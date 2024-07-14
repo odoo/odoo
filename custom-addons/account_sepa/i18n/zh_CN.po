@@ -1,0 +1,416 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_sepa
+# 
+# Translators:
+# Wil Odoo, 2023
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
+# Yazi Tian, 2024
+# 湘子 南 <1360857908@qq.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid "A bank account is not defined."
+msgstr "银行账户未定义。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_payment_register.py:0
+#, python-format
+msgid "A bank account must be set on the following documents: "
+msgstr "银行账户须在以下文件设置："
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03_austrian_004
+msgid "Austrian"
+msgstr "奥地利"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"Bank account %s 's bank does not have any BIC number associated. Please "
+"define one."
+msgstr "银行账户%s的银行没有关联的BIC号码。请指定。"
+
+#. module: account_sepa
+#: model_terms:ir.ui.view,arch_db:account_sepa.view_batch_payment_form_inherit
+msgid "Batch Booking"
+msgstr "批量预订"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_batch_payment
+msgid "Batch Payment"
+msgstr "批量付款"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设置"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_res_partner
+msgid "Contact"
+msgstr "联系"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_company__sepa_orgid_issr
+msgid ""
+"Entity that assigns the identification (eg. KBE-BCO or Finanzamt Muenchen "
+"IV)."
+msgstr "分配标识的实体（例如：KBE-BCO或Finanzamt Muenchen IV）。"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03
+msgid "Generic"
+msgstr "通用"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03_de
+msgid "German"
+msgstr "德语"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_journal__has_sepa_ct_payment_method
+msgid "Has Sepa Ct Payment Method"
+msgstr "有Sepa Ct付款方式"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_res_company__sepa_orgid_id
+#: model:ir.model.fields,field_description:account_sepa.field_res_config_settings__sepa_orgid_id
+msgid "Identification"
+msgstr "身份证明"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_company__sepa_orgid_id
+#: model:ir.model.fields,help:account_sepa.field_res_config_settings__sepa_orgid_id
+msgid "Identification assigned by an institution (eg. VAT number)."
+msgstr "机构分配的身份证明（例如：增值税号码）。"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_res_company__sepa_orgid_issr
+#: model:ir.model.fields,field_description:account_sepa.field_res_config_settings__sepa_orgid_issr
+msgid "Issuer"
+msgstr "发行人"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_journal
+msgid "Journal"
+msgstr "日记账"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_res_company__account_sepa_lei
+#: model:ir.model.fields,field_description:account_sepa.field_res_partner__account_sepa_lei
+#: model:ir.model.fields,field_description:account_sepa.field_res_users__account_sepa_lei
+msgid "LEI"
+msgstr "LEI"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_company__account_sepa_lei
+#: model:ir.model.fields,help:account_sepa.field_res_partner__account_sepa_lei
+#: model:ir.model.fields,help:account_sepa.field_res_users__account_sepa_lei
+msgid "Legal Entity Identifier"
+msgstr "法律实体标识符"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid "Maximum amount is %s for payments in Euros, %s for other currencies."
+msgstr "欧元付款的最高金额为%s，其他币种付款的最高金额为%s。"
+
+#. module: account_sepa
+#: model_terms:ir.ui.view,arch_db:account_sepa.res_partner_sepa_inherit_form
+msgid "Miscellaneous"
+msgstr "杂项"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_config_settings__sepa_initiating_party_name
+msgid ""
+"Name of the Creditor Reference Party. Usage Rule: Limited to 70 characters "
+"in length."
+msgstr "债权人参考方名称。使用规则：长度限于70个字符以内。"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_09
+msgid "New generic version (09)"
+msgstr "新通用版本（09）"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid "Partner %s has no country code defined."
+msgstr "没有为合作伙伴%s指定国家代码。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid "Partner %s has not bank account defined."
+msgstr "没有为合作伙伴%s指定银行账户。"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_payment_method
+msgid "Payment Methods"
+msgstr "付款方式"
+
+#. module: account_sepa
+#: model_terms:ir.ui.view,arch_db:account_sepa.account_journal_dashboard_kanban_view_inherited
+msgid "Payment to send via SEPA"
+msgstr "通过SEPA发送的付款"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_payment
+msgid "Payments"
+msgstr "付款"
+
+#. module: account_sepa
+#: model_terms:ir.ui.view,arch_db:account_sepa.account_journal_dashboard_kanban_view_inherited
+msgid "Payments to send via SEPA"
+msgstr "通过SEPA发送的付款"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"Please first set a SEPA identification number in the accounting settings."
+msgstr "请先在会计设置中设置SEPA识别号。"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_payment_register
+msgid "Register Payment"
+msgstr "登记付款"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_account_batch_payment__sct_batch_booking
+msgid "Request batch booking from the bank for the related bank statements."
+msgstr "为相关银行对账单向银行申请批量预订。"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_batch_payment__sct_batch_booking
+msgid "SCT Batch Booking"
+msgstr "SCT批量预订"
+
+#. module: account_sepa
+#: model:account.payment.method,name:account_sepa.account_payment_method_sepa_ct
+msgid "SEPA Credit Transfer"
+msgstr "单一欧元支付区 SEPA 贷方转账"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal_dashboard.py:0
+#, python-format
+msgid "SEPA Credit Transfers to Send"
+msgstr "待发送的SEPA贷项转账"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_journal__sepa_pain_version
+#: model:ir.model.fields,field_description:account_sepa.field_account_payment__sepa_pain_version
+#: model_terms:ir.ui.view,arch_db:account_sepa.view_account_journal_form
+msgid "SEPA Pain Version"
+msgstr "SEPA格式版本"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_account_journal__sepa_pain_version
+#: model:ir.model.fields,help:account_sepa.field_account_payment__sepa_pain_version
+msgid ""
+"SEPA may be a generic format, some countries differ from the SEPA "
+"recommendations made by the EPC (European Payment Council) and thus the XML "
+"created need some tweaking."
+msgstr ""
+"单一欧元支付区（SEPA）可能是一种通用格式，某些国家与欧洲支付委员会（EPC）提出的单一欧元支付区建议不同，因此创建的XML需要进行调整。"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_batch_payment__sct_generic
+msgid "Sct Generic"
+msgstr "通用的"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid "Some payments are above the maximum amount allowed."
+msgstr "某些付款高于最高允许金额。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"Some payments are not made on an IBAN recipient account. This batch might "
+"not be accepted by certain banks because of that."
+msgstr "某些付款不是在IBAN收件人账户上支付的。因此，某些银行可能不接受该批量付款。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid "Some payments have no recipient bank account set."
+msgstr "某些付款未设置收件人银行账户。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"Some payments were instructed in another currency than Euro. This batch "
+"might not be accepted by certain banks because of that."
+msgstr "某些付款以非欧元币种指示。因此，某些银行可能不接受该批量付款。"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03_se
+msgid "Swedish"
+msgstr "瑞典语"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03_ch_02
+msgid "Swiss"
+msgstr "瑞士"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_account_batch_payment__sct_generic
+msgid ""
+"Technical feature used during the file creation. A SEPA message is said to "
+"be 'generic' if it cannot be considered as a standard european credit "
+"transfer. That is if the bank journal is not in €, a transaction is not in €"
+" or a payee is not identified by an IBAN account number."
+msgstr ""
+"创建文件时使用的技术功能。如果单一欧元支付区 SEPA "
+"消息不能视作标准欧洲贷方转账，则称为“通用”消息。也就是说，如果银行日记账不以€列示，则交易不以€表示，或者收款人不以 IBAN 账户号码."
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"The BIC code '%s' associated to the bank '%s' of bank account '%s' of partner '%s' does not respect the required convention.\n"
+"It must contain 8 or 11 characters and match the following structure:\n"
+"- 4 letters: institution code or bank code\n"
+"- 2 letters: country code\n"
+"- 2 letters or digits: location code\n"
+"- 3 letters or digits: branch code, optional\n"
+msgstr ""
+"与合作伙伴“%s”的银行账号“%s”的银行“%s”关联的BIC代码“%s”不符合规定惯例。\n"
+"代码须包含8个或11个字符，并符合以下结构：\n"
+"- 4个字母：机构或银行代码\n"
+"- 2个字母：国家代码\n"
+"- 2个字母或数字：地点代码\n"
+"- 3个字母或数字：分行代码，可选\n"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/res_partner.py:0
+#, python-format
+msgid ""
+"The LEI number must contain 20 characters and match the following structure:\n"
+"- 18 alphanumeric characters with capital letters\n"
+"- 2 digits in the end\n"
+msgstr ""
+"LEI 号码必须包含 20 个字符，并符合以下结构：\n"
+"- 18 个大写字母数字字符\n"
+"- 末尾 2 个数字\n"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"The account %s, linked to partner '%s', is not of type IBAN.\n"
+"A valid IBAN account is required to use SEPA features."
+msgstr ""
+"账户%s，链接至合作伙伴 '%s'，不是 IBAN 类型。\n"
+"有效 IBAN 账户需使用单一欧元支付区 SEPA 功能."
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"The account %s, of journal '%s', is not of type IBAN.\n"
+"A valid IBAN account is required to use SEPA features."
+msgstr ""
+"日记账 %s 的账户 '%s'，不是 IBAN 类型。\n"
+"有效IBAN账户需使用单一欧元支付区 SEPA 功能."
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"The amount of the payment '%(payment)s' is too high. The maximum permitted "
+"is %(limit)s."
+msgstr "付款“%(payment)s”金额过高。最高允许金额为%(limit)s。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"The bank defined on account %s (from partner %s) has no BIC. Please first "
+"set one."
+msgstr "账户%s（来自合作伙伴%s）定义的银行没有BIC。请先设置。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_payment.py:0
+#, python-format
+msgid ""
+"The journal '%s' requires a proper IBAN account to pay via SEPA. Please "
+"configure it first."
+msgstr "日记账“%s”需要正确的IBAN账号，以通过单一欧元支付区（SEPA）付款。请先配置。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid "Too many transactions for a single file."
+msgstr "单个文件中的交易过多。"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_payment__sepa_uetr
+msgid "UETR"
+msgstr "UETR"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_account_payment__sepa_uetr
+msgid "Unique end-to-end transaction reference"
+msgstr "唯一端到端交易参考"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_company__sepa_initiating_party_name
+#: model:ir.model.fields,help:account_sepa.field_res_config_settings__sepa_orgid_issr
+msgid ""
+"Will appear in SEPA payments as the name of the party initiating the "
+"payment. Limited to 70 characters."
+msgstr "将在单一欧元支付区（SEPA）付款中显示为发起付款一方的名称。限70个字符。"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_res_company__sepa_initiating_party_name
+#: model:ir.model.fields,field_description:account_sepa.field_res_config_settings__sepa_initiating_party_name
+msgid "Your Company Name"
+msgstr "公司名称"

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="social.StreamPostCommentsOriginalPost" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('o_social_original_post_author_image')]" position="inside">
+            <img t-if="originalPost.instagram_facebook_author_id.raw_value" t-attf-src="https://graph.facebook.com/v17.0/{{ originalPost.instagram_facebook_author_id.raw_value }}/picture" alt="Author Image" class="rounded"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_social_comments_modal_original_post_content')]" position="inside">
+            <div t-if="originalPost.media_type.raw_value === 'instagram'"
+                 class="o_social_original_post_instagram_stats d-flex justify-content-around pt-2">
+                <div class="o_social_instagram_likes ps-2 pe-3"
+                    t-att-data-post-id="originalPost.id.raw_value">
+                    <t t-if="originalPost.instagram_likes_count.raw_value !== 0">
+                        <i class="fa fa-heart me-1" title="Likes"/>
+                        <b class="o_social_likes_count" t-esc="originalPost.instagram_likes_count.value"/>
+                    </t>
+                </div>
+                <div class="flex-grow-1" />
+            </div>
+        </xpath>
+    </t>
+</templates>

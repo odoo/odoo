@@ -1,0 +1,22 @@
+<templates>
+
+<t t-name="web_studio.ViewEditor.InteractiveEditorProperties.Chatter">
+    <Property
+            name="'email_alias'"
+            type="'string'"
+            value="state.mailAlias"
+            onChange.bind="onChangeMailAlias"
+        >
+            Email Alias
+    </Property>
+    <div class="input-group-text">
+        <t t-if="state.aliasDomain" t-esc="'@' + state.aliasDomain"/>
+        <t t-else=""> domain not defined </t>
+    </div>
+    <div t-if="state.mailAlias and state.aliasDomain" class="mt8">
+        Send a <a t-att-href="'mailto:' + state.mailAlias + '@' + state.aliasDomain + '?subject=test'">test email</a>.
+    </div>
+    <SidebarPropertiesToolbox />
+</t>
+
+</templates>

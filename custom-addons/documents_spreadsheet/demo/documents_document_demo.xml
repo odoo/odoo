@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    <record id="spreadsheet_demo_partner_pivot" model="documents.document" forcecreate="0">
+        <field name="name">Partner Spreadsheet Test</field>
+        <field name="folder_id" eval="ref('documents.documents_internal_folder')"/>
+        <field name="handler">spreadsheet</field>
+        <field name="mimetype">application/o-spreadsheet</field>
+        <field name="datas" type="base64" file="documents_spreadsheet/demo/files/res_partner_spreadsheet.json"/>
+        <field name="thumbnail" type="base64" file="documents_spreadsheet/demo/files/res_partner_spreadsheet_thumbnail.jpg"/>
+    </record>
+    </data>
+</odoo>

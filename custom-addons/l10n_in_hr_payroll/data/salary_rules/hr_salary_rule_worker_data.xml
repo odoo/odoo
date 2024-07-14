@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_worker_trans_allownce" model="hr.salary.rule">
+        <field name="code">TCA</field>
+        <field name="name">Transport/Conveyance Allownace</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">fix</field>
+        <field eval="800.0" name="amount_fix"/>
+        <field name="sequence" eval="14"/>
+        <field name="note">A conveyance allowance refers to an amount of money reimbursed to someone for the operation of a vehicle or the riding of a vehicle. The allowance is typically a designated amount or percentage of total transportation expenses that is referenced in a country's tax laws or code. Organizations and private or public businesses may also offer a conveyance allowance in addition to reimbursing employees or members for transportation expenses. In this instance, the conveyance allowance may identify an unusual transport occurrence that may not be covered by a designated travel expense report such as travel to a specific job site that requires a daily bus or taxi ride.</field>
+        <field name="struct_id" ref="structure_worker_0001"/>
+    </record>
+
+    <record id="hr_salary_rule_worker_special" model="hr.salary.rule">
+        <field name="code">SA</field>
+        <field name="name">Special</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.l10n_in_supplementary_allowance)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = contract.l10n_in_supplementary_allowance</field>
+        <field name="sequence" eval="20"/>
+        <field name="note">This allowance is normally given as an additional benefit to worker and is fully taxable.</field>
+        <field name="struct_id" ref="structure_worker_0001"/>
+    </record>
+
+    <record id="hr_payslip_line_worker_professional_tax" model="hr.salary.rule">
+        <field name="code">PTD</field>
+        <field name="name">Professional Tax</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories['GROSS'] &gt;= 3000 </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+amounts = payslip._rule_parameter('l10n_in_professional_tax')
+if categories['GROSS'] &gt;= 12000:
+    result = amounts[0]
+elif categories['GROSS'] &gt;= 9000 and categories &lt; 11999:
+    result = amounts[1]
+elif categories['GROSS'] &gt;= 6000 and categories['GROSS'] &lt;= 8999:
+    result = amounts[2]
+else:
+    result = 0
+        </field>
+        <field name="partner_id" ref="hr_professional_tax_deduction_register"/>
+        <field eval="145" name="sequence"/>
+        <field name="note">Workers living in states that impose the professional tax must submit a payment each half-year for the right to practice a profession or trade. It applies equally to employees who work for the national or state government, and those employed by private corporations. The professional tax uses a six-month accounting system, which divides the year into two periods, beginning on April 1 and October 1.</field>
+        <field name="struct_id" ref="structure_worker_0001"/>
+    </record>
+</odoo>

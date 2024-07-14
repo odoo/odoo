@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="helpdesk_stage_view_tree" model="ir.ui.view">
+        <field name="name">helpdesk.stages.tree</field>
+        <field name="model">helpdesk.stage</field>
+        <field name="arch" type="xml">
+            <tree string="Stage" multi_edit="1" sample="1" delete="0">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="team_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
+                <field name="template_id" options="{'no_create': True}" optional="hide"/>
+                <field name="fold" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="helpdesk_stage_view_search" model="ir.ui.view">
+        <field name="name">helpdesk.stages.search</field>
+        <field name="model">helpdesk.stage</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="team_ids"/>
+                <field name="template_id" domain="[('model', '=', 'helpdesk.ticket')]"/>
+                <filter string="Archived" name="active" domain="[('active', '=' ,False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="helpdesk_stage_view_kanban" model="ir.ui.view">
+        <field name="name">helpdesk.stages.kanban</field>
+        <field name="model">helpdesk.stage</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="sequence" widget="handle"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click oe_kanban_content">
+                            <strong class="o_kanban_record_title">
+                                <field name="name"/>
+                            </strong>
+                            <div>
+                                <field name="team_ids" options="{'color_field': 'color'}" widget="many2many_tags"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="helpdesk_stage_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.stage.form</field>
+        <field name="model">helpdesk.stage</field>
+        <field name="arch" type="xml">
+            <form string="Stage Search" delete="0">
+                <field name="active" invisible="1" />
+                <sheet>
+                    <div class="oe_button_box" name="button_box" invisible="not context.get('display_stat_button', False)">
+                        <button class="oe_stat_button" type="object" name="action_open_helpdesk_ticket" icon="fa-life-ring" invisible="ticket_count == 0">
+                            <field name="ticket_count" widget="statinfo" string="Tickets"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" />
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="template_id" context="{'default_model': 'helpdesk.ticket'}"/>
+                            <field name="sequence" groups="base.group_no_one"/>
+                        </group>
+                        <group>
+                            <field name="fold"/>
+                            <field name="team_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        </group>
+                    </group>
+                    <group string="Stage Description and States Meaning">
+                        <group>
+                            <p class="text-muted mt-2" colspan="2">
+                                Add a description to help your coworkers understand the meaning and purpose of the stage.
+                            </p>
+                            <field name="description" placeholder="Add a description..." nolabel="1" colspan="2"/>
+                            <p class="text-muted" colspan="2">
+                                At each stage, employees can block tickets or mark them as ready for the next step.
+                                You can customize the meaning of each state.
+                            </p>
+                            <div class="row g-0 ms-1" colspan="2">
+                                <label for="legend_normal" string=" " class="o_status mt4"
+                                    title="Task in progress. Click to block or set as done."
+                                    aria-label="Task in progress. Click to block or set as done." role="img"/>
+                                <div class="col-11 ps-2">
+                                    <field name="legend_normal"/>
+                                </div>
+                            </div>
+                            <div class="row g-0 ms-1" colspan="2">
+                                <label for="legend_blocked" string=" " class="o_status o_status_red mt4"
+                                    title="Task is blocked. Click to unblock or set as done."
+                                    aria-label="Task is blocked. Click to unblock or set as done." role="img"/>
+                                <div class="col-11 ps-2">
+                                    <field name="legend_blocked"/>
+                                </div>
+                            </div>
+                            <div class="row g-0 ms-1" colspan="2">
+                                <label for="legend_done" string=" " class="o_status o_status_green mt4"
+                                    title="This step is done. Click to block or set in progress."
+                                    aria-label="This step is done. Click to block or set in progress." role="img"/>
+                                <div class="col-11 ps-2">
+                                    <field name="legend_done"/>
+                                </div>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="unlink_helpdesk_stage_action" model="ir.actions.server">
+        <field name="name">Delete</field>
+        <field name="model_id" ref="helpdesk.model_helpdesk_stage"/>
+        <field name="binding_model_id" ref="helpdesk.model_helpdesk_stage"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_unlink_wizard(stage_view=True)</field>
+    </record>
+
+    <record id="helpdesk_stage_action" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="res_model">helpdesk.stage</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="search_view_id" ref="helpdesk_stage_view_search"/>
+        <field name="context">{'display_stat_button': True}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No stages found. Let's create one!
+          </p><p>
+            Adapt your pipeline to your workflow and track the progress of your tickets.
+          </p>
+        </field>
+    </record>
+
+</odoo>

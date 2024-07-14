@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="preparation_display_reset_wizard" model="ir.ui.view">
+        <field name="name">pos.preparation.display.reset.form</field>
+        <field name="model">pos_preparation_display.reset.wizard</field>
+        <field name="arch" type="xml">
+        <form string="Check products">
+                <p>
+                    Archive all preparation display's orders for a fresh start. This will not affect the PoS order history.
+                </p>
+            <footer>
+                <button name="reset_all_orders" string="Reset" type="object" class="btn-primary" data-hotkey="q"/>
+                <button special="cancel" data-hotkey="x" string="Discard" class="btn-secondary"/>
+            </footer>
+        </form>
+        </field>
+    </record>
+</odoo>

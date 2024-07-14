@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_order_template_action" model="ir.actions.act_window">
+        <field name="name">Rental Quotation Templates</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'in_rental_app': 1}</field>
+        <field name="search_view_id" ref="sale_management.sale_order_template_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your quotation template
+            </p><p>
+                Use templates to create polished, professional quotes in minutes.
+                Send these quotes by email and let your customers sign online.
+                Use cross-selling and discounts to push and boost your sales.
+            </p>
+        </field>
+    </record>
+
+</odoo>

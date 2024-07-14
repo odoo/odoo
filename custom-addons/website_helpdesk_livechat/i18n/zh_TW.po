@@ -1,0 +1,288 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_helpdesk_livechat
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid ""
+"\n"
+"                    Create a new helpdesk ticket by typing <b>/ticket <i>ticket title</i></b><br>\n"
+"                    "
+msgstr ""
+"\n"
+"                    輸入以下字串，即可新增技術支援請求： <b>/ticket <i>請求主題</i></b><br>\n"
+"                    "
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/chatbot_script_step.py:0
+#, python-format
+msgid "%(name)s's Ticket"
+msgstr "%(name)s 的支援請求"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_done
+msgid "Alright, we should have everything we need"
+msgstr "好的，我們應該已有需要的一切."
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/chatbot_script.py:0
+#, python-format
+msgid ""
+"An \"Email\" step type must exist before the \"Create Ticket\" step for a "
+"ticket to be created."
+msgstr "在「建立支援請求」步驟之前，必須有「電子郵件」步驟類型，才可建立支援請求。"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_technical_serial_misc
+msgid "Anything else to add?"
+msgstr "有沒有其他資料要補充？"
+
+#. module: website_helpdesk_livechat
+#: model:ir.ui.menu,name:website_helpdesk_livechat.helpdesk_team_canned_response_menu
+msgid "Canned Responses"
+msgstr "預設回應"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model,name:website_helpdesk_livechat.model_chatbot_script
+msgid "Chatbot Script"
+msgstr "聊天機器人程式碼"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model,name:website_helpdesk_livechat.model_chatbot_script_step
+msgid "Chatbot Script Step"
+msgstr "聊天機器人程式碼步驟"
+
+#. module: website_helpdesk_livechat
+#: model_terms:ir.ui.view,arch_db:website_helpdesk_livechat.helpdesk_team_view_form_inherit_website_helpdesk_livechat
+msgid "Configure Canned Responses"
+msgstr "設定預設回應"
+
+#. module: website_helpdesk_livechat
+#: model_terms:ir.ui.view,arch_db:website_helpdesk_livechat.helpdesk_team_view_form_inherit_website_helpdesk_livechat
+msgid "Configure Live Chat Channel"
+msgstr "設定線上客服頻道"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model.fields.selection,name:website_helpdesk_livechat.selection__chatbot_script_step__step_type__create_ticket
+msgid "Create Ticket"
+msgstr "新增技術支援請求"
+
+#. module: website_helpdesk_livechat
+#. odoo-javascript
+#: code:addons/website_helpdesk_livechat/static/src/messaging_service_patch.js:0
+#, python-format
+msgid "Create a new helpdesk ticket (/ticket ticket title)"
+msgstr "新增技術支援請求（/ticket 請求主題）"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "Created a new ticket: %s"
+msgstr "已建立新支援請求：%s"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model,name:website_helpdesk_livechat.model_discuss_channel
+msgid "Discussion Channel"
+msgstr "討論群組"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_dispatch
+msgid "First, what is the nature of your issue?"
+msgstr "首先，問題的性質是甚麼？"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model.fields,field_description:website_helpdesk_livechat.field_chatbot_script__ticket_count
+msgid "Generated Ticket Count"
+msgstr "已產生支援請求數目"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref_yes
+msgid "Great, that will make our lives easier."
+msgstr "太好了，這會使我們的工作較容易。"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script,title:website_helpdesk_livechat.chatbot_script_helpdesk_bot
+msgid "Helpdesk Bot"
+msgstr "技術支援機器人"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model,name:website_helpdesk_livechat.model_helpdesk_team
+#: model:ir.model.fields,field_description:website_helpdesk_livechat.field_chatbot_script_step__helpdesk_team_id
+msgid "Helpdesk Team"
+msgstr "技術支援團隊"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_welcome
+msgid "Here we go, help is on the way!"
+msgstr "很好，快將會有人幫助你。"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.answer,name:website_helpdesk_livechat.chatbot_script_helpdesk_step_dispatch_answer_technical
+msgid "I have a technical issue"
+msgstr "我有一個技術問題"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.answer,name:website_helpdesk_livechat.chatbot_script_helpdesk_step_dispatch_answer_administrative
+msgid "I have an administrative question"
+msgstr "我有一個行政問題"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref_no
+msgid "It's OK, we can also find your contract by other means."
+msgstr "沒問題，我們也可以用其他方法找出你的合約。"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_email
+msgid "Just a last thing, can we please have your email address?"
+msgstr "最後，可以告知你的電郵地址嗎？"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model.fields,field_description:website_helpdesk_livechat.field_helpdesk_team__use_website_helpdesk_livechat
+msgid "Live Chat"
+msgstr "線上客服"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "Make sure you are using the right format:"
+msgstr "請確保使用正確的格式："
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.answer,name:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref_answer_no
+msgid "No"
+msgstr "否"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "No tickets found for %s."
+msgstr "未找到 %s 相關的支援請求。"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid ""
+"No tickets found for <b>%s</b>. <br> Make sure you are using the right "
+"format:<br> <b>/search_tickets <i>keyword</i></b>"
+msgstr ""
+"找不到有關 <b>%s</b> 的支援請求。<br><br>請確保使用正確格式：<br> <b>/search_tickets "
+"<i>關鍵字</i></b>"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_ticket
+msgid ""
+"OK, I just created a ticket for you. You should receive an email "
+"confirmation very soon."
+msgstr "好的，我剛剛為你建立了一個技術支援請求。你應該很快會收到一封確認電郵。"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_technical_serial
+msgid "Please write below the serial number of your equipment."
+msgstr "請在下方填寫你設備的序號。"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref_input
+msgid "Please write below your customer reference."
+msgstr "請於下方填寫客戶參考編號。"
+
+#. module: website_helpdesk_livechat
+#. odoo-javascript
+#: code:addons/website_helpdesk_livechat/static/src/messaging_service_patch.js:0
+#, python-format
+msgid "Search helpdesk tickets (/search_tickets keyword)"
+msgstr "搜尋技術支援請求（/search_tickets 關鍵字）"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid ""
+"Search helpdesk tickets by typing <b>/search_tickets <i>keyword</i></b>"
+msgstr "輸入以下字串，即可搜尋技術支援請求： <b>/search_tickets <i>關鍵字</i></b>"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "Something is missing or wrong in command"
+msgstr "指令有缺漏或錯誤"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model.fields,field_description:website_helpdesk_livechat.field_chatbot_script_step__step_type
+msgid "Step Type"
+msgstr "步驟類型"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_technical_serial_thanks
+msgid "Thank you, that will help our engineers see what went wrong."
+msgstr "謝謝你，這將幫助我們的工程師找出問題所在。"
+
+#. module: website_helpdesk_livechat
+#: model_terms:ir.ui.view,arch_db:website_helpdesk_livechat.chatbot_script_view_form
+msgid "Tickets"
+msgstr "支援請求"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "Tickets search results for %s: "
+msgstr "有關「%s」的支援請求搜尋結果："
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref
+msgid ""
+"To start with, do you have a customer reference?\n"
+"They are written on each invoice you received, next to your name."
+msgstr ""
+"首先，你有客戶參考編號嗎？\n"
+"應該在你收到的每張發票上，寫了在你的名稱旁邊的。"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model,name:website_helpdesk_livechat.model_res_users
+msgid "User"
+msgstr "使用者"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_issue
+msgid "We're all set. Now, what is your issue?"
+msgstr "我們都準備好了。現在，你的問題是什麼？"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.answer,name:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref_answer_yes
+msgid "Yes"
+msgstr "是"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "keyword"
+msgstr "關鍵字"

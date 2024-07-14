@@ -1,0 +1,14 @@
+<?xml version = "1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_view_form_inherit_map" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.map</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="active_lang_count" position="after">
+                <field name="partner_longitude" invisible="1"/>
+                <field name="partner_latitude" invisible="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="planning_view_search_inherit_planning_hr_skills" model="ir.ui.view">
+        <field name="name">planning.view.search.inherit.planning.hr.skills</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_search_base"/>
+        <field name="arch" type="xml">
+            <field name='name' position="before">
+                <field name="employee_skill_ids" groups="planning.group_planning_user" filter_domain="['|', ('resource_id', '=', False), ('employee_skill_ids', 'ilike', self)]"/>
+            </field>
+        </field>
+    </record>
+</odoo>

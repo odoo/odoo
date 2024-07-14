@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="timesheet_grid.TimesheetMany2OneAvatarEmployeeGridRow">
+        <div t-att-name="props.name" t-attf-class="{{ props.classNames }} d-flex align-items-center gap-1" t-att-data-tooltip="displayName">
+            <span class="o_avatar o_m2o_avatar" t-on-click.stop.prevent="onClickAvatar">
+                <span t-if="!resId and props.canOpen" class="o_avatar_empty o_m2o_avatar_empty"></span>
+                <img t-if="resId"
+                     t-attf-src="/web/image/{{relation}}/{{resId}}/avatar_128"
+                     class="rounded"
+                />
+            </span>
+            <Many2OneGridRow t-props="many2OneProps" canOpen="false"/>
+            <EmployeeOvertimeIndication t-props="timesheetOvertimeProps"/>
+        </div>
+    </t>
+</templates>

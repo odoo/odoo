@@ -1,0 +1,104 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* appointment_crm
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:22+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: appointment_crm
+#: model:crm.tag,name:appointment_crm.appointment_crm_tag
+msgid "Appointment"
+msgstr "Rendez-vous"
+
+#. module: appointment_crm
+#: model:ir.model,name:appointment_crm.model_appointment_invite
+msgid "Appointment Invite"
+msgstr "Inviter au rendez-vous"
+
+#. module: appointment_crm
+#: model:ir.model,name:appointment_crm.model_appointment_type
+msgid "Appointment Type"
+msgstr "Type de rendez-vous"
+
+#. module: appointment_crm
+#: model:ir.model,name:appointment_crm.model_calendar_event
+msgid "Calendar Event"
+msgstr "Événement calendrier"
+
+#. module: appointment_crm
+#. odoo-javascript
+#: code:addons/appointment_crm/static/src/views/appointment_calendar/appointment_crm_calendar_controller.xml:0
+#, python-format
+msgid "Click in your calendar to pick meeting time proposals for"
+msgstr ""
+"Cliquez dans votre calendrier pour choisir les propositions d'heure de "
+"réunion pour"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_appointment_type__lead_create
+msgid "Create Opportunities"
+msgstr "Créer des opportunités"
+
+#. module: appointment_crm
+#: model:ir.model.fields,help:appointment_crm.field_appointment_type__lead_create
+msgid ""
+"For each scheduled appointment, create a new opportunity and assign it to "
+"the responsible user."
+msgstr ""
+"Pour chaque rendez-vous programmé, créez une nouvelle opportunité et "
+"attribuez-la à l'utilisateur responsable."
+
+#. module: appointment_crm
+#: model_terms:ir.ui.view,arch_db:appointment_crm.appointment_type_view_form
+msgid "Leads"
+msgstr "Pistes"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_appointment_type__lead_count
+msgid "Leads Count"
+msgstr "Nombre de pistes"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_appointment_type__lead_ids
+msgid "Leads/Opportunity"
+msgstr "Pistes/Opportunité"
+
+#. module: appointment_crm
+#: model:ir.model.fields,help:appointment_crm.field_appointment_invite__opportunity_id
+msgid ""
+"Link an opportunity/lead to the appointment invite created.\n"
+"Used when creating an invitation from the Meeting action in the crm form view."
+msgstr ""
+"Lier une opportunité/piste à l'invitation à un rendez-vous créée.\n"
+"Utilisé lors de la création d'une invitation à partir de l'action Réunion dans la vue de formulaire crm."
+
+#. module: appointment_crm
+#. odoo-python
+#: code:addons/appointment_crm/models/calendar_event.py:0
+#, python-format
+msgid "Meeting linked to Lead/Opportunity %s"
+msgstr "Réunion liées à une piste/opportunité %s"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_calendar_event__opportunity_id
+msgid "Opportunity"
+msgstr "Opportunité"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_appointment_invite__opportunity_id
+msgid "Opportunity/Lead"
+msgstr "Opportunité/Piste"

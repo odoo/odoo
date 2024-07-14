@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <t t-name="hr_payroll.Dashboard">
+        <div class="o_hr_payroll_dashboard_sheet container-fluid h-100 overflow-auto m-2 m-md-3 p-0">
+            <div class="row g-0 g-lg-3 h-lg-100">
+                <div class="col-12 col-lg-7 row p-0 pe-3 pe-lg-0 m-0 h-100">
+                    <div class="row g-0 g-md-3 mt-0 h-100 pe-0 ">
+                        <div class="col-12 col-md-6 mb-3 mb-md-0 o_payroll_dashboard_panel">
+                            <PayrollDashboardActionBox actions="dashboardData.actions"/>
+                        </div>
+                        <div class="col-12 col-md-6 mb-3 mb-md-0 o_payroll_dashboard_panel">
+                            <PayrollDashboardPayslipBatch batches="dashboardData.batches"/>
+                        </div>
+                        <t t-set="stats" t-value="dashboardData.stats"/>
+                        <t t-foreach="stats" t-as="stat" t-key="stat.id" t-if="stats &amp;&amp; stats.length > 0">
+                            <div class="col-12 col-md-6 mb-2 o_payroll_dashboard_panel">
+                                <PayrollDashboardStats t-props="stat"/>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-5 h-100 m-0 pt-2 pt-md-3 pe-md-3 ps-0" >
+                    <PayrollDashboardTodo orderBy="[{name: 'id', asc: true}]"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>

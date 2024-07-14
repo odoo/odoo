@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="helpdesk_ticket_view_form_inherit_helpdesk_stock" model="ir.ui.view">
+        <field name='name'>helpdesk.ticket.form.inherit.stock</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <button name="action_open_helpdesk_ticket" position="before">
+                <button class="oe_stat_button" name="action_view_pickings" icon="fa-truck"
+                    type="object" invisible="pickings_count == 0">
+                    <field name="pickings_count" string="Returns" widget="statinfo" />
+                </button>
+            </button>
+            <xpath expr="//page[@name='extra_info']//field[@name='company_id']" position="after">
+                <field name="use_credit_notes" invisible="1"/>
+                <field name="use_product_returns" invisible="1"/>
+                <field name="use_product_repairs" invisible="1"/>
+                <field name="suitable_product_ids" invisible="1"/>
+                <field name="tracking" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_view_form_inherit_stock_user" model="ir.ui.view">
+        <field name='name'>helpdesk.ticket.form.inherit.return.stock.user</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="priority">45</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <field name="stage_id" position="before">
+                <field name="has_partner_picking" invisible="1" groups="stock.group_stock_user"/>
+                <field name="use_product_returns" invisible="1" groups="stock.group_stock_user"/>
+                <button type="action" name="%(stock.act_stock_return_picking)d"
+                    groups="stock.group_stock_user"
+                    string="Return" invisible="not has_partner_picking or not use_product_returns"
+                    context="{'default_ticket_id': id, 'default_company_id': company_id}" data-hotkey="q"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_view_tree_inherit_helpdesk_stock" model="ir.ui.view">
+        <field name='name'>helpdesk.ticket.tree.inherit.stock</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="priority">40</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_tree"/>
+        <field name="arch" type="xml">
+            <field name='partner_id' position="after">
+                <field name="suitable_product_ids" column_invisible="True"/>
+                <field name="product_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+</odoo>

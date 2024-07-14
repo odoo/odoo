@@ -1,0 +1,150 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_contract_salary_payroll
+# 
+# Translators:
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Martin Trigaux, 2024
+# Betty Keresztesi, 2024
+# Maria Muntean, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Maria Muntean, 2024\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: hr_contract_salary_payroll
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.salary_package_sidebar_payroll
+msgid ""
+"<option value=\"100\" selected=\"1\">Full Time</option>\n"
+"                <option value=\"90\">9/10</option>\n"
+"                <option value=\"80\">4/5</option>\n"
+"                <option value=\"60\">3/5</option>\n"
+"                <option value=\"50\">Half Time</option>\n"
+"                <option value=\"40\">2/5</option>\n"
+"                <option value=\"20\">1/5</option>"
+msgstr ""
+"<option value=\"100\" selected=\"1\">Cu normă întreagă</option>\n"
+"                <option value=\"90\">9/10</option>\n"
+"                <option value=\"80\">4/5</option>\n"
+"                <option value=\"60\">3/5</option>\n"
+"                <option value=\"50\">Jumătate din timp</option>\n"
+"                <option value=\"40\">2/5</option>\n"
+"                <option value=\"20\">1/5</option>"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_resume__code
+msgid "Code"
+msgstr "Cod"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.ui.menu,name:hr_contract_salary_payroll.menu_hr_payroll_configuration_contract
+msgid "Contracts"
+msgstr "Contracte"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.ui.menu,name:hr_contract_salary_payroll.hr_payroll_menu_contract_type
+msgid "Employment Types"
+msgstr "Tipuri de angajare"
+
+#. module: hr_contract_salary_payroll
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_resume_view_search_inherit
+msgid "Impacts Monthly Total"
+msgstr "Impacturi Total lunar"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model.fields.selection,name:hr_contract_salary_payroll.selection__hr_contract_salary_resume__value_type__payslip
+msgid "Payslip Value"
+msgstr "Valoare Fluturaș Salariu"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model,name:hr_contract_salary_payroll.model_hr_payslip_worked_days
+msgid "Payslip Worked Days"
+msgstr "Fluturas de salariu pentru Zilele lucrate"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model.fields,help:hr_contract_salary_payroll.field_hr_contract_salary_resume__value_type
+msgid ""
+"Pick how the value of the information is computed:\n"
+"Fixed value: Set a determined value static for all links\n"
+"Contract value: Get the value from a field on the contract record\n"
+"Payslip value: Get the value from a field on the payslip record\n"
+"Sum of Benefits value: You can pick in all benefits and compute a sum of them\n"
+"Monthly Total: The information will be a total of all the informations in the category Monthly Benefits"
+msgstr ""
+"Alegeți modul în care este calculată valoarea informațiilor:\n"
+"Valoare fixă: Setați o valoare determinată statică pentru toate linkurile\n"
+"Valoare contract: Obțineți valoarea dintr-un câmp al înregistrării contractului\n"
+"Valoarea fluturașului de salariu: Obține valoarea dintr-un câmp din înregistrarea fluturașului de salariu\n"
+"Sum of Benefits value (Suma prestațiilor): Puteți selecta toate prestațiile și să calculați o sumă a acestora\n"
+"Total lunar: Informația va fi un total al tuturor informațiilor din categoria Prestații lunare"
+
+#. module: hr_contract_salary_payroll
+#. odoo-javascript
+#: code:addons/hr_contract_salary_payroll/static/src/xml/brut2net_modal.xml:0
+#, python-format
+msgid ""
+"Please note that this information may be inaccurate and should be used for "
+"reference only."
+msgstr ""
+"Vă rugăm să rețineți că aceste informații pot fi inexacte și ar trebui "
+"utilizate numai cu titlu de referință."
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model,name:hr_contract_salary_payroll.model_hr_contract_salary_resume
+msgid "Salary Package Resume"
+msgstr "Reluare Pachet Salarial"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.ui.menu,name:hr_contract_salary_payroll.hr_payroll_menu_contract_templates
+msgid "Templates"
+msgstr "Șabloane"
+
+#. module: hr_contract_salary_payroll
+#. odoo-javascript
+#: code:addons/hr_contract_salary_payroll/static/src/xml/brut2net_modal.xml:0
+#, python-format
+msgid "The amounts are calculated  based on a full time permanent contract."
+msgstr ""
+"Sumele sunt calculate pe baza unui contract permanent cu normă întreagă."
+
+#. module: hr_contract_salary_payroll
+#. odoo-javascript
+#: code:addons/hr_contract_salary_payroll/static/src/xml/brut2net_modal.xml:0
+#, python-format
+msgid ""
+"There is no defined payroll structure for your contract. Please contact a "
+"responsible for more information."
+msgstr ""
+"Nu există o structură de salarizare definită pentru contractul dvs. Vă rugăm"
+" să contactați un responsabil pentru mai multe informații."
+
+#. module: hr_contract_salary_payroll
+#. odoo-python
+#: code:addons/hr_contract_salary_payroll/controllers/main.py:0
+#, python-format
+msgid ""
+"This is the gross calculated for the current month with a total of %s hours."
+msgstr ""
+"Acesta este salariul brut calculat pentru luna curentă cu un total de %s "
+"ore."
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_resume__value_type
+msgid "Value Type"
+msgstr "Tip Valoare"
+
+#. module: hr_contract_salary_payroll
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.salary_package_sidebar_payroll
+msgid "Working Schedule"
+msgstr "Program de lucru"

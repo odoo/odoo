@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_batch_payment_rejection_form" model="ir.ui.view">
+            <field name="name">account.batch.payment.rejection.form</field>
+            <field name="model">account.batch.payment.rejection</field>
+            <field name="arch" type="xml">
+                <form string="Batch Payment">
+                    <!-- Invisible fields -->
+                    <field name="in_reconcile_payment_ids" invisible="1"/>
+                    <field name="rejected_payment_ids" invisible="1"/>
+
+                    <div>
+                        <span invisible="1 not in nb_batch_payment_ids"><field name="nb_rejected_payment_ids"/> payments from the batch have been removed.</span>
+                        <span invisible="1 in nb_batch_payment_ids"><field name="nb_rejected_payment_ids"/> payments from <field name="nb_batch_payment_ids"/> batches have been removed.</span>
+                        <br/>
+                        <span>Do you want to cancel payments to retry them later or keep the batch open with unprocess payments, if you expect them later.</span>
+                    </div>
+                    <footer>
+                        <button string="Cancel Payments"
+                                name="button_cancel_payments"
+                                type="object"
+                                class="btn btn-primary"
+                                close="1"
+                                data-hotkey="q"/>
+                        <button string="Expect Payments Later"
+                                name="button_continue"
+                                type="object"
+                                class="btn btn-secondary"
+                                close="1"
+                                data-hotkey="l"/>
+                        <button string="Cancel"
+                                name="button_cancel"
+                                type="object"
+                                class="btn btn-secondary"
+                                close="1"
+                                data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

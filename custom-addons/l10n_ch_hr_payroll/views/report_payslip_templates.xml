@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_payslip_ch" inherit_id="hr_payroll.report_payslip" primary="True">
+    <xpath expr="//t[@t-call='web.external_layout']" position="before">
+        <t t-set="company" t-value="o.company_id.sudo()"/>
+    </xpath>
+
+    <xpath expr="//table[@name='employee-infos']" position="replace">
+        <table name="employee-infos" id="employee_info_table_1" class="table table-sm table-bordered w-25">
+            <tr id="employee_info_line_1">
+                <td class="w-25"><strong><span t-field="o.employee_id"/></strong></td>
+            </tr>
+            <tr id="employee_info_line_2">
+                <td><span t-field="o.employee_id.private_street"/></td>
+            </tr>
+            <tr id="employee_info_line_3">
+                <td><span t-field="o.employee_id.private_city"/> <span t-field="o.employee_id.private_zip"/></td>
+            </tr>
+            <tr id="employee_info_line_4">
+                <td><span t-field="o.employee_id.private_country_id.name"/></td>
+            </tr>
+        </table>
+    </xpath>
+
+    <xpath expr="//t[@t-call='web.external_layout']" position="attributes">
+        <attribute name="t-call">web.external_layout_standard</attribute>
+    </xpath>
+
+    <xpath expr="//th[@id='line_header_name']" position="before">
+        <th id="ch_line_header_code"></th>
+    </xpath>
+
+    <xpath expr="//td[@id='worked_days_name']" position="before">
+        <td></td>
+    </xpath>
+
+    <xpath expr="//th[@id='line_header_hours']" position="attributes">
+        <attribute name="class">text-end</attribute>
+    </xpath>
+
+    <xpath expr="//th[@id='line_header_days']" position="attributes">
+        <attribute name="class">text-end</attribute>
+    </xpath>
+
+    <xpath expr="//td[@id='worked_days_hours']" position="attributes">
+        <attribute name="class">text-end</attribute>
+    </xpath>
+
+    <xpath expr="//td[@id='worked_days_days']" position="attributes">
+        <attribute name="class">text-end</attribute>
+    </xpath>
+
+    <xpath expr="//t[@id='payslip_lines']" position="before">
+        <thead class="o_black_border">
+            <tr>
+                <th id="ch_line_header_code">Code</th>
+                <th id="ch_line_header_name">Name</th>
+                <th id="ch_line_header_quantity" class="text-end">Quantity</th>
+                <th id="ch_line_header_rate" class="text-end">Rate</th>
+                <th id="ch_line_header_amount" class="text-end">Amount</th>
+            </tr>
+        </thead>
+    </xpath>
+
+    <xpath expr="//td[@id='payslip_line_quantity']" position="after">
+        <xpath expr="//td[@id='payslip_line_rate']" position="move"/>
+    </xpath>
+
+    <xpath expr="//td[@id='payslip_line_name']" position="before">
+        <td><span t-field="line.salary_rule_id.l10n_ch_code"/></td>
+    </xpath>
+
+    <xpath expr="//td[@id='payslip_line_rate']" position="attributes">
+        <attribute name="class">text-end</attribute>
+    </xpath>
+
+    <xpath expr="//td[@id='payslip_line_rate']" position="inside">
+        <span t-if="line.rate != 100" t-field="line.rate"/>
+    </xpath>
+
+    <xpath expr="//td[@id='payslip_line_quantity']" position="replace">
+        <td id="payslip_line_amount" class="text-end">
+            <span t-field="line.amount"/>
+        </td>
+    </xpath>
+</template>
+
+<template id="report_payslip_ch_lang">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="o" t-value="o.with_context(lang=o.employee_id.lang or o.env.lang)"/>
+            <t t-call="l10n_ch_hr_payroll.report_payslip_ch" t-lang="o.env.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

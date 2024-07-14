@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account.sepa.direct.debit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='collect_customer_payment']/div[hasclass('content-group')]" position="replace">
+                <div class="content-group" invisible="not module_account_sepa_direct_debit">
+                    <div class="row">
+                        <label for="sdd_creditor_identifier" class="col-lg-3 o_light_label"/>
+                        <field name="sdd_creditor_identifier" class="oe_inline"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

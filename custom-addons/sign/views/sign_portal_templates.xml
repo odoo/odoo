@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_home_menu_sign" name="Portal layout : sign menu entries" inherit_id="portal.portal_breadcrumbs" priority="60">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'signatures' or my_sign_item" t-attf-class="breadcrumb-item #{'active ' if not sign_requests else ''}">
+                <a t-if="my_sign_item" t-attf-href="/my/signatures?{{ keep_query() }}">Signatures</a>
+                <t t-else="">Signatures</t>
+            </li>
+            <li t-if="my_sign_item" class="breadcrumb-item active">
+                <span t-field="my_sign_item.reference"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_sign" name="Show Signatures" customize_show="True" inherit_id="portal.portal_my_home" priority="60">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_alert_category_enable" t-value="True"/>
+            <t t-set="portal_client_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_alert_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="bg_color" t-value="'alert alert-primary'"/>
+                <t t-set="title">Document(s) to sign</t>
+                <t t-set="url" t-value="'/my/signatures'"/>
+                <t t-set="placeholder_count" t-value="'to_sign_count'"/>
+                <t t-set="show_count" t-value="True"/>
+            </t>
+        </div>
+        <div id="portal_client_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/purchase/static/src/img/rfq.svg'"/>
+                <t t-set="title">Documents</t>
+                <t t-set="text">Access your signed documents</t>
+                <t t-set="url" t-value="'/my/signatures'"/>
+                <t t-set="placeholder_count" t-value="'sign_count'"/>
+            </t>
+        </div>
+    </template>
+
+    <template id="sign_portal_my_requests" name="My Signatures">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Signatures</t>
+            </t>
+                <div t-if="not grouped_signatures" class="alert alert-warning" role="alert">
+                    There are no signatures request.
+                </div>
+            <t t-if="grouped_signatures" t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>Document</th>
+                        <th class="text-center">Signature Date</th>
+                        <th class="text-end">Status</th>
+                    </tr>
+                </thead>
+                <t t-foreach="grouped_signatures" t-as="signature_requests">
+                    <tbody>
+                        <tr t-if="not groupby =='none'" class="table-light">
+                            <th t-if="groupby != 'none'" colspan="3">
+                                <span t-field="signature_requests[0].sudo().state"/>
+                            </th>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr t-foreach="signature_requests" t-as="sign_request_item">
+                            <td>
+                                <a t-attf-href="/my/signature/#{sign_request_item.id}?{{ keep_query() }}">
+                                    <t t-esc="sign_request_item.reference"/>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <span t-field="sign_request_item.signing_date"/>
+                            </td>
+                            <td class="text-end lh-1">
+                                <t t-if="sign_request_item.ignored">
+                                    <span class="badge rounded-pill text-bg-light">Ignored</span>
+                                </t>
+                                <span class="badge rounded-pill text-bg-info"
+                                      t-field="sign_request_item.sudo().sign_request_id.state"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </t>
+            </t>
+        </t>
+    </template>
+    <template id="sign_portal_my_request" name="My Signature">
+        <t t-call="portal.portal_layout">
+            <t t-set="o_portal_fullwidth_alert" groups="sign.access_sign_request_item_all">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" t-value="'/web#model=sign.request&amp;id=%s&amp;view_type=form' % (sign.request.id)"/>
+                </t>
+            </t>
+            <t t-call="portal.portal_record_layout">
+                <t t-set="card_header">
+                    <h3 class="mb-1 mb-md-0">
+                        <span t-field="my_sign_item.reference"/>
+                        <span t-field="my_sign_item.sign_request_id.state" class=" badge rounded-pill bg-info-light text-info fs-6 fw-normal"
+                            title="Current status of the signature request"/>
+                    </h3>
+                </t>
+                <t t-set="card_body">
+                    <div class="o_sign_portal">
+                        <div class="row mb-3" t-if="my_sign_item.partner_id">
+                            <div class="col-12 col-md-6">
+                                <p class="o_portal_category text-muted">Summary</p>
+                                <div>
+                                    <strong>Creation Date:</strong>
+                                    <span t-field="my_sign_item.create_date" t-options="{'widget': 'date'}"/>
+                                </div>
+                                <div>
+                                    <t t-foreach="my_sign_item.sign_request_id.request_item_ids" t-as="sign">
+                                        <div class="_status clearfix" t-att-data-id="sign.id">
+                                            <t t-if="sign.state == 'sent'">
+                                                <b><t t-esc="sign.partner_id.name if sign.partner_id else 'Public user'"/></b>
+                                                <t t-if="sign.role_id"><t t-esc="' - ' + sign.role_id.name"/></t> - <em>
+                                                    Waiting Signature<t t-if="(my_sign_item == sign) and sign.ignored"> (Ignored)</t>
+                                                </em>
+                                                <em t-if="not sign.is_mail_sent"><br/>(the email access has not been sent)</em>
+                                            </t>
+                                            <t t-if="sign.state == 'canceled'">
+                                                <b><t t-esc="sign.partner_id.name"/></b>
+                                                <t t-if="sign.role_id"><t t-esc="' - ' + sign.role_id.name"/></t> - <em>Canceled</em>
+                                            </t>
+                                            <t t-if="sign.state == 'refused'">
+                                                <b><t t-esc="sign.partner_id.name"/></b>
+                                                <t t-if="sign.role_id"><t t-esc="' - ' + sign.role_id.name"/></t> - <em>Refused on <span t-field="sign.signing_date"></span></em>
+                                            </t>
+                                            <t t-if="sign.state == 'completed'">
+                                                <b><t t-esc="sign.partner_id.name"/></b>
+                                                <t t-if="sign.role_id"><t t-esc="' - ' + sign.role_id.name"/></t> - <em>Signed on <span t-field="sign.signing_date"></span></em>
+                                            </t>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6" t-if="my_sign_item.partner_id">
+                                <p class="o_portal_category text-muted">Your Information</p>
+                                <div class="d-flex justify-content-start align-items-center gap-3 mb-2">
+                                    <img class="o_portal_contact_img rounded"
+                                    t-att-src="image_data_uri(my_sign_item.partner_id.avatar_1024)" alt="Contact" width="50"/>
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h5 class="mb-0" t-out="my_sign_item.partner_id.name"/>
+                                        <p class="mb-0 text-muted" t-out="my_sign_item.partner_id.company_name"/>
+                                    </div>
+                                </div>
+                                <div t-field="my_sign_item.partner_id" t-options="{'widget': 'contact', 'fields': ['email', 'phone']}"/>
+                            </div>
+                        </div>
+                        <div class="o_sign_button">
+                            <a t-att-href="url" class="btn btn-primary btn-block">
+                                <div class="o_sign_button_content" t-if="my_sign_item.state == 'completed'">View Document</div>
+                                <div class="o_sign_button_content" t-else="">Sign</div>
+                            </a>
+                        </div>
+                    </div>
+                </t>
+            </t>
+            <hr/>
+            <div>
+                <h3>Communication history</h3>
+                <t t-call="portal.message_thread">
+                    <t t-set="object" t-value="my_sign_item.sign_request_id"/>
+                    <t t-set="token" t-value="my_sign_item.sign_request_id.access_token"/>
+                    <t t-set="pid" t-value="pid"/>
+                    <t t-set="hash" t-value="hash"/>
+                </t>
+            </div>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,958 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* industry_fsm
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tomáš Píšek, 2024
+# Jakub Krkoška, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Jakub Krkoška, 2024\n"
+"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__nbr
+msgid "# of Tasks"
+msgstr "# Počet úloh"
+
+#. module: industry_fsm
+#: model:mail.template,body_html:industry_fsm.mail_template_data_intervention_details
+msgid ""
+"<div>\n"
+"    <t t-set=\"date_begin\" t-value=\"format_datetime(object.planned_date_begin, tz=object.partner_id.tz, lang_code=object.partner_id.lang)\"></t>\n"
+"\n"
+"    <t t-set=\"date_end\" t-value=\"format_datetime(object.date_deadline, tz=object.partner_id.tz, lang_code=object.partner_id.lang)\"></t>\n"
+"\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">customer</t>,<br><br>\n"
+"    <t t-if=\"date_begin and date_end\">\n"
+"        Your <t t-out=\"object.name or ''\">Boiler maintenance</t> intervention is scheduled from the <t t-out=\"date_begin or ''\">05/31/2021 12:30:00</t> to the <t t-out=\"date_end or ''\">05/31/2021 14:30:00</t>.\n"
+"    </t>\n"
+"    <t t-else=\"\">\n"
+"        Your <t t-out=\"object.name or ''\">Boiler maintenance</t> intervention is scheduled.\n"
+"    </t>\n"
+"    <br><br>\n"
+"    Best regards,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.portal_task_sign_button
+msgid "<i class=\"fa fa-check me-1\"/>Sign"
+msgstr "<i class=\"fa fa-check me-1\"/>Podpísať"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+msgid ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer phone number will also be "
+"updated.\" invisible=\"not partner_id or not is_task_phone_update\"/>"
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.portal_my_task
+msgid "<strong>Planned Date:</strong>"
+msgstr "<strong>Plánovaný dátum:</strong>"
+
+#. module: industry_fsm
+#: model:ir.model.constraint,message:industry_fsm.constraint_project_project_company_id_required_for_fsm_project
+msgid "A fsm project must be company restricted"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__active
+msgid "Active"
+msgstr "Aktívne"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.mail_activity_plan_menu_config_task
+msgid "Activity Plans"
+msgstr "Plány aktivít"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_config_activity_type
+msgid "Activity Types"
+msgstr "Typy aktivít"
+
+#. module: industry_fsm
+#: model:res.groups,name:industry_fsm.group_fsm_manager
+msgid "Administrator"
+msgstr "Správca"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_all_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_all_tasks_root
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_all_tasks_todo
+msgid "All Tasks"
+msgstr "Všetky úlohy"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__allocated_hours
+msgid "Allocated Time"
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_user_action_report_fsm
+msgid ""
+"Analyze the progress of your tasks and the performance of your workers."
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__user_ids
+msgid "Assignees"
+msgstr "Pridelené osoby"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__date_assign
+msgid "Assignment Date"
+msgstr "Dátum pridelenia"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__rating_avg
+msgid "Average Rating"
+msgstr "Priemerné hodnotenie"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__dependent_ids
+msgid "Block"
+msgstr "Blokovať"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.project_task_menu_planning_by_project_fsm
+msgid "By Project"
+msgstr "Podľa projektu"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.project_task_menu_planning_by_user_fsm
+msgid "By User"
+msgstr "Podľa pouźívateľa"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__partner_city
+msgid "City"
+msgstr "Mesto"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.portal_task_sign_button
+msgid "Close"
+msgstr "Zatvoriť"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_res_company
+msgid "Companies"
+msgstr "Spoločnosti"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__company_id
+msgid "Company"
+msgstr "Spoločnosť"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavenia konfigurácie"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_settings
+msgid "Configuration"
+msgstr "Konfigurácia"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_stop_timer_wizard_form
+msgid "Confirm"
+msgstr "Potvrdiť"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid ""
+"Confirm the <b>time spent</b> on your task. <i>Tip: note that the duration "
+"has automatically been rounded to 15 minutes.</i>"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_project_view_form_simplified_footer_fsm
+msgid "Create"
+msgstr "Vytvoriť"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__create_date
+msgid "Create Date"
+msgstr "Dátum vytvorenia"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task_create_timesheet
+msgid "Create Timesheet from task"
+msgstr "Vytvorte pracovný výkaz z úlohy"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.open_create_project_fsm
+msgid "Create a Project"
+msgstr "Vytvorte projekt"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.res_config_settings_view_form
+msgid "Create custom worksheet templates"
+msgstr ""
+
+#. module: industry_fsm
+#: model:res.groups,name:industry_fsm.group_fsm_quotation_from_task
+msgid "Create new quotations directly from the tasks"
+msgstr "Vytvárajte nové cenové ponuky priamo z úloh"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.res_config_settings_view_form
+msgid "Create new quotations directly from your tasks"
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_project_action_only_fsm
+msgid ""
+"Create projects to organize your tasks and define a different workflow for "
+"each project."
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__create_uid
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__create_uid
+msgid "Created by"
+msgstr "Vytvoril"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__create_date
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__create_date
+msgid "Created on"
+msgstr "Vytvorené"
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/models/project_task.py:0
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__partner_id
+#, python-format
+msgid "Customer"
+msgstr "Zákazník"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_reporting_customer_ratings
+msgid "Customer Ratings"
+msgstr "Hodnotenie zákazníkov"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__delay_endings_days
+msgid "Days to Deadline"
+msgstr "Dni do termínu"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__date_deadline
+msgid "Deadline"
+msgstr "Uzávierka"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__description
+msgid "Description"
+msgstr "Popis"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_project_view_form_simplified_footer_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_partner_address_form_industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_stop_timer_wizard_form
+msgid "Discard"
+msgstr "Zrušiť"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__display_enabled_conditions_count
+msgid "Display Enabled Conditions Count"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__display_mark_as_done_primary
+msgid "Display Mark As Done Primary"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__display_mark_as_done_secondary
+msgid "Display Mark As Done Secondary"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__display_name
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__display_name
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__display_name
+msgid "Display Name"
+msgstr "Zobrazovaný názov"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__display_satisfied_conditions_count
+msgid "Display Satisfied Conditions Count"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model.fields,help:industry_fsm.field_project_project__is_fsm
+#: model:ir.model.fields,help:industry_fsm.field_project_task__is_fsm
+msgid ""
+"Display tasks in the Field Service module and allow planning with start/end "
+"dates."
+msgstr ""
+"Zobrazte úlohy v module Riadenie pracovníkov v teréne a umožnite plánovanie "
+"s dátumami začatia a ukončenia."
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/models/project_task.py:0
+#, python-format
+msgid "Do you want to stop the running timers?"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__date_end
+msgid "Ending Date"
+msgstr "Dátum ukončenia"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_res_config_settings__group_industry_fsm_quotations
+msgid "Extra Quotations"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_report_project_task_user_fsm
+msgid "FSM Tasks Analysis"
+msgstr ""
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/models/project_project.py:0
+#: code:addons/industry_fsm/models/res_company.py:0
+#: model:ir.model.fields,field_description:industry_fsm.field_project_project__is_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__is_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_root
+#: model:project.project,name:industry_fsm.fsm_project
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:industry_fsm.res_config_settings_view_form
+#, python-format
+msgid "Field Service"
+msgstr "Manažment pracovníkov v teréne"
+
+#. module: industry_fsm
+#: model:mail.template,name:industry_fsm.mail_template_data_intervention_details
+msgid "Field Service: Intervention Scheduled"
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_map
+msgid "Find here your itinerary for today's tasks."
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm
+msgid "Find here your upcoming tasks for the next few days."
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Future"
+msgstr "Budúcnosť"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Future Activities"
+msgstr "Budúce aktivity"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid ""
+"Give it a <b>title</b> <i>(e.g. Boiler maintenance, Air-conditioning "
+"installation, etc.).</i>"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__effective_hours
+msgid "Hours Spent"
+msgstr "Minuté hodiny"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__id
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__id
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__id
+msgid "ID"
+msgstr "ID"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__message_is_follower
+msgid "Is Follower"
+msgstr "Odberateľ"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__is_task_phone_update
+msgid "Is Task Phone Update"
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.res_config_settings_view_form
+msgid ""
+"Keep track of the products used for your tasks, and invoice your time and "
+"material to your customers"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__date_last_stage_update
+msgid "Last Stage Update"
+msgstr "Aktualizácia poslednej fázy"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__write_uid
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__write_uid
+msgid "Last Updated by"
+msgstr "Naposledy upravoval"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__write_date
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__write_date
+msgid "Last Updated on"
+msgstr "Naposledy upravované"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Late Activities"
+msgstr "Omeškané aktivity"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid "Launch the timer to <b>track the time spent</b> on your task."
+msgstr ""
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid ""
+"Let's <b>mark your task as done!</b> <i>Tip: when doing so, your stock will "
+"automatically be updated, and your task will be closed.</i>"
+msgstr ""
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid "Let's create your first <b>task</b>."
+msgstr "Poďme vytvoriť vašu prvú <b>úlohu</b>."
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__line_ids
+msgid "Line"
+msgstr "Riadok"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_view_form_inherit
+msgid "Manage tasks in the Field Service module"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_fsm_map
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_tasks_map
+msgid "Map"
+msgstr "Mapa"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+msgid "Mark as done"
+msgstr "Označiť ako hotovo"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_ir_ui_menu
+msgid "Menu"
+msgstr "Menu"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__milestone_id
+msgid "Milestone"
+msgstr "Míľnik"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_project__allow_milestones
+msgid "Milestones"
+msgstr "Míľniky"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_tasks_menu
+msgid "My Tasks"
+msgstr "Moje úlohy"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_partner_address_form_industry_fsm
+msgid "Navigate To"
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_user_action_report_fsm
+msgid "No data yet!"
+msgstr "Zatiaľ žiadne údaje!"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_project_action_only_fsm
+msgid "No projects found. Let's create one!"
+msgstr "Nenašli sa žiadne projekty. Poďme si jeden vytvoriť!"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_type_action_fsm
+msgid "No stages found. Let's create one!"
+msgstr "Nenašli sa žiadne štádiá. Poďme si jedeno vytvoriť!"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_all_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_map
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_planning_groupby_project
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_planning_groupby_user
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_to_schedule_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_tasks_action_fsm
+msgid "No tasks found. Let's create one!"
+msgstr "Neboli nájdené žiadne úlohy. Vytvorme si jeden!"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__overtime
+msgid "Overtime"
+msgstr "Nadčasy"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__parent_id
+msgid "Parent Task"
+msgstr "Nadradená úloha"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__personal_stage_type_ids
+msgid "Personal Stage"
+msgstr "Osobné štádium"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__partner_phone
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_map_view_fsm
+msgid "Phone"
+msgstr "Telefón"
+
+#. module: industry_fsm
+#: model:project.task.type,name:industry_fsm.planning_project_stage_1
+msgid "Planned"
+msgstr "Plánované"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_list_fsm
+msgid "Planned Date"
+msgstr "Plánovaný dátum"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_planning
+msgid "Planning"
+msgstr "Plánovanie"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_fsm_planning_groupby_project
+msgid "Planning by Project"
+msgstr "Plánovanie podľa projektu"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_fsm_planning_groupby_user
+msgid "Planning by User"
+msgstr "Plánovanie používateľom"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__priority
+msgid "Priority"
+msgstr "Priority"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__progress
+msgid "Progress"
+msgstr "Priebeh"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_project
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__project_id
+msgid "Project"
+msgstr "Projekt"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_project_action_only_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_settings_project
+msgid "Projects"
+msgstr "Projekt"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Properties"
+msgstr "Vlastnosti"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__rating_last_value
+msgid "Rating (/5)"
+msgstr "Hodnotenie (/5)"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid ""
+"Ready to <b>manage your onsite interventions</b>? <i>Click Field Service to "
+"start.</i>"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__remaining_hours
+msgid "Remaining Hours"
+msgstr "Zostávajúce hodiny"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__remaining_hours_percentage
+msgid "Remaining Hours Percentage"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_reporting
+msgid "Reporting"
+msgstr "Prehľady"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_planning_groupby_project
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_planning_groupby_user
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_to_schedule_fsm
+msgid "Schedule your tasks and assign them to your workers."
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.report_project_task_user_fsm_view_search
+msgid "Search Planning"
+msgstr ""
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid "Select the <b>customer</b> for your task."
+msgstr ""
+
+#. module: industry_fsm
+#: model:mail.template,description:industry_fsm.mail_template_data_intervention_details
+msgid ""
+"Set this template on a project's stage to automate email when tasks reach "
+"stages"
+msgstr ""
+"Nastavte túto šablónu vo fáze projektu na automatizáciu e-mailu, keď úlohy "
+"dosiahnu fázy"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.res_config_settings_action_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_settings_res_config
+msgid "Settings"
+msgstr "Nastavenia"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Show all records which has next action date is before today"
+msgstr "Zobraz všetky záznamy, ktorých následná aktivita je pred dnešným dňom"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.portal_task_sign_button
+msgid "Sign"
+msgstr "E-podpis"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.portal_task_sign_button
+msgid "Sign Task"
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_stop_timer_wizard_form
+msgid ""
+"Some employees are still running their timer for this task. Are you sure you"
+" want to continue?"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__stage_id
+msgid "Stage"
+msgstr "Štádium"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_type_action_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_settings_stage
+msgid "Stages"
+msgstr "Štádia"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__planned_date_begin
+msgid "Start date"
+msgstr "Dátum začiatku"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__state
+msgid "State"
+msgstr "Štát"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid "Stop the <b>timer</b> when you are done."
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.report_project_task_user_fsm_view_tree
+msgid "Sum of Effective Hours"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__tag_ids
+#: model:ir.ui.menu,name:industry_fsm.menu_project_tags_act
+msgid "Tags"
+msgstr "Tagy"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__task_id
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__name
+msgid "Task"
+msgstr "Požiadavka"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_project__allow_task_dependencies
+msgid "Task Dependencies"
+msgstr "Závislosti úloh"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__fsm_done
+msgid "Task Done"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task_recurrence
+msgid "Task Recurrence"
+msgstr "Opakovanie úlohy"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task_type
+msgid "Task Stage"
+msgstr "Fáza úlohy"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task_stop_timers_wizard
+msgid "Task stop running timers confirmation wizard"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task_stop_timers_wizard_line
+msgid "Task stop running timers confirmation wizard line"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_tasks_action_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__task_id
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_tasks_kanban
+#: model:project.project,label_tasks:industry_fsm.fsm_project
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_calendar_fsm
+msgid "Tasks"
+msgstr "Úlohy"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_user_action_report_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_reporting_task_analysis
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_graph
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_pivot
+#: model_terms:ir.ui.view,arch_db:industry_fsm.report_project_task_user_fsm_view_tree
+msgid "Tasks Analysis"
+msgstr "Analýza úloh"
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/models/project_task.py:0
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+#, python-format
+msgid "Time"
+msgstr "Čas"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.timesheet_view_form
+msgid "Time Spent"
+msgstr "Strávený čas"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_res_config_settings__module_industry_fsm_sale
+msgid "Time and Material Invoicing"
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+msgid "Time recorded on this task"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.model.fields,help:industry_fsm.field_report_project_task_user_fsm__total_hours_spent
+msgid "Time spent on this task, including its sub-tasks."
+msgstr "Čas strávený touto úlohou vrátane jej čiastkových úloh."
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/models/project_task.py:0
+#, python-format
+msgid "Timer started at: %(date)s %(time)s"
+msgstr ""
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/wizard/project_task_create_timesheet.py:0
+#, python-format
+msgid "Timer stopped at: %(date)s %(time)s"
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.timesheet_view_form
+msgid "Timesheet"
+msgstr "Pracovné výkazy"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_to_schedule_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_all_tasks_schedule
+msgid "To Schedule"
+msgstr "Naplánovať"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "To Schedule/Assign"
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_all_fsm
+msgid ""
+"To get things done, plan activities and use the task status.<br>\n"
+"                Collaborate efficiently by chatting in real-time or via email."
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_tasks_action_fsm
+msgid ""
+"To get things done, use activities and status on tasks.<br>\n"
+"                Chat in real-time or by email to collaborate efficiently."
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Today"
+msgstr "Dnes"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Today Activities"
+msgstr "Dnešné aktivity"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__total_hours_spent
+msgid "Total Hours"
+msgstr "Celkom hodín"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_type_action_fsm
+msgid "Track the progress of your tasks from their creation to their closing."
+msgstr "Sledujte priebeh svojich úloh od ich vytvorenia až po ukončenie."
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Unread Messages"
+msgstr "Neprečítané správy"
+
+#. module: industry_fsm
+#: model:res.groups,name:industry_fsm.group_fsm_user
+msgid "User"
+msgstr "Užívateľ"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+msgid "View Itinerary"
+msgstr "Naviguj"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__wizard_id
+msgid "Wizard"
+msgstr "Sprievodca"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__working_days_open
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_graph
+msgid "Working Days to Assign"
+msgstr "Pracovné dni na pridelenie"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__working_days_close
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_graph
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_pivot
+msgid "Working Days to Close"
+msgstr "Pracovné dni do zatvorenia"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__working_hours_open
+msgid "Working Hours to Assign"
+msgstr "Pracovný čas na pridelenie"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__working_hours_close
+msgid "Working Hours to Close"
+msgstr "Pracovná doba do zatvorenia"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_res_config_settings__module_industry_fsm_report
+msgid "Worksheets"
+msgstr ""
+
+#. module: industry_fsm
+#: model:mail.template,subject:industry_fsm.mail_template_data_intervention_details
+msgid ""
+"Your intervention is scheduled {{ object.planned_date_begin and "
+"object.date_deadline and 'from the ' + "
+"format_datetime(object.planned_date_begin, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) + ' to the ' + "
+"format_datetime(object.date_deadline, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) or '' }}"
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.quick_create_task_form_fsm_inherited
+msgid "e.g. Boiler replacement"
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+msgid "is FSM?"
+msgstr ""
+
+#. module: industry_fsm
+#: model:ir.actions.server,name:industry_fsm.fsm_customer_ratings_server_action
+msgid "project.project.fsm"
+msgstr ""
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_pivot
+msgid "working days to assign"
+msgstr ""

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_kp_payroll_fetch_payrun" model="ir.actions.server">
+        <field name="name">Fetch Payruns</field>
+        <field name="model_id" ref="base_setup.model_res_config_settings"/>
+        <field name="state">code</field>
+        <field name="code">
+action = records.action_kp_payroll_fetch_payrun()
+        </field>
+    </record>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_au_keypay</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='account_reports_settings']" position="after">
+                <block title="Australian Localization" id="l10n_au" groups="account.group_account_manager" invisible="country_code != 'AU'">
+                    <field name="country_code" invisible="1" />
+                    <setting id="l10n_au_keypay">
+                        <div class="row">
+                            <label for="l10n_au_kp_api_key" class="col-lg-4"/>
+                            <field name="l10n_au_kp_api_key"/>
+                        </div>
+                        <div class="row">
+                            <label for="l10n_au_kp_base_url" class="col-lg-4"/>
+                            <field name="l10n_au_kp_base_url"/>
+                        </div>
+                    </setting>
+                    <setting id="l10n_au_keypay_company" help="Allows to synchronize Employment Hero payroll for this company" company_dependent="1">
+                        <field name="l10n_au_kp_enable"/>
+                        <div class="content-group" invisible="not l10n_au_kp_enable">
+                            <div class="mt8">
+                                <button name="%(action_kp_payroll_fetch_payrun)d" type="action" string="Fetch Payruns Manually" class="oe_link" id="action_kp_payroll_fetch_payrun"/>
+                            </div>
+                        </div>
+                        <div class="content-group mt8" invisible="not l10n_au_kp_enable">
+                            <div class="row">
+                                <label for="l10n_au_kp_identifier" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_au_kp_identifier"/>
+                            </div>
+                            <div class="row">
+                                <label for="l10n_au_kp_lock_date" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_au_kp_lock_date"/>
+                            </div>
+                            <div class="row">
+                                <label for="l10n_au_kp_journal_id" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_au_kp_journal_id"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

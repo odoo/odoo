@@ -1,0 +1,987 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* industry_fsm
+# 
+# Translators:
+# Wil Odoo, 2023
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# 何彬 <vnsoft.he@gmail.com>, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2023\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__nbr
+msgid "# of Tasks"
+msgstr "#  任务"
+
+#. module: industry_fsm
+#: model:mail.template,body_html:industry_fsm.mail_template_data_intervention_details
+msgid ""
+"<div>\n"
+"    <t t-set=\"date_begin\" t-value=\"format_datetime(object.planned_date_begin, tz=object.partner_id.tz, lang_code=object.partner_id.lang)\"></t>\n"
+"\n"
+"    <t t-set=\"date_end\" t-value=\"format_datetime(object.date_deadline, tz=object.partner_id.tz, lang_code=object.partner_id.lang)\"></t>\n"
+"\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">customer</t>,<br><br>\n"
+"    <t t-if=\"date_begin and date_end\">\n"
+"        Your <t t-out=\"object.name or ''\">Boiler maintenance</t> intervention is scheduled from the <t t-out=\"date_begin or ''\">05/31/2021 12:30:00</t> to the <t t-out=\"date_end or ''\">05/31/2021 14:30:00</t>.\n"
+"    </t>\n"
+"    <t t-else=\"\">\n"
+"        Your <t t-out=\"object.name or ''\">Boiler maintenance</t> intervention is scheduled.\n"
+"    </t>\n"
+"    <br><br>\n"
+"    Best regards,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
+msgstr ""
+"<div>\n"
+"   <t t-set=\"date_begin\" t-value=\"format_datetime(object.planned_date_begin, tz=object.partner_id.tz, lang_code=object.partner_id.lang)\"></t>\n"
+"\n"
+"    <t t-set=\"date_end\" t-value=\"format_datetime(object.date_deadline, tz=object.partner_id.tz, lang_code=object.partner_id.lang)\"></t>\n"
+"\n"
+"    亲爱的<t t-out=\"object.partner_id.name or 'customer'\">顾客</t><br><br>\n"
+"   <t t-if=\"date_begin and date_end\">\n"
+"        您的<t t-out=\"object.name or ''\">锅炉维护</t>工作定于<t t-out=\"date_begin or ''\">2021 年 5 月 31 日 12:30:00</t>至<t t-out=\"date_end or ''\">2021 年 5 月 31 日 14</t>:<t t-out=\"date_begin or ''\">30:00</t>。\n"
+"   </t>\n"
+"   <t t-else=\"\">\n"
+"        您的<t t-out=\"object.name or ''\">锅炉维护</t>干预计划。\n"
+"   </t>\n"
+"   <br><br>\n"
+"    致以最诚挚的问候\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>米歇尔 管理员</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.portal_task_sign_button
+msgid "<i class=\"fa fa-check me-1\"/>Sign"
+msgstr "<i class=\"fa fa-check me-1\"/>电子签"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+msgid ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer phone number will also be "
+"updated.\" invisible=\"not partner_id or not is_task_phone_update\"/>"
+msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer phone number will also be "
+"updated.\" invisible=\"not partner_id or not is_task_phone_update\"/>"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.portal_my_task
+msgid "<strong>Planned Date:</strong>"
+msgstr "<strong>计划日期：</strong>"
+
+#. module: industry_fsm
+#: model:ir.model.constraint,message:industry_fsm.constraint_project_project_company_id_required_for_fsm_project
+msgid "A fsm project must be company restricted"
+msgstr "FSM 项目必须受公司限制"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__active
+msgid "Active"
+msgstr "已启用"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.mail_activity_plan_menu_config_task
+msgid "Activity Plans"
+msgstr "活动计划"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_config_activity_type
+msgid "Activity Types"
+msgstr "活动类型"
+
+#. module: industry_fsm
+#: model:res.groups,name:industry_fsm.group_fsm_manager
+msgid "Administrator"
+msgstr "管理员"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_all_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_all_tasks_root
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_all_tasks_todo
+msgid "All Tasks"
+msgstr "所有任务"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__allocated_hours
+msgid "Allocated Time"
+msgstr "已分配时间"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_user_action_report_fsm
+msgid ""
+"Analyze the progress of your tasks and the performance of your workers."
+msgstr "分析您的任务进度和您员工的表现。"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__user_ids
+msgid "Assignees"
+msgstr "受托人"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__date_assign
+msgid "Assignment Date"
+msgstr "指派日期"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__rating_avg
+msgid "Average Rating"
+msgstr "平均评价"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__dependent_ids
+msgid "Block"
+msgstr "阻塞"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.project_task_menu_planning_by_project_fsm
+msgid "By Project"
+msgstr "按项目"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.project_task_menu_planning_by_user_fsm
+msgid "By User"
+msgstr "按 用户"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__partner_city
+msgid "City"
+msgstr "城市"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.portal_task_sign_button
+msgid "Close"
+msgstr "关闭"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__company_id
+msgid "Company"
+msgstr "公司"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设置"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_settings
+msgid "Configuration"
+msgstr "配置"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_stop_timer_wizard_form
+msgid "Confirm"
+msgstr "确认"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid ""
+"Confirm the <b>time spent</b> on your task. <i>Tip: note that the duration "
+"has automatically been rounded to 15 minutes.</i>"
+msgstr "确认你的任务<b>所花费的时间</b>。<i>提示：注意，持续时间已自动四舍五入为15分钟。</i>"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_res_partner
+msgid "Contact"
+msgstr "联系人"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_project_view_form_simplified_footer_fsm
+msgid "Create"
+msgstr "创建"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__create_date
+msgid "Create Date"
+msgstr "创建日期"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task_create_timesheet
+msgid "Create Timesheet from task"
+msgstr "从任务创建工时表"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.open_create_project_fsm
+msgid "Create a Project"
+msgstr "创建项目"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.res_config_settings_view_form
+msgid "Create custom worksheet templates"
+msgstr "创建自定义工作表模板"
+
+#. module: industry_fsm
+#: model:res.groups,name:industry_fsm.group_fsm_quotation_from_task
+msgid "Create new quotations directly from the tasks"
+msgstr "直接从任务中创建新的报价"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.res_config_settings_view_form
+msgid "Create new quotations directly from your tasks"
+msgstr "直接从你的任务中创建新的报价"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_project_action_only_fsm
+msgid ""
+"Create projects to organize your tasks and define a different workflow for "
+"each project."
+msgstr "创建项目来组织你的任务，并为每个项目定义不同的工作流程。"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__create_uid
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__create_date
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__create_date
+msgid "Created on"
+msgstr "创建日期"
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/models/project_task.py:0
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__partner_id
+#, python-format
+msgid "Customer"
+msgstr "客户"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_reporting_customer_ratings
+msgid "Customer Ratings"
+msgstr "客户点评"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__delay_endings_days
+msgid "Days to Deadline"
+msgstr "距离截止日期的天数"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__date_deadline
+msgid "Deadline"
+msgstr "截止日期"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__description
+msgid "Description"
+msgstr "描述"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_project_view_form_simplified_footer_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_partner_address_form_industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_stop_timer_wizard_form
+msgid "Discard"
+msgstr "丢弃"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__display_enabled_conditions_count
+msgid "Display Enabled Conditions Count"
+msgstr "显示已启用的条件计数"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__display_mark_as_done_primary
+msgid "Display Mark As Done Primary"
+msgstr "显示标记为完成主要"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__display_mark_as_done_secondary
+msgid "Display Mark As Done Secondary"
+msgstr "显示标记为已完成次要"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__display_name
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__display_name
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__display_satisfied_conditions_count
+msgid "Display Satisfied Conditions Count"
+msgstr "显示满意的条件计数"
+
+#. module: industry_fsm
+#: model:ir.model.fields,help:industry_fsm.field_project_project__is_fsm
+#: model:ir.model.fields,help:industry_fsm.field_project_task__is_fsm
+msgid ""
+"Display tasks in the Field Service module and allow planning with start/end "
+"dates."
+msgstr "在现场服务模块中显示任务，并允许用开始/结束日期进行规划。"
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/models/project_task.py:0
+#, python-format
+msgid "Do you want to stop the running timers?"
+msgstr "您想停止运行的计时器吗？"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__date_end
+msgid "Ending Date"
+msgstr "期末日期"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_res_config_settings__group_industry_fsm_quotations
+msgid "Extra Quotations"
+msgstr "额外引言"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_report_project_task_user_fsm
+msgid "FSM Tasks Analysis"
+msgstr "FSM任务分析"
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/models/project_project.py:0
+#: code:addons/industry_fsm/models/res_company.py:0
+#: model:ir.model.fields,field_description:industry_fsm.field_project_project__is_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__is_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_root
+#: model:project.project,name:industry_fsm.fsm_project
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:industry_fsm.res_config_settings_view_form
+#, python-format
+msgid "Field Service"
+msgstr "现场服务"
+
+#. module: industry_fsm
+#: model:mail.template,name:industry_fsm.mail_template_data_intervention_details
+msgid "Field Service: Intervention Scheduled"
+msgstr "现场服务：计划干预"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_map
+msgid "Find here your itinerary for today's tasks."
+msgstr "在这里，您可以找到今天的任务行程表。"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm
+msgid "Find here your upcoming tasks for the next few days."
+msgstr "在这里找到您未来几天的任务。"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Future"
+msgstr "未来"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Future Activities"
+msgstr "未来活动"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid ""
+"Give it a <b>title</b> <i>(e.g. Boiler maintenance, Air-conditioning "
+"installation, etc.).</i>"
+msgstr "给它一个<b>标题</b><i>（例如：锅炉维修、空调安装等。)</i>"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__effective_hours
+msgid "Hours Spent"
+msgstr "耗时"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__id
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__id
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__id
+msgid "ID"
+msgstr "ID"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__message_is_follower
+msgid "Is Follower"
+msgstr "是关注者"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__is_task_phone_update
+msgid "Is Task Phone Update"
+msgstr "任务手机是否更新"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.res_config_settings_view_form
+msgid ""
+"Keep track of the products used for your tasks, and invoice your time and "
+"material to your customers"
+msgstr "追踪你的任务所使用的产品，并向你的客户开具你的时间和材料的结算单"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__date_last_stage_update
+msgid "Last Stage Update"
+msgstr "最后阶段更新"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__write_uid
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__write_date
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__write_date
+msgid "Last Updated on"
+msgstr "上次更新日期"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Late Activities"
+msgstr "最近活动"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid "Launch the timer to <b>track the time spent</b> on your task."
+msgstr "启动计时器，<b>跟踪</b>你的任务<b>所花费的时间</b>。"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid ""
+"Let's <b>mark your task as done!</b> <i>Tip: when doing so, your stock will "
+"automatically be updated, and your task will be closed.</i>"
+msgstr "让我们<b>把您的任务标记为完成</b> <i>提示：这么做您的库存将自动更新，您的任务将被关闭。</i>"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid "Let's create your first <b>task</b>."
+msgstr "让我们创建您的第一个<b>任务</b>。"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__line_ids
+msgid "Line"
+msgstr "行"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_view_form_inherit
+msgid "Manage tasks in the Field Service module"
+msgstr "管理现场服务模块中的任务"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_fsm_map
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_tasks_map
+msgid "Map"
+msgstr "地图"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+msgid "Mark as done"
+msgstr "完成"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_ir_ui_menu
+msgid "Menu"
+msgstr "菜单"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__milestone_id
+msgid "Milestone"
+msgstr "里程碑"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_project__allow_milestones
+msgid "Milestones"
+msgstr "里程碑"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_tasks_menu
+msgid "My Tasks"
+msgstr "我的任务"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_partner_address_form_industry_fsm
+msgid "Navigate To"
+msgstr "导航到"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_user_action_report_fsm
+msgid "No data yet!"
+msgstr "还没有数据耶！"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_project_action_only_fsm
+msgid "No projects found. Let's create one!"
+msgstr "找不到项目。 让我们创建一个！"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_type_action_fsm
+msgid "No stages found. Let's create one!"
+msgstr "没有找到阶段。让我们创建一个!"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_all_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_map
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_planning_groupby_project
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_planning_groupby_user
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_to_schedule_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_tasks_action_fsm
+msgid "No tasks found. Let's create one!"
+msgstr "找不到任务。 让我们创建一个！"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__overtime
+msgid "Overtime"
+msgstr "延时"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__parent_id
+msgid "Parent Task"
+msgstr "上级任务"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__personal_stage_type_ids
+msgid "Personal Stage"
+msgstr "个人阶段"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__partner_phone
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_map_view_fsm
+msgid "Phone"
+msgstr "电话号码"
+
+#. module: industry_fsm
+#: model:project.task.type,name:industry_fsm.planning_project_stage_1
+msgid "Planned"
+msgstr "已安排"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_list_fsm
+msgid "Planned Date"
+msgstr "计划日期"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_planning
+msgid "Planning"
+msgstr "计划"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_fsm_planning_groupby_project
+msgid "Planning by Project"
+msgstr "按项目规划"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_fsm_planning_groupby_user
+msgid "Planning by User"
+msgstr "按用户计划"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__priority
+msgid "Priority"
+msgstr "优先级"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__progress
+msgid "Progress"
+msgstr "进度"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_project
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__project_id
+msgid "Project"
+msgstr "项目"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_project_action_only_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_settings_project
+msgid "Projects"
+msgstr "项目"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Properties"
+msgstr "权益"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__rating_last_value
+msgid "Rating (/5)"
+msgstr "评价 (/5)"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid ""
+"Ready to <b>manage your onsite interventions</b>? <i>Click Field Service to "
+"start.</i>"
+msgstr "准备好<b>管理你的现场干预</b>了吗？<i>点击现场服务开始。</i>"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__remaining_hours
+msgid "Remaining Hours"
+msgstr "剩余时数"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__remaining_hours_percentage
+msgid "Remaining Hours Percentage"
+msgstr "剩余工时百分比"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_reporting
+msgid "Reporting"
+msgstr "报告"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_planning_groupby_project
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_planning_groupby_user
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_to_schedule_fsm
+msgid "Schedule your tasks and assign them to your workers."
+msgstr "安排你的任务并把它们指派给你的工人。"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.report_project_task_user_fsm_view_search
+msgid "Search Planning"
+msgstr "搜索计划"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid "Select the <b>customer</b> for your task."
+msgstr "为您的任务选择<b>客户</b>。"
+
+#. module: industry_fsm
+#: model:mail.template,description:industry_fsm.mail_template_data_intervention_details
+msgid ""
+"Set this template on a project's stage to automate email when tasks reach "
+"stages"
+msgstr "在项目的阶段设置此模板，以便在任务到达阶段时自动发送电子邮件"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.res_config_settings_action_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_settings_res_config
+msgid "Settings"
+msgstr "设置"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Show all records which has next action date is before today"
+msgstr "显示下一操作日期早于今天的所有记录"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.portal_task_sign_button
+msgid "Sign"
+msgstr "签署"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.portal_task_sign_button
+msgid "Sign Task"
+msgstr "签署任务"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_stop_timer_wizard_form
+msgid ""
+"Some employees are still running their timer for this task. Are you sure you"
+" want to continue?"
+msgstr "有些员工仍在运行这个任务的计时器，您确定要继续吗？"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__stage_id
+msgid "Stage"
+msgstr "阶段"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_type_action_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_settings_stage
+msgid "Stages"
+msgstr "阶段"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__planned_date_begin
+msgid "Start date"
+msgstr "开始日期"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__state
+msgid "State"
+msgstr "状态"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid "Stop the <b>timer</b> when you are done."
+msgstr "完成后停止<b>计时</b>。"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.report_project_task_user_fsm_view_tree
+msgid "Sum of Effective Hours"
+msgstr "有效小时数合计"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__tag_ids
+#: model:ir.ui.menu,name:industry_fsm.menu_project_tags_act
+msgid "Tags"
+msgstr "标签"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__task_id
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__name
+msgid "Task"
+msgstr "任务"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_project__allow_task_dependencies
+msgid "Task Dependencies"
+msgstr "任务依赖"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__fsm_done
+msgid "Task Done"
+msgstr "任务完成"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task_recurrence
+msgid "Task Recurrence"
+msgstr "重新发起"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task_type
+msgid "Task Stage"
+msgstr "任务阶段"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task_stop_timers_wizard
+msgid "Task stop running timers confirmation wizard"
+msgstr "任务停止运行计时器确认向导"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task_stop_timers_wizard_line
+msgid "Task stop running timers confirmation wizard line"
+msgstr "任务停止运行计时器确认向导行"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_tasks_action_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__task_id
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_tasks_kanban
+#: model:project.project,label_tasks:industry_fsm.fsm_project
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_calendar_fsm
+msgid "Tasks"
+msgstr "任务"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_user_action_report_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_reporting_task_analysis
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_graph
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_pivot
+#: model_terms:ir.ui.view,arch_db:industry_fsm.report_project_task_user_fsm_view_tree
+msgid "Tasks Analysis"
+msgstr "任务分析"
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/models/project_task.py:0
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+#, python-format
+msgid "Time"
+msgstr "时间"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.timesheet_view_form
+msgid "Time Spent"
+msgstr "花费的时间"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_res_config_settings__module_industry_fsm_sale
+msgid "Time and Material Invoicing"
+msgstr "时间和材料开票"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+msgid "Time recorded on this task"
+msgstr "该任务的时间记录"
+
+#. module: industry_fsm
+#: model:ir.model.fields,help:industry_fsm.field_report_project_task_user_fsm__total_hours_spent
+msgid "Time spent on this task, including its sub-tasks."
+msgstr "用于此任务包括其子任务所花费的时间。"
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/models/project_task.py:0
+#, python-format
+msgid "Timer started at: %(date)s %(time)s"
+msgstr "计时器开始时间：%(date)s %(time)s"
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/wizard/project_task_create_timesheet.py:0
+#, python-format
+msgid "Timer stopped at: %(date)s %(time)s"
+msgstr "计时器结束时间：%(date)s %(time)s"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.timesheet_view_form
+msgid "Timesheet"
+msgstr "工时表"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_to_schedule_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_all_tasks_schedule
+msgid "To Schedule"
+msgstr "计划安排"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "To Schedule/Assign"
+msgstr "计划/指派"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_all_fsm
+msgid ""
+"To get things done, plan activities and use the task status.<br>\n"
+"                Collaborate efficiently by chatting in real-time or via email."
+msgstr ""
+"要完成任务，请计划活动并使用任务状态。<br>\n"
+"                通过实时聊天或通过电子邮件高效协作。"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_tasks_action_fsm
+msgid ""
+"To get things done, use activities and status on tasks.<br>\n"
+"                Chat in real-time or by email to collaborate efficiently."
+msgstr ""
+"为了完成工作，使用任务的活动和状态。<br>\n"
+"                实时聊天或通过电子邮件进行高效协作。"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Today"
+msgstr "今天"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Today Activities"
+msgstr "今日活动"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__total_hours_spent
+msgid "Total Hours"
+msgstr "总时数"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_type_action_fsm
+msgid "Track the progress of your tasks from their creation to their closing."
+msgstr "追踪你的任务从创建到结束的进度。"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Unread Messages"
+msgstr "未读消息"
+
+#. module: industry_fsm
+#: model:res.groups,name:industry_fsm.group_fsm_user
+msgid "User"
+msgstr "用户"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+msgid "View Itinerary"
+msgstr "查看行程"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__wizard_id
+msgid "Wizard"
+msgstr "向导"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__working_days_open
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_graph
+msgid "Working Days to Assign"
+msgstr "指派的工作天数"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__working_days_close
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_graph
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_pivot
+msgid "Working Days to Close"
+msgstr "关闭的工作天数"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__working_hours_open
+msgid "Working Hours to Assign"
+msgstr "指派的工作时间"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__working_hours_close
+msgid "Working Hours to Close"
+msgstr "关闭的工作时间"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_res_config_settings__module_industry_fsm_report
+msgid "Worksheets"
+msgstr "工时单"
+
+#. module: industry_fsm
+#: model:mail.template,subject:industry_fsm.mail_template_data_intervention_details
+msgid ""
+"Your intervention is scheduled {{ object.planned_date_begin and "
+"object.date_deadline and 'from the ' + "
+"format_datetime(object.planned_date_begin, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) + ' to the ' + "
+"format_datetime(object.date_deadline, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) or '' }}"
+msgstr ""
+"您的干预计划 {{ object.planned_date_begin 和 object.date_deadline 以及 '从 ' + "
+"format_datetime(object.planned_date_begin, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) + ' 到 ' + "
+"format_datetime(object.date_deadline, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) 或 '' }}"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.quick_create_task_form_fsm_inherited
+msgid "e.g. Boiler replacement"
+msgstr "例如：更换锅炉"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+msgid "is FSM?"
+msgstr "是 FSM 吗？"
+
+#. module: industry_fsm
+#: model:ir.actions.server,name:industry_fsm.fsm_customer_ratings_server_action
+msgid "project.project.fsm"
+msgstr "project.project.fsm"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_pivot
+msgid "working days to assign"
+msgstr "指派的工作天数"

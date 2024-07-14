@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.AbstractBehaviorBlueprint">
+        <div t-attf-class="o_knowledge_behavior_anchor #{behaviorType}" data-oe-protected="true"/>
+    </t>
+    <t t-name="knowledge.ArticleBehaviorBlueprint">
+        <a t-att-href="href" t-att-data-behavior-props="data" target="_blank"
+           class="btn btn-sm o_knowledge_behavior_anchor o_knowledge_behavior_type_article" data-oe-protected="true"/>
+    </t>
+    <t t-name="knowledge.VideoBehaviorBlueprint">
+        <div class="o_knowledge_behavior_anchor o_knowledge_behavior_type_video"
+            t-att-data-behavior-props="behaviorProps" data-oe-protected="true"/>
+    </t>
+    <t t-name="knowledge.ArticlesStructureBehaviorBlueprint">
+        <div class="o_knowledge_behavior_anchor o_knowledge_behavior_type_articles_structure" data-oe-protected="true"/>
+    </t>
+    <t t-name="knowledge.EmbeddedViewBehaviorBlueprint">
+        <div class="o_knowledge_behavior_anchor o_knowledge_behavior_type_embedded_view"
+            t-att-data-behavior-props="behaviorProps" data-oe-protected="true">
+            <div t-if="action_help" class="o_knowledge_content d-none" data-prop-name="action_help">
+                <t t-out="action_help"/>
+            </div>
+        </div>
+    </t>
+    <t t-name="knowledge.EmbeddedViewLinkBehaviorBlueprint">
+        <span class="o_knowledge_view_link text-o-color-1 o_knowledge_behavior_anchor o_knowledge_behavior_type_view_link"
+            t-att-data-behavior-props="behaviorProps" data-oe-protected="true"/>
+    </t>
+    <t t-name="knowledge.FileBehaviorBlueprint">
+        <div class="o_knowledge_behavior_anchor o_knowledge_behavior_type_file"
+            t-att-data-behavior-props="behaviorProps" data-oe-protected="true"/>
+    </t>
+</templates>

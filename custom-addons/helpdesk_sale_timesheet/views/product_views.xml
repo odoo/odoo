@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_invoice_policy_inherit_helpdesk" model="ir.ui.view">
+        <field name="name">product.template.timesheet.form.inherit.helpdesk</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="sale_project.product_template_form_view_invoice_policy_inherit_sale_project"/>
+        <field name="arch" type="xml">
+            <group name="sale" position="after">
+                <group>
+                    <group string="Helpdesk" name="helpdesk" invisible="type != 'service' or not sale_ok" groups="helpdesk.group_use_sla">
+                        <div class="o_td_label d-inline-flex" invisible="type != 'service' or not sale_ok">
+                            <label for='sla_id'/>
+                            <span class='fa fa-lg fa-building-o fa-fw' title="Values set here are company-specific." groups="base.group_multi_company"/>
+                        </div>
+                        <field name="sla_id" groups="!helpdesk.group_helpdesk_user" invisible="type != 'service' or not sale_ok" options="{'no_quick_create': True, 'no_open': True}" context="{'with_team_name': True}" nolabel="1"/>
+                        <field name="sla_id" groups="helpdesk.group_helpdesk_user" invisible="type != 'service' or not sale_ok" options="{'no_quick_create': True}" context="{'with_team_name': True}" nolabel="1"/>
+                    </group>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

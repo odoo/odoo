@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="worksheet_custom_page" inherit_id="industry_fsm_report.worksheet_custom_page">
+        <div name="worksheet_task_timesheet" position="before">
+            <span><t t-if="doc.name"><h2><strong>Field Service Report: <t t-out="doc.name"/></strong></h2></t></span>
+            <h2 t-if="doc.allow_billable and doc.sale_order_id">Time &amp; Material</h2>
+            <t t-call="industry_fsm_sale.worksheet_time_and_material"/>
+            <br/>
+        </div>
+    </template>
+</odoo>

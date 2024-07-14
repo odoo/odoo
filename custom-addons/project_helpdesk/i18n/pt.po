@@ -1,0 +1,158 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* project_helpdesk
+# 
+# Translators:
+# Wil Odoo, 2023
+# Rita Bastos, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Rita Bastos, 2024\n"
+"Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: project_helpdesk
+#: model_terms:ir.ui.view,arch_db:project_helpdesk.helpdesk_ticket_convert_to_task_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:project_helpdesk.project_task_convert_to_ticket_wizard_view_form
+msgid "Convert"
+msgstr "Converter"
+
+#. module: project_helpdesk
+#: model:ir.model,name:project_helpdesk.model_helpdesk_ticket_convert_wizard
+msgid "Convert Helpdesk Tickets to Tasks"
+msgstr "Converte Ticket de Helpdesk em Tarefas"
+
+#. module: project_helpdesk
+#: model:ir.model,name:project_helpdesk.model_project_task_convert_wizard
+msgid "Convert Project Tasks to Tickets"
+msgstr "Converter Tarefas de Projeto em Tickets"
+
+#. module: project_helpdesk
+#. odoo-python
+#: code:addons/project_helpdesk/models/helpdesk.py:0
+#: model:ir.actions.server,name:project_helpdesk.action_ticket_convert_to_task
+#: model_terms:ir.ui.view,arch_db:project_helpdesk.helpdesk_ticket_convert_to_task_wizard_view_form
+#, python-format
+msgid "Convert to Task"
+msgstr "Converter em Tarefa"
+
+#. module: project_helpdesk
+#. odoo-python
+#: code:addons/project_helpdesk/models/project.py:0
+#: model:ir.actions.server,name:project_helpdesk.action_task_convert_to_ticket
+#: model_terms:ir.ui.view,arch_db:project_helpdesk.project_task_convert_to_ticket_wizard_view_form
+#, python-format
+msgid "Convert to Ticket"
+msgstr "Converter em Ticket"
+
+#. module: project_helpdesk
+#. odoo-python
+#: code:addons/project_helpdesk/wizard/helpdesk_ticket_convert_wizard.py:0
+#, python-format
+msgid "Converted Tasks"
+msgstr "Tarefas Convertidas"
+
+#. module: project_helpdesk
+#. odoo-python
+#: code:addons/project_helpdesk/wizard/project_task_convert_wizard.py:0
+#, python-format
+msgid "Converted Tickets"
+msgstr "Tickets Convertidos"
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_helpdesk_ticket_convert_wizard__create_uid
+#: model:ir.model.fields,field_description:project_helpdesk.field_project_task_convert_wizard__create_uid
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_helpdesk_ticket_convert_wizard__create_date
+#: model:ir.model.fields,field_description:project_helpdesk.field_project_task_convert_wizard__create_date
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: project_helpdesk
+#: model_terms:ir.ui.view,arch_db:project_helpdesk.helpdesk_ticket_convert_to_task_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:project_helpdesk.project_task_convert_to_ticket_wizard_view_form
+msgid "Discard"
+msgstr "Descartar"
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_helpdesk_ticket_convert_wizard__display_name
+#: model:ir.model.fields,field_description:project_helpdesk.field_project_task_convert_wizard__display_name
+msgid "Display Name"
+msgstr "Nome"
+
+#. module: project_helpdesk
+#: model:ir.model,name:project_helpdesk.model_helpdesk_ticket
+msgid "Helpdesk Ticket"
+msgstr "Ticket de Apoio ao Cliente"
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_helpdesk_ticket_convert_wizard__id
+#: model:ir.model.fields,field_description:project_helpdesk.field_project_task_convert_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_helpdesk_ticket_convert_wizard__write_uid
+#: model:ir.model.fields,field_description:project_helpdesk.field_project_task_convert_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Última Atualização por"
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_helpdesk_ticket_convert_wizard__write_date
+#: model:ir.model.fields,field_description:project_helpdesk.field_project_task_convert_wizard__write_date
+msgid "Last Updated on"
+msgstr "Última Atualização em"
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_helpdesk_ticket_convert_wizard__project_id
+msgid "Project"
+msgstr "Projeto"
+
+#. module: project_helpdesk
+#. odoo-python
+#: code:addons/project_helpdesk/models/project.py:0
+#, python-format
+msgid "Recurring tasks cannot be converted into tickets."
+msgstr "Tarefas recorrentes não podem ser convertidas em tickets."
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_helpdesk_ticket_convert_wizard__stage_id
+#: model:ir.model.fields,field_description:project_helpdesk.field_project_task_convert_wizard__stage_id
+msgid "Stage"
+msgstr "Etapa"
+
+#. module: project_helpdesk
+#: model:ir.model,name:project_helpdesk.model_project_task
+msgid "Task"
+msgstr "Tarefa"
+
+#. module: project_helpdesk
+#. odoo-python
+#: code:addons/project_helpdesk/wizard/project_task_convert_wizard.py:0
+#, python-format
+msgid "Task converted into ticket %s"
+msgstr "Tarefa convertida em ticket %s"
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_project_task_convert_wizard__team_id
+msgid "Team"
+msgstr "Equipa"
+
+#. module: project_helpdesk
+#. odoo-python
+#: code:addons/project_helpdesk/wizard/helpdesk_ticket_convert_wizard.py:0
+#, python-format
+msgid "Ticket converted into task %s"
+msgstr "Ticket convertido em tarefa %s"

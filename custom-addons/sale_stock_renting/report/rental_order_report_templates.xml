@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_rental_order_document" inherit_id="sale_renting.report_rental_order_document">
+        <xpath expr="//div/table" position="before">
+            <t t-set="display_serial_numbers" t-value="any(l.pickedup_lot_ids for l in doc.order_line)"/>
+        </xpath>
+        <xpath expr="//div/table/thead/tr" position="inside">
+            <th t-if="display_serial_numbers" class="text-end">Serial Numbers</th>
+        </xpath>
+        <xpath expr="//div/table/tbody/tr" position="inside">
+            <td t-if="display_serial_numbers" class="text-end">
+                <span t-out="', '.join(map(lambda x: x.name, line.pickedup_lot_ids))"/>
+            </td>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit.l10n.mx.hr.payroll</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+        <field name="arch" type="xml">
+            <group name="salary" position="inside">
+                <field name="l10n_mx_schedule_pay" invisible="country_code != 'MX'" required="country_code == 'MX'" string="Schedule Pay"/>
+                <label for="l10n_mx_risk_bonus_rate" invisible="country_code != 'MX'"/>
+                <div class="o_row" invisible="country_code != 'MX'">
+                    <field name="l10n_mx_risk_bonus_rate" class="o_hr_narrow_field" nolabel="1"/>
+                    <span>%</span>
+                </div>
+                <label for="l10n_mx_christmas_bonus" invisible="country_code != 'MX'"/>
+                <div class="o_row" invisible="country_code != 'MX'">
+                    <field name="l10n_mx_christmas_bonus" class="o_hr_narrow_field" nolabel="1"/>
+                    <span>days / year</span>
+                </div>
+                <label for="l10n_mx_holidays_count" invisible="country_code != 'MX'"/>
+                <div class="o_row" invisible="country_code != 'MX'">
+                    <field name="l10n_mx_holidays_count" class="o_hr_narrow_field" nolabel="1"/>
+                    <span>days / year</span>
+                </div>
+                <label for="l10n_mx_holiday_bonus_rate" invisible="country_code != 'MX'"/>
+                <div class="o_row" invisible="country_code != 'MX'">
+                    <field name="l10n_mx_holiday_bonus_rate" class="o_hr_narrow_field" nolabel="1"/>
+                    <span>%</span>
+                </div>
+            </group>
+        </field>
+    </record>
+</odoo>

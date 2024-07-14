@@ -1,0 +1,884 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_batch_payment
+# 
+# Translators:
+# Wil Odoo, 2023
+# Rasareeyar Lappiam, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
+msgid "$1000.0"
+msgstr "$1000.0"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
+msgid "2023-08-14"
+msgstr "2023-08-14"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
+msgid "2023-08-15"
+msgstr "2023-08-15"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
+msgid "3956012345678"
+msgstr "3956012345678"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_account_move_kanban
+msgid "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
+msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"วันที่\"/>"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_account_payment_form_inherit_account_batch_payment
+msgid "<span>Batch Payment</span>"
+msgstr "<span>การชำระเงินเป็นกลุ่ม</span>"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.batch_error_wizard_form
+msgid ""
+"<strong invisible=\"not warning_line_ids\">The following warnings were also "
+"raised; they do not impeach validation</strong>"
+msgstr ""
+"<strong invisible=\"not "
+"warning_line_ids\">คำเตือนต่อไปนี้ก็ถูกหยิบยกขึ้นมาเช่นกัน "
+"พวกเขาไม่ได้ฟ้องร้องการตรวจสอบ</strong>"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.batch_error_wizard_form
+msgid "<strong>Please first consider the following warnings</strong>"
+msgstr "<strong>โปรดพิจารณาคำเตือนต่อไปนี้ก่อน</strong>"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.batch_error_wizard_form
+msgid "<strong>The following errors occurred</strong>"
+msgstr "<strong>เกิดข้อผิดพลาดต่อไปนี้</strong>"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
+msgid "ABC Suppliers"
+msgstr "ซัพพลายเออร์ ABC"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__message_needaction
+msgid "Action Needed"
+msgstr "จำเป็นต้องดำเนินการ"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__activity_ids
+msgid "Activities"
+msgstr "กิจกรรม"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "การตกแต่งข้อยกเว้นกิจกรรม"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__activity_state
+msgid "Activity State"
+msgstr "สถานะกิจกรรม"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "ไอคอนประเภทกิจกรรม"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_batch_payment.py:0
+#, python-format
+msgid "All payments in the batch must belong to the same company."
+msgstr "การชำระเงินทั้งหมดในกลุ่มต้องเป็นของบริษัทเดียวกัน"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_batch_payment.py:0
+#, python-format
+msgid "All payments in the batch must share the same payment method."
+msgstr "การชำระเงินทั้งหมดในกลุ่มต้องใช้วิธีการชำระเงินเดียวกัน"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__amount
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_form
+msgid "Amount"
+msgstr "จำนวน"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__amount_residual
+msgid "Amount Residual"
+msgstr "ปริมาณคงเหลือ"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__amount_residual_currency
+msgid "Amount Residual Currency"
+msgstr "จำนวนเงินคงเหลือสกุลเงิน"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_payment__amount_signed
+msgid "Amount Signed"
+msgstr "จำนวนเงินที่ลงนาม"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__message_attachment_count
+msgid "Attachment Count"
+msgstr "จำนวนสิ่งที่แนบมา"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__available_payment_method_ids
+msgid "Available Payment Method"
+msgstr "วิธีการชำระเงินที่ใช้ได้"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__journal_id
+msgid "Bank"
+msgstr "ธนาคาร"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_search
+msgid "Bank Journal"
+msgstr "สมุดรายวันธนาคาร"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
+msgid "Bank Transfer"
+msgstr "โอนเงินผ่านธนาคาร"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_form
+msgid "Batch Content"
+msgstr "เนื้อหาเป็นกลุ่ม"
+
+#. module: account_batch_payment
+#: model:account.payment.method,name:account_batch_payment.account_payment_method_batch_deposit
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.account_journal_dashboard_kanban_view_inherited
+msgid "Batch Deposit"
+msgstr "การฝากเป็นกลุ่ม"
+
+#. module: account_batch_payment
+#: model:ir.model,name:account_batch_payment.model_report_account_batch_payment_print_batch_payment
+msgid "Batch Deposit Report"
+msgstr "รายงานการฝากเป็นกลุ่ม"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_payment.py:0
+#: model:ir.model,name:account_batch_payment.model_account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard__batch_payment_id
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_payment__batch_payment_id
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_form
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_search
+#, python-format
+msgid "Batch Payment"
+msgstr "เงินดาวน์"
+
+#. module: account_batch_payment
+#: model:ir.ui.menu,name:account_batch_payment.menu_batch_payment_purchases
+#: model:ir.ui.menu,name:account_batch_payment.menu_batch_payment_sales
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_account_payment_search_inherit_account_batch_payment
+msgid "Batch Payments"
+msgstr "การชำระ"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__batch_type
+msgid "Batch Type"
+msgstr "ประเภทกลุ่ม"
+
+#. module: account_batch_payment
+#: model_terms:ir.actions.act_window,help:account_batch_payment.action_batch_payment_in
+#: model_terms:ir.actions.act_window,help:account_batch_payment.action_batch_payment_out
+msgid ""
+"Batch payments allow you grouping different payments to ease\n"
+"                    reconciliation. They are also useful when depositing checks\n"
+"                    to the bank."
+msgstr ""
+"การชำระเงินเป็นกลุ่มช่วยให้คุณสามารถจัดกลุ่มการชำระเงินที่แตกต่างกันเพื่อลดการกระทบยอดได้\n"
+"นอกจากนี้ยังมีประโยชน์ในการฝากเช็ค\n"
+"เข้าธนาคารอีกด้วย"
+
+#. module: account_batch_payment
+#: model:ir.model,name:account_batch_payment.model_account_batch_error_wizard
+msgid "Batch payments error reporting wizard"
+msgstr "โปรแกรมรายงานข้อผิดพลาดในการชำระเงินเป็นกลุ่ม"
+
+#. module: account_batch_payment
+#: model:ir.model,name:account_batch_payment.model_account_batch_error_wizard_line
+msgid "Batch payments error reporting wizard line"
+msgstr "บรรทัดโปรแกรมรายงานข้อผิดพลาดในการชำระเงินเป็นกลุ่ม"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_batch_payment.py:0
+#, python-format
+msgid "Cannot validate an empty batch. Please add some payments to it first."
+msgstr "ไม่สามารถตรวจสอบกลุ่มที่ว่างได้ โปรดเพิ่มการชำระเงินบางส่วนก่อน"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.batch_error_wizard_form
+msgid "Close"
+msgstr "ปิด"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__payment_method_code
+msgid "Code"
+msgstr "โค้ด"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__company_currency_id
+msgid "Company Currency"
+msgstr "สกุลเงินของบริษัท"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_account_payment_tree_inherit_account_batch_payment
+msgid "Create Batch"
+msgstr "สร้างกลุ่ม"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_journal.py:0
+#, python-format
+msgid "Create Batch Payment"
+msgstr "สร้างการชำระเงินเป็นกลุ่ม"
+
+#. module: account_batch_payment
+#: model_terms:ir.actions.act_window,help:account_batch_payment.action_batch_payment_in
+msgid "Create a new customer batch payment"
+msgstr "สร้างการชำระเงินเป็นกลุ่มสำหรับลูกค้าใหม่"
+
+#. module: account_batch_payment
+#: model_terms:ir.actions.act_window,help:account_batch_payment.action_batch_payment_out
+msgid "Create a new vendor batch payment"
+msgstr "สร้างการชำระเงินเป็นกลุ่มสำหรับผู้จำหน่ายใหม่"
+
+#. module: account_batch_payment
+#: model:ir.actions.server,name:account_batch_payment.action_account_create_batch_payment
+msgid "Create batch payment"
+msgstr "สร้างการชำระเงินเป็นกลุ่ม"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard__create_uid
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard_line__create_uid
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard__create_date
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard_line__create_date
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,help:account_batch_payment.field_account_batch_payment__export_file_create_date
+msgid "Creation date of the related export file."
+msgstr "วันที่สร้างไฟล์ส่งออกที่เกี่ยวข้อง"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__currency_id
+msgid "Currency"
+msgstr "สกุลเงิน"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
+msgid "Customer"
+msgstr "ลูกค้า"
+
+#. module: account_batch_payment
+#: model:ir.actions.act_window,name:account_batch_payment.action_batch_payment_in
+msgid "Customer Batch Payments"
+msgstr "การชำระเงินเป็นกลุ่มของลูกค้า"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__date
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
+msgid "Date"
+msgstr "วันที่"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
+msgid "Demo Ref"
+msgstr "อ้างอิงการสาธิต"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard_line__description
+msgid "Description"
+msgstr "คำอธิบาย"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard__display_name
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard_line__display_name
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard__error_line_ids
+msgid "Error Line"
+msgstr "บรรทัดเกิดข้อผิดพลาด"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard_line__error_wizard_id
+msgid "Error Wizard"
+msgstr "โปรแกรมเกิดข้อผิดพลาด"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.batch_error_wizard_line_tree
+msgid "Exclude Payments"
+msgstr "ไม่รวมการชำระเงิน"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,help:account_batch_payment.field_account_batch_payment__export_file
+msgid "Export file related to this batch"
+msgstr "ส่งออกไฟล์ที่เกี่ยวข้องกับกลุ่มนี้"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__export_file
+msgid "File"
+msgstr "ไฟล์"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__file_generation_enabled
+msgid "File Generation Enabled"
+msgstr "เปิดใช้งานการสร้างไฟล์แล้ว"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__export_filename
+msgid "File Name"
+msgstr "ชื่อไฟล์"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__message_follower_ids
+msgid "Followers"
+msgstr "ผู้ติดตาม"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "ผู้ติดตาม (พาร์ทเนอร์)"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,help:account_batch_payment.field_account_batch_payment__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "ไอคอนแบบฟอนต์ที่ยอดเยี่ยมเช่น fa-tasks"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__export_file_create_date
+msgid "Generation Date"
+msgstr "วันที่สร้าง"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_search
+msgid "Group By"
+msgstr "กลุ่มโดย"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__has_message
+msgid "Has Message"
+msgstr "มีข้อความ"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard_line__help_message
+msgid "Help"
+msgstr "ช่วยเหลือ"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard__id
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard_line__id
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__activity_exception_icon
+msgid "Icon"
+msgstr "ไอคอน"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,help:account_batch_payment.field_account_batch_payment__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "ไอคอนเพื่อระบุการยกเว้นกิจกรรม"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,help:account_batch_payment.field_account_batch_payment__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,help:account_batch_payment.field_account_batch_payment__message_has_error
+#: model:ir.model.fields,help:account_batch_payment.field_account_batch_payment__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "ถ้าเลือก ข้อความบางข้อความมีข้อผิดพลาดในการส่ง"
+
+#. module: account_batch_payment
+#: model:ir.model.fields.selection,name:account_batch_payment.selection__account_batch_payment__batch_type__inbound
+msgid "Inbound"
+msgstr "ขาเข้า"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_journal.py:0
+#, python-format
+msgid "Inbound Batch Payments Sequence"
+msgstr "ลำดับการชำระเงินเป็นกลุ่มขาเข้า"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__message_is_follower
+msgid "Is Follower"
+msgstr "เป็นผู้ติดตาม"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
+msgid "Issuing bank account :"
+msgstr "บัญชีธนาคารที่ออก :"
+
+#. module: account_batch_payment
+#: model:ir.model,name:account_batch_payment.model_account_journal
+msgid "Journal"
+msgstr "สมุดรายวัน"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard__write_uid
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard_line__write_uid
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard__write_date
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard_line__write_date
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_form
+msgid "Leave empty to generate automatically..."
+msgstr "เว้นว่างไว้เพื่อสร้างโดยอัตโนมัติ..."
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
+msgid "Memo"
+msgstr "บันทึกย่อ"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__message_has_error
+msgid "Message Delivery error"
+msgstr "เกิดข้อผิดพลาดในการส่งข้อความ"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__message_ids
+msgid "Messages"
+msgstr "ข้อความ"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
+msgid "Monthly Payment"
+msgstr "การชำระเงินรายเดือน"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "วันครบกำหนดกิจกรรมของฉัน"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_payment__payment_method_name
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,help:account_batch_payment.field_account_batch_payment__export_filename
+msgid "Name of the export file generated for this batch"
+msgstr "ชื่อของไฟล์ส่งออกที่สร้างขึ้นสำหรับกลุ่มนี้"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,help:account_batch_payment.field_account_payment__amount_signed
+msgid "Negative value of amount field if payment_type is outbound"
+msgstr "ช่องจำนวนเงินจะเป็นค่าลบ ถ้า payment_type เป็นขาออก"
+
+#. module: account_batch_payment
+#: model:ir.model.fields.selection,name:account_batch_payment.selection__account_batch_payment__state__draft
+msgid "New"
+msgstr "ใหม่"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "ปฏิทินอีเวนต์กิจกรรมถัดไป"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "วันครบกำหนดกิจกรรมถัดไป"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__activity_summary
+msgid "Next Activity Summary"
+msgstr "สรุปกิจกรรมถัดไป"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__activity_type_id
+msgid "Next Activity Type"
+msgstr "ประเภทกิจกรรมถัดไป"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_account_payment_search_inherit_account_batch_payment
+msgid "Not Batch Payments"
+msgstr "ไม่ใช่การชำระเงินเป็นกลุ่ม"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_account_payment_search_inherit_account_batch_payment
+msgid "Not reconciled"
+msgstr "ไม่มีการกระทบยอด"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__message_needaction_counter
+msgid "Number of Actions"
+msgstr "จํานวนการดําเนินการ"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__message_has_error_counter
+msgid "Number of errors"
+msgstr "จํานวนข้อผิดพลาด"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,help:account_batch_payment.field_account_batch_payment__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "จำนวนข้อความที่ต้องดำเนินการ"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,help:account_batch_payment.field_account_batch_payment__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "จํานวนข้อความที่มีข้อผิดพลาดในการส่ง"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
+msgid "Odoo Payments LLC"
+msgstr "Odoo Payments LLC"
+
+#. module: account_batch_payment
+#: model:ir.model.fields.selection,name:account_batch_payment.selection__account_batch_payment__batch_type__outbound
+msgid "Outbound"
+msgstr "ขาออก"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_journal.py:0
+#, python-format
+msgid "Outbound Batch Payments Sequence"
+msgstr "ลำดับการชำระเงินเป็นกลุ่มขาออก"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_account_payment_tree_inherit_account_batch_payment
+msgid "Partner"
+msgstr "พาร์ทเนอร์"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__payment_method_id
+msgid "Payment Method"
+msgstr "วิธีการชำระเงิน"
+
+#. module: account_batch_payment
+#: model:ir.model,name:account_batch_payment.model_account_payment_method
+msgid "Payment Methods"
+msgstr "วิธีการชำระเงิน"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_form
+msgid "Payment method"
+msgstr "วิธีการชำระเงิน"
+
+#. module: account_batch_payment
+#: model:ir.model,name:account_batch_payment.model_account_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard_line__payment_ids
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__payment_ids
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_form
+msgid "Payments"
+msgstr "การชำระเงิน"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/wizard/batch_error.py:0
+#, python-format
+msgid "Payments in Error"
+msgstr "เกิดข้อผิดพลาดในการชำระเงิน"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_batch_payment.py:0
+#, python-format
+msgid "Payments must be posted to be added to a batch."
+msgstr "ต้องผ่านรายการการชำระเงินจึงจะเพิ่มลงในกลุ่มได้"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_form
+msgid "Print"
+msgstr "พิมพ์"
+
+#. module: account_batch_payment
+#: model:ir.actions.report,name:account_batch_payment.action_print_batch_payment
+msgid "Print Batch Payment"
+msgstr "พิมพ์การชำระเงินเป็นกลุ่ม"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.batch_error_wizard_form
+msgid "Proceed with validation"
+msgstr "ดำเนินการตรวจสอบความถูกต้อง"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__rating_ids
+msgid "Ratings"
+msgstr "การให้คะแนน"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_form
+msgid "Re-generate Export File"
+msgstr "สร้างไฟล์ส่งออกใหม่"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
+msgid "Recipient Bank Account"
+msgstr "บัญชีธนาคารของผู้รับ"
+
+#. module: account_batch_payment
+#: model:ir.model.fields.selection,name:account_batch_payment.selection__account_batch_payment__state__reconciled
+msgid "Reconciled"
+msgstr "กระทบยอดแล้ว"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__name
+msgid "Reference"
+msgstr "การอ้างอิง"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__activity_user_id
+msgid "Responsible User"
+msgstr "ผู้ใช้ที่รับผิดชอบ"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "ข้อผิดพลาดในการส่ง SMS"
+
+#. module: account_batch_payment
+#: model:ir.model.fields.selection,name:account_batch_payment.selection__account_batch_payment__state__sent
+msgid "Sent"
+msgstr "ส่งแล้ว"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_batch_payment.py:0
+#, python-format
+msgid "Set payments state to \"posted\"."
+msgstr "ตั้งค่าสถานะการชำระเงินเป็น \"ผ่านรายการแล้ว\""
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.batch_error_wizard_line_tree
+msgid "Show"
+msgstr "แสดง"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard_line__show_remove_button
+msgid "Show Remove Button"
+msgstr "แสดงปุ่มลบ"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard__show_remove_options
+msgid "Show Remove Options"
+msgstr "แสดงตัวเลือกการลบ"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_batch_payment.py:0
+#, python-format
+msgid "Some payments have already been matched with a bank statement."
+msgstr "การชำระเงินบางรายการได้รับการจับคู่กับรายการเดินบัญชีธนาคารแล้ว"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_batch_payment.py:0
+#, python-format
+msgid "Some payments have already been sent."
+msgstr "การชำระเงินบางส่วนได้ถูกส่งไปแล้ว"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_batch_payment.py:0
+#, python-format
+msgid "Some recipient accounts do not allow out payments."
+msgstr "บัญชีผู้รับบางบัญชีไม่อนุญาตให้ชำระเงิน"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__state
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_search
+msgid "State"
+msgstr "สถานะ"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,help:account_batch_payment.field_account_batch_payment__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"สถานะตามกิจกรรม\n"
+"เกินกำหนด: วันที่ครบกำหนดผ่านไปแล้ว\n"
+"วันนี้: วันที่จัดกิจกรรมคือวันนี้\n"
+"วางแผน: กิจกรรมในอนาคต"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.print_batch_payment
+msgid "TOTAL"
+msgstr "ทั้งหมด"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"Target another recipient account or allow sending money to the current one."
+msgstr "กำหนดเป้าหมายบัญชีผู้รับอื่นหรืออนุญาตให้ส่งเงินไปยังบัญชีปัจจุบัน"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.batch_error_wizard_form
+msgid "The batch cannot be validated."
+msgstr "ไม่สามารถตรวจสอบกลุ่มการชำระเงินได้"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.batch_error_wizard_form
+msgid "The batch could not be validated"
+msgstr "ไม่สามารถตรวจสอบกลุ่มการชำระเงินได้"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"The batch must have the same payment method as the payments it contains."
+msgstr ""
+"กลุ่มการชำระเงินจะต้องมีวิธีการชำระเงินเดียวกันกับการชำระเงินที่มีอยู่"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_batch_payment.py:0
+#, python-format
+msgid "The batch must have the same type as the payments it contains."
+msgstr "กลุ่มการชำระเงินจะต้องมีประเภทเดียวกันกับการชำระเงินที่มีอยู่"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,help:account_batch_payment.field_account_batch_error_wizard__batch_payment_id
+msgid ""
+"The batch payment generating the errors and warnings displayed in this "
+"wizard."
+msgstr "การชำระเงินเป็นกลุ่มที่สร้างข้อผิดพลาดและคำเตือนที่แสดงในโปรแกรมนี้"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"The journal of the batch payment and of the payments it contains must be the"
+" same."
+msgstr ""
+"สมุดรายวันของการชำระเงินเป็นกลุ่มและการชำระเงินที่มีอยู่จะต้องเหมือนกัน"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,help:account_batch_payment.field_account_batch_payment__payment_method_id
+msgid "The payment method used by the payments in this batch."
+msgstr "วิธีการชำระเงินที่ใช้โดยการชำระเงินในกลุ่มนี้"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_form
+msgid "Total"
+msgstr "รวม"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,help:account_batch_payment.field_account_batch_error_wizard__show_remove_options
+msgid ""
+"True if and only if the options to remove the payments causing the errors or"
+" warnings from the batch should be shown"
+msgstr ""
+"เลือก True หากควรแสดงตัวเลือกในการลบการชำระเงินที่ทำให้เกิดข้อผิดพลาด "
+"หรือคำเตือนจากกลุ่มการชำระเงิน"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,help:account_batch_payment.field_account_batch_payment__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "ประเภทกิจกรรมข้อยกเว้นบนบันทึก"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_search
+msgid "Unreconciled"
+msgstr "ยังไม่ได้ไม่กระทบยอด"
+
+#. module: account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_batch_payment.view_batch_payment_form
+msgid "Validate"
+msgstr "ตรวจสอบ"
+
+#. module: account_batch_payment
+#: model:ir.actions.act_window,name:account_batch_payment.action_batch_payment_out
+msgid "Vendor Batch Payments"
+msgstr "การชำระเงินเป็นกลุ่มของผู้จำหน่าย"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard__warning_line_ids
+msgid "Warning Line"
+msgstr "บรรทัดการแจ้งเตือน"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_error_wizard_line__warning_wizard_id
+msgid "Warning Wizard"
+msgstr "โปรแกรมการแจ้งเตือน"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,field_description:account_batch_payment.field_account_batch_payment__website_message_ids
+msgid "Website Messages"
+msgstr "ข้อความเว็บไซต์"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,help:account_batch_payment.field_account_batch_payment__website_message_ids
+msgid "Website communication history"
+msgstr "ประวัติการสื่อสารของเว็บไซต์"
+
+#. module: account_batch_payment
+#: model:ir.model.fields,help:account_batch_payment.field_account_batch_payment__file_generation_enabled
+msgid ""
+"Whether or not this batch payment should display the 'Generate File' button "
+"instead of 'Print' in form view."
+msgstr ""
+"การชำระเงินกลุ่มนี้ควรแสดงปุ่ม 'สร้างไฟล์' แทน 'พิมพ์' "
+"ในมุมมองแบบฟอร์มหรือไม่"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_batch_payment.py:0
+#, python-format
+msgid "You cannot add payments that are not posted."
+msgstr "คุณไม่สามารถเพิ่มการชำระเงินที่ไม่ได้ผ่านรายการได้"
+
+#. module: account_batch_payment
+#. odoo-python
+#: code:addons/account_batch_payment/models/account_batch_payment.py:0
+#, python-format
+msgid "You cannot add payments with zero amount in a Batch Payment."
+msgstr ""
+"คุณไม่สามารถเพิ่มการชำระเงินด้วยจำนวนเงินที่เป็นศูนย์ได้ในการชำระเงินเป็นกลุ่ม"

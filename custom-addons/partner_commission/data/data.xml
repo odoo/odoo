@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_commission" model="product.product">
+        <field name="name">Commission</field>
+        <field name="purchase_ok" eval="True"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="type">service</field>
+    </record>
+
+    <record id="cron_confirm_purchase_orders" model="ir.cron">
+        <field name="name">Partner Commission: confirm purchase orders</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_confirm_purchase_orders()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="DateTime.now() + relativedelta(days=1)"/>
+    </record>
+</odoo>

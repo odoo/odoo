@@ -1,0 +1,167 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* documents_project_sale
+# 
+# Translators:
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:11+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: documents_project_sale
+#: model_terms:ir.ui.view,arch_db:documents_project_sale.product_template_form_view_inherit_documents_project_sale
+msgid ""
+"<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are "
+"company-specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are "
+"company-specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: documents_project_sale
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_product__documents_allowed_company_id
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_template__documents_allowed_company_id
+msgid "Documents Allowed Company"
+msgstr "Дозволені документи комапнії"
+
+#. module: documents_project_sale
+#: model:ir.model,name:documents_project_sale.model_documents_folder
+msgid "Documents Workspace"
+msgstr "Папка документів"
+
+#. module: documents_project_sale
+#: model:documents.tag,name:documents_project_sale.documents_folder_facet_1_tag_3
+msgid "Done/Archived"
+msgstr "Виконано/Заархівовано"
+
+#. module: documents_project_sale
+#: model:documents.tag,name:documents_project_sale.documents_folder_facet_1_tag_2
+msgid "In Use"
+msgstr "Використовується"
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder_template_child_3
+msgid "Miscellaneous"
+msgstr "Інші"
+
+#. module: documents_project_sale
+#: model:documents.tag,name:documents_project_sale.documents_folder_facet_1_tag_1
+msgid "New/Unsorted"
+msgstr "Новий/невідсортований"
+
+#. module: documents_project_sale
+#: model:ir.model.fields,help:documents_project_sale.field_product_product__template_folder_id
+#: model:ir.model.fields,help:documents_project_sale.field_product_template__template_folder_id
+msgid ""
+"On sales order confirmation, a workspace will be automatically generated for"
+" the project based on this template."
+msgstr ""
+"Після підтвердження замовлення на продаж буде автоматично створено папку для"
+" проекту на основі цього шаблону."
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder_template_child_2
+msgid "Photos"
+msgstr "Фотографії"
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder_template_child_1
+msgid "Plans"
+msgstr "Плани"
+
+#. module: documents_project_sale
+#: model:ir.model,name:documents_project_sale.model_product_template
+msgid "Product"
+msgstr "Товар"
+
+#. module: documents_project_sale
+#: model:ir.model.fields,field_description:documents_project_sale.field_documents_folder__product_template_ids
+msgid "Product Template"
+msgstr "Шаблон товару"
+
+#. module: documents_project_sale
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_product__project_template_use_documents
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_template__project_template_use_documents
+msgid "Project Template - Documents"
+msgstr "Шаблон проекту - Документи"
+
+#. module: documents_project_sale
+#: model:product.template,name:documents_project_sale.product_1
+msgid "Renovation Architect (Workspace Template)"
+msgstr "Архітектор ремонту (шаблон папки)"
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder
+msgid "Renovation Projects"
+msgstr "Проекти реновації"
+
+#. module: documents_project_sale
+#: model:ir.model,name:documents_project_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Замовлення на продаж"
+
+#. module: documents_project_sale
+#: model:documents.facet,name:documents_project_sale.documents_folder_facet_1
+msgid "Status"
+msgstr "Статус"
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder_template
+msgid "Template"
+msgstr "Шаблон "
+
+#. module: documents_project_sale
+#. odoo-python
+#: code:addons/documents_project_sale/models/product_template.py:0
+#, python-format
+msgid ""
+"The \"%s\" workspace template should either be in the \"%s\" company like "
+"this product or be open to all companies."
+msgstr ""
+"Шаблон папки \"%s\" має бути або в компанії \"%s\" як цей товар, або бути "
+"відкритим для всіх компаній."
+
+#. module: documents_project_sale
+#. odoo-python
+#: code:addons/documents_project_sale/models/documents_folder.py:0
+#, python-format
+msgid ""
+"This workspace should remain in the same company as the \"%s\" product for "
+"which it is a template. Please update the company of the \"%s\" product, or "
+"leave the company of this workspace empty."
+msgstr ""
+"Це робоче місце має залишатися в тій самій компанії, що й товар \"%s\" для "
+"якого цей шаблон. Оновіть компанію товару \"%s\", або залиште компанію цієї "
+"пустої папки."
+
+#. module: documents_project_sale
+#. odoo-python
+#: code:addons/documents_project_sale/models/documents_folder.py:0
+#, python-format
+msgid ""
+"This workspace should remain in the same company as the following products for which it is a template:\n"
+"%s\n"
+"\n"
+"Please update the company of those products, or leave the company of this workspace empty."
+msgstr ""
+"Ця папка має залишатися в тій самій компанії, що й наступні товари, для яких вона є шаблоном:\n"
+"%s\n"
+"\n"
+"Оновіть компанію цих товарів або залиште компанію цієї папки пустою."
+
+#. module: documents_project_sale
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_product__template_folder_id
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_template__template_folder_id
+msgid "Workspace Template"
+msgstr "Шаблон папки"

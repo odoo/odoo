@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- INVOICE 1 -->
+        <record id="demo_invoice_1" model="account.move">
+            <field name="move_type">out_invoice</field>
+            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="invoice_user_id" ref="base.user_demo"/>
+            <field name="company_id" ref="l10n_be.demo_company_be"/>
+            <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+            <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+            <field name="journal_id" model="account.journal"
+                   search="[('type', '=', 'sale'), ('company_id', '=', ref('l10n_be.demo_company_be'))]"/>
+            <field name="invoice_line_ids" model="account.account" eval="[
+                (0,0,{
+                    'product_id': ref('product.consu_delivery_02'),
+                    'account_id': obj().search([('company_id', '=', ref('l10n_be.demo_company_be')), ('code', '=', '700000')]).id,
+                    'price_unit': 642.0,
+                    'quantity': 5
+                }),
+                (0,0,{
+                    'product_id': ref('product.consu_delivery_03'),
+                    'account_id': obj().search([('company_id', '=', ref('l10n_be.demo_company_be')), ('code', '=', '700000')]).id,
+                    'price_unit': 280.0,
+                    'quantity': 5
+                }),
+            ]"/>
+        </record>
+
+        <!-- INVOICE 2 -->
+        <record id="demo_invoice_2" model="account.move">
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="move_type">out_invoice</field>
+            <field name="invoice_date" eval="time.strftime('%Y-%m')+'-08'"/>
+            <field name="company_id" ref="l10n_be.demo_company_be"/>
+            <field name="journal_id" model="account.journal"
+                   search="[('type', '=', 'sale'), ('company_id', '=', ref('l10n_be.demo_company_be'))]"/>
+            <field name="invoice_line_ids" model="account.account" eval="[
+                (0,0,{
+                    'product_id': ref('product.consu_delivery_03'),
+                    'account_id': obj().search([('company_id', '=', ref('l10n_be.demo_company_be')), ('code', '=', '700000')]).id,
+                    'price_unit': 50.0,
+                    'quantity': 5
+                }),
+                (0,0,{
+                    'product_id': ref('product.consu_delivery_01'),
+                    'account_id': obj().search([('company_id', '=', ref('l10n_be.demo_company_be')), ('code', '=', '700000')]).id,
+                    'price_unit': 25.0,
+                    'quantity': 20
+                }),
+            ]"/>
+        </record>
+        <!-- INVOICE 3-->
+        <record id="demo_invoice_3" model="account.move">
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="move_type">out_invoice</field>
+            <field name="invoice_date" eval="time.strftime('%Y-%m')+'-08'"/>
+            <field name="company_id" ref="l10n_be.demo_company_be"/>
+            <field name="journal_id" model="account.journal"
+                   search="[('type', '=', 'sale'), ('company_id', '=', ref('l10n_be.demo_company_be'))]"/>
+            <field name="invoice_line_ids" model="account.account" eval="[
+                (0,0,{
+                    'product_id': ref('product.consu_delivery_01'),
+                    'account_id': obj().search([('company_id', '=', ref('l10n_be.demo_company_be')), ('code', '=', '700000')]).id,
+                    'price_unit': 90.0,
+                    'quantity': 5
+                }),
+                (0,0,{
+                    'product_id': ref('product.consu_delivery_03'),
+                    'account_id': obj().search([('company_id', '=', ref('l10n_be.demo_company_be')), ('code', '=', '700000')]).id,
+                    'price_unit': 15.0,
+                    'quantity': 5
+                }),
+            ]"/>
+        </record>
+
+        <!-- VENDOR BILL -->
+        <record id="vendor_bill_1" model="account.move">
+            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="invoice_user_id" ref="base.user_demo"/>
+            <field name="company_id" ref="l10n_be.demo_company_be"/>
+            <field name="journal_id" model="account.journal"
+                   search="[('type', '=', 'purchase'), ('company_id', '=', ref('l10n_be.demo_company_be'))]"/>
+            <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+            <field name="move_type">in_invoice</field>
+            <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+            <field name="invoice_line_ids" model="account.account" eval="[
+                (0,0,{
+                    'product_id': ref('product.product_delivery_01'),
+                    'account_id': obj().search([('company_id', '=', ref('l10n_be.demo_company_be')), ('code', '=', '300000')]).id,
+                    'price_unit': 10.0,
+                    'quantity': 1
+                }),
+                (0,0,{
+                    'product_id': ref('product.product_order_01'),
+                    'account_id': obj().search([('company_id', '=', ref('l10n_be.demo_company_be')), ('code', '=', '300000')]).id,
+                    'price_unit': 4.0,
+                    'quantity': 5
+                }),
+            ]"/>
+        </record>
+
+        <function model="account.move" name="_post">
+            <value eval="[ref('demo_invoice_1'), ref('demo_invoice_2'), ref('demo_invoice_3'), ref('vendor_bill_1')]"/>
+        </function>
+    </data>
+</odoo>

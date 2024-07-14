@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_invoice_form" model="ir.ui.view">
+        <field name="model">account.move</field>
+        <field name="name">account.move.edi.form</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@id='other_tab']" position="inside">
+                <group id="l10n_pe_group">
+                    <group string="Peru" name="l10n_pe_group" invisible="country_code != 'PE' or move_type != 'in_invoice' or not l10n_latam_document_type_id or l10n_latam_document_type_id_code in ['91', '97', '98']">
+                        <field name="l10n_latam_document_type_id_code" invisible="1"/>
+                        <field name="l10n_pe_detraction_number" />
+                        <field name="l10n_pe_detraction_date" />
+                    </group>
+                    <group string="Peru" name="l10n_pe_group_foreign" invisible="country_code != 'PE' or move_type != 'in_invoice' or not l10n_latam_document_type_id or l10n_latam_document_type_id_code not in ['91', '97', '98']">
+                        <field name="l10n_pe_dua_invoice_id" options="{'no_create': True}" />
+                        <field name="l10n_pe_service_modality" />
+                        <field name="l10n_pe_usage_type_id" options="{'no_create': True}" />
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//page[@id='other_tab_entry']/field[@name='narration']" position="before">
+                <group id="l10n_pe_reports_group">
+                    <group name="l10n_pe_sunat_transaction_type" invisible="country_code != 'PE'">
+                        <field name="l10n_pe_sunat_transaction_type" />
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

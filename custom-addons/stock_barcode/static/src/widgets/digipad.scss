@@ -1,0 +1,46 @@
+.o_digipad_widget {
+    display: flex;
+
+    .btn {
+        padding: 0;
+        border-radius: 4px;
+        font-size: 2em;
+
+        .o_web_client.o_touch_device & {
+            border-radius: 4px;
+            font-size: 1em;
+            padding: 4px;
+        }
+    }
+
+    .o_digipad_digit_buttons, .o_digipad_special_buttons {
+        display: grid;
+        grid-template-rows: repeat(4, 1fr);
+        gap: 4px;
+    }
+
+    .o_digipad_digit_buttons {
+        width: 75%;
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .o_digipad_special_buttons {
+        width: 25%;
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .o_packaging_button {
+        font-size: 1em;
+        overflow: hidden;
+
+        div[name=packaging_name] {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .small-text {
+        font-size: 0.66em;
+    }
+}

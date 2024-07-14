@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_address_form_industry_fsm" model="ir.ui.view">
+        <field name="name">res.partner.form.address.fsm</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_address_form"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="25"/>
+        <field name="arch" type="xml">
+            <field name="city" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
+            <field name="country_id" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
+            <field name="website" position="replace"/>
+            <field name="image_1920" position="replace"/>
+            <xpath expr="//form" position="inside">
+                <footer>
+                    <button name="action_partner_navigate" type="object" string="Navigate To" class="btn btn-primary" data-hotkey="q" close="1"/>
+                    <button string="Discard" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

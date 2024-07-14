@@ -1,0 +1,1005 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* industry_fsm
+# 
+# Translators:
+# Wil Odoo, 2023
+# Abe Manyo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Abe Manyo, 2023\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__nbr
+msgid "# of Tasks"
+msgstr "# Kegiatans"
+
+#. module: industry_fsm
+#: model:mail.template,body_html:industry_fsm.mail_template_data_intervention_details
+msgid ""
+"<div>\n"
+"    <t t-set=\"date_begin\" t-value=\"format_datetime(object.planned_date_begin, tz=object.partner_id.tz, lang_code=object.partner_id.lang)\"></t>\n"
+"\n"
+"    <t t-set=\"date_end\" t-value=\"format_datetime(object.date_deadline, tz=object.partner_id.tz, lang_code=object.partner_id.lang)\"></t>\n"
+"\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">customer</t>,<br><br>\n"
+"    <t t-if=\"date_begin and date_end\">\n"
+"        Your <t t-out=\"object.name or ''\">Boiler maintenance</t> intervention is scheduled from the <t t-out=\"date_begin or ''\">05/31/2021 12:30:00</t> to the <t t-out=\"date_end or ''\">05/31/2021 14:30:00</t>.\n"
+"    </t>\n"
+"    <t t-else=\"\">\n"
+"        Your <t t-out=\"object.name or ''\">Boiler maintenance</t> intervention is scheduled.\n"
+"    </t>\n"
+"    <br><br>\n"
+"    Best regards,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
+msgstr ""
+"<div>\n"
+"    <t t-set=\"date_begin\" t-value=\"format_datetime(object.planned_date_begin, tz=object.partner_id.tz, lang_code=object.partner_id.lang)\"></t>\n"
+"\n"
+"    <t t-set=\"date_end\" t-value=\"format_datetime(object.date_deadline, tz=object.partner_id.tz, lang_code=object.partner_id.lang)\"></t>\n"
+"\n"
+"    Yth <t t-out=\"object.partner_id.name or 'customer'\">pelanggan</t>,<br><br>\n"
+"    <t t-if=\"date_begin and date_end\">\n"
+"        Intervensi <t t-out=\"object.name or ''\">maintenance Boiler</t> Anda dijadawalkan dari <t t-out=\"date_begin or ''\">05/31/2021 12:30:00</t> sampai <t t-out=\"date_end or ''\">05/31/2021 14:30:00</t>.\n"
+"    </t>\n"
+"    <t t-else=\"\">\n"
+"        Intervensi <t t-out=\"object.name or ''\">maintenance Boiler</t> Anda dijadwalkan.\n"
+"    </t>\n"
+"    <br><br>\n"
+"    Salam hormat,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.portal_task_sign_button
+msgid "<i class=\"fa fa-check me-1\"/>Sign"
+msgstr "<i class=\"fa fa-check me-1\"/>Tandatangan"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+msgid ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer phone number will also be "
+"updated.\" invisible=\"not partner_id or not is_task_phone_update\"/>"
+msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"Dengan menyimpan perubahan ini, nomor telepon pelanggan telah "
+"diperbarui.\" invisible=\"not partner_id or not is_task_phone_update\"/>"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.portal_my_task
+msgid "<strong>Planned Date:</strong>"
+msgstr "<strong>Tanggal Direncanakan:</strong>"
+
+#. module: industry_fsm
+#: model:ir.model.constraint,message:industry_fsm.constraint_project_project_company_id_required_for_fsm_project
+msgid "A fsm project must be company restricted"
+msgstr "Project fsm harus terbatas perusahaan"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__active
+msgid "Active"
+msgstr "Aktif"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.mail_activity_plan_menu_config_task
+msgid "Activity Plans"
+msgstr "Rencana-Rencana Kegiatan"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_config_activity_type
+msgid "Activity Types"
+msgstr "Jenis Aktivitas"
+
+#. module: industry_fsm
+#: model:res.groups,name:industry_fsm.group_fsm_manager
+msgid "Administrator"
+msgstr "Administrator"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_all_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_all_tasks_root
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_all_tasks_todo
+msgid "All Tasks"
+msgstr "Semua Task"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__allocated_hours
+msgid "Allocated Time"
+msgstr "Waktu yang Dialokasikan"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_user_action_report_fsm
+msgid ""
+"Analyze the progress of your tasks and the performance of your workers."
+msgstr "Analisis progress task Anda dan performa pekerja Anda."
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__user_ids
+msgid "Assignees"
+msgstr "Petugas"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__date_assign
+msgid "Assignment Date"
+msgstr "Tanggal Tugas"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__rating_avg
+msgid "Average Rating"
+msgstr "Rata-Rata Rating"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__dependent_ids
+msgid "Block"
+msgstr "Blokir"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.project_task_menu_planning_by_project_fsm
+msgid "By Project"
+msgstr "Oleh Proyek"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.project_task_menu_planning_by_user_fsm
+msgid "By User"
+msgstr "Oleh Pengguna"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__partner_city
+msgid "City"
+msgstr "Kota"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.portal_task_sign_button
+msgid "Close"
+msgstr "Tutup"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_res_company
+msgid "Companies"
+msgstr "Perusahaan"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__company_id
+msgid "Company"
+msgstr "Perusahaan"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfigurasi"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_settings
+msgid "Configuration"
+msgstr "Konfigurasi"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_stop_timer_wizard_form
+msgid "Confirm"
+msgstr "Konfirmasi"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid ""
+"Confirm the <b>time spent</b> on your task. <i>Tip: note that the duration "
+"has automatically been rounded to 15 minutes.</i>"
+msgstr ""
+"Konfirmasi <b>waktu yang digunakan</b> pada task Anda. <i>Tip: catat bahwa "
+"durasi telah secara otomatis dibulatkan menjadi 15 menit.</i>"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_res_partner
+msgid "Contact"
+msgstr "Kontak"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_project_view_form_simplified_footer_fsm
+msgid "Create"
+msgstr "Buat"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__create_date
+msgid "Create Date"
+msgstr "Tanggal dibuat"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task_create_timesheet
+msgid "Create Timesheet from task"
+msgstr "Buat Timesheet dari task"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.open_create_project_fsm
+msgid "Create a Project"
+msgstr "Buat Proyek"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.res_config_settings_view_form
+msgid "Create custom worksheet templates"
+msgstr "Buat templat worksheet kustom"
+
+#. module: industry_fsm
+#: model:res.groups,name:industry_fsm.group_fsm_quotation_from_task
+msgid "Create new quotations directly from the tasks"
+msgstr "Buat quotation baru langsung dari task"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.res_config_settings_view_form
+msgid "Create new quotations directly from your tasks"
+msgstr "Buat quotation baru langsung dari task Anda"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_project_action_only_fsm
+msgid ""
+"Create projects to organize your tasks and define a different workflow for "
+"each project."
+msgstr ""
+"Buat project untuk mengatur tugas-tugas Anda dan definisikan workflow "
+"berbeda untuk setiap project."
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__create_uid
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__create_date
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/models/project_task.py:0
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__partner_id
+#, python-format
+msgid "Customer"
+msgstr "Pelanggan"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_reporting_customer_ratings
+msgid "Customer Ratings"
+msgstr "Rating Pelanggan"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__delay_endings_days
+msgid "Days to Deadline"
+msgstr "Hari menuju Deadline"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__date_deadline
+msgid "Deadline"
+msgstr "Batas waktu"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__description
+msgid "Description"
+msgstr "Deskripsi"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_project_view_form_simplified_footer_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_partner_address_form_industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_stop_timer_wizard_form
+msgid "Discard"
+msgstr "Buang"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__display_enabled_conditions_count
+msgid "Display Enabled Conditions Count"
+msgstr "Tampilkan Jumlah Kondisi yang Diaktifkan"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__display_mark_as_done_primary
+msgid "Display Mark As Done Primary"
+msgstr "Tampilkan Tandai Sebagai Selesai Utama"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__display_mark_as_done_secondary
+msgid "Display Mark As Done Secondary"
+msgstr "Tampilkan Tandai Sebagai Selesai Kedua"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__display_name
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__display_name
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__display_satisfied_conditions_count
+msgid "Display Satisfied Conditions Count"
+msgstr "Tampilkan Jumlah Kondisi yang Dipenuhi"
+
+#. module: industry_fsm
+#: model:ir.model.fields,help:industry_fsm.field_project_project__is_fsm
+#: model:ir.model.fields,help:industry_fsm.field_project_task__is_fsm
+msgid ""
+"Display tasks in the Field Service module and allow planning with start/end "
+"dates."
+msgstr ""
+"Tampilkan task di modul Layanan Lapangan dan izinkan perencanaan dengan "
+"tanggal awal/akhir."
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/models/project_task.py:0
+#, python-format
+msgid "Do you want to stop the running timers?"
+msgstr "Apakah Anda ingin berhenti menjalankan timer?"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__date_end
+msgid "Ending Date"
+msgstr "Tanggal Akhir"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_res_config_settings__group_industry_fsm_quotations
+msgid "Extra Quotations"
+msgstr "Quotation Ekstra"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_report_project_task_user_fsm
+msgid "FSM Tasks Analysis"
+msgstr "Analisis Task FSM"
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/models/project_project.py:0
+#: code:addons/industry_fsm/models/res_company.py:0
+#: model:ir.model.fields,field_description:industry_fsm.field_project_project__is_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__is_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_root
+#: model:project.project,name:industry_fsm.fsm_project
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:industry_fsm.res_config_settings_view_form
+#, python-format
+msgid "Field Service"
+msgstr "Layanan Lapangan"
+
+#. module: industry_fsm
+#: model:mail.template,name:industry_fsm.mail_template_data_intervention_details
+msgid "Field Service: Intervention Scheduled"
+msgstr "Layanan Lapangan: Intervensi Dijadwalkan"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_map
+msgid "Find here your itinerary for today's tasks."
+msgstr "Cari di sini itinerary untuk task hari ini."
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm
+msgid "Find here your upcoming tasks for the next few days."
+msgstr "Cari di sini task-task mendatang untuk beberapa hari ke depan."
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Future"
+msgstr "Akan Datang"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Future Activities"
+msgstr "Kegiatan - Kegiatan Mendatang"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid ""
+"Give it a <b>title</b> <i>(e.g. Boiler maintenance, Air-conditioning "
+"installation, etc.).</i>"
+msgstr ""
+"Berikan <b>judul</b> <i>(contoh Boiler maintenance, Air-conditioning "
+"installation, dsb.).</i>"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__effective_hours
+msgid "Hours Spent"
+msgstr "Jam penundaan"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__id
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__id
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__id
+msgid "ID"
+msgstr "ID"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__message_is_follower
+msgid "Is Follower"
+msgstr "Adalah Follower"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__is_task_phone_update
+msgid "Is Task Phone Update"
+msgstr "Apakah Telepon Task Diperbarui"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.res_config_settings_view_form
+msgid ""
+"Keep track of the products used for your tasks, and invoice your time and "
+"material to your customers"
+msgstr ""
+"Tetap lacak produk yang digunakan untuk task Anda, dan faktur waktu serta "
+"material Anda ke pelanggan"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__date_last_stage_update
+msgid "Last Stage Update"
+msgstr "Update Tahap Terakhir"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__write_uid
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__write_date
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Late Activities"
+msgstr "Aktifitas terakhir"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid "Launch the timer to <b>track the time spent</b> on your task."
+msgstr ""
+"Luncurkan timer untuk <b>melacak waktu yang digunakan</b> pada task Anda."
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid ""
+"Let's <b>mark your task as done!</b> <i>Tip: when doing so, your stock will "
+"automatically be updated, and your task will be closed.</i>"
+msgstr ""
+"Ayo <b>tandai task Anda sebagai selesai!</b> <i>Tip: saat menandai, stok "
+"Anda akan langsung diupdate, dan task Anda akan ditutup.</i>"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid "Let's create your first <b>task</b>."
+msgstr "Ayo buat <b>task</b> pertama Anda."
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard__line_ids
+msgid "Line"
+msgstr "Baris"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_view_form_inherit
+msgid "Manage tasks in the Field Service module"
+msgstr "Kelola task di modul Layanan Lapangan"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_fsm_map
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_tasks_map
+msgid "Map"
+msgstr "Peta"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+msgid "Mark as done"
+msgstr "Tandai sebagai selesai"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_ir_ui_menu
+msgid "Menu"
+msgstr "Menu"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__milestone_id
+msgid "Milestone"
+msgstr "Milestone"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_project__allow_milestones
+msgid "Milestones"
+msgstr "Milestone"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_tasks_menu
+msgid "My Tasks"
+msgstr " Kegiatanku"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_partner_address_form_industry_fsm
+msgid "Navigate To"
+msgstr "Navigasi Ke"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_user_action_report_fsm
+msgid "No data yet!"
+msgstr "Belum ada data!"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_project_action_only_fsm
+msgid "No projects found. Let's create one!"
+msgstr "Tidak ada project yang ditemukan. Ayo buat baru!"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_type_action_fsm
+msgid "No stages found. Let's create one!"
+msgstr "Tidak ada tahap yang ditemukan. Ayo buat baru!"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_all_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_map
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_planning_groupby_project
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_planning_groupby_user
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_to_schedule_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_tasks_action_fsm
+msgid "No tasks found. Let's create one!"
+msgstr "Tidak ada task yang ditemukan. Ayo buat baru!"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__overtime
+msgid "Overtime"
+msgstr "Jam Lembur"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__parent_id
+msgid "Parent Task"
+msgstr "Task Induk"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__personal_stage_type_ids
+msgid "Personal Stage"
+msgstr "Tahap Pribadi"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__partner_phone
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_map_view_fsm
+msgid "Phone"
+msgstr "Telepon"
+
+#. module: industry_fsm
+#: model:project.task.type,name:industry_fsm.planning_project_stage_1
+msgid "Planned"
+msgstr "Sudah Direncanakan"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_list_fsm
+msgid "Planned Date"
+msgstr "Tanggal Yang Direncanakan"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_planning
+msgid "Planning"
+msgstr "Perencanaan"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_fsm_planning_groupby_project
+msgid "Planning by Project"
+msgstr "Planning berdasarkan Project"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_fsm_planning_groupby_user
+msgid "Planning by User"
+msgstr "Planning berdasarkan User"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__priority
+msgid "Priority"
+msgstr "Prioritas"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__progress
+msgid "Progress"
+msgstr "Kemajuan"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_project
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__project_id
+msgid "Project"
+msgstr "Proyek"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_project_action_only_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_settings_project
+msgid "Projects"
+msgstr "Proyek"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Properties"
+msgstr "Properti"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__rating_last_value
+msgid "Rating (/5)"
+msgstr "Rating (/5)"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid ""
+"Ready to <b>manage your onsite interventions</b>? <i>Click Field Service to "
+"start.</i>"
+msgstr ""
+"Siap untuk <b>mengelola intervensi di lapangan</b>? <i>Klik Layanan Lapangan"
+" untuk memulai.</i>"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__remaining_hours
+msgid "Remaining Hours"
+msgstr "Jam tersisa"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__remaining_hours_percentage
+msgid "Remaining Hours Percentage"
+msgstr "Persentase Jam yang Tersisa"
+
+#. module: industry_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_reporting
+msgid "Reporting"
+msgstr "Laporan"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_planning_groupby_project
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_fsm_planning_groupby_user
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_to_schedule_fsm
+msgid "Schedule your tasks and assign them to your workers."
+msgstr "Jadwalkan task Anda dan tugaskan ke pekerja Anda."
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.report_project_task_user_fsm_view_search
+msgid "Search Planning"
+msgstr "Cari Planning"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid "Select the <b>customer</b> for your task."
+msgstr "Pilih <b>pelanggan</b> untuk task Anda."
+
+#. module: industry_fsm
+#: model:mail.template,description:industry_fsm.mail_template_data_intervention_details
+msgid ""
+"Set this template on a project's stage to automate email when tasks reach "
+"stages"
+msgstr ""
+"Tetapkan templat pada tahap project untuk mengotomatiskan email saat task "
+"sampai di tahap"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.res_config_settings_action_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_settings_res_config
+msgid "Settings"
+msgstr "Pengaturan"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Show all records which has next action date is before today"
+msgstr "Tampilkan semua dokumen dengan aksi berikut sebelum hari ini"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.portal_task_sign_button
+msgid "Sign"
+msgstr "Sign"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.portal_task_sign_button
+msgid "Sign Task"
+msgstr "Tandatangan Task"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_stop_timer_wizard_form
+msgid ""
+"Some employees are still running their timer for this task. Are you sure you"
+" want to continue?"
+msgstr ""
+"Beberapa karyawan masih menjalankan timer mereka untuk task ini. Apakah Anda"
+" yakin ingin melanjutkan?"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__stage_id
+msgid "Stage"
+msgstr "Tahapan"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_type_action_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_settings_stage
+msgid "Stages"
+msgstr "Tahap"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__planned_date_begin
+msgid "Start date"
+msgstr "Tanggal awal"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__state
+msgid "State"
+msgstr "Status"
+
+#. module: industry_fsm
+#. odoo-javascript
+#: code:addons/industry_fsm/static/src/js/tours/industry_fsm_tour.js:0
+#, python-format
+msgid "Stop the <b>timer</b> when you are done."
+msgstr "Hentikan <b>timer</b> saat Anda selesai."
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.report_project_task_user_fsm_view_tree
+msgid "Sum of Effective Hours"
+msgstr "Jumlah Jam Efektif"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__tag_ids
+#: model:ir.ui.menu,name:industry_fsm.menu_project_tags_act
+msgid "Tags"
+msgstr "Label"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__task_id
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__name
+msgid "Task"
+msgstr "Kegiatan"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_project__allow_task_dependencies
+msgid "Task Dependencies"
+msgstr "Ketergantungan Task"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task__fsm_done
+msgid "Task Done"
+msgstr "Task Selesai"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task_recurrence
+msgid "Task Recurrence"
+msgstr "Pengulangan Task"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task_type
+msgid "Task Stage"
+msgstr "Tahap kegiatan"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task_stop_timers_wizard
+msgid "Task stop running timers confirmation wizard"
+msgstr "Alat bantu konfirmasi task berhenti menjalankan timer"
+
+#. module: industry_fsm
+#: model:ir.model,name:industry_fsm.model_project_task_stop_timers_wizard_line
+msgid "Task stop running timers confirmation wizard line"
+msgstr "Baris wizard konfirmasi task berhenti menjalankan timer"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_tasks_action_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__task_id
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_tasks_kanban
+#: model:project.project,label_tasks:industry_fsm.fsm_project
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_calendar_fsm
+msgid "Tasks"
+msgstr "Kegiatan"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_user_action_report_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_reporting_task_analysis
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_graph
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_pivot
+#: model_terms:ir.ui.view,arch_db:industry_fsm.report_project_task_user_fsm_view_tree
+msgid "Tasks Analysis"
+msgstr "Kegiatan analisis"
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/models/project_task.py:0
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+#, python-format
+msgid "Time"
+msgstr "Waktu"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.timesheet_view_form
+msgid "Time Spent"
+msgstr "Waktu yang dihabiskan"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_res_config_settings__module_industry_fsm_sale
+msgid "Time and Material Invoicing"
+msgstr "Faktur Waktu dan Materi"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+msgid "Time recorded on this task"
+msgstr "Waktu yang dicatat pada task ini"
+
+#. module: industry_fsm
+#: model:ir.model.fields,help:industry_fsm.field_report_project_task_user_fsm__total_hours_spent
+msgid "Time spent on this task, including its sub-tasks."
+msgstr "Waktu yang dihabiskan pada task ini, termasuk sub-tasknya."
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/models/project_task.py:0
+#, python-format
+msgid "Timer started at: %(date)s %(time)s"
+msgstr "Timer dimulai pada: %(date)s %(time)s"
+
+#. module: industry_fsm
+#. odoo-python
+#: code:addons/industry_fsm/wizard/project_task_create_timesheet.py:0
+#, python-format
+msgid "Timer stopped at: %(date)s %(time)s"
+msgstr "Timer dihentikan pada: %(date)s %(time)s"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.timesheet_view_form
+msgid "Timesheet"
+msgstr "Lembar waktu"
+
+#. module: industry_fsm
+#: model:ir.actions.act_window,name:industry_fsm.project_task_action_to_schedule_fsm
+#: model:ir.ui.menu,name:industry_fsm.fsm_menu_all_tasks_schedule
+msgid "To Schedule"
+msgstr "Untuk Dijadwalkan"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "To Schedule/Assign"
+msgstr "Untuk Dijadwalkan/Ditugaskan"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_action_all_fsm
+msgid ""
+"To get things done, plan activities and use the task status.<br>\n"
+"                Collaborate efficiently by chatting in real-time or via email."
+msgstr ""
+"Agar kerjaan selesai, rencanakan kegiatan dan gunakan status task.<br>\n"
+"                Kolaborasi efisien dengan mengobrol secara real-time atau melalui email."
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_tasks_action_fsm
+msgid ""
+"To get things done, use activities and status on tasks.<br>\n"
+"                Chat in real-time or by email to collaborate efficiently."
+msgstr ""
+"Untuk menyelesaikan tugas, gunakan kegiatan dan status pada task.<br>\n"
+"                Chat secara real-time atau melalui email untuk berkolaborasi dengan efisien."
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Today"
+msgstr "Hari Ini"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Today Activities"
+msgstr "Aktivitas Hari ini"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__total_hours_spent
+msgid "Total Hours"
+msgstr "Total jam"
+
+#. module: industry_fsm
+#: model_terms:ir.actions.act_window,help:industry_fsm.project_task_type_action_fsm
+msgid "Track the progress of your tasks from their creation to their closing."
+msgstr "Lacak progress task Anda dari pembuatan sampai closing."
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_view_search_fsm
+msgid "Unread Messages"
+msgstr "Pesan Belum Dibaca"
+
+#. module: industry_fsm
+#: model:res.groups,name:industry_fsm.group_fsm_user
+msgid "User"
+msgstr "Pengguna"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+msgid "View Itinerary"
+msgstr "Lihat Itinerary"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_project_task_stop_timers_wizard_line__wizard_id
+msgid "Wizard"
+msgstr "Wisaya"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__working_days_open
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_graph
+msgid "Working Days to Assign"
+msgstr "Hari Kerja untuk Ditugaskan"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__working_days_close
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_graph
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_pivot
+msgid "Working Days to Close"
+msgstr "Hari Kerja untuk Ditutup"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__working_hours_open
+msgid "Working Hours to Assign"
+msgstr "Jam Kerja untuk Ditugaskan"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_report_project_task_user_fsm__working_hours_close
+msgid "Working Hours to Close"
+msgstr "Jam Kerja untuk Ditutup"
+
+#. module: industry_fsm
+#: model:ir.model.fields,field_description:industry_fsm.field_res_config_settings__module_industry_fsm_report
+msgid "Worksheets"
+msgstr "Workshee"
+
+#. module: industry_fsm
+#: model:mail.template,subject:industry_fsm.mail_template_data_intervention_details
+msgid ""
+"Your intervention is scheduled {{ object.planned_date_begin and "
+"object.date_deadline and 'from the ' + "
+"format_datetime(object.planned_date_begin, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) + ' to the ' + "
+"format_datetime(object.date_deadline, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) or '' }}"
+msgstr ""
+"Intervensi Anda dijadwalkan {{ object.planned_date_begin and "
+"object.date_deadline and 'from the ' + "
+"format_datetime(object.planned_date_begin, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) + ' to the ' + "
+"format_datetime(object.date_deadline, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) or '' }}"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.quick_create_task_form_fsm_inherited
+msgid "e.g. Boiler replacement"
+msgstr "contoh Penggantian boiler"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.view_task_form2_inherit
+msgid "is FSM?"
+msgstr "apakah FSM?"
+
+#. module: industry_fsm
+#: model:ir.actions.server,name:industry_fsm.fsm_customer_ratings_server_action
+msgid "project.project.fsm"
+msgstr "project.project.fsm"
+
+#. module: industry_fsm
+#: model_terms:ir.ui.view,arch_db:industry_fsm.project_task_user_view_pivot
+msgid "working days to assign"
+msgstr "hari kerja untuk ditugaskan"

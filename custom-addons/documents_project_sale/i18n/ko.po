@@ -1,0 +1,162 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* documents_project_sale
+# 
+# Translators:
+# Sarah Park, 2023
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:11+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: documents_project_sale
+#: model_terms:ir.ui.view,arch_db:documents_project_sale.product_template_form_view_inherit_documents_project_sale
+msgid ""
+"<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are "
+"company-specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are "
+"company-specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: documents_project_sale
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_product__documents_allowed_company_id
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_template__documents_allowed_company_id
+msgid "Documents Allowed Company"
+msgstr "문서가 허용되는 회사"
+
+#. module: documents_project_sale
+#: model:ir.model,name:documents_project_sale.model_documents_folder
+msgid "Documents Workspace"
+msgstr "문서 저장공간"
+
+#. module: documents_project_sale
+#: model:documents.tag,name:documents_project_sale.documents_folder_facet_1_tag_3
+msgid "Done/Archived"
+msgstr "완료/보관"
+
+#. module: documents_project_sale
+#: model:documents.tag,name:documents_project_sale.documents_folder_facet_1_tag_2
+msgid "In Use"
+msgstr "사용 중"
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder_template_child_3
+msgid "Miscellaneous"
+msgstr "기타"
+
+#. module: documents_project_sale
+#: model:documents.tag,name:documents_project_sale.documents_folder_facet_1_tag_1
+msgid "New/Unsorted"
+msgstr "신규/미분류"
+
+#. module: documents_project_sale
+#: model:ir.model.fields,help:documents_project_sale.field_product_product__template_folder_id
+#: model:ir.model.fields,help:documents_project_sale.field_product_template__template_folder_id
+msgid ""
+"On sales order confirmation, a workspace will be automatically generated for"
+" the project based on this template."
+msgstr "판매 주문을 확인할 경우, 이 서식을 기준으로 프로젝트의 작업 공간을 자동으로 생성합니다."
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder_template_child_2
+msgid "Photos"
+msgstr "사진"
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder_template_child_1
+msgid "Plans"
+msgstr "계획"
+
+#. module: documents_project_sale
+#: model:ir.model,name:documents_project_sale.model_product_template
+msgid "Product"
+msgstr "품목"
+
+#. module: documents_project_sale
+#: model:ir.model.fields,field_description:documents_project_sale.field_documents_folder__product_template_ids
+msgid "Product Template"
+msgstr "품목 양식"
+
+#. module: documents_project_sale
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_product__project_template_use_documents
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_template__project_template_use_documents
+msgid "Project Template - Documents"
+msgstr "프로젝트 서식 - 문서"
+
+#. module: documents_project_sale
+#: model:product.template,name:documents_project_sale.product_1
+msgid "Renovation Architect (Workspace Template)"
+msgstr "리노베이션 건축가 (작업 공간 서식)"
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder
+msgid "Renovation Projects"
+msgstr "리노베이션 프로젝트"
+
+#. module: documents_project_sale
+#: model:ir.model,name:documents_project_sale.model_sale_order
+msgid "Sales Order"
+msgstr "판매 주문"
+
+#. module: documents_project_sale
+#: model:documents.facet,name:documents_project_sale.documents_folder_facet_1
+msgid "Status"
+msgstr "상태"
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder_template
+msgid "Template"
+msgstr "서식"
+
+#. module: documents_project_sale
+#. odoo-python
+#: code:addons/documents_project_sale/models/product_template.py:0
+#, python-format
+msgid ""
+"The \"%s\" workspace template should either be in the \"%s\" company like "
+"this product or be open to all companies."
+msgstr "\"%s\" 작업 공간 서식은 이 품목처럼 \"%s\" 회사에 있거나 모든 회사에서 사용할 수 있어야 합니다."
+
+#. module: documents_project_sale
+#. odoo-python
+#: code:addons/documents_project_sale/models/documents_folder.py:0
+#, python-format
+msgid ""
+"This workspace should remain in the same company as the \"%s\" product for "
+"which it is a template. Please update the company of the \"%s\" product, or "
+"leave the company of this workspace empty."
+msgstr ""
+"해당 작업 공간은 서식에 있는 \"%s\" 품목과 동일한 회사에 있어야 합니다. \"%s\" 품목의 회사를 변경하거나 작업 공간의 회사 "
+"항목을 비워두세요."
+
+#. module: documents_project_sale
+#. odoo-python
+#: code:addons/documents_project_sale/models/documents_folder.py:0
+#, python-format
+msgid ""
+"This workspace should remain in the same company as the following products for which it is a template:\n"
+"%s\n"
+"\n"
+"Please update the company of those products, or leave the company of this workspace empty."
+msgstr ""
+"해당 작업 공간은 서식에서 다음의 품목과 동일한 회사에 있어야 합니다.:\n"
+"%s\n"
+"\n"
+"해당 품목의 회사를 변경하거나, 작업 공간의 회사 항목을 비워두세요."
+
+#. module: documents_project_sale
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_product__template_folder_id
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_template__template_folder_id
+msgid "Workspace Template"
+msgstr "작업 공간 서식"

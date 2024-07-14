@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="mrp_workorder.MrpDisplayMenuDialog" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('button_list')]" position="inside">
+            <button t-if="props.record.resModel == 'mrp.workorder'" class="btn btn-warning d-flex justify-content-between align-items-center p-3 fs-3"
+                    t-on-click="() => this.callAction('button_maintenance_req')">Request Maintenance <i class="oi oi-chevron-right"/></button>
+        </xpath>
+    </t>
+</templates>

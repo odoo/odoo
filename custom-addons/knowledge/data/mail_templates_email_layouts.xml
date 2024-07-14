@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <!-- This mail template is only sent to users that are mentioned in the composer of the comments
+        because it is configured in 'note' mode. This means that each comment added on a thread is a note logged
+        and does not trigger the sending of a notification unless some people are tagged. The only way to receive all
+        the note notification via email would be to modify the subtypes subscription inside the
+        knowledge.article.thread model, which is not easily accessible.-->
+    <template id="knowledge_mail_notification_layout" inherit_id="mail.mail_notification_layout" primary="True">
+        <xpath expr="//div[@t-out='message.body']" position="replace">
+            <span style="margin-bottom: 16px; font-size: 13px;"><t t-out="message.author_id.name"/> mentioned you in a comment:</span>
+            <table style="padding-top: 16px">
+                <tr style="padding-bottom: 0px; padding-top: 16px">
+                    <td>
+                        <div style="font-size: small; font-weight:bolder; padding-left: 8px;" t-out="message.author_id.name"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="margin-left: 8px; padding-left: 8px; padding-right: 8px;">
+                        <div t-out="message.body"/>
+                    </td>
+                </tr>
+            </table>
+        </xpath>
+    </template>
+</data>
+</odoo>

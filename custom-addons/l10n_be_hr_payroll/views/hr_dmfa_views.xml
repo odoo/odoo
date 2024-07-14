@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_dmfa_view_form" model="ir.ui.view">
+        <field name="name">l10n_be_hr_payroll.dmfa.report</field>
+        <field name="model">l10n_be.dmfa</field>
+        <field name="arch" type="xml">
+            <form string="DMFA">
+                <header>
+                    <button name="generate_dmfa_xml_report" string="Generate XML report" type="object" class="oe_highlight"  invisible="declaration_type == 'web' or dmfa_xml"/>
+                    <button name="generate_dmfa_xml_report" string="Re-Generate XML report" type="object" invisible="declaration_type == 'web' or not dmfa_xml"/>
+                    <button name="generate_dmfa_pdf_report" string="Generate PDF report" type="object" class="oe_highlight"  invisible="declaration_type == 'batch' or dmfa_pdf"/>
+                    <button name="generate_dmfa_pdf_report" string="Re-Generate PDF report" type="object" invisible="declaration_type == 'batch' or not dmfa_pdf"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="reference"/>
+                            <field name="year"/>
+                            <field name="quarter"/>
+                            <field name="declaration_type"/>
+                            <field name="file_type" invisible="declaration_type == 'web'"/>
+                            <field name="dmfa_xml_filename" invisible="1"/>
+                            <field name="dmfa_xml" filename="dmfa_xml_filename" readonly="1" invisible="declaration_type == 'web'"/>
+                            <field name="dmfa_signature_filename" invisible="1"/>
+                            <field name="dmfa_signature" filename="dmfa_signature_filename" readonly="1" invisible="declaration_type == 'web'"/>
+                            <field name="dmfa_go_filename" invisible="1"/>
+                            <field name="dmfa_go" filename="dmfa_go_filename" readonly="1" invisible="declaration_type == 'web'"/>
+                            <field name="dmfa_pdf_filename" invisible="1"/>
+                            <field name="dmfa_pdf" filename="dmfa_pdf_filename" readonly="1" invisible="declaration_type == 'batch'"/>
+                        </group>
+                        <group>
+                            <field name="validation_state" widget="state_selection" invisible="declaration_type == 'web'"/>
+                            <field name="error_message" invisible="declaration_type == 'web' or validation_state != 'invalid'"/>
+                        </group>
+                        <p class="text-muted" invisible="declaration_type == 'web'">Please note that the declaration by batch is rather complex and requires some technical knowledge (using some concepts like ssh keys, SFTP servers, and electronical signatures). You may want to take a look at the <a href="https://www.socialsecurity.be/site_fr/employer/applics/dmfa/batch/home.htm" target="_blank">the official documentation</a> and at the <a href="https://www.socialsecurity.be/site_fr/employer/applics/dmfa/batch/outline.htm" target="_blank">process overview</a> for more informations</p>
+                        <p class="text-muted" invisible="declaration_type == 'batch'">The printed pdf contains all the data to encode into the 'DmfA declaration web interface' that you can find <a href="https://www.socialsecurity.be/site_fr/employer/applics/dmfa/index.htm" target="_blank">here</a>.</p>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_be_hr_payroll_action_work_address_codes" model="ir.actions.act_window">
+        <field name="name">Work address DMFA codes</field>
+        <field name="res_model">l10n_be.dmfa.location.unit</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="hr_payslip_report_action_dmfa" model="ir.actions.act_window">
+        <field name="name">DMFA</field>
+        <field name="res_model">l10n_be.dmfa</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_be_hr_payroll_configuration"
+        name="Belgium"
+        parent="hr_work_entry_contract_enterprise.menu_hr_payroll_configuration"
+        sequence="500"
+        groups="hr_payroll.group_hr_payroll_user"
+    />
+
+    <menuitem
+        id="menu_l10n_be_dmfa_location_unit"
+        name="DMFA: Work Locations"
+        parent="menu_l10n_be_hr_payroll_configuration"
+        sequence="80"
+        action="l10n_be_hr_payroll_action_work_address_codes"
+        groups="hr_payroll.group_hr_payroll_user"
+    />
+
+    <record id="l10n_be_dmfa_location_unit_view_tree" model="ir.ui.view">
+        <field name="name">l10n_be.dmfa.location.unit</field>
+        <field name="model">l10n_be.dmfa.location.unit</field>
+        <field name="arch" type="xml">
+            <tree string="Work address DMFA codes">
+                <field name="code" options="{'format': false}"/>
+                <field name="partner_id"/>
+                <field name="company_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_be_dmfa_view_tree" model="ir.ui.view">
+        <field name="name">l10n_be.dmfa</field>
+        <field name="model">l10n_be.dmfa</field>
+        <field name="arch" type="xml">
+            <tree string="DMFA Reports">
+                <field name="reference"/>
+                <field name="year"/>
+                <field name="quarter"/>
+                <field name="validation_state" widget="state_selection" options="{'hide_label': False}"/>
+            </tree>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_hr_payroll_dmfa"
+        action="hr_payslip_report_action_dmfa"
+        parent="l10n_be_hr_payroll.menu_reporting_l10n_be"
+        sequence="30"
+    />
+
+</odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="event_type_view_form" model="ir.ui.view">
+        <field name="name">event.type.view.form.inherit.twitter.wall</field>
+        <field name="model">event.type</field>
+        <field name="inherit_id" ref="website_event.event_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//span[@name='menu_register_cta']" position="before">
+                <span>
+                    <label for="social_menu"/>
+                    <field name="social_menu"/>
+                </span>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

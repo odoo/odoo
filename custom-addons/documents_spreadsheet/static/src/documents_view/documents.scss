@@ -1,0 +1,19 @@
+/* Document share page, for some reason uses backend assets */
+
+.o_documents_content {
+    .o_document_spreadsheet,.o_document_xlsx {
+        cursor: zoom-in;
+    }
+
+    .o_spreadsheet_resize {
+        object-fit: cover;
+        object-position: left top;
+    }
+}
+
+
+.o_image {
+    &[data-mimetype="application/o-spreadsheet"] {
+        background-image: url("/spreadsheet/static/img/spreadsheet.svg");
+    }
+}

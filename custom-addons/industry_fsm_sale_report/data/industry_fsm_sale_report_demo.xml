@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="industry_fsm_sale.field_service_product" model="product.product">
+            <field name="worksheet_template_id" ref="industry_fsm_report.fsm_worksheet_template2"/>
+        </record>
+
+        <record id="fsm_template_field4" model="ir.model.fields">
+            <field name="name">x_model</field>
+            <field name="ttype">many2one</field>
+            <field name="relation">product.product</field>
+            <field name="field_description">Model</field>
+            <field name="model_id" model="ir.model" eval="obj().env.ref('industry_fsm_report.fsm_worksheet_template2').model_id.id"/>
+        </record>
+
+        <record id="fsm_worksheet_template2_form_inherit" model="ir.ui.view">
+            <field name="name">fsm.worksheet.template2.form.inherit</field>
+            <field name="model" model="ir.model" eval="obj().env.ref('industry_fsm_report.fsm_worksheet_template2').model_id.model"/>
+            <field name="inherit_id" ref="industry_fsm_report.fsm_worksheet_template2_form_inherit"/>
+            <field name="arch" type="xml">
+                <field name="x_manufacturer" position="after">
+                    <field name="x_model" options="{'no_create':true,'no_open':true}"/>
+                </field>
+            </field>
+        </record>
+
+        <function model="worksheet.template" name="_generate_qweb_report_template">
+            <value eval="[ref('industry_fsm_report.fsm_worksheet_template2')]"/>
+            <value model="ir.ui.view" eval=" obj().env.ref('industry_fsm_sale_report.fsm_worksheet_template2_form_inherit').id"/>
+        </function>
+
+    </data>
+</odoo>

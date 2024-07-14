@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <div t-name="knowledge.KnowledgeCommentsHandler" t-ref="root">
+        <t t-if="state.displayCommentsHandler and props.record.data.user_permission">
+            <t t-foreach="displayedComments" t-as="comment" t-key="comment.knowledgeThreadId">
+                <KnowledgeCommentsThread
+                    t-props="comment" record="props.record"
+
+                    changeCommentResolvedState="boundFunctions.changeCommentResolvedState"
+                    destroyComment="boundFunctions.destroyComment"
+                />
+            </t>
+        </t>
+    </div>
+</templates>

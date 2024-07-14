@@ -1,0 +1,739 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_avatax
+# 
+# Translators:
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Wil Odoo, 2024
+# Junko Augias, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "%(response)s"
+msgstr "%(response)s"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "- %s (ID: %s) on %s"
+msgstr "- %s (ID: %s)  %s上の"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i class=\"oi oi-fw oi-arrow-right\"/>\n"
+"                                How to Get Credentials"
+msgstr ""
+"<i class=\"oi oi-fw oi-arrow-right\"/>\n"
+"                                資格証明書の入手方法"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Go to Avatax portal\" role=\"img\" aria-label=\"Go to Avatax portal\" class=\"fa fa-external-link-square fa-fw\"/>\n"
+"                                Avatax portal"
+msgstr ""
+"<i title=\"Go to Avatax portal\" role=\"img\" aria-label=\"Go to Avatax portal\" class=\"fa fa-external-link-square fa-fw\"/>\n"
+"                                Avataxポータル"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Show logs\" role=\"img\" aria-label=\"Show logs\" class=\"fa fa-file-text-o\"/>\n"
+"                                Show logs"
+msgstr ""
+"<i title=\"Show logs\" role=\"img\" aria-label=\"Show logs\" class=\"fa fa-file-text-o\"/>\n"
+"                                ログを表示"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Start logging for 30 minutes\" role=\"img\" aria-label=\"Start logging for 30 minutes\" class=\"fa fa-file-text-o\"/>\n"
+"                                Start logging for 30 minutes"
+msgstr ""
+"<i title=\"Start logging for 30 minutes\" role=\"img\" aria-label=\"Start logging for 30 minutes\" class=\"fa fa-file-text-o\"/>\n"
+"                                30分のロギングを始める"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Sync Parameters\" role=\"img\" aria-label=\"Sync Parameters\" class=\"fa fa-refresh\"/>\n"
+"                                Sync Parameters"
+msgstr ""
+"<i title=\"Sync Parameters\" role=\"img\" aria-label=\"Sync Parameters\" class=\"fa fa-refresh\"/>\n"
+"                               パラメーターの同期"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Test connection\" role=\"img\" aria-label=\"Test connection\" class=\"fa fa-plug fa-fw\"/>\n"
+"                                Test connection"
+msgstr ""
+"<i title=\"Test connection\" role=\"img\" aria-label=\"Test connection\" class=\"fa fa-plug fa-fw\"/>\n"
+"                                接続のテスト"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "API ID"
+msgstr "API ID"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "API KEY"
+msgstr "APIキー"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_account_fiscal_position__avatax_invoice_account_id
+msgid "Account that will be used by Avatax taxes for invoices."
+msgstr "請求書用にAvataxによって使用される口座"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_account_fiscal_position__avatax_refund_account_id
+msgid "Account that will be used by Avatax taxes for refunds."
+msgstr "返金用にAvataxによって使用される口座"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Address Validation"
+msgstr "住所の確認"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/wizard/avatax_validate_address.py:0
+#, python-format
+msgid "Address validation is only supported for North American addresses."
+msgstr "住所の確認は北米の住所のみに限られます"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/res_company.py:0
+#, python-format
+msgid "Authentication failed."
+msgstr "認証に失敗しました"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/res_company.py:0
+#, python-format
+msgid "Authentication success."
+msgstr "認証に成功しました"
+
+#. module: account_avatax
+#: model:account.fiscal.position,name:account_avatax.account_fiscal_position_avatax_us
+msgid "Automatic Tax Mapping (AvaTax)"
+msgstr "自動税マッピング（AvaTax）"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_api_id
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_api_id
+msgid "Avalara API ID"
+msgstr "Avalara API ID"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_api_key
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_api_key
+msgid "Avalara API KEY"
+msgstr "Avalara API KEY"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_address_validation
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_address_validation
+msgid "Avalara Address Validation"
+msgstr "Avalara住所確認"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_avatax_unique_code__avatax_unique_code
+#: model:ir.model.fields,field_description:account_avatax.field_account_bank_statement_line__avatax_unique_code
+#: model:ir.model.fields,field_description:account_avatax.field_account_move__avatax_unique_code
+#: model:ir.model.fields,field_description:account_avatax.field_account_payment__avatax_unique_code
+#: model:ir.model.fields,field_description:account_avatax.field_res_partner__avatax_unique_code
+#: model:ir.model.fields,field_description:account_avatax.field_res_users__avatax_unique_code
+msgid "Avalara Code"
+msgstr "アバララコード"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_partner_code
+msgid "Avalara Company Code"
+msgstr "Avalara会社コード"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_environment
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_environment
+msgid "Avalara Environment"
+msgstr "Avalara環境"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_partner__avalara_exemption_id
+#: model:ir.model.fields,field_description:account_avatax.field_res_users__avalara_exemption_id
+msgid "Avalara Exemption"
+msgstr "Avalara免責"
+
+#. module: account_avatax
+#: model:ir.actions.act_window,name:account_avatax.ir_logging_avalara_action
+msgid "Avalara Logging"
+msgstr "Avalaraロギング"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_partner__avalara_partner_code
+#: model:ir.model.fields,field_description:account_avatax.field_res_users__avalara_partner_code
+msgid "Avalara Partner Code"
+msgstr "Avalara取引先コード"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_partner__avalara_show_address_validation
+#: model:ir.model.fields,field_description:account_avatax.field_res_users__avalara_show_address_validation
+msgid "Avalara Show Address Validation"
+msgstr "Avalara住所確認を表示"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.account_fiscal_position_form_inherit
+msgid "Avatax"
+msgstr "Avatax"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_product_category__avatax_category_id
+#: model:ir.model.fields,field_description:account_avatax.field_product_product__avatax_category_id
+#: model:ir.model.fields,field_description:account_avatax.field_product_template__avatax_category_id
+msgid "Avatax Category"
+msgstr "Avataxカテゴリ"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_bank_statement_line__avatax_tax_date
+#: model:ir.model.fields,field_description:account_avatax.field_account_move__avatax_tax_date
+#: model:ir.model.fields,field_description:account_avatax.field_account_payment__avatax_tax_date
+msgid "Avatax Date"
+msgstr "Avatax日付"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_fiscal_position__avatax_invoice_account_id
+msgid "Avatax Invoice Account"
+msgstr "Avatax請求口座"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_avatax_exemption
+msgid "Avatax Partner Exemption Codes"
+msgstr "Avatax取引先免責コード"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_product_avatax_category
+msgid "Avatax Product Category"
+msgstr "Avataxプロダクトカテゴリ"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_fiscal_position__avatax_refund_account_id
+msgid "Avatax Refund Account"
+msgstr "Avatax還付口座"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_account_bank_statement_line__avatax_tax_date
+#: model:ir.model.fields,help:account_avatax.field_account_move__avatax_tax_date
+#: model:ir.model.fields,help:account_avatax.field_account_payment__avatax_tax_date
+msgid ""
+"Avatax will use this date to calculate the tax on this invoice. If not "
+"specified it will use the Invoice Date."
+msgstr "Avataxはこの日付を使用して請求書の税額を計算します。指定がない場合は、請求日が使用されます。"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Cancel"
+msgstr "取消"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__city
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "City"
+msgstr "市"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_connection_test_result_view_form
+msgid "Close"
+msgstr "閉じる"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__code
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__code
+msgid "Code"
+msgstr "コード"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Commit Transactions"
+msgstr "取引をコミットする"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_commit
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_commit
+msgid "Commit in Avatax"
+msgstr "Avataxでコミットする"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_res_company
+msgid "Companies"
+msgstr "会社"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__company_id
+msgid "Company"
+msgstr "会社"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Company Code"
+msgstr "会社コード"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_res_config_settings
+msgid "Config Settings"
+msgstr "コンフィグ設定"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_res_partner
+msgid "Contact"
+msgstr "連絡先"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__country_id
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Country"
+msgstr "国"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__create_uid
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__create_uid
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__create_uid
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__create_date
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__create_date
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__create_date
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_res_partner__avalara_partner_code
+#: model:ir.model.fields,help:account_avatax.field_res_users__avalara_partner_code
+msgid "Customer Code set in Avalara for this partner."
+msgstr "この取引先のためにAvalaraに設定された顧客コード"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__description
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__description
+msgid "Description"
+msgstr "説明"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__display_name
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__display_name
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__display_name
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Environment"
+msgstr "環境"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_account_fiscal_position
+msgid "Fiscal Position"
+msgstr "会計ポジション"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_latitude
+msgid "Geo Latitude"
+msgstr "ジオ緯度"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_longitude
+msgid "Geo Longitude"
+msgstr "ジオ緯度"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "Go to the configuration panel"
+msgstr "コンフィグレーションパネルに移動"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__id
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__id
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__id
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__is_already_valid
+msgid "Is Already Valid"
+msgstr "すでに有効です"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_bank_statement_line__is_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_external_tax_mixin__is_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_move__is_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_payment__is_avatax
+msgid "Is Avatax"
+msgstr "アバターです"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_account_move
+msgid "Journal Entry"
+msgstr "仕訳"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__write_uid
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__write_uid
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__write_uid
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__write_date
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__write_date
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__write_date
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Latitude"
+msgstr "緯度"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Longitude"
+msgstr "経度"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_account_avatax_unique_code
+msgid "Mixin to generate unique ids for Avatax"
+msgstr "Avatax 用の一意な ID を生成する Mixin"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_account_external_tax_mixin
+msgid "Mixin to manage common parts of external tax calculation"
+msgstr "外部税計算の共通部分を管理するミキシン"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__name
+msgid "Name"
+msgstr "名称"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid ""
+"Odoo could not change the state of the transaction related to %(document)s in AvaTax\n"
+"Please check the status of `%(technical)s` in the AvaTax portal."
+msgstr ""
+"OdooがAvaTaxで%(document)sに関連する取引のステータスを変更できませんでした。\n"
+"AvaTaxポータルで`%(technical)s`の状態を確認して下さい。"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/res_company.py:0
+#, python-format
+msgid "Odoo could not fetch the exemption codes of %(company)s"
+msgstr "Odooは%(company)sの免税コードを取得できませんでした。"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid ""
+"Odoo could not fetch the taxes related to %(document)s.\n"
+"Please check the status of `%(technical)s` in the AvaTax portal."
+msgstr ""
+"Odooは%(document)sに関連する税を取得できませんでした。\n"
+"AvaTaxポータルで`%(technical)s`のステータスを確認して下さい。"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/wizard/avatax_validate_address.py:0
+#, python-format
+msgid "Odoo could not validate the address of %(partner)s with Avalara."
+msgstr "OdooはAvalaraと%(partner)sの所在地を検証できませんでした。"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid ""
+"Odoo could not void the transaction related to %(document)s in AvaTax\n"
+"Please check the status of `%(technical)s` in the AvaTax portal."
+msgstr ""
+"OdooがAvaTaxで%(document)sに関連する取引を無効化できませんでした。\n"
+"AvaTaxポータルで`%(technical)s`のステータスを確認してください。"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Original Address"
+msgstr "参照元アドレス"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__partner_id
+msgid "Partner"
+msgstr "取引先"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "Please add your AvaTax credentials"
+msgstr "AvaTaxの認証情報を追加して下さい。"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_product_template
+msgid "Product"
+msgstr "プロダクト"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_product_category
+msgid "Product Category"
+msgstr "プロダクトカテゴリ"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_product_product
+msgid "Product Variant"
+msgstr "プロダクトバリアント"
+
+#. module: account_avatax
+#: model:ir.model.fields.selection,name:account_avatax.selection__res_company__avalara_environment__production
+msgid "Production"
+msgstr "製造"
+
+#. module: account_avatax
+#: model:ir.model.fields.selection,name:account_avatax.selection__res_company__avalara_environment__sandbox
+msgid "Sandbox"
+msgstr "Sandbox"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Save Validated"
+msgstr "検証済と保存する"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_avatax_unique_code.py:0
+#, python-format
+msgid "Search operation not supported"
+msgstr "処理の検索はサポートされていません"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__server_response
+msgid "Server Response"
+msgstr "サーバ回答"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__state_id
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "State"
+msgstr "都道府県・州"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__street
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Street"
+msgstr "町名番地"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__street2
+msgid "Street2"
+msgstr "町名番地2"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_avatax_validate_address
+msgid "Suggests validated addresses from Avatax"
+msgstr "Avataxから有効な住所を提案"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Synchronize the exemption codes from Avatax"
+msgstr "Avataxから免税コードを同期する"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/res_company.py:0
+#, python-format
+msgid "Test Result"
+msgstr "テスト結果"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_avatax_connection_test_result
+msgid "Test connection with avatax"
+msgstr "avataxとの接続テスト"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_res_config_settings__avalara_partner_code
+msgid ""
+"The Avalara Company Code for this company. Avalara will interpret as DEFAULT"
+" if it is not set."
+msgstr "この会社のAvalara会社コード。設定されていない場合、Avalara は DEFAULT と解釈します。"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid ""
+"The Avalara Tax Code is required for %(name)s (#%(id)s)\n"
+"See https://taxcode.avatax.avalara.com/"
+msgstr ""
+"Avalara税コードは以下のために必要です：%(name)s (#%(id)s)\n"
+"以下を参照して下さい https://taxcode.avatax.avalara.com/"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid ""
+"The following customer(s) need to have a zip, state and country when using "
+"Avatax:"
+msgstr "Avataxをご利用の際、以下のお客様は郵便番号、州、国名が必要です："
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_res_config_settings__avalara_commit
+msgid "The transactions will be committed for reporting in Avatax."
+msgstr "取引はAvataxでの報告にコミットされます。"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "This is already a valid address."
+msgstr "これは既に有効なアドレスです。"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__setting_account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__setting_account_avatax
+msgid "Use AvaTax"
+msgstr "AvaTaxを使用する"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_fiscal_position__is_avatax
+msgid "Use AvaTax API"
+msgstr "AvaTax APIを使用する"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_use_upc
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_use_upc
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Use UPC"
+msgstr "UPCを使用する"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_res_config_settings__avalara_use_upc
+msgid "Use Universal Product Code instead of custom defined codes in Avalara."
+msgstr "Avalaraでは、カスタム定義コードの代わりにユニバーサルプロダクトコードを使用します。"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_account_avatax_unique_code__avatax_unique_code
+#: model:ir.model.fields,help:account_avatax.field_account_bank_statement_line__avatax_unique_code
+#: model:ir.model.fields,help:account_avatax.field_account_move__avatax_unique_code
+#: model:ir.model.fields,help:account_avatax.field_account_payment__avatax_unique_code
+#: model:ir.model.fields,help:account_avatax.field_res_partner__avatax_unique_code
+#: model:ir.model.fields,help:account_avatax.field_res_users__avatax_unique_code
+msgid "Use this code to cross-reference in the Avalara portal."
+msgstr "このコードを使用して、Avalara ポータルで相互参照します。"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__valid_country_ids
+msgid "Valid Country"
+msgstr "有効な国"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_partner_form_inherit
+msgid "Validate"
+msgstr "検証"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/res_partner.py:0
+#, python-format
+msgid "Validate address of %s"
+msgstr "%sのアドレスを検証する"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_res_config_settings__avalara_address_validation
+msgid ""
+"Validate and correct the addresses of partners in North America with "
+"Avalara."
+msgstr "Avalaraで北アメリカのパートナーのアドレスを検証・訂正する。"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Validated Address"
+msgstr "検証済アドレス"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_city
+msgid "Validated City"
+msgstr "検証済都市"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_country_id
+msgid "Validated Country"
+msgstr "検証済国"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_state_id
+msgid "Validated State"
+msgstr "検証済州"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_street
+msgid "Validated Street"
+msgstr "検証済通り名"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_street2
+msgid "Validated Street2"
+msgstr "検証済通り名2"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_zip
+msgid "Validated Zip Code"
+msgstr "検証済郵便番号"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__zip
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Zip Code"
+msgstr "郵便番号"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/product.py:0
+#, python-format
+msgid "[%s] %s"
+msgstr "[%s] %s"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_product_category__avatax_category_id
+#: model:ir.model.fields,help:account_avatax.field_product_product__avatax_category_id
+#: model:ir.model.fields,help:account_avatax.field_product_template__avatax_category_id
+msgid "https://taxcode.avatax.avalara.com/"
+msgstr "https://taxcode.avatax.avalara.com/"

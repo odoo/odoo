@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="document_view_search" model="ir.ui.view">
+        <field name="name">Document search view</field>
+        <field name="model">documents.document</field>
+        <field name="arch" type="xml">
+            <search string="Documents">
+                <field name="name" string="Document"/>
+                <field name="tag_ids"/>
+                <field name="owner_id"/>
+                <field name="partner_id" string="Contact"/>
+                <field name="index_content"/>
+                <field name="create_uid" string="Created by"/>
+                <filter string="My Documents" name="my_documents_filter" domain="[('owner_id', '=', uid)]"/>
+                <filter string="My Favorites" name="my_favorites_filter" domain="[('favorited_ids', 'in', uid)]"/>
+                <filter string="My Activities" name="my_activities_filter" domain="[('activity_user_id','=',uid)]"/>
+                <separator/>
+                <filter string="PDF/Document" name="pdf_doc" domain="['|', ('mimetype', 'ilike', 'pdf'), ('name', 'ilike', '.doc')]"/>
+                <filter string="Image/Video" name="img_video" domain="['|', ('mimetype', 'ilike', 'image'), ('mimetype', 'ilike', 'video')]"/>
+                <filter string="URL" name="url_filter" domain="[('type', '=', 'url')]"/>
+                <separator/>
+                <filter string="Locked" name="locked_filter" domain="['|', ('lock_uid', '=', uid), ('lock_uid', '!=', False)]"/>
+                <separator/>
+                <filter string="Requested" name="requested_filter" domain="[('type', '=', 'empty')]"/>
+                <separator/>
+                <filter string="Late Activities" name="activities_overdue"
+                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
+                <filter string="Today Activities" name="activities_today"
+                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Future Activities" name="activities_upcoming_all"
+                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <field name="type"/>
+                <group expand="0" string="Group By">
+                    <filter string="Contact" name="filter_partner_id" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Owner" name="filter_owner_id" domain="[]" context="{'group_by': 'owner_id'}"/>
+                    <filter string="Type" name="filter_type" domain="[]" context="{'group_by': 'type'}"/>
+                    <filter string="Model" name="filter_res_model" domain="[]" context="{'group_by': 'res_model'}"/>
+                    <filter string="Creation Date" name="filter_create_date" domain="[]" context="{'group_by':'create_date'}"/>
+                    <filter string="File Extension" name="filter_file_extension" domain="[]" context="{'group_by': 'file_extension'}"/>
+                </group>
+                <searchpanel class="o_documents_search_panel">
+                    <field name="folder_id"/>
+                    <field name="tag_ids" select="multi" groupby="facet_id" icon="fa-tag" enable_counters="1"/>
+                    <field name="res_model" select="multi" string="Attached To" icon="fa-file-text" color="#338FFC" enable_counters="1"/>
+                </searchpanel>
+                <field name="file_extension"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="document_view_kanban" model="ir.ui.view">
+        <field name="name">documents.document kanban</field>
+        <field name="model">documents.document</field>
+        <field name="arch" type="xml">
+            <kanban js_class="documents_kanban" create="false" sample="1">
+                <field name="id"/>
+                <field name="mimetype"/>
+                <field name="favorited_ids"/>
+                <field name="owner_id"/>
+                <field name="lock_uid"/>
+                <field name="type"/>
+                <field name="create_uid"/>
+                <field name="url"/>
+                <field name="url_preview_image"/>
+                <field name="create_date"/>
+                <field name="active"/>
+                <field name="checksum"/>
+                <field name="name"/>
+                <field name="res_model_name"/>
+                <field name="res_model"/>
+                <field name="res_name"/>
+                <field name="activity_ids"/>
+                <field name="activity_state"/>
+                <field name="is_editable_attachment"/>
+                <field name="is_multipage"/>
+                <field name="thumbnail_status"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div draggable="true" class="d-flex flex-column oe_kanban_global_area o_kanban_attachment o_documents_attachment"
+                             t-attf-class="#{record.is_multipage.raw_value ? 'o_kanban_stack' : ''}" t-att-data-id="record.id.raw_value">
+                            <t t-set="fileRequest" t-value="record.type.raw_value === 'empty'"/>
+                            <div class="o_kanban_image" t-attf-class="#{fileRequest ? 'o_request_image' : ''}">
+                                <t t-set="isPdf" t-value="['application/pdf', 'application/pdf;base64'].includes(record.mimetype.value)"/>
+                                <t t-set="hasThumbnail" t-value="(isPdf &amp;&amp; record.thumbnail_status.raw_value === 'present') || new RegExp('image.*(gif|jpeg|jpg|png|webp)').test(record.mimetype.value)"/>
+                                <!-- should be made more generic if we support different websites for videos -->
+                                <t t-set="youtubeUrlMatch" t-value="record.url.raw_value ? record.url.raw_value.match('youtu(?:\.be|be\.com)/(?:.*v(?:/|=)|(?:.*/)?)([a-zA-Z0-9-_]{11})') : false"/>
+                                <t t-set="youtubeVideoToken" t-value="youtubeUrlMatch ? youtubeUrlMatch.length > 1 ? youtubeUrlMatch[1] : false : false"/>
+                                <div name="document_preview" class="o_kanban_image_wrapper" t-att-title="fileRequest ? 'Upload file' : ''">
+                                    <img t-if="youtubeVideoToken" width="100" height="100" alt="Document" class="o_attachment_image"
+                                         t-attf-src="https://img.youtube.com/vi/{{youtubeVideoToken}}/0.jpg"/>
+                                    <a t-elif="record.type.raw_value =='url'" target="_blank" t-att-href="record.url.raw_value" class="o_kanban_image_wrapper">
+                                        <img t-if="record.url_preview_image.raw_value" class="w-100 h-100"
+                                            t-att-src="record.url_preview_image.raw_value" t-att-alt="record.name.raw_value"/>
+                                        <t t-else="">
+                                            <span class="o_url_image fa fa-link fa-3x text-muted"/>
+                                        </t>
+                                    </a>
+                                    <t t-elif="hasThumbnail">
+                                        <t t-set="unique" t-value="record.checksum.value ? record.checksum.value.slice(-8) : ''"/>
+                                        <div class="o_documents_image">
+                                            <img t-attf-src="/documents/image/#{record.id.raw_value}?field=thumbnail&amp;unique=#{unique}" alt="Document preview"/>
+                                        </div>
+                                    </t>
+                                    <div t-elif="fileRequest" class="fa fa-upload fa-3x text-muted">
+                                        <input type="file" class="o_input_file o_hidden o_kanban_replace_document"/>
+                                    </div>
+                                    <div t-else="!hasThumbnail" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>
+                                </div>
+                            </div>
+                            <div class="o_kanban_details flex-grow-1 flex-shrink-1 flex-auto">
+                                <div class="o_kanban_details_wrapper">
+                                    <div t-att-title="record.name.raw_value" class="o_kanban_record_title">
+                                        <t t-if="record.lock_uid.raw_value">
+                                            <i class="o_documents_lock fa fa-lock" t-att-title="record.lock_uid.value"/>
+                                        </t>
+                                        <field name="name" required="True" string="Document"/>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <t t-if="record.res_model_name.raw_value &amp;&amp; record.res_model.raw_value !== 'documents.document'">
+                                            <strong><field name="res_model_name"/></strong>
+                                            <t t-if="record.res_name.raw_value">
+                                                <span t-att-title="record.res_name.raw_value">: <field name="res_name"/></span>
+                                            </t>
+                                            <t t-elif="fileRequest">
+                                                 <span><b> Request</b></span>
+                                            </t>
+                                        </t>
+                                        <t t-elif="record.type.raw_value == 'url'" class="d-block">
+                                            <field name="url" class="d-block o_field_document_url" widget="url"/>
+                                        </t>
+                                        <t t-elif="fileRequest">
+                                            <span><b>Requested Document</b></span>
+                                        </t>
+                                        <div t-else="" class="mb-3"/>
+                                        <field name="tag_ids" class="d-block text-wrap" widget="documents_many2many_tags"/>
+                                    </div>
+                                    <div class="o_kanban_record_bottom flex-wrap">
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="activity_ids" widget="kanban_activity"/>
+                                            <field name="is_favorited" nolabel="1" widget="boolean_favorite"/>
+                                            <field name="owner_id" widget="many2one_avatar_user"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <t t-if="record.is_multipage.raw_value">
+                            <div class="o_kanban_stack"/>
+                            <div class="o_kanban_stack"/>
+                        </t>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="document_view_form" model="ir.ui.view">
+        <field name="name">documents form</field>
+        <field name="model">documents.document</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form create="false">
+                <header>
+                    <button type="object" name="access_content" string="Access" class="oe_highlight" invisible="not url"/>
+                    <button type="object" name="access_content" string="Download" class="oe_highlight" invisible="type != 'binary'"/>
+                    <button type="object" name="create_share" string="Share"/>
+                    <button type="object" name="toggle_lock" string="Lock" invisible="lock_uid"/>
+                    <button type="object" name="toggle_lock" string="Unlock" invisible="not lock_uid"/>
+                    <button type="object" name="action_archive" string="Move to trash" invisible="not active"/>
+                    <button type="object" name="action_unarchive" string="Restore" invisible="active"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="open_resource" type="object" class="oe_stat_button" icon="fa-external-link" invisible="not res_id or res_model in [False, 'documents.document']">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Related <br/> Record</span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Moved to trash" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="thumbnail" nolabel="1" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;:&quot;thumbnail&quot;}" invisible="not thumbnail"/>
+                    <div class="oe_title" aria-label="Name">
+                        <h1>
+                            <field name="name" class="oe_inline" placeholder="Document Name" required="True" readonly="is_locked"/> <i class="fa fa-lock oe_inline" title="Locked" invisible="not lock_uid"/>
+                        </h1>
+                    </div>
+                    <field name="is_locked" invisible="1"/>
+                    <field name="active" invisible="1"/>
+                    <field name="res_id" invisible="1"/>
+                    <field name="res_model" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="datas" string="File" filename="name" invisible="type == 'url'" readonly="is_locked"/>
+                            <field name="url" invisible="type != 'url'" readonly="is_locked"/>
+                            <field name="folder_id" readonly="is_locked"/>
+                            <field name="owner_id" readonly="is_locked"/>
+                            <field name="partner_id"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="type"/>
+                            <field name="create_date"/>
+                            <field name="create_uid"/>
+                            <field name="lock_uid" readonly="1" invisible="not lock_uid"/>
+                        </group>
+                    </group>
+                    <group groups="base.group_no_one">
+                        <field name="group_ids" widget="many2many_tags"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="file_size" invisible="type != 'binary'"/>
+                        <field name="mimetype"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="documents_upload_url_view" model="ir.ui.view">
+        <field name="name">upload url</field>
+        <field name="priority" eval="5"/>
+        <field name="model">documents.document</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="url" string="URL" widget="url" required="1" placeholder="e.g. https://www.youtube.com/watch?v=CP96yVnXNrY"/>
+                        <field name="name" required="True"/>
+                        <field name="url_preview_image" invisible="1" force_save="1"/>
+                        <field name="folder_id"/>
+                        <field name="tag_ids" invisible="1"/>
+                    </group>
+                <footer>
+                    <button special="save" data-hotkey="q" string="Add" class="btn btn-primary"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="documents_view_list" model="ir.ui.view">
+        <field name="name">documents list</field>
+        <field name="model">documents.document</field>
+        <field name="arch" type="xml">
+            <tree js_class="documents_list"
+                  create="false"
+                  decoration-info="type == 'empty'"
+                  sample="1">
+                <field name="id" optional="hide"/>
+                <field name="name" string="Document" required="True"/>
+                <field name="url" optional="hide"/>
+                <field name="tag_ids" widget="documents_many2many_tags" optional="show"/>
+                <field name="partner_id" optional="show"/>
+                <field name="owner_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="lock_uid" optional="hide"/>
+                <field name="type" optional="show"/>
+                <field name="checksum" invisible="1"/>
+                <field name="create_date" widget="date" optional="show"/>
+                <field name="activity_exception_decoration" widget="activity_exception" nolabel="True"/>
+                <field name="file_extension" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="documents_view_activity" model="ir.ui.view">
+        <field name="name">documents.document activity</field>
+        <field name="model">documents.document</field>
+        <field name="arch" type="xml">
+            <activity string="Documents" js_class="documents_activity">
+                <field name="folder_id" required="True"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <img class="rounded" t-att-src="activity_image('res.users', 'avatar_128', record.owner_id.raw_value)"
+                            role="img" t-att-title="record.owner_id.value" t-att-alt="record.owner_id.value"/>
+                        <div class="ms-2">
+                            <field class="o_text_block" name="name" display="full" required="True"/>
+                            <field name="owner_id" muted="1" display="full" class="o_text_block" invisible="1"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <record id="action_url_form" model="ir.actions.act_window">
+        <field name="name">Add Url</field>
+        <field name="res_model">documents.document</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'form_view_ref': 'documents.documents_upload_url_view'}</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="document_action" model="ir.actions.act_window">
+        <field name="name">Documents</field>
+        <field name="res_model">documents.document</field>
+        <field name="view_mode">kanban,tree,activity</field>
+        <field name="domain">[]</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('documents.document_view_kanban')}),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('documents.documents_view_list')}),
+            (0, 0, {'view_mode': 'activity', 'view_id': ref('documents.documents_view_activity')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Upload <span class="fw-normal">a file or</span> drag <span class="fw-normal">it here.</span></p>
+        </field>
+    </record>
+</odoo>

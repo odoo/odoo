@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="res_config_settings_view_form">
+        <field name="name">res.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_ar.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <div id="argentina_localization_section" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </div>
+
+            <xpath expr="//block[@id='argentina_localization']" position="inside">
+                <setting string="AFIP Web Services" company_dependent="1">
+                    <field name="l10n_ar_afip_ws_environment" class="o_light_label"  widget="radio"/>
+                    <div class="content-group">
+                        <div class="d-flex align-items-center" groups="base.group_no_one">
+                            <label for="l10n_ar_afip_ws_key" class="o_light_label col-lg-3"/>
+                            <field name="l10n_ar_afip_ws_key_fname" invisible="1" force_save="1"/>
+                            <field name="l10n_ar_afip_ws_key" widget="binary" class="oe_inline" filename="l10n_ar_afip_ws_key_fname"/>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <label for="l10n_ar_afip_ws_crt" class="o_light_label col-lg-3"/>
+                            <field name="l10n_ar_afip_ws_crt_fname" invisible="1" force_save="1"/>
+                            <field name="l10n_ar_afip_ws_crt" widget="binary" class="oe_inline" filename="l10n_ar_afip_ws_crt_fname" help="Here need to upload the file with the Certificate that you download from AFIP"/>
+                            <span invisible="l10n_ar_afip_ws_crt"> or</span>
+                            <button name="l10n_ar_action_create_certificate_request" icon="oi-arrow-right" type="object" class="oe_link oe_inline" string="Generate Request" invisible="l10n_ar_afip_ws_crt" help="Click here to create a Resquest Certificate file. This file need to be uploaded to your AFIP Portal in order to ask AFIP for a certificate"/>
+                        </div>
+                        <div class="mt16">
+                            <button name="l10n_ar_connection_test" icon="oi-arrow-right" type="object" class="oe_link oe_inline" string="Test Connections"/>
+                        </div>
+                        <div class="mt16" invisible="not l10n_ar_afip_ws_crt">
+                            <button name="l10n_ar_action_create_certificate_request" icon="oi-arrow-right" type="object" class="oe_link oe_inline" string="Generate Renewal Request"/>
+                        </div>
+                        <div class="mt16" id="get_afip_certificate">
+                            <a href="https://www.afip.gob.ar/ws/WSAA/WSAA.ObtenerCertificado.pdf" target="_blank">
+                                How to get certificate for production?
+                            </a>
+                        </div>
+                    </div>
+                </setting>
+                <setting string="Verify Vendor Bills validity in AFIP" company_dependent="1" help="Allow or Require to do vendor bill verify in AFIP for documents with CAE, CAI or CAEA numbers" invisible="country_code != 'AR'">
+                    <field name="l10n_ar_afip_verification_type" widget="radio"/>
+                </setting>
+                <setting string="Default MiPyME FCE Transmission Option" company_dependent="1" help="This information will be sent to AFIP by default when validating electronic FCE documents. RG 4919/2021 requirement." invisible="country_code != 'AR'">
+                    <field name="l10n_ar_fce_transmission_type" class="o_light_label" widget="radio"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

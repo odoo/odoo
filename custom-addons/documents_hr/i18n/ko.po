@@ -1,0 +1,239 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* documents_hr
+# 
+# Translators:
+# Wil Odoo, 2023
+# Daye Jeong, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Daye Jeong, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: documents_hr
+#: model_terms:ir.ui.view,arch_db:documents_hr.res_config_settings_view_form
+msgid ""
+"<span name=\"documents_hr_tags\" class=\"o_form_label\" invisible=\"1\">\n"
+"                                Default tags\n"
+"                            </span>"
+msgstr ""
+"<span name=\"documents_hr_tags\" class=\"o_form_label\" invisible=\"1\">\n"
+"                                기본 태그\n"
+"                            </span>"
+
+#. module: documents_hr
+#: model:mail.template,body_html:documents_hr.mail_template_document_folder_link
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
+"        <tr><td valign=\"top\" style=\"text-align: left; font-size: 14px;\">\n"
+"            Dear <t t-esc=\"object.name\"></t>, your personal documents access link is available for you.<br><br>\n"
+"            You'll find all your personal HR documents in this folder.<br><br>\n"
+"            Please keep this link secure.<br><br>\n"
+"            <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                <a t-attf-href=\"{{ object.documents_share_id.full_url }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                    Your Documents\n"
+"                </a>\n"
+"            </div>\n"
+"            Have a nice day,<br>\n"
+"            The HR Team\n"
+"        </td></tr>\n"
+"    </tbody></table>\n"
+"                "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
+"        <tr><td valign=\"top\" style=\"text-align: left; font-size: 14px;\">\n"
+"            안녕하세요, <t t-esc=\"object.name\"></t>님. 귀하의 문서함에 엑세스할 수 있는 링크를 보내드립니다.<br><br>\n"
+"            이 폴더에서 인사 관련 개인 문서 전체를 확인하실 수 있습니다.<br><br>\n"
+"            해당 링크의 보안을 안전하게 유지해 주시기를 바랍니다.<br><br>\n"
+"            <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                <a t-attf-href=\"{{ object.documents_share_id.full_url }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                    개인 문서함\n"
+"                </a>\n"
+"            </div>\n"
+"            좋은 하루 보내시기 바랍니다.<br>\n"
+"            인사팀\n"
+"        </td></tr>\n"
+"    </tbody></table>\n"
+"                "
+
+#. module: documents_hr
+#: model:documents.tag,name:documents_hr.documents_hr_documents_absences
+msgid "Absences"
+msgstr "부재"
+
+#. module: documents_hr
+#: model_terms:ir.ui.view,arch_db:documents_hr.res_config_settings_view_form
+msgid "Centralize your employees' documents (contracts, payslips, etc.)"
+msgstr "직원과 관련된 문서를 중앙 집중화합니다. (근로계약서, 급여 명세서 등)"
+
+#. module: documents_hr
+#: model:documents.tag,name:documents_hr.documents_hr_documents_Cerification
+msgid "Certifications"
+msgstr "인증"
+
+#. module: documents_hr
+#: model:ir.model,name:documents_hr.model_res_company
+msgid "Companies"
+msgstr "회사"
+
+#. module: documents_hr
+#: model:ir.model,name:documents_hr.model_res_config_settings
+msgid "Config Settings"
+msgstr "환경설정"
+
+#. module: documents_hr
+#: model:ir.model,name:documents_hr.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr "퇴사 마법사"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_res_users__document_ids
+msgid "Document"
+msgstr "문서"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_hr_employee__document_count
+msgid "Document Count"
+msgstr "문서 수"
+
+#. module: documents_hr
+#. odoo-python
+#: code:addons/documents_hr/models/res_users.py:0
+#: model:documents.facet,name:documents_hr.documents_hr_documents
+#: model:ir.model.fields,field_description:documents_hr.field_res_users__document_count
+#: model_terms:ir.ui.view,arch_db:documents_hr.hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:documents_hr.res_users_view_form
+#, python-format
+msgid "Documents"
+msgstr "문서"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_res_company__documents_hr_settings
+msgid "Documents Hr Settings"
+msgstr "인사 관리 문서 설정"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_hr_employee__documents_share_id
+msgid "Documents Share"
+msgstr "문서 공유"
+
+#. module: documents_hr
+#: model:ir.model,name:documents_hr.model_hr_employee
+msgid "Employee"
+msgstr "임직원"
+
+#. module: documents_hr
+#. odoo-python
+#: code:addons/documents_hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"Employee's related user and private email must be set to use \"Send Access Link\" function:\n"
+"%s"
+msgstr ""
+"직원의 사용자 및 비공개 이메일은 반드시 '액세스 링크 보내기' 기능을 사용하도록 설정해야 합니다.:\n"
+"%s"
+
+#. module: documents_hr
+#: model:documents.tag,name:documents_hr.documents_hr_documents_employees
+msgid "Employees Documents"
+msgstr "직원 관련 문서"
+
+#. module: documents_hr
+#: model:documents.folder,name:documents_hr.documents_hr_folder
+msgid "HR"
+msgstr "인사"
+
+#. module: documents_hr
+#. odoo-python
+#: code:addons/documents_hr/models/hr_employee.py:0
+#, python-format
+msgid "HR Documents: %s"
+msgstr "인사 문서: %s"
+
+#. module: documents_hr
+#: model:mail.template,name:documents_hr.mail_template_document_folder_link
+msgid "HR: Document Access Link"
+msgstr "인사: 문서 액세스 링크"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_res_config_settings__documents_hr_settings
+msgid "Human Resources"
+msgstr "인사 관리"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_hr_departure_wizard__private_email
+msgid "Private Email"
+msgstr "개인 이메일"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_hr_departure_wizard__send_hr_documents_access_link
+msgid "Send Access Link"
+msgstr "액세스 링크 전송"
+
+#. module: documents_hr
+#: model:ir.actions.server,name:documents_hr.ir_actions_server_send_access_link
+msgid "Send HR Documents Access Link"
+msgstr "인사 문서 액세스 링크 전송"
+
+#. module: documents_hr
+#: model:ir.model.fields,help:documents_hr.field_hr_departure_wizard__send_hr_documents_access_link
+msgid ""
+"Send a share link to the private email of the employee with all the HR files"
+" he owns in Documents app"
+msgstr "직원의 개인 이메일로 문서 앱에 저장되어 있는 모든 인사 파일의 공유 링크를 보냅니다."
+
+#. module: documents_hr
+#: model:mail.template,description:documents_hr.mail_template_document_folder_link
+msgid "Sent manually when recording an employee departure"
+msgstr "직원 퇴사 기록 시 수동으로 전송"
+
+#. module: documents_hr
+#. odoo-python
+#: code:addons/documents_hr/models/hr_employee.py:0
+#, python-format
+msgid "The access link has been sent to the employee."
+msgstr "직원에게 액세스 링크가 전송되었습니다."
+
+#. module: documents_hr
+#: model:ir.model,name:documents_hr.model_res_users
+msgid "User"
+msgstr "사용자"
+
+#. module: documents_hr
+#: model_terms:ir.ui.view,arch_db:documents_hr.res_config_settings_view_form
+msgid "Workspace"
+msgstr "저장공간"
+
+#. module: documents_hr
+#. odoo-python
+#: code:addons/documents_hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"You must set a work contact address on the Employee in order to use "
+"Document's features."
+msgstr "문서의 기능을 사용하려면 직원의 업무용 연락처 주소를 설정해야 합니다."
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_res_company__documents_hr_folder
+msgid "hr Workspace"
+msgstr "인사 저장공간"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_res_config_settings__documents_hr_folder
+msgid "hr default workspace"
+msgstr "인사 기본 저장공간"
+
+#. module: documents_hr
+#: model:mail.template,subject:documents_hr.mail_template_document_folder_link
+msgid "{{ object.name }}, your personal documents access link is available"
+msgstr "{{ object.name }}, 개인 문서 액세스 링크를 사용할 수 있습니다"

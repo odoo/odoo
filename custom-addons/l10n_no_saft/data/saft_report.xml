@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="saft_template_inherit_l10n_no_saft" inherit_id="account_saft.saft_template">
+        <xpath expr="//TaxCodeDetails" position="before">
+            <t t-if="company.account_fiscal_country_id.code == 'NO'">
+                <TaxType>MVA</TaxType>
+                <Description>Merverdiavgift</Description>
+            </t>
+        </xpath>
+        <xpath expr="//TaxCodeDetails" position="inside">
+            <t t-if="company.account_fiscal_country_id.code == 'NO'">
+                <!-- TODO: master has taxes whose name starts with two digit codes, V13 doesn't have such taxes, so giving fix code -->
+                <StandardTaxCode>02</StandardTaxCode>
+                <!-- <StandardTaxCode t-out="int(tax_vals['name'][:2])"/> -->
+                <!-- TODO: 100 depicts the whole amount is tax deductible, need to check if there can be any other value -->
+                <BaseRate>100</BaseRate>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="tax_information_inherit_l10n_no_saft" inherit_id="account_saft.tax_information">
+        <xpath expr="//TaxCode" position="before">
+            <t t-if="company.account_fiscal_country_id.code == 'NO'">
+                <TaxType>MVA</TaxType>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

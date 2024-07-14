@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="action_social_media" model="ir.actions.act_window">
+        <field name="name">Social Media</field>
+        <field name="res_model">social.media</field>
+        <field name="view_mode">kanban,form</field>
+    </record>
+
+    <record id="menu_social_media" model="ir.ui.menu">
+        <field name="action" ref="action_social_media" />
+    </record>
+
+    <record id="social_media_view_kanban" model="ir.ui.view">
+        <field name="name">social.media.view.kanban</field>
+        <field name="model">social.media</field>
+        <field name="arch" type="xml">
+            <kanban create="false">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="media_description"/>
+                <field name="media_type"/>
+                <field name="can_link_accounts"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_color_5">
+                            <div class="o_kanban_image">
+                                <img type="open" t-att-src="kanban_image('social.media', 'image', record.id.raw_value)" alt="Social Media"/>
+                            </div>
+                            <div class="mb-2">
+                                <h3 class="mt4"><t t-esc="record.name.value"/></h3>
+                                <t t-esc="record.media_description.value"/>
+                            </div>
+                            <button t-if="record.can_link_accounts.raw_value" type="object" class="btn btn-primary" name="action_add_account">Link account</button>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</data>
+</odoo>

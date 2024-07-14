@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_gr_pl_accounting_report" model="account.report">
+        <field name="name">Profit and Loss (Model B.2.1)</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.gr"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="default_opening_date_filter">this_year</field>
+        <field name="column_ids">
+            <record id="l10n_gr_pl_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_gr_pl_net_turnover" model="account.report.line">
+                <field name="name">Net turnover</field>
+                <field name="code">l10n_gr_net_turnover</field>
+                <field name="hierarchy_level">1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_net_turnover_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-70</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_cost_of_sales" model="account.report.line">
+                <field name="name">Cost of sales</field>
+                <field name="code">l10n_gr_cost_of_sales</field>
+                <field name="hierarchy_level">1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_cost_of_sales_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">
+                            -60.01.01 - 60.02.01 - 60.03.01 - 60.04.01 - 60.05.01 - 61.04 - 64.01.01.01 -
+                            64.01.02.01 - 64.02.01 - 64.03.01 - 64.04.01 - 64.05.01.01 - 64.05.02.01 -
+                            64.06.01 - 64.07.01 - 64.08.01 - 64.09.01 - 64.10.01 - 64.11.01 - 64.12.01 -
+                            64.13.01 - 65.05 - 66.01.01 - 66.02.01 - 66.03.01 - 66.04.01 - 66.05.01 - 66.06.01 -
+                            66.07.01 - 66.08.01 - 68.02 - 68.03.01 - 68.05.01 - 68.06.01 - 76.02 - 76.03.01 -
+                            76.05.01 - 76.09 - 80.01 - 80.02 - 80.03 - 80.04 - 80.05</field>
+                        <field name="green_on_positive" eval="True"/>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_gross_margin" model="account.report.line">
+                <field name="name">Gross margin</field>
+                <field name="code">l10n_gr_gross_margin</field>
+                <field name="hierarchy_level">3</field>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_gross_margin_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_gr_net_turnover.balance + l10n_gr_cost_of_sales.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_other_ordinary_revenue" model="account.report.line">
+                <field name="name">Other ordinary revenue</field>
+                <field name="code">l10n_gr_other_ordinary_revenue</field>
+                <field name="hierarchy_level">3</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_other_ordinary_revenue_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-71</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_temporary_result" model="account.report.line">
+                <field name="name">Gross margin - Other ordinary revenue</field>
+                <field name="code">l10n_gr_temporary_result</field>
+                <field name="hierarchy_level">3</field>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_temporary_result_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_gr_gross_margin.balance + l10n_gr_other_ordinary_revenue.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_admin_exp" model="account.report.line">
+                <field name="name">Administrative expenses</field>
+                <field name="code">l10n_gr_admin_exp</field>
+                <field name="hierarchy_level">3</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_admin_exp_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-60.01.02 - 60.02.02 - 60.03.02 - 60.04.02 - 60.05.02 -
+                            64.01.01.02 - 64.01.02.02 - 64.02.02 - 64.03.02 - 64.04.02 - 64.05.01.02 -
+                            64.05.02.02 - 64.06.02 - 64.07.02 - 64.08.02 - 64.09.02 - 64.10.02 - 64.11.02 -
+                            64.12.02 - 64.13.02 - 66.01.02 - 66.02.02 - 66.03.02 - 66.04.02 - 66.05.02 -
+                            66.06.02 - 66.07.02 - 66.08.02 - 68.04.01 - 68.06.02 - 76.05.02</field>
+                        <field name="green_on_positive" eval="True"/>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_selling_distri_exp" model="account.report.line">
+                <field name="name">Selling and distribution expenses</field>
+                <field name="code">l10n_gr_selling_distri_exp</field>
+                <field name="hierarchy_level">3</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_selling_distri_exp_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-60.01.03 - 60.02.03 - 60.03.03 - 60.04.03 - 60.05.03 -
+                            64.01.01.03 - 64.01.02.03 - 64.02.03 - 64.03.03 - 64.04.03 - 64.05.01.03 -
+                            64.05.02.03 - 64.06.03 - 64.07.03 - 64.08.03 - 64.09.03 - 64.10.03 - 64.11.03 -
+                            64.12.03 - 64.13.03 - 66.01.03 - 66.02.03 - 66.03.03 - 66.04.03 - 66.05.03 -
+                            66.06.03 - 66.07.03 - 66.08.03</field>
+                        <field name="green_on_positive" eval="True"/>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_other_exp_and_loss" model="account.report.line">
+                <field name="name">Other expenses and losses</field>
+                <field name="code">l10n_gr_other_exp_and_loss</field>
+                <field name="hierarchy_level">3</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_other_exp_and_loss_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-62 - 64.11.04 - 67 - 68.01 - 68.03.02 - 68.04.02 - 68.05.02 - 68.06.03 - 64.14</field>
+                        <field name="green_on_positive" eval="True"/>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_impairments_expenses" model="account.report.line">
+                <field name="name">Impairments of assets (net amount)</field>
+                <field name="code">l10n_gr_impairments_assets</field>
+                <field name="hierarchy_level">3</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_impairments_expenses_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-61.01 - 61.02 - 61.03 - 61.05 - 61.06 -
+                            76.06 - 76.07 - 76.08 - 76.10 - 76.11</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_loss_disposal_assets" model="account.report.line">
+                <field name="name">Gains/Losses on disposal of non-current assets</field>
+                <field name="code">l10n_gr_gain_loss_disposal_assets</field>
+                <field name="hierarchy_level">3</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_loss_disposal_assets_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-63 - 75</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_loss_measurement_fair_value" model="account.report.line">
+                <field name="name">Gains/Losses from measurement at fair value</field>
+                <field name="code">l10n_gr_gain_loss_measurement_fair_value</field>
+                <field name="hierarchy_level">3</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_loss_measurement_fair_value_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-61.07 - 77</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_revenue_investment" model="account.report.line">
+                <field name="name">Revenue from Investments</field>
+                <field name="code">l10n_gr_revenue_investment</field>
+                <field name="hierarchy_level">3</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_revenue_investment_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-72.04 - 74</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_gain_bargain_business" model="account.report.line">
+                <field name="name">Gain from Bargain Purchase of a Business</field>
+                <field name="code">l10n_gr_gain_bargain_business</field>
+                <field name="hierarchy_level">3</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_gain_bargain_business_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-79.03</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_other_gains" model="account.report.line">
+                <field name="name">Other Revenue and Gains</field>
+                <field name="code">l10n_gr_other_gains</field>
+                <field name="hierarchy_level">3</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_other_gains_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-73 - 76.01 - 76.03.02 - 76.04 - 76.05.03 - 79.01 - 79.02</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_income_before_interest_and_tax" model="account.report.line">
+                <field name="name">Income before interest and tax</field>
+                <field name="code">l10n_gr_income_before_interest_and_tax</field>
+                <field name="hierarchy_level">3</field>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_income_before_interest_and_tax_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">
+                            l10n_gr_temporary_result.balance +
+                            l10n_gr_admin_exp.balance +
+                            l10n_gr_selling_distri_exp.balance +
+                            l10n_gr_other_exp_and_loss.balance +
+                            l10n_gr_impairments_assets.balance +
+                            l10n_gr_gain_loss_disposal_assets.balance +
+                            l10n_gr_gain_loss_measurement_fair_value.balance +
+                            l10n_gr_revenue_investment.balance +
+                            l10n_gr_gain_bargain_business.balance +
+                            l10n_gr_other_gains.balance
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_interest_income" model="account.report.line">
+                <field name="name">Interest income</field>
+                <field name="code">l10n_gr_interest_income</field>
+                <field name="hierarchy_level">3</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_interest_income_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-72.01 - 72.02 - 72.03</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_interest_expense" model="account.report.line">
+                <field name="name">Interest expense</field>
+                <field name="code">l10n_gr_interest_expense</field>
+                <field name="hierarchy_level">3</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_interest_expense_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-65\(65.05)</field>
+                        <field name="green_on_positive" eval="True"/>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_income_before_tax" model="account.report.line">
+                <field name="name">Income before tax</field>
+                <field name="code">l10n_gr_income_before_tax</field>
+                <field name="hierarchy_level">3</field>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_income_before_tax_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">
+                            l10n_gr_income_before_interest_and_tax.balance +
+                            l10n_gr_interest_income.balance +
+                            l10n_gr_interest_expense.balance
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_income_tax" model="account.report.line">
+                <field name="name">Income tax</field>
+                <field name="code">l10n_gr_income_tax</field>
+                <field name="hierarchy_level">3</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_income_tax_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-69 - 78</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_gr_pl_net_income_for_the_period" model="account.report.line">
+                <field name="name">Net income for the period</field>
+                <field name="code">l10n_gr_net_income_for_the_period</field>
+                <field name="hierarchy_level">3</field>
+                <field name="expression_ids">
+                    <record id="l10n_gr_pl_net_income_for_the_period_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_gr_income_before_tax.balance + l10n_gr_income_tax.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="l10n_gr_pl_to_bs_action" model="ir.actions.client">
+        <field name="name">Profit and loss account</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('l10n_gr_pl_accounting_report')}"/>
+    </record>
+
+    <record id="l10n_gr_bs_unallocated_curr_year" model="account.report.line">
+        <field name="action_id" ref="l10n_gr_pl_to_bs_action"/>
+    </record>
+</odoo>

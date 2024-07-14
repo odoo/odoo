@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sri_key_type_tree_view" model="ir.ui.view">
+        <field name="name">l10n.ec.certificate.tree</field>
+        <field name="model">l10n_ec_edi.certificate</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="subject_common_name"/>
+                <field name="company_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="sri_key_type_form_view" model="ir.ui.view">
+        <field name="name">l10n.ec.certificate.form</field>
+        <field name="model">l10n_ec_edi.certificate</field>
+        <field name="arch" type="xml">
+            <form duplicate="0">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="file_name" invisible="1" force_save="1"/>
+                        </group>
+                        <group>
+                            <field name="content" required="1" filename="file_name"/>
+                            <field name="password" required="1" password="True"/>
+                        </group>
+                    </group>
+                    <notebook colspan="2">
+                        <page string="Certificate Info" name="page_certificate_info">
+                            <group>
+                                <group>
+                                    <field name="date_start"/>
+                                    <field name="subject_common_name"/>
+                                </group>
+                                <group>
+                                    <field name="date_end"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sri_key_type_search_view" model="ir.ui.view">
+        <field name="name">l10n.ec.certificate.search</field>
+        <field name="model">l10n_ec_edi.certificate</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="subject_common_name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="sri_key_type_action" model="ir.actions.act_window">
+        <field name="name">Digital Certificates</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">l10n_ec_edi.certificate</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="sri_key_type_tree_view"/>
+        <field name="search_view_id" ref="sri_key_type_search_view"/>
+    </record>
+
+    <menuitem
+        id="sri_key_type_menu"
+        name="Digital Certificates SRI"
+        sequence="2"
+        parent="l10n_ec.sri_menu"
+        action="sri_key_type_action"
+        groups="base.group_system"
+    />
+</odoo>

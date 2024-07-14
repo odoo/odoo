@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportHeader">
+        <t t-call="{{ env.template('AccountReportHeader') }}"/>
+    </t>
+
+    <t t-name="account_reports.AccountReportHeaderCustomizable">
+        <thead id="table_header" class="sticky">
+            <!-- Headers -->
+            <t t-foreach="columnHeaders" t-as="columnHeader" t-key="columnHeader_index">
+                <tr>
+                    <!-- First empty column -->
+                    <th>
+                        <t t-if="columnHeader_first and controller.options.companies.length > 1">
+                            <span class="companies_header" t-out="controller.options.companies.map(company => company.name).join(', ')"/>
+                        </t>
+                    </th>
+
+                    <!-- Other columns -->
+                    <t t-foreach="columnHeader" t-as="header" t-key="header_index">
+                        <th
+                            class="column_header"
+                            t-att-colspan="this.columnHeadersColspan(columnHeader_index, header)"
+                        >
+                            <t t-out="header.name"/>
+                        </th>
+                    </t>
+
+                    <!-- Growth comparison column -->
+                    <t t-if="controller.hasGrowthComparisonColumn">
+                        <!-- We only want to display it once on the first row -->
+                        <t t-if="columnHeader_first">
+                            <th class="growth_comparison_header">
+                                <i class="fa fa-percent"/>
+                            </th>
+                        </t>
+                    </t>
+
+                    <!-- Debug column -->
+                    <t t-if="controller.hasDebugColumn">
+                        <!-- We only want to display it once on the first row -->
+                        <t t-if="columnHeader_first">
+                            <th class="debug_header">
+                                <i class="fa fa-bug"/>
+                            </th>
+                        </t>
+                    </t>
+                </tr>
+            </t>
+
+            <!-- Custom subheaders -->
+            <t t-if="controller.hasCustomSubheaders">
+                <tr>
+                    <!-- First empty column -->
+                    <th/>
+
+                    <!-- Other columns -->
+                    <t t-foreach="customSubheaders" t-as="customSubheader" t-key="customSubheader_index">
+                        <th
+                            t-att-colspan="customSubheader.colspan || 1"
+                            t-att-data-expression_label="customSubheader.expression_label"
+                        >
+                            <t t-out="customSubheader.name"/>
+                        </th>
+                    </t>
+
+                    <!-- Debug column -->
+                    <t t-if="controller.hasDebugColumn">
+                        <!-- Empty to prevent a gap beneath the debug label -->
+                        <th/>
+                    </t>
+                </tr>
+            </t>
+
+            <!-- Subheaders -->
+            <tr>
+                <!-- First empty column -->
+                <th/>
+
+                <!-- Other columns -->
+                <t t-foreach="subheaders" t-as="subheader" t-key="subheader_index">
+                    <th
+                        t-att-colspan="subheader.colspan || 1"
+                        t-att-data-expression_label="subheader.expression_label"
+                    >
+                        <!-- Sortable -->
+                        <t t-if="subheader.sortable">
+                            <button
+                                class="btn btn_sortable"
+                                t-on-click="() => this.sortLinesByColumn(subheader_index, subheader)"
+                            >
+                                <i t-att-class="sortableClasses(subheader_index)"/>
+                            </button>
+                        </t>
+
+                        <t t-if="subheader.template">
+                            <t t-call="{{ subheader.template }}"/>
+                        </t>
+                        <t t-else="">
+                            <t t-out="subheader.name"/>
+                        </t>
+                    </th>
+                </t>
+
+                <!-- Debug column -->
+                <t t-if="controller.hasDebugColumn">
+                    <!-- Empty to prevent a gap beneath the debug label -->
+                    <th/>
+                </t>
+            </tr>
+        </thead>
+    </t>
+</templates>

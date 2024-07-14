@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record model="ir.cron" id="cron_get_result">
+        <field name="name">Website Generator: Get website scraper results</field>
+        <field name="interval_number">15</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="state">code</field>
+        <field name="doall" eval="False"/>
+        <field name="active" eval="False" />
+        <field name="model_id" ref="website_generator.model_website_generator_request"/>
+        <field name="code">model.get_result_waiting_requests()</field>
+    </record>
+</odoo>

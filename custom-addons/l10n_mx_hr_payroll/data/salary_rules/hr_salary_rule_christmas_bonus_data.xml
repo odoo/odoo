@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_mx_christmas_bonus_isr" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">ISR (Income Tax)</field>
+        <field name="code">ISR</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+def find_rates(x, rates):
+    for low, high, fix, rate in rates:
+        if low &lt;= x &lt;= high:
+            return low, high, fix, rate
+
+worked_days = (payslip.date_to - contract.employee_id.first_contract_date).days
+
+monthly_salary = contract._get_contract_wage()
+isr_tables = payslip._rule_parameter('l10n_mx_isr_tables')
+isr_monthly_table = isr_tables['monthly']
+
+# Method 1 - Working for more than 1 year
+gross = categories['GROSS']
+if gross and worked_days &gt;= 365:
+    month_income = monthly_salary + gross
+    exceeding_bonus = payslip._rule_parameter('l10n_mx_uma') * 30
+    taxable_amount = month_income - exceeding_bonus
+    low, high, fix, rate = find_rates(taxable_amount, isr_monthly_table)
+    isr_taxed_income = (taxable_amount - low) * rate / 100 + fix
+
+    low, high, fix, rate = find_rates(monthly_salary, isr_monthly_table)
+    isr_salary_month = (monthly_salary - low) * rate / 100 + fix
+
+    result = -(isr_taxed_income - isr_salary_month)
+# Method 2 - Working for less than 1 year
+elif gross and worked_days &lt; 365:
+    days_amount = contract.l10n_mx_christmas_bonus
+    taxed_bonus = (days_amount * monthly_salary / 30) * worked_days / 365
+    exceeding_bonus = payslip._rule_parameter('l10n_mx_uma') * 30
+    fraction_I = ((taxed_bonus - exceeding_bonus) / 365) * 30.4
+
+    fraction_II = monthly_salary + fraction_I
+    low, high, fix, rate = find_rates(fraction_II, isr_monthly_table)
+    fraction_II = (fraction_II - low) * rate / 100 + fix
+
+    low, high, fix, rate = find_rates(monthly_salary, isr_monthly_table)
+    fraction_III = (monthly_salary - low) * rate / 100 + fix
+    fraction_III = fraction_II - fraction_III
+
+    fraction_V = fraction_III / fraction_I
+
+    fraction_IV = taxed_bonus * fraction_V
+
+    result = - fraction_IV
+else:
+    result = 0
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_christmas_bonus"/>
+        <field name="note">
+        </field>
+    </record>
+
+</odoo>

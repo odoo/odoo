@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 
+        Sources:
+        https://leinonen.eu/lt-en/business-in-lithuania/employment
+        https://www.activpayroll.com/global-insights/lithuania
+        https://boundlesshq.com/guides/lithuania/taxes/
+     -->
+    <record id="l10n_lt_employees_salary_bik" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Benefit in Kind</field>
+        <field name="code">BIK</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.l10n_lt_benefits_in_kind</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = contract.l10n_lt_benefits_in_kind
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_lt_hr_payroll.hr_payroll_structure_lt_employee_salary"/>
+    </record>
+
+    <record id="l10n_lt_employees_salary_pit" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Personal Income Tax (PIT)</field>
+        <field name="code">PIT</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = payslip._get_l10n_lt_taxable_amount(localdict)
+result_rate = -payslip._rule_parameter('l10n_lt_pit_rate_low')
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_lt_hr_payroll.hr_payroll_structure_lt_employee_salary"/>
+    </record>
+
+    <record id="l10n_lt_employees_salary_pit_sick" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Personal Income Tax Sick Days (PIT)</field>
+        <field name="code">PITSICK</field>
+        <field name="sequence">111</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = payslip._get_l10n_lt_taxable_amount(localdict, sick=True)
+result_rate = -payslip._rule_parameter('l10n_lt_pit_rate_sick')
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_lt_hr_payroll.hr_payroll_structure_lt_employee_salary"/>
+    </record>
+
+    <record id="l10n_lt_employees_salary_pit_last_year" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Personal Income Tax Last Year (PIT)</field>
+        <field name="code">PITLAST</field>
+        <field name="sequence">112</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'PITLAST' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['PITLAST'].amount
+result_rate = -payslip._rule_parameter('l10n_lt_pit_rate_high')
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_lt_hr_payroll.hr_payroll_structure_lt_employee_salary"/>
+    </record>
+
+    <record id="l10n_lt_employees_salary_social_contribution" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Social Security Contribution</field>
+        <field name="code">SSC</field>
+        <field name="sequence">115</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = payslip._get_l10n_lt_taxable_amount(localdict)
+if contract.l10n_lt_pension:
+    result_rate = -payslip._rule_parameter('l10n_lt_ssc_rate_high')
+else:
+    result_rate = -payslip._rule_parameter('l10n_lt_ssc_rate')
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_lt_hr_payroll.hr_payroll_structure_lt_employee_salary"/>
+    </record>
+
+    <record id="l10n_lt_employees_salary_pension" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Pension Scheme</field>
+        <field name="code">PENSION</field>
+        <field name="sequence">120</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.l10n_lt_pension</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = payslip._get_l10n_lt_taxable_amount(localdict)
+result_rate = -payslip._rule_parameter('l10n_lt_pension_rate')
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_lt_hr_payroll.hr_payroll_structure_lt_employee_salary"/>
+    </record>
+
+    <record id="l10n_lt_employees_salary_social_contribution_company" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_lt_hr_payroll.hr_salary_rule_category_ssc_employer"/>
+        <field name="name">Social Contribution (Employer)</field>
+        <field name="code">SSCEMP</field>
+        <field name="sequence">300</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = payslip._get_l10n_lt_taxable_amount(localdict)
+if contract.l10n_lt_time_limited:
+    result_rate = payslip._rule_parameter('l10n_lt_sscemp_rate_high')
+else:
+    result_rate = payslip._rule_parameter('l10n_lt_sscemp_rate')
+        </field>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_lt_hr_payroll.hr_payroll_structure_lt_employee_salary"/>
+    </record>
+
+</odoo>
+

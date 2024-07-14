@@ -1,0 +1,22 @@
+.o_calendar_container {
+    .o_calendar_renderer .fc-view {
+        .fc-bgevent.o_calendar_slot {
+            opacity: 1;
+        }
+        .fc-day.fc-past.o_calendar_slot_selection, .fc-week .fc-day.fc-today.o_calendar_slot_selection {
+            border-color: #AAA;
+            background-color: $gray-300;
+            cursor: not-allowed;
+        }
+        .fc-day.fc-today.o_calendar_slot_selection {
+            border-color: #AAA !important;
+            div.o_calendar_slot_selection_now {
+                background-color: $gray-300;
+                cursor: not-allowed;
+            }
+        }
+    }
+    .o_calendar_sidebar_container .o_appointment_calendar_group_buttons .dropdown-toggle:after {
+        display: none;
+    }
+}

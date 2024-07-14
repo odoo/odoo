@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payslip_sepa_view_form" model="ir.ui.view">
+        <field name="name">hr.payslip.sepa.wizard.form</field>
+        <field name="model">hr.payslip.sepa.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Select a bank journal.">
+                <group>
+                  <field name="journal_id" required="True" domain="[('type', '=', 'bank')]"/>
+                </group>
+                <footer>
+                    <button string="Confirm" class="btn-primary" name="generate_sepa_xml_file" type="object" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_payslip_run_sepa_view_form" model="ir.ui.view">
+        <field name="name">hr.payslip.run.sepa.wizard.form</field>
+        <field name="model">hr.payslip.run.sepa.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Select a bank journal.">
+                <group>
+                  <field name="journal_id" required="True" domain="[('type', '=', 'bank')]"/>
+                  <field name="file_name" required="True"/>
+                </group>
+                <footer>
+                    <button string="Confirm" class="btn-primary" name="generate_sepa_xml_file" type="object" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

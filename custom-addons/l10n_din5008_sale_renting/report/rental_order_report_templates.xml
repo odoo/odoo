@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <template id="report_rental_order" inherit_id="sale_renting.report_rental_order">
+            <xpath expr="//t/t" position="before">
+                <t t-set="docs" t-value="docs.with_context(pickup_receipt=True)"/>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

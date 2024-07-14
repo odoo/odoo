@@ -1,0 +1,125 @@
+<odoo>
+    <data>
+        <template id="l10n_ch_salary_certificate_report_xml">
+            <SalaryDeclaration>
+        <Company>
+            <CompanyDescription>
+                <Name>
+                    <HR-RC-Name><t t-esc="company.name"/></HR-RC-Name>
+                </Name>
+                <Address>
+                    <ZIP-Code><t t-esc="company.zip"/></ZIP-Code>
+                    <City><t t-esc="company.city"/></City>
+                    <Country><t t-esc="company.country_id.name.upper()"/></Country>
+                </Address>
+            </CompanyDescription>
+        <Staff>
+            <t t-foreach="employee_data" t-as="employee">
+            <Person>
+                <Particulars>
+                    <Social-InsuranceIdentification>
+                        <SV-AS-Number><t t-esc="employee['sv-as-number']"/></SV-AS-Number>
+                    </Social-InsuranceIdentification>
+                    <EmployeeNumber><t t-esc="employee['emp_number']"/></EmployeeNumber>
+                    <Lastname><t t-esc="employee['Lastname']"/></Lastname>
+                    <Firstname><t t-esc="employee['Firstname']"/></Firstname>
+                    <Sex><t t-esc="employee['sex']"/></Sex>
+                    <DateOfBirth><t t-esc="employee['birthday']"/></DateOfBirth>
+                    <Nationality><t t-esc="employee['nationality']"/></Nationality>
+                    <Address>
+                        <Street><t t-esc="employee['Street']"/></Street>
+                        <ZIP-Code><t t-esc="employee['ZIP-Code']"/></ZIP-Code>
+                        <City><t t-esc="employee['City']"/></City>
+                        <Country><t t-esc="employee['Country']"/></Country>
+                    </Address>
+                    <ResidenceCanton><t t-esc="employee['ResidenceCanton']"/></ResidenceCanton>
+                    <MunicipalityID><t t-esc="employee['MunicipalityID']"/></MunicipalityID>
+                </Particulars>
+                <TaxSalaries>
+                    <TaxSalary>
+                        <DocID><t t-esc="employee['DocID']"/></DocID>
+                        <Period>
+                            <from>2022-01-01</from>
+                            <until>2022-12-31</until>
+                        </Period>
+                        <Income><t t-esc="employee['salaries']['Income'][0]"/></Income>
+                        <FringeBenefits>
+                            <FoodLodging><t t-esc="employee['salaries']['FringeBenefits']['FoodLodging'][0]"/></FoodLodging>
+                            <CompanyCar><t t-esc="employee['salaries']['FringeBenefits']['CompanyCar'][0]"/></CompanyCar>
+                            <Other>
+                                <Sum><t t-esc="employee['salaries']['FringeBenefits']['Other'][0]"/></Sum>
+                                <t t-if="employee['salaries']['FringeBenefits']['Other'][1]">
+                                    <Text><t t-esc="employee['salaries']['FringeBenefits']['Other'][1]"/></Text>
+                                </t>
+                            </Other>
+                        </FringeBenefits>
+                        <SporadicBenefits>
+                            <Sum><t t-esc="employee['salaries']['SporadicBenefits'][0]"/></Sum>
+                            <t t-if="employee['salaries']['SporadicBenefits'][1]">
+                                <Text><t t-esc="employee['salaries']['SporadicBenefits'][1]"/></Text>
+                            </t>
+                        </SporadicBenefits>
+                        <CapitalPayment>
+                            <Sum><t t-esc="employee['salaries']['CapitalPayment'][0]"/></Sum>
+                            <t t-if="employee['salaries']['CapitalPayment'][1]">
+                                <Text><t t-esc="employee['salaries']['CapitalPayment'][1]"/></Text>
+                            </t>
+                        </CapitalPayment>
+                        <OwnershipRight><t t-esc="employee['salaries']['OwnershipRight'][0]"/></OwnershipRight>
+                        <BoardOfDirectorsRemuneration><t t-esc="employee['salaries']['BoardOfDirectorsRemuneration'][0]"/></BoardOfDirectorsRemuneration>
+                        <OtherBenefits>
+                            <Sum><t t-esc="employee['salaries']['OtherBenefits'][0]"/></Sum>
+                            <t t-if="employee['salaries']['OtherBenefits'][1]">
+                                <Text><t t-esc="employee['salaries']['OtherBenefits'][1]"/></Text>
+                            </t>
+                        </OtherBenefits>
+                        <GrossIncome><t t-esc="employee['salaries']['GrossIncome'][0]"/></GrossIncome>
+                        <AHV-ALV-NBUV-AVS-AC-AANP-Contribution><t t-esc="employee['salaries']['AHV-ALV-NBUV-AVS-AC-AANP-Contribution'][0]"/></AHV-ALV-NBUV-AVS-AC-AANP-Contribution>
+                        <BVG-LPP-Contribution>
+                            <Regular><t t-esc="employee['salaries']['BVG-LPP-Contribution']['Regular'][0]"/></Regular>
+                            <Purchase><t t-esc="employee['salaries']['BVG-LPP-Contribution']['Purchase'][0]"/></Purchase>
+                        </BVG-LPP-Contribution>
+                        <NetIncome><t t-esc="employee['salaries']['NetIncome'][0]"/></NetIncome>
+                        <DeductionAtSource><t t-esc="employee['salaries']['DeductionAtSource'][0]"/></DeductionAtSource>
+                        <Charges>
+                            <Effective>
+                                <TravelFoodAccommodation><t t-esc="employee['salaries']['Charges']['Effective']['TravelFoodAccommodation'][0]"/></TravelFoodAccommodation>
+                                <Other>
+                                    <Sum><t t-esc="employee['salaries']['Charges']['Effective']['Other'][0]"/></Sum>
+                                    <t t-if="employee['salaries']['Charges']['Effective']['Other'][1]">
+                                        <Text><t t-esc="employee['salaries']['Charges']['Effective']['Other'][1]"/></Text>
+                                    </t>
+                                </Other>
+                            </Effective>
+                            <LumpSum>
+                                <Representation><t t-esc="employee['salaries']['Charges']['LumpSum']['Representation'][0]"/></Representation>
+                                <Car><t t-esc="employee['salaries']['Charges']['LumpSum']['Car'][0]"/></Car>
+                                <Other>
+                                    <Sum><t t-esc="employee['salaries']['Charges']['LumpSum']['Other'][0]"/></Sum>
+                                    <t t-if="employee['salaries']['Charges']['LumpSum']['Other'][1]">
+                                        <Text><t t-esc="employee['salaries']['Charges']['LumpSum']['Other'][1]"/></Text>
+                                    </t>
+                                </Other>
+                            </LumpSum>
+                            <Education><t t-esc="employee['salaries']['Charges']['Education'][0]"/></Education>
+                        </Charges>
+                        <OtherFringeBenefits><t t-esc="employee['salaries']['OtherFringeBenefits'][1]"/></OtherFringeBenefits>
+                    </TaxSalary>
+                </TaxSalaries>
+            </Person>
+                </t>
+            </Staff>
+        </Company>
+        <GeneralSalaryDeclarationDescription>
+            <CreationDate><t t-esc="creation_date"/></CreationDate>
+            <AccountingPeriod><t t-esc="accounting_period"/></AccountingPeriod>
+            <ContactPerson>
+                <Name><t t-esc="contact_person.name"/></Name>
+                <EmailAddress><t t-esc="contact_person.email"/></EmailAddress>
+                <PhoneNumber><t t-esc="contact_person.phone"/></PhoneNumber>
+            </ContactPerson>
+        </GeneralSalaryDeclarationDescription>
+            </SalaryDeclaration>
+        </template>
+    </data>
+</odoo>

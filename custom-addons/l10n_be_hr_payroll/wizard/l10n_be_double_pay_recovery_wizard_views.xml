@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_double_pay_recovery_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n.be.double.pay.recovery.wizard.view.form</field>
+        <field name="model">l10n.be.double.pay.recovery.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Double Pay Recovery Computation">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="contract_id"/>
+                            <field name="payslip_id" invisible="1"/>
+                            <field name="gross_salary"/>
+                            <field name="months_count"/>
+                        </group>
+                        <field name="months_count_description" nolabel="1" class="text-muted"/>
+                    </group>
+                    <group string="Previous Occupations" invisible="months_count &gt; 12.0">
+                        <field name="line_ids">
+                            <tree editable="bottom">
+                                <field name="months_count"/>
+                                <field name="amount"/>
+                                <field name="occupation_rate"/>
+                                <field name="currency_id" column_invisible="True"/>
+                                <field name="company_calendar" column_invisible="True"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group string="Amounts to Recover" invisible="months_count &gt; 12.0">
+                        <group>
+                            <field name="double_pay_to_recover"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Validate" name="action_validate" type="object" class="btn-primary" invisible="months_count &gt; 12.0" data-hotkey="q"/>
+                    <button special="cancel" data-hotkey="x" string="Close" type="object" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_be_double_pay_recovery_wizard_action" model="ir.actions.act_window">
+        <field name="name">Double Pay Recovery Computation</field>
+        <field name="res_model">l10n.be.double.pay.recovery.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

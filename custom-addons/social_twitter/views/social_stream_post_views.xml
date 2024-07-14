@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="social_stream_post_view_kanban" model="ir.ui.view">
+        <field name="name">social.stream.post.view.kanban.inherit.twitter</field>
+        <field name="model">social.stream.post</field>
+        <field name="inherit_id" ref="social.social_stream_post_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stream_id']" position="after">
+                <field name="twitter_tweet_id"/>
+                <field name="twitter_author_id"/>
+                <field name="twitter_profile_image_url"/>
+                <field name="twitter_likes_count"/>
+                <field name="twitter_user_likes"/>
+                <field name="twitter_retweet_count"/>
+                <field name="twitter_screen_name"/>
+                <field name="twitter_comments_count"/>
+                <field name="twitter_quoted_tweet_id_str"/>
+                <field name="twitter_quoted_tweet_message"/>
+                <field name="twitter_quoted_tweet_author_name"/>
+                <field name="twitter_quoted_tweet_author_link"/>
+                <field name="twitter_quoted_tweet_profile_image_url"/>
+                <field name="twitter_can_retweet"/>
+            </xpath>
+            <xpath expr="//span[hasclass('o_social_stream_post_author_image')]" position="inside">
+                <img t-if="record.twitter_profile_image_url.raw_value" t-att-src="record.twitter_profile_image_url.raw_value" alt="Author Image" class="rounded"/>
+            </xpath>
+            <xpath expr="//div[@name='o_social_stream_post_message_body']" position="inside">
+                <t t-if="record.twitter_quoted_tweet_id_str?.value"
+                    t-call="social_twitter.StreamPostQuotedTweet">
+                    <t t-set="post" t-value="record"/>
+                    <t t-set="formattedMessage">
+                        <field name="twitter_quoted_tweet_message" widget="social_post_formatter"/>
+                    </t>
+                </t>
+            </xpath>
+            <xpath expr="//div[hasclass('o_social_stream_post_message')]" position="inside">
+                <div class="o_social_stream_post_twitter_stats px-2 d-flex justify-content-around" t-if="record.media_type.raw_value === 'twitter'">
+                    <div class="d-flex justify-content-around">
+                        <div t-attf-class="o_social_twitter_likes o_social_subtle_btn ps-2 pe-3 #{record.twitter_user_likes.raw_value ? 'o_social_twitter_user_likes' : ''}">
+                            <i class="fa fa-heart me-1" title="Likes"/>
+                            <field name="twitter_likes_count" t-if="record.twitter_likes_count.value !== '0'" class="fw-bold"/>
+                        </div>
+
+                        <div class="o_social_twitter_comments o_social_comments o_social_subtle_btn px-4">
+                            <i class="fa fa-comments me-1" title="Comments"/>
+                        </div>
+                    </div>
+
+                    <div class="flex-grow-1 text-end text-muted">
+                        <div class="d-inline-block dropdown shown kanban_ignore_dropdown">
+                            <a href="#" class="o_social_twitter_retweet_icon o_social_subtle_btn"
+                                role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i t-attf-class="fa fa-retweet #{record.twitter_can_retweet.raw_value ? '' : 'active'} me-1"
+                                    role="img" aria-label="Retweet" title="Retweet or Quote"/>
+                                <t t-if="record.twitter_retweet_count.value > 0">
+                                    <div class="d-inline-block">
+                                        <t t-esc="record.twitter_retweet_count.value"/>
+                                        RT
+                                    </div>
+                                </t>
+                            </a>
+                            <div class="dropdown-menu kanban_ignore_dropdown" role="menu">
+                                <a class="dropdown-item o_social_twitter_retweet" href="#" role="button">
+                                    <i class="fa fa-retweet me-1" title="Retweet a tweet"/>
+                                    <span t-if="record.twitter_can_retweet.raw_value">Retweet</span>
+                                    <span t-else="">Undo Retweet</span>
+                                </a>
+                                <a class="dropdown-item o_social_twitter_quote" href="#" role="button">
+                                    <i class="fa fa-pencil me-1" title="Quote a tweet"/>
+                                    <span>Quote Tweet</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>

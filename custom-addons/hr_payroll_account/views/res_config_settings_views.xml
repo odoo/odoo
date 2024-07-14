@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr.payroll.account</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_payroll.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@name='module_hr_payroll_account_sepa']" position="after">
+                <setting string="Batch Account Move Lines" help="Enable this option to merge all the accounting entries for the same period into a single account move line. This will anonymize the accounting entries but also disable single payment generations.">
+                    <field name="batch_payroll_move_lines"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+

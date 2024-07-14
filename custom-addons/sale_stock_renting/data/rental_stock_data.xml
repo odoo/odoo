@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record forcecreate="True" id="property_padding_time" model="ir.property">
+            <field name="name">property_padding_time</field>
+            <field name="fields_id" search="[('model','=','product.template'),('name','=','preparation_time')]"/>
+            <field name="value" model="product.template" eval="obj().env.company.padding_time"/>
+            <field name="type">float</field>
+        </record>
+    </data>
+</odoo>

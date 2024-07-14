@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="worksheet_page" inherit_id="quality_mrp.worksheet_page">
+            <xpath expr="//div[@name='production_order']" position="attributes">
+                <attribute name="t-if">
+                    doc.production_id and not doc.workorder_id
+                </attribute>
+            </xpath>
+            <xpath expr="//t[@name='origin']" position="inside">
+                <div name="workorder" t-if="doc.workorder_id">
+                    <strong>Work Order: </strong>
+                    <span t-field="doc.workorder_id.display_name"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='lot']" position="replace">
+                <div name="lot" t-if="doc.lot_id or doc.finished_lot_id">
+                    <strong>Lot/Serial Number: </strong>
+                    <span t-if="doc.lot_id.product_id.id == doc.product_id.id" t-field="doc.lot_id.display_name"/>
+                    <span t-if="doc.finished_lot_id.product_id.id == doc.product_id.id" t-field="doc.finished_lot_id.display_name"/>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

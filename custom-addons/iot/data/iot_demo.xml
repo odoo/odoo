@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+    <!-- IoT Boxes -->
+
+    <record id="iot_box_shop" model="iot.box">
+        <field name="name">Shop</field>
+        <field name="identifier">00:00:00:00:00:00</field>
+        <field name="ip">0.0.0.0</field>
+        <field name="version">19.12</field>
+    </record>
+
+    <record id="iot_box_workshop" model="iot.box">
+        <field name="name">Workshop</field>
+        <field name="identifier">11:11:11:11:11:11</field>
+        <field name="ip">1.1.1.1</field>
+        <field name="version">19.12</field>
+    </record>
+
+    <!-- IoT Devices -->
+
+    <record id="iot_printer" model="iot.device">
+        <field name="name">Receipt Printer</field>
+        <field name="iot_id" ref="iot_box_shop"/>
+        <field name="identifier">printer_identifier</field>
+        <field name="type">printer</field>
+        <field name="manufacturer"></field>
+        <field name="connection">network</field>
+        <field name="connected">False</field>
+    </record>
+
+    <record id="iot_scanner" model="iot.device">
+        <field name="name">Barcode Scanner</field>
+        <field name="iot_id" ref="iot_box_shop"/>
+        <field name="identifier">scanner_identifier</field>
+        <field name="type">scanner</field>
+        <field name="manufacturer"></field>
+        <field name="connection">direct</field>
+        <field name="connected">False</field>
+    </record>
+
+    <record id="iot_payment" model="iot.device">
+        <field name="name">Payment Terminal</field>
+        <field name="iot_id" ref="iot_box_shop"/>
+        <field name="identifier">payment_identifier</field>
+        <field name="type">payment</field>
+        <field name="manufacturer"></field>
+        <field name="connection">network</field>
+        <field name="connected">False</field>
+    </record>
+
+    <record id="iot_scale" model="iot.device">
+        <field name="name">Scale</field>
+        <field name="iot_id" ref="iot_box_shop"/>
+        <field name="identifier">scale_identifier</field>
+        <field name="type">scale</field>
+        <field name="manufacturer"></field>
+        <field name="connection">serial</field>
+        <field name="connected">False</field>
+    </record>
+
+    <record id="iot_display" model="iot.device">
+        <field name="name">Customer Display</field>
+        <field name="iot_id" ref="iot_box_shop"/>
+        <field name="identifier">display_identifier</field>
+        <field name="type">display</field>
+        <field name="manufacturer"></field>
+        <field name="connection">hdmi</field>
+        <field name="connected">False</field>
+    </record>
+
+    <record id="iot_keyboard" model="iot.device">
+        <field name="name">USB Keyboard</field>
+        <field name="iot_id" ref="iot_box_workshop"/>
+        <field name="identifier">keyboard_identifier</field>
+        <field name="type">keyboard</field>
+        <field name="manufacturer"></field>
+        <field name="connection">direct</field>
+        <field name="connected">False</field>
+    </record>
+
+    <record id="iot_camera" model="iot.device">
+        <field name="name">Camera</field>
+        <field name="iot_id" ref="iot_box_workshop"/>
+        <field name="identifier">camera_identifier</field>
+        <field name="type">camera</field>
+        <field name="manufacturer"></field>
+        <field name="connection">direct</field>
+        <field name="connected">False</field>
+    </record>
+
+    <record id="iot_device" model="iot.device">
+        <field name="name">Caliper</field>
+        <field name="iot_id" ref="iot_box_workshop"/>
+        <field name="identifier">device_identifier</field>
+        <field name="type">device</field>
+        <field name="manufacturer"></field>
+        <field name="connection">bluetooth</field>
+        <field name="connected">False</field>
+    </record>
+
+    </data>
+</odoo>

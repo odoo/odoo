@@ -1,0 +1,1918 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mrp_plm
+# 
+# Translators:
+# Tony Ng, 2024
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:09+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__mrp_document_count
+msgid "# Attachments"
+msgstr "附件數目"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_bom__eco_count
+#: model:ir.model.fields,field_description:mrp_plm.field_product_product__eco_count
+#: model:ir.model.fields,field_description:mrp_plm.field_product_template__eco_count
+msgid "# ECOs"
+msgstr "工程變更指令（ECO）數目"
+
+#. module: mrp_plm
+#. odoo-python
+#: code:addons/mrp_plm/models/mrp_eco.py:0
+#, python-format
+msgid "%(approval_name)s %(approver_name)s %(approval_status)s this ECO"
+msgstr "%(approval_name)s %(approver_name)s %(approval_status)s 此工程變更指令（ECO）"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_type_dashboard_view_kanban
+msgid ""
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Domain alias\" "
+"title=\"Domain alias\"/>&amp;nbsp;"
+msgstr ""
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"域別名\" "
+"title=\"域別名\"/>&amp;nbsp;"
+
+#. module: mrp_plm
+#. odoo-python
+#: code:addons/mrp_plm/models/mrp_eco.py:0
+#, python-format
+msgid ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        Upload files to your ECO, that will be applied to the product later\n"
+"                    </p><p>\n"
+"                        Use this feature to store any files, like drawings or specifications.\n"
+"                    </p>"
+msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        上傳文件至工程變更指令（ECO），之後將應用於產品. \n"
+"                    </p><p>\n"
+"                        使用該功能保存任何文件，如圖紙或規範。\n"
+"                    </p>"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_plm_production_form_view
+msgid "<span class=\"o_stat_text\">ECO(S)</span>"
+msgstr "<span class=\"o_stat_text\">工程變更指令</span>"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "<span class=\"o_stat_text\">Revision</span>"
+msgstr "<span class=\"o_stat_text\">修訂</span>"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.view_document_file_kanban_mrp_plm
+msgid "<span class=\"text-bg-danger\">Archived</span>"
+msgstr "<span class=\"text-bg-danger\">已封存</span>"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.view_document_file_kanban_mrp_plm
+msgid "<span class=\"text-bg-primary\">New</span>"
+msgstr "<span class=\"text-bg-primary\">新增</span>"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_type__alias_defaults
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr "當建立別名的新記錄時，一個Python字典被提供作為預設值."
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__message_needaction
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__message_needaction
+msgid "Action Needed"
+msgstr "需要採取行動"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__active
+msgid "Active"
+msgstr "啟用"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__activity_ids
+msgid "Activities"
+msgstr "活動"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "活動異常圖示"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__activity_state
+msgid "Activity State"
+msgstr "活動狀態"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "活動類型圖示"
+
+#. module: mrp_plm
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco_bom_change__change_type__add
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco_routing_change__change_type__add
+msgid "Add"
+msgstr "加入"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_stage_view_form
+msgid "Add a description..."
+msgstr "添加描述"
+
+#. module: mrp_plm
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_tag_action
+msgid "Add a new tag"
+msgstr "添加新標籤"
+
+#. module: mrp_plm
+#: model:res.groups,name:mrp_plm.group_plm_manager
+msgid "Administrator"
+msgstr "管理員"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__alias_id
+msgid "Alias"
+msgstr "別名"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__alias_contact
+msgid "Alias Contact Security"
+msgstr "別名聯絡人安全"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__alias_domain_id
+msgid "Alias Domain"
+msgstr "別名域"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__alias_domain
+msgid "Alias Domain Name"
+msgstr "別名域名"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__alias_full_name
+msgid "Alias Email"
+msgstr "別名電子郵件"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__alias_name
+msgid "Alias Name"
+msgstr "別名"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__alias_status
+msgid "Alias Status"
+msgstr "別名狀態"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_type__alias_status
+msgid "Alias status assessed on the last message received."
+msgstr "根據最後收到的一則訊息評估的別名狀態。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__alias_model_id
+msgid "Aliased Model"
+msgstr "別名的模型"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.view_document_search_mrp_plm
+msgid "All"
+msgstr "所有"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_type_dashboard_view_kanban
+msgid "All Validations"
+msgstr "全部驗證"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__allow_change_kanban_state
+msgid "Allow Change Kanban State"
+msgstr "允許更改看板狀態"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__allow_change_stage
+msgid "Allow Change Stage"
+msgstr "允許更改階段"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__allow_apply_change
+msgid "Allow to apply changes"
+msgstr "允許套用變更"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_stage__allow_apply_change
+msgid "Allow to apply changes from this stage."
+msgstr "允許套用該階段的變更。"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_tree
+msgid "Apply Changes"
+msgstr "套用變更"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Apply Rebase"
+msgstr "套用變基"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__type
+msgid "Apply on"
+msgstr "套用於"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__approval_date
+msgid "Approval Date"
+msgstr "審批日期"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__approval_roles
+msgid "Approval Roles"
+msgstr "批核角色"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__template_stage_id
+msgid "Approval Stage"
+msgstr "批核階段"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval_template__approval_type
+msgid "Approval Type"
+msgstr "批核類型"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__approval_ids
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__approval_template_ids
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_stage_view_form
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Approvals"
+msgstr "審批"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__approval_ids
+msgid "Approvals by stage"
+msgstr "按階段批核"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Approve"
+msgstr "審批"
+
+#. module: mrp_plm
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco__kanban_state__done
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco_approval__status__approved
+msgid "Approved"
+msgstr "已審批"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__user_id
+msgid "Approved by"
+msgstr "批准者"
+
+#. module: mrp_plm
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco_approval_template__approval_type__optional
+msgid "Approves, but the approval is optional"
+msgstr "批准，但批核為可選"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+#: model_terms:ir.ui.view,arch_db:mrp_plm.view_document_search_mrp_plm
+msgid "Archived"
+msgstr "已封存"
+
+#. module: mrp_plm
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco__effectivity__asap
+msgid "As soon as possible"
+msgstr "盡快"
+
+#. module: mrp_plm
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco__effectivity__date
+msgid "At Date"
+msgstr "於指定日期"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__message_attachment_count
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__message_attachment_count
+msgid "Attachment Count"
+msgstr "附件數"
+
+#. module: mrp_plm
+#. odoo-python
+#: code:addons/mrp_plm/models/mrp_eco.py:0
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__mrp_document_ids
+#, python-format
+msgid "Attachments"
+msgstr "附件"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__awaiting_my_validation
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "Awaiting My Validation"
+msgstr "等待我的驗證"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "Awaiting Validation"
+msgstr "等待驗證"
+
+#. module: mrp_plm
+#: model:ir.model,name:mrp_plm.model_report_mrp_report_bom_structure
+msgid "BOM Overview Report"
+msgstr "BOM結構清單報表"
+
+#. module: mrp_plm
+#: model:mrp.eco.type,name:mrp_plm.ecotype_bom_update
+msgid "BOM Updates"
+msgstr "用料清單（BOM）更新"
+
+#. module: mrp_plm
+#: model:ir.model,name:mrp_plm.model_mrp_bom
+msgid "Bill of Material"
+msgstr "物料清單"
+
+#. module: mrp_plm
+#: model:ir.model,name:mrp_plm.model_mrp_bom_line
+msgid "Bill of Material Line"
+msgstr "BOM明細"
+
+#. module: mrp_plm
+#. odoo-python
+#: code:addons/mrp_plm/models/mrp_eco.py:0
+#: model:ir.actions.act_window,name:mrp_plm.mrp_bom_action_kanban
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__bom_id
+#: model:ir.ui.menu,name:mrp_plm.menu_mrp_plm_boms
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+#, python-format
+msgid "Bill of Materials"
+msgstr "物料清單"
+
+#. module: mrp_plm
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_bom_action_kanban
+msgid ""
+"Bills of materials allow you to define the list of required components\n"
+"              used to make a finished product; through a manufacturing\n"
+"              order or a pack of products."
+msgstr ""
+"通過物料清單，可以定義生產成品\n"
+"              所需組件的清單；通過生產訂單\n"
+"              或產品包。"
+
+#. module: mrp_plm
+#. odoo-python
+#: code:addons/mrp_plm/models/mrp_eco.py:0
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco__kanban_state__blocked
+#: model:mrp.eco.stage,legend_blocked:mrp_plm.ecostage_bom_update_effective
+#: model:mrp.eco.stage,legend_blocked:mrp_plm.ecostage_bom_update_new
+#: model:mrp.eco.stage,legend_blocked:mrp_plm.ecostage_bom_update_progress
+#: model:mrp.eco.stage,legend_blocked:mrp_plm.ecostage_bom_update_validated
+#: model:mrp.eco.stage,legend_blocked:mrp_plm.ecostage_effective
+#: model:mrp.eco.stage,legend_blocked:mrp_plm.ecostage_new
+#: model:mrp.eco.stage,legend_blocked:mrp_plm.ecostage_progress
+#: model:mrp.eco.stage,legend_blocked:mrp_plm.ecostage_validated
+#, python-format
+msgid "Blocked"
+msgstr "已封鎖"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__is_blocking
+msgid "Blocking Stage"
+msgstr "阻塞階段"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "BoM Changes"
+msgstr "用料清單（BOM）變更"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__bom_rebase_ids
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "BoM Rebase"
+msgstr "用料清單（BOM）變基"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__new_bom_revision
+msgid "BoM Revision"
+msgstr "用料清單（BOM）修訂"
+
+#. module: mrp_plm
+#. odoo-python
+#: code:addons/mrp_plm/models/mrp_production.py:0
+#, python-format
+msgid "BoM Suggestions from %(mo_name)s"
+msgstr "來自 %(mo_name)s 的 BoM 建議"
+
+#. module: mrp_plm
+#. odoo-javascript
+#: code:addons/mrp_plm/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
+#: model_terms:ir.ui.view,arch_db:mrp_plm.report_mrp_bom_inherit_mrp_plm
+#, python-format
+msgid "BoM Version"
+msgstr "用料清單（BOM）版本"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_kanban
+msgid "BoM:"
+msgstr "用料清單（BOM）："
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__user_can_approve
+msgid "Can Approve"
+msgstr "可審批"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__user_can_reject
+msgid "Can Reject"
+msgstr "可拒絕"
+
+#. module: mrp_plm
+#. odoo-python
+#: code:addons/mrp_plm/models/mrp_production.py:0
+#, python-format
+msgid ""
+"Cannot create an ECO if the Manufacturing Order doesn't use a Bill of "
+"Materials"
+msgstr "如果製造訂單未使用物料清單，便不可建立工程變更指令（ECO）"
+
+#. module: mrp_plm
+#: model:ir.ui.menu,name:mrp_plm.menu_mrp_plm_changes
+msgid "Changes"
+msgstr "變更"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Changes made in previous eco"
+msgstr "上一工程變更指令（ECO）的變更"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Changes made on old bill of materials"
+msgstr "舊物料清單的變更"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Changes made on the new revision bill of materials"
+msgstr "用料清單新修訂版的變更"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Changes made on the operation."
+msgstr "操作詳情變更。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__color
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__color
+msgid "Color"
+msgstr "顏色"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_tag__color
+msgid "Color Index"
+msgstr "顏色索引"
+
+#. module: mrp_plm
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco_approval__status__comment
+msgid "Commented"
+msgstr "已留言"
+
+#. module: mrp_plm
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco_approval_template__approval_type__comment
+msgid "Comments only"
+msgstr "只限留言"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__company_id
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "Company"
+msgstr "公司"
+
+#. module: mrp_plm
+#: model:ir.ui.menu,name:mrp_plm.menu_mrp_plm_configuration
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_type_dashboard_view_kanban
+msgid "Configuration"
+msgstr "配置"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__conflict
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco__state__conflict
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "Conflict"
+msgstr "衝突"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Conflict Resolved"
+msgstr "衝突已解決"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__operation_change
+msgid "Consumed in Operation"
+msgstr "已在製程消耗"
+
+#. module: mrp_plm
+#: model:ir.actions.server,name:mrp_plm.action_production_order_create_eco
+msgid "Create ECO"
+msgstr "建立 ECO"
+
+#. module: mrp_plm
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_stage_action
+msgid "Create a new ECO stage"
+msgstr "建立新的工程變更指令（ECO）階段"
+
+#. module: mrp_plm
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_type_action_dashboard
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_type_action_form
+msgid "Create a new ECO type"
+msgstr "建立新的工程變更指令（ECO）類型"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__create_uid
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__create_uid
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval_template__create_uid
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__create_uid
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_routing_change__create_uid
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__create_uid
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_tag__create_uid
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__create_uid
+msgid "Created by"
+msgstr "建立人員"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__create_date
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__create_date
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval_template__create_date
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__create_date
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_routing_change__create_date
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__create_date
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_tag__create_date
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__create_date
+msgid "Created on"
+msgstr "建立於"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__alias_bounced_content
+msgid "Custom Bounced Message"
+msgstr "自訂彈跳訊息"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__effectivity
+msgid "Date on which the changes should be applied. For reference only."
+msgstr "應套用變更的日期。只供參考。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__alias_defaults
+msgid "Default Values"
+msgstr "預設值"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Define the approval roles on the ECO stages."
+msgstr "為工程變更指令（ECO）階段規定批核角色。"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_kanban
+#: model_terms:ir.ui.view,arch_db:mrp_plm.view_document_file_kanban_mrp_plm
+msgid "Delete"
+msgstr "刪除"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__description
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Description"
+msgstr "說明"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_stage__description
+msgid "Description and tooltips of the stage states."
+msgstr "階段狀態描述和工具提示。"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Description of the change and its reason."
+msgstr "變更及理由描述。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__bom_change_ids
+msgid "Difference between old BoM and new BoM revision"
+msgstr "舊物料清單（BOM）與新修訂版本的分別"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__routing_change_ids
+msgid "Difference between old operation and new operation revision"
+msgstr "舊操作與新操作修訂的分別"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__display_name
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__display_name
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval_template__display_name
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__display_name
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_routing_change__display_name
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__display_name
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_tag__display_name
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__displayed_image_id
+msgid "Displayed Image"
+msgstr "顯示的圖像"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Documents"
+msgstr "文件"
+
+#. module: mrp_plm
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco__state__done
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "Done"
+msgstr "完成"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_routing_change_view_form
+msgid "Duration"
+msgstr "時長"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__eco_id
+msgid "ECO"
+msgstr "工程變更指令（ECO）"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_graph
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_pivot
+msgid "ECO Analysis"
+msgstr "工程變更指令（ECO）分析"
+
+#. module: mrp_plm
+#: model:ir.model,name:mrp_plm.model_mrp_eco_approval
+#: model:mail.activity.type,name:mrp_plm.mail_activity_eco_approval
+msgid "ECO Approval"
+msgstr "工程變更指令（ECO）批核"
+
+#. module: mrp_plm
+#: model:ir.model,name:mrp_plm.model_mrp_eco_approval_template
+msgid "ECO Approval Template"
+msgstr "工程變更指令（ECO）批核範本"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__bom_change_ids
+msgid "ECO BoM Changes"
+msgstr "工程變更指令（ECO）用料清單（BOM）變更"
+
+#. module: mrp_plm
+#: model:ir.model,name:mrp_plm.model_mrp_eco_bom_change
+msgid "ECO BoM changes"
+msgstr "工程變更指令（ECO）用料清單（BOM）變更"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__eco_rebase_id
+msgid "ECO Rebase"
+msgstr "工程變更指令（ECO）變基"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__routing_change_ids
+msgid "ECO Routing Changes"
+msgstr "工程變更指令（ECO）路線變更"
+
+#. module: mrp_plm
+#: model:ir.model,name:mrp_plm.model_mrp_eco_stage
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__eco_stage_id
+msgid "ECO Stage"
+msgstr "工程變更指令（ECO）階段"
+
+#. module: mrp_plm
+#: model:ir.actions.act_window,name:mrp_plm.mrp_eco_stage_action
+#: model:ir.ui.menu,name:mrp_plm.menu_mrp_plm_eco_stages
+msgid "ECO Stages"
+msgstr "工程變更指令（ECO）階段"
+
+#. module: mrp_plm
+#: model:ir.actions.act_window,name:mrp_plm.mrp_eco_tag_action
+#: model:ir.model,name:mrp_plm.model_mrp_eco_tag
+#: model:ir.ui.menu,name:mrp_plm.menu_mrp_plm_eco_tag
+msgid "ECO Tags"
+msgstr "工程變更指令（ECO）標籤"
+
+#. module: mrp_plm
+#: model:ir.model,name:mrp_plm.model_mrp_eco_type
+msgid "ECO Type"
+msgstr "工程變更指令（ECO）類型"
+
+#. module: mrp_plm
+#: model:ir.actions.act_window,name:mrp_plm.mrp_eco_type_action_form
+#: model:ir.ui.menu,name:mrp_plm.menu_mrp_plm_eco_types
+msgid "ECO Types"
+msgstr "工程變更指令（ECO）類型"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_bom_change_view_form
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_routing_change_view_form
+msgid "ECO details"
+msgstr "工程變更指令（ECO）詳情"
+
+#. module: mrp_plm
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_stage_action
+msgid "ECO stages give the different stages for the Engineering Change Orders"
+msgstr "工程變更指令（ECO）階段為工程變更單提供不同階段"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_bom__eco_ids
+msgid "ECO to be applied"
+msgstr "待套用工程變更指令（ECO）"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_bom_view_form_inherit_plm
+msgid "ECO(s)"
+msgstr "工程變更指令（ECO）"
+
+#. module: mrp_plm
+#. odoo-javascript
+#: code:addons/mrp_plm/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
+#: code:addons/mrp_plm/static/src/components/bom_overview_line/mrp_bom_overview_line.js:0
+#: code:addons/mrp_plm/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__nb_ecos
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_production__eco_ids
+#: model:ir.model.fields,field_description:mrp_plm.field_product_product__eco_ids
+#: model:ir.model.fields,field_description:mrp_plm.field_product_template__eco_ids
+#: model:ir.ui.menu,name:mrp_plm.menu_mrp_plm_eco_report
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_calendar
+#: model_terms:ir.ui.view,arch_db:mrp_plm.product_template_view_form_inherit_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.report_mrp_bom_inherit_mrp_plm
+#, python-format
+msgid "ECOs"
+msgstr "工程變更指令（ECO）"
+
+#. module: mrp_plm
+#. odoo-python
+#: code:addons/mrp_plm/models/mrp_eco.py:0
+#, python-format
+msgid "Eco"
+msgstr "工程變更指令（ECO）"
+
+#. module: mrp_plm
+#. odoo-python
+#: code:addons/mrp_plm/models/mrp_eco.py:0
+#, python-format
+msgid "Eco BoM"
+msgstr "工程變更指令（ECO）物料清單（BOM）"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_production__eco_count
+msgid "Eco Count"
+msgstr "工程變更指令（ECO）數目"
+
+#. module: mrp_plm
+#: model:ir.model,name:mrp_plm.model_mrp_eco_routing_change
+msgid "Eco Routing changes"
+msgstr "工程變更指令（ECO）路線變更"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_kanban
+msgid "Edit Task"
+msgstr "編輯任務"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__effectivity
+#: model:mrp.eco.stage,name:mrp_plm.ecostage_bom_update_effective
+#: model:mrp.eco.stage,name:mrp_plm.ecostage_effective
+msgid "Effective"
+msgstr "有效的"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__effectivity_date
+msgid "Effective Date"
+msgstr "實際日期"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__alias_email
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_type_view_form
+msgid "Email Alias"
+msgstr "郵箱別名"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__email_cc
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Email cc"
+msgstr "電郵副本抄送"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__eco_id
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_routing_change__eco_id
+msgid "Engineering Change"
+msgstr "工程變更"
+
+#. module: mrp_plm
+#: model:ir.model,name:mrp_plm.model_mrp_eco
+msgid "Engineering Change Order (ECO)"
+msgstr "工程變更指令（ECO）"
+
+#. module: mrp_plm
+#: model:ir.actions.act_window,name:mrp_plm.mrp_eco_action
+#: model:ir.actions.act_window,name:mrp_plm.mrp_eco_action_approval
+#: model:ir.actions.act_window,name:mrp_plm.mrp_eco_action_approval_my
+#: model:ir.actions.act_window,name:mrp_plm.mrp_eco_action_late
+#: model:ir.actions.act_window,name:mrp_plm.mrp_eco_action_main
+#: model:ir.actions.act_window,name:mrp_plm.mrp_eco_action_product_tmpl
+#: model:ir.actions.act_window,name:mrp_plm.mrp_eco_action_report
+msgid "Engineering Change Orders"
+msgstr "工程變更指令"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_type_dashboard_view_kanban
+msgid "Engineering Changes"
+msgstr "工程變更"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Extra Info"
+msgstr "額外資訊"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "Filters"
+msgstr "篩選"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__final_stage
+msgid "Final Stage"
+msgstr "最終階段"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__folded
+msgid "Folded in kanban view"
+msgstr "在看板視圖中折疊"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__message_follower_ids
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__message_follower_ids
+msgid "Followers"
+msgstr "關注人"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__message_partner_ids
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "關注人（業務夥伴）"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome 圖示，例如，fa-task"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__effectivity_date
+msgid "For reference only."
+msgstr "只供參考。"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "Future Activities"
+msgstr "未來活動"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__legend_done
+msgid "Green Kanban Label"
+msgstr "綠色看板標籤"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__legend_normal
+msgid "Grey Kanban Label"
+msgstr "灰色看板標籤"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "Group by..."
+msgstr "分組由..."
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__has_message
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__has_message
+msgid "Has Message"
+msgstr "有訊息"
+
+#. module: mrp_plm
+#: model:ir.module.category,description:mrp_plm.module_category_manufacturing_product_lifecycle_management_(plm)
+msgid "Helps you manage your product's lifecycles."
+msgstr "協助你管理產品生命周期。"
+
+#. module: mrp_plm
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco__priority__1
+msgid "High"
+msgstr "高"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__id
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__id
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval_template__id
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__id
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_routing_change__id
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__id
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_tag__id
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__id
+msgid "ID"
+msgstr "識別號"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_type__alias_parent_thread_id
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
+msgstr "上級記錄ID支援別名(例如:專案支援任務建立別名)"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__activity_exception_icon
+msgid "Icon"
+msgstr "圖示"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "用於指示異常活動的圖示。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__message_needaction
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_type__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "勾選代表有新訊息需要您留意。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__message_has_error
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__message_has_sms_error
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_type__message_has_error
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_type__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "勾選代表有訊息發生傳送錯誤。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_type__alias_bounced_content
+msgid ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
+msgstr "設置後，此內容將自動發送給未經授權的用戶，而不是默認訊息。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__active
+msgid ""
+"If the active field is set to False, it will allow you to hide the "
+"engineering change order without removing it."
+msgstr "如果生效欄位設置為 False（假），將隱藏而非刪除工程變更指令。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_bom__image_128
+msgid "Image 128"
+msgstr "圖像 128"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_kanban
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_type_dashboard_view_kanban
+msgid "In #{kanban_getcolorname(record.color.raw_value)}"
+msgstr "在 #{kanban_getcolorname(record.color.raw_value)}"
+
+#. module: mrp_plm
+#. odoo-python
+#: code:addons/mrp_plm/models/mrp_eco.py:0
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco__kanban_state__normal
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco__state__progress
+#: model:mrp.eco.stage,legend_normal:mrp_plm.ecostage_bom_update_effective
+#: model:mrp.eco.stage,legend_normal:mrp_plm.ecostage_bom_update_new
+#: model:mrp.eco.stage,legend_normal:mrp_plm.ecostage_bom_update_progress
+#: model:mrp.eco.stage,legend_normal:mrp_plm.ecostage_bom_update_validated
+#: model:mrp.eco.stage,legend_normal:mrp_plm.ecostage_effective
+#: model:mrp.eco.stage,legend_normal:mrp_plm.ecostage_new
+#: model:mrp.eco.stage,legend_normal:mrp_plm.ecostage_progress
+#: model:mrp.eco.stage,legend_normal:mrp_plm.ecostage_validated
+#: model:mrp.eco.stage,name:mrp_plm.ecostage_bom_update_progress
+#: model:mrp.eco.stage,name:mrp_plm.ecostage_progress
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+#, python-format
+msgid "In Progress"
+msgstr "進行中"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__is_approved
+msgid "Is Approved"
+msgstr "已批核"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__is_closed
+msgid "Is Closed"
+msgstr "已關閉"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__message_is_follower
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__message_is_follower
+msgid "Is Follower"
+msgstr "是關注人"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__is_rejected
+msgid "Is Rejected"
+msgstr "已拒絕"
+
+#. module: mrp_plm
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco_approval_template__approval_type__mandatory
+msgid "Is required to approve"
+msgstr "必須批核"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__legend_blocked
+msgid "Kanban Blocked Explanation"
+msgstr "看板阻塞說明"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__legend_normal
+msgid "Kanban Ongoing Explanation"
+msgstr "看板進展中說明"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__kanban_state
+msgid "Kanban State"
+msgstr "看板狀態"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__kanban_state_label
+msgid "Kanban State Label"
+msgstr "看板狀態標籤"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__legend_done
+msgid "Kanban Valid Explanation"
+msgstr "看板有效解釋"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__write_uid
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__write_uid
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval_template__write_uid
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__write_uid
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_routing_change__write_uid
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__write_uid
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_tag__write_uid
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__write_uid
+msgid "Last Updated by"
+msgstr "最後更新者"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__write_date
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__write_date
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval_template__write_date
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__write_date
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_routing_change__write_date
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__write_date
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_tag__write_date
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__write_date
+msgid "Last Updated on"
+msgstr "最後更新於"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "Late Activities"
+msgstr "逾期活動"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_production__latest_bom_id
+msgid "Latest Bom"
+msgstr "最新用料清單（BOM）"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr "基於本地部件的來件檢測"
+
+#. module: mrp_plm
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_action
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_action_approval
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_action_approval_my
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_action_late
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_action_main
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_action_product_tmpl
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_action_report
+msgid ""
+"Manage your products and bills of materials changes with the ECO's.\n"
+"              Gather the related documentation and receive the necessary approvals\n"
+"              before applying your changes."
+msgstr ""
+"通過工程變更指令（ECO）管理產品和物料清單。\n"
+"              在應用變更前，\n"
+"              收集相關文件，並獲得必要批核。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_routing_change__upd_time_cycle_manual
+msgid "Manual Duration Change"
+msgstr "手動時長變更"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__production_id
+msgid "Manufacturing Orders"
+msgstr "製造訂單"
+
+#. module: mrp_plm
+#: model:ir.ui.menu,name:mrp_plm.menu_mrp_plm_master_data
+msgid "Master Data"
+msgstr "主資料"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__message_has_error
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__message_has_error
+msgid "Message Delivery error"
+msgstr "訊息遞送錯誤"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__message_ids
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__message_ids
+msgid "Messages"
+msgstr "訊息"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_tag_view_search
+msgid "Mrp Eco Tags"
+msgstr "MRP工程變更指令（ECO）標籤"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "我的活動截止時間"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "My Change Orders"
+msgstr "我的變更指令"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_type_dashboard_view_kanban
+msgid "My Validations"
+msgstr "我的驗證"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__name
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__name
+msgid "Name"
+msgstr "名稱"
+
+#. module: mrp_plm
+#: model:mrp.eco.stage,name:mrp_plm.ecostage_bom_update_new
+#: model:mrp.eco.stage,name:mrp_plm.ecostage_new
+msgid "New"
+msgstr "新增"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__new_bom_id
+msgid "New Bill of Materials"
+msgstr "新物料清單"
+
+#. module: mrp_plm
+#. odoo-python
+#: code:addons/mrp_plm/models/mrp_production.py:0
+#, python-format
+msgid "New BoM from %(mo_name)s"
+msgstr "來自 %(mo_name)s 的新 BoM"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__current_bom_id
+msgid "New Bom"
+msgstr "新物料清單（BOM）"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__new_operation_id
+msgid "New Consumed in Operation"
+msgstr "操作的新消耗"
+
+#. module: mrp_plm
+#: model:mrp.eco.type,name:mrp_plm.ecotype0
+msgid "New Product Introduction"
+msgstr "新產品介紹"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__new_uom_id
+msgid "New Product UoM"
+msgstr "新產品計量單位"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_routing_change__new_time_cycle_manual
+msgid "New manual duration"
+msgstr "新手動時長"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_routing_change__operation_id
+msgid "New or Previous Operation"
+msgstr "新的或之前的操作"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__new_product_qty
+msgid "New revision quantity"
+msgstr "新修訂數量"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "下一個活動日曆事件"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "下一活動截止日期"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__activity_summary
+msgid "Next Activity Summary"
+msgstr "下一活動摘要"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__activity_type_id
+msgid "Next Activity Type"
+msgstr "下一活動類型"
+
+#. module: mrp_plm
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_bom_action_kanban
+msgid "No bill of materials found. Let's create one!"
+msgstr "找不到用料清單。讓我們建立一個吧！"
+
+#. module: mrp_plm
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_action
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_action_approval
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_action_approval_my
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_action_late
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_action_main
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_action_product_tmpl
+#: model_terms:ir.actions.act_window,help:mrp_plm.mrp_eco_action_report
+msgid "No engineering change order found"
+msgstr "找不到工程變更指令"
+
+#. module: mrp_plm
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco__priority__0
+msgid "Normal"
+msgstr "正常"
+
+#. module: mrp_plm
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco_approval__status__none
+msgid "Not Yet"
+msgstr "尚未"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__note
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Note"
+msgstr "備註"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__message_needaction_counter
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__message_needaction_counter
+msgid "Number of Actions"
+msgstr "動作數量"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__message_has_error_counter
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__message_has_error_counter
+msgid "Number of errors"
+msgstr "錯誤數量"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__message_needaction_counter
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_type__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "需要採取行動的訊息數目"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__message_has_error_counter
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_type__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "有發送錯誤的郵件數量"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_routing_change__old_time_cycle_manual
+msgid "Old manual duration"
+msgstr "舊手動時長"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_stage__final_stage
+msgid "Once the changes are applied, the ECOs will be moved to this stage."
+msgstr "變更應用後，工程變更指令（ECO）將移至該階段。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_routing_change__operation_name
+msgid "Operation"
+msgstr "操作"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Operation Changes"
+msgstr "操作變更"
+
+#. module: mrp_plm
+#. odoo-python
+#: code:addons/mrp_plm/models/mrp_eco.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "不支援該操作"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_type__alias_force_thread_id
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr "所有的進來的信件都將附上一條潛在商機（記錄）選配的ID，即使它們不曾回覆過它。如果設定了，這個將完全阻止新記錄的建立。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_document__origin_attachment_id
+msgid "Origin Attachment"
+msgstr "原本附件"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__legend_blocked
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_stage__legend_blocked
+msgid ""
+"Override the default value displayed for the blocked state for kanban "
+"selection, when the ECO is in that stage."
+msgstr "當工程變更指令（ECO）處於該階段時，覆蓋選擇看板時受阻狀態顯示的預設值。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__legend_done
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_stage__legend_done
+msgid ""
+"Override the default value displayed for the done state for kanban "
+"selection, when the ECO is in that stage."
+msgstr "當工程變更指令（ECO）處於該階段時，覆蓋選擇看板時已完成狀態顯示的預設值。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__legend_normal
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_stage__legend_normal
+msgid ""
+"Override the default value displayed for the normal state for kanban "
+"selection, when the ECO is in that stage."
+msgstr "當工程變更指令（ECO）處於該階段時，覆蓋選擇看板時正常狀態顯示的預設值。"
+
+#. module: mrp_plm
+#: model:ir.ui.menu,name:mrp_plm.menu_mrp_plm_dashboard
+msgid "Overview"
+msgstr "概覽"
+
+#. module: mrp_plm
+#: model:ir.module.category,name:mrp_plm.module_category_manufacturing_product_lifecycle_management_(plm)
+#: model:ir.ui.menu,name:mrp_plm.menu_mrp_plm_root
+msgid "PLM"
+msgstr "產品生命周期（PLM）"
+
+#. module: mrp_plm
+#: model:ir.actions.act_window,name:mrp_plm.mrp_eco_type_action_dashboard
+msgid "PLM Overview"
+msgstr "產品生命周期（PLM）概覽"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__alias_parent_model_id
+msgid "Parent Model"
+msgstr "上級模型"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__alias_parent_thread_id
+msgid "Parent Record Thread ID"
+msgstr "上級記錄線程ID"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_type__alias_parent_model_id
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"載有該別名的母項模型。載有別名參照的模型，不一定是 alias_model_id 提供的模型，例如：專案（parent_model）與任務（model）"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_type__alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
+"通過信件網關在文件上提交一個訊息政策。\n"
+"- 任何人：任何人都可以提交\n"
+"- 合作夥伴：只有認證過的合作夥伴\n"
+"- 跟隨者：只有相關文件或下列頻道成員的跟隨者\n"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_bom__previous_bom_id
+msgid "Previous BoM"
+msgstr "之前用料清單（BOM）"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__old_operation_id
+msgid "Previous Consumed in Operation"
+msgstr "之前操作中的消耗"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__previous_change_ids
+msgid "Previous ECO Changes"
+msgstr "之前工程變更指令（ECO）變更"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Previous Eco Bom Changes"
+msgstr "之前工程變更指令（ECO）物料清單（BOM）變更"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__old_uom_id
+msgid "Previous Product UoM"
+msgstr "之前產品計量單位"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__old_product_qty
+msgid "Previous revision quantity"
+msgstr "之前修訂數量"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__priority
+msgid "Priority"
+msgstr "優先級"
+
+#. module: mrp_plm
+#: model:ir.model,name:mrp_plm.model_product_template
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__product_tmpl_id
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__product_id
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_bom_change_view_form
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "Product"
+msgstr "商品"
+
+#. module: mrp_plm
+#. odoo-python
+#: code:addons/mrp_plm/models/mrp_eco.py:0
+#, python-format
+msgid "Product Only"
+msgstr "只限產品"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Production"
+msgstr "生產"
+
+#. module: mrp_plm
+#: model:ir.model,name:mrp_plm.model_mrp_document
+msgid "Production Document"
+msgstr "生產單據"
+
+#. module: mrp_plm
+#: model:ir.model,name:mrp_plm.model_mrp_production
+msgid "Production Order"
+msgstr "製造訂單"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_bom__active
+msgid "Production Ready"
+msgstr "生產準備就緒"
+
+#. module: mrp_plm
+#: model:ir.ui.menu,name:mrp_plm.menu_mrp_plm_products
+msgid "Products"
+msgstr "產品"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__upd_product_qty
+msgid "Quantity"
+msgstr "數量"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__rating_ids
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__rating_ids
+msgid "Ratings"
+msgstr "評分"
+
+#. module: mrp_plm
+#. odoo-python
+#: code:addons/mrp_plm/models/mrp_eco.py:0
+#: model:mrp.eco.stage,legend_done:mrp_plm.ecostage_bom_update_effective
+#: model:mrp.eco.stage,legend_done:mrp_plm.ecostage_bom_update_new
+#: model:mrp.eco.stage,legend_done:mrp_plm.ecostage_bom_update_progress
+#: model:mrp.eco.stage,legend_done:mrp_plm.ecostage_bom_update_validated
+#: model:mrp.eco.stage,legend_done:mrp_plm.ecostage_effective
+#: model:mrp.eco.stage,legend_done:mrp_plm.ecostage_new
+#: model:mrp.eco.stage,legend_done:mrp_plm.ecostage_progress
+#: model:mrp.eco.stage,legend_done:mrp_plm.ecostage_validated
+#, python-format
+msgid "Ready"
+msgstr "準備好"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__rebase_id
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco__state__rebase
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "Rebase"
+msgstr "變基"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Rebase new revision of BoM with previous eco bom and old bom changes."
+msgstr "根據之前工程變更指令（ECO）物料清單（BOM）和舊物料清單變更變基物料清單新版本。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "記錄線程識別碼"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__legend_blocked
+msgid "Red Kanban Label"
+msgstr "紅色的看板標籤"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__name
+msgid "Reference"
+msgstr "編號"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Reject"
+msgstr "拒絕"
+
+#. module: mrp_plm
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco_approval__status__rejected
+msgid "Rejected"
+msgstr "已拒絕"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__displayed_image_attachment_id
+msgid "Related attachment"
+msgstr "相關的附件"
+
+#. module: mrp_plm
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco_bom_change__change_type__remove
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco_routing_change__change_type__remove
+#: model_terms:ir.ui.view,arch_db:mrp_plm.view_document_file_kanban_mrp_plm
+msgid "Remove"
+msgstr "移除"
+
+#. module: mrp_plm
+#: model:ir.ui.menu,name:mrp_plm.menu_mrp_plm_reporting
+msgid "Reporting"
+msgstr "報告"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__required_user_ids
+msgid "Requested Users"
+msgstr "請求用戶"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__user_id
+msgid "Responsible"
+msgstr "負責人"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__activity_user_id
+msgid "Responsible User"
+msgstr "責任使用者"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__name
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval_template__name
+msgid "Role"
+msgstr "角色"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "Routing"
+msgstr "途程"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__message_has_sms_error
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "簡訊發送錯誤"
+
+#. module: mrp_plm
+#: model:ir.ui.menu,name:mrp_plm.menu_mrp_plm_search
+msgid "Search"
+msgstr "搜尋"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval_template__sequence
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__sequence
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__sequence
+msgid "Sequence"
+msgstr "序列號"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_kanban
+msgid "Set Cover Image"
+msgstr "設定封面圖像"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__allow_apply_change
+msgid "Show Apply Change"
+msgstr "顯示套用變更"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "Show all records which has next action date is before today"
+msgstr "顯示在今天之前的下一個行動日期的所有記錄"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__stage_id
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval_template__stage_id
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "Stage"
+msgstr "階段"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_stage_view_form
+msgid "Stage Description and Tooltips"
+msgstr "階段描述和工具提示"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__stage_ids
+msgid "Stages"
+msgstr "階段"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "Start Revision"
+msgstr "開始修訂"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "State"
+msgstr "狀態"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__state
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__status
+msgid "Status"
+msgstr "狀態"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"根據活動的狀態 \n"
+" 逾期：已經超過截止日期 \n"
+" 現今：活動日期是當天 \n"
+" 計劃：未來活動。"
+
+#. module: mrp_plm
+#. odoo-python
+#: code:addons/mrp_plm/models/mrp_eco.py:0
+#, python-format
+msgid "Successfully Rebased!"
+msgstr "變基成功！"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid ""
+"System will automatically resolved the conflict(s) and apply changes. Do you"
+" agree?"
+msgstr "系統將自動處理衝突並套用更改。同意？"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_tag__name
+msgid "Tag Name"
+msgstr "標籤名稱"
+
+#. module: mrp_plm
+#: model:ir.model.constraint,message:mrp_plm.constraint_mrp_eco_tag_name_uniq
+msgid "Tag name already exists!"
+msgstr "標籤名稱已存在!"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__tag_ids
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_tag_view_tree
+msgid "Tags"
+msgstr "標籤"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_stage_view_form
+msgid "Task in progress. Click to block or set as done."
+msgstr "任務正在進行中，點選以阻止或設定為完成。"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_stage_view_form
+msgid "Task is blocked. Click to unblock or set as done."
+msgstr "任務被阻止。 點選以取消阻止或設定為已完成。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__user_can_approve
+msgid "Technical field to check if approval by current user is required"
+msgstr "技術欄位，查看是否需要當前用戶批核。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__user_can_reject
+msgid "Technical field to check if reject by current user is possible"
+msgstr "技術欄位，查看當前用戶能否拒絕"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval__approval_template_id
+msgid "Template"
+msgstr "範本文字"
+
+#. module: mrp_plm
+#: model:res.groups,comment:mrp_plm.group_plm_manager
+msgid "The PLM manager manages products lifecycle management"
+msgstr "產品生命周期管理（PLM）經理負責產品生命周期管理"
+
+#. module: mrp_plm
+#: model:res.groups,comment:mrp_plm.group_plm_user
+msgid "The PLM user uses products lifecycle management"
+msgstr "產品生命周期管理（PLM）用戶使用產品生命周期管理"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_product_product__version
+#: model:ir.model.fields,help:mrp_plm.field_product_template__version
+msgid "The current version of the product."
+msgstr "產品目前版本"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_type__alias_model_id
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
+msgstr ""
+"相應於這個別名對應的模型(Odoo單據種類)。任何一封不屬於對某個已存在的記錄的到來信件，將導致此模組中新記錄的建立(例如，一個新專案任務)。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_type__alias_name
+msgid ""
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
+msgstr "信件別名的名稱，例如，如果您要收取 <jobs@example.odoo.com> 的電子信件,別名就要被設為：\"jobs\""
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_stage_view_form
+msgid "This step is done. Click to block or set in progress."
+msgstr "該步驟已完成，點選設定為阻止或進行中。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__nb_validation
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_type_dashboard_view_kanban
+msgid "To Apply"
+msgstr "套用於"
+
+#. module: mrp_plm
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco__state__confirmed
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "To Do"
+msgstr "待辦事項"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_search
+msgid "Today Activities"
+msgstr "今天的活動"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__type_id
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__change_type
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_routing_change__change_type
+msgid "Type"
+msgstr "類型"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "記錄的異常活動的類型。"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_stage__type_ids
+msgid "Types"
+msgstr "類型"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.view_document_file_kanban_mrp_plm
+msgid "Undo"
+msgstr "復原"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_bom_change__uom_change
+msgid "Unit of Measure"
+msgstr "量度單位"
+
+#. module: mrp_plm
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco_bom_change__change_type__update
+#: model:ir.model.fields.selection,name:mrp_plm.selection__mrp_eco_routing_change__change_type__update
+msgid "Update"
+msgstr "更新"
+
+#. module: mrp_plm
+#: model:res.groups,name:mrp_plm.group_plm_user
+msgid "User"
+msgstr "使用者"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_approval_template__user_ids
+msgid "Users"
+msgstr "使用者"
+
+#. module: mrp_plm
+#: model:mrp.eco.stage,name:mrp_plm.ecostage_bom_update_validated
+#: model:mrp.eco.stage,name:mrp_plm.ecostage_validated
+msgid "Validated"
+msgstr "已驗證"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_bom__version
+#: model:ir.model.fields,field_description:mrp_plm.field_product_product__version
+#: model:ir.model.fields,field_description:mrp_plm.field_product_template__version
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_bom_view_form_inherit_plm
+msgid "Version"
+msgstr "版本"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__nb_approvals
+msgid "Waiting Approvals"
+msgstr "等待批核"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__nb_approvals_my
+msgid "Waiting my Approvals"
+msgstr "等待我的批核"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco__website_message_ids
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_type__website_message_ids
+msgid "Website Messages"
+msgstr "網站資訊"
+
+#. module: mrp_plm
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco__website_message_ids
+#: model:ir.model.fields,help:mrp_plm.field_mrp_eco_type__website_message_ids
+msgid "Website communication history"
+msgstr "網站溝通記錄"
+
+#. module: mrp_plm
+#: model:ir.model.fields,field_description:mrp_plm.field_mrp_eco_routing_change__workcenter_id
+msgid "Work Center"
+msgstr "工作中心"
+
+#. module: mrp_plm
+#: model:ir.ui.menu,name:mrp_plm.menu_mrp_plm_workcenters
+msgid "Work Centers"
+msgstr "工作中心"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_stage_view_form
+msgid ""
+"You can also add a description to help your coworkers understand the meaning"
+" and purpose of the stage."
+msgstr "您還可以添加一個說明來讓您的同時理解相關階段的意思和目的"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_stage_view_form
+msgid ""
+"You can define here labels that will be displayed for the state instead\n"
+"                            of the default labels."
+msgstr ""
+"可以在此處定義顯示的狀態標籤，而非\n"
+"                            預設標籤。"
+
+#. module: mrp_plm
+#. odoo-python
+#: code:addons/mrp_plm/models/mrp_eco.py:0
+#, python-format
+msgid "You cannot change the stage, as approvals are required in the process."
+msgstr "不可更改該階段，因為需要批核。"
+
+#. module: mrp_plm
+#. odoo-python
+#: code:addons/mrp_plm/models/mrp_eco.py:0
+#, python-format
+msgid "You cannot change the stage, as approvals are still required."
+msgstr "不可更改該階段，因為仍需批核。"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_view_form
+msgid "e.g. Awesome Product 2.0"
+msgstr "例如：美妙產品2.0"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_stage_view_form
+msgid "e.g. Engineering Department"
+msgstr "例如：工程部"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_type_view_form
+msgid "e.g. domain.com"
+msgstr "例如domain.com"
+
+#. module: mrp_plm
+#: model_terms:ir.ui.view,arch_db:mrp_plm.mrp_eco_kanban
+msgid "oe_kanban_text_red"
+msgstr "oe_kanban_text_red"

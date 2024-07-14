@@ -1,0 +1,844 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* social_youtube
+# 
+# Translators:
+# Wil Odoo, 2023
+# Junko Augias, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:47+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_account__youtube_upload_playlist_id
+msgid ""
+"'Uploads' Playlist ID provided by the YouTube API, this should never be set "
+"manually."
+msgstr "'アップロード' YouTube APIによって提供されるプレイリストID、これは手動で設定されることは決してありません。"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.youtube_preview
+msgid "123 Views •"
+msgstr "123ビュー •"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_stream_post_view_kanban
+msgid "<i class=\"fa fa-thumbs-o-up me-1\" title=\"Likes\"/>"
+msgstr "<i class=\"fa fa-thumbs-o-up me-1\" title=\"Likes\"/>"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.youtube_preview
+msgid "<span class=\"fw-bold\">Your YouTube Channel</span>"
+msgstr "<span class=\"fw-bold\">自分のYouTubeチャンネル</span>"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid ""
+"<span>These are stored up to 30 days and refreshed often to provide you an accurate depiction of reality. </span>\n"
+"                        <span>To delete these from Odoo, simply delete this account.</span>"
+msgstr ""
+"<span>これらは最大30日間保存され、現実を正確に表現するために頻繁にリフレッシュされます。</span>\n"
+"                        <span>Odooからこれらを削除するには、このアカウントを削除して下さい。</span>"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "Access to your account can be revoked at any time from"
+msgstr "アカウントへのアクセスは、以下からいつでも取り消すことができます。"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_account__youtube_access_token
+msgid ""
+"Access token provided by the YouTube API, this should never be set manually."
+msgstr "YouTube APIが提供するアクセストークンは、手動で設定されることは決してありません。"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__account_id
+msgid "Account"
+msgstr "勘定科目"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_live_post.py:0
+#: code:addons/social_youtube/models/social_stream_post.py:0
+#, python-format
+msgid "An error occurred."
+msgstr "エラーが発生しました"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "Auth endpoint did not provide a refresh token. Please try again."
+msgstr "認証エンドポイントがリフレッシュトークンを提供しませんでした。再試行して下さい。"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_stream_post_view_kanban
+#, python-format
+msgid "Author Image"
+msgstr "作者イメージ"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_revoke_youtube_view_form
+msgid "Cancel"
+msgstr "取消"
+
+#. module: social_youtube
+#: model:social.stream.type,name:social_youtube.stream_type_youtube_channel_videos
+msgid "Channel"
+msgstr "チャネル"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#, python-format
+msgid "Clear"
+msgstr "クリア"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_stream_post_view_kanban
+#, python-format
+msgid "Comments"
+msgstr "コメント"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_stream_post.py:0
+#, python-format
+msgid ""
+"Comments are marked as 'disabled' for this video. It could have been set as "
+"'private'."
+msgstr "この動画用のコメントが '無効' に設定されています。 '非公開' に設定されている可能性があります。"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_res_config_settings
+msgid "Config Settings"
+msgstr "コンフィグ設定"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Confirmation"
+msgstr "確認"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_live_post__youtube_video_id
+#: model:ir.model.fields,help:social_youtube.field_social_post__youtube_video_id
+msgid "Contains the ID of the video as returned by the YouTube API"
+msgstr "YouTube API が返す動画の ID を含みます。"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_post__youtube_video_category_id
+msgid "Contains the ID of the video category as returned by the YouTube API"
+msgstr "YouTube API が返す動画カテゴリの ID を含みます。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/wizard/social_account_revoke_youtube.py:0
+#, python-format
+msgid ""
+"Could not revoke your account.\n"
+"Error: %s"
+msgstr ""
+"アカウントを取り消すことができませんでした。\n"
+"エラー: %s"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "Description cannot exceed 5000 characters."
+msgstr "説明は5000字を超えることはできません。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "Description should not contain > or < symbol."
+msgstr "説明に記号 > または <を含めることはできません。 "
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Do you also want to remove the video from your YouTube account?"
+msgstr "YouTubeアカウントから動画を削除しますか？"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Draft Video"
+msgstr "ドラフト動画"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_account__youtube_token_expiration_date
+msgid ""
+"Expiration date of the Access Token provided by the YouTube API, this should"
+" never be set manually."
+msgstr "YouTube APIが提供するアクセストークンの失効日は、手動で設定されることは決してありません。"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account__youtube_access_token
+msgid "Google Access Token"
+msgstr "Googleアクセストークン"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "Google Privacy Policy"
+msgstr "Googleプライバシーポリシー"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account__youtube_refresh_token
+msgid "Google Refresh Token"
+msgstr "Googleリフレッシュトークン"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__id
+msgid "ID"
+msgstr "ID"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#, python-format
+msgid "Likes"
+msgstr "いいね！"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_media__media_type
+msgid "Media Type"
+msgstr "メディアタイプ"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "No"
+msgstr "いいえ"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.res_config_settings_view_form
+msgid "OAuth Client ID"
+msgstr "OAuthクライアントID"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.res_config_settings_view_form
+msgid "OAuth Client Secret"
+msgstr "OAuthクライアントシークレット"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_revoke_youtube_view_form
+msgid ""
+"Odoo will lose access to your YouTube account\n"
+"                        and delete all its related data from your database."
+msgstr ""
+"OdooはあなたのYouTubeアカウントへのアクセスを失い\n"
+"　　　　　　関連するすべてのデータがデータベースから削除されます。"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_post__youtube_video_privacy
+msgid "Once posted, set the video as Public/Private/Unlisted"
+msgstr "投稿後、動画を公開/非公開/非掲載に設定します。"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid ""
+"Our YouTube Social application uses YouTube API Services.\n"
+"                        By using it, you implicitly agree to the:"
+msgstr ""
+"当社のYouTubeソーシャルアプリケーションはYouTube APIサービスを利用しています。\n"
+"                       れを利用することにより、あなたは以下の事項に同意したものとみなされます:"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+#, python-format
+msgid "Please select a single YouTube account at a time."
+msgstr "YouTubeアカウントは1つずつ選択して下さい。"
+
+#. module: social_youtube
+#: model:ir.model.fields.selection,name:social_youtube.selection__social_post__youtube_video_privacy__private
+msgid "Private"
+msgstr "非公開"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Processing..."
+msgstr "処理中..."
+
+#. module: social_youtube
+#: model:ir.model.fields.selection,name:social_youtube.selection__social_post__youtube_video_privacy__public
+msgid "Public"
+msgstr "パブリック"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "Read More about YouTube Channel"
+msgstr "YouTubeチャンネルについてさらに読む"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "Reason:"
+msgstr "理由:"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_account__youtube_refresh_token
+msgid ""
+"Refresh token provided by the YouTube API, this should never be set "
+"manually."
+msgstr "YouTube APIが提供するリフレッシュトークンは、手動で設定されることは決してありません。"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "Revoke"
+msgstr "取り消す"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_revoke_youtube_view_form
+msgid "Revoke & Delete"
+msgstr "取消＆削除"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_account.py:0
+#, python-format
+msgid "Revoke Account"
+msgstr "アカウント取消"
+
+#. module: social_youtube
+#: model:ir.actions.act_window,name:social_youtube.social_account_revoke_youtube_action
+#: model:ir.model,name:social_youtube.model_social_account_revoke_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_revoke_youtube_view_form
+msgid "Revoke YouTube Account"
+msgstr "YouTubeアカウントを取消す"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_account.py:0
+#, python-format
+msgid "Revoking access tokens is currently limited to YouTube accounts only."
+msgstr "アクセストークンの失効は現在、YouTubeアカウントのみに限定されています。"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#, python-format
+msgid "Select"
+msgstr "選択"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_accounts_other_count
+msgid "Selected Other Accounts"
+msgstr "選択した他のアカウント"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_accounts_count
+msgid "Selected YouTube Accounts"
+msgstr "選択したYouTubeアカウント"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_post__youtube_video
+msgid ""
+"Simply holds the filename of the video as the video itself is uploaded "
+"directly to YouTube"
+msgstr "動画そのものがYouTubeに直接アップロードされるため、動画のファイル名を保持するだけです。"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_account
+msgid "Social Account"
+msgstr "ソーシャルアカウント"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_live_post
+msgid "Social Live Post"
+msgstr "ソーシャル・ライブ・ポスト"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_media
+msgid "Social Media"
+msgstr "ソーシャルメディア"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_post
+msgid "Social Post"
+msgstr "ソーシャル・ポスト"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_post_template
+msgid "Social Post Template"
+msgstr "ソーシャルポストテンプレート"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_stream
+msgid "Social Stream"
+msgstr "ソーシャルストリーム"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_stream_post
+msgid "Social Stream Post"
+msgstr "ソーシャルストリームポスト"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "The 'message' field is required for post ID %s"
+msgstr "'メッセージ'フィールドがポストIDに必要です %s"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "The selected video exceeds the maximum allowed size of %s."
+msgstr "選択した動画が許容最大ファイルサイズ%sを超えています。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_media.py:0
+#, python-format
+msgid ""
+"The url that this service requested returned an error. Please contact the "
+"author of the app."
+msgstr "このサービスが要求したURLがエラーを返しました。アプリの作者に連絡してください。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_live_post.py:0
+#, python-format
+msgid "The video you are trying to publish has been deleted from YouTube."
+msgstr "公開しようとしている動画はYouTubeから削除されています。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "There is no channel linked with this YouTube account."
+msgstr "このYouTubeアカウントにリンクされたチャンネルはありません。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "Title cannot exceed 100 characters."
+msgstr "タイトルは100文字以下にして下さい。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "Title should not contain > or < symbol."
+msgstr "タイトルに記号 > または < を含めることはできません。 "
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid ""
+"To provide our application services, note that we store the following data "
+"from your YouTube account:"
+msgstr "当社のアプリケーションサービスを提供するために、当社はお客様のYouTubeアカウントから以下のデータを保存します:"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account__youtube_token_expiration_date
+msgid "Token expiration date"
+msgstr "トークン使用期限日"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "Unauthorized. Please contact your administrator."
+msgstr "認証されていません。管理者に連絡して下さい。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/wizard/social_account_revoke_youtube.py:0
+#, python-format
+msgid "Unknown"
+msgstr "不明"
+
+#. module: social_youtube
+#: model:ir.model.fields.selection,name:social_youtube.selection__social_post__youtube_video_privacy__unlisted
+msgid "Unlisted"
+msgstr "非公開"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#, python-format
+msgid "Upload Video"
+msgstr "動画をアップロード"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Upload failed. Please try again."
+msgstr "アップロードに失敗しました。もう一度やり直して下さい。"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Uploading... %s%"
+msgstr "アップロード中... %s%"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Uploading... 0%"
+msgstr "アップロード中... 0%"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_res_config_settings__youtube_use_own_account
+msgid "Use your own YouTube Account"
+msgstr "自分のYouTubeアカウントを使用"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_media__media_type
+msgid ""
+"Used to make comparisons when we need to restrict some features to a "
+"specific media ('facebook', 'twitter', ...)."
+msgstr ""
+"いくつかの機能を特定のメディア('Facebook','Twitter', ...)に制限する必要がある場合の比較を行うために使用されます。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "Video"
+msgstr "動画"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+msgid "Video Description"
+msgstr "動画の説明"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_video_privacy
+msgid "Video Privacy"
+msgstr "動画のプライバシー"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+msgid "Video Title"
+msgstr "動画タイトル"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Video Upload"
+msgstr "動画アップロード"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_stream_post.py:0
+#, python-format
+msgid "Video not found. It could have been removed from Youtube."
+msgstr "動画が見つかりません。YouTubeから削除されている可能性があります。"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_stream_post_view_kanban
+#, python-format
+msgid "Views"
+msgstr "ビュー"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Yes, delete it"
+msgstr "はい、削除します。"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "You cannot use '>' or '<' in both title and description."
+msgstr "タイトルと説明文の両方で '>' または '<' を使用することはできません。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_media.py:0
+#, python-format
+msgid "You don't have an active subscription. Please buy one here: %s"
+msgstr "アクティブなサブスクリプションを持っていません。こちらで購入してください:%s"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "You have to upload a video when posting on YouTube."
+msgstr "YouTubeに投稿する際には動画をアップロードする必要があります。"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "You need to give your video a description."
+msgstr "動画に説明をつけて下さい。"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "You need to give your video a title."
+msgstr "動画にタイトルを付けて下さい。"
+
+#. module: social_youtube
+#: model:ir.model.fields.selection,name:social_youtube.selection__social_media__media_type__youtube
+#: model:social.media,name:social_youtube.social_media_youtube
+msgid "YouTube"
+msgstr "YouTube"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_access_token
+msgid "YouTube Access Token"
+msgstr "YouTubeアクセストークン"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_video_category_id
+msgid "YouTube Category Id"
+msgstr "YouTubeカテゴリID"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account__youtube_channel_id
+msgid "YouTube Channel ID"
+msgstr "YouTubeチャンネルID"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_account__youtube_channel_id
+msgid ""
+"YouTube Channel ID provided by the YouTube API, this should never be set "
+"manually."
+msgstr "YouTube APIによって提供されるYouTubeチャンネルID、これは手動で設定されることは決してありません。"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/stream_post_kanban_record.js:0
+#, python-format
+msgid "YouTube Comments"
+msgstr "YouTubeコメント"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_comments_count
+msgid "YouTube Comments Count"
+msgstr "YouTubeコメント数"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.res_config_settings_view_form
+msgid "YouTube Developer Account"
+msgstr "YouTubeデベロッパーアカウント"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_dislikes_count
+msgid "YouTube Dislikes"
+msgstr "YouTubeよくないね"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_likes_count
+msgid "YouTube Likes"
+msgstr "YouTubeいいね"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_likes_ratio
+msgid "YouTube Likes Ratio"
+msgstr "YouTubeいいね率"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_res_config_settings__youtube_oauth_client_id
+msgid "YouTube OAuth Client ID"
+msgstr "YouTube OAuthクライアントID"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_res_config_settings__youtube_oauth_client_secret
+msgid "YouTube OAuth Client Secret"
+msgstr "YouTube OAuthクライアントシークレット"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+msgid "YouTube Options"
+msgstr "YouTubeオプション"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.youtube_preview
+msgid "YouTube Placeholder"
+msgstr "YouTubeプレースホルダ"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_preview
+msgid "YouTube Preview"
+msgstr "YouTubeプレビュー"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "YouTube Terms of Service (ToS)"
+msgstr "YouTubeサービス利用規約(ToS)"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_kanban
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_stream_post_view_kanban
+msgid "YouTube Thumbnail"
+msgstr "YouTubeサムネイル"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_thumbnail_url
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_thumbnail_url
+msgid "YouTube Thumbnail Url"
+msgstr "YouTubeサムネイルUrl"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account__youtube_upload_playlist_id
+msgid "YouTube Upload Playlist ID"
+msgstr "YouTubeアップロードプレイリストID"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_video
+msgid "YouTube Video"
+msgstr "YouTube動画"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_description
+msgid "YouTube Video Description"
+msgstr "YouTube動画説明"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_video_id
+msgid "YouTube Video ID"
+msgstr "YouTube動画ID"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_live_post__youtube_video_id
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_video_id
+msgid "YouTube Video Id"
+msgstr "YouTube動画ID"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_title
+msgid "YouTube Video Title"
+msgstr "YouTube動画タイトル"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_video_url
+msgid "YouTube Video Url"
+msgstr "YouTube動画URL"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_views_count
+msgid "YouTube Views"
+msgstr "YouTubeビュー"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "YouTube did not provide a valid access token or it may have expired."
+msgstr "YouTubeが有効なアクセストークンを提供していないか、有効期限が切れている可能性があります。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "YouTube did not provide a valid authorization code."
+msgstr "YouTubeが有効な認証コードを提供しませんでした。"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "Your channel name and picture"
+msgstr "チャンネル名と写真"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Your description cannot exceed 5000 characters."
+msgstr "説明は5000字以内にして下さい。"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Your title cannot exceed 100 characters."
+msgstr "タイトルは100字以下にして下さい。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_live_post.py:0
+#, python-format
+msgid "Your video is missing a correct title or description."
+msgstr "動画のタイトルや説明文が正しくありません。"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid ""
+"Your videos metadata including title and view counts (but never the video "
+"itself)"
+msgstr "タイトルや視聴回数などの動画のメタデータ(ただし、動画そのものは含まれません)"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+msgid ""
+"e.g. Engage your entire community with a single app! "
+"https://www.odoo.com/trial"
+msgstr "例: 1つのアプリでコミュニティ全体を巻き込もう！https://www.odoo.com/trial"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+msgid "e.g. Odoo Social Tutorial"
+msgstr "例: Odooソーシャルチュートリアル"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "the Google Third-party app account access panel"
+msgstr "Googleサードパーティアプリのアカウントアクセスパネル"

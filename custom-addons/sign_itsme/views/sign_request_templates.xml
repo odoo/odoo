@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sign_itsme._doc_sign" inherit_id="sign._doc_sign">
+        <xpath expr="//input[@id='o_sign_input_optional_redirect_url_text']" position="after">
+            <t t-if="show_thank_you_dialog">
+                <input id="o_sign_show_thank_you_dialog" type="hidden"/>
+            </t>
+            <t t-if="error_message">
+                <input id="o_sign_show_error_message" t-att-value="error_message" type="hidden"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account_invoice_extract.Box">
+        <div
+            t-attf-class="o_invoice_extract_box #{state.ocr_selected ? 'ocr_chosen' : ''} #{state.user_selected ? 'selected' : ''}"
+            t-att-data-id="state.id"
+            t-att-data-field-name="state.feature"
+            t-att-style="style"
+            t-on-click="onClick"
+        />
+    </t>
+    <t t-name="account_invoice_extract.BoxLayer">
+        <div t-attf-class="o_invoice_extract_box_layer" t-att-style="style" t-on-mousedown.prevent="">
+            <t t-foreach="state.boxes" t-as="box" t-key="box.id">
+                <Box
+                    box="box"
+                    pageWidth="pageWidth"
+                    pageHeight="pageHeight"
+                    onClickBoxCallback="props.onClickBoxCallback"
+                />
+            </t>
+        </div>
+    </t>
+</templates>

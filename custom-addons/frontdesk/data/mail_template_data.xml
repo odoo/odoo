@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="frontdesk_mail_template" model="mail.template">
+            <field name="name">Frontdesk Email Template</field>
+            <field name="model_id" ref="frontdesk.model_frontdesk_visitor"/>
+            <field name="subject">Your Visitor {{ object.name }} Requested To Meet You</field>
+            <field name="lang">{{ ctx.get('lang') }}</field>
+            <field name="description">Sent to hosts on guest arrival</field>
+            <field name="body_html" type="html">
+                <div>
+                    <p>Hello <t t-if="ctx.get('host_name')"><t t-out="ctx.get('host_name')"/>, </t><b><t t-out="object.name"/></b> <t t-if="object.phone">(<t t-out="object.phone"/>)</t><t t-if="object.company">, coming from <t t-out="object.company"/></t> is asking to meet you at <t t-out="object.station_id.name"/>. Please let them know you'll be there shortly.
+                    </p>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <div t-name="spreadsheet_dashboard_edition.DashboardEditAction" class="o_dashboard_edit_action">
+        <SpreadsheetControlPanel
+            t-props="controlPanelProps"
+            onSpreadsheetShared.bind="shareSpreadsheet"/>
+        <SpreadsheetComponent model="model"/>
+    </div>
+
+</templates>

@@ -1,0 +1,119 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_event_track_social
+# 
+# Translators:
+# Wil Odoo, 2023
+# Daye Jeong, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:22+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Daye Jeong, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_event_track_social
+#: model_terms:ir.ui.view,arch_db:website_event_track_social.event_track_view_form
+msgid "<span invisible=\"not push_reminder\">minutes before start</span>"
+msgstr "시작 <span invisible=\"not push_reminder\">분 전</span>"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,help:website_event_track_social.field_event_track__push_reminder
+msgid ""
+"Check this if you want to send a push notification reminder to everyone that"
+" has favorited this track."
+msgstr "세션을 즐겨찾기한 모든 사람에게 푸시 알림을 보내려면 이 옵션을 선택하십시오."
+
+#. module: website_event_track_social
+#: model_terms:ir.ui.view,arch_db:website_event_track_social.event_track_view_form
+msgid "Edit Push Reminder"
+msgstr "푸시 알림 변경"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_event_track__firebase_enable_push_notifications
+msgid "Enable Web Push Notifications"
+msgstr "웹 푸시 알림 활성화"
+
+#. module: website_event_track_social
+#: model:ir.model,name:website_event_track_social.model_event_track
+msgid "Event Track"
+msgstr "행사 과정"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,help:website_event_track_social.field_event_track__push_reminder_delay
+msgid ""
+"How many minutes before the start of the talk do you want to send the "
+"reminder?"
+msgstr "강연 시작 몇 분 전에 미리 알림을 보내시겠습니까?"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_social_post__event_track_id
+msgid "Linked Event Track"
+msgstr "링크된 행사 세션"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_website_visitor__event_track_push_enabled_ids
+msgid "Push Enabled Tracks"
+msgstr "푸시 알림 활성화된 세션"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_event_track__push_reminder
+#: model_terms:ir.ui.view,arch_db:website_event_track_social.event_track_view_form
+msgid "Push Reminder"
+msgstr "푸시 알림"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_event_track__push_reminder_delay
+msgid "Push Reminder Delay"
+msgstr "푸시 알림 지연"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_event_track__push_reminder_posts
+msgid "Push Reminders"
+msgstr "푸시 알림"
+
+#. module: website_event_track_social
+#: model:ir.model,name:website_event_track_social.model_social_post
+msgid "Social Post"
+msgstr "소셜 게시"
+
+#. module: website_event_track_social
+#. odoo-python
+#: code:addons/website_event_track_social/models/event_track.py:0
+#, python-format
+msgid "There are no push reminders associated with this track"
+msgstr "이 세션과 관련된 푸시 알림이 없습니다"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,help:website_event_track_social.field_website_visitor__event_track_push_enabled_ids
+msgid ""
+"Tracks that are 'default favorited' can be blacklisted and the visitor is "
+"removed from push reminders."
+msgstr "'기본 즐겨찾기'로 설정된 세션은 블랙리스트에 추가할 수 있으며, 해당 방문자는 푸시 알림에서 제거됩니다."
+
+#. module: website_event_track_social
+#: model:ir.model,name:website_event_track_social.model_website_visitor
+msgid "Website Visitor"
+msgstr "웹사이트 방문자"
+
+#. module: website_event_track_social
+#. odoo-python
+#: code:addons/website_event_track_social/models/event_track.py:0
+#, python-format
+msgid "Your favorite track '%s' will start in %s minutes!"
+msgstr "즐겨찾기한 세션 '%s' 가 %s분 후 시작합니다! "
+
+#. module: website_event_track_social
+#. odoo-python
+#: code:addons/website_event_track_social/models/event_track.py:0
+#, python-format
+msgid "Your track is about to start!"
+msgstr "세션이 곧 시작됩니다!"

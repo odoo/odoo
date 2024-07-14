@@ -1,0 +1,969 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* frontdesk
+# 
+# Translators:
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# Wil Odoo, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
+# 湘子 南 <1360857908@qq.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_visitor.py:0
+#, python-format
+msgid " Check-In: %s"
+msgstr "签到： %s"
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_visitor.py:0
+#, python-format
+msgid " Check-In: %s to meet %s"
+msgstr "签到：%s 与 %s 会面"
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_visitor.py:0
+#, python-format
+msgid "%(name)s just checked-in. Requested Drink: %(drink)s."
+msgstr "%(name)s刚登记入住。要求喝: %(drink)s."
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_visitor.py:0
+#, python-format
+msgid "%s just checked-in."
+msgstr "%s 刚刚签到。"
+
+#. module: frontdesk
+#: model:mail.template,body_html:frontdesk.frontdesk_mail_template
+msgid ""
+"<div>\n"
+"                    <p>Hello <t t-if=\"ctx.get('host_name')\"><t t-out=\"ctx.get('host_name')\"></t>, </t><b><t t-out=\"object.name\"></t></b> <t t-if=\"object.phone\">(<t t-out=\"object.phone\"></t>)</t><t t-if=\"object.company\">, coming from <t t-out=\"object.company\"></t></t> is asking to meet you at <t t-out=\"object.station_id.name\"></t>. Please let them know you'll be there shortly.\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"                    <p>你好<t t-if=\"ctx.get('host_name')\"><t t-out=\"ctx.get('host_name')\"></t> 、 </t><b><t t-out=\"object.name\"></t></b><t t-if=\"object.phone\">(<t t-out=\"object.phone\"></t></t>)<t t-if=\"object.company\"> 从<t t-out=\"object.company\"></t> 来</t>，要求在<t t-out=\"object.station_id.name\"></t> 与您见面。请告诉他们您马上就到。\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__active
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__active
+msgid "Active"
+msgstr "启用"
+
+#. module: frontdesk
+#: model:ir.actions.client,name:frontdesk.frontdesk_visitor_action_configure_properties_field
+msgid "Add Properties"
+msgstr "增加属性"
+
+#. module: frontdesk
+#: model:res.groups,name:frontdesk.frontdesk_group_administrator
+msgid "Administrator"
+msgstr "管理员"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Allow visitor to select a drink during registration"
+msgstr "允许访客在注册时选择饮料"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Allows the visitor to pick the host of the meeting from the list"
+msgstr "允许访客从列表中选择会议主持人"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Archived"
+msgstr "已存档"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/quick_check_in/quick_check_in.xml:0
+#, python-format
+msgid "Are you one of these people?"
+msgstr "你是其中之一吗？"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__authenticate_guest
+msgid "Authenticate Guest"
+msgstr "验证访客身份"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/navbar/navbar.xml:0
+#, python-format
+msgid "Back"
+msgstr "返回"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+msgid "By Responsible"
+msgstr "按负责人"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+msgid "Cancel"
+msgstr "取消"
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_visitor__state__canceled
+msgid "Canceled"
+msgstr "已取消"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__check_in
+#, python-format
+msgid "Check In"
+msgstr "签到"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__check_out
+msgid "Check Out"
+msgstr "签退"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/welcome_page/welcome_page.xml:0
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+#, python-format
+msgid "Check in"
+msgstr "签到"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "Check out"
+msgstr "签退"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "CheckIn"
+msgstr "签到"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "CheckIn Station"
+msgstr "签到点"
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_visitor__state__checked_in
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Checked-In"
+msgstr "签到"
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_visitor__state__checked_out
+msgid "Checked-Out"
+msgstr "签退"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Checked-out"
+msgstr "已签退"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "Checkout"
+msgstr "签退"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/end_page/end_page.xml:0
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "Close"
+msgstr "关闭"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__company_id
+msgid "Company"
+msgstr "公司"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/navbar/navbar.xml:0
+#, python-format
+msgid "Company Logo"
+msgstr "公司Logo"
+
+#. module: frontdesk
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_config
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "Configuration"
+msgstr "配置"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Configure Drinks"
+msgstr "配置饮料"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/host_page/host_page.xml:0
+#, python-format
+msgid "Confirm"
+msgstr "确认"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__create_uid
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__create_uid
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__create_date
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__create_date
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__theme__dark
+msgid "Dark"
+msgstr "深色"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Date"
+msgstr "日期"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__description
+msgid "Description"
+msgstr "描述"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__display_name
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__display_name
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "Do you want something to drink?"
+msgstr "想喝点什么吗？"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__drink_ids
+msgid "Drink"
+msgstr "饮料"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__drink_image
+msgid "Drink Image"
+msgstr "饮料形象"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_drink_view_form
+msgid "Drink Name"
+msgstr "饮料名称"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__served
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "Drink Served"
+msgstr "提供的饮料"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/drink_page/drink_page.xml:0
+#, python-format
+msgid "Drink image"
+msgstr "饮料图片"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Drink to Serve"
+msgstr "饮用"
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_drink
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_drinks_report
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__drink_ids
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_drinks_config
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_report_drinks
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_drink_report_view_graph
+msgid "Drinks"
+msgstr "饮料"
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_open_drink_to_serve_visitor
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__drink_to_serve
+msgid "Drinks to Serve"
+msgstr "饮料供应"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "Drinks to serve"
+msgstr "饮料"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__duration
+msgid "Duration"
+msgstr "持续时间"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+msgid "E.g. What's your Name"
+msgstr "例如：你叫什么名字？"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__ask_email
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__email
+msgid "Email"
+msgstr "邮箱"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__mail_template_id
+msgid "Email Template"
+msgstr "邮件模板"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+msgid "Favorite"
+msgstr "收藏"
+
+#. module: frontdesk
+#: model:ir.model,name:frontdesk.model_frontdesk_frontdesk
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_root
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Frontdesk"
+msgstr "前台"
+
+#. module: frontdesk
+#: model:ir.model,name:frontdesk.model_frontdesk_drink
+msgid "Frontdesk Drink"
+msgstr "前台饮料"
+
+#. module: frontdesk
+#: model:mail.template,name:frontdesk.frontdesk_mail_template
+msgid "Frontdesk Email Template"
+msgstr "前台电子邮件模板"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__name
+msgid "Frontdesk Name"
+msgstr "前台名称"
+
+#. module: frontdesk
+#: model:sms.template,name:frontdesk.frontdesk_sms_template
+msgid "Frontdesk SMS Template"
+msgstr "前台短信模板"
+
+#. module: frontdesk
+#: model:ir.model,name:frontdesk.model_frontdesk_visitor
+msgid "Frontdesk Visitors"
+msgstr "前台访客"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Group By"
+msgstr "分组方式"
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_open_guest_on_site_visitor
+msgid "Guest On Site"
+msgstr "现场嘉宾"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__guest_on_site
+msgid "Guests On Site"
+msgstr "现场嘉宾"
+
+#. module: frontdesk
+#: model:sms.template,body:frontdesk.frontdesk_sms_template
+msgid ""
+"Hello, Your visitor {{ object.name }} {{ '(%s)' % object.phone if "
+"object.phone else '' }} {{ '(%s)' % object.company if object.company else ''"
+" }} wants to meet you at {{ object.station_id.name }}. Please let them know "
+"you'll be there shortly."
+msgstr ""
+"您好，您的访客 {{ object.name }}{{ '(%s)'% object.phone if object.phone else '' "
+"}}{{ '(%s)'% object.company if object.company else '' }} 希望在 {{ "
+"object.station_id.name }} 与您见面。请告知他们您马上就到。"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "Host"
+msgstr "接待人"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__host_ids
+msgid "Host Name"
+msgstr "接待人姓名"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__host_selection
+msgid "Host Selection"
+msgstr "接待人选择"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/drink_page/drink_page.xml:0
+#, python-format
+msgid "How can we delight you?"
+msgstr "我们如何让您满意？"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__id
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__id
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__id
+msgid "ID"
+msgstr "ID"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__image
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_drink_view_kanban
+msgid "Image"
+msgstr "图片"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__is_favorite
+msgid "Is Favorite"
+msgstr "已收藏"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "Kiosk"
+msgstr "自助服务终端"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__kiosk_url
+msgid "Kiosk URL"
+msgstr "自助服务终端网址"
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_frontdesk.py:0
+#, python-format
+msgid "Last Check-In: %s hours ago"
+msgstr "最近一次签到： %s 小时前"
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_frontdesk.py:0
+#, python-format
+msgid "Last Check-In: %s minutes ago"
+msgstr "上次签到： %s 分钟前"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__write_uid
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__write_uid
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__write_date
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__write_date
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__latest_check_in
+msgid "Latest Check In"
+msgstr "最新签到"
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__theme__light
+msgid "Light"
+msgstr "浅色"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/host_page/many2one/many2one.js:0
+#, python-format
+msgid "Loading..."
+msgstr "加载中... 稍安勿躁"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__message
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+msgid "Message"
+msgstr "信息"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+msgid "My Station"
+msgstr "我的岗位"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__name
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__name
+msgid "Name"
+msgstr "名称"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "No, thank you"
+msgstr "不用了，谢谢你"
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_company__none
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_email__none
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_phone__none
+msgid "None"
+msgstr "无"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/drink_page/drink_page.xml:0
+#, python-format
+msgid "Nothing, thanks."
+msgstr "没什么，谢谢。"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__notify_sms
+msgid "Notify by SMS"
+msgstr "短信通知"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__notify_discuss
+msgid "Notify by discuss"
+msgstr "通过讨论通知"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__notify_email
+msgid "Notify by email"
+msgstr "通过电子邮件通知"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Notify the host on guest arrival"
+msgstr "客人抵达时通知接待人"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__drink_offer
+msgid "Offer Drinks"
+msgstr "提供饮料"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "On Site"
+msgstr "站内公告"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "Open Desk"
+msgstr "开放式办公桌"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Open Kiosk"
+msgstr "打开自助服务终端"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Open host chat window when guest arrives"
+msgstr "访客到达时打开接待人聊天窗口"
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_company__optional
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_email__optional
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_phone__optional
+msgid "Optional"
+msgstr "可选"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Options"
+msgstr "选项"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__ask_company
+msgid "Organization"
+msgstr "组织"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__pending
+msgid "Pending"
+msgstr "待定"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__notify_user_ids
+msgid "People to Notify"
+msgstr "要通知的人"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__ask_phone
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__phone
+msgid "Phone"
+msgstr "电话"
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_open_planned_visitor
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_visitor__state__planned
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Planned"
+msgstr "计划"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/end_page/end_page.xml:0
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "Please have a seat."
+msgstr "请坐"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_qr_expired
+msgid "Please rescan it."
+msgstr "请重新扫描。"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__visitor_properties
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "Properties"
+msgstr "属性"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/welcome_page/welcome_page.xml:0
+#, python-format
+msgid "QR Code"
+msgstr "二维码"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_qr_expired
+msgid "QR Code Expired."
+msgstr "二维码已过期。"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/quick_check_in/quick_check_in.xml:0
+#, python-format
+msgid "Quick Check In"
+msgstr "快捷签到"
+
+#. module: frontdesk
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_report
+msgid "Reporting"
+msgstr "报表"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Request additional information upon registering"
+msgstr "注册时索取更多信息"
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_company__required
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_email__required
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_phone__required
+msgid "Required"
+msgstr "必需"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+msgid "Responsible"
+msgstr "负责人"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__responsible_ids
+msgid "Responsibles"
+msgstr "负责人"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__sms_template_id
+msgid "SMS Template"
+msgstr "SMS 模板"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__access_token
+msgid "Security Token"
+msgstr "安全Token"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Select the color of the Desk"
+msgstr "选择桌面颜色"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__self_check_in
+msgid "Self Check-In"
+msgstr "自助签到"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Send an SMS to the host on guest arrival"
+msgstr "在客人抵达时向接待人员发送短信"
+
+#. module: frontdesk
+#: model:mail.template,description:frontdesk.frontdesk_mail_template
+msgid "Sent to hosts on guest arrival"
+msgstr "在访客抵达时发送给"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__sequence
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_drink_view_form
+msgid "Sequence"
+msgstr "序列"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Show a QR code on the welcome screen to check-in from mobile"
+msgstr "在欢迎屏幕上显示二维码，以便通过手机办理签到手续"
+
+#. module: frontdesk
+#: model:ir.model.fields,help:frontdesk.field_frontdesk_frontdesk__self_check_in
+msgid ""
+"Shows a QR code in the interface, for guests to check in from their mobile "
+"phone."
+msgstr "在界面上显示二维码，方便客人用手机办理签到手续。"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Side Message"
+msgstr "侧边信息"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__station_id
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Station"
+msgstr "岗位"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+msgid "Station Name"
+msgstr "岗位名称"
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_open_station_visitor
+msgid "Station Visitors"
+msgstr "岗位访客"
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_frontdesk_tree
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_stations
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_stations_config
+msgid "Stations"
+msgstr "岗位"
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_station_report
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "Statistics"
+msgstr "统计"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__state
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Status"
+msgstr "状态"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/end_page/end_page.xml:0
+#, python-format
+msgid "Thank you for registering!"
+msgstr "感谢您的注册！"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__theme
+msgid "Theme"
+msgstr "主题"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Today"
+msgstr "今天"
+
+#. module: frontdesk
+#: model:res.groups,name:frontdesk.frontdesk_group_user
+msgid "User"
+msgstr "用户"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Visitor"
+msgstr "访客"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__company
+msgid "Visitor Company"
+msgstr "参观公司"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__visitor_properties_definition
+msgid "Visitor Properties"
+msgstr "访客属性"
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_frontdesk.py:0
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_visitor
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_visitors_report
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__visitor_ids
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_report_visitors
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_visitors
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_station_report_view_graph
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_report_view_graph
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_graph
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_pivot
+#, python-format
+msgid "Visitors"
+msgstr "访客"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/welcome_page/welcome_page.xml:0
+#, python-format
+msgid "Welcome"
+msgstr "欢迎"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/navbar/navbar.xml:0
+#, python-format
+msgid "Who are you visiting?"
+msgstr "你要拜访谁？"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/navbar/navbar.xml:0
+#, python-format
+msgid "Who are you?"
+msgstr "您是谁？"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Write message..."
+msgstr "写留言..."
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "Yes, please"
+msgstr "是的，请"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "You have been registered!"
+msgstr "您已注册！"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "Your Company"
+msgstr "您的公司"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "Your Email"
+msgstr "你的邮箱"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "Your Name"
+msgstr "你的名字"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "Your Phone Number"
+msgstr "你的电话号码"
+
+#. module: frontdesk
+#: model:mail.template,subject:frontdesk.frontdesk_mail_template
+msgid "Your Visitor {{ object.name }} Requested To Meet You"
+msgstr "您的访客 {{ object.name }}请求与您见面"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/end_page/end_page.xml:0
+#, python-format
+msgid "Your drink is on the way."
+msgstr "您的饮料马上就到。"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_drink_view_form
+msgid "e.g. Coca-Cola"
+msgstr "例如：可口可乐"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "e.g. John Doe"
+msgstr "例如 John Doe"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "e.g. My Company"
+msgstr "例如：我的公司"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "e.g. john@company.com"
+msgstr "例如：john@company.com"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/end_page/end_page.xml:0
+#, python-format
+msgid "has been informed."
+msgstr "已获悉。"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/welcome_page/welcome_page.xml:0
+#, python-format
+msgid "to"
+msgstr "到"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "will get back to you."
+msgstr "会给你回复的。"

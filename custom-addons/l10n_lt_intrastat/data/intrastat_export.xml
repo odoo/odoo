@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main intrastat report export for Lithuania -->
+    <template id="intrastat_report_export_xml">
+        <INSTAT>
+            <Envelope>
+                <envelopeId t-out="envelopeId"/>
+                <t t-call="l10n_lt_intrastat.DateTime"/>
+                <t t-call="l10n_lt_intrastat.Party">
+                    <t t-set="type" t-value="'PSI'"/>
+                    <t t-set="role" t-value="'sender'"/>
+                </t>
+                <t t-call="l10n_lt_intrastat.Party">
+                    <t t-set="type" t-value="'CC'"/>
+                    <t t-set="role" t-value="'receiver'"/>
+                </t>
+                <testIndicator t-if="is_test">true</testIndicator>
+                <softwareUsed t-out="version"/>
+                <t t-call="l10n_lt_intrastat.Declaration">
+                    <t t-set="reception" t-value="True"/>
+                    <t t-set="items" t-value="in_vals"/>
+                </t>
+                <t t-call="l10n_lt_intrastat.Declaration">
+                    <t t-set="reception" t-value="False"/>
+                    <t t-set="items" t-value="out_vals"/>
+                </t>
+                <numberOfDeclarations t-out="number_of_declarations"/>
+            </Envelope>
+        </INSTAT>
+    </template>
+
+    <template id="DateTime">
+        <DateTime>
+            <date t-out="sending_date.strftime('%Y-%m-%d')"/>
+            <time t-out="sending_date.strftime('%H:%M:%S')"/>
+        </DateTime>
+    </template>
+
+    <template id="Party">
+        <Party t-att-partyType="type" t-att-partyRole="role">
+            <t t-if="type=='CC'">
+                <partyId>MM39</partyId>
+                <partyName>MD STATISTIKOS ANALIZĖS SKYRIUS</partyName>
+            </t>
+            <t t-else="">
+                <partyId t-out="company.vat"/>
+                <partyName t-out="company.name"/>
+                <t t-call="l10n_lt_intrastat.Address"/>
+                <t t-call="l10n_lt_intrastat.ContactPerson"/>
+            </t>
+        </Party>
+    </template>
+
+    <template id="Address">
+        <Address>
+            <adresas t-if="company.street" t-out="company.street"/>
+            <phoneNumber t-if="company.phone" t-out="company.phone"/>
+            <e-mail t-if="company.email" t-out="company.email"/>
+        </Address>
+    </template>
+
+    <template id="ContactPerson">
+        <ContactPerson>
+            <contactPersonName t-out="user.name"/>
+            <phoneNumber t-if="user.phone" t-out="user.phone"/>
+            <e-mail t-if="user.email" t-out="user.email"/>
+        </ContactPerson>
+    </template>
+
+    <template id="Declaration">
+        <t t-if="items">
+            <Declaration>
+                <t t-call="l10n_lt_intrastat.DateTime"/>
+                <referencePeriod t-out="date"/>
+                <PSIId t-out="company.vat"/>
+                <Function>
+                    <functionCode>O</functionCode>
+                </Function>
+                <flowCode t-out="'A' if reception else 'D'"/>
+                <currencyCode>EUR</currencyCode>
+                <totalInvoicedAmount t-out="total_invoiced_amount"/>
+                <t t-call="l10n_lt_intrastat.Item"/>
+                <totalNumberDetailedLines t-out="len(items)"/>
+            </Declaration>
+        </t>
+    </template>
+
+    <template id="Item">
+        <t t-foreach="items" t-as="item">
+            <Item>
+                <itemNumber t-out="item['itemNumber']"/>
+                <t t-call="l10n_lt_intrastat.CN8"/>
+                <goodsDescription t-out="item['goods_description'] or ''"/>
+                <MSConsDestCode t-out="company.account_fiscal_country_id.code if reception else item['country_code']"/>
+                <countryOfOriginCode t-out="item['intrastat_product_origin_country_code']"/>
+                <netMass t-out="item['weight']"/>
+                <invoicedAmount t-out="item['value']"/>
+                <partnerId t-out="item['partner_vat']"/>
+                <t t-call="l10n_lt_intrastat.NatureOfTransaction"/>
+                <modeOfTransportCode t-if="item.get('transport_code')" t-out="item['transport_code']"/>
+                <regionCode t-if="item.get('region_code')" t-out="item['region_code']"/>
+                <t t-call="l10n_lt_intrastat.DeliveryTerms"/>
+            </Item>
+        </t>
+    </template>
+
+    <template id="CN8">
+        <CN8>
+            <CN8Code t-out="item['commodity_code']"/>
+            <SUCode t-if="item.get('supplementary_units')" t-out="item['supplementary_units']"/>
+        </CN8>
+    </template>
+
+    <template id="NatureOfTransaction">
+        <t t-if="item.get('transaction_code')">
+            <NatureOfTransaction>
+                <natureOfTransactionACode t-out="item['transaction_code'][0]"/>
+                <natureOfTransactionBCode t-out="item['transaction_code'][1]"/>
+            </NatureOfTransaction>
+        </t>
+    </template>
+
+    <template id="DeliveryTerms">
+        <t t-if="item.get('incoterm_code')">
+            <DeliveryTerms>
+                <TODCode t-out="item['incoterm_code']"/>
+            </DeliveryTerms>
+        </t>
+    </template>
+
+</odoo>

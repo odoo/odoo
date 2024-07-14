@@ -1,0 +1,199 @@
+///
+/// Odoo Dark-Mode
+///
+///
+
+// = Colors
+// ============================================================================
+
+$o-white: #000 !default;
+$o-black: #FFF !default;
+
+$o-gray-100: #1B1D26 !default;
+$o-gray-200: #262A36 !default;
+$o-gray-300: #3C3E4B !default;
+$o-gray-400: #5A5E6B !default;
+$o-gray-500: #6B707F !default;
+$o-gray-600: #7E8392 !default;
+$o-gray-700: #B1B3BC !default;
+$o-gray-800: #D1D1D1 !default;
+$o-gray-900: #E4E4E4 !default;
+
+$o-enterprise-color: #6b3e66 !default;
+$o-brand-primary: $o-enterprise-color !default;
+$o-enterprise-action-color: #02c7b5 !default;
+
+$o-success: #1dc959 !default;
+$o-info: #6AB5FB !default;
+$o-warning: #FBB56A !default;
+$o-danger: #b83232 !default;
+$o-action: $o-enterprise-action-color !default;
+$light: $o-gray-300 !default;
+$dark: $o-gray-700 !default;
+
+
+// = Text
+// ============================================================================
+
+$o-main-text-color: $o-gray-800 !default;
+$o-main-link-color: $o-action !default;
+$o-enterprise-color: $o-brand-odoo !default;
+$o-main-favorite-color: #ffd532 !default;
+$o-main-code-color: #c58bc8 !default;
+
+// = Fine-tune contextual text colors.
+$o-theme-text-colors: (
+    "primary": #b972a6,
+    "success": #1dc959,
+    "info": #6AB5FB,
+    "warning": #FBB56A,
+    "danger": #ff5757,
+) !default;
+
+
+// = Webclient
+// ============================================================================
+$o-webclient-color-scheme: dark !default;
+$o-webclient-background-color: $o-gray-100 !default;
+$o-view-background-color: $o-gray-200 !default;
+
+// = Inputs
+$o-input-border-required: $o-black !default;
+
+// = Button Secondary
+$o-btn-secondary-bg: $o-view-background-color !default;
+$o-btn-secondary-hover-bg: $o-gray-100 !default;
+$o-btn-secondary-hover-border: $o-btn-secondary-hover-bg !default;
+
+// = Components
+// ============================================================================
+$o-component-active-bg: mix($o-action, $o-gray-300, 10%) !default;
+$o-form-lightsecondary: $o-gray-300 !default;
+
+// = List-group
+$o-list-group-active-color: $o-gray-900 !default;
+$o-list-group-active-bg: rgba(saturate(adjust-hue($o-info, 15), 1.8), .5) !default;
+
+// = Modal
+$modal-content-bg: $o-view-background-color !default;
+$modal-backdrop-bg: $o-white !default;
+
+// = Buttons
+$o-btns-bs-override: () !default;
+$o-btns-bs-override: map-merge((
+    "primary": (
+        background: $o-brand-primary,
+        border: $o-brand-primary,
+        color: $o-black,
+
+        hover-background: lighten($o-brand-primary, 5%),
+        hover-border: lighten($o-brand-primary, 5%),
+        hover-color: $o-black,
+
+        active-background: lighten($o-brand-primary, 10%),
+        active-border: lighten($o-brand-primary, 10%),
+        active-color: $o-black,
+    ),
+
+    "secondary": (
+        background: $o-gray-300,
+        border: $o-gray-300,
+        color: $o-gray-900,
+
+        hover-background: $o-gray-400,
+        hover-border: $o-gray-400,
+        hover-color: $o-gray-900,
+
+        active-background: mix($o-action, $o-gray-100, 15%),
+        active-border: lighten($o-action, 10%),
+        active-color: $o-black,
+    ),
+
+    "light": (
+        background: $o-gray-200,
+        border: $o-gray-200,
+        color: $o-gray-800,
+
+        hover-background: $o-gray-300,
+        hover-border: $o-gray-300,
+        hover-color: $o-gray-900,
+
+        active-background: mix($o-action, $o-gray-100, 15%),
+        active-border:  darken($o-action, 10%),
+        active-color: $o-black,
+    ),
+
+    "danger": (
+        background: $o-danger,
+        border: $o-danger,
+        color: $o-black,
+
+        hover-background: lighten($o-danger, 5%),
+        hover-border: lighten($o-danger, 5%),
+        hover-color: $o-black,
+
+        active-background: lighten($o-danger, 10%),
+        active-border: lighten($o-danger, 10%),
+        active-color: $o-black,
+    ),
+), $o-btns-bs-override);
+
+
+$o-btns-bs-outline-override: () !default;
+$o-btns-bs-outline-override: map-merge((
+
+    "primary": (
+        background: transparent,
+        border: map-get($o-theme-text-colors, 'primary'),
+        color: map-get($o-theme-text-colors, 'primary'),
+
+        hover-background: lighten($o-brand-primary, 5%),
+        hover-border: lighten($o-brand-primary, 5%),
+        hover-color: $o-black,
+
+        active-background: lighten($o-brand-primary, 10%),
+        active-border: lighten($o-brand-primary, 10%),
+        active-color: $o-black,
+    ),
+    "secondary": (
+        background: transparent,
+        border: $o-gray-300,
+        color: $o-gray-700,
+
+        hover-background: $o-gray-300,
+        hover-border: $o-gray-300,
+        hover-color: $o-black,
+
+        active-background: mix($o-action, $o-gray-100, 15%),
+        active-border: lighten($o-action, 10%),
+        active-color: $o-black,
+    ),
+
+    "light": (
+        background: transparent,
+        border: $o-gray-300,
+        color: $o-black,
+
+        hover-background: $o-gray-300,
+        hover-border: $o-gray-300,
+        hover-color: $o-gray-900,
+
+        active-background: mix($o-action, $o-gray-100, 15%),
+        active-border: lighten($o-action, 10%),
+        active-color: $o-black,
+    ),
+
+    "danger": (
+        background: transparent,
+        border: $o-danger,
+        color: $o-danger,
+
+        hover-background: lighten($o-danger, 5%),
+        hover-border: lighten($o-danger, 5%),
+        hover-color: $o-black,
+
+        active-background: lighten($o-danger, 10%),
+        active-border: lighten($o-danger, 10%),
+        active-color: $o-black,
+    ),
+), $o-btns-bs-outline-override);

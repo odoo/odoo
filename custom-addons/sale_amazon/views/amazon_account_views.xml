@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="amazon_account_view_tree" model="ir.ui.view">
+        <field name="name">amazon.account.tree</field>
+        <field name="model">amazon.account</field>
+        <field name="arch" type="xml">
+            <tree string="Amazon Accounts" delete="false">
+                <field name="name"/>
+                <field name="active_marketplace_ids" widget="many2many_tags"/>
+                <field name="user_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="last_orders_sync" groups="base.group_no_one"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="amazon_account_view_form" model="ir.ui.view">
+        <field name="name">amazon.account.form</field>
+        <field name="model">amazon.account</field>
+        <field name="arch" type="xml">
+            <form string="Amazon Account">
+                <header invisible="not id">
+                    <button name="action_recover_order"
+                            string="Recover Order"
+                            type="object"
+                            class="btn-secondary"
+                            groups="base.group_no_one"/>
+                    <button name="action_sync_orders"
+                            string="Sync Orders"
+                            type="object"
+                            class="btn-secondary"
+                            groups="base.group_no_one"/>
+                    <button name="action_sync_pickings"
+                            string="Sync Deliveries"
+                            type="object"
+                            class="btn-secondary"
+                            groups="base.group_no_one"/>
+                    <button name="action_sync_inventory"
+                            string="Sync FBM Inventory"
+                            type="object"
+                            class="btn-secondary"
+                            groups="base.group_no_one"/>
+                    <button name="action_sync_feeds_status"
+                            string="Sync Feeds Status"
+                            type="object"
+                            class="btn-secondary"
+                            groups="base.group_no_one"/>
+                </header>
+                <sheet>
+                    <field name="company_id" invisible="1" force_save="1"/>
+                    <field name="available_marketplace_ids" invisible="1"/>
+                    <field name="is_follow_up_displayed" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_offers"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-amazon"
+                                invisible="not id">
+                            <field name="offer_count" widget="statinfo" string="Offers"/>
+                        </button>
+                        <button name="action_view_orders"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-dollar"
+                                invisible="not id">
+                            <field name="order_count" widget="statinfo" string="Orders"/>
+                        </button>
+                    </div>
+                    <field name="refresh_token" invisible="1"/>
+                    <div class="badge rounded-pill text-bg-warning fs-6 float-end"
+                         invisible="not id or refresh_token">
+                        Unlinked Account
+                    </div>
+                    <div class="badge rounded-pill text-bg-success fs-6 float-end"
+                         invisible="not refresh_token">
+                        Linked Account
+                    </div>
+                    <div class="oe_title" id="title">
+                        <label for="name" string="Account Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. American Market"/>
+                        </h1>
+                    </div>
+                    <notebook>
+                        <page string="Credentials" name="credentials">
+                            <p class="text-muted"
+                               invisible="refresh_token">
+                                Link your Amazon account with Odoo to start synchronizing your
+                                Amazon orders.
+                            </p>
+                            <p class="text-muted"
+                               invisible="not refresh_token">
+                                Your Amazon account is linked with Odoo.
+                            </p>
+                            <group invisible="id">
+                                <group>
+                                    <label for="base_marketplace_id"/>
+                                    <div>
+                                        <field name="base_marketplace_id"
+                                               options="{'no_open': True, 'no_create': True}"/>
+                                        <div class="text-muted">
+                                            <br/>
+                                            <p>Select the marketplace on which your seller account
+                                                was initially created.</p>
+                                            <p>After validation of the credentials, the marketplaces
+                                                to which this account has access will be
+                                                synchronized and automatically made available.</p>
+                                        </div>
+                                    </div>
+                                </group>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="base_marketplace_id"
+                                           force_save="True"
+                                           groups="base.group_no_one"
+                                           readonly="True"
+                                           invisible="not id"
+                                           options="{'no_open': True, 'no_create': True}"/>
+                                </group>
+                            </group>
+                            <div invisible="not id">
+                            <button string="Link with Amazon"
+                                type="object"
+                                name="action_redirect_to_oauth_url"
+                                class="btn-primary"
+                                invisible="refresh_token"/>
+                            <button string="Unlink account"
+                                type="object"
+                                name="action_reset_refresh_token"
+                                class="btn-secondary ps-0"
+                                groups="base.group_no_one"
+                                invisible="not refresh_token"
+                                confirm="This action will disconnect your account with Amazon and
+                                         cannot be undone. Are you sure you want to proceed?"/>
+                            </div>
+                        </page>
+                        <page string="Marketplaces"
+                              name="marketplaces" invisible="not id or not refresh_token">
+                            <group>
+                                <label for="active_marketplace_ids"/>
+                                <div>
+                                    <field name="active_marketplace_ids"
+                                           widget="many2many_tags"
+                                           options="{'no_create': True}"
+                                           class="oe_inline"/>
+                                    <button name="action_update_available_marketplaces"
+                                            string="Update Available Marketplaces"
+                                            help="If this account gained access to new marketplaces,
+                                        synchronize and add them to the current sync marketplaces"
+                                            type="object"
+                                            class="oe_link"
+                                            icon="fa-refresh"/>
+                                </div>
+                            </group>
+                        </page>
+                        <page string="Order Follow-up"
+                              name="follow_up"
+                              invisible="not is_follow_up_displayed">
+                            <group>
+                                <group>
+                                    <field name="user_id"
+                                           invisible="not id"
+                                           required="id"/>
+                                    <field name="team_id"
+                                           invisible="not id"
+                                           required="id"/>
+                                    <field name="company_id"
+                                           groups="base.group_multi_company"
+                                           force_save="1"
+                                           options="{'no_create_edit': True, 'no_open': True}"/>
+                                    <field name="location_id"
+                                           groups="stock.group_stock_multi_locations"
+                                           invisible="not id"
+                                           required="id"/>
+                                    <field name="active"
+                                           invisible="not id"/>
+                                    <field name="synchronize_inventory"
+                                           invisible="not id"/>
+                                    <field name="last_orders_sync" groups="base.group_no_one"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="amazon_account_view_search" model="ir.ui.view">
+        <field name="name">amazon.account.search</field>
+        <field name="model">amazon.account</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Account"/>
+                <field name="active_marketplace_ids"
+                       filter_domain="[('active_marketplace_ids.name', 'ilike', self)]"/>
+                <filter name="filter_active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="filter_inactive" string="Inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+</odoo>

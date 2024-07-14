@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_rule_list" model="ir.ui.view">
+        <field name="name">hr.salary.rule.list</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="arch" type="xml">
+            <tree string="Salary Rules">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="category_id"/>
+                <field name="struct_id" column_invisible="True"/>
+                <field name="sequence" column_invisible="True"/>
+                <field name="partner_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_salary_rule_view_kanban" model="ir.ui.view">
+        <field name="name">hr.salary.rule.kanban</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-8">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div class="col-4">
+                                    <span class="float-end"><field name="category_id"/></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <span>Code: <field name="code"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="hr_salary_rule_form" model="ir.ui.view">
+        <field name="name">hr.salary.rule.form</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="arch" type="xml">
+            <form string="Salary Rules">
+            <sheet>
+                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                <label for="name" string="Rule Name"/>
+                <h1><field name="name" placeholder="e.g. Net Salary"/></h1>
+                <label for="category_id"/>
+                <h2><field name="category_id" placeholder="e.g. Net"/></h2>
+
+                <group name="main_details" col="4">
+                   <field name="code"/>
+                   <field name="sequence"/>
+                   <field name="struct_id"/>
+                   <field name="active" widget="boolean_toggle"/>
+                   <field name="appears_on_payslip"/>
+                   <field name="appears_on_employee_cost_dashboard"/>
+                   <field name="appears_on_payroll_report"/>
+                </group>
+                <notebook colspan="6">
+                    <page name="general" string="General">
+                        <group name="general_conditions">
+                            <group string="Conditions">
+                                <field name="condition_select"/>
+                                <field name="condition_range" invisible="condition_select != 'range'" required="condition_select == 'range'"/>
+                                <field name="condition_range_min" invisible="condition_select != 'range'" required="condition_select == 'range'"/>
+                                <field name="condition_range_max" invisible="condition_select != 'range'" required="condition_select == 'range'"/>
+                            </group>
+                            <group colspan="4">
+                                <field name="condition_python" invisible="condition_select != 'python'" required="condition_select == 'python'"/>
+                            </group>
+                            <group string="Computation">
+                                <field name="amount_select"/>
+                                <field name="amount_percentage_base" invisible="amount_select != 'percentage'" required="amount_select == 'percentage'"/>
+                                <field name="quantity" invisible="amount_select == 'code'" required="amount_select != 'code'"/>
+                                <field name="amount_fix"  invisible="amount_select != 'fix'"  required="amount_select == 'fix'"/>
+                                <field name="amount_percentage" invisible="amount_select != 'percentage'" required="amount_select == 'percentage'"/>
+                            </group>
+                            <group colspan="4">
+                                <field name="amount_python_compute" invisible="amount_select != 'code'" required="amount_select == 'code'"/>
+                            </group>
+                            <group string="Company Contribution">
+                                <field name="partner_id"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page name="description" string="Description">
+                        <field name="note"/>
+                    </page>
+                </notebook>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hr_rule_filter" model="ir.ui.view">
+        <field name="name">hr.salary.rule.select</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="arch" type="xml">
+            <search string="Search Salary Rule">
+                <field name="name" string="Salary Rules" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                <field name="category_id"/>
+                <field name="struct_id"/>
+                <field name="condition_range_min"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group col="8" colspan="4" expand="0" string="Group By">
+                    <filter string="Category" name="head" context="{'group_by': 'category_id'}"/>
+                    <filter string="Salary Structure" name="group_by_struct_id" context="{'group_by': 'struct_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_salary_rule_form" model="ir.actions.act_window">
+        <field name="name">Salary Rules</field>
+        <field name="res_model">hr.salary.rule</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_group_by_struct_id': 1}</field>
+        <field name="search_view_id" ref="view_hr_rule_filter"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new salary rule
+            </p>
+        </field>
+    </record>
+</odoo>

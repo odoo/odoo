@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="utm_campaign_view_form">
+        <field name="name">utm.campaign.view.form.inherit.push_notifications</field>
+        <field name="model">utm.campaign</field>
+        <field name="inherit_id" ref="utm.utm_campaign_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_send_push_notification" type="object" class="oe_highlight order-3" string="Send Push" groups="social.group_social_user"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_redirect_to_push_notifications"
+                    type="object" class="oe_stat_button order-11 border-end" icon="fa-bell"
+                    invisible="social_push_notifications_count == 0" groups="social.group_social_user">
+                    <field name="social_push_notifications_count" widget="statinfo" string="Notifications"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Push Notifications" name="push_notifications" class="order-3"
+                    invisible="social_push_notifications_count == 0" groups="social.group_social_user">
+                    <field name="social_push_notification_ids" widget="one2many" mode="kanban" nolabel="1" context="{'default_campaign_id': id}"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="utm_campaign_view_kanban">
+        <field name="name">utm.campaign.view.kanban.inherit.push_notifications</field>
+        <field name="model">utm.campaign</field>
+        <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="social_push_notifications_count" groups="social.group_social_user"/>
+            </xpath>
+            <xpath expr="//ul[@id='o_utm_actions']">
+                <a name="action_redirect_to_push_notifications" type="object"
+                    t-attf-class="pe-4 #{record.social_push_notifications_count.raw_value === 0 ? 'text-muted' : ''}" groups="social.group_social_user">
+                    <t t-out="record.social_push_notifications_count.raw_value"/> Notifications
+                </a>
+            </xpath>
+        </field>
+    </record>
+</odoo>

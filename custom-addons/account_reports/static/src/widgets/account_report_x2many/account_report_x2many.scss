@@ -1,0 +1,54 @@
+.account_report_lines_list_x2many {
+    margin-top: - 16px; // Removes padding-top from 'tab-pane'
+
+    ul { list-style: none }
+
+    .o_row_handle {
+        width: auto;
+        padding: 14px 8px;
+    }
+
+    .column {
+        line-height: 40px;
+        padding: 0 8px;
+
+        &:hover { cursor: pointer }
+        &.fluid { flex-grow: 1 }
+        &.fixed {
+            width: 160px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .form-check-input { margin-top: 14px }
+    }
+
+    .dropdown-toggle, .trash {
+        line-height: 40px;
+        background-color: inherit;
+        outline: none;
+        border: none;
+        text-align: center;
+    }
+
+    .filter {
+        font-family: 'odoo_ui_icons';
+
+        &:before { content: '\e80c' }
+    }
+
+    .overlined:after {
+        content: "";
+        position: absolute;
+        height: 1px;
+        background-color: #d8dadd;
+        left: 0;
+        right: 0;
+    }
+
+    .o_dragged_placeholder {
+        color: $o-gray-300;
+
+        .o_row_handle, .trash { color: $o-gray-300 }
+    }
+}

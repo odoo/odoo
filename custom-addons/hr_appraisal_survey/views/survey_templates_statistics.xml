@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <template id="hr_appraisal_survey_button_form_view" inherit_id="survey.survey_button_form_view">
+        <xpath expr="//div[1]" position="replace">
+            <t t-if="appraisal_id or env.user.has_group('survey.group_survey_manager') or (env.user.has_group('hr_appraisal.group_hr_appraisal_manager') and survey.survey_type == 'appraisal')">
+                <div t-ignore="true" class="alert alert-info p-2 border-0 rounded-0 d-print-none css_editable_mode_hidden mb-0">
+                    <div t-ignore="true" class="text-center">
+                        <div groups="hr_appraisal.group_hr_appraisal_manager" class="d-inline-block">
+                            <t t-if="survey.survey_type == 'appraisal'">
+                                <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=hr_appraisal_survey.survey_survey_action_appraisal"><span t-if="answer and answer.test_entry">This is a Test Survey. </span><i class="oi oi-fw oi-arrow-right"/>Edit Survey</a>
+                            </t>
+                            <t t-if="appraisal_id">
+                                or
+                            </t>
+                        </div>
+                        <div groups="survey.group_survey_manager" class="d-inline-block">
+                            <t t-if="survey.survey_type != 'appraisal'">
+                                <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form"><span t-if="answer and answer.test_entry">This is a Test Survey. </span><i class="oi oi-fw oi-arrow-right"/>Edit Survey</a>
+                            </t>
+                        </div>
+                        <t t-if="appraisal_id">
+                            <a t-attf-href="/web#view_type=form&amp;model=hr.appraisal&amp;id=#{appraisal_id}&amp;action=hr_appraisal.open_view_hr_appraisal_tree" class="">Back to the appraisal</a>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="hr_appraisal_survey_page_statistics_header" inherit_id="survey.survey_page_statistics_header">
+        <xpath expr="//div[hasclass('o_survey_statistics_header')]" position="inside">
+            <t t-if="appraisal_id and answers">
+                <h3>
+                    Appraisal of <t t-esc="employee_name"/> - Feedback requested by -
+                    <t t-esc="', '.join(requestor.name for requestor in requestors)"/>
+                    - <t t-esc="appraisal_date"/>
+                </h3>
+                <h3>
+                    Responded:
+                    <t t-foreach="answers" t-as="answer">
+                        <a t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.access_token)" target="_blank"><t t-esc="answer.partner_id.name"/></a><t t-if="not answer_last">,</t>
+                    </t>
+                </h3>
+            </t>
+        </xpath>
+    </template>
+</data>
+</odoo>

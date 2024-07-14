@@ -1,0 +1,1575 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_consolidation
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__account_ids_count
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__chart_account_ids_count
+msgid "# Accounts"
+msgstr "賬戶數目"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__group_ids_count
+msgid "# Groups"
+msgstr "群組數目"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__journal_ids_count
+msgid "# Journals"
+msgstr "日記賬數目"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__period_ids_count
+msgid "# Periods"
+msgstr "期間數目"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "% Control"
+msgstr "% 控制"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "% Ownership"
+msgstr "% 擁有權"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/builder/abstract.py:0
+#, python-format
+msgid "%s (%s Currency Conversion Method)"
+msgstr "%s (%s 貨幣轉換方法)"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_period.py:0
+#, python-format
+msgid "%s Consolidated Accounting"
+msgstr "%s 合併會計"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "(Re)Compute"
+msgstr "(重新)計算"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "(Re)compute"
+msgstr "(重新)計算"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#, python-format
+msgid ") and the consolidated company ("
+msgstr ") 以及合併公司 ("
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#, python-format
+msgid ") have different currencies and the company is consolidated at"
+msgstr ") 有不同的貨幣，而公司已合併在"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#, python-format
+msgid ") have different currencies."
+msgstr ") 有不同的貨幣。"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/header.xml:0
+#, python-format
+msgid "/ End Rate: 1"
+msgstr "/ End Rate: 1"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+msgid "<span class=\"o_form_label oe_inline\">%</span>"
+msgstr "<span class=\"o_form_label oe_inline\">%</span>"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "<span class=\"o_stat_text\">Consolidated Balance</span>"
+msgstr "<span class=\"o_stat_text\">綜合結餘</span>"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "<span class=\"o_stat_text\">Edit</span>"
+msgstr "<span class=\"o_stat_text\">編輯</span>"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "<span role=\"separator\">Actions</span>"
+msgstr "<span role=\"separator\">動作</span>"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "<span role=\"separator\">View</span>"
+msgstr "<span role=\"separator\">查看</span>"
+
+#. module: account_consolidation
+#: model:ir.model.constraint,message:account_consolidation.constraint_consolidation_account_code_uniq
+msgid ""
+"A consolidation account with the same code already exists in this "
+"consolidation."
+msgstr "此合併已有相同代碼的合併賬戶。"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid ""
+"A journal entry should only be linked to a company period OR to a analysis "
+"period of another consolidation!"
+msgstr "日記賬記項應只連結至公司期間，或另一個合併的分析期間。"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_account_account
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__line_ids
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "Account"
+msgstr "賬戶"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_res_company__account_consolidation_currency_is_different
+msgid "Account Consolidation Currency Is Different"
+msgstr "賬戶合併貨幣不同"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding,name:account_consolidation.onboarding_onboarding_account_consolidation_dashboard
+msgid "Account Consolidation Dashboard Onboarding"
+msgstr "賬戶合併概覽畫面新手簡介"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_tree
+msgid "Account Group"
+msgstr "賬戶組別"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_group_action
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__group_ids
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration_account_sections
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_tree
+msgid "Account Groups"
+msgstr "賬戶組別"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.account_mapping_action
+#: model:ir.actions.act_window,name:account_consolidation.account_mapping_from_period_action
+msgid "Account Mapping"
+msgstr "賬戶配對"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_coa.py:0
+#, python-format
+msgid "Account Mapping: %(chart)s"
+msgstr "賬戶配對: %(chart)s"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/res_company.py:0
+#, python-format
+msgid "Account Mapping: %(company)s"
+msgstr "賬戶配對: %(company)s"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_period.py:0
+#, python-format
+msgid "Account Mapping: %s (for %s)"
+msgstr "賬戶配對: %s (為 %s)"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+msgid "Account Name"
+msgstr "賬戶名稱"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.account_mapping_search
+msgid "Account with Entries"
+msgstr "有記項的賬戶"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__account_ids
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Accounts"
+msgstr "賬戶"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_res_company__consolidation_color
+msgid "Accounts color"
+msgstr "賬戶顏色"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_needaction
+msgid "Action Needed"
+msgstr "需要採取行動"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Active"
+msgstr "啟用"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/views/trial_balance_grid/trial_balance_grid_controller.js:0
+#: code:addons/account_consolidation/static/src/views/trial_balance_grid/trial_balance_grid_controller.xml:0
+#, python-format
+msgid "Add a column"
+msgstr "新增欄"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+msgid "Additional Information"
+msgstr "額外的資訊"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Advanced Consolidation"
+msgstr "進階合併"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.account_mapping_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_search_mapping
+msgid "Already Mapped"
+msgstr "已配對"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__amount
+msgid "Amount"
+msgstr "金額"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_coa.py:0
+#, python-format
+msgid ""
+"An account group can only have accounts or other groups children but not "
+"both!"
+msgstr "一個賬戶組別只能有賬戶或其他組的子級，但不能同時有兩者！"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__period_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Analysis Period"
+msgstr "分析期間"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__using_period_id
+msgid "Analysis Period Using This"
+msgstr "使用此項的分析期間"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.analysis_period_config_action
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__period_ids
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_tree
+msgid "Analysis Periods"
+msgstr "分析期間"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,title:account_consolidation.onboarding_onboarding_step_create_consolidation_period
+msgid "Analysis period"
+msgstr "分析期間"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,done_text:account_consolidation.onboarding_onboarding_step_create_consolidation_period
+msgid "Analysis period created!"
+msgstr "分析期間已建立。"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form_onboarding
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form_onboarding
+msgid "Apply"
+msgstr "套用"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_attachment_count
+msgid "Attachment Count"
+msgstr "附件數目"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_search
+msgid "Auto-generated"
+msgstr "自動產生"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__auto_generated
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__auto_generated
+msgid "Automatically Generated"
+msgstr "自動產生"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__currency_rate_avg
+msgid "Average Currency Rate"
+msgstr "平均貨幣匯率"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_account__currency_mode__avg
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+msgid "Average Rate"
+msgstr "平均匯率"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/header.xml:0
+#, python-format
+msgid "Avg Rate: 1"
+msgstr "平均匯率: 1"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__balance
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+msgid "Balance"
+msgstr "結餘"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form_onboarding
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form_onboarding
+msgid "Cancel"
+msgstr "取消"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__chart_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__chart_id
+msgid "Chart"
+msgstr "圖表"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,title:account_consolidation.onboarding_onboarding_step_setup_ccoa
+msgid "Chart of Accounts"
+msgstr "賬目總表"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "Chart of accounts"
+msgstr "賬目總表"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,done_text:account_consolidation.onboarding_onboarding_step_setup_ccoa
+msgid "Chart of accounts set!"
+msgstr "賬目總表已設置！"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_tree
+msgid "Charts"
+msgstr "圖表"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__child_ids
+msgid "Children"
+msgstr "子級"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Close"
+msgstr "關閉"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "Close period"
+msgstr "關閉期間"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_period__state__closed
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Closed"
+msgstr "已關閉"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_account__currency_mode__end
+msgid "Closing Rate"
+msgstr "結算匯率"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__code
+msgid "Code"
+msgstr "程式碼"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_account_account__consolidation_color
+msgid "Color"
+msgstr "顏色"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__color
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__color
+msgid "Color Index"
+msgstr "顏色索引"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_res_company
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__company_ids
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__company_ids
+msgid "Companies"
+msgstr "公司"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__company_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__company_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.trial_balance_grid_search
+msgid "Company"
+msgstr "公司"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__currency_company_id
+msgid "Company Currency"
+msgstr "公司貨幣"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__company_name
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Company Name"
+msgstr "公司名稱"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__company_period_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+msgid "Company Period"
+msgstr "公司期間"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_company_period_action
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__company_period_ids
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration_company_periods
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Company Periods"
+msgstr "公司期間"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__company_unmapped_accounts_counts
+msgid "Company Unmapped Accounts Counts"
+msgstr "公司未配對賬戶數目"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/filters/filters.xml:0
+#, python-format
+msgid "Comparison:"
+msgstr "比較："
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__composed_period_id
+msgid "Composed Analysis Period"
+msgstr "組合分析期間"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__composed_chart_currency_id
+msgid "Composed Consolidation Currency"
+msgstr "組合合併貨幣"
+
+#. module: account_consolidation
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration
+msgid "Configuration"
+msgstr "配置"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/header.xml:0
+#, python-format
+msgid "Conso Rate:"
+msgstr "合併匯率:"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__account_id
+msgid "Consolidated Account"
+msgstr "綜合賬戶"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.account_mapping_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+msgid "Consolidated Accounts"
+msgstr "綜合賬戶"
+
+#. module: account_consolidation
+#: model:account.report,name:account_consolidation.consolidated_balance_report
+#: model:ir.actions.client,name:account_consolidation.trial_balance_report_action
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "Consolidated Balance"
+msgstr "綜合結餘"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Consolidated Companies"
+msgstr "已合併計算公司"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__parents_ids
+msgid "Consolidated In"
+msgstr "合併在"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__used_in_ids
+msgid "Consolidated in"
+msgstr "合併在"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_chart_action
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_chart_action_onboarding
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__chart_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__chart_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__chart_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__chart_id
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration_charts
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Consolidation"
+msgstr "合併報表"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_account_account__consolidation_account_ids
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__account_ids
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "Consolidation Account"
+msgstr "合併賬戶"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_account_account__consolidation_account_chart_filtered_ids
+msgid "Consolidation Account Chart Filtered"
+msgstr "經篩選合併賬目總表"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_account_action
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__using_ids
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__account_ids
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration_accounts
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "Consolidation Accounts"
+msgstr "合併賬戶"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Consolidation Chart"
+msgstr "合併圖表"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_company_period
+msgid "Consolidation Company Period"
+msgstr "合併公司期間"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__currency_chart_id
+msgid "Consolidation Currency"
+msgstr "合併貨幣"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.Consolidation_journal_line_action
+msgid "Consolidation Entries"
+msgstr "合併記項"
+
+#. module: account_consolidation
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_operations_consolidation_entries
+msgid "Consolidation Entry"
+msgstr "合併記項"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_group
+msgid "Consolidation Group"
+msgstr "合併組別"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_tree
+msgid "Consolidation Items"
+msgstr "合併項目"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_journal
+msgid "Consolidation Journal"
+msgstr "合併日記賬"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_account_move_line__consolidation_journal_line_ids
+msgid "Consolidation Journal Line"
+msgstr "合併日記賬資料行"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__consolidation_method
+msgid "Consolidation Method"
+msgstr "合併方法"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__chart_name
+msgid "Consolidation Name"
+msgstr "合併名稱"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_period
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__composition_id
+msgid "Consolidation Period"
+msgstr "合併期間"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_period_composition
+msgid "Consolidation Period Composition"
+msgstr "合併期間組成"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_rate
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__rate_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__rate_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__rate_consolidation
+msgid "Consolidation Rate"
+msgstr "合併率"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Consolidation Rate (%)"
+msgstr "合併率(%)"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_account
+msgid "Consolidation account"
+msgstr "合併賬戶"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_chart
+msgid "Consolidation chart"
+msgstr "合併圖表"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__line_ids
+msgid "Consolidation items"
+msgstr "合併項目"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_journal_line
+msgid "Consolidation journal line"
+msgstr "合併日記賬資料行"
+
+#. module: account_consolidation
+#: model:res.groups,name:account_consolidation.group_consolidation_user
+msgid "Consolidation user"
+msgstr "合併用戶"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,button_text:account_consolidation.onboarding_onboarding_step_create_consolidation_period
+msgid "Create"
+msgstr "建立"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_period_action_onboarding
+msgid "Create First Period"
+msgstr "建立首個期間"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,description:account_consolidation.onboarding_onboarding_step_create_consolidation_period
+msgid "Create your first analysis period & set the currency rates."
+msgstr "建立你的第一個分析期間，並設定貨幣匯率。"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__create_uid
+msgid "Created by"
+msgstr "建立人員"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__create_date
+msgid "Created on"
+msgstr "建立於"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__currencies_are_different
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__currencies_are_different
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__currencies_are_different
+msgid "Currencies Are Different"
+msgstr "貨幣不同"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Currency"
+msgstr "貨幣"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__currency_amount
+msgid "Currency Amount"
+msgstr "貨幣金額"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__currency_mode
+msgid "Currency Conversion Method"
+msgstr "貨幣轉換方法"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__currency_rate
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+msgid "Currency Rate"
+msgstr "匯率"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period_composition__currency_rate
+msgid "Currency rate from composed chart currency to using chart currency"
+msgstr "從組合圖表貨幣到使用圖表貨幣的匯率"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_period_action
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_home
+msgid "Dashboard"
+msgstr "概覽畫面"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__dashboard_sections
+msgid "Dashboard Sections"
+msgstr "概覽畫面分節"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_tree
+msgid "Date"
+msgstr "日期"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,button_text:account_consolidation.onboarding_onboarding_step_setup_consolidation
+msgid "Define"
+msgstr "定義"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,description:account_consolidation.onboarding_onboarding_step_setup_consolidation
+msgid ""
+"Define the companies that should be consolidated & the target currency."
+msgstr "設定應合併的公司及目標貨幣。"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__note
+msgid "Description"
+msgstr "說明"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__display_dates
+msgid "Display Dates"
+msgstr "顯示日期"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_period__state__draft
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Draft"
+msgstr "草稿"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#, python-format
+msgid "Edit"
+msgstr "編輯"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#, python-format
+msgid "Edit %s"
+msgstr "編輯 %s"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__currency_rate_end
+msgid "End Currency Rate"
+msgstr "結算貨幣匯率"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__date_company_end
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__date_analysis_end
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__date_end
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "End Date"
+msgstr "結束日期"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+msgid "End Rate"
+msgstr "結算匯率"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_company_period__consolidation_method__equity
+msgid "Equity"
+msgstr "股權"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__exclude_journal_ids
+msgid "Exclude Journals"
+msgstr "不計算日記賬"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__filtered_used_in_ids
+msgid "Filtered Used In"
+msgstr "篩選已用於"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_follower_ids
+msgid "Followers"
+msgstr "關注人"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "關注人（業務夥伴）"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__full_name
+msgid "Full Name"
+msgstr "完整名稱"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_company_period__consolidation_method__full
+msgid "Full consolidation"
+msgstr "完全合併"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__group_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__group_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.trial_balance_grid_search
+msgid "Group"
+msgstr "組別"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "Group Name"
+msgstr "組別名稱"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Groups"
+msgstr "組別"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__has_message
+msgid "Has Message"
+msgstr "有訊息"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid "Hierarchy and Subtotals"
+msgstr "層級及小計"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_account__currency_mode__hist
+msgid "Historical Rate"
+msgstr "歷史匯率"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Historical Rates"
+msgstr "歷史匯率"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/res_company.py:0
+#, python-format
+msgid "Historical Rates: %(company)s"
+msgstr "歷史匯率: %(company)s"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_company_period__currency_rate_avg
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_company_period__currency_rate_end
+msgid ""
+"How many units of company currency is needed to get 1 unit of chart currency"
+msgstr "需要多少單位的公司貨幣才獲得 1 單位的圖表貨幣"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__id
+msgid "ID"
+msgstr "識別號"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "勾選代表有新訊息需要您留意。"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__message_has_error
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "勾選代表有訊息發生傳送錯誤。"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "In The Future"
+msgstr "未來"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "In The Past"
+msgstr "過往"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__invert_sign
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__invert_sign
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__invert_sign
+msgid "Invert Balance Sign"
+msgstr "結餘正負號反轉"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_is_follower
+msgid "Is Follower"
+msgstr "是關注人"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__journal_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_form
+msgid "Journal"
+msgstr "日記賬"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_account_move_line
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_form
+msgid "Journal Item"
+msgstr "日記賬項目"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.view_account_move_line_filter
+msgid "Journal Items"
+msgstr "日記賬項目"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__line_ids
+msgid "Journal lines"
+msgstr "日記賬資料行"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_journal_action
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__journal_ids
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "Journals"
+msgstr "日記賬"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/filters/filters.xml:0
+#, python-format
+msgid "Journals:"
+msgstr "日記帳："
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__write_uid
+msgid "Last Updated by"
+msgstr "最後更新者"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__write_date
+msgid "Last Updated on"
+msgstr "最後更新於"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_search
+msgid "Manually Created"
+msgstr "手動建立"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Map Accounts"
+msgstr "配對賬戶"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_tree
+msgid "Mapped Accounts"
+msgstr "已配對賬戶"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_search_mapping
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_tree_mapping
+msgid "Mapped In"
+msgstr "已配對在"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_has_error
+msgid "Message Delivery error"
+msgstr "訊息遞送錯誤"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_ids
+msgid "Messages"
+msgstr "訊息"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__move_line_ids
+msgid "Move Line"
+msgstr "傳票明細"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__name
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_tree
+msgid "Name"
+msgstr "名稱"
+
+#. module: account_consolidation
+#: model_terms:ir.actions.act_window,help:account_consolidation.account_mapping_action
+msgid ""
+"No accounts have been found. Make sure you have installed a chart of account"
+" for this company or that you have access right to see the accounts of this "
+"company."
+msgstr "找不到任何賬戶。請確保你已為此公司安裝會計賬目總表，或你有權查看此公司的賬戶。"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.account_mapping_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_search_mapping
+msgid "Not Mapped"
+msgstr "未配對"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_company_period__consolidation_method__none
+msgid "Not consolidated"
+msgstr "未合併"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_needaction_counter
+msgid "Number of Actions"
+msgstr "動作數量"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_has_error_counter
+msgid "Number of errors"
+msgstr "錯誤數量"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "需要採取行動的訊息數目"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "有發送錯誤的郵件數量"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_onboarding_onboarding
+msgid "Onboarding"
+msgstr "新手簡介"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,step_image_alt:account_consolidation.onboarding_onboarding_step_create_consolidation_period
+msgid "Onboarding Analysis period"
+msgstr "分析期間新手簡介"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,step_image_alt:account_consolidation.onboarding_onboarding_step_setup_ccoa
+msgid "Onboarding Chart of Accounts"
+msgstr "賬目總表新手簡介"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_onboarding_onboarding_step
+msgid "Onboarding Step"
+msgstr "新手簡介步驟"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,step_image_alt:account_consolidation.onboarding_onboarding_step_setup_consolidation
+msgid "Onboarding The Scope of Consolidation"
+msgstr "合併範圍新手簡介"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid ""
+"Only one entry by account should be created for a generated journal entry!"
+msgstr "對於生成的日記賬記項,只能每賬戶建立一個記項！"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Only the periods containing today"
+msgstr "只限包括今天的期間"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Only the periods in the future"
+msgstr "只限將來期間"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Only the periods in the past"
+msgstr "只限過往期間"
+
+#. module: account_consolidation
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_operations
+msgid "Operations"
+msgstr "製程"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__originating_currency_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__journal_originating_currency_id
+msgid "Originating Currency"
+msgstr "原始貨幣"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#, python-format
+msgid "PDF"
+msgstr "PDF"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__parent_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_search
+msgid "Parent"
+msgstr "母級"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__parent_path
+msgid "Parent Path"
+msgstr "母級路徑"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__period_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__period_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Period"
+msgstr "期間"
+
+#. module: account_consolidation
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration_analysis_periods
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Periods"
+msgstr "期間"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_company_period__consolidation_method__proportional
+msgid "Proportional consolidation"
+msgstr "按比例合併"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__rate
+msgid "Rate"
+msgstr "匯率"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__rate_control
+msgid "Rate Control"
+msgstr "匯率控制"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__rate_ownership
+msgid "Rate Ownership"
+msgstr "Rate Ownership"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_rate_action
+msgid "Rate Ranges"
+msgstr "匯率範圍"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__rating_ids
+msgid "Ratings"
+msgstr "評分"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "Reopen period"
+msgstr "重開期間"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Reset To Draft"
+msgstr "重置為草稿"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Review Chart Of Accounts"
+msgstr "審視賬目總表"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "簡訊發送錯誤"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,done_text:account_consolidation.onboarding_onboarding_step_setup_consolidation
+msgid "Scope of Consolidation defined!"
+msgstr "合併規模已定義！"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__sequence
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__sequence
+msgid "Sequence"
+msgstr "序列號"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+msgid "Settings"
+msgstr "設定"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,button_text:account_consolidation.onboarding_onboarding_step_setup_ccoa
+msgid "Setup"
+msgstr "設定"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,description:account_consolidation.onboarding_onboarding_step_setup_ccoa
+msgid ""
+"Setup your consolidated accounts and their currency conversion method.\n"
+"                Then map them with the companies accounts."
+msgstr ""
+"設定你的綜合賬戶及它們的貨幣換算方法。\n"
+"                然後將它們與公司賬戶進行配對。"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_company_period__rate_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_company_period__rate_control
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_company_period__rate_ownership
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period_composition__rate_consolidation
+msgid "Should be between 0 and 100 %"
+msgstr "應在 0 至 100% 之間"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__show_on_dashboard
+msgid "Show On Dashboard"
+msgstr "在概覽畫面顯示"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid "Show Zero Balance Accounts"
+msgstr "顯示零結餘賬戶"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__sign
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__sign
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__sign
+msgid "Sign"
+msgstr "簽名"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__date_company_begin
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__date_analysis_begin
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__date_start
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Start Date"
+msgstr "開始日期"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__state
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__state
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "State"
+msgstr "狀態"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Sub-consolidated Chart"
+msgstr "次級綜合圖表"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__linked_chart_ids
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__children_ids
+msgid "Sub-consolidations"
+msgstr "次級合併"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Sub-consolidations Periods"
+msgstr "次級合併期間"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Sub-consolidations periods"
+msgstr "次級合併期間"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "Subgroups"
+msgstr "子組別"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#, python-format
+msgid "Take into account that the consolidation ("
+msgstr "請考慮到合併("
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#, python-format
+msgid "Take into account that this company is consolidated at"
+msgstr "請考慮到該公司合併在"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__currency_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__currency_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__chart_currency_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__chart_currency_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__using_chart_currency_id
+msgid "Target Currency"
+msgstr "目標貨幣"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_period.py:0
+#, python-format
+msgid ""
+"The Composed Analysis Period must be different from the Analysis Period"
+msgstr "組合分析期間必須與分析期間不同"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,title:account_consolidation.onboarding_onboarding_step_setup_consolidation
+msgid "The Scope of Consolidation"
+msgstr "合併規模"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+msgid ""
+"The rate used for the consolidation (basically this rate will multiply the "
+"sum of everything"
+msgstr "合併用匯率 (基本上這個匯率將乘以所有總額"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+msgid "This journal has been automatically generated on"
+msgstr "此日記賬是自動生成於"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/builder/abstract.py:0
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_tree
+#, python-format
+msgid "Total"
+msgstr "總計"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.view_trial_balance_report_graph
+#: model_terms:ir.ui.view,arch_db:account_consolidation.view_trial_balance_report_grid
+#, python-format
+msgid "Trial Balance"
+msgstr "試算平衡"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_trial_balance_report_handler
+msgid "Trial Balance Custom Handler"
+msgstr "試算平衡自訂處理程式"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_period.py:0
+#, python-format
+msgid "Trial Balance: %s"
+msgstr "試算平衡: %s"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.trial_balance_grid_search
+msgid "Trial balance"
+msgstr "試算平衡"
+
+#. module: account_consolidation
+#: model:ir.model.constraint,message:account_consolidation.constraint_consolidation_period_composition__unique_composition
+msgid ""
+"Two compositions of the same analysis period by the same analysis period "
+"cannot be created"
+msgstr "無法建立同一分析期間的兩個組成"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+msgid "Update"
+msgstr "更新"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__used_in_composition_ids
+msgid "Used In Composition"
+msgstr "用於組成"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_chart__color
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__color
+msgid "Used in the kanban view"
+msgstr "用於看板檢視"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__using_composition_ids
+msgid "Using Composition"
+msgstr "使用組成"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__website_message_ids
+msgid "Website Messages"
+msgstr "網站資訊"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__website_message_ids
+msgid "Website communication history"
+msgstr "網站溝通記錄"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid ""
+"When setting a period on a consolidation journal, the selected consolidation"
+" chart for the journal cannot be different from the one of the chosen "
+"period."
+msgstr "為合併日記賬設定期間時，為日記賬選擇的合併圖表不能與所選期間不同。"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#, python-format
+msgid "XLSX"
+msgstr "XLSX"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid ""
+"You can here define complex consolidations based on other sub-"
+"consolidations, as part of a whole scheme"
+msgstr "你可在此定義基於其他次級合併的複雜合併，作為整個方案的一部份"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid "You can't delete an auto-generated journal entry."
+msgstr "你不可刪除自動生成的日記賬記項。"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid "You can't edit an auto-generated journal entry."
+msgstr "你不可編輯自動生成的日記賬記項。"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid "You cannot add journals to a closed period!"
+msgstr "已關閉期間不可再加入日記賬！"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "e.g. Profit and Loss"
+msgstr "例：損益表"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+msgid "e.g. Revenue"
+msgstr "例：收入"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/builder/comparison.py:0
+#, python-format
+msgid "n/a"
+msgstr "(不適用)"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/dashboard_widget/dashboard_widget.xml:0
+#, python-format
+msgid "unmapped accounts"
+msgstr "未配對賬戶"

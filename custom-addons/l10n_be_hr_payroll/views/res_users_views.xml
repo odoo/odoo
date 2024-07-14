@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">hr.user.preferences.view.form.l10n.be.payroll.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='marital']" position="after">
+                <field name="spouse_fiscal_status" invisible="marital not in ['married', 'cohabitant']" readonly="not can_edit" required="marital in ['married', 'cohabitant']" help="if spouse has professionnel income or not"/>
+                <p colspan="2" class="p-0 m-0 " invisible="marital not in ['married', 'cohabitant']">
+                    <a class="btn btn-link p-0 mb-1" data-bs-toggle="collapse" href="#spouse_status_explanation" role="button" aria-expanded="false" aria-controls="#spouse_status_explanation">Toggle Explanation</a>
+                </p>
+                <div class="collapse" id="spouse_status_explanation" colspan="2" invisible="marital not in ['married', 'cohabitant']">
+                  <div class="card card-body">
+                    <field name="spouse_fiscal_status_explanation" nolabel="1" class="text-muted" widget="text"/>
+                  </div>
+                </div>
+                <field name="disabled_spouse_bool" invisible="marital not in ['married', 'cohabitant']" readonly="not can_edit"/>
+            </xpath>
+            <xpath expr="//field[@name='gender']" position="after">
+                <field name="disabled" readonly="not can_edit"/>
+            </xpath>
+            <xpath expr="//field[@name='children']" position="after">
+                <field name="disabled_children_bool" readonly="not can_edit"/>
+                <field name="disabled_children_number" invisible="not disabled_children_bool" readonly="not can_edit" colspan="1" help="number of dependent children declared as disabled"/>
+                <field name="dependent_children" invisible="1"/>
+                <field name="other_dependent_people" invisible="1"/>
+                <field name="other_dependent_people" groups="hr.group_hr_user" readonly="not can_edit"/>
+                <field name="other_senior_dependent" invisible="not other_dependent_people" readonly="not can_edit"/>
+                <field name="other_disabled_senior_dependent" invisible="not other_dependent_people" readonly="not can_edit"/>
+                <field name="other_juniors_dependent" invisible="not other_dependent_people" readonly="not can_edit"/>
+                <field name="other_disabled_juniors_dependent" invisible="not other_dependent_people" readonly="not can_edit"/>
+            </xpath>
+            <field name="study_school" position="after">
+                <field name="l10n_be_scale_seniority" readonly="not can_edit"/>
+            </field>
+        </field>
+    </record>
+</odoo>

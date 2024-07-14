@@ -1,0 +1,138 @@
+///
+/// This file is a copy of the bootstrap _variables.scss file where all the
+/// left-untouched variables definition have been removed.
+///
+
+//
+// Color system
+//
+
+$light: $o-white !default;
+$dark: $o-gray-900 !default;
+$warning: #e99d00 !default;
+$danger: #d44c59 !default;
+
+
+// Options
+
+// Enable predefined decorative box-shadow styles on various components.
+// Does not affect box-shadows used for focus states.
+
+$enable-shadows: true !default;
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+$component-active-color: unset !default;
+$component-active-bg: mix($o-enterprise-action-color, $o-white, 10%) !default;
+
+$nav-tabs-border-radius: 0 !default;
+$nav-pills-border-radius: 0 !default;
+$card-border-radius: 0 !default;
+$accordion-border-radius: 0 !default;
+$toast-border-radius: 0 !default;
+$badge-border-radius: 0 !default;
+$progress-border-radius: 0 !default;
+$list-group-border-radius: 0 !default;
+$thumbnail-border-radius: 0 !default;
+$form-check-input-border-radius: 0 !default;
+
+// Typography
+//
+// Font, line-height, and color for body text, headings, and more.
+
+$h1-font-size: $o-font-size-base * 2.4 !default;
+$h2-font-size: $o-font-size-base * 1.5 !default;
+$h3-font-size: $o-font-size-base * 1.3 !default;
+$h4-font-size: $o-font-size-base * 1.2 !default;
+$h5-font-size: $o-font-size-base * 1.1 !default;
+
+// Buttons
+//
+// For each of Bootstrap's buttons, define text, background, and border color.
+
+$btn-transition: none !default;
+
+$btn-box-shadow: 0 !default;
+$btn-active-box-shadow: 0 !default;
+$btn-focus-box-shadow: 0 !default;
+
+// Dropdowns
+//
+// Dropdown menu container and contents.
+
+$dropdown-box-shadow: 0 .3rem 1rem rgba(#000, .1) !default;
+
+// Forms
+//
+
+$input-border-color: $o-gray-200 !default;
+$input-box-shadow: 0 !default;
+
+$input-focus-bg: $o-white !default;
+$input-focus-box-shadow: 0 !default;
+$input-focus-border-color: mix($o-enterprise-action-color, $o-gray-200) !default;
+
+$form-check-input-checked-color: $o-white !default;
+$form-check-input-checked-border-color: $o-enterprise-action-color !default;
+$form-check-input-checked-bg-color: $o-enterprise-action-color !default;
+
+$form-select-focus-box-shadow: 0 !default;
+
+$form-range-track-box-shadow: 0 !default;
+
+$custom-checkbox-indicator-border-radius: 1px !default; // Just a slight smoothing.
+
+// Z-index master list
+//
+// Change the z-index of the modal-backdrop elements to be equal to the
+// modal elements' ones. Bootstrap does not support multi-modals, and without
+// this rule all the modal-backdrops are below all the opened modals.
+// Indeed, bootstrap forces them to a lower z-index as the modal-backdrop
+// element (unique in their supported cases) might be put after the modal
+// element (if the modal is already in the DOM, hidden, then opened). This
+// cannot happen in odoo though as modals are not hidden but removed from
+// the DOM and are always put at the end of the body when opened.
+//
+// TODO the following code was disabled because it is saas-incompatible
+//
+// $zindex-modal-backdrop: $zindex-modal;
+
+// Navs
+$nav-link-color: $o-main-text-color !default;
+$nav-tabs-link-active-color: $o-main-headings-color !default;
+$nav-tabs-link-active-bg: transparent !default;
+
+
+// Badges
+
+$badge-border-radius: $o-border-radius !default;
+$badge-font-weight: normal !default;
+
+// Alerts
+//
+// Define alert colors, border radius, and padding.
+
+$alert-border-width: 0 !default;
+
+// Progress bars
+
+$progress-box-shadow: 0 !default;
+
+// List group
+
+$list-group-active-color: $o-enterprise-action-color !default;
+$list-group-active-bg: $component-active-bg !default;
+$list-group-active-border-color: $o-enterprise-action-color !default;
+
+
+// Image thumbnails
+
+$thumbnail-box-shadow: 0 !default;
+
+
+// Breadcrumbs
+
+$breadcrumb-active-color: $o-main-text-color !default;
+$breadcrumb-divider-color: $o-main-color-muted !default;

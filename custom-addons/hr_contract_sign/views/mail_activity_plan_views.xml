@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_activity_plan_view_form" model="ir.ui.view">
+        <field name="model">mail.activity.plan</field>
+        <field name="inherit_id" ref="mail.mail_activity_plan_view_form"/>
+        <field name="arch" type="xml">
+            <field name="responsible_id" position="after">
+                <field name="sign_template_id" optional="hidden"/>
+            </field>
+        </field>
+    </record>
+</odoo>

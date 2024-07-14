@@ -1,0 +1,2402 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_contract_salary
+# 
+# Translators:
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_personal_info__impacts_net_salary
+msgid ""
+" If checked, any change on this information will trigger a new computation "
+"of the gross-->net salary."
+msgstr ""
+"إذا كان محدداً، سيتسبب أي تغيير في هذه المعلومة في تشغيل عملية احتساب جديدة "
+"للإجمالي--->صافي الراتب. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__signatures_count
+msgid "# Signatures"
+msgstr "عدد التوقيعات"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_offer.py:0
+#, python-format
+msgid "%s manually set the Offer to Refused"
+msgstr "%s قم بتعيين العرض كتم رفضه يدوياً "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_offer.py:0
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#, python-format
+msgid "%s: Job Offer - %s"
+msgstr "%s: عرض عمل - %s"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,helper:hr_contract_salary.hr_contract_salary_personal_info_name
+msgid "(Lastname Firstname)"
+msgstr "(اسم العائلة الاسم الأول) "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,placeholder:hr_contract_salary.hr_contract_salary_personal_info_identification_id
+msgid "00.00.00-000.00"
+msgstr "00.00.00-000.00"
+
+#. module: hr_contract_salary
+#: model:mail.template,body_html:hr_contract_salary.mail_template_send_offer
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <h2>Congratulations!</h2>\n"
+"    You can configure your salary package by clicking on the link below.<br>\n"
+"    The link will expire on the <t t-out=\"ctx.get('validity_end')\"></t>.\n"
+"    <div style=\"padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/salary_package/simulation/offer/{{ctx.get('offer_id')}}\" target=\"_blank\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Configure your package</a>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <h2>تهانينا!</h2>\n"
+"    بإمكانك تهيئة باقة راتبك عن طريق الضغط على الرابط أدناه.<br>\n"
+"    ستنتهي صلاحية الرابط في <t t-out=\"ctx.get('validity_end')\"></t>.\n"
+"    <div style=\"padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/salary_package/simulation/offer/{{ctx.get('offer_id')}}\" target=\"_blank\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">تهيئة باقتك</a>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+
+#. module: hr_contract_salary
+#: model:mail.template,body_html:hr_contract_salary.mail_template_send_offer_applicant
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <h2>Congratulations!</h2>\n"
+"    You can configure your salary package by clicking on the link below.<br>\n"
+"    The link will expire on the <t t-out=\"ctx.get('validity_end')\"></t>.\n"
+"    <div style=\"padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/salary_package/simulation/offer/{{ctx.get('offer_id')}}?token={{ctx.get('access_token')}}\" target=\"_blank\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Configure your package</a>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <h2>تهانينا!</h2>\n"
+"    بإمكانك تهيئة باقة راتبك عن طريق الضغط على الرابط أدناه.<br>\n"
+"    ستنتهي صلاحية الرابط في <t t-out=\"ctx.get('validity_end')\"></t>.\n"
+"    <div style=\"padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/salary_package/simulation/offer/{{ctx.get('offer_id')}}?token={{ctx.get('access_token')}}\" target=\"_blank\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">تهيئة باقتك</a>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_thank_you
+msgid "<i class=\"fa fa-check-circle-o mr8\"/>Congratulations"
+msgstr "<i class=\"fa fa-check-circle-o mr8\"/>تهانينا"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span class=\"ms-3\">/ month</span>"
+msgstr "<span class=\"ms-3\">/ الشهر</span> "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span class=\"ms-3\">/ year</span>"
+msgstr "<span class=\"ms-3\">/ السنة</span> "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span class=\"o_stat_text ml4\">Previous Contract</span>"
+msgstr "<span class=\"o_stat_text ml4\">العقد السابق</span> "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_applicant_view_form
+msgid "<span class=\"o_stat_text\">Contracts</span>"
+msgstr "<span class=\"o_stat_text\">العقود</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span class=\"o_stat_text\">Offers</span>"
+msgstr "<span class=\"o_stat_text\">العروض</span> "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span class=\"o_stat_text\">Reviews</span>"
+msgstr "<span class=\"o_stat_text\">المعاينات</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid ""
+"<span class=\"text-muted fst-italic\" invisible=\"contract_id\">An offer template need to be selected to have an offer link.</span>\n"
+"                        <span class=\"text-muted fst-italic\" invisible=\"not display_warning_message\">An applicant name needs to be set to have an offer link.</span>"
+msgstr ""
+"<span class=\"text-muted fst-italic\" invisible=\"contract_id\">يجب أن يتم تحديد قالب عرض العمل حتى يكون لديك رابط لعرض العمل.</span>\n"
+"                        <span class=\"text-muted fst-italic\" invisible=\"not display_warning_message\">يجب أن يتم إعداد اسم المتقدم للعمل حتى يكون هناك رابط لعرض العمل.</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_thank_you
+msgid "<span class=\"text-muted mr4 ml4\">|</span>"
+msgstr "<span class=\"text-muted mr4 ml4\">|</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid ""
+"<span>\n"
+"                                    This field can only be modified by a server administrator, contact them if these field requires modifications.\n"
+"                                </span>\n"
+"                                <span invisible=\"requested_documents_fields_string\">\n"
+"                                    There are currently no requested fields.\n"
+"                                </span>"
+msgstr ""
+"<span>\n"
+"                                    هذا الحقل يمكن تعديله فقط بواسطة مدير الخادم. تواصل معه إذا كنت تريد تعديل إجراء تلك الحقول.\n"
+"                                </span>\n"
+"                                <span invisible=\"requested_documents_fields_string\">\n"
+"                                    لا توجد حقول مطلوبة حالياً.\n"
+"                                </span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid "<span> /year</span>"
+msgstr "<span> /سنة</span> "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form_hr
+msgid "<span> days</span>"
+msgstr "<span> أيام</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span>/ month</span>"
+msgstr "<span>/ شهر</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span>days / year</span>"
+msgstr "<span>أيام / سنة</span> "
+
+#. module: hr_contract_salary
+#: model:ir.model.constraint,message:hr_contract_salary.constraint_hr_contract_salary_benefit_required_fold_res_field_id
+msgid "A folded field is required"
+msgstr "يتطلب حقلاً مطوياً "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__access_token
+msgid "Access Token"
+msgstr "رمز الوصول "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_needaction
+msgid "Action Needed"
+msgstr "إجراء مطلوب"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__active
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__active
+msgid "Active"
+msgstr "نشط"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_ids
+msgid "Activities"
+msgstr "الأنشطة"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Activity"
+msgstr "النشاط"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__activity_creation
+msgid "Activity Creation"
+msgstr "إنشاء النشاط "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__activity_creation_type
+msgid "Activity Creation Type"
+msgstr "نوع إنشاء النشاط "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "زخرفة استثناء النشاط"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_state
+msgid "Activity State"
+msgstr "حالة النشاط"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__activity_type_id
+msgid "Activity Type"
+msgstr "نوع النشاط"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "أيقونة نوع النشاط"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Add a line"
+msgstr "إضافة بند"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Add a section"
+msgstr "إضافة قسم"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__benefit_ids
+msgid ""
+"All benefits in this field need to be selected, as a condition for the "
+"current one to be editable. Before edition, the current benefit is always "
+"set to false."
+msgstr ""
+"يجب تحديد كافة الفوائد في هذا الحقل كشرط ليكون الحقل الحالي قابل للتحرير. "
+"قبل الإصدار، تكون الفائدة الحالية معينة كقيمة خاطئة في كل الحالات. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__always
+msgid "Always Selected"
+msgstr "محدد دائماً "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#, python-format
+msgid ""
+"An <a href='#' data-oe-model='hr.contract.salary.offer' data-oe-"
+"id='%s'>Offer</a> as been sent by %s to the applicant (mail: %s)"
+msgstr ""
+"تم إرسال <a href='#' data-oe-model='hr.contract.salary.offer' data-oe-"
+"id='%s'>عرض عمل</a> بواسطة %s إلى المتقدم للوظيفة (البريد: %s) "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#, python-format
+msgid ""
+"An <a href='#' data-oe-model='hr.contract.salary.offer' data-oe-"
+"id='%s'>Offer</a> as been sent by %s to the employee (mail: %s)"
+msgstr ""
+"تم إرسال <a href='#' data-oe-model='hr.contract.salary.offer' data-oe-"
+"id='%s'>عرض عمل</a> بواسطة %s إلى الموظف (البريد: %s) "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_employee_report__final_yearly_costs
+msgid "Annual Employee Budget"
+msgstr "ميزانية الموظفين السنوية "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Annual Employer Cost"
+msgstr " تكلفة الموظفين السنوية "
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__applicant_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__applicant_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__applicant_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Applicant"
+msgstr "المتقدم للوظيفة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__applicant_name
+msgid "Applicant's Name"
+msgstr "اسم المتقدم"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Applicants"
+msgstr "المتقدمين للوظيفة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__applies_on
+msgid "Applies On"
+msgstr "ينطبق على "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_next_step_button
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_sidebar
+msgid "Apply Now"
+msgstr "قم بالتقديم الآن "
+
+#. module: hr_contract_salary
+#: model:ir.actions.server,name:hr_contract_salary.ir_cron_clean_redundant_salary_data_ir_actions_server
+msgid "Archive/Delete redundant generated salary data"
+msgstr "أرشفة/حذف بيانات الراتب المنشأة المكررة "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_search
+msgid "Archived"
+msgstr "مؤرشف"
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/js/binary_field_contract.js:0
+#, python-format
+msgid "Are you sure you want to delete this file permanently ?"
+msgstr "هل أنت متأكد من أنك ترغب في حذف هذا الملف بشكل نهائي؟ "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__activity_responsible_id
+msgid "Assigned to"
+msgstr "تم إسنادها إلى "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_attachment_count
+msgid "Attachment Count"
+msgstr "عدد المرفقات"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_certificate_bachelor
+msgid "Bachelor"
+msgstr "البكالوريوس"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__applies_on__bank_account
+msgid "Bank Account"
+msgstr "الحساب البنكي"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_acc_number
+msgid "Bank account"
+msgstr "الحساب البنكي"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__benefit_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__benefit_ids
+msgid "Benefit"
+msgstr "فائدة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__res_field_id
+msgid "Benefit Field"
+msgstr "حقل الفائدة "
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.hr_contract_benefit_action
+#: model:ir.ui.menu,name:hr_contract_salary.salary_package_benefit
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Benefits"
+msgstr "الفوائد "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_benefit.py:0
+#, python-format
+msgid "Benefits that are not linked to a field should always be displayed."
+msgstr "يجب دائماً عرض الفوائد غير المرتبطة بحقل. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__res_field_public
+msgid "Benefit Field"
+msgstr "حقل الفائدة "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_birthdate
+msgid "Birthdate"
+msgstr "تاريخ الميلاد"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__category_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_form
+msgid "Category"
+msgstr "الفئة "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_certificate
+msgid "Certificate"
+msgstr "الشهادة "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_diff_email_template
+msgid "Changes summary since previous contract:"
+msgstr "ملخص التغيرات منذ العقد السابق: "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__checkbox
+msgid "Checkbox"
+msgstr "صندوق الاختيار "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__child_ids
+msgid "Child"
+msgstr "الفرعي "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__activity_creation
+msgid ""
+"Choose when the activity is created:\n"
+"- Employee signs his contract: Activity is created as soon as the employee signed the contract\n"
+"- Contract is countersigned: HR responsible have signed the contract and conclude the process."
+msgstr ""
+"قم بتحديد متى يتم إنشاء النشاط:\n"
+"- وقّع الموظف على عقده: يتم إنشاء النشاط بمجرد توقيع الموظف على العقد\n"
+"- وقّع الطرف المقابل على العقد: قام موظف الموارد البشرية بالتوقيع على العقد وختام العملية."
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_city
+msgid "City"
+msgstr "المدينة"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__code
+msgid "Code"
+msgstr "رمز "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__color
+msgid "Color"
+msgstr "اللون"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__company_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__company_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Company"
+msgstr "الشركة "
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات "
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_benefit_type
+msgid "Contract Benefit Type"
+msgstr "نوع فائدة العقد "
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_benefit_value
+msgid "Contract Benefit Value"
+msgstr "قيمة فائدة العقد "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Contract Information:"
+msgstr "معلومات العقد: "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__contract_start_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__contract_start_date
+msgid "Contract Start Date"
+msgstr "تاريخ بدء العقد"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__contract_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__default_contract_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_history__default_contract_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__contract_template_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_job__default_contract_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Contract Template"
+msgstr "قالب العقد"
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.action_hr_contract_templates
+msgid "Contract Templates"
+msgstr "قوالب العقود"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Contract Type"
+msgstr "نوع العقد"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__contract_update_template_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_history__contract_update_template_id
+msgid "Contract Update Document Template"
+msgstr "قالب مستند تحديث جهة الاتصال"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__value_type__contract
+msgid "Contract Value"
+msgstr "قيمة العقد "
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_employee_report
+msgid "Contract and Employee Analysis Report"
+msgstr "تقرير العقد وتحليل الموظفين "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__res_field_id
+msgid "Contract field linked to this benefit"
+msgstr "حقل العقد المرتبط بهذه الفائدة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__cost_res_field_id
+msgid ""
+"Contract field linked to this benefit cost. If not set, the benefit won't be"
+" taken into account when computing the employee budget."
+msgstr ""
+"حقل العقد المرتبط بتكلفة الفائدة هذه. إذا لم يكن معيناً، لن تؤخذ الفائدة "
+"بعين الاعتبار عند احتساب ميزانية الموظف. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__fold_res_field_id
+msgid "Contract field used to fold this benefit."
+msgstr "حقل العقد المُستخدَم لطي هذه الفائدة. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__manual_res_field_id
+msgid "Contract field used to manually encode an benefit value."
+msgstr "حقل عقد يُستخدَم لترميز قيمة الفائدة يدوياً. "
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_history
+msgid "Contract history"
+msgstr "سِجل العقد "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__activity_creation__countersigned
+msgid "Contract is countersigned"
+msgstr "العقد موثق "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Contracts Reviews"
+msgstr "معاينات العقود"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__cost_res_field_id
+msgid "Cost Field"
+msgstr "حقل التكلفة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__cost_field
+msgid "Cost Field Name"
+msgstr "اسم حقل التكلفة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__cost_res_field_public
+msgid "Cost Field"
+msgstr "حقل التكلفة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__dropdown_selection__country
+msgid "Countries"
+msgstr "الدول"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_country
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__country_id
+msgid "Country"
+msgstr "الدولة"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_country_of_birth
+msgid "Country of Birth"
+msgstr "بلد الميلاد"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_generate_simulation_link
+msgid "Create an Offer"
+msgstr "إنشاء عرض عمل "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__hash_token
+msgid "Created From Token"
+msgstr "تم إنشاؤه من الرمز "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__create_date
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__currency_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__currency_id
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__uom__currency
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__uom__currency
+msgid "Currency"
+msgstr "العملة"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package
+msgid "Customize your salary"
+msgstr "تخصيص راتبك "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__date
+msgid "Date"
+msgstr "التاريخ"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__uom__days
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__uom__days
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_benefits
+#, python-format
+msgid "Days"
+msgstr "الأيام"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_res_config_settings__access_token_validity
+msgid "Default Access Token Validity Duration"
+msgstr "المدة الافتراضية لصلاحية رمز الوصول "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_res_config_settings__employee_salary_simulator_link_validity
+msgid "Default Salary Configurator Link Validity Duration For Employees"
+msgstr "مدة صلاحية رابط تهيئة الراتب الافتراضي للموظفين "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_job__default_contract_id
+msgid ""
+"Default contract used to generate an offer. If empty, benefits will be taken"
+" from current contract of the employee/nothing for an applicant."
+msgstr ""
+"العقد الافتراضي المستخدَم لإنشاء عرض عمل. إذا كان فارغاً، سيتم أخذ الفوائد "
+"من العقد الحالي للموظف/لا شيء للمتقدم للوظيفة. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__default_contract_id
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_history__default_contract_id
+msgid "Default contract used when making an offer to an applicant."
+msgstr "العقد الافتراضي المستخدم عند تقديم عرض لمتقدم."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__sign_template_id
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_history__sign_template_id
+msgid ""
+"Default document that the applicant will have to sign to accept a contract "
+"offer."
+msgstr ""
+"المستند الافتراضي الذي يقوم المتقدم للوظيفة بالتوقيع عليه لقبول عرض عقد."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__contract_update_template_id
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_history__contract_update_template_id
+msgid ""
+"Default document that the employee will have to sign to update his contract."
+msgstr "المستند الافتراضي الذي يقوم الموظف بالتوقيع عليه لتحديث عقده."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__activity_creation_type
+msgid ""
+"Define when the system creates a new activity:\n"
+"- When the benefit is set: Unique creation the first time the employee will take the benefit\n"
+"- When the benefit is modified: Activity will be created for each change regarding the benefit."
+msgstr ""
+"حدد متى يقوم النظام بإنشاء نشاط جديد:\n"
+"- عندما تكون الفائدة معدّة: سيتم إنشاؤها بشكل فريد في المرة الأولى التي يستفيد فيها الموظف من الفائدة\n"
+"- عندما يتم تعديل الفائدة: سيتم إنشاء النشاط لكل تغيير متعلق بالفائدة. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__sign_frenquency
+msgid ""
+"Define when the system creates a new sign request:\n"
+"- When the benefit is set: Unique signature request the first time the employee will take the benefit\n"
+"- When the benefit is modified: Signature request will be created for each change regarding the benefit."
+msgstr ""
+"حدد متى يقوم النظام بإنشاء طلب توقيع جديد:\n"
+"- عندما تكون الفائدة معدّة: سيتم إنشاء طلب توقيع فريد في المرة الأولى التي يستفيد فيها الموظف من الفائدة\n"
+"- عندما يتم تعديل الفائدة: سيتم إنشاء طلب توقيع لكل تغيير متعلق بالفائدة. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__department_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__department_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Department"
+msgstr "القسم"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__description
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Description"
+msgstr "الوصف"
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/xml/resume_sidebar.xml:0
+#, python-format
+msgid "Details"
+msgstr "التفاصيل"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid "Discard"
+msgstr "إهمال "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Display"
+msgstr "عرض"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__display_name
+msgid "Display Name"
+msgstr "اسم العرض "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__display_type
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__display_type
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__display_type
+msgid "Display Type"
+msgstr "نوع العرض"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__display_warning_message
+msgid "Display Warning Message"
+msgstr "عرض رسالة التحذير "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_certificate_doctor
+msgid "Doctor"
+msgstr "دكتور"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__document
+msgid "Document"
+msgstr "المستند"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__sign_template_id
+msgid ""
+"Documents selected here will be requested to the employee for additional "
+"signatures related to the benefit. eg: A company car policy to approve if "
+"you choose a company car."
+msgstr ""
+"المستندات المحددة هنا سيتم طلبها من الموظف للتوقيعات الإضافية التعلقة "
+"بالفائدة. مثال: سياسة سيارة الشركة للموافقة عليها في حال اخترت سيارة الشركة."
+" "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_sign_document_wizard__sign_template_ids
+msgid "Documents to sign"
+msgstr "المستندات لتوقيعها "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_sign_document_wizard__sign_template_ids
+msgid ""
+"Documents to sign. Only documents with 1 or 2 different responsible are selectable.\n"
+"        Documents with 1 responsible will only have to be signed by the employee while documents with 2 different responsible will have to be signed by both the employee and the responsible.\n"
+"        "
+msgstr ""
+"المستندات لتوقيعها. وحدها المستندات التي لها مسؤول 1 أو 2 يتم تحديدها.\n"
+"        يجب أن تُوقّع المستندات ذات المسؤول الواحد من قِبَل الموظف، بينما تُوقّع المستندات ذات المسؤولَين المختلفين من قِبَل الموظف والمسؤول معاً.\n"
+"        "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__dropdown
+msgid "Dropdown"
+msgstr "منسدلة"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__dropdown-group
+msgid "Dropdown Group"
+msgstr "المجموعة المنسدلة "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_email
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__email
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__email_to
+msgid "Email To"
+msgstr "إرسال رسالة بريد إلكتروني إلى "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__sign_copy_partner_id
+msgid "Email address to which to transfer the signature."
+msgstr "عنوان البريد الإكتروني الذي يجب تحويل التوقيع فيه. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__employee_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__employee_id
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__applies_on__employee
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Employee"
+msgstr "الموظف"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__employee_contract_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__employee_contract_id
+msgid "Employee Contract"
+msgstr "عقد الموظف"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__employee_job_id
+msgid "Employee Job"
+msgstr "وظيفة الموظف "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Employee Name"
+msgstr "اسم الموظف"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_image_1920
+msgid "Employee Photo"
+msgstr "صورة الموظف "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__activity_creation__running
+msgid "Employee signs his contract"
+msgstr "الموظف يوقع على عقده "
+
+#. module: hr_contract_salary
+#: model:mail.template,name:hr_contract_salary.mail_template_send_offer
+msgid "Employee: Contract And Salary Package"
+msgstr "الموظف: الهقد وباقة الراتب "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Employees"
+msgstr "الموظفون"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__final_yearly_costs
+msgid "Employer Budget"
+msgstr "ميزانية الموظِّف "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid ""
+"Equals to the sum of the following values:\n"
+"\n"
+"%s"
+msgstr ""
+"يساوي مجموع القيم التالية: \n"
+"\n"
+"%s"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_offer__state__expired
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Expired"
+msgstr "منتهي الصلاحية"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.benefit,name:hr_contract_salary.benefit_extra_time_off
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__holidays
+msgid "Extra Time Off"
+msgstr "وقت إجازة إضافي "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_gender_female
+msgid "Female"
+msgstr "أنثى"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__field
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__field
+msgid "Field Name"
+msgstr "اسم الحقل"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_study_field
+msgid "Field of Study"
+msgstr "مجال الدراسة"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__fixed_value
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__value_type__fixed
+msgid "Fixed Value"
+msgstr "قيمة ثابتة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__fold_field
+msgid "Fold Field Name"
+msgstr "طي اسم الحقل "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__fold_label
+msgid "Fold Label"
+msgstr "طي بطاقة العنوان "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__fold_res_field_id
+msgid "Fold Res Field"
+msgstr "طي حقل Res "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__folded
+msgid "Folded"
+msgstr "مطوي "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_follower_ids
+msgid "Followers"
+msgstr "المتابعين"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "المتابعين (الشركاء) "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "أيقونة من Font awesome مثال: fa-tasks "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_offer__state__full_signed
+msgid "Fully Signed"
+msgstr "مُوقع بالكامل"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_gender
+msgid "Gender"
+msgstr "الجنس"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Generate Offer"
+msgstr "إنشاء عرض "
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.generate_offer_link_action
+#: model:ir.actions.act_window,name:hr_contract_salary.generate_simulation_link_action
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid "Generate a Simulation Link"
+msgstr "إنشاء رابط محاكاة"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_value__color__green
+msgid "Green"
+msgstr "أخضر"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Group By"
+msgstr "تجميع حسب"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract.py:0
+#, python-format
+msgid ""
+"HR Responsible %s should be a User of Sign and have a valid email address "
+"when New Contract Document Template is specified"
+msgstr ""
+"يجب أن يكون مسؤول الموارد البشرية %sمستخدماً لتطبيق التوقيع الإلكتروني، وأن "
+"يكون لديه عنوان بريد إلكتروني صالح عندما يتم تحديد قالب مستند عقد جديد "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__has_admin_access
+msgid "Has Admin Access"
+msgstr "يحتوي على صلاحية وصول المدير "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__has_message
+msgid "Has Message"
+msgstr "يحتوي على رسالة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__helper
+msgid "Helper"
+msgstr "مساعد "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_personal_information
+msgid "Hide <i class=\"oi oi-chevron-up\"/>"
+msgstr "إخفاء <i class=\"oi oi-chevron-up\"/> "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__hide_children
+msgid "Hide Children"
+msgstr "إخفاء الفروع "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__hide_description
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__hide_description
+msgid "Hide Description"
+msgstr "إخفاء الوصف "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_personal_info_value__hide_children
+msgid "Hide children personal info when checked."
+msgstr "إخفاء معلومات الفروع الشخصية عند التحديد. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__hide_description
+msgid "Hide the description if the benefit is not taken."
+msgstr "إخفاء الوصف إذا لم يتم أخذ الفائدة. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__icon
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_exception_icon
+msgid "Icon"
+msgstr "الأيقونة"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "الأيقونة للإشارة إلى النشاط المستثنى. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "إذا كان محددًا، فهناك رسائل جديدة عليك رؤيتها. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__message_has_error
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "إذا كان محددًا، فقد حدث خطأ في تسليم بعض الرسائل."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_resume__impacts_monthly_total
+msgid ""
+"If checked, the value of this information will be computed in all "
+"information set as Monthly Total"
+msgstr ""
+"إذا كان محدداً، سيتم احتساب قيمة هذه المعلومة في كافة المعلومات المعينة "
+"كالإجمالي الشهري. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__image_1920
+msgid "Image"
+msgstr "صورة"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__image_1920_filename
+msgid "Image 1920 Filename"
+msgstr "اسم ملف الصورة 1920 "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__impacts_monthly_total
+msgid "Impacts Monthly Total"
+msgstr "يؤثر على الإجمالي الشهري "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__impacts_net_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__impacts_net_salary
+msgid "Impacts Net Salary"
+msgstr "يؤثر على صافي الراتب "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_offer__state__open
+msgid "In Progress"
+msgstr "قيد التنفيذ"
+
+#. module: hr_contract_salary
+#: model_terms:hr.contract.salary.benefit,description:hr_contract_salary.benefit_extra_time_off
+msgid ""
+"In addition to your legal leaves, you can chose up to 30 extra days off.\n"
+"            The amount of annual time off (legal leaves) you get depends on your work schedule in the previous year. A full-time work schedule through the 12 months of the last year, under your contract, will grant you 20 annual time off (legal leaves)."
+msgstr ""
+"إضافة إلى إجازاتك القانونية، يمكنك أخذ ما يصل إلى 30 يوم إجازة إضافي.\n"
+"            يعتمد عدد أيام إجازتك (الإجازة القانونية) التي تحصل عليها على جدول عملك خلال العام الماضي. إذا كنت تعمل بدوام كامل خلال الـ12 شهر في العام الماضي بموجب عقدك، ستحصل على 20 يوم إجازة سنوية (إجازة قانونية). "
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/js/hr_contract_salary.js:0
+#, python-format
+msgid ""
+"In order to choose %s, first you need to choose:\n"
+" %s"
+msgstr "حتى تتمكن من اختيار %s، عليك أولاً اختيار: %s "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__info_type_id
+msgid "Info Type"
+msgstr "نوع المعلومات "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_form
+msgid "Information"
+msgstr "معلومات"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__integer
+msgid "Integer"
+msgstr "عدد صحيح"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_is_follower
+msgid "Is Follower"
+msgstr "متابع"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__is_required
+msgid "Is Required"
+msgstr "مطلوب "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__is_origin_contract_template
+msgid "Is origin contract a contract template?"
+msgstr "هل العقد الأصلي قالب عقد؟ "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: model:ir.model,name:hr_contract_salary.model_hr_job
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__employee_job_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+#, python-format
+msgid "Job Position"
+msgstr "المنصب الوظيفي"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__job_title
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__job_title
+#, python-format
+msgid "Job Title"
+msgstr "المسمى الوظيفي"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__dropdown_selection__lang
+msgid "Languages"
+msgstr "اللغات"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: hr_contract_salary
+#: model_terms:ir.actions.act_window,help:hr_contract_salary.action_hr_contract_templates
+msgid "Let's create one"
+msgstr "فلننشئ واحداً "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_value__display_type__line
+msgid "Line"
+msgstr "البند "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__url
+msgid "Link"
+msgstr "الرابط"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__validity
+msgid "Link Expiration Date"
+msgstr "تاريخ انتهاء صلاحية الرابط "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__position__left
+msgid "Main Panel"
+msgstr "اللوحة الرئيسية "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_gender_male
+msgid "Male"
+msgstr "ذكر"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__benefit_ids
+msgid "Mandatory Benefits"
+msgstr "الفوائد الإلزامية "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__manual_field
+msgid "Manual Field Name"
+msgstr "اسم الحقل اليدوي "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__manual
+msgid "Manual Input"
+msgstr "الإدخال اليدوي "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__manual_res_field_id
+msgid "Manual Res Field"
+msgstr "حقل Res يدوي "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_certificate_master
+msgid "Master"
+msgstr "الرئيسي"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_has_error
+msgid "Message Delivery error"
+msgstr "خطأ في تسليم الرسائل"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_ids
+msgid "Messages"
+msgstr "الرسائل"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_personal_info.py:0
+#, python-format
+msgid ""
+"Mismatch between res_field_id %(field)s and model %(model)s for info "
+"%(personal_info)s"
+msgstr ""
+"يوجد عدم تطابق بين res_field_id %(field)s والنموذج %(model)s للمعلومات "
+"%(personal_info)s "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_type__periodicity__monthly
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume_category__periodicity__monthly
+msgid "Monthly"
+msgstr "شهرياً"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_history_view_form
+msgid "Monthly Cost"
+msgstr "التكلفة الشهرية "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__monthly_yearly_costs
+msgid "Monthly Cost (Real)"
+msgstr "التكلفة الشهرية (الفعلية) "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Monthly Gross Salary"
+msgstr "إجمالي الراتب الشهري "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__value_type__monthly_total
+msgid "Monthly Total"
+msgstr "الإجمالي الشهري "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_history__reference_monthly_wage
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_history_view_form
+msgid "Monthly Wage"
+msgstr "الأجر الشهري "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "الموعد النهائي لنشاطاتي "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__name
+msgid "Name"
+msgstr "الاسم"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_personal_info__res_field_id
+msgid "Name of the field related to this personal info."
+msgstr "اسم الحقل المتعلق بهذه المعلومات الشخصية. "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_identification_id
+msgid "National Identification Number"
+msgstr "الرقم الوطني "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_country_id
+msgid "Nationality"
+msgstr "الجنسية"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package
+msgid "Net calculation"
+msgstr "صافي الحساب"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__sign_template_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_history__sign_template_id
+msgid "New Contract Document Template"
+msgstr "قالب مستند عقد جديد"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "الفعالية التالية في تقويم الأنشطة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "الموعد النهائي للنشاط التالي"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_summary
+msgid "Next Activity Summary"
+msgstr "ملخص النشاط التالي"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_type_id
+msgid "Next Activity Type"
+msgstr "نوع النشاط التالي"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "No"
+msgstr "لا"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid ""
+"No HR responsible defined on the job position. Please contact an "
+"administrator."
+msgstr ""
+"لم يتم تحديد مسؤول موارد بشرية للمنصب الوظيفي. الرجاء التواصل مع أحد "
+"المدراء. "
+
+#. module: hr_contract_salary
+#: model_terms:ir.actions.act_window,help:hr_contract_salary.action_hr_contract_templates
+msgid "No Template found"
+msgstr "لم يتم العثور على قالب "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid ""
+"No signature template defined on the contract. Please contact the HR "
+"responsible."
+msgstr ""
+"لم يتم تحديد قالب للتوقيع على العقد. الرجاء التواصل مع مسؤول الموارد "
+"البشرية. "
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/js/hr_contract_salary.js:0
+#, python-format
+msgid "Not a valid e-mail address"
+msgstr "ليس عنوان بريد إلكتروني صالحاً "
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/js/hr_contract_salary.js:0
+#, python-format
+msgid "Not a valid input in integer field"
+msgstr "ليس مدخلاً صالحاً في حقل العدد الصحيح "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_needaction_counter
+msgid "Number of Actions"
+msgstr "عدد الإجراءات"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__holidays
+msgid "Number of days of paid leaves the employee gets per year."
+msgstr "عدد أيام الإجازة المدفوعة التي يحصل الموظف عليها سنوياً. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_has_error_counter
+msgid "Number of errors"
+msgstr "عدد الأخطاء "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "عدد الرسائل الحادث بها خطأ في التسليم"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+msgid "Offer"
+msgstr "عرض "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__offer_end_date
+msgid "Offer Validity Date"
+msgstr "تاريخ صلاحية العرض "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_offer.py:0
+#, python-format
+msgid "Offer [%s] for %s / Budget: %s"
+msgstr "قعرض [%s] لـ %s / ميزانية: %s "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#, python-format
+msgid "Offer link can not be send. The applicant needs to have a name."
+msgstr "تعذر إرسال رابط عرض العمل. يجب أن يكون للمتقدم للوظيفة اسم. "
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.hr_contract_salary_offer_action
+#: model:ir.actions.act_window,name:hr_contract_salary.hr_contract_salary_offer_recruitment_action
+#: model:ir.ui.menu,name:hr_contract_salary.menu_hr_contract_salary_job_offer
+#: model:ir.ui.menu,name:hr_contract_salary.menu_salary_package_offer
+msgid "Offers"
+msgstr "العروض "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Oops"
+msgstr "عذراً "
+
+#. module: hr_contract_salary
+#: model:sign.template,redirect_url_text:hr_contract_salary.sign_template_cdi_developer
+msgid "Open Link"
+msgstr "فتح الرابط "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__origin_contract_id
+msgid "Origin Contract"
+msgstr "العقد الأصلي"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Original Link"
+msgstr "الرابط الأصلي "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_certificate_other
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_gender_other
+msgid "Other"
+msgstr "غير ذلك"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__parent_id
+msgid "Parent"
+msgstr "الأصل"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_offer__state__half_signed
+msgid "Partially Signed"
+msgstr "تم التوقيع جزئياً "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__uom__percent
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__uom__percent
+msgid "Percent"
+msgstr "بالمئة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__periodicity
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__periodicity
+msgid "Periodicity"
+msgstr "الوتيرة "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_emergency_contact
+msgid "Person to call"
+msgstr "المسؤول "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Personal Documents"
+msgstr "المستندات الشخصية "
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.hr_contract_salary_personal_info_action
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__personal_info_id
+#: model:ir.ui.menu,name:hr_contract_salary.salary_package_personal_info
+msgid "Personal Info"
+msgstr "المعلومات الشخصية "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Personal Information"
+msgstr "المعلومات الشخصية"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_phone
+msgid "Phone Number"
+msgstr "رقم الهاتف"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_emergency_phone
+msgid "Phone number"
+msgstr "رقم الهاتف"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_resume__category_id
+msgid "Pick a category to display this information"
+msgstr "اختر الفئة لعرض هذه المعلومة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_resume__value_type
+msgid ""
+"Pick how the value of the information is computed:\n"
+"Fixed value: Set a determined value static for all links\n"
+"Contract value: Get the value from a field on the contract record\n"
+"Payslip value: Get the value from a field on the payslip record\n"
+"Sum of Benefits value: You can pick in all benefits and compute a sum of them\n"
+"Monthly Total: The information will be a total of all the informations in the category Monthly Benefits"
+msgstr ""
+"اختر كيفية حساب قيمة المعلومات:\n"
+"القيمة الثابتة: قم بتعيين قيمة محددة ثابتة لجميع الروابط\n"
+"قيمة العقد: احصل على القيمة من حقل في سجل العقد\n"
+"قيمة إيصال الدفع: احصل على القيمة من حقل في سجل إيصال الدفع\n"
+"قيمة مجموع الفوائد: يمكنك اختيار جميع المزايا وحساب مجموعها\n"
+"الإجمالي الشهري: ستكون المعلومات عبارة عن إجمالي جميع المعلومات الموجودة في فئة المزايا الشهرية "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_place_of_birth
+msgid "Place of Birth"
+msgstr "مكان الميلاد"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__placeholder
+msgid "Placeholder"
+msgstr "العنصر النائب "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__position
+msgid "Position"
+msgstr "المنصب الوظيفي "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Previous Contract"
+msgstr "العقد السابق "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_private_license_plate
+msgid "Private License Plate"
+msgstr "لوحة رخصة خاصة "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_applicant.py:0
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_applicant__proposed_contracts
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_applicant_view_form
+#, python-format
+msgid "Proposed Contracts"
+msgstr "العقود المقدمة"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_applicant__proposed_contracts_count
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__contract_reviews_count
+msgid "Proposed Contracts Count"
+msgstr "عدد العقود المقدمة"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__radio
+msgid "Radio"
+msgstr "راديو "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__radio
+msgid "Radio Buttons"
+msgstr "أزرار اختيار"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__rating_ids
+msgid "Ratings"
+msgstr "التقييمات "
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/xml/resume_sidebar.xml:0
+#: code:addons/hr_contract_salary/static/src/xml/resume_sidebar.xml:0
+#, python-format
+msgid "Recompute"
+msgstr "إعاده احتساب "
+
+#. module: hr_contract_salary
+#: model:mail.template,name:hr_contract_salary.mail_template_send_offer_applicant
+msgid "Recruitment: Your Salary Package"
+msgstr "التوظيف: باقة راتبك "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_value__color__red
+msgid "Red"
+msgstr "أحمر"
+
+#. module: hr_contract_salary
+#: model:ir.actions.server,name:hr_contract_salary.action_refuse_salary_offer
+msgid "Refuse"
+msgstr "رفض"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_offer__state__refused
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Refused"
+msgstr "تم الرفض "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__res_field_id
+msgid "Related Field"
+msgstr "الحقل ذو الصلة "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_form
+msgid "Related Model"
+msgstr "النموذج ذو الصلة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__benefit_type_id
+msgid "Related Type"
+msgstr "النوع ذو الصلة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__requested_documents_field_ids
+msgid "Requested Documents"
+msgstr "المستندات المطلوبة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__requested_documents
+msgid "Requested Documents Fields"
+msgstr "حقول المستندات المطلوبة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__sign_request_ids
+msgid "Requested Signatures"
+msgstr "التوقيعات المطلوبة"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__requested_documents_fields_string
+msgid "Requested Documents"
+msgstr "المستندات المطلوبة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__res_model
+msgid "Res Model"
+msgstr "نموذج Res "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_user_id
+msgid "Responsible User"
+msgstr "المستخدم المسؤول"
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.hr_contract_salary_resume_action
+#: model:ir.ui.menu,name:hr_contract_salary.salary_package_resume
+msgid "Resume"
+msgstr "المتابعة "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_next_step_button
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_sidebar
+msgid "Review Contract &amp; Sign"
+msgstr "مراجعة وتوقيع العقد"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "خطأ في تسليم الرسائل النصية القصيرة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_payroll_structure_type__salary_benefits_ids
+msgid "Salary Benefits"
+msgstr "فوائد الراتب "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form_hr
+msgid "Salary Configurator"
+msgstr "أداة تهيئة الرواتب "
+
+#. module: hr_contract_salary
+#: model:ir.actions.server,name:hr_contract_salary.ir_cron_update_offer_state_ir_actions_server
+msgid "Salary Configurator: Update Offer State"
+msgstr "أداة تهيئة المرتبات: تحديث حالة عرض العمل "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_applicant__salary_offer_ids
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__salary_offer_ids
+msgid "Salary Offer"
+msgstr "عرض الراتب "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_applicant__salary_offers_count
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__salary_offers_count
+msgid "Salary Offers Count"
+msgstr "عدد عروض الرواتب "
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_benefit
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_tree
+msgid "Salary Package Benefit"
+msgstr "فائدة باقة الراتب "
+
+#. module: hr_contract_salary
+#: model:ir.ui.menu,name:hr_contract_salary.salary_package_menu
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form_hr
+msgid "Salary Package Configurator"
+msgstr "أداة تهيئة باقة الراتب "
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_offer
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+msgid "Salary Package Offer"
+msgstr "عرض باقة الراتب "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_tree
+msgid "Salary Package Offers"
+msgstr "عروض باقات الرواتب "
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_personal_info
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_tree
+msgid "Salary Package Personal Info"
+msgstr "المعلومات الشخصية لباقة الراتب "
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_personal_info_type
+msgid "Salary Package Personal Info Type"
+msgstr "نوع المعلومات الشخصية لباقة الراتب "
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_personal_info_value
+msgid "Salary Package Personal Info Value"
+msgstr "قيمة المعلومات الشخصية لباقة الراتب "
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_resume
+msgid "Salary Package Resume"
+msgstr "متابعة باقة الراتب "
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_resume_category
+msgid "Salary Package Resume Category"
+msgstr "فئة متابعة باقة الراتب "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Salary Package Summary"
+msgstr "ملخص باقة الراتب "
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_payroll_structure_type
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__structure_type_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__structure_type_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__structure_type_id
+msgid "Salary Structure Type"
+msgstr "نوع هيكل الراتب "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid "Save"
+msgstr "حفظ"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_study_school
+msgid "School"
+msgstr "المدرسة "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Search Offers"
+msgstr "البحث عن العروض "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_value__display_type__section
+msgid "Section"
+msgstr "القسم"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,placeholder:hr_contract_salary.hr_contract_salary_personal_info_country
+#: model:hr.contract.salary.personal.info,placeholder:hr_contract_salary.hr_contract_salary_personal_info_country_id
+#: model:hr.contract.salary.personal.info,placeholder:hr_contract_salary.hr_contract_salary_personal_info_country_of_birth
+msgid "Select a Country"
+msgstr "قم بتحديد دولة "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,placeholder:hr_contract_salary.hr_contract_salary_personal_info_state_id
+msgid "Select a State"
+msgstr "قم بتحديد حالة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__dropdown
+msgid "Selection"
+msgstr "قائمة خيارات"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__dropdown_selection
+msgid "Selection Nature"
+msgstr "طبيعة الاختيار "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+msgid "Send By Email"
+msgstr "الإرسال عبر البريد الإلكتروني "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__sign_copy_partner_id
+msgid "Send a copy to"
+msgstr "إرسال نسخة إلى"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Sent Offers"
+msgstr "العروض المرسلة "
+
+#. module: hr_contract_salary
+#: model:mail.template,description:hr_contract_salary.mail_template_send_offer_applicant
+msgid "Sent automatically when you generate an offer for an application"
+msgstr "يتم إرساله تلقائياً عندما تقوم بإنشاء عقد لطلب تقديم "
+
+#. module: hr_contract_salary
+#: model:mail.template,description:hr_contract_salary.mail_template_send_offer
+msgid ""
+"Sent manually when you generate a simulation link on the employee contract"
+msgstr "يتم إرساله يدوياً عندما تقوم بإنشاء رابط محاكاة في عقد الموظف "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__sequence
+msgid "Sequence"
+msgstr "تسلسل "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_personal_information
+msgid "Show <i class=\"oi oi-chevron-down\"/>"
+msgstr "إظهار <i class=\"oi oi-chevron-down\"/> "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__show_name
+msgid "Show Name"
+msgstr "إظهار الاسم "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__position__right
+msgid "Side Panel"
+msgstr "اللوحة الجانبية "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Sign"
+msgstr "توقيع"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__sign_frenquency
+msgid "Sign Creation Type"
+msgstr "نوع إنشاء التوقيع "
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_sign_document_wizard
+msgid "Sign document in contract"
+msgstr "توقيع المستند في العقد "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Signature Request - %s"
+msgstr "طلب التوقيع - %s"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__slider
+msgid "Slider"
+msgstr "شريط التمرير "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__slider_max
+msgid "Slider Max"
+msgstr "الحد الأقصى لشريط التمرير "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__slider_min
+msgid "Slider Min"
+msgstr "الحد الأدنى لشريط التمرير "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__slider_step
+msgid "Slider Step"
+msgstr "خطوة شريط التمرير "
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/js/hr_contract_salary.js:0
+#: code:addons/hr_contract_salary/static/src/js/hr_contract_salary.js:0
+#, python-format
+msgid "Some required fields are not filled"
+msgstr "لم يتم ملء بعض الحقول المطلوبة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__dropdown_selection__specific
+msgid "Specific Values"
+msgstr "قيم محددة "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_state_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__state
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "State"
+msgstr "الولاية "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__dropdown_selection__state
+msgid "States"
+msgstr "الحالات "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"الأنشطة المعتمدة على الحالة\n"
+"المتأخرة: تاريخ الاستحقاق مر\n"
+"اليوم: تاريخ النشاط هو اليوم\n"
+"المخطط: الأنشطة المستقبلية."
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_street
+msgid "Street"
+msgstr "الشارع"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_street2
+msgid "Street 2"
+msgstr "الشارع 2"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_search
+msgid "Structure Type"
+msgstr "نوع الهيكل "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__value_type__sum
+msgid "Sum of Benefits Values"
+msgstr "مجموع قيم الفوائد "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__sign_template_id
+msgid "Template to Sign"
+msgstr "القالب لتوقيعه "
+
+#. module: hr_contract_salary
+#: model:ir.ui.menu,name:hr_contract_salary.hr_menu_contract_templates
+msgid "Templates"
+msgstr "القوالب "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__text
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__text
+msgid "Text"
+msgstr "النص"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__origin_contract_id
+msgid "The contract from which this contract has been duplicated."
+msgstr "العقد الذي تم نسخ هذا العقد منه."
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "The current requested documents are the followings:"
+msgstr "المستندات المطلوبة الحالية هي التالية: "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid ""
+"The employee does not have a valid work email set. The Simulation Link won't"
+" be able to be completed."
+msgstr ""
+"ليس للموظف بريد إلكتروني صالح معد للعمل. لن نتمكن من إكمال رابط المحاكاة. "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid ""
+"The employee is not linked to an existing user, please contact the "
+"administrator.."
+msgstr "الموظف غير مرتبط بمستخدم موجود بالفعل. يرجى التواصل مع المدير. "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_benefit.py:0
+#, python-format
+msgid ""
+"The minimum value for the slider should be inferior to the maximum value."
+msgstr "يجب أن تكون القيمة الدنيا لشريط التمرير أقل من القيمة القصوى "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__signatures_count
+msgid "The number of signatures on the pdf contract with the most signatures."
+msgstr "عدد التوقيعات في عقد الـpdf الذي يحتوي على أكبر عدد من التوقيعات. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__activity_type_id
+msgid ""
+"The type of activity that will be created automatically on the contract if "
+"this benefit is chosen by the employee."
+msgstr ""
+"نوع النشاط الذي سوف يتم إنشاؤه تلقائياً في العقد إذا تم اختيار هذه الفائدة "
+"من قِبَل الموظف. "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_benefits
+msgid "There is no available option to customize your salary"
+msgstr "لا يوجد خيار متاح لتخصيص راتبك "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_diff_email_template
+msgid "There were no changes since previous contract."
+msgstr "لم تطرأ أي تغييرات منذ العقد السابق. "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_thank_you
+msgid ""
+"They will review your contract.<br/> Feel free to contact them if you have "
+"any questions."
+msgstr ""
+"سيقومون بمراجعة عقدك.<br/> لا تتردد في التواصل إذا كانت لديك أي أسئلة أو "
+"استفسارات. "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid ""
+"This link is invalid. Please contact the HR Responsible to get a new one..."
+msgstr ""
+"هذا الرابط غير صالح. يرجى التواصل مع مسؤول الموارد البشرية للحصول على واحد "
+"جديد..."
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "This offer has been updated, please request an updated link.."
+msgstr "لقد تم تحديث هذا العرض، يرجى طلب الرابط المحدث.. "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "This offer is outdated, please request an updated link..."
+msgstr "هذا العرض قديم، يرجى طلب رابط محدث.. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__display_name
+msgid "Title"
+msgstr "العنوان"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+msgid "To"
+msgstr "إلى"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+msgid "Token"
+msgstr "الرمز "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__monthly_yearly_costs
+msgid "Total real monthly cost of the employee for the employer."
+msgstr "إجمالي تكلفة الموظَف الشهرية الفعلية للموظِف. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__final_yearly_costs
+msgid "Total real yearly cost of the employee for the employer."
+msgstr "إجمالي تكلفة الموظَف السنوية الفعلية للموظِف. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_history__reference_yearly_cost
+msgid "Total yearly cost of the employee for the employer."
+msgstr "إجمالي تكلفة الموظَف السنوية للموظِف. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "نوع النشاط المستثنى في السجل. "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__uom
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__uom
+msgid "Unit of Measure"
+msgstr "وحدة القياس"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form_hr
+msgid "Validity duration for salary package requests for employees"
+msgstr "فترة صلاحية طلبات باقة الراتب للموظفين "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form
+msgid "Validity duration for salary package requests for new applicants"
+msgstr "فترة صلاحية طلبات باقة الراتب للمتقدمين الجدد "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__value_ids
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__value
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__value_ids
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__value
+msgid "Value"
+msgstr "القيمة"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__value_type
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_search
+msgid "Value Type"
+msgstr "نوع القيمة "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Wage"
+msgstr "الأجر "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__wage_on_signature
+msgid "Wage on Payroll"
+msgstr "الأجر في كشوف المرتبات "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__wage_on_signature
+msgid "Wage on contract signature"
+msgstr "الأجر في توقيع العقد "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_history__reference_monthly_wage
+msgid "Wage update with holidays retenues"
+msgstr "إيرادات تحديث الأجر مع الإجازات "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__wage_with_holidays
+msgid "Wage with Holidays"
+msgstr "الأجر مع الإجازات "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__website_message_ids
+msgid "Website Messages"
+msgstr "رسائل الموقع الإلكتروني "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__website_message_ids
+msgid "Website communication history"
+msgstr "سجل تواصل الموقع الإلكتروني "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__activity_creation_type__onchange
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__sign_frenquency__always
+msgid "When the benefit is modified"
+msgstr "عندما يتم تعديل الفائدة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__activity_creation_type__always
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__sign_frenquency__onchange
+msgid "When the benefit is set"
+msgstr "عندما يتم تعيين الفائدة "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__show_name
+msgid "Whether the name should be displayed in the Salary Configurator"
+msgstr "ما إذا كان يجب عرض الاسم في أداة تهيئة الرواتب أم لا "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_type__periodicity__yearly
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume_category__periodicity__yearly
+msgid "Yearly"
+msgstr "سنويًا"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__final_yearly_costs
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_history__reference_yearly_cost
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_history_view_form
+msgid "Yearly Cost"
+msgstr "التكلفة السنوية "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__final_yearly_costs
+msgid "Yearly Cost (Real)"
+msgstr "التكلفة السنوية (الفعلية) "
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Yes"
+msgstr "نعم"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_personal_information
+msgid "Your Personal Information"
+msgstr "بياناتك الشخصية"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_thank_you
+msgid "Your contract has been sent to:"
+msgstr "تم إرسال عقدك إلى:"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_zip
+msgid "Zip Code"
+msgstr "رمز Zip "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package
+msgid "close"
+msgstr "إغلاق"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_form
+msgid "e.g. Birthdate"
+msgstr "مثال: تاريخ الميلاد "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "e.g. Meal Vouchers"
+msgstr "مثال: قسائم الوجبات "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "sign"
+msgstr "توقيع "
+
+#. module: hr_contract_salary
+#: model:mail.template,subject:hr_contract_salary.mail_template_send_offer_applicant
+msgid ""
+"{{ object.company_id.name }}: Job Offer - {{ object.applicant_id.name }}"
+msgstr ""
+"{{ object.company_id.name }}: عرض عمل - {{ object.applicant_id.name }}"
+
+#. module: hr_contract_salary
+#: model:mail.template,subject:hr_contract_salary.mail_template_send_offer
+msgid ""
+"{{ object.company_id.name }}: Job Offer - {{ "
+"object.employee_contract_id.name }}"
+msgstr ""
+"{{ object.company_id.name }}: عرض عمل - {{ object.employee_contract_id.name "
+"}} "

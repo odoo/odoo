@@ -1,0 +1,1317 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_online_synchronization
+# 
+# Translators:
+# Duy BQ <duybq86@gmail.com>, 2023
+# Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:46+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_online_synchronization
+#. odoo-javascript
+#: code:addons/account_online_synchronization/static/src/components/transient_bank_statement_line_list_view/transient_bank_statement_line_list_view.xml:0
+#, python-format
+msgid ""
+").\n"
+"                    This might cause duplicate entries."
+msgstr ""
+").\n"
+"                    Điều này có thể gây ra các bút toán trùng lặp."
+
+#. module: account_online_synchronization
+#. odoo-javascript
+#: code:addons/account_online_synchronization/static/src/components/refresh_spin_journal_widget/refresh_spin_journal_widget.xml:0
+#, python-format
+msgid "0 transaction fetched"
+msgstr "0 giao dịch được lấy"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.account_journal_form
+msgid "<i class=\"oi oi-arrow-right me-2\"/> Send Now"
+msgstr "<i class=\"oi oi-arrow-right me-2\"/> Gửi ngay"
+
+#. module: account_online_synchronization
+#: model:mail.template,body_html:account_online_synchronization.email_template_sync_reminder
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\">\n"
+"                    <tr>\n"
+"                        <td align=\"center\">\n"
+"                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"                                <tbody>\n"
+"                                    <!-- CONTENT -->\n"
+"                                    <tr>\n"
+"                                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                                <tr>\n"
+"                                                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                                                        <div>\n"
+"                                                            Hello,<br><br>\n"
+"                                                            The connection between <b><a t-att-href=\"object.get_base_url()\" t-out=\"object.get_base_url() or ''\">https://yourcompany.odoo.com</a></b> and <t t-out=\"object.account_online_link_id.name or ''\">Belfius</t> <t t-if=\"not object.expiring_synchronization_due_day\">expired.</t><t t-else=\"\">expires in <t t-out=\"object.expiring_synchronization_due_day or ''\">10</t> days.</t><br>\n"
+"                                                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                                                <a t-attf-href=\"{{ website_url }}/renew_consent/{{ object.id }}?access_token={{object.access_token}}\" style=\"background-color: #4caf50; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                                                    Renew Consent\n"
+"                                                                </a>\n"
+"                                                            </div>\n"
+"                                                            Security Tip: Check that the domain name you are redirected to is: <b><a t-att-href=\"object.get_base_url()\" t-out=\"object.get_base_url() or ''\">https://yourcompany.odoo.com</a></b>\n"
+"                                                        </div>\n"
+"                                                    </td>\n"
+"                                                </tr>\n"
+"                                                <tr>\n"
+"                                                    <td style=\"text-align:center;\">\n"
+"                                                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                                    </td>\n"
+"                                                </tr>\n"
+"                                            </table>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </tbody>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <!-- POWERED BY -->\n"
+"                    <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                                <tr>\n"
+"                                    <td style=\"text-align: center; font-size: 13px;\">\n"
+"                                        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                                <tr>\n"
+"                                    <td style=\"text-align: center; font-size: 11px;\">\n"
+"                                        PS: This is an automated email sent by Odoo Accounting to remind you before a bank sync consent expiration.\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\">\n"
+"                    <tr>\n"
+"                        <td align=\"center\">\n"
+"                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"                                <tbody>\n"
+"                                    <!-- CONTENT -->\n"
+"                                    <tr>\n"
+"                                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                                <tr>\n"
+"                                                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                                                        <div>\n"
+"                                                            Xin chào,<br><br>\n"
+"                                                            Kết nối giữa <b><a t-att-href=\"object.get_base_url()\" t-out=\"object.get_base_url() or ''\">https://yourcompany.odoo.com</a></b> và <t t-out=\"object.account_online_link_id.name or ''\">Belfius</t> <t t-if=\"not object.expiring_synchronization_due_day\">đã hết hạn.</t><t t-else=\"\">hết hạn trong vòng <t t-out=\"object.expiring_synchronization_due_day or ''\">10</t> ngày.</t><br>\n"
+"                                                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                                                <a t-attf-href=\"{{ website_url }}/renew_consent/{{ object.id }}?access_token={{object.access_token}}\" style=\"background-color: #4caf50; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                                                    Gia hạn chấp thuận\n"
+"                                                                </a>\n"
+"                                                            </div>\n"
+"                                                            Mẹo bảo mật: Đảm bảo tên miền bạn được chuyển hướng đến là: <b><a t-att-href=\"object.get_base_url()\" t-out=\"object.get_base_url() or ''\">https://yourcompany.odoo.com</a></b>\n"
+"                                                        </div>\n"
+"                                                    </td>\n"
+"                                                </tr>\n"
+"                                                <tr>\n"
+"                                                    <td style=\"text-align:center;\">\n"
+"                                                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                                    </td>\n"
+"                                                </tr>\n"
+"                                            </table>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </tbody>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <!-- POWERED BY -->\n"
+"                    <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                                <tr>\n"
+"                                    <td style=\"text-align: center; font-size: 13px;\">\n"
+"                                        Cung cấp bởi <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                                <tr>\n"
+"                                    <td style=\"text-align: center; font-size: 11px;\">\n"
+"                                        PS: Đây là email tự động được Odoo Kế toán gửi để nhắc nhở bạn trước khi hết hạn chấp thuận đồng bộ hóa ngân hàng.\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            "
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__access_token
+msgid "Access Token"
+msgstr "Token truy cập"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__account_data
+msgid "Account Data"
+msgstr "Dữ liệu tài khoản"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__name
+msgid "Account Name"
+msgstr "Tên tài khoản "
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_account__name
+msgid "Account Name as provided by third party provider"
+msgstr "Tên tài khoản như được cung cấp bởi nhà cung cấp bên thứ ba"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__account_number
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__account_number
+msgid "Account Number"
+msgstr "Số tài khoản"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_selection__account_online_account_ids
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__online_account_id
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_journal__account_online_account_id
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__account_online_account_ids
+msgid "Account Online Account"
+msgstr "Tài khoản Tài khoản online"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_selection__account_online_link_id
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line__online_link_id
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_journal__account_online_link_id
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__account_online_link_id
+msgid "Account Online Link"
+msgstr "Tài khoản Liên kết online"
+
+#. module: account_online_synchronization
+#: model:ir.actions.server,name:account_online_synchronization.online_sync_cron_waiting_synchronization_ir_actions_server
+msgid "Account: Journal online Waiting Synchronization"
+msgstr "Tài khoản: Đang chờ đồng bộ sổ nhật ký online"
+
+#. module: account_online_synchronization
+#: model:ir.actions.server,name:account_online_synchronization.online_sync_cron_ir_actions_server
+msgid "Account: Journal online sync"
+msgstr "Tài khoản: Đồng bộ nhật ký trực tuyến"
+
+#. module: account_online_synchronization
+#: model:ir.actions.server,name:account_online_synchronization.online_sync_unused_connection_cron_ir_actions_server
+msgid "Account: Journal online sync cleanup unused connections"
+msgstr ""
+"Tài khoản: Đồng bộ online sổ nhật ký dọn dẹp các kết nối không sử dụng"
+
+#. module: account_online_synchronization
+#: model:ir.actions.server,name:account_online_synchronization.online_sync_mail_cron_ir_actions_server
+msgid "Account: Journal online sync reminder"
+msgstr "Tài khoản: Nhắc nhở đồng bộ online sổ nhật ký"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__message_needaction
+msgid "Action Needed"
+msgstr "Hành động cần thiết"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__activity_ids
+msgid "Activities"
+msgstr "Hoạt động"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Hoạt động ngoại lệ"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__activity_state
+msgid "Activity State"
+msgstr "Trạng thái hoạt động"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Biểu tượng loại hoạt động"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__amount
+msgid "Amount"
+msgstr "Số tiền"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__message_attachment_count
+msgid "Attachment Count"
+msgstr "Số lượng tệp đính kèm"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_journal.py:0
+#, python-format
+msgid "Automated Bank Synchronization"
+msgstr "Automated Bank Synchronization"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__auto_sync
+msgid "Automatic synchronization"
+msgstr "Đồng bộ tự động"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__balance
+msgid "Balance"
+msgstr "Số dư"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_account__balance
+msgid "Balance of the account sent by the third party provider"
+msgstr "Số dư của tài khoản được gửi bởi nhà cung cấp bên thứ ba"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.portal_renew_consent
+msgid "Bank"
+msgstr "Ngân hàng"
+
+#. module: account_online_synchronization
+#: model:ir.model,name:account_online_synchronization.model_account_online_link
+msgid "Bank Connection"
+msgstr "Kết nối ngân hàng"
+
+#. module: account_online_synchronization
+#: model:ir.model,name:account_online_synchronization.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Dòng sao kê ngân hàng"
+
+#. module: account_online_synchronization
+#: model:mail.activity.type,name:account_online_synchronization.bank_sync_activity_update_consent
+msgid "Bank Synchronization: Update consent"
+msgstr "Đồng bộ ngân hàng: Cập nhật chấp thuận"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid "Bank Synchronization: Update your consent"
+msgstr "Đồng bộ ngân hàng: Cập nhật chấp thuận của bạn"
+
+#. module: account_online_synchronization
+#: model:mail.template,name:account_online_synchronization.email_template_sync_reminder
+msgid "Bank connection expiration reminder"
+msgstr "Nhắc nhở hết hạn kết nối ngân hàng"
+
+#. module: account_online_synchronization
+#: model:ir.model,name:account_online_synchronization.model_bank_rec_widget
+msgid "Bank reconciliation widget for a single statement line"
+msgstr "Tiện ích đối chiếu ngân hàng cho một dòng sao kê"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.account_missing_transaction_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.view_account_bank_selection_form_wizard
+msgid "Cancel"
+msgstr "Hủy"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid "Check the documentation"
+msgstr "Xem tài liệu"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.account_missing_transaction_wizard_view_form
+msgid "Choose a date and a journal from which you want to fetch transactions"
+msgstr "Chọn ngày và sổ nhật ký mà bạn muốn lấy giao dịch"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__client_id
+msgid "Client"
+msgstr "Khách hàng"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.account_online_link_view_form
+msgid "Client id"
+msgstr "ID khách hàng"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_journal__renewal_contact_email
+msgid ""
+"Comma separated list of email addresses to send consent renewal "
+"notifications 15, 3 and 1 days before expiry"
+msgstr ""
+"Danh sách địa chỉ email được phân tách bằng dấu phẩy để gửi thông báo gia "
+"hạn chấp thuận vào 15, 3 và 1 ngày trước khi hết hạn"
+
+#. module: account_online_synchronization
+#: model:ir.model,name:account_online_synchronization.model_res_company
+msgid "Companies"
+msgstr "Công ty"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__company_id
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__company_id
+msgid "Company"
+msgstr "Công ty"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.account_online_link_view_form
+msgid "Connect"
+msgstr "Kết nối"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.account_journal_dashboard_inherit_online_sync
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.view_account_bank_selection_form_wizard
+msgid "Connect Bank"
+msgstr "Kết nối ngân hàng"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.portal_renew_consent
+msgid "Connect my Bank"
+msgstr "Kết nối ngân hàng của tôi"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.portal_renew_consent
+msgid "Connect your bank account to Odoo"
+msgstr "Kết nối tài khoản ngân hàng của bạn với Odoo"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields.selection,name:account_online_synchronization.selection__account_online_link__state__connected
+msgid "Connected"
+msgstr "Đã kết nối"
+
+#. module: account_online_synchronization
+#. odoo-javascript
+#: code:addons/account_online_synchronization/static/src/components/connected_until_widget/connected_until_widget.xml:0
+#, python-format
+msgid "Connected until"
+msgstr "Đã kết nối cho đến"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_journal__renewal_contact_email
+msgid "Connection Requests"
+msgstr "Yêu cầu kết nối"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__connection_state_details
+msgid "Connection State Details"
+msgstr "Thông tin trạng thái kết nối"
+
+#. module: account_online_synchronization
+#: model:mail.message.subtype,name:account_online_synchronization.bank_sync_consent_renewal
+msgid "Consent Renewal"
+msgstr "Gia hạn chấp thuận"
+
+#. module: account_online_synchronization
+#: model:ir.model,name:account_online_synchronization.model_res_partner
+msgid "Contact"
+msgstr "Liên hệ"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid "Create a Bank Account"
+msgstr "Tạo một Tài khoản Ngân hàng"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_selection__create_uid
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__create_uid
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_missing_transaction_wizard__create_uid
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__create_uid
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__create_uid
+msgid "Created by"
+msgstr "Được tạo bởi"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_selection__create_date
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__create_date
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_missing_transaction_wizard__create_date
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__create_date
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__create_date
+msgid "Created on"
+msgstr "Được tạo vào"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__currency_id
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__currency_id
+msgid "Currency"
+msgstr "Tiền tệ"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__date
+msgid "Date"
+msgstr "Ngày"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_journal__expiring_synchronization_date
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__expiring_synchronization_date
+msgid "Date when the consent for this connection expires"
+msgstr "Ngày mà chấp thuận kết nối này hết hạn"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_selection__display_name
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__display_name
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_missing_transaction_wizard__display_name
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__display_name
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields.selection,name:account_online_synchronization.selection__account_online_account__fetching_status__done
+msgid "Done"
+msgstr "Hoàn tất"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_bank_statement.py:0
+#: model:ir.model.fields.selection,name:account_online_synchronization.selection__account_online_link__state__error
+#, python-format
+msgid "Error"
+msgstr "Lỗi"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_journal__expiring_synchronization_date
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__expiring_synchronization_date
+msgid "Expiring Synchronization Date"
+msgstr "Ngày đồng bộ hết hạn"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_journal__expiring_synchronization_due_day
+msgid "Expiring Synchronization Due Day"
+msgstr "Ngày đồng bộ hết hạn"
+
+#. module: account_online_synchronization
+#. odoo-javascript
+#: code:addons/account_online_synchronization/static/src/components/connected_until_widget/connected_until_widget.xml:0
+#, python-format
+msgid "Extend Connection"
+msgstr "Gia hạn kết nối"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_account__account_data
+msgid "Extra information needed by third party provider"
+msgstr "Thông tin bổ sung mà nhà cung cấp bên thứ ba cần"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.account_missing_transaction_wizard_view_form
+msgid "Fetch"
+msgstr "Lấy"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.account_missing_transaction_wizard_view_form
+msgid "Fetch Missing Bank Statements Wizard"
+msgstr "Tính năng lấy sao kê ngân hàng bị thiếu"
+
+#. module: account_online_synchronization
+#. odoo-javascript
+#: code:addons/account_online_synchronization/static/src/components/refresh_spin_journal_widget/refresh_spin_journal_widget.xml:0
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.account_online_link_view_form
+#, python-format
+msgid "Fetch Transactions"
+msgstr "Lấy giao dịch"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid "Fetched Transactions"
+msgstr "Giao dịch đã lấy"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_journal__online_sync_fetching_status
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__fetching_status
+msgid "Fetching Status"
+msgstr "Trạng thái lấy"
+
+#. module: account_online_synchronization
+#. odoo-javascript
+#: code:addons/account_online_synchronization/static/src/components/refresh_spin_journal_widget/refresh_spin_journal_widget.xml:0
+#, python-format
+msgid "Fetching..."
+msgstr "Đang lấy dữ liệu..."
+
+#. module: account_online_synchronization
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_journal.py:0
+#: code:addons/account_online_synchronization/static/src/components/bank_reconciliation/fetch_missing_transactions_cog_menu.xml:0
+#: model:ir.actions.server,name:account_online_synchronization.account_journal_action_fetch_missing_transactions
+#, python-format
+msgid "Find Missing Transactions"
+msgstr "Tìm kiếm giao dịch bị thiếu"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__message_follower_ids
+msgid "Followers"
+msgstr "Người theo dõi"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Người theo dõi (Đối tác)"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font biểu tượng, ví dụ: fa-tasks"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__has_message
+msgid "Has Message"
+msgstr "Có tin nhắn"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__has_unlinked_accounts
+msgid "Has Unlinked Accounts"
+msgstr "Có tài khoản ngừng liên kết"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid "Here"
+msgstr "Ở đây"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_selection__id
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__id
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_missing_transaction_wizard__id
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__id
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__activity_exception_icon
+msgid "Icon"
+msgstr "Biểu tượng"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Biểu tượng cho thấy một hoạt động ngoại lệ."
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_account__online_identifier
+msgid "Id used to identify account by third party provider"
+msgstr "ID được nhà cung cấp bên thứ ba sử dụng để nhận diện tài khoản"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Nếu chọn, bạn cần chú ý tới các tin nhắn mới."
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__message_has_error
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Nếu chọn, một số tin nhắn sẽ có lỗi gửi."
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_account__inverse_balance_sign
+msgid "If checked, the balance sign will be inverted"
+msgstr "Nếu chọn, ký hiệu số dư sẽ bị đảo ngược"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_account__inverse_transaction_sign
+msgid "If checked, the transaction sign will be inverted"
+msgstr "Nếu chọn, ký hiệu giao dịch sẽ bị đảo ngược"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__auto_sync
+msgid ""
+"If possible, we will try to automatically fetch new transactions for this "
+"record"
+msgstr ""
+"Nếu có thể, chúng tôi sẽ cố gắng tự động lấy các giao dịch mới cho tập dữ "
+"liệu này"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid ""
+"If you've already opened a ticket for this issue, don't report it again: a "
+"support agent will contact you shortly."
+msgstr ""
+"Nếu bạn đã mở một phiếu hỗ trợ cho vấn đề này, vui lòng không báo cáo lại "
+"nữa: đại diện hỗ trợ sẽ sớm liên hệ với bạn."
+
+#. module: account_online_synchronization
+#. odoo-javascript
+#: code:addons/account_online_synchronization/static/src/components/transient_bank_statement_line_list_view/transient_bank_statement_line_list_view.xml:0
+#, python-format
+msgid "Import Transactions"
+msgstr "Nhập giao dịch"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__provider_data
+msgid "Information needed to interact with third party provider"
+msgstr "Thông tin cần để tương tác với nhà cung cấp bên thứ ba"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_bank_selection__institution_name
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__name
+msgid "Institution Name"
+msgstr "Tên tổ chức"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid "Internal Error"
+msgstr "Lỗi nội bộ"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid "Invalid URL"
+msgstr "URL không hợp lệ"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid "Invalid value for proxy_mode config parameter."
+msgstr "Giá trị không hợp lệ cho tham số cấu hình proxy_mode."
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__inverse_balance_sign
+msgid "Inverse Balance Sign"
+msgstr "Đảo ký hiệu số dư"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__inverse_transaction_sign
+msgid "Inverse Transaction Sign"
+msgstr "Đảo ký hiệu giao dịch"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__message_is_follower
+msgid "Is Follower"
+msgstr "Là người theo dõi"
+
+#. module: account_online_synchronization
+#: model:ir.model,name:account_online_synchronization.model_account_journal
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__journal_id
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_missing_transaction_wizard__journal_id
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__journal_ids
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__journal_ids
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.portal_renew_consent
+msgid "Journal"
+msgstr "Sổ nhật ký"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__last_refresh
+msgid "Last Refresh"
+msgstr "Làm mới lần cuối"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_selection__write_uid
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__write_uid
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_missing_transaction_wizard__write_uid
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__write_uid
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__write_uid
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_selection__write_date
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__write_date
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_missing_transaction_wizard__write_date
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__write_date
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__write_date
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối vào"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.account_online_link_view_form
+msgid "Last refresh"
+msgstr "Lần làm mới cuối cùng"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__last_sync
+msgid "Last synchronization"
+msgstr "Đồng bộ lần cuối"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.portal_renew_consent
+msgid "Latest Balance"
+msgstr "Số dư mới nhất"
+
+#. module: account_online_synchronization
+#: model:ir.model,name:account_online_synchronization.model_account_bank_selection
+msgid "Link a bank account to the selected journal"
+msgstr "Liên kết tài khoản ngân hàng với sổ nhật ký đã chọn"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/wizard/account_journal_missing_transactions.py:0
+#, python-format
+msgid "Manual Bank Statement Lines"
+msgstr "Dòng sao kê ngân hàng thủ công"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid "Message"
+msgstr "Tin nhắn"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__message_has_error
+msgid "Message Delivery error"
+msgstr "Lỗi gửi tin nhắn"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__message_ids
+msgid "Messages"
+msgstr "Tin nhắn"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/wizard/account_journal_missing_transactions.py:0
+#, python-format
+msgid "Missing and Pending Transactions"
+msgstr "Giao dịch đang treo và bị thiếu"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Hạn chót hoạt động của tôi"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_selection__institution_name
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__name
+msgid "Name"
+msgstr "Tên"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Hạn chót cho hoạt động tiếp theo"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__activity_summary
+msgid "Next Activity Summary"
+msgstr "Tóm tắt hoạt động tiếp theo"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__activity_type_id
+msgid "Next Activity Type"
+msgstr "Loại hoạt động tiếp theo"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__next_refresh
+msgid "Next synchronization"
+msgstr "Lần đồng bộ kế tiếp"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields.selection,name:account_online_synchronization.selection__account_online_link__state__disconnected
+msgid "Not Connected"
+msgstr "Không kết nối"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Số lượng hành động"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__message_has_error_counter
+msgid "Number of errors"
+msgstr "Số lượng lỗi"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Số tin nhắn cần xử lý"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Số tin nhắn bị gửi lỗi"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.portal_renew_consent
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line__online_account_id
+msgid "Online Account"
+msgstr "Tài khoản trực tuyến"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.account_online_link_view_form
+msgid "Online Accounts"
+msgstr "Tài khoản online"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_account__online_identifier
+msgid "Online Identifier"
+msgstr "Số nhận dạng trực tuyến"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_journal__next_link_synchronization
+msgid "Online Link Next synchronization"
+msgstr "Liên kết online Đồng bộ hóa tiếp theo"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line__online_partner_information
+#: model:ir.model.fields,field_description:account_online_synchronization.field_res_partner__online_partner_information
+#: model:ir.model.fields,field_description:account_online_synchronization.field_res_users__online_partner_information
+msgid "Online Partner Information"
+msgstr "Thông tin đối tác online"
+
+#. module: account_online_synchronization
+#: model:ir.actions.act_window,name:account_online_synchronization.action_account_online_link_form
+#: model:ir.ui.menu,name:account_online_synchronization.menu_action_online_link_account
+#: model_terms:ir.actions.act_window,help:account_online_synchronization.action_account_online_link_form
+msgid "Online Synchronization"
+msgstr "Đồng bộ trực tuyến"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line__online_transaction_identifier
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__online_transaction_identifier
+msgid "Online Transaction Identifier"
+msgstr "Mã giao dịch online"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_bank_statement.py:0
+#, python-format
+msgid "Opening statement: first synchronization"
+msgstr "Đang mở báo cáo: trước tiên đồng bộ"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__partner_name
+msgid "Partner Name"
+msgstr "Tên đối tác"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__payment_ref
+msgid "Payment Ref"
+msgstr "Mã thanh toán"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields.selection,name:account_online_synchronization.selection__account_bank_statement_line_transient__state__pending
+msgid "Pending"
+msgstr "Đang chờ"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields.selection,name:account_online_synchronization.selection__account_online_account__fetching_status__planned
+msgid "Planned"
+msgstr "Đã lập kế hoạch"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/wizard/account_journal_missing_transactions.py:0
+#, python-format
+msgid "Please enter a valid Starting Date to continue."
+msgstr "Vui lòng nhập Ngày bắt đầu hợp lệ để tiếp tục."
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid "Please reconnect your online account."
+msgstr "Vui lòng kết nối lại tài khoản online của bạn."
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/wizard/account_bank_statement_line.py:0
+#, python-format
+msgid "Please select first the transactions you wish to import."
+msgstr "Trước tiên hãy chọn các giao dịch bạn muốn nhập."
+
+#. module: account_online_synchronization
+#: model:ir.model.fields.selection,name:account_online_synchronization.selection__account_bank_statement_line_transient__state__posted
+msgid "Posted"
+msgstr "Đã vào sổ"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.missing_bank_statement_line_search
+msgid "Posted Transactions"
+msgstr "Giao dịch đã ghi sổ"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields.selection,name:account_online_synchronization.selection__account_online_account__fetching_status__processing
+msgid "Processing"
+msgstr "Đang xử lý"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__provider_data
+msgid "Provider Data"
+msgstr "Dữ liệu của nhà cung cấp"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__provider_type
+msgid "Provider Type"
+msgstr "Loại nhà cung cấp"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.account_online_link_view_form
+msgid "Reconnect"
+msgstr "Kết nối lại"
+
+#. module: account_online_synchronization
+#. odoo-javascript
+#: code:addons/account_online_synchronization/static/src/components/refresh_spin_journal_widget/refresh_spin_journal_widget.xml:0
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.account_journal_dashboard_inherit_online_sync
+#, python-format
+msgid "Reconnect Bank"
+msgstr "Kết nối ngân hàng lại"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid "Redirect"
+msgstr "Chuyển hướng"
+
+#. module: account_online_synchronization
+#. odoo-javascript
+#: code:addons/account_online_synchronization/static/src/components/refresh_spin_journal_widget/refresh_spin_journal_widget.xml:0
+#, python-format
+msgid "Refresh"
+msgstr "Làm mới"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__refresh_token
+msgid "Refresh Token"
+msgstr "Refresh Token"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_journal.py:0
+#, python-format
+msgid "Report Issue"
+msgstr "Báo cáo vấn đề"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid "Report issue"
+msgstr "Báo cáo vấn đề"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__client_id
+msgid "Represent a link for a given user towards a banking institution"
+msgstr ""
+"Cho thấy một liên kết cho một người dùng nhất định tới một tổ chức ngân hàng"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__activity_user_id
+msgid "Responsible User"
+msgstr "Người phụ trách"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Lỗi gửi SMS"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.portal_renew_consent
+msgid ""
+"Security Tip: always check the domain name of this page, before clicking on "
+"the button."
+msgstr ""
+"Mẹo bảo mật: luôn kiểm tra tên miền của trang này trước khi nhấp vào nút."
+
+#. module: account_online_synchronization
+#. odoo-javascript
+#: code:addons/account_online_synchronization/static/src/components/refresh_spin_journal_widget/refresh_spin_journal_widget.xml:0
+#, python-format
+msgid "See error"
+msgstr "Xem lỗi"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.view_account_bank_selection_form_wizard
+#, python-format
+msgid "Select a Bank Account"
+msgstr "Chọn một Tài khoản ngân hàng"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.view_account_bank_selection_form_wizard
+msgid "Select the"
+msgstr "Chọn"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_selection__selected_account
+msgid "Selected Account"
+msgstr "Tài khoản đã chọn"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__sequence
+msgid "Sequence"
+msgstr "Trình tự"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_account__account_number
+msgid "Set if third party provider has the full account number"
+msgstr "Chọn nếu nhà cung cấp bên thứ ba có số tài khoản đầy đủ"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_missing_transaction_wizard__date
+msgid "Starting Date"
+msgstr "Ngày bắt đầu"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__state
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_journal__account_online_link_state
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__state
+msgid "State"
+msgstr "Trạng thái"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Trạng thái dựa trên hoạt động\n"
+"Quá hạn: Hạn chót hạn đã qua\n"
+"Hôm nay: Hôm nay là ngày phải thực hiện\n"
+"Kế hoạch: Cần thực hiện trong tương lai."
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.portal_renew_consent
+msgid "Thank You!"
+msgstr "Cảm ơn bạn!"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid "The consent for the selected account has expired."
+msgstr "Sự chấp thuận cho tài khoản đã chọn đã hết hạn."
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid ""
+"The online synchronization service is not available at the moment. Please "
+"try again later."
+msgstr ""
+"Dịch vụ đồng bộ online có vẻ không khả dụng vào lúc này. Vui lòng thử lại "
+"sau."
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__provider_type
+msgid "Third Party Provider"
+msgstr "Nhà cung cấp bên thứ ba"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid ""
+"This version of Odoo appears to be outdated and does not support the '%s' "
+"sync mode. Installing the latest update might solve this."
+msgstr ""
+"Phiên bản Odoo này có vẻ đã quá cũ và không hỗ trợ chế độ đồng bộ '%s'. Việc"
+" cài đặt bản cập nhật mới nhất có thể giải quyết vấn đề này."
+
+#. module: account_online_synchronization
+#: model_terms:ir.actions.act_window,help:account_online_synchronization.action_account_online_link_form
+msgid ""
+"To create a synchronization with your banking institution,<br>\n"
+"                please click on <b>Add a Bank Account</b>."
+msgstr ""
+"Để tạo đồng bộ với tổ chức ngân hàng của bạn,<br>\n"
+"                vui lòng nhấp vào <b>Thêm một Tài khoản ngân hàng</b>."
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__access_token
+msgid "Token used to access API."
+msgstr "Token được sử dụng để truy cập API."
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__refresh_token
+msgid "Token used to sign API request, Never disclose it"
+msgstr "Token được sử dụng để ký yêu cầu API. Đừng bao giờ tiết lộ token này."
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_bank_statement_line_transient__transaction_details
+msgid "Transaction Details"
+msgstr "Chi tiết giao dịch"
+
+#. module: account_online_synchronization
+#: model:ir.model,name:account_online_synchronization.model_account_bank_statement_line_transient
+msgid "Transient model for bank statement line"
+msgstr "Mô hình tạm thời cho dòng sao kê ngân hàng"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__has_unlinked_accounts
+msgid ""
+"True if that connection still has accounts that are not linked to an Odoo "
+"journal"
+msgstr ""
+"Đúng nếu kết nối đó vẫn có các tài khoản không được liên kết với một sổ nhật"
+" ký Odoo"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Loại hoạt động ngoại lệ trong tập dữ liệu."
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.account_online_link_view_form
+msgid "Update Credentials"
+msgstr "Cập nhật thông tin xác thực"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields.selection,name:account_online_synchronization.selection__account_online_account__fetching_status__waiting
+msgid "Waiting"
+msgstr "Đang chờ"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,field_description:account_online_synchronization.field_account_online_link__website_message_ids
+msgid "Website Messages"
+msgstr "Thông báo trên trang web"
+
+#. module: account_online_synchronization
+#: model:ir.model.fields,help:account_online_synchronization.field_account_online_link__website_message_ids
+msgid "Website communication history"
+msgstr "Lịch sử trao đổi qua trang web"
+
+#. module: account_online_synchronization
+#: model:ir.model,name:account_online_synchronization.model_account_missing_transaction_wizard
+msgid "Wizard for missing transactions"
+msgstr "Tính năng dùng cho giao dịch bị thiếu"
+
+#. module: account_online_synchronization
+#. odoo-javascript
+#: code:addons/account_online_synchronization/static/src/components/transient_bank_statement_line_list_view/transient_bank_statement_line_list_view.xml:0
+#, python-format
+msgid ""
+"You are importing transactions before the creation of your online synchronization\n"
+"                    ("
+msgstr ""
+"Bạn đang nhập giao dịch trước khi tạo đồng bộ hóa online\n"
+"                    ("
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid "You can contact Odoo support"
+msgstr "Bạn có thể liên hệ Bộ phận hỗ trợ của Odoo"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_journal.py:0
+#, python-format
+msgid "You can only execute this action for bank-synchronized journals."
+msgstr ""
+"Bạn chỉ có thể thực hiện hành động này đối với các sổ nhật ký được đồng bộ "
+"hóa với ngân hàng."
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_journal.py:0
+#: code:addons/account_online_synchronization/wizard/account_journal_missing_transactions.py:0
+#, python-format
+msgid ""
+"You can't find missing transactions for a journal that isn't connected."
+msgstr ""
+"Bạn không thể tìm thấy các giao dịch bị thiếu cho một sổ nhật ký không được "
+"kết nối."
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/models/account_journal.py:0
+#: code:addons/account_online_synchronization/models/account_online.py:0
+#, python-format
+msgid "You cannot have two journals associated with the same Online Account."
+msgstr ""
+"Bạn không thể có hai sổ nhật ký được liên kết với cùng một Tài khoản online."
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/wizard/account_bank_statement_line.py:0
+#, python-format
+msgid "You cannot import pending transactions."
+msgstr "Bạn không thể nhập các giao dịch đang treo."
+
+#. module: account_online_synchronization
+#. odoo-javascript
+#: code:addons/account_online_synchronization/static/src/components/transient_bank_statement_line_list_view/transient_bank_statement_line_list_view.xml:0
+#, python-format
+msgid "You have"
+msgstr "Bạn có"
+
+#. module: account_online_synchronization
+#. odoo-python
+#: code:addons/account_online_synchronization/wizard/account_journal_missing_transactions.py:0
+#, python-format
+msgid "You have to select one journal to continue."
+msgstr "Bạn phải chọn một sổ nhật ký để tiếp tục."
+
+#. module: account_online_synchronization
+#: model:mail.template,subject:account_online_synchronization.email_template_sync_reminder
+msgid "Your bank connection is expiring soon"
+msgstr "Kết nối ngân hàng của bạn sẽ sớm hết hạn"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.view_account_bank_selection_form_wizard
+msgid "account to connect:"
+msgstr "tài khoản để kết nối:"
+
+#. module: account_online_synchronization
+#. odoo-javascript
+#: code:addons/account_online_synchronization/static/src/components/transient_bank_statement_line_list_view/transient_bank_statement_line_list_view.xml:0
+#, python-format
+msgid "entries"
+msgstr "bút toán"
+
+#. module: account_online_synchronization
+#: model_terms:ir.ui.view,arch_db:account_online_synchronization.portal_renew_consent
+msgid "on"
+msgstr "trên"
+
+#. module: account_online_synchronization
+#: model:ir.model,name:account_online_synchronization.model_account_online_account
+msgid "representation of an online bank account"
+msgstr "đại diện của một tài khoản ngân hàng online"
+
+#. module: account_online_synchronization
+#. odoo-javascript
+#: code:addons/account_online_synchronization/static/src/components/refresh_spin_journal_widget/refresh_spin_journal_widget.xml:0
+#, python-format
+msgid "transactions fetched"
+msgstr "giao dịch đã được lấy"
+
+#. module: account_online_synchronization
+#. odoo-javascript
+#: code:addons/account_online_synchronization/static/src/components/transient_bank_statement_line_list_view/transient_bank_statement_line_list_view.xml:0
+#, python-format
+msgid ""
+"within this period that were not created using the online synchronization. "
+"This might cause duplicate entries."
+msgstr ""
+"trong khoảng thời gian này không được tạo bằng cách sử dụng đồng bộ hóa "
+"online. Điều này có thể gây ra các bút toán trùng lặp."

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="appointment_onboarding_link_view_form" model="ir.ui.view">
+        <field name="name">appointment.onboarding.link.view.form</field>
+        <field name="model">appointment.onboarding.link</field>
+        <field name="arch" type="xml">
+            <form string='Get Your Link' create="false" class="py-3">
+                <p class="mb-1">Share this link to let people book meetings with you, your team or a resource.</p>
+                <field name="appointment_type_id" invisible="1"/>
+                <div>
+                    <field name="base_book_url" class="me-1 oe_inline text-black" readonly="1" nolabel="1"/>
+                    <field name="short_code" class="w-25 oe_inline o_input" required="1" nolabel="1"/>
+                </div>
+                <footer>
+                    <widget name="appointment_onboarding_invite_buttons" class="d-flex gap-1 w-100 w-md-auto"/>
+                    <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

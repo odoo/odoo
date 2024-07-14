@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="view_account_asset_fleet_form" model="ir.ui.view">
+        <field name="name">account.asset.fleet.form</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/div[@name='button_box']" position="inside">
+                <field name='vehicle_id' invisible="1"/>
+                <button class="oe_stat_button" string="Vehicle" name="action_open_vehicle" type="object" icon="fa-car" invisible="not vehicle_id"/>
+            </xpath>
+            <xpath expr="//sheet/notebook/page[@name='related_items']//field[@name='account_id']" position="after">
+                <field name='vehicle_id' optional='hidden'/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

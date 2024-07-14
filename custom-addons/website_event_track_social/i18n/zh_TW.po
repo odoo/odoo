@@ -1,0 +1,119 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_event_track_social
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:22+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_event_track_social
+#: model_terms:ir.ui.view,arch_db:website_event_track_social.event_track_view_form
+msgid "<span invisible=\"not push_reminder\">minutes before start</span>"
+msgstr "<span invisible=\"not push_reminder\">分鐘（開始前）</span>"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,help:website_event_track_social.field_event_track__push_reminder
+msgid ""
+"Check this if you want to send a push notification reminder to everyone that"
+" has favorited this track."
+msgstr "若要向加入此音軌至最愛的每個人發送推送通知提醒，請剔選此項。"
+
+#. module: website_event_track_social
+#: model_terms:ir.ui.view,arch_db:website_event_track_social.event_track_view_form
+msgid "Edit Push Reminder"
+msgstr "編輯推送提醒"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_event_track__firebase_enable_push_notifications
+msgid "Enable Web Push Notifications"
+msgstr "啟用網絡推送通知"
+
+#. module: website_event_track_social
+#: model:ir.model,name:website_event_track_social.model_event_track
+msgid "Event Track"
+msgstr "活動音軌"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,help:website_event_track_social.field_event_track__push_reminder_delay
+msgid ""
+"How many minutes before the start of the talk do you want to send the "
+"reminder?"
+msgstr "你想在演講開始前多少分鐘發送提醒？"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_social_post__event_track_id
+msgid "Linked Event Track"
+msgstr "已連結活動音軌"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_website_visitor__event_track_push_enabled_ids
+msgid "Push Enabled Tracks"
+msgstr "已啟用推送的音軌"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_event_track__push_reminder
+#: model_terms:ir.ui.view,arch_db:website_event_track_social.event_track_view_form
+msgid "Push Reminder"
+msgstr "推送提醒"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_event_track__push_reminder_delay
+msgid "Push Reminder Delay"
+msgstr "推送提醒延遲"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_event_track__push_reminder_posts
+msgid "Push Reminders"
+msgstr "推送提醒"
+
+#. module: website_event_track_social
+#: model:ir.model,name:website_event_track_social.model_social_post
+msgid "Social Post"
+msgstr "社交帖文"
+
+#. module: website_event_track_social
+#. odoo-python
+#: code:addons/website_event_track_social/models/event_track.py:0
+#, python-format
+msgid "There are no push reminders associated with this track"
+msgstr "此音軌未有相關的推送提醒"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,help:website_event_track_social.field_website_visitor__event_track_push_enabled_ids
+msgid ""
+"Tracks that are 'default favorited' can be blacklisted and the visitor is "
+"removed from push reminders."
+msgstr "「預設加至最愛」的音軌可被列入黑名單，訪客不會收到推送提醒。"
+
+#. module: website_event_track_social
+#: model:ir.model,name:website_event_track_social.model_website_visitor
+msgid "Website Visitor"
+msgstr "網站訪客"
+
+#. module: website_event_track_social
+#. odoo-python
+#: code:addons/website_event_track_social/models/event_track.py:0
+#, python-format
+msgid "Your favorite track '%s' will start in %s minutes!"
+msgstr "你加至最愛的音軌「%s」將於 %s 分鐘後開始！"
+
+#. module: website_event_track_social
+#. odoo-python
+#: code:addons/website_event_track_social/models/event_track.py:0
+#, python-format
+msgid "Your track is about to start!"
+msgstr "你的音軌即將開始！"

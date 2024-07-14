@@ -1,0 +1,1134 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* voip
+# 
+# Translators:
+# JH CHOI <hwangtog@gmail.com>, 2023
+# Sarah Park, 2023
+# Wil Odoo, 2023
+# Daye Jeong, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Daye Jeong, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/call_model.js:0
+#, python-format
+msgid "%(minutes)s min %(seconds)s sec"
+msgstr "%(minutes)s분 %(seconds)s초"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/call_model.js:0
+#, python-format
+msgid "%(minutes)s minutes"
+msgstr "%(minutes)s 분"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/softphone.js:0
+#, python-format
+msgid "%(number)s missed calls"
+msgstr "부재중 전화 %(number)s통"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/call_model.js:0
+#, python-format
+msgid "%(seconds)s seconds"
+msgstr "%(seconds)s초"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/call_model.js:0
+#, python-format
+msgid "1 minute"
+msgstr "1 분"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/softphone.js:0
+#, python-format
+msgid "1 missed call"
+msgstr "부재중 전화 1"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/call_model.js:0
+#, python-format
+msgid "1 second"
+msgstr "1 초"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/call_model.js:0
+#, python-format
+msgid "2 minutes"
+msgstr "2 분"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/softphone.js:0
+#, python-format
+msgid "2 missed calls"
+msgstr "부재중 전화 2"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/call_model.js:0
+#, python-format
+msgid "2 seconds"
+msgstr "2 초"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid ""
+"A hardware error has occurred while trying to access the audio recording "
+"device. Please ensure that your drivers are up to date and try again."
+msgstr "오디오 녹음 장치에 액세스하는 동안 하드웨어 오류가 발생했습니다. 드라이버가 최신 버전인지 확인한 후 다시 시도하세요."
+
+#. module: voip
+#: model:ir.model,name:voip.model_voip_call
+msgid "A phone call handled using the VoIP application"
+msgstr "VoIP 애플리케이션을 사용한 전화 통화"
+
+#. module: voip
+#: model:ir.model.fields.selection,name:voip.selection__voip_call__state__aborted
+msgid "Aborted"
+msgstr "중단됨"
+
+#. module: voip
+#. odoo-python
+#: code:addons/voip/models/voip_call.py:0
+#, python-format
+msgid "Aborted call to %(phone_number)s"
+msgstr "%(phone_number)s로의 통화 중단됨"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/correspondence_details.xml:0
+#: model:ir.model,name:voip.model_mail_activity
+#, python-format
+msgid "Activity"
+msgstr "활동"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_voip_call__activity_name
+msgid "Activity Name"
+msgstr "활동명"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/web/call_queue_switch.js:0
+#, python-format
+msgid "Add to Call Queue"
+msgstr "통화 대기열에 추가"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid ""
+"An error occured involving the audio recording device (%(errorName)s):\n"
+"%(errorMessage)s"
+msgstr ""
+"오디오 녹음 장치와 관련된 오류가 발생했습니다 (%(errorName)s):\n"
+"%(errorMessage)s"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid ""
+"An error occurred during the instantiation of the User Agent:\n"
+"\n"
+"%(error)s"
+msgstr ""
+"사용자 에이전트를 인스턴스화하는 중에 오류가 발생했습니다.:\n"
+"\n"
+"%(error)s"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid ""
+"An error occurred trying to invite the following number: %(phoneNumber)s\n"
+"\n"
+"Error: %(error)s"
+msgstr ""
+"다음 전화번호의 사용자를 초대하는 동안 오류가 발생했습니다: %(phoneNumber)s\n"
+"\n"
+"오류: %(error)s"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/activities_tab.js:0
+#, python-format
+msgid ""
+"Are you sure you want to delete this activity? It will be lost forever, "
+"which is quite a long time 😔"
+msgstr "이 활동을 삭제하시겠습니까? 삭제 후에는 복구할 수 없습니다.😔"
+
+#. module: voip
+#: model:ir.model.fields.selection,name:voip.selection__res_users__how_to_call_on_mobile__ask
+#: model:ir.model.fields.selection,name:voip.selection__res_users_settings__how_to_call_on_mobile__ask
+msgid "Ask"
+msgstr "물어보기"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/numpad.xml:0
+#, python-format
+msgid "Backspace"
+msgstr "백스페이스"
+
+#. module: voip
+#. odoo-javascript
+#. odoo-python
+#: code:addons/voip/models/voip_queue_mixin.py:0
+#: code:addons/voip/static/src/softphone/correspondence_details.xml:0
+#: code:addons/voip/static/src/softphone/softphone.js:0
+#, python-format
+msgid "Call"
+msgstr "전화"
+
+#. module: voip
+#. odoo-python
+#: code:addons/voip/models/voip_call.py:0
+#, python-format
+msgid "Call from %(correspondent)s"
+msgstr "%(correspondent)s으로부터의 전화"
+
+#. module: voip
+#. odoo-python
+#: code:addons/voip/models/voip_call.py:0
+#, python-format
+msgid "Call from %(phone_number)s"
+msgstr "%(phone_number)s으로부터의 전화"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_res_users_settings__should_call_from_another_device
+msgid "Call from another device"
+msgstr "다른 기기에서 통화"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid "Call rejected (reason: “%(reasonPhrase)s”)"
+msgstr "수신 거부됨 (사유: “%(reasonPhrase)s”)"
+
+#. module: voip
+#. odoo-python
+#: code:addons/voip/models/voip_call.py:0
+#, python-format
+msgid "Call to %(correspondent)s"
+msgstr "%(correspondent)s으로 전화"
+
+#. module: voip
+#. odoo-python
+#: code:addons/voip/models/voip_call.py:0
+#, python-format
+msgid "Call to %(phone_number)s"
+msgstr "%(phone_number)s으로 전화"
+
+#. module: voip
+#: model:ir.model.fields.selection,name:voip.selection__voip_call__state__calling
+msgid "Calling"
+msgstr "전화 중"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid "Calling %(phone number)s"
+msgstr "%(phone number)s로 전화"
+
+#. module: voip
+#: model:ir.actions.act_window,name:voip.voip_call_view
+#: model_terms:ir.ui.view,arch_db:voip.voip_call_tree_view
+msgid "Calls"
+msgstr "전화"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/mobile/devise_selection_dialog.xml:0
+#: code:addons/voip/static/src/softphone/correspondence_details.xml:0
+#, python-format
+msgid "Cancel"
+msgstr "취소"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/activities_tab.xml:0
+#, python-format
+msgid "Cancel the activity"
+msgstr "활동 취소"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid ""
+"Cannot access audio recording device. If you have denied access to your "
+"microphone, please allow it and try again. Otherwise, make sure that this "
+"website is running over HTTPS and that your browser is not set to deny "
+"access to media devices."
+msgstr ""
+"오디오 녹음 장치에 액세스할 수 없습니다. 마이크에 대한 권한 설정이 거부된 경우 마이크 권한을 허용하고 다시 시도해 주세요. 그렇지 "
+"않은 경우 이 웹사이트가 HTTPS를 통해 실행되고, 브라우저에서 미디어 디바이스에 대한 액세스를 거부하도록 설정되어 있지 않은지 확인해"
+" 주세요."
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/correspondence_details.xml:0
+#, python-format
+msgid "Change input device"
+msgstr "입력 장치 변경하기"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/mobile/devise_selection_dialog.xml:0
+#, python-format
+msgid "Choose a device:"
+msgstr "디바이스 선택:"
+
+#. module: voip
+#: model:ir.model.fields,help:voip.field_res_users_settings__how_to_call_on_mobile
+msgid ""
+"Choose the method to be used to place a call when using the mobile application:\n"
+"            • VoIP: Always use the Odoo softphone\n"
+"            • Device's phone: Always use the device's phone\n"
+"            • Ask: Always ask whether the softphone or the device's phone must be used\n"
+"        "
+msgstr ""
+"모바일 앱에서 전화를 걸 때 사용하는 방법을 선택합니다:\n"
+"            • VoIP: 항상 Odoo 소프트폰을 사용\n"
+"            • 전화: 항상 기기의 기본 전화 기능 사용\n"
+"            • 물어보기: 소프트폰 또는 기본 전화 중 어떤 방법을 사용할 지 항상 확인\n"
+"        "
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/softphone.xml:0
+#, python-format
+msgid "Close"
+msgstr "닫기"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/softphone.js:0
+#, python-format
+msgid "Close Numpad"
+msgstr "숫자패드 닫기"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/web/voip_systray_item.js:0
+#, python-format
+msgid "Close Softphone"
+msgstr "소프트폰 닫기"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/correspondence_details.xml:0
+#, python-format
+msgid "Close details"
+msgstr "세부사항 닫기"
+
+#. module: voip
+#: model:ir.model,name:voip.model_res_config_settings
+msgid "Config Settings"
+msgstr "환경 설정"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/mobile/call_method_selection_dialog.xml:0
+#: code:addons/voip/static/src/mobile/devise_selection_dialog.xml:0
+#, python-format
+msgid "Confirm"
+msgstr "승인"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid "Connecting…"
+msgstr "연결 중 ..."
+
+#. module: voip
+#: model:ir.model,name:voip.model_res_partner
+#: model:ir.model.fields,field_description:voip.field_voip_call__partner_id
+msgid "Contact"
+msgstr "연락처"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/softphone.js:0
+#, python-format
+msgid "Contacts"
+msgstr "연락처"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/contacts_tab.xml:0
+#, python-format
+msgid "Contacts with a phone number will be shown here."
+msgstr "전화번호가 포함된 연락처가 여기에 표시됩니다."
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_voip_call__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_voip_call__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/correspondence_details.xml:0
+#, python-format
+msgid "Customer"
+msgstr "고객"
+
+#. module: voip
+#: model:ir.model.fields.selection,name:voip.selection__res_config_settings__mode__demo
+msgid "Demo"
+msgstr "데모"
+
+#. module: voip
+#: model:ir.model.fields.selection,name:voip.selection__res_users__how_to_call_on_mobile__phone
+#: model:ir.model.fields.selection,name:voip.selection__res_users_settings__how_to_call_on_mobile__phone
+msgid "Device's phone"
+msgstr "기본 전화"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_voip_call__direction
+msgid "Direction"
+msgstr "방향"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_voip_call__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/correspondence_details.xml:0
+#, python-format
+msgid "Documents"
+msgstr "문서"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/correspondence_details.xml:0
+#, python-format
+msgid "Edit"
+msgstr "편집"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/softphone.js:0
+#, python-format
+msgid "End Call"
+msgstr "통화 종료"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_voip_call__end_date
+msgid "End Date"
+msgstr "종료일"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/transfer_popover.xml:0
+#, python-format
+msgid "Enter number or name"
+msgstr "번호 또는 이름을 입력하세요"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/numpad.xml:0
+#, python-format
+msgid "Enter the number…"
+msgstr "번호를 입력하세요..."
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_res_users__external_device_number
+msgid "External Device Number"
+msgstr "외부 장치 번호"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_res_users_settings__external_device_number
+msgid "External device number"
+msgstr "외부 전화번호"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid ""
+"Failed to load the SIP.js library:\n"
+"\n"
+"%(error)s"
+msgstr ""
+"SIP.js 라이브러리를 불러오지 못했습니다:\n"
+"\n"
+"%(error)s"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/softphone.xml:0
+#, python-format
+msgid "Hang up but keep call in queue"
+msgstr "전화를 끊고 통화를 계속 유지"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/activities_tab.js:0
+#, python-format
+msgid "Hold on!"
+msgstr "잠시만요!"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_res_users__how_to_call_on_mobile
+msgid "How To Call On Mobile"
+msgstr "모바일로 전화하는 방법"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_res_users_settings__how_to_call_on_mobile
+msgid "How to place calls on mobile"
+msgstr "모바일에서 전화를 거는 방법"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_voip_call__id
+msgid "ID"
+msgstr "ID"
+
+#. module: voip
+#: model:ir.model.fields,help:voip.field_res_users_settings__should_auto_reject_incoming_calls
+msgid "If enabled, incoming calls will be automatically declined in Odoo."
+msgstr "활성화하면 Odoo에서 수신 전화를 자동으로 거절합니다."
+
+#. module: voip
+#: model:ir.model.fields,help:voip.field_res_users_settings__should_call_from_another_device
+msgid ""
+"If enabled, placing a call in Odoo will transfer the call to the \"External "
+"device number\". Use this option to place the call in Odoo but handle it "
+"from another device - e.g. your desk phone."
+msgstr ""
+"활성화 시 Odoo에서 전화를 걸 때 통화가 '외부 전화번호'로 전송됩니다. 이 옵션을 사용하면 Odoo에서 전화를 걸어도 다른 기기 "
+"(예: 사무실 전화)로 연결됩니다."
+
+#. module: voip
+#: model:ir.model.fields,help:voip.field_res_users_settings__external_device_number
+msgid ""
+"If the \"Call from another device\" option is enabled, calls placed in Odoo "
+"will be transfered to this phone number."
+msgstr "\"다른 장치에서 전화\" 옵션을 활성화하면 Odoo로 걸려온 전화가 이 전화 번호로 전송됩니다."
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/correspondence_details.js:0
+#, python-format
+msgid "In call for: %(minutes)s:%(seconds)s"
+msgstr "전화 중: %(minutes)s:%(seconds)s"
+
+#. module: voip
+#: model:ir.model.fields.selection,name:voip.selection__voip_call__direction__incoming
+msgid "Incoming"
+msgstr "수신"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/call_invitation.xml:0
+#, python-format
+msgid "Incoming call from…"
+msgstr "수신 전화..."
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/mobile/device_selection_dialog.js:0
+#, python-format
+msgid "Input device selection"
+msgstr "입력 장치 선택"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_res_partner__has_call_in_queue
+#: model:ir.model.fields,field_description:voip.field_res_users__has_call_in_queue
+#: model:ir.model.fields,field_description:voip.field_voip_queue_mixin__has_call_in_queue
+msgid "Is in the Call Queue"
+msgstr "통화 대기열에 넣을 지 여부"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_res_users__last_seen_phone_call
+msgid "Last Seen Phone Call"
+msgstr "마지막으로 확인한 전화"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_voip_call__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_voip_call__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/correspondence_details.xml:0
+#, python-format
+msgid "Mark as done"
+msgstr "완료"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/activities_tab.js:0
+#, python-format
+msgid "Missclicked, sorry."
+msgstr "잘못 눌렀습니다, 죄송합니다."
+
+#. module: voip
+#: model:ir.model.fields.selection,name:voip.selection__voip_call__state__missed
+msgid "Missed"
+msgstr "놓침"
+
+#. module: voip
+#. odoo-python
+#: code:addons/voip/models/voip_call.py:0
+#, python-format
+msgid "Missed call from %(phone_number)s"
+msgstr "%(phone_number)s의 부재중 전화"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_mail_activity__mobile
+msgid "Mobile"
+msgstr "휴대폰 번호"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/activity/activity_patch.xml:0
+#, python-format
+msgid "Mobile:"
+msgstr "휴대전화 :"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/correspondence_details.js:0
+#, python-format
+msgid "Mute"
+msgstr "소리 끄기"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/softphone.js:0
+#, python-format
+msgid "Next Activities"
+msgstr "다음 활동"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid ""
+"No audio recording device available. The application requires a microphone "
+"in order to be used."
+msgstr "오디오 녹음 장치를 사용할 수 없습니다. 앱을 사용하려면 마이크가 필요합니다."
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/activities_tab.xml:0
+#, python-format
+msgid "No calls scheduled for today 😎"
+msgstr "오늘 예정된 통화가 없습니다. 😎"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/activities_tab.xml:0
+#: code:addons/voip/static/src/softphone/contacts_tab.xml:0
+#: code:addons/voip/static/src/softphone/recent_tab.xml:0
+#, python-format
+msgid "No search results 💔"
+msgstr "검색 결과가 없습니다. 💔"
+
+#. module: voip
+#: model:ir.model.fields.selection,name:voip.selection__voip_call__state__ongoing
+msgid "Ongoing"
+msgstr "진행중"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/softphone.js:0
+#, python-format
+msgid "Open Numpad"
+msgstr "넘버패드 열기"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/web/voip_systray_item.js:0
+#, python-format
+msgid "Open Softphone"
+msgstr "소프트폰 열기"
+
+#. module: voip
+#: model:ir.model.fields.selection,name:voip.selection__voip_call__direction__outgoing
+msgid "Outgoing"
+msgstr "출고"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_res_config_settings__pbx_ip
+msgid "PBX Server IP"
+msgstr "PBS 서버 IP"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid "PBX or Websocket address is missing. Please check your settings."
+msgstr "PBX 또는 웹 소켓 주소가 없습니다. 설정을 확인하십시오."
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_mail_activity__phone
+msgid "Phone"
+msgstr "전화번호"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_voip_call__phone_number
+msgid "Phone Number"
+msgstr "전화번호"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/activity/activity_patch.xml:0
+#, python-format
+msgid "Phone:"
+msgstr "전화 :"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid "Please accept the use of the microphone."
+msgstr "마이크 사용을 수락하십시오."
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/registerer.js:0
+#, python-format
+msgid ""
+"Please try again later. If the problem persists, you may want to ask an "
+"administrator to check the configuration."
+msgstr "나중에 다시 시도해 주세요. 문제가 지속되면 관리자에게 설정 사항을 확인해 달라고 요청할 수 있습니다."
+
+#. module: voip
+#: model:ir.model.fields.selection,name:voip.selection__res_config_settings__mode__prod
+msgid "Production"
+msgstr "생산"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/softphone.js:0
+#, python-format
+msgid "Recent"
+msgstr "최근"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/registerer.js:0
+#, python-format
+msgid "Registration rejected: %(statusCode)s %(reasonPhrase)s."
+msgstr "등록 거부됨: %(statusCode)s %(reasonPhrase)s."
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_res_users_settings__should_auto_reject_incoming_calls
+msgid "Reject incoming calls"
+msgstr "수신 전화 거부"
+
+#. module: voip
+#: model:ir.model.fields.selection,name:voip.selection__voip_call__state__rejected
+msgid "Rejected"
+msgstr "거부됨"
+
+#. module: voip
+#. odoo-python
+#: code:addons/voip/models/voip_call.py:0
+#, python-format
+msgid "Rejected call from %(phone_number)s"
+msgstr "%(phone_number)s의 전화가 거부됨"
+
+#. module: voip
+#. odoo-python
+#: code:addons/voip/models/voip_call.py:0
+#, python-format
+msgid "Rejected call to %(phone_number)s"
+msgstr "%(phone_number)s의 통화가 거부됨"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/mobile/call_method_selection_dialog.xml:0
+#, python-format
+msgid "Remember?"
+msgstr "기억할까요?"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/web/call_queue_switch.js:0
+#, python-format
+msgid "Remove from Call Queue"
+msgstr "통화 대기열에서 제거"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_voip_call__user_id
+msgid "Responsible"
+msgstr "담당자"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/correspondence_details.js:0
+#, python-format
+msgid "Ringing…"
+msgstr "전화 거는 중..."
+
+#. module: voip
+#: model_terms:ir.ui.view,arch_db:voip.res_config_settings_view_form
+msgid "Schedule & make calls from your database"
+msgstr "데이터베이스에서 일정 예약 및 전화 걸기"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/correspondence_details.xml:0
+#, python-format
+msgid "Schedule Activity"
+msgstr "활동 계획표"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/softphone.xml:0
+#, python-format
+msgid "Search"
+msgstr "검색"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/mobile/call_method_selection_dialog.js:0
+#, python-format
+msgid "Select a call method"
+msgstr "통화 수단 선택"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/correspondence_details.xml:0
+#, python-format
+msgid "Send e-mail"
+msgstr "이메일 전송"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_res_users__should_auto_reject_incoming_calls
+msgid "Should Auto Reject Incoming Calls"
+msgstr "수신 전화 자동 거부"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_res_users__should_call_from_another_device
+msgid "Should Call From Another Device"
+msgstr "다른 디바이스에서 통화해야 하는 경우"
+
+#. module: voip
+#. odoo-python
+#: code:addons/voip/models/voip_queue_mixin.py:0
+#, python-format
+msgid ""
+"Some documents cannot be added to the call queue as they do not have a phone"
+" number set: %(record_names)s"
+msgstr "일부 문서에는 전화 번호가 설정되어 있지 않아 통화 대기열에 추가할 수 없습니다: %(record_names)s"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_voip_call__start_date
+msgid "Start Date"
+msgstr "시작일"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_voip_call__state
+msgid "State"
+msgstr "시/도"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/mobile/call_method_selection_dialog.xml:0
+#, python-format
+msgid "Tell us how to make the call:"
+msgstr "전화거는 방법을 알려주세요:"
+
+#. module: voip
+#: model:ir.model.fields.selection,name:voip.selection__voip_call__state__terminated
+msgid "Terminated"
+msgstr "종료됨"
+
+#. module: voip
+#: model:ir.model.fields,help:voip.field_res_config_settings__pbx_ip
+msgid "The IP address of your PBX Server"
+msgstr "PBX 서버의 IP 주소"
+
+#. module: voip
+#: model:ir.model.fields,help:voip.field_res_config_settings__wsServer
+msgid "The URL of your WebSocket"
+msgstr "웹소켓 URL"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid "The WebSocket connection was lost and couldn't be reestablished."
+msgstr "WebSocket 연결이 끊어져 다시 설정할 수 없습니다."
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/registerer.js:0
+#, python-format
+msgid ""
+"The error may come from the transport layer. Please have an administrator "
+"verify the websocket server URL in the General Settings. If the problem "
+"persists, this is probably an issue with the server."
+msgstr ""
+"전송 계층에서 오류가 발생했을 수 있습니다. 관리자에게 일반 설정에서 웹소켓 서버 URL을 확인하도록 요청하세요. 문제가 지속되면 서버에"
+" 문제가 있는 것일 수 있습니다."
+
+#. module: voip
+#: model:ir.model.fields,help:voip.field_voip_call__activity_name
+msgid "The name of the activity related to this phone call, if any."
+msgstr "이 전화 통화와 관련된 활동의 이름이 있는 경우,  이를 입력합니다."
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid ""
+"The number is incorrect, the user credentials could be wrong or the connection cannot be made. Please check your configuration.\n"
+"(Reason received: %(reasonPhrase)s)"
+msgstr ""
+"번호 또는 사용자 자격 증명이 잘못되었거나 연결할 수 없습니다 .설정을 다시 확인해 주세요.\n"
+"(사유: %(reasonPhrase)s)"
+
+#. module: voip
+#: model:ir.model.fields,help:voip.field_res_users_settings__voip_secret
+msgid "The password that will be used to register with the PBX server."
+msgstr "PBX 서버에 등록하는 데 사용되는 비밀번호입니다."
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid "The person you try to contact is currently unavailable."
+msgstr "수신자가 현재 전화를 받으실 수 없습니다."
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/registerer.js:0
+#, python-format
+msgid ""
+"The server failed to authenticate you. Please have an administrator verify "
+"that you are reaching the right server (PBX server IP in the General "
+"Settings) and that the credentials in your user preferences are correct."
+msgstr ""
+"서버가 사용자를 인증하지 못했습니다. 관리자에게 올바른 서버(일반 설정의 PBX 서버 IP)에 연결되었는지, 사용자 자격 증명이 올바르게"
+" 설정되었는지 확인하도록 요청하세요."
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid ""
+"The user agent could not be started. The websocket server URL may be "
+"incorrect. Please have an administrator check the websocket server URL in "
+"the General Settings."
+msgstr ""
+"사용자 에이전트를 시작하지 못했습니다. 웹소켓 서버의 URL이 잘못되었을 수 있습니다. 관리자 계정으로 일반 설정에서 웹소켓 서버 "
+"URL을 확인하세요."
+
+#. module: voip
+#: model:ir.model.fields,help:voip.field_res_users_settings__voip_username
+msgid ""
+"The username (typically the extension number) that will be used to register "
+"with the PBX server."
+msgstr "PBX 서버에 등록하는 데 사용되는 사용자 이름 (일반적으로 내선 번호)입니다."
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid ""
+"The websocket connection to the server has been lost. Attempting to "
+"reestablish the connection…"
+msgstr "서버에 대한 웹소켓 연결이 끊어졌습니다. 연결을 다시 설정하려고 시도 중입니다..."
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/voip_service.js:0
+#, python-format
+msgid ""
+"There is still a call in progress, are you sure you want to leave the page?"
+msgstr "아직 통화가 진행 중입니다. 페이지에서 나가시겠습니까?"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/correspondence_details.xml:0
+#: code:addons/voip/static/src/softphone/transfer_popover.xml:0
+#, python-format
+msgid "Transfer"
+msgstr "전송"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/transfer_popover.xml:0
+#, python-format
+msgid "Transfer to"
+msgstr "다음으로 이동"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/web/voip_systray_item.js:0
+#, python-format
+msgid "Unfold Softphone"
+msgstr "소프트폰 펼치기"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/correspondence_details.js:0
+#, python-format
+msgid "Unmute"
+msgstr "소리 켜기"
+
+#. module: voip
+#: model:ir.model,name:voip.model_res_users
+msgid "User"
+msgstr "사용자"
+
+#. module: voip
+#: model:ir.model,name:voip.model_res_users_settings
+msgid "User Settings"
+msgstr "사용자 설정"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/mobile/call_method_selection_dialog.xml:0
+#, python-format
+msgid "Using VoIP"
+msgstr "VoIP 사용"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/mobile/call_method_selection_dialog.xml:0
+#, python-format
+msgid "Using device's phone"
+msgstr "장치의 휴대폰 사용"
+
+#. module: voip
+#: model:ir.model,name:voip.model_voip_queue_mixin
+msgid "VOIP Queue support"
+msgstr "VOIP 대기열 지원"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/softphone.js:0
+#: model:ir.model.fields.selection,name:voip.selection__res_users__how_to_call_on_mobile__voip
+#: model:ir.model.fields.selection,name:voip.selection__res_users_settings__how_to_call_on_mobile__voip
+#: model_terms:ir.ui.view,arch_db:voip.res_user_form
+#: model_terms:ir.ui.view,arch_db:voip.res_users_view_form_preferences
+#, python-format
+msgid "VoIP"
+msgstr "VoIP"
+
+#. module: voip
+#: model_terms:ir.ui.view,arch_db:voip.voip_res_users_settings_view_form
+msgid "VoIP Configuration"
+msgstr "VoIP 설정"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_res_config_settings__mode
+msgid "VoIP Environment"
+msgstr "VoIP 환경"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_res_users_settings__voip_secret
+msgid "VoIP secret"
+msgstr "VoIP 암호"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_res_users_settings__voip_username
+msgid "VoIP username / Extension number"
+msgstr "VoIP 사용자 이름 / 내선 번호"
+
+#. module: voip
+#: model:ir.ui.menu,name:voip.menu_voip_call_view
+msgid "Voip / Calls"
+msgstr "Voip / 통화"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_res_users__voip_secret
+msgid "Voip Secret"
+msgstr "VoIP 암호"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_res_users__voip_username
+msgid "Voip Username"
+msgstr "VoIP 사용자 이름"
+
+#. module: voip
+#: model:ir.model.fields,field_description:voip.field_res_config_settings__wsServer
+msgid "WebSocket"
+msgstr "웹소켓"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/activities_tab.js:0
+#, python-format
+msgid "Yes, do it."
+msgstr "네, 그렇게 하세요."
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid ""
+"Your browser does not support some of the features required for VoIP to "
+"work. Please try updating your browser or using a different one."
+msgstr ""
+"사용 중인 브라우저가 VoIP 작동에 필요한 일부 기능을 지원하지 않습니다. 브라우저를 업데이트하거나 다른 브라우저를 이용해 주세요."
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/softphone/recent_tab.xml:0
+#, python-format
+msgid "Your call history is empty! Make a call now and have it listed here 💡"
+msgstr "통화 내역이 없습니다! 지금 전화를 걸어 통화 목록을 만드세요. 💡"
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/user_agent_service.js:0
+#, python-format
+msgid ""
+"Your login details are not set correctly. Please contact your administrator."
+msgstr "로그인 정보가 올바르게 설정되지 않았습니다. 관리자에게 문의하십시오."
+
+#. module: voip
+#. odoo-javascript
+#: code:addons/voip/static/src/core/call_model.js:0
+#, python-format
+msgid "less than a second"
+msgstr "1초 미만"

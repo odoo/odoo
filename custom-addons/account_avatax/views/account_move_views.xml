@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="move_form_inherit" model="ir.ui.view">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <field name="invoice_date" position="after">
+                <field name="is_avatax" invisible="1"/>
+                <field name="avatax_tax_date" invisible="move_type not in ('out_invoice', 'out_refund') or not is_avatax"/>
+            </field>
+            <group name="accounting_info_group" position="inside">
+                <field name="avatax_unique_code" invisible="not is_avatax"/>
+            </group>
+        </field>
+    </record>
+</odoo>

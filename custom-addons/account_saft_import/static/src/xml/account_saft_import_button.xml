@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="saft_import_template" t-inherit="account_base_import.accountImportTemplate" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('saft-import')]" position="inside">
+            <button class="btn btn-primary mb-3" t-on-click="() => this._importAccountGuideAction('account_saft_import.open_saft_import_wizard')">Import SAF-T</button>
+        </xpath>
+    </t>
+</templates>

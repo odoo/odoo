@@ -1,0 +1,41 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+{
+    'name': 'PoS Order Tracking Customer Display',
+    'version': '1.0.0',
+    'category': 'Sales/Point of Sale',
+    'sequence': 7,
+    'summary': 'Display customer\'s order status',
+    'depends': ['pos_preparation_display', 'pos_self_order'],
+    'installable': True,
+    'auto_install': True,
+    'data': [
+        'views/index.xml',
+        'views/preparation_display_view.xml',
+    ],
+    'assets': {
+        'pos_order_tracking_display.assets': [
+            ("include", "web._assets_helpers"),
+            ("include", "web._assets_backend_helpers"),
+            ("include", "web._assets_primary_variables"),
+            "web/static/src/scss/pre_variables.scss",
+            "web/static/lib/bootstrap/scss/_functions.scss",
+            "web/static/lib/bootstrap/scss/_variables.scss",
+            ("include", "web._assets_bootstrap"),
+            ("include", "web._assets_bootstrap_backend"),
+            ('include', 'web._assets_core'),
+            ("remove", "web/static/src/core/browser/router_service.js"),
+            ("remove", "web/static/src/core/debug/**/*"),
+            "web/static/lib/odoo_ui_icons/*",
+            'web/static/src/legacy/scss/ui.scss',
+            "point_of_sale/static/src/utils.js",
+            'bus/static/src/services/bus_service.js',
+            'bus/static/src/bus_parameters_service.js',
+            'bus/static/src/multi_tab_service.js',
+            'bus/static/src/workers/*',
+            "point_of_sale/static/src/app/generic_components/odoo_logo/*",
+            'pos_order_tracking_display/static/src/**/*',
+        ],
+    },
+    'license': 'OEEL-1',
+}

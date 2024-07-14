@@ -1,0 +1,1022 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_appraisal_survey
+# 
+# Translators:
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2023
+# Collex100, 2023
+# Alena Vlasova, 2023
+# Martin Trigaux, 2023
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_survey_page_statistics_header
+msgid "- Feedback requested by -"
+msgstr "- Обратная связь по запросу -"
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.survey,description:hr_appraisal_survey.appraisal_360_feedback_template
+msgid ""
+"360 Degree Feedback is a system or process in which managers will ask feedback from the people who work around the employee.\n"
+"            This typically includes the employee's manager, peers, and direct reports."
+msgstr ""
+"обратная связь 360 градусов - это система или процесс, в котором менеджеры запрашивают отзывы у людей, работающих рядом с сотрудником.\n"
+"            Как правило, это руководитель сотрудника, коллеги и непосредственные подчиненные."
+
+#. module: hr_appraisal_survey
+#: model:ir.actions.act_window,name:hr_appraisal_survey.survey_survey_action_appraisal
+#: model:ir.ui.menu,name:hr_appraisal_survey.menu_hr_appraisal_surveys
+#: model:survey.survey,title:hr_appraisal_survey.appraisal_360_feedback_template
+msgid "360 Feedback"
+msgstr "360 отзывов"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_survey_button_form_view
+msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Edit Survey"
+msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Редактировать опрос"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_view_form
+msgid "<span class=\"o_stat_text\">Feedbacks</span>"
+msgstr "<span class=\"o_stat_text\">Отзывы</span>"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_view_form
+msgid "<span> / </span>"
+msgstr "<span> / </span>"
+
+#. module: hr_appraisal_survey
+#: model:mail.template,body_html:hr_appraisal_survey.mail_template_appraisal_ask_feedback
+msgid ""
+"<t t-set=\"logged_user\" t-value=\"ctx.get('logged_user')\"></t>\n"
+"                <t t-set=\"employee\" t-value=\"ctx.get('employee')\"></t>\n"
+"                <t t-set=\"deadline\" t-value=\"ctx.get('deadline')\"></t>\n"
+"                <div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        <p style=\"margin-left:5px\">Dear <t t-out=\"object.partner_id.name or 'participant'\">[participant]</t></p>\n"
+"                        <span>\n"
+"                            <t t-out=\"logged_user\">[Current user]</t> invites you to participate in a survey and provide your feedback on <t t-out=\"employee\">[employee]</t>.\n"
+"                            Please complete the survey before the <t t-out=\"deadline\">[specified deadline]</t>.\n"
+"                        </span>\n"
+"                        <br>\n"
+"                        Thank you!\n"
+"                        <br><br>\n"
+"                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.get_start_url()\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                Give your feedback\n"
+"                            </a>\n"
+"                        </div>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<t t-set=\"logged_user\" t-value=\"ctx.get('logged_user')\"></t>\n"
+"                <t t-set=\"employee\" t-value=\"ctx.get('employee')\"></t>\n"
+"                <t t-set=\"deadline\" t-value=\"ctx.get('deadline')\"></t>\n"
+"                <div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                       <p style=\"margin-left:5px\">Уважаемый <t t-out=\"object.partner_id.name or 'participant'\">[участник]</t></p>\n"
+"                       <span>\n"
+"                           <t t-out=\"logged_user\">[Текущий пользователь]</t> приглашает вас принять участие в опросе и оставить свой отзыв о <t t-out=\"employee\">[сотруднике]</t>.\n"
+"                            Пожалуйста, заполните опрос до <t t-out=\"deadline\">[указанного срока]</t>.\n"
+"                       </span>\n"
+"                       <br>\n"
+"                        Спасибо!\n"
+"                       <br><br>\n"
+"                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.get_start_url()\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                Оставьте свой отзыв\n"
+"                            </a>\n"
+"                        </div>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_1_1
+msgid "Ability to cope with multidisciplinarity of team"
+msgstr "Способность справляться с многопрофильностью команды"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_1_6
+msgid "Ability to follow and complete work as instructed"
+msgstr ""
+"Способность следовать инструкциям и выполнять работу в соответствии с ними"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_2_5
+msgid "Ability to manage planning resources, risks, budgets and deadlines"
+msgstr ""
+"Способность управлять ресурсами, рисками, бюджетами и сроками планирования"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_360_4
+msgid "About us"
+msgstr "О нас"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_360_1
+msgid "About you"
+msgstr "О вас"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_1_13
+msgid ""
+"Adaptability: Ability to adapt oneself to organizational changes while "
+"keeping efficiency"
+msgstr ""
+"Адаптивность: Способность адаптироваться к организационным изменениям, "
+"сохраняя при этом эффективность"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.actions.act_window,help:hr_appraisal_survey.survey_survey_action_appraisal
+msgid "Add a new survey"
+msgstr "Aggiungere un nuovo sondaggio"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.appraisal_ask_feedback_view_form
+msgid "Add employees..."
+msgstr "Добавьте сотрудников..."
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_2_3
+msgid "Additional Comments"
+msgstr "Дополнительные комментарии"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.y_360_5_6
+msgid "Admit my mistakes"
+msgstr "Признать свои ошибки"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_survey_user_input_view_tree
+msgid "All answers"
+msgstr "Все ответы"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.x_360_5_5
+msgid "Almost always"
+msgstr "Почти всегда"
+
+#. module: hr_appraisal_survey
+#. odoo-python
+#: code:addons/hr_appraisal_survey/wizard/appraisal_ask_feedback.py:0
+#, python-format
+msgid ""
+"An appraisal feedback was requested. Please take time to fill the <a "
+"href=\"%s\" target=\"_blank\">survey</a>"
+msgstr ""
+"Мы просим вас оставить отзыв об оценке. Пожалуйста, найдите время, чтобы "
+"заполнить <a href=\"%s\" target=\"_blank\">анкету</a>"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_1_11
+msgid "Analytical and synthetic mind"
+msgstr "Аналитический и синтетический ум"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__deadline
+msgid "Answer Deadline"
+msgstr "Крайний срок ответа"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__appraisal_id
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_survey_user_input__appraisal_id
+#: model:ir.model.fields.selection,name:hr_appraisal_survey.selection__survey_survey__survey_type__appraisal
+msgid "Appraisal"
+msgstr "Аттестация"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__employee_id
+msgid "Appraisal Employee"
+msgstr "Оценка сотрудника"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_hr_department__appraisal_survey_template_id
+msgid "Appraisal Survey"
+msgstr "Оценочное исследование"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_res_company__appraisal_survey_template_id
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_res_config_settings__appraisal_survey_template_id
+msgid "Appraisal Survey Template"
+msgstr "Шаблон оценочного исследования"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_1_3
+msgid "Appraisal for Period"
+msgstr "Аттестация за период"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_survey_page_statistics_header
+msgid "Appraisal of"
+msgstr "Оценка"
+
+#. module: hr_appraisal_survey
+#: model:mail.template,name:hr_appraisal_survey.mail_template_appraisal_ask_feedback
+msgid "Appraisal: Ask Feedback"
+msgstr "Оценка: спросите об обратной связи"
+
+#. module: hr_appraisal_survey
+#. odoo-python
+#: code:addons/hr_appraisal_survey/wizard/appraisal_ask_feedback.py:0
+#, python-format
+msgid "Appraisal: Ask Feedback new template"
+msgstr "Оценка: новый шаблон для обратной связи"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_1_5
+msgid "Appraiser"
+msgstr "Оценивающий"
+
+#. module: hr_appraisal_survey
+#. odoo-python
+#: code:addons/hr_appraisal_survey/models/hr_appraisal.py:0
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.appraisal_ask_feedback_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_view_form
+#, python-format
+msgid "Ask Feedback"
+msgstr "Спросите отзывы"
+
+#. module: hr_appraisal_survey
+#: model:ir.model,name:hr_appraisal_survey.model_appraisal_ask_feedback
+msgid "Ask Feedback for Appraisal"
+msgstr "Запросите обратную связь для оценки"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_hr_appraisal__employee_feedback_ids
+msgid "Asked Feedback"
+msgstr "Спрошенные отзывы"
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_1
+msgid "At the conclusion of the appraisal time period"
+msgstr "По окончании периода времени аттестации"
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_1
+msgid "At the outset of the appraisal time period"
+msgstr "В начале периода времени аттестации"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__attachment_ids
+msgid "Attachments"
+msgstr "Вложения"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__author_id
+msgid "Author"
+msgstr "Автор"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_survey_button_form_view
+msgid "Back to the appraisal"
+msgstr "Назад к оценке"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__body_has_template_value
+msgid "Body content is the same as the template"
+msgstr "Содержание тела соответствует шаблону"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__can_edit_body
+msgid "Can Edit Body"
+msgstr "Можно редактировать тело"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.appraisal_ask_feedback_view_form
+msgid "Cancel"
+msgstr "Отменить"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.y_360_5_3
+msgid "Collaborate effectively with others to achieve shared goals"
+msgstr "Эффективно сотрудничать с другими людьми для достижения общих целей"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_1_9
+msgid ""
+"Communication skills (written & verbally): clearness, concision, exactitude"
+msgstr ""
+"Коммуникативные навыки (письменные и устные): четкость, краткость, точность"
+
+#. module: hr_appraisal_survey
+#: model:ir.model,name:hr_appraisal_survey.model_res_company
+msgid "Companies"
+msgstr "Компании"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_hr_appraisal__completed_survey_count
+msgid "Completed Survey Count"
+msgstr "Количество завершенных опросов"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_1_3
+msgid ""
+"Compliance to internal rules and processes (timesheets completion, etc.)"
+msgstr ""
+"Соблюдение внутренних правил и процессов (заполнение табелей учета рабочего "
+"времени и т.д.)"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_360_9
+msgid "Conclusion"
+msgstr "Вывод"
+
+#. module: hr_appraisal_survey
+#: model:ir.model,name:hr_appraisal_survey.model_res_config_settings
+msgid "Config Settings"
+msgstr "Параметры конфигурации"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__body
+msgid "Contents"
+msgstr "Содержание"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.y_360_5_2
+msgid "Create space for different ideas and options to be voiced"
+msgstr "Создайте пространство для высказывания различных идей и вариантов"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__create_uid
+msgid "Created by"
+msgstr "Создано"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__create_date
+msgid "Created on"
+msgstr "Создано"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_1_14
+msgid "Creativity and forward looking aptitude"
+msgstr "Творческий подход и стремление к развитию"
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_1
+msgid ""
+"Critical or key elements of performance and professional development needs "
+"(if any), should also be noted at this time"
+msgstr ""
+"Критические или ключевые элементы работы и потребности в профессиональном "
+"развитии (если таковые имеются) также должны быть отмечены в этот момент"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_1_8
+msgid "Customer commitment"
+msgstr "Обязательства перед клиентами"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_1_4
+msgid "Date of review"
+msgstr "Дата рассмотрения"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_1_7
+msgid "Decision making"
+msgstr "Принятие решений"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.res_config_settings_view_form_hr_appraisal_survey
+msgid "Default Template"
+msgstr "Шаблон по умолчанию"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_2_2
+msgid "Delegation: Ability to efficiently assign tasks to other people"
+msgstr "Делегирование: Способность эффективно поручать задания другим людям"
+
+#. module: hr_appraisal_survey
+#: model:ir.model,name:hr_appraisal_survey.model_hr_department
+msgid "Department"
+msgstr "Отдел"
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_3
+msgid "Did not meet standards and expectations"
+msgstr "Не соответствует стандартам и ожиданиям"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_360_10
+msgid "Do you have any comment to tell me and help me improve?"
+msgstr ""
+"Есть ли у вас комментарии, чтобы рассказать мне и помочь улучшить ситуацию?"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_survey_user_input_view_tree
+msgid "Employee"
+msgstr "Сотрудник"
+
+#. module: hr_appraisal_survey
+#: model:ir.model,name:hr_appraisal_survey.model_hr_appraisal
+msgid "Employee Appraisal"
+msgstr "Аттестация сотрудника"
+
+#. module: hr_appraisal_survey
+#: model:survey.survey,title:hr_appraisal_survey.appraisal_feedback_template
+msgid "Employee Appraisal Form"
+msgstr "Форма аттестации сотрудника"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_5
+msgid "Employee Comments"
+msgstr "Комментарии сотрудников"
+
+#. module: hr_appraisal_survey
+#: model:survey.survey,title:hr_appraisal_survey.opinion_form
+msgid "Employee Opinion Form"
+msgstr "Форма для выражения мнения сотрудников"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_3
+msgid "Employee Performance in Key Areas"
+msgstr "Результаты работы сотрудников в ключевых областях"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_1_2
+msgid "Enthusiasm & implication toward projects/assignments"
+msgstr "Энтузиазм и заинтересованность в проектах/заданиях"
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_3
+msgid "Exceeds standards and expectations"
+msgstr "Превосходит стандарты и ожидания"
+
+#. module: hr_appraisal_survey
+#. odoo-python
+#: code:addons/hr_appraisal_survey/models/hr_appraisal.py:0
+#, python-format
+msgid "Feedback Surveys"
+msgstr "Опросы обратной связи"
+
+#. module: hr_appraisal_survey
+#. odoo-python
+#: code:addons/hr_appraisal_survey/wizard/appraisal_ask_feedback.py:0
+#, python-format
+msgid "Fill the feedback form on survey"
+msgstr "Заполните форму обратной связи в опросе"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_360_5
+msgid "How do you feel to work with me? Do I ... "
+msgstr "Как вы относитесь к работе со мной? Я ..."
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.appraisal_360_3_sug5
+msgid "I'm not from the company."
+msgstr "Я не из компании."
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.appraisal_360_3_sug3
+msgid "I'm part of your management."
+msgstr "Я являюсь частью вашего руководства."
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.appraisal_360_3_sug4
+msgid "I'm referring to you."
+msgstr "Я имею в виду тебя."
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_4
+msgid ""
+"Identify professional, performance, or project objectives you recommend for "
+"employee’s continued career development over the coming year."
+msgstr ""
+"Определите профессиональные, исполнительские или проектные цели, которые вы "
+"рекомендуете для дальнейшего карьерного роста сотрудника в течение "
+"ближайшего года."
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_1_5
+msgid "Initiative and self autonomy"
+msgstr "Инициативность и самостоятельность"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__is_mail_template_editor
+msgid "Is Editor"
+msgstr "Редактор"
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_1
+msgid ""
+"It is the joint responsibility of the employee and the supervisor "
+"(appraiser) to establish a feasible work plan for the coming year, including"
+" major employee responsibilities and corresponding benchmarks against which "
+"results will be evaluated."
+msgstr ""
+"Сотрудник и его руководитель (оценщик) несут совместную ответственность за "
+"составление выполнимого плана работы на следующий год, включая основные "
+"обязанности сотрудника и соответствующие контрольные показатели, по которым "
+"будут оцениваться результаты."
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_1
+msgid ""
+"It is the primary responsibility of the supervisor to gather the necessary "
+"input from the appropriate sources of feedback (internal and/or external "
+"customers, peers)."
+msgstr ""
+"Руководитель несет основную ответственность за сбор необходимой информации "
+"из соответствующих источников обратной связи (внутренних и/или внешних "
+"клиентов, коллег)."
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__lang
+msgid "Language"
+msgstr "Язык"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__write_uid
+msgid "Last Updated by"
+msgstr "Последнее обновление"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__write_date
+msgid "Last Updated on"
+msgstr "Последнее обновление"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_2_3
+msgid ""
+"Leadership: create a challenging and motivating work environment aligned "
+"with the company's strategy"
+msgstr ""
+"Лидерство: создание интересной и мотивирующей рабочей среды в соответствии "
+"со стратегией компании"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_2_4
+msgid "Leadership: sustain subordinates in their professional growth"
+msgstr "Лидерство: поддерживать подчиненных в их профессиональном росте"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.y_360_5_1
+msgid "Listen well to others"
+msgstr "Хорошо слушать других"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.appraisal_ask_feedback_view_form
+msgid "Load template"
+msgstr "Загрузить шаблон"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__template_id
+msgid "Mail Template"
+msgstr "Шаблон сообщения"
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_3
+msgid "Meet standards and expectations"
+msgstr "Ожидаемые стандарты и ожидания"
+
+#. module: hr_appraisal_survey
+#. odoo-python
+#: code:addons/hr_appraisal_survey/wizard/appraisal_ask_feedback.py:0
+#, python-format
+msgid "Missing email"
+msgstr "Пропавшее письмо"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_1_1
+msgid "Name"
+msgstr "Имя"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.x_360_5_1
+msgid "Never"
+msgstr "Никогда"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_2_1
+msgid "Objectives"
+msgstr "Задачи"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.x_360_5_4
+msgid "Often"
+msgstr "Часто"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.appraisal_ask_feedback_view_form
+msgid "Optional message"
+msgstr "Добровольное сообщение"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,help:hr_appraisal_survey.field_appraisal_ask_feedback__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"Необязательный язык перевода (код ISO) для выбора при отправке сообщения "
+"электронной почты. Если он не задан, будет использоваться английская версия."
+" Как правило, это должно быть выражение-заполнитель, обеспечивающее "
+"соответствующий язык, например {{ object.partner_id.lang }}."
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_1
+msgid "Overall Purpose Of Employee Appraisal"
+msgstr "Общая цель аттестации работника"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,help:hr_appraisal_survey.field_survey_user_input__requested_by
+msgid "Partner-related data of the user"
+msgstr "Данные о партнере пользователя"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_4_2
+msgid "Personal Performance Objectives"
+msgstr "Цели личной деятельности"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_1_2
+msgid "Position Title"
+msgstr "Название должности"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_4_1
+msgid "Professional Development Objectives"
+msgstr "Цели профессионального развития"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_4
+msgid "Professional Development and Performance Plan"
+msgstr "План профессионального развития и производительности"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_4_3
+msgid "Project Objectives"
+msgstr "Цели проекта"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_1_12
+msgid "Promptness and attendance record"
+msgstr "Оперативность и учет посещаемости"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.x_360_5_2
+msgid "Rarely"
+msgstr "Редко"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__employee_ids
+msgid "Recipients"
+msgstr "Получатели"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.y_360_5_7
+msgid "Recognize the contributions of teammates and peers"
+msgstr "Признавать вклад товарищей по команде и коллег по работе"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__render_model
+msgid "Rendering Model"
+msgstr "Модель рендеринга"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_survey_user_input__requested_by
+msgid "Requested by"
+msgstr "Запросил"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_survey_user_input_view_tree
+msgid "Resend"
+msgstr "Отправить повторно"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_survey_page_statistics_header
+msgid "Responded:"
+msgstr "Ответили:"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_2_2
+msgid "Results"
+msgstr "Результаты"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_2_1
+msgid ""
+"Results of the bottom-up survey and mitigation actions to face technical, "
+"organizational, structural and/or relational issues"
+msgstr ""
+"Результаты опроса \"снизу вверх\" и меры по устранению технических, "
+"организационных, структурных и/или реляционных проблем"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.appraisal_ask_feedback_view_form
+msgid "Save as a new template"
+msgstr "Сохранить как новый шаблон"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.appraisal_ask_feedback_view_form
+msgid "Save as new template"
+msgstr "Сохранить как новый шаблон"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_survey_user_input_view_tree
+msgid "See Answers"
+msgstr "Смотреть ответы"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.y_360_5_5
+msgid "Seek to understand the problem before working on a solution"
+msgstr "Стремитесь понять проблему, прежде чем приступать к ее решению"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.appraisal_ask_feedback_view_form
+msgid "Send"
+msgstr "Отправить"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,help:hr_appraisal_survey.field_hr_appraisal__survey_ids
+msgid "Sent out surveys"
+msgstr "Рассылка опросов"
+
+#. module: hr_appraisal_survey
+#: model:mail.template,description:hr_appraisal_survey.mail_template_appraisal_ask_feedback
+msgid "Sent to employees to gather appraisal feedback"
+msgstr "Рассылка сотрудникам для сбора отзывов об оценке"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.y_360_5_4
+msgid "Show good judgment in decision making"
+msgstr "Проявлять рассудительность в принятии решений"
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_3
+msgid "Significantly below standards and expectations"
+msgstr "Значительно ниже стандартов и ожиданий"
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_3
+msgid ""
+"Significantly exceeds standards and expectations required of the position"
+msgstr "Значительно превышает стандарты и ожидания, необходимые для позиции"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.x_360_5_3
+msgid "Sometimes"
+msgstr "Иногда"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__subject
+#: model:survey.question,title:hr_appraisal_survey.appraisal_3_1
+msgid "Subject"
+msgstr "Тема"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.appraisal_ask_feedback_view_form
+msgid "Subject..."
+msgstr "Тема…"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_3_2
+msgid "Supervisors only"
+msgstr "Только руководители"
+
+#. module: hr_appraisal_survey
+#: model:ir.model,name:hr_appraisal_survey.model_survey_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_hr_appraisal__survey_ids
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_survey_question_answer__survey_id
+msgid "Survey"
+msgstr "Опрос"
+
+#. module: hr_appraisal_survey
+#. odoo-python
+#: code:addons/hr_appraisal_survey/models/hr_appraisal.py:0
+#: code:addons/hr_appraisal_survey/models/survey.py:0
+#: code:addons/hr_appraisal_survey/models/survey.py:0
+#: code:addons/hr_appraisal_survey/models/survey.py:0
+#, python-format
+msgid "Survey Feedback"
+msgstr "Отзывы об исследовании"
+
+#. module: hr_appraisal_survey
+#: model:ir.model,name:hr_appraisal_survey.model_survey_question_answer
+msgid "Survey Label"
+msgstr "Метка исследования"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_appraisal_ask_feedback__survey_template_id
+msgid "Survey Template"
+msgstr "Шаблон для опроса"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_survey_survey__survey_type
+msgid "Survey Type"
+msgstr "Тип опроса"
+
+#. module: hr_appraisal_survey
+#: model:ir.model,name:hr_appraisal_survey.model_survey_user_input
+msgid "Survey User Input"
+msgstr "Опрос пользователей ввод"
+
+#. module: hr_appraisal_survey
+#: model:mail.template,subject:hr_appraisal_survey.mail_template_appraisal_ask_feedback
+msgid "Take part in {{ object.employee_id.name or 'this' }} appraisal"
+msgstr "Примите участие в {{ object.employee_id.name or 'этот' }} оценке"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_1_4
+msgid ""
+"Team spirit: ability to work efficiently with peers, manage the conflicts "
+"with diplomacy"
+msgstr ""
+"Командный дух: способность эффективно работать с коллегами, дипломатично "
+"разрешать конфликты"
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_1_10
+msgid "Technical skills regarding to the job requirements"
+msgstr "Технические навыки в соответствии с требованиями к работе"
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_3
+msgid ""
+"The appraiser should rate the employee’s major work accomplishments and "
+"performance according to the metric provided below:"
+msgstr ""
+"Оценщик должен оценить основные достижения и результаты работы сотрудника в "
+"соответствии с приведенной ниже метрикой:"
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_1
+msgid ""
+"The employee may choose to offer comments or explanation regarding the "
+"completed review."
+msgstr ""
+"Работник может выбрать предложеные комментарии или пояснения относительно "
+"завершенного обзора."
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_1
+msgid ""
+"The employee will be responsible for completing a draft of the Appraisal "
+"Form as a tool for self-appraisal and a starting point for the supervisor’s "
+"evaluation. The employee can add examples of achievements for each "
+"criterion. Once the form had been filled, the employee send it to their "
+"supervisor."
+msgstr ""
+"Сотрудник будет отвечать за заполнение черновика оценочной формы, которая "
+"станет инструментом самооценки и отправной точкой для оценки руководителя. "
+"Сотрудник может добавить примеры достижений по каждому критерию. После того "
+"как форма заполнена, сотрудник отправляет ее своему руководителю."
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_1
+msgid ""
+"The supervisor synthesizes and integrates all input into the completed "
+"appraisal. The motivation of the evaluation is explained in the ad hoc "
+"fields."
+msgstr ""
+"Руководитель обобщает и интегрирует все материалы в завершенную оценку. "
+"Мотивация оценки объясняется на специальных полях."
+
+#. module: hr_appraisal_survey
+#. odoo-python
+#: code:addons/hr_appraisal_survey/wizard/appraisal_ask_feedback.py:0
+#, python-format
+msgid ""
+"This employee doesn't have any mail address registered and will not receive any email. \n"
+"The following employees do not have any email: \n"
+"%s"
+msgstr ""
+"У этого сотрудника нет зарегистрированного почтового адреса, и он не будет получать электронную почту.\n"
+"Следующие сотрудники не имеют электронной почты:\n"
+"%s"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,help:hr_appraisal_survey.field_hr_department__appraisal_survey_template_id
+msgid ""
+"This field is used with 360 Feedback setting on Appraisal App, the aim is to"
+" define a default Survey Template related to this department."
+msgstr ""
+"Это поле используется с настройкой 360 Feedback в Appraisal App, цель - "
+"определить шаблон опроса по умолчанию, относящийся к данному отделу."
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_survey_button_form_view
+msgid "This is a Test Survey."
+msgstr "Это тестовый опрос."
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.survey,description:hr_appraisal_survey.appraisal_feedback_template
+msgid ""
+"This survey allows you to give a feedback about your collaboration with an "
+"employee. Filling it helps us improving the appraisal process."
+msgstr ""
+"Этот опрос позволяет вам оставить отзыв о сотрудничестве с сотрудником. Его "
+"заполнение поможет нам улучшить процесс оценки."
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.arow_3_1_15
+msgid "Time management: projects/tasks are completed on time"
+msgstr "Управление временем: проекты/задачи выполняются в срок"
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_1
+msgid ""
+"To assist employees in their professional growth, through the identification"
+" of strengths and opportunities for development"
+msgstr ""
+"Помогать сотрудникам в их профессиональном росте, выявляя сильные стороны и "
+"возможности для развития"
+
+#. module: hr_appraisal_survey
+#: model_terms:survey.question,description:hr_appraisal_survey.appraisal_1
+msgid "To initiate a clear and open communication of performance expectations"
+msgstr "Чтобы начать четкое и открытое общение для достижения ожиданий"
+
+#. module: hr_appraisal_survey
+#: model:ir.model.fields,field_description:hr_appraisal_survey.field_hr_appraisal__total_survey_count
+msgid "Total Survey Count"
+msgstr "Общее количество опрошенных"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_5_1
+msgid ""
+"Use the following space to make any comments regarding the above performance"
+" evaluation."
+msgstr ""
+"Воспользуйтесь следующим местом, чтобы высказать любые замечания по поводу "
+"приведенной выше оценки работы."
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.appraisal_360_3_sug1
+msgid "We're colleagues, for the same manager."
+msgstr "Мы коллеги, работаем на одного менеджера."
+
+#. module: hr_appraisal_survey
+#: model:survey.question.answer,value:hr_appraisal_survey.appraisal_360_3_sug2
+msgid "We're colleagues, in different teams."
+msgstr "Мы коллеги, но в разных командах."
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_360_6
+msgid "What should I do in order to improve on my day-to-day job?"
+msgstr "Что я должен сделать, чтобы улучшить свою повседневную работу?"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_360_7
+msgid "What's my greatest strength?"
+msgstr "В чем моя главная сила?"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_360_8
+msgid "What's my greatest weakness?"
+msgstr "В чем моя самая большая слабость?"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_360_3
+msgid "What's the relation between us?"
+msgstr "Что нас связывает?"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_360_2
+msgid "What's your name?"
+msgstr "Как Вас зовут?"
+
+#. module: hr_appraisal_survey
+#: model:survey.question,title:hr_appraisal_survey.appraisal_2
+msgid "Work Plan"
+msgstr "План работы"
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.actions.act_window,help:hr_appraisal_survey.survey_survey_action_appraisal
+msgid ""
+"You can create surveys used for appraisals. Design easily your appraisal,\n"
+"                send invitations and analyze answers."
+msgstr ""
+"Вы можете создавать опросы, используемые для оценки. Легко разработать свою оценку,\n"
+"                отправляйте приглашения и анализируйте ответы."
+
+#. module: hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal_survey.hr_appraisal_survey_button_form_view
+msgid "or"
+msgstr "или"

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_co_reports_fuente" model="account.report">
+        <field name="name">Retención por Terceros</field>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_partner" eval="False"/>
+        <field name="filter_show_draft" eval="False"/>
+        <field name="filter_unreconciled" eval="False"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_date_range" eval="True"/>
+        <field name="default_opening_date_filter">this_year</field>
+        <field name="search_bar" eval="True"/>
+        <field name="custom_handler_model_id" ref="model_l10n_co_fuente_report_handler"/>
+        <field name="column_ids">
+            <record id="l10n_co_reports_fuente_communication" model="account.report.column">
+                <field name="name">Concepto de retención</field>
+                <field name="expression_label">account_name</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="l10n_co_reports_fuente_tax_base_amount" model="account.report.column">
+                <field name="name">Monto del Pago Sujeto Retención</field>
+                <field name="expression_label">tax_base_amount</field>
+            </record>
+            <record id="l10n_co_reports_fuente_balance" model="account.report.column">
+                <field name="name">Retenido Consignado</field>
+                <field name="expression_label">balance</field>
+                <field name="blank_if_zero" eval="True"/>
+            </record>
+        </field>
+    </record>
+
+    <record id="action_account_report_fuente" model="ir.actions.client">
+        <field name="name">Certificado de Retención en Fuente</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('l10n_co_reports.l10n_co_reports_fuente')}" />
+    </record>
+
+    <menuitem id="menu_action_account_report_fuente" name="Certificado de Retención en Fuente" action="action_account_report_fuente" parent="account_reports_co_statements_menu"/>
+</odoo>

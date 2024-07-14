@@ -1,0 +1,1047 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_ebay
+# 
+# Translators:
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
+# Kari Lindgren <karisatu@gmail.com>, 2023
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
+# Mikko Salmela <salmemik@gmail.com>, 2023
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Martin Trigaux, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid ""
+" If you want to set quantity to 0, the Out Of Stock option should be enabled"
+" and the listing duration should set to Good 'Til Canceled"
+msgstr ""
+" Jos haluat asettaa määrän arvoksi 0, Out Of Stock -vaihtoehto on otettava "
+"käyttöön ja listauksen kesto on asetettava arvoon Kelvollinen kunnes "
+"peruutettu"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid ""
+" You need to have at least 2 variations selected for a multi-variations listing.\n"
+" Or if you try to delete a variation, you cannot do it by unselecting it. Setting the quantity to 0 is the safest method to make a variation unavailable."
+msgstr ""
+" Monimuunnoslistalle on valittava vähintään 2 muunnelmaa.\n"
+" Tai jos yrität poistaa variaation, et voi tehdä sitä poistamalla sen valinnan. Määrän asettaminen 0:ksi on turvallisin tapa tehdä variaatio käyttökelvottomaksi."
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__product_template__ebay_listing_duration__days_10
+msgid "10 Days"
+msgstr "10 päivää"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__product_template__ebay_listing_duration__days_3
+msgid "3 Days"
+msgstr "3 päivää"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__product_template__ebay_listing_duration__days_30
+msgid "30 Days (only for fixed price)"
+msgstr "30 päivää (vain kiinteään hintaan)"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__product_template__ebay_listing_duration__days_5
+msgid "5 Days"
+msgstr "5 päivää"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__product_template__ebay_listing_duration__days_7
+msgid "7 Days"
+msgstr "7 päivää"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Activate Other Currencies"
+msgstr "Aktivoi muut valuutat"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Add other countries"
+msgstr "Lisää muita maita"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid ""
+"All the quantities must be greater than 0 or you need to enable the Out Of "
+"Stock option."
+msgstr ""
+"Kaikkien määrien on oltava suurempia kuin 0 tai sinun on otettava käyttöön "
+"Out Of Stock -vaihtoehto."
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_best_offer
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_best_offer
+msgid "Allow Best Offer"
+msgstr "Salli paras tarjous"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__product_template__ebay_listing_type__chinese
+msgid "Auction"
+msgstr "Huutokauppa"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_buy_it_now_price
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_buy_it_now_price
+msgid "Buy It Now Price"
+msgstr "Osta heti -hinta"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.ebay_link_listing_view
+msgid "Cancel"
+msgstr "Peruuta"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_category_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_category_id
+msgid "Category"
+msgstr "Kategoria"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_category_2_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_category_2_id
+msgid "Category 2 (Optional)"
+msgstr "Luokka 2 (vapaaehtoinen)"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__category_id
+msgid "Category ID"
+msgstr "Kategorian ID"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__category_parent_id
+msgid "Category Parent ID"
+msgstr "Ylemmän luokan ID"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__category_type
+msgid "Category Type"
+msgstr "Ryhmän tyyppi"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_item_condition__code
+msgid "Code"
+msgstr "Koodi"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_res_config_settings
+msgid "Config Settings"
+msgstr "Asetukset"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid "Configure The eBay Integrator Now"
+msgstr "Määritä eBay-integraatio"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_res_partner
+msgid "Contact"
+msgstr "Kontakti"
+
+#. module: sale_ebay
+#: model:ir.actions.act_window,name:sale_ebay.action_country_all_form
+msgid "Countries"
+msgstr "Maat"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Countries & Currencies"
+msgstr "Maat ja valuutat"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_res_country
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_country
+msgid "Country"
+msgstr "Maa"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__create_uid
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_item_condition__create_uid
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_link_listing__create_uid
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__create_uid
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_site__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__create_date
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_item_condition__create_date
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_link_listing__create_date
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__create_date
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_site__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_res_currency
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Currency"
+msgstr "Valuutta"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__ebay_category__category_type__store
+msgid "Custom Store Category"
+msgstr "Mukautettu myymälän luokka"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "Describe the product characteristics..."
+msgstr "Kuvaile tuotteen ominaisuuksia..."
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_template_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_template_id
+msgid "Description Template"
+msgstr "Kuvausmalli"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_dev_id
+msgid "Developer Key"
+msgstr "Kehittäjän avain"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__display_name
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_item_condition__display_name
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_link_listing__display_name
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__display_name
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_site__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_listing_duration
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_listing_duration
+msgid "Duration"
+msgstr "Kesto"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/sale_order.py:0
+#, python-format
+msgid ""
+"Ebay Synchronisation could not confirm because of the following error:\n"
+"%s"
+msgstr ""
+"Ebay-synkronointia ei voitu vahvistaa seuraavan virheen vuoksi:\n"
+"%s"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/sale_order.py:0
+#, python-format
+msgid ""
+"Ebay could not synchronize order:\n"
+"%s"
+msgstr ""
+"Ebay ei voinut synkronoida tilausta:\n"
+"%s"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.ir_cron_sale_ebay_orders_sync_ir_actions_server
+msgid "Ebay: get new orders"
+msgstr "Ebay: hae uudet tilaukset"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.ir_cron_sale_ebay_orders_recovery
+msgid "Ebay: orders recovery"
+msgstr "Ebay: tilausten palautus"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.ir_cron_sale_ebay_stock_sync_ir_actions_server
+msgid "Ebay: synchronise stock"
+msgstr "Ebay: synkronoi varastot"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.ir_cron_sale_ebay_categories_ir_actions_server
+msgid "Ebay: update categories"
+msgstr "Ebay: päivitä luokat"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "End Item's Listing"
+msgstr "Lopeta kohteen luettelointi"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid ""
+"Error Encountered.\n"
+" No Variant Set To Be Listed On eBay."
+msgstr ""
+"Tapahtui virhe.\n"
+" Ei varianttia, joka on lueteltu eBayssä."
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid ""
+"Error Encountered.\n"
+"%r"
+msgstr ""
+"Tapahtui virhe.\n"
+"%r"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "Fixed Price"
+msgstr "Kiinteä hinta"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__product_template__ebay_listing_type__fixedpriceitem
+msgid "Fixed price"
+msgstr "Kiinteä hinta"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__full_name
+msgid "Full Name"
+msgstr "Koko nimi"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_gallery_plus
+msgid "Gallery Plus"
+msgstr "Galleria Plus"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Generate Token"
+msgstr "Luo tunniste"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__product_template__ebay_listing_duration__gtc
+msgid "Good 'Til Cancelled (only for fixed price)"
+msgstr "Hyvä kunnes peruutetaan (vain kiinteään hintaan)"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__id
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_item_condition__id
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_link_listing__id
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__id
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_site__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_ebay
+#: model:ir.model.fields,help:sale_ebay.field_res_country__ebay_available
+#: model:ir.model.fields,help:sale_ebay.field_res_currency__ebay_available
+msgid "If activated, can be used for eBay."
+msgstr "Jos aktivoitu, voidaan käyttää eBayssä."
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Import eBay config data and sync transactions"
+msgstr "Tuo eBayn konfigurointitiedot ja synkronoi tapahtumat"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid ""
+"Impossible to revise a listing into a multi-variations listing.\n"
+" Create a new listing."
+msgstr ""
+"Mahdotonta tarkistaa luetteloa monimuunnosluetteloksi.\n"
+" Luo uusi listaus."
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_item_condition_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_item_condition_id
+msgid "Item Condition"
+msgstr "Kohteen kunto"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__write_uid
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_item_condition__write_uid
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_link_listing__write_uid
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__write_uid
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_site__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__write_date
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_item_condition__write_date
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_link_listing__write_date
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__write_date
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_site__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_last_sync
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_last_sync
+msgid "Last update"
+msgstr "Viimeisin päivitys"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__leaf_category
+msgid "Leaf Category"
+msgstr "Välilehden Luokka"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.ebay_link_listing_view
+msgid "Link Existing Listing"
+msgstr "Linkki Olemassa olevaan listaukseen"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "Link With Existing eBay Listing"
+msgstr "Linkki olemassa olevan eBay-listan kanssa"
+
+#. module: sale_ebay
+#: model:ir.actions.act_window,name:sale_ebay.action_ebay_link_listing
+msgid "Link with Existing eBay Listing"
+msgstr "Linkki olemassa olevan eBay-listan kanssa"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.ebay_link_listing_view
+msgid "Link with eBay Listing"
+msgstr "Linkki eBay-listan kanssa"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "List Item on eBay"
+msgstr "Luetteloi kohde eBay:ssä"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_listing_type
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_listing_type
+msgid "Listing Type"
+msgstr "Listaustyyppi"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_location
+msgid "Location"
+msgstr "Sijainti"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_account_deletion_endpoint
+msgid "Marketplace account deletion notification endpoint"
+msgstr "Markkinapaikan tilin poistoilmoituksen päätepiste"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Mode"
+msgstr "Tila"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Mode and credentials"
+msgstr "Tila ja tunnukset"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__name
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_item_condition__name
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__name
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_site__name
+msgid "Name"
+msgstr "Nimi"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/sale_ebay.py:0
+#, python-format
+msgid "No Business Policies"
+msgstr "Ei liiketoimintapolitiikkaa"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__ebay_category__category_type__ebay
+msgid "Official eBay Category"
+msgstr "Virallinen eBay-luokka"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid "One parameter is missing."
+msgstr "Yksi parametri puuttuu."
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid "Or the condition is not compatible with the category."
+msgstr "Tai ehto ei ole yhteensopiva luokan kanssa."
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_out_of_stock
+msgid "Out Of Stock"
+msgstr "Ei saatavilla"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_seller_payment_policy_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_seller_payment_policy_id
+msgid "Payment Policy"
+msgstr "Maksupolitiikka"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Please provide your ebay production keys before enabling the account "
+"deletion notifications."
+msgstr ""
+"Anna ebay-tuotantoavaimesi, ennen kuin otat tilin poistoilmoitukset "
+"käyttöön."
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Policies"
+msgstr "Käytännöt"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__policy_id
+msgid "Policy ID"
+msgstr "Vakuutusnumero"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_private_listing
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_private_listing
+msgid "Private Listing"
+msgstr "Yksityinen listaus"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_product_template
+msgid "Product"
+msgstr "Tuote"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Product Categories"
+msgstr "Tuotekategoriat"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_product_product
+msgid "Product Variant"
+msgstr "Tuotevariaatio"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/sale_order.py:0
+#, python-format
+msgid "Product created from eBay transaction %s"
+msgstr "EBay-tapahtumasta luotu tuote %s"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__res_config_settings__ebay_domain__prod
+msgid "Production"
+msgstr "Valmistus"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_prod_app_id
+msgid "Production App Key"
+msgstr "Tuotannon sovellusavain"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_prod_cert_id
+msgid "Production Cert Key"
+msgstr "Tuotannon sertifikaatin avain"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_prod_token
+msgid "Production Token"
+msgstr "Tuotannon tunniste"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_use
+msgid "Publish On eBay"
+msgstr "Julkaise eBayssä"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_quantity
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_quantity
+msgid "Quantity On eBay"
+msgstr "Määrä eBayssä"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_quantity_sold
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_quantity_sold
+msgid "Quantity Sold"
+msgstr "Myyty määrä"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "Relist Item"
+msgstr "Listaa kohde uudelleen"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_seller_return_policy_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_seller_return_policy_id
+msgid "Return Policy"
+msgstr "Palautuskäytäntö"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "Revise Item"
+msgstr "Tarkista kohde"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_sale_order
+msgid "Sales Order"
+msgstr "Myyntitilaus"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Sales Team"
+msgstr "Myyntitiimi"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Sales Team to manage eBay sales"
+msgstr "Myyntitiimi hallinnoimaan eBay-myyntiä"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__res_config_settings__ebay_domain__sand
+msgid "Sandbox"
+msgstr "Hiekkalaatikko"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_sandbox_app_id
+msgid "Sandbox App Key"
+msgstr "Hiekkalaatikko-sovellusavain"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_sandbox_cert_id
+msgid "Sandbox Cert Key"
+msgstr "Hiekkalaatikon sertifikaatin avain"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_sandbox_token
+msgid "Sandbox Token"
+msgstr "Hiekkalaatikko-tunniste"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "Sell on eBay"
+msgstr "Myy eBayssä"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_seller_shipping_policy_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_seller_shipping_policy_id
+msgid "Shipping Policy"
+msgstr "Lähetyssäännöt"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_start_date
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_start_date
+msgid "Start Date"
+msgstr "Alkupäivä"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_price
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_price
+msgid "Starting Price for Auction"
+msgstr "Huutokaupan lähtöhinta"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Storage"
+msgstr "Varasto"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Storage location of your products"
+msgstr "Tuotteiden varastointipaikka"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_store_category_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_store_category_id
+msgid "Store Category (Optional)"
+msgstr "Kaupan luokka (valinnainen)"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_store_category_2_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_store_category_2_id
+msgid "Store Category 2 (Optional)"
+msgstr "Myymäläluokka 2 (valinnainen)"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_subtitle
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_subtitle
+msgid "Subtitle"
+msgstr "Alaotsikko"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__short_summary
+msgid "Summary"
+msgstr "Yhteenveto"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Sync now"
+msgstr "Synkronoi nyt"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Synchronization"
+msgstr "Synkronointi"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/sale_order.py:0
+#, python-format
+msgid "The Buyer Chose The Following Delivery Method :\n"
+msgstr "Ostaja valitsi seuraavan toimitustavan :\n"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/sale_order.py:0
+#, python-format
+msgid "The Buyer Posted :\n"
+msgstr "Ostaja lähetti :\n"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"The python 'cryptography' module is not installed on your server.\n"
+"It is necessary to support eBay account deletion notifications, please contact your system administrator to install it."
+msgstr ""
+"Python 'cryptography' -moduulia ei ole asennettu palvelimellesi.\n"
+"Se on tarpeen eBay-tilin poistoilmoitusten tukemiseksi, ota yhteyttä järjestelmänvalvojaan sen asentamiseksi."
+
+#. module: sale_ebay
+#: model:ir.model.fields,help:sale_ebay.field_product_product__ebay_subtitle
+#: model:ir.model.fields,help:sale_ebay.field_product_template__ebay_subtitle
+msgid ""
+"The subtitle is restricted to 55 characters. Fees can be claimed by eBay for"
+" this feature"
+msgstr ""
+"Tekstitys on rajoitettu 55 merkkiin. EBay voi periä maksuja tästä "
+"ominaisuudesta"
+
+#. module: sale_ebay
+#: model:ir.model.fields,help:sale_ebay.field_product_product__ebay_title
+#: model:ir.model.fields,help:sale_ebay.field_product_template__ebay_title
+msgid "The title is restricted to 80 characters"
+msgstr "Otsikon pituus on rajoitettu 80 merkkiin"
+
+#. module: sale_ebay
+#: model:ir.model.fields,help:sale_ebay.field_product_product__ebay_category_2_id
+#: model:ir.model.fields,help:sale_ebay.field_product_template__ebay_category_2_id
+msgid ""
+"The use of a secondary category is not allowed on every eBay sites. Fees can"
+" be claimed by eBay for this feature"
+msgstr ""
+"Toissijaisen luokan käyttö ei ole sallittua kaikilla eBay-sivustoilla. EBay "
+"voi periä maksuja tästä ominaisuudesta"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid ""
+"There is no last synchronization date in your System Parameters. Create a "
+"System Parameter record with the key \"ebay_last_sync\" and the value set to"
+" the date of the oldest order you wish to synchronize in the format \"YYYY-"
+"MM-DD\"."
+msgstr ""
+"Järjestelmäparametreissa ei ole viimeisintä synkronointipäivämäärää. Luo "
+"järjestelmäparametritietue, jonka avain on \"ebay_last_sync\" ja arvo on sen"
+" vanhimman tilauksen päivämäärä, jonka haluat synkronoida, muodossa \"VVVV-"
+"KK-PP\"."
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid ""
+"This function should not be called with a range of more than 30 days, as "
+"eBay does not handle longer timespans. Instead use synchronize_orders which "
+"split in as many calls as needed."
+msgstr ""
+"Tätä toimintoa ei saa kutsua yli 30 päivän pituisella alueella, koska eBay "
+"ei käsittele pidempiä aikavälejä. Käytä sen sijaan synchronize_orders-"
+"toimintoa, joka jaetaan niin moneen kutsuun kuin on tarpeen."
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/res_partner.py:0
+#, python-format
+msgid ""
+"This is an automated notification as a deletion request has been received from eBay concerning the account \"%s (%s)\". The account has been anonymised already and his portal access revoked (if they had any).\n"
+"\n"
+"However, personal information might remain in linked documents, please review them according to laws that apply."
+msgstr ""
+"Tämä on automaattinen ilmoitus siitä, että eBay on vastaanottanut tiliä \"%s (%s)\" koskevan poistopyynnön. Tili on jo anonymisoitu ja hänen portaalioikeutensa on peruutettu (jos hänellä oli sellainen).\n"
+"\n"
+"Henkilökohtaisia tietoja saattaa kuitenkin jäädä linkitettyihin asiakirjoihin, tarkista ne voimassa olevien lakien mukaisesti."
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_title
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_title
+msgid "Title"
+msgstr "Otsikko"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_stock_picking
+msgid "Transfer"
+msgstr "Siirto"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__policy_type
+msgid "Type"
+msgstr "Tyyppi"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_sync_stock
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_sync_stock
+msgid "Use Stock Quantity"
+msgstr "Käytä varastomäärää"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_use
+msgid "Use eBay"
+msgstr "Käytä eBaytä"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_country__ebay_available
+#: model:ir.model.fields,field_description:sale_ebay.field_res_currency__ebay_available
+msgid "Use on eBay"
+msgstr "Käytä eBayssä"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "Variants"
+msgstr "Variaatiot"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_verification_token
+msgid "Verification Token"
+msgstr "Varmennustunniste"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_zip_code
+msgid "Zip"
+msgstr "Postinumero"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "eBay"
+msgstr "eBay"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "eBay Account"
+msgstr "eBay-tili"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_ebay_category
+msgid "eBay Category"
+msgstr "eBay-luokka"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_description
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_description
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "eBay Description"
+msgstr "eBay kuvaus"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_domain
+msgid "eBay Environment"
+msgstr "eBay ympäristö"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_fixed_price
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_fixed_price
+msgid "eBay Fixed Price"
+msgstr "eBay Kiinteä hinta"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_site__ebay_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_id
+msgid "eBay ID"
+msgstr "eBay-tunnus"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_ebay_item_condition
+msgid "eBay Item Condition"
+msgstr "eBayn kohteen kunto"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_ebay_link_listing
+msgid "eBay Link Listing"
+msgstr "eBay-linkki luetteloon"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_link_listing__ebay_id
+msgid "eBay Listing ID"
+msgstr "eBay-listan tunnus"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "eBay Marketplace Account Deletion/Closure Notifications"
+msgstr "eBay-markkinapaikan tilin poisto-/sulkemisilmoitukset"
+
+#. module: sale_ebay
+#: model:mail.activity.type,summary:sale_ebay.ebay_GDPR_notification
+msgid "eBay Odoo connector notification - account deletion"
+msgstr "eBay ja Odoon välisen integraation ilmoitus - tilin poistaminen"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "eBay Options"
+msgstr "eBay-vaihtoehdot"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_ebay_policy
+msgid "eBay Policy"
+msgstr "eBay-käytäntö"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_ebay_site
+msgid "eBay Site"
+msgstr "eBay-sivusto"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_listing_status
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_listing_status
+msgid "eBay Status"
+msgstr "eBay-tila"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_partner__ebay_id
+#: model:ir.model.fields,field_description:sale_ebay.field_res_users__ebay_id
+msgid "eBay User ID"
+msgstr "eBay-käyttäjätunnus"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_variant_url
+msgid "eBay Variant URL"
+msgstr "eBay-variantin URL-osoite"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_site
+msgid "eBay Website"
+msgstr "eBay-sivusto"
+
+#. module: sale_ebay
+#: model:mail.activity.type,name:sale_ebay.ebay_GDPR_notification
+msgid "eBay connector: account deletion notification"
+msgstr "eBay-liitin: tilin poistoilmoitus"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/sale_ebay.py:0
+#, python-format
+msgid ""
+"eBay error: Impossible to synchronize the categories. \n"
+"'%s'"
+msgstr ""
+"eBay-virhe: Mahdotonta synkronoida luokkia.\n"
+"'%s'"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid "eBay is unreachable. Please try again later."
+msgstr "eBay ei ole tavoitettavissa. Yritä myöhemmin uudelleen."
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "eBay parameters"
+msgstr "eBay parametrit"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid ""
+"eBay requires supporting customer account deletion/closure notifications."
+msgstr ""
+"eBay vaatii asiakastilin poistamista/sulkemista koskevien ilmoitusten "
+"tukemista."
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_url
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_url
+msgid "eBay url"
+msgstr "eBay URL"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.action_end_items_listings
+msgid "eBay: End product listings"
+msgstr "eBay: EBay: Lopeta tuoteluettelot"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.action_list_items
+msgid "eBay: List products"
+msgstr "eBay: EBay: Luettelo tuotteista"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.action_relist_items
+msgid "eBay: Relist products"
+msgstr "eBay: EBay: Listaa tuotteet uudelleen"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.action_revise_items
+msgid "eBay: Revise products"
+msgstr "eBay: Tarkista tuotteet"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.action_unlink_items_listings
+msgid "eBay: Unlink product listings"
+msgstr "eBay: Unlink tuoteselosteet"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.action_ebay_update_carrier
+msgid "eBay: Update carrier information"
+msgstr "eBay: Päivitä operaattorin tiedot"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_currency
+msgid "ebay Currency"
+msgstr "eBay valuutta"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_sales_team
+msgid "ebay Sales Team"
+msgstr "ebay myyntitiimi"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "to setup this mechanism."
+msgstr "tämän mekanismin asentamiseksi."
+
+#. module: sale_ebay
+#: code:addons/sale_ebay/tools/ebaysdk.py:0
+#, python-format
+msgid ""
+"An unexpected error occured from eBay.\n"
+"Please check your credentials and try again later."
+msgstr ""

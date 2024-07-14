@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_delivery_ups" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.delivery.ups</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='property_delivery_carrier_id']" position="after">
+                <field name="bill_my_account" invisible="1"/>
+                <field name="property_ups_carrier_account" invisible="not bill_my_account"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

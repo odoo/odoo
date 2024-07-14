@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="res_users_view_form_profile_in_inherit" model="ir.ui.view">
+            <field name="name">res.user.preferences.view.form.l10n.in.payroll.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='emergency_contact']" position="after">
+                    <field name="l10n_in_relationship" readonly="not can_edit"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

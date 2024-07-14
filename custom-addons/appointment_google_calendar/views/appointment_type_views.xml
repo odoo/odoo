@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="appointment_type_view_form" model="ir.ui.view">
+        <field name="name">appointment.type.form.inherit.appointment.google.calendar</field>
+        <field name="model">appointment.type</field>
+        <field name="inherit_id" ref="appointment.appointment_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <div class="alert alert-warning" role="alert" invisible="not users_wo_google_calendar_msg">
+                    <field name="users_wo_google_calendar_msg"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

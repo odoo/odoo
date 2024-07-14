@@ -1,0 +1,1024 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* quality
+#
+# Translators:
+# Matej Mijoč, 2022
+# Ivan Marijanović <ivanm101@yahoo.com>, 2022
+# Vladimir Vrgoč, 2022
+# 0ba0ac30481a756f36528ba6f9a4317e_6443a87 <52eefe24349934c364624ef40611b7a3_1010754>, 2022
+# Mario Jureša <mario.juresa@uvid.hr>, 2022
+# Hrvoje Sić <hrvoje.sic@gmail.com>, 2022
+# Tina Milas, 2022
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2022
+# KRISTINA PALAŠ <kristina.palas@storm.hr>, 2022
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
+# Milan Tribuson <one.mile.code@gmail.com>, 2022
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2022
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2022
+# Martin Trigaux, 2022
+# Bole <bole@dajmi5.com>, 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-16 16:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:48+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2022\n"
+"Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alert_count
+#: model:ir.model.fields,field_description:quality.field_quality_check__alert_count
+msgid "# Quality Alerts"
+msgstr "# upozorenja kvaltete"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__check_count
+msgid "# Quality Checks"
+msgstr "# kontrola kavlitete"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_defaults
+msgid "A Python dictionary that will be evaluated to provide default values when creating new records for this alias."
+msgstr "Python rječnik koji će se provjeravati za zadane postave kada se kreira novi zapis za ovaj alias."
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_needaction
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_needaction
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_needaction
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_needaction
+msgid "Action Needed"
+msgstr "Potrebna dodatna radnja"
+
+#. module: quality
+#: model:quality.alert.stage,name:quality.quality_alert_stage_2
+msgid "Action Proposed"
+msgstr "Predložena radnja"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_point__active
+msgid "Active"
+msgstr "Aktivan"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_ids
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_ids
+msgid "Activities"
+msgstr "Aktivnosti"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_exception_decoration
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Dekoracija iznimke aktivnosti"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_state
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_state
+msgid "Activity State"
+msgstr "Status aktivnosti"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_type_icon
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikona tipa aktivnosti"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__additional_note
+msgid "Additional Note"
+msgstr "Dodatna napomena"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_check__additional_note
+msgid "Additional remarks concerning this check."
+msgstr "Dodatne napomene vezane za ovu kontrolu."
+
+#. module: quality
+#: model:res.groups,name:quality.group_quality_manager
+msgid "Administrator"
+msgstr "Administrator"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__done
+msgid "Alert Processed"
+msgstr "Upozorenje obrađeno"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__alert_ids
+msgid "Alerts"
+msgstr "Upozorenja"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_id
+msgid "Alias"
+msgstr "Alias"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_contact
+msgid "Alias Contact Security"
+msgstr "Alias kontakt za osiguranje"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_name
+msgid "Alias Name"
+msgstr "Alias ime"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_status
+msgid "Alias Status"
+msgstr ""
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_domain
+msgid "Alias domain"
+msgstr "Alias domena"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_status
+msgid "Alias status assessed on the last message received."
+msgstr ""
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_model_id
+msgid "Aliased Model"
+msgstr "Zamjenski model"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_form
+msgid "Archived"
+msgstr "Arhivirano"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_attachment_count
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_attachment_count
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_attachment_count
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_attachment_count
+msgid "Attachment Count"
+msgstr "Broj priloga"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_point__reason
+msgid "Cause"
+msgstr "Uzrok"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__check_id
+#: model:ir.model.fields,field_description:quality.field_quality_point__check_ids
+msgid "Check"
+msgstr "Čekovi"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_point__check_count
+msgid "Check Count"
+msgstr "Kontrolno prebrojavanje"
+
+#. module: quality
+#. odoo-javascript
+#: code:addons/quality/static/src/tablet_image_field/tablet_image_field.xml:0
+#, python-format
+msgid "Close"
+msgstr "Zatvori"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__color
+msgid "Color"
+msgstr "Boja"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_tag__color
+msgid "Color Index"
+msgstr "Indeks boje"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__company_id
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__company_id
+#: model:ir.model.fields,field_description:quality.field_quality_check__company_id
+#: model:ir.model.fields,field_description:quality.field_quality_point__company_id
+msgid "Company"
+msgstr "Tvrtka"
+
+#. module: quality
+#: model:quality.alert.stage,name:quality.quality_alert_stage_1
+msgid "Confirmed"
+msgstr "Potvrđeno"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__control_date
+msgid "Control Date"
+msgstr "Datum kontrole"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__point_id
+msgid "Control Point"
+msgstr "Točka kontrole"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__action_corrective
+msgid "Corrective Action"
+msgstr "Korektivne akcije"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__create_uid
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__create_uid
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__create_uid
+#: model:ir.model.fields,field_description:quality.field_quality_check__create_uid
+#: model:ir.model.fields,field_description:quality.field_quality_point__create_uid
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__create_uid
+#: model:ir.model.fields,field_description:quality.field_quality_reason__create_uid
+#: model:ir.model.fields,field_description:quality.field_quality_tag__create_uid
+msgid "Created by"
+msgstr "Kreirao"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__create_date
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__create_date
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__create_date
+#: model:ir.model.fields,field_description:quality.field_quality_check__create_date
+#: model:ir.model.fields,field_description:quality.field_quality_point__create_date
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__create_date
+#: model:ir.model.fields,field_description:quality.field_quality_reason__create_date
+#: model:ir.model.fields,field_description:quality.field_quality_tag__create_date
+msgid "Created on"
+msgstr "Kreirano"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Creation Date"
+msgstr "Datum kreiranja"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_bounced_content
+msgid "Custom Bounced Message"
+msgstr "Prilagođena poruka odbijanja"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__date_assign
+msgid "Date Assigned"
+msgstr "Datum dodjeljivanja"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__date_close
+msgid "Date Closed"
+msgstr "Datum zatvaranja"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_defaults
+msgid "Default Values"
+msgstr "Zadane vrijednosti"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_point__test_type_id
+msgid "Defines the type of the quality control point."
+msgstr "Definira tip kontrolne točke kontrole kvalitete"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_form
+msgid "Describe the quality check to do..."
+msgstr "Opišite kontrolu kvalitete za napraviti..."
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_form
+msgid "Describe why you need to perform this quality check..."
+msgstr "Opišite zašto je potrebna ova kontrola kvaitete..."
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__description
+msgid "Description"
+msgstr "Opis"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__display_name
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__display_name
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__display_name
+#: model:ir.model.fields,field_description:quality.field_quality_check__display_name
+#: model:ir.model.fields,field_description:quality.field_quality_point__display_name
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__display_name
+#: model:ir.model.fields,field_description:quality.field_quality_reason__display_name
+#: model:ir.model.fields,field_description:quality.field_quality_tag__display_name
+msgid "Display Name"
+msgstr "Naziv"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Done"
+msgstr "Riješeno"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__email_cc
+msgid "Email cc"
+msgstr "Email cc"
+
+#. module: quality
+#: model:ir.model.fields.selection,name:quality.selection__quality_check__quality_state__fail
+msgid "Failed"
+msgstr "Neuspjelo"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__folded
+msgid "Folded"
+msgstr "Omotano"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_follower_ids
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_follower_ids
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_follower_ids
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_follower_ids
+msgid "Followers"
+msgstr "Pratitelji"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_partner_ids
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_partner_ids
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_partner_ids
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Pratitelji (Partneri)"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__activity_type_icon
+#: model:ir.model.fields,help:quality.field_quality_check__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome ikona npr. fa-tasks"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Future Activities"
+msgstr "Buduće aktivnosti"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Group By"
+msgstr "Grupiraj po"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__has_message
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__has_message
+#: model:ir.model.fields,field_description:quality.field_quality_check__has_message
+#: model:ir.model.fields,field_description:quality.field_quality_point__has_message
+msgid "Has Message"
+msgstr "Ima poruku"
+
+#. module: quality
+#: model:ir.model.fields.selection,name:quality.selection__quality_alert__priority__2
+msgid "High"
+msgstr "Visok"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__id
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__id
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__id
+#: model:ir.model.fields,field_description:quality.field_quality_check__id
+#: model:ir.model.fields,field_description:quality.field_quality_point__id
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__id
+#: model:ir.model.fields,field_description:quality.field_quality_reason__id
+#: model:ir.model.fields,field_description:quality.field_quality_tag__id
+msgid "ID"
+msgstr "ID"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_parent_thread_id
+msgid "ID of the parent record holding the alias (example: project holding the task creation alias)"
+msgstr "ID matične evidencije sadrži pseudonim (na primjer : projekt sadrži pseudonim pod kojim djelatnik kreira zadatak)"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_exception_icon
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_exception_icon
+msgid "Icon"
+msgstr "Ikona"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__activity_exception_icon
+#: model:ir.model.fields,help:quality.field_quality_check__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikona za prikaz iznimki."
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__message_needaction
+#: model:ir.model.fields,help:quality.field_quality_alert_team__message_needaction
+#: model:ir.model.fields,help:quality.field_quality_check__message_needaction
+#: model:ir.model.fields,help:quality.field_quality_point__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__message_has_error
+#: model:ir.model.fields,help:quality.field_quality_alert__message_has_sms_error
+#: model:ir.model.fields,help:quality.field_quality_alert_team__message_has_error
+#: model:ir.model.fields,help:quality.field_quality_alert_team__message_has_sms_error
+#: model:ir.model.fields,help:quality.field_quality_check__message_has_error
+#: model:ir.model.fields,help:quality.field_quality_check__message_has_sms_error
+#: model:ir.model.fields,help:quality.field_quality_point__message_has_error
+#: model:ir.model.fields,help:quality.field_quality_point__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_bounced_content
+msgid "If set, this content will automatically be sent out to unauthorized users instead of the default message."
+msgstr "Ako je postavljeno, ovaj sadržaj bit će automatsku poslan neovlaštenim korisnicima umjesto zadane poruke."
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "In Progress"
+msgstr "U tijeku"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_form
+msgid "Instructions"
+msgstr "upute"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_is_follower
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_is_follower
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_is_follower
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_is_follower
+msgid "Is Follower"
+msgstr "Je pratitelj"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__write_uid
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__write_uid
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__write_uid
+#: model:ir.model.fields,field_description:quality.field_quality_check__write_uid
+#: model:ir.model.fields,field_description:quality.field_quality_point__write_uid
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__write_uid
+#: model:ir.model.fields,field_description:quality.field_quality_reason__write_uid
+#: model:ir.model.fields,field_description:quality.field_quality_tag__write_uid
+msgid "Last Updated by"
+msgstr "Promijenio"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__write_date
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__write_date
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__write_date
+#: model:ir.model.fields,field_description:quality.field_quality_check__write_date
+#: model:ir.model.fields,field_description:quality.field_quality_point__write_date
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__write_date
+#: model:ir.model.fields,field_description:quality.field_quality_reason__write_date
+#: model:ir.model.fields,field_description:quality.field_quality_tag__write_date
+msgid "Last Updated on"
+msgstr "Vrijeme promjene"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Late Activities"
+msgstr "Posljednje aktivnosti"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__lot_id
+msgid "Lot"
+msgstr "Lot"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__lot_id
+msgid "Lot/Serial"
+msgstr "Lot/Serija"
+
+#. module: quality
+#: model:ir.model.fields.selection,name:quality.selection__quality_alert__priority__1
+msgid "Low"
+msgstr "Nizak"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_has_error
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_has_error
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_has_error
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_has_error
+msgid "Message Delivery error"
+msgstr "Greška pri isporuci poruke"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_ids
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_ids
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_ids
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_ids
+msgid "Messages"
+msgstr "Poruke"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__my_activity_date_deadline
+#: model:ir.model.fields,field_description:quality.field_quality_check__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Rok za moju aktivnost"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "My Alerts"
+msgstr "Moja upozorenja"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__name
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__name
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__name
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__name
+#: model:ir.model.fields,field_description:quality.field_quality_reason__name
+msgid "Name"
+msgstr "Naziv"
+
+#. module: quality
+#. odoo-python
+#: code:addons/quality/models/quality.py:0
+#: model:quality.alert.stage,name:quality.quality_alert_stage_0
+#, python-format
+msgid "New"
+msgstr "Novi"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_calendar_event_id
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Događaj sljedećeg kalendara aktivnosti"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_date_deadline
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Krajnji rok slijedeće aktivnosti"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_summary
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_summary
+msgid "Next Activity Summary"
+msgstr "Sažetak sljedeće aktivnosti"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_type_id
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tip sljedeće aktivnosti"
+
+#. module: quality
+#. odoo-python
+#: code:addons/quality/models/quality.py:0
+#, python-format
+msgid ""
+"No quality team found for this company.\n"
+"Please go to configuration and create one first."
+msgstr ""
+
+#. module: quality
+#: model:ir.model.fields.selection,name:quality.selection__quality_alert__priority__0
+msgid "Normal"
+msgstr "Normalan"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__note
+#: model:ir.model.fields,field_description:quality.field_quality_point__note
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_form
+msgid "Note"
+msgstr "Bilješka"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_form
+msgid "Notes"
+msgstr "Bilješke"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_needaction_counter
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_needaction_counter
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_needaction_counter
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Broj akcija"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_has_error_counter
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_has_error_counter
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_has_error_counter
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_has_error_counter
+msgid "Number of errors"
+msgstr "Broj grešaka"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__message_needaction_counter
+#: model:ir.model.fields,help:quality.field_quality_alert_team__message_needaction_counter
+#: model:ir.model.fields,help:quality.field_quality_check__message_needaction_counter
+#: model:ir.model.fields,help:quality.field_quality_point__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Broj poruka koje zahtijevaju aktivnost"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__message_has_error_counter
+#: model:ir.model.fields,help:quality.field_quality_alert_team__message_has_error_counter
+#: model:ir.model.fields,help:quality.field_quality_check__message_has_error_counter
+#: model:ir.model.fields,help:quality.field_quality_point__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Broj poruka sa greškama pri isporuci"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_point__picking_type_ids
+msgid "Operation Types"
+msgstr "Vrste operacija"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_form
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_tree
+msgid "Operations"
+msgstr "Operacije"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_force_thread_id
+msgid "Optional ID of a thread (record) to which all incoming messages will be attached, even if they did not reply to it. If set, this will disable the creation of new records completely."
+msgstr "Opcionalni ID zapisa na kojeg će biti povezane sve dolazne poruke, čak i ako oni nisu odgovorili na njega. Ako je postavljeno, to će onemogućiti stvaranje novih zapisa u potpunosti."
+
+#. module: quality
+#: model:quality.reason,name:quality.reason_other
+msgid "Others"
+msgstr "Ostali"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_user_id
+msgid "Owner"
+msgstr "Vlasnik"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_parent_model_id
+msgid "Parent Model"
+msgstr "Ishodni Model"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_parent_thread_id
+msgid "Parent Record Thread ID"
+msgstr "ID zapisa nadređenog"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_parent_model_id
+msgid "Parent model holding the alias. The model holding the alias reference is not necessarily the model given by alias_model_id (example: project (parent_model) and task (model))"
+msgstr "Matični model sadrži pseudonim. Model sadrži alias referencu ali nije nužno da model daje alias_model_id (na primjer: projekt ( matični_model ) kraj zadatka (model))"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__partner_id
+msgid "Partner"
+msgstr "Partner"
+
+#. module: quality
+#: model:quality.reason,name:quality.reason_parts
+msgid "Parts Quality"
+msgstr "Kvaliteta dijelova"
+
+#. module: quality
+#: model:ir.model.fields.selection,name:quality.selection__quality_check__quality_state__pass
+msgid "Passed"
+msgstr "Prošao"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__picking_id
+#: model:ir.model.fields,field_description:quality.field_quality_check__picking_id
+msgid "Picking"
+msgstr "Skladišnice"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__picture
+msgid "Picture"
+msgstr "Slika"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
+"Pravila za objavu poruke na dokumentu putem poštanskog sandučića.\n"
+"- svatko: svatko može objaviti poruku\n"
+"- partneri: samo autentificirani partner\n"
+"- pratitelji: samo pratitelji srodne dokumentacije\n"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__action_preventive
+msgid "Preventive Action"
+msgstr "Preventivna akcija"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__priority
+msgid "Priority"
+msgstr "Prioritet"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__product_tmpl_id
+#: model:ir.model.fields,field_description:quality.field_quality_check__product_id
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Product"
+msgstr "Proizvod"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_point__product_category_ids
+msgid "Product Categories"
+msgstr "Kategorije proizvoda"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__product_id
+msgid "Product Variant"
+msgstr "Varijanta proizvoda"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_point__product_ids
+msgid "Products"
+msgstr "Proizvodi"
+
+#. module: quality
+#: model:ir.model,name:quality.model_quality_alert
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Quality Alert"
+msgstr "Upozorenje kvalitete"
+
+#. module: quality
+#: model:ir.model,name:quality.model_quality_alert_stage
+msgid "Quality Alert Stage"
+msgstr "Faza upozorenja kvalitete"
+
+#. module: quality
+#: model:ir.model,name:quality.model_quality_alert_team
+msgid "Quality Alert Team"
+msgstr "Tim upozorenja kvalitete"
+
+#. module: quality
+#: model:ir.model,name:quality.model_quality_check
+msgid "Quality Check"
+msgstr "Test kvalitete"
+
+#. module: quality
+#: model:ir.model,name:quality.model_quality_point
+msgid "Quality Control Point"
+msgstr "Točka kontrole kvalitete"
+
+#. module: quality
+#: model:ir.model,name:quality.model_quality_point_test_type
+msgid "Quality Control Test Type"
+msgstr "Tip testa kontrole kvalitete"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_point__product_category_ids
+msgid "Quality Point will apply to every Products in the selected Product Categories."
+msgstr ""
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_point__product_ids
+msgid "Quality Point will apply to every selected Products."
+msgstr ""
+
+#. module: quality
+#: model:ir.model,name:quality.model_quality_tag
+msgid "Quality Tag"
+msgstr "Oznaka kvalitete"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Quality Team"
+msgstr "Tim kvalitete"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__rating_ids
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__rating_ids
+#: model:ir.model.fields,field_description:quality.field_quality_check__rating_ids
+#: model:ir.model.fields,field_description:quality.field_quality_point__rating_ids
+msgid "Ratings"
+msgstr ""
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "ID niti zapisa"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__name
+#: model:ir.model.fields,field_description:quality.field_quality_point__name
+msgid "Reference"
+msgstr "Vezna oznaka"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__user_id
+#: model:ir.model.fields,field_description:quality.field_quality_check__user_id
+#: model:ir.model.fields,field_description:quality.field_quality_point__user_id
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Responsible"
+msgstr "Odgovoran"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_user_id
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_user_id
+msgid "Responsible User"
+msgstr "Odgovorna osoba"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__reason_id
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Root Cause"
+msgstr "Glavni uzrok"
+
+#. module: quality
+#: model:ir.model,name:quality.model_quality_reason
+msgid "Root Cause for Quality Failure"
+msgstr "Korjenski uzrok nezadovoljavanja kontrole"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_has_sms_error
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_has_sms_error
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_has_sms_error
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Greška u slanju SMSa"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__sequence
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__sequence
+#: model:ir.model.fields,field_description:quality.field_quality_point__sequence
+msgid "Sequence"
+msgstr "Sekvenca"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Show all records which has next action date is before today"
+msgstr "Prikazuje sve zapise kojima je sljedeći datum akcije prije danas"
+
+#. module: quality
+#: model:quality.alert.stage,name:quality.quality_alert_stage_3
+msgid "Solved"
+msgstr "Riješeno"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__stage_id
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Stage"
+msgstr "Faza"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__quality_state
+msgid "Status"
+msgstr "Status"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__activity_state
+#: model:ir.model.fields,help:quality.field_quality_check__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status po aktivnostima\n"
+"U kašnjenju: Datum aktivnosti je već prošao\n"
+"Danas: Datum aktivnosti je danas\n"
+"Planirano: Buduće aktivnosti."
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_tag__name
+msgid "Tag Name"
+msgstr "Naziv taga"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__tag_ids
+msgid "Tags"
+msgstr "Oznake"
+
+#. module: quality
+#. odoo-javascript
+#: code:addons/quality/static/src/tablet_image_field/tablet_image_field.xml:0
+#, python-format
+msgid "Take a Picture"
+msgstr "Slikaj"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__team_id
+#: model:ir.model.fields,field_description:quality.field_quality_check__team_id
+#: model:ir.model.fields,field_description:quality.field_quality_point__team_id
+msgid "Team"
+msgstr "Tim"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__team_ids
+msgid "Teams"
+msgstr "Timovi"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__test_type
+#: model:ir.model.fields,field_description:quality.field_quality_point__test_type
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__technical_name
+msgid "Technical name"
+msgstr "Tehnički naziv"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__test_type_id
+#: model:ir.model.fields,field_description:quality.field_quality_point__test_type_id
+msgid "Test Type"
+msgstr "Tip testa"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_model_id
+msgid "The model (Odoo Document Kind) to which this alias corresponds. Any incoming email that does not reply to an existing record will cause the creation of a new record of this model (e.g. a Project Task)"
+msgstr "Model (Odoo vrsta dokumenta) na koje se ovaj alias odgovara. Svaki dolazni e-mail koji ne odgovara na postojeći zapis uzrokovati će stvaranje novog zapisa ovog modela (npr. projektni zadatak)"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_name
+msgid "The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>"
+msgstr "Ime e-mail aliasa, npr. 'poslovi' ako žele uhvatiti e-poštu za<jobs@example.odoo.com>"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_user_id
+msgid "The owner of records created upon receiving emails on this alias. If this field is not set the system will attempt to find the right owner based on the sender (From) address, or will use the Administrator account if no system user is found for that address."
+msgstr "Vlasnik zapisa kreiranih nakon primitka e-mailova na taj alias. Ako ovo polje nije postavljeno sustav će pokušati pronaći pravog vlasnika na temelju adrese pošiljatelja (od), ili će koristiti administratorski račun ako ne pronađe sistemskog korisnika za tu adresu."
+
+#. module: quality
+#: model:res.groups,comment:quality.group_quality_manager
+msgid "The quality manager manages the quality process"
+msgstr "Manager kvalitete upravlja procesima kvalitete"
+
+#. module: quality
+#: model:res.groups,comment:quality.group_quality_user
+msgid "The quality user uses the quality process"
+msgstr "Korisnik kvalitete koristi proces kvalitete"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__title
+#: model:ir.model.fields,field_description:quality.field_quality_point__title
+msgid "Title"
+msgstr "Naslov"
+
+#. module: quality
+#: model:ir.model.fields.selection,name:quality.selection__quality_check__quality_state__none
+msgid "To do"
+msgstr "Za napraviti"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Today Activities"
+msgstr "Današnje aktivnosti"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_form
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_tree
+msgid "Type"
+msgstr "Vrsta"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__activity_exception_decoration
+#: model:ir.model.fields,help:quality.field_quality_check__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Vrsta aktivnosti iznimke na zapisu."
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_tag__color
+msgid "Used in the kanban view"
+msgstr "Koristi se u kanban pregledu"
+
+#. module: quality
+#: model:res.groups,name:quality.group_quality_user
+msgid "User"
+msgstr "Korisnik"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__partner_id
+msgid "Vendor"
+msgstr "Dobavljač"
+
+#. module: quality
+#: model:ir.model.fields.selection,name:quality.selection__quality_alert__priority__3
+msgid "Very High"
+msgstr "Jako visok"
+
+#. module: quality
+#. odoo-javascript
+#: code:addons/quality/static/src/tablet_image_field/tablet_image_field.xml:0
+#, python-format
+msgid "Viewer"
+msgstr ""
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__website_message_ids
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__website_message_ids
+#: model:ir.model.fields,field_description:quality.field_quality_check__website_message_ids
+#: model:ir.model.fields,field_description:quality.field_quality_point__website_message_ids
+msgid "Website Messages"
+msgstr "Poruke webstranica"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__website_message_ids
+#: model:ir.model.fields,help:quality.field_quality_alert_team__website_message_ids
+#: model:ir.model.fields,help:quality.field_quality_check__website_message_ids
+#: model:ir.model.fields,help:quality.field_quality_point__website_message_ids
+msgid "Website communication history"
+msgstr "Povijest komunikacije Web stranice"
+
+#. module: quality
+#: model:quality.reason,name:quality.reason_wo
+msgid "Work Operation"
+msgstr "Radna operacija"
+
+#. module: quality
+#: model:quality.reason,name:quality.reason_workcenter
+msgid "Workcenter Failure"
+msgstr "Greška radnog centra"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__active
+msgid "active"
+msgstr "aktivan"

@@ -1,0 +1,2918 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* planning
+# 
+# Translators:
+# Abe Manyo, 2024
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (salin)"
+
+#. module: planning
+#: model:ir.actions.report,print_report_name:planning.report_planning_slot
+msgid "'Planning'"
+msgstr "'Planning'"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning_template.py:0
+#, python-format
+msgid "(%s days span)"
+msgstr "(%s rentang hari)"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.open_slots_list_template
+msgid ".&amp;nbsp;"
+msgstr ".&amp;nbsp;"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.resource_planning
+msgid "01/01/2023 5:00 PM"
+msgstr "01/01/2023 5:00 PM"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.resource_planning
+msgid "01/01/2023 9:00 AM"
+msgstr "01/01/2023 9:00 AM"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "04:00"
+msgstr "04:00"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "08:00"
+msgstr "08:00"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.resource_planning
+msgid "100"
+msgstr "100"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "12:00"
+msgstr "12:00"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "16:00"
+msgstr "16:00"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.resource_planning
+msgid "8 hours"
+msgstr "8 jam"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid ""
+"<b class=\"o_gantt_header o_gantt_row_sidebar position-sticky top-0 bg-view "
+"d-flex align-items-center justify-content-center\">Schedule</b>"
+msgstr ""
+"<b class=\"o_gantt_header o_gantt_row_sidebar position-sticky top-0 bg-view "
+"d-flex align-items-center justify-content-center\">Jadwal</b>"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid ""
+"<b class=\"o_gantt_header_scale d-flex align-items-center justify-content-"
+"center\">12 February 2023 - 18 February 2023</b>"
+msgstr ""
+"<b class=\"o_gantt_header_scale d-flex align-items-center justify-content-"
+"center\">12 Febuari 2023 - 18 Febuari 2023</b>"
+
+#. module: planning
+#: model_terms:digest.tip,tip_description:planning.digest_tip_planning_0
+msgid "<b class=\"tip_title\">Tip: Record your planning faster</b>"
+msgstr "<b class=\"tip_title\">Tip: Catat planning Anda dengan lebih cepat</b>"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/js/tours/planning.js:0
+#, python-format
+msgid "<b>Congratulations!</b></br> You are now a master of planning."
+msgstr "<b>Selamat!</b></br> Anda sekarang menguasai planning."
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/js/tours/planning.js:0
+#, python-format
+msgid ""
+"<b>Drag & drop</b> your shift to reschedule it. <i>Tip: hit CTRL (or Cmd) to"
+" duplicate it instead.</i> <b>Adjust the size</b> of the shift to modify its"
+" period."
+msgstr ""
+"<b>Tarik & lepas</b> shift Anda untuk menjadwalkan ulang shift. <i>Tip: "
+"pencet CTRL (atau Cmd) untuk menggandakannya.</i> <b>Sesuaikan ukuran</b> "
+"shift untuk memodifikasi periodenya."
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/js/tours/planning.js:0
+#, python-format
+msgid "<b>Publish & send</b> your employee's planning."
+msgstr "<b>Publikasikan kirim</b> rencana karyawan Anda."
+
+#. module: planning
+#: model:mail.template,body_html:planning.email_template_shift_switch_email
+msgid ""
+"<div>\n"
+"                    <p>\n"
+"                        Dear <t t-out=\"ctx.get('old_assignee_name', 'Mitchel Admin')\"></t>,\n"
+"                        <br><br>\n"
+"                        Your following shift was re-assigned to <t t-out=\"ctx.get('new_assignee_name', 'Marc Demo')\"></t>.\n"
+"                    </p>\n"
+"                    <br>\n"
+"                    <table style=\"width: 80%; margin: auto;\">\n"
+"                        <tr>\n"
+"                            <th style=\"padding: 5px;text-align: left;\">From</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"ctx.get('start_datetime') or ''\">05/31/2021 08:00:00</td>\n"
+"                        </tr>\n"
+"                        <tr>\n"
+"                            <th style=\"padding: 5px;text-align: left;\">To</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"ctx.get('end_datetime') or ''\">05/31/2021 16:00:00</td>\n"
+"                        </tr>\n"
+"                        <tr t-if=\"object.role_id\">\n"
+"                            <th style=\"padding: 5px;text-align: left;\">Role</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"object.role_id.name or ''\">Bartender</td>\n"
+"                        </tr>\n"
+"                        <tr t-if=\"hasattr(object, 'project_id') and object.project_id\">\n"
+"                            <th style=\"padding: 5px;text-align: left;\">Project</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"object.sudo().project_id.name or ''\">Gathering</td>\n"
+"                        </tr>\n"
+"                        <tr t-if=\"hasattr(object, 'sale_line_id') and object.sale_line_id\">\n"
+"                            <th style=\"padding: 5px; text-align: left;\">Sale Order Item</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"object.sudo().sale_line_id.name or ''\"></td>\n"
+"                        </tr>\n"
+"                        <tr t-if=\"hasattr(object, 'name') and object.name\">\n"
+"                            <th style=\"padding: 5px;text-align: left;\">Note</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"object.name or ''\">/</td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"                    <p>\n"
+"                        Yth <t t-out=\"ctx.get('old_assignee_name', 'Mitchel Admin')\"></t>,\n"
+"                        <br><br>\n"
+"                        Shift Anda ditugaskan ulang ke <t t-out=\"ctx.get('new_assignee_name', 'Marc Demo')\"></t>.\n"
+"                    </p>\n"
+"                    <br>\n"
+"                    <table style=\"width: 80%; margin: auto;\">\n"
+"                        <tr>\n"
+"                            <th style=\"padding: 5px;text-align: left;\">Dari</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"ctx.get('start_datetime') or ''\">05/31/2021 08:00:00</td>\n"
+"                        </tr>\n"
+"                        <tr>\n"
+"                            <th style=\"padding: 5px;text-align: left;\">Sampai</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"ctx.get('end_datetime') or ''\">05/31/2021 16:00:00</td>\n"
+"                        </tr>\n"
+"                        <tr t-if=\"object.role_id\">\n"
+"                            <th style=\"padding: 5px;text-align: left;\">Peran</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"object.role_id.name or ''\">Bartender</td>\n"
+"                        </tr>\n"
+"                        <tr t-if=\"hasattr(object, 'project_id') and object.project_id\">\n"
+"                            <th style=\"padding: 5px;text-align: left;\">Project</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"object.sudo().project_id.name or ''\">Gathering</td>\n"
+"                        </tr>\n"
+"                        <tr t-if=\"hasattr(object, 'sale_line_id') and object.sale_line_id\">\n"
+"                            <th style=\"padding: 5px; text-align: left;\">Item Sale Order</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"object.sudo().sale_line_id.name or ''\"></td>\n"
+"                        </tr>\n"
+"                        <tr t-if=\"hasattr(object, 'name') and object.name\">\n"
+"                            <th style=\"padding: 5px;text-align: left;\">Catatan</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"object.name or ''\">/</td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </div>\n"
+"            "
+
+#. module: planning
+#: model:mail.template,body_html:planning.email_template_planning_planning
+msgid ""
+"<div>\n"
+"                    <p>\n"
+"                    <t t-if=\"ctx.get('employee')\">\n"
+"                        Dear <t t-out=\"ctx['employee'].name or ''\"></t>,\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        Hello,\n"
+"                    </t>\n"
+"                        <br><br>\n"
+"                    <t t-if=\"ctx.get('assigned_new_shift')\">\n"
+"                        You have been assigned new shifts:\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        Please, find your planning for the following period:\n"
+"                    </t>\n"
+"                    </p>\n"
+"                    <br>\n"
+"\n"
+"                    <table style=\"table-layout: fixed; width: 80%; margin: auto;\">\n"
+"                        <tr>\n"
+"                            <th style=\"padding: 5px;text-align: left; width: 15%;\">From</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"format_date(ctx.get('start_datetime')) or ''\">05/05/2021</td>\n"
+"                        </tr>\n"
+"                        <tr>\n"
+"                            <th style=\"padding: 5px;text-align: left; width: 15%;\">To</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"format_date(ctx.get('end_datetime')) or ''\">05/05/2021</td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"\n"
+"                    <div t-if=\"ctx.get('planning_url')\" style=\"margin: 15px;\">\n"
+"                        <a t-att-href=\"ctx.get('planning_url')\" target=\"_blank\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">View Your Planning</a>\n"
+"                    </div>\n"
+"\n"
+"                    <div t-if=\"ctx.get('slot_unassigned')\">\n"
+"                        <p>If an open shift is available and at your convenience, please assign yourself to it</p>\n"
+"                    </div>\n"
+"                    <br>\n"
+"\n"
+"                    <t t-if=\"ctx.get('message')\">\n"
+"                        <p t-out=\"ctx['message'] or ''\"></p>\n"
+"                    </t>\n"
+"\n"
+"                    <p t-if=\"hasattr(object, 'allow_self_unassign') and object.allow_self_unassign and hasattr(object, 'self_unassign_days_before') and object.self_unassign_days_before\">\n"
+"                        As a small reminder, you have <t t-out=\"object.self_unassign_days_before or ''\">5</t>day(s) before the beginning of a shift to unassign yourself if you are unavailable. Thank you for your understanding.\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"                    <p>\n"
+"                    <t t-if=\"ctx.get('employee')\">\n"
+"                        Dear <t t-out=\"ctx['employee'].name or ''\"></t>,\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        Halo,\n"
+"                    </t>\n"
+"                        <br><br>\n"
+"                    <t t-if=\"ctx.get('assigned_new_shift')\">\n"
+"                        Anda telah diberikan shift baru:\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        Silakan lihat jadwal Anda untuk periode berikut:\n"
+"                    </t>\n"
+"                    </p>\n"
+"                    <br>\n"
+"\n"
+"                    <table style=\"table-layout: fixed; width: 80%; margin: auto;\">\n"
+"                        <tr>\n"
+"                            <th style=\"padding: 5px;text-align: left; width: 15%;\">Dari</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"format_date(ctx.get('start_datetime')) or ''\">05/05/2021</td>\n"
+"                        </tr>\n"
+"                        <tr>\n"
+"                            <th style=\"padding: 5px;text-align: left; width: 15%;\">Sampai</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"format_date(ctx.get('end_datetime')) or ''\">05/05/2021</td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"\n"
+"                    <div t-if=\"ctx.get('planning_url')\" style=\"margin: 15px;\">\n"
+"                        <a t-att-href=\"ctx.get('planning_url')\" target=\"_blank\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">Lihat Jadwal Anda</a>\n"
+"                    </div>\n"
+"\n"
+"                    <div t-if=\"ctx.get('slot_unassigned')\">\n"
+"                        <p>Bila ada shift baru yang terbuka dan Anda tertarik, silakan masukkan nama Anda ke shift tersebut</p>\n"
+"                    </div>\n"
+"                    <br>\n"
+"\n"
+"                    <t t-if=\"ctx.get('message')\">\n"
+"                        <p t-out=\"ctx['message'] or ''\"></p>\n"
+"                    </t>\n"
+"\n"
+"                    <p t-if=\"hasattr(object, 'allow_self_unassign') and object.allow_self_unassign and hasattr(object, 'self_unassign_days_before') and object.self_unassign_days_before\">\n"
+"                        Sebagai pengingat saja, Anda memiliki <t t-out=\"object.self_unassign_days_before or ''\">5</t>hari sebelum shift dimulai untuk membatalkan shift tersebut bila Anda tidak bisa hadir. Terima kasih atas pengertian Anda.\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+
+#. module: planning
+#: model:mail.template,body_html:planning.email_template_slot_single
+msgid ""
+"<div>\n"
+"                    <p>Dear <t t-out=\"ctx.get('employee_name', '')\">Anita Oliver</t>,<br><br></p>\n"
+"                    <t t-if=\"ctx.get('open_shift_available')\">\n"
+"                        <p>A new open shift is available:</p>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        <p>You have been assigned the following schedule:</p>\n"
+"                    </t>\n"
+"                    <br>\n"
+"                    <table style=\"width: 80%; margin: auto;\">\n"
+"                        <tr>\n"
+"                            <th style=\"padding: 5px;text-align: left;\">From</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"ctx.get('start_datetime') or ''\">05/31/2021 08:00:00</td>\n"
+"                        </tr>\n"
+"                        <tr>\n"
+"                            <th style=\"padding: 5px;text-align: left;\">To</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"ctx.get('end_datetime') or ''\">05/31/2021 16:00:00</td>\n"
+"                        </tr>\n"
+"                        <tr t-if=\"object.role_id\">\n"
+"                            <th style=\"padding: 5px;text-align: left;\">Role</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"object.role_id.name or ''\">Bartender</td>\n"
+"                        </tr>\n"
+"                        <tr t-if=\"hasattr(object, 'project_id') and object.project_id\">\n"
+"                            <th style=\"padding: 5px;text-align: left;\">Project</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"object.sudo().project_id.name or ''\">Gathering</td>\n"
+"                        </tr>\n"
+"                        <tr t-if=\"hasattr(object, 'sale_line_id') and object.sale_line_id\">\n"
+"                            <th style=\"padding: 5px; text-align: left;\">Sale Order Item</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"object.sudo().sale_line_id.name or ''\"></td>\n"
+"                        </tr>\n"
+"                        <tr t-if=\"hasattr(object, 'name') and object.name\">\n"
+"                            <th style=\"padding: 5px;text-align: left;\">Note</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"object.name or ''\">/</td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"                    <p>Yth <t t-out=\"ctx.get('employee_name', '')\">Anita Oliver</t>,<br><br></p>\n"
+"                    <t t-if=\"ctx.get('open_shift_available')\">\n"
+"                        <p>Shift kosong baru tersedia:</p>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        <p>Anda telah ditugaskan ke tanggal berikut:</p>\n"
+"                    </t>\n"
+"                    <br>\n"
+"                    <table style=\"width: 80%; margin: auto;\">\n"
+"                        <tr>\n"
+"                            <th style=\"padding: 5px;text-align: left;\">Dari</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"ctx.get('start_datetime') or ''\">05/31/2021 08:00:00</td>\n"
+"                        </tr>\n"
+"                        <tr>\n"
+"                            <th style=\"padding: 5px;text-align: left;\">Sampai</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"ctx.get('end_datetime') or ''\">05/31/2021 16:00:00</td>\n"
+"                        </tr>\n"
+"                        <tr t-if=\"object.role_id\">\n"
+"                            <th style=\"padding: 5px;text-align: left;\">Peran</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"object.role_id.name or ''\">Bartender</td>\n"
+"                        </tr>\n"
+"                        <tr t-if=\"hasattr(object, 'project_id') and object.project_id\">\n"
+"                            <th style=\"padding: 5px;text-align: left;\">Project</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"object.sudo().project_id.name or ''\">Gathering</td>\n"
+"                        </tr>\n"
+"                        <tr t-if=\"hasattr(object, 'sale_line_id') and object.sale_line_id\">\n"
+"                            <th style=\"padding: 5px; text-align: left;\">Item Sale Order</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"object.sudo().sale_line_id.name or ''\"></td>\n"
+"                        </tr>\n"
+"                        <tr t-if=\"hasattr(object, 'name') and object.name\">\n"
+"                            <th style=\"padding: 5px;text-align: left;\">Catatan</th>\n"
+"                            <td style=\"padding: 5px;\" t-out=\"object.name or ''\">/</td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </div>\n"
+"            "
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_shift_notification
+msgid ""
+"<i class=\"fa fa-check-circle text-success\"/>\n"
+"                        You have successfully requested to switch your shift. You will be notified when another employee takes over your shift."
+msgstr ""
+"<i class=\"fa fa-check-circle text-success\"/>\n"
+"                        Anda sukses meminta pergantian shift Anda. Anda akan dinotifikasi saat karyawan lain mengambil alih shift Anda."
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_shift_notification
+msgid ""
+"<i class=\"fa fa-check-circle text-success\"/> Request to switch shift "
+"cancelled successfully."
+msgstr ""
+"<i class=\"fa fa-check-circle text-success\"/> Permintaan pergantian shift "
+"sukses dibatalkan."
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_shift_notification
+msgid ""
+"<i class=\"fa fa-check-circle text-success\"/> This shift is no longer "
+"assigned to you."
+msgstr ""
+"<i class=\"fa fa-check-circle text-success\"/> Shift ini tidak lagi "
+"ditugaskan ke Anda."
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_shift_notification
+msgid ""
+"<i class=\"fa fa-check-circle text-success\"/> You were successfully "
+"assigned this open shift."
+msgstr ""
+"<i class=\"fa fa-check-circle text-success\"/> Anda sukses ditugaskan ke "
+"shift yang kosong ini."
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_slot_template_view_kanban
+msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Hours\" title=\"Hours\"/>"
+msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Hours\" title=\"Jam\"/>"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_assignee_contact_popover
+msgid ""
+"<i class=\"fa fa-envelope-o\" title=\"Mail\" role=\"img\" style=\"padding-"
+"right: 2px\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope-o\" title=\"Email\" role=\"img\" style=\"padding-"
+"right: 2px\"/>"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_shift_notification
+msgid ""
+"<i class=\"fa fa-exclamation-circle text-warning\"/> This shift is already "
+"assigned to another employee."
+msgstr ""
+"<i class=\"fa fa-exclamation-circle text-warning\"/> Shift ini sudah "
+"ditugaskan ke karyawan lain."
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_shift_notification
+msgid ""
+"<i class=\"fa fa-exclamation-circle text-warning\"/> You can no longer "
+"unassign yourself from this shift."
+msgstr ""
+"<i class=\"fa fa-exclamation-circle text-warning\"/> Anda tidak lagi dapat "
+"membatalkan penugasan Anda dari shift ini."
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_slot_template_view_form
+msgid ""
+"<i class=\"fa fa-long-arrow-right my-1 mx-1\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
+msgstr ""
+"<i class=\"fa fa-long-arrow-right my-1 mx-1\" aria-label=\"Arrow icon\" "
+"title=\"Arah Panah\"/>"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.open_slots_list_template
+msgid "<i class=\"fa fa-long-arrow-right\" aria-label=\"Arrow icon\" title=\"Arrow\"/>"
+msgstr ""
+"<i class=\"fa fa-long-arrow-right\" aria-label=\"Arrow icon\" title=\"Arah "
+"Panah\"/>"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_gantt
+msgid "<i class=\"fa fa-long-arrow-right\" title=\"Arrow\"/>"
+msgstr "<i class=\"fa fa-long-arrow-right\" title=\"Panah\"/>"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_assignee_contact_popover
+msgid "<i class=\"fa fa-phone\" title=\"Phone\" role=\"img\" style=\"padding-right: 2px\"/>"
+msgstr ""
+"<i class=\"fa fa-phone\" title=\"Telepon\" role=\"img\" style=\"padding-"
+"right: 2px\"/>"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "<i class=\"fa small fa-minus me-1\"></i>Bartender"
+msgstr "<i class=\"fa small fa-minus me-1\"></i>Bartender"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "<i class=\"fa small fa-minus me-1\"></i>Waiter"
+msgstr "<i class=\"fa small fa-minus me-1\"></i>Waiter"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_kanban
+msgid "<i class=\"me-1 fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr "<i class=\"me-1 fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Tanggal\"/>"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.period_report_template
+msgid "<span aria-label=\"Close\">×</span>"
+msgstr "<span aria-label=\"Close\">×</span>"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+msgid ""
+"<span class=\"align-middle\" invisible=\"overlap_slot_count == 0\">Prepare "
+"for the ultimate multi-tasking challenge:</span>"
+msgstr ""
+"<span class=\"align-middle\" invisible=\"overlap_slot_count == 0\">Siapkan "
+"diri Anda untuk tantangan multi-tasking paling berat:</span>"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+msgid ""
+"<span class=\"align-middle\" invisible=\"overlap_slot_count == "
+"0\">conflict.</span>"
+msgstr ""
+"<span class=\"align-middle\" invisible=\"overlap_slot_count == "
+"0\">konflik.</span>"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+msgid "<span class=\"ms-0 me-4\">Edit</span>"
+msgstr "<span class=\"ms-0 me-4\">Edit</span>"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_slot_template_view_form
+msgid "<span class=\"ms-2 flex-shrink-1\"> Working hours</span>"
+msgstr "<span class=\"ms-2 flex-shrink-1\"> Jam kerja</span>"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid ""
+"<span class=\"o_gantt_consolidated_pill_title bg-view text-truncate px-1 "
+"mb-1\">04:00</span>"
+msgstr ""
+"<span class=\"o_gantt_consolidated_pill_title bg-view text-truncate px-1 "
+"mb-1\">04:00</span>"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid ""
+"<span class=\"o_gantt_consolidated_pill_title bg-view text-truncate px-1 "
+"mb-1\">12:00</span>"
+msgstr ""
+"<span class=\"o_gantt_consolidated_pill_title bg-view text-truncate px-1 "
+"mb-1\">12:00</span>"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid ""
+"<span class=\"o_gantt_consolidated_pill_title bg-view text-truncate px-1 "
+"mb-1\">16:00</span>"
+msgstr ""
+"<span class=\"o_gantt_consolidated_pill_title bg-view text-truncate px-1 "
+"mb-1\">16:00</span>"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid ""
+"<span class=\"o_gantt_pill_title bg-view text-truncate px-1 "
+"z-index-1\">04:00</span>"
+msgstr ""
+"<span class=\"o_gantt_pill_title bg-view text-truncate px-1 "
+"z-index-1\">04:00</span>"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid ""
+"<span class=\"o_gantt_pill_title bg-view text-truncate px-1 "
+"z-index-1\">08:00</span>"
+msgstr ""
+"<span class=\"o_gantt_pill_title bg-view text-truncate px-1 "
+"z-index-1\">08:00</span>"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid ""
+"<span class=\"o_gantt_pill_title bg-view text-truncate px-1 "
+"z-index-1\">12:00</span>"
+msgstr ""
+"<span class=\"o_gantt_pill_title bg-view text-truncate px-1 "
+"z-index-1\">12:00</span>"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid ""
+"<span class=\"o_gantt_pill_title text-truncate mx-1\">1:00 PM - 5:00 PM (4h)"
+" - Jeffrey Kelly</span>"
+msgstr ""
+"<span class=\"o_gantt_pill_title text-truncate mx-1\">1:00 PM - 5:00 PM (4j)"
+" - Jeffrey Kelly</span>"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid ""
+"<span class=\"o_gantt_pill_title text-truncate mx-1\">1:00 PM - 5:00 PM "
+"(4h)</span>"
+msgstr ""
+"<span class=\"o_gantt_pill_title text-truncate mx-1\">1:00 PM - 5:00 PM "
+"(4j)</span>"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid ""
+"<span class=\"o_gantt_pill_title text-truncate mx-1\">8:00 AM - 12:00 PM "
+"(4h) - Doris Cole</span>"
+msgstr ""
+"<span class=\"o_gantt_pill_title text-truncate mx-1\">8:00 AM - 12:00 PM "
+"(4j) - Doris Cole</span>"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid ""
+"<span class=\"o_gantt_pill_title text-truncate mx-1\">8:00 AM - 12:00 PM "
+"(4h) - Eli Lambert</span>"
+msgstr ""
+"<span class=\"o_gantt_pill_title text-truncate mx-1\">8:00 AM - 12:00 PM "
+"(4j) - Eli Lambert</span>"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid ""
+"<span class=\"o_gantt_pill_title text-truncate mx-1\">8:00 AM - 12:00 PM "
+"(4h)</span>"
+msgstr ""
+"<span class=\"o_gantt_pill_title text-truncate mx-1\">8:00 AM - 12:00 PM "
+"(4j)</span>"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.period_report_template
+msgid ""
+"<span class=\"o_start_date\"/>\n"
+"                                    <i class=\"mx-1 fa fa-long-arrow-right\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
+"                                    <span class=\"o_end_date\"/>"
+msgstr ""
+"<span class=\"o_start_date\"/>\n"
+"                                    <i class=\"mx-1 fa fa-long-arrow-right\" aria-label=\"Arrow icon\" title=\"Arah Panah\"/>\n"
+"                                    <span class=\"o_end_date\"/>"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.hr_employee_view_form_inherit
+msgid "<span class=\"o_stat_text\">Planning</span>"
+msgstr "<span class=\"o_stat_text\">Planning</span>"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "<span>Doris Cole <span class=\"text-muted\">(Bartender)</span></span>"
+msgstr "<span>Doris Cole <span class=\"text-muted\">(Bartender)</span></span>"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "<span>Eli Lambert <span class=\"text-muted\">(Waiter)</span></span>"
+msgstr "<span>Eli Lambert <span class=\"text-muted\">(Waiter)</span></span>"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "<span>Jeffrey Kelly <span class=\"text-muted\">(Bartender)</span></span>"
+msgstr "<span>Jeffrey Kelly <span class=\"text-muted\">(Bartender)</span></span>"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_gantt
+msgid ""
+"<span>The employee assigned would like to switch shifts with someone "
+"else.</span>"
+msgstr ""
+"<span>Karyawan yang ditugaskan ingin mengganti shift dengan orang "
+"lain.</span>"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.res_config_settings_view_form
+msgid "<span>months ahead</span>"
+msgstr "<span>bulan ke depan</span>"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_gantt
+msgid "<strong>Allocated Time — </strong>"
+msgstr "<strong>Waktu yang Dialokasi — </strong>"
+
+#. module: planning
+#: model:ir.model.constraint,message:planning.constraint_planning_recurrency_check_until_limit
+msgid ""
+"A recurrence repeating itself until a certain date must have its limit set"
+msgstr ""
+"Pengulangan yang terus berulang sampai tanggal tertentu harus memiliki "
+"batasan"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_role__active
+#: model:ir.model.fields,field_description:planning.field_planning_slot_template__active
+msgid "Active"
+msgstr "Aktif"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_gantt/planning_gantt_controller.js:0
+#, python-format
+msgid "Add Shift"
+msgstr "Tambahkan Shift"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_send_view_form
+msgid "Additional message"
+msgstr "Pesan tambahan"
+
+#. module: planning
+#: model:ir.model.fields,help:planning.field_planning_send__note
+msgid "Additional message displayed in the email sent to employees"
+msgstr "Pesan tambahan yang ditampilkan di email yang dikirim ke karyawan"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+msgid "Additional note sent to the employee"
+msgstr "Catatan tambahan yang dikirim ke karyawan"
+
+#. module: planning
+#: model:res.groups,name:planning.group_planning_manager
+msgid "Administrator"
+msgstr "Administrator"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_hooks.js:0
+#, python-format
+msgid ""
+"All open shifts have already been assigned, or there are no resources "
+"available to take them at this time."
+msgstr ""
+"Semua shift kosong sudah ditugaskan, atau tidak ada sumber daya yang "
+"tersedia untuk mengambil shift saat ini."
+
+#. module: planning
+#: model:ir.model.fields.selection,name:planning.selection__planning_slot__recurrence_update__all
+msgid "All shifts"
+msgstr "Semua shift"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form_in_gantt
+msgid ""
+"All subsequent shifts will be deleted. Are you sure you want to continue?"
+msgstr ""
+"Semua shift selanjutnya akan dihapus. Apakah Anda yakin ingin melanjutkan?"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__allocated_hours
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_tree
+msgid "Allocated Hours"
+msgstr "Jam yang Dialokasikan"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_tree
+msgid "Allocated Percentage"
+msgstr "Persentase yang Dialokasikan"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__allocated_hours
+#: model_terms:ir.ui.view,arch_db:planning.resource_planning
+msgid "Allocated Time"
+msgstr "Waktu yang Dialokasikan"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__allocated_percentage
+msgid "Allocated Time %"
+msgstr "Waktu yang Dialokasikan %"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__allocated_percentage
+msgid "Allocated Time (%)"
+msgstr "Waktu yang Dialokasikan (%)"
+
+#. module: planning
+#: model:ir.model.constraint,message:planning.constraint_planning_slot_check_allocated_hours_positive
+msgid "Allocated hours and allocated time percentage cannot be negative."
+msgstr ""
+"Jam yang dialokasikan dan persentase waktu yang dialokasikan tidak boleh "
+"negatif."
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__allocation_type
+msgid "Allocation Type"
+msgstr "Tipe Alokasi"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__allow_template_creation
+msgid "Allow Template Creation"
+msgstr "Izinkan Pembuatan Templat"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_res_config_settings__planning_allow_self_unassign
+msgid "Allow Unassignment"
+msgstr "Izinkan Pembatalan Penugasan"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning_recurrency.py:0
+#, python-format
+msgid "An shift must be in the same company as its recurrency."
+msgstr "Shift harus di perusahaan yang sama dengan pengulangannya."
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_report_action_analysis
+msgid ""
+"Analyze the allocation of your resources across roles, projects, and sales "
+"orders, and estimate future needs."
+msgstr ""
+"Analisa alokasi sumber daya menurut peran, projec, dan sales order, dan "
+"perkirakan kebutuhan masa depan."
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_role_view_form
+#: model_terms:ir.ui.view,arch_db:planning.planning_role_view_search
+#: model_terms:ir.ui.view,arch_db:planning.planning_slot_template_view_form
+#: model_terms:ir.ui.view,arch_db:planning.planning_slot_template_view_search
+msgid "Archived"
+msgstr "Diarsipkan"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/resource_form/resource_form_controller.js:0
+#: code:addons/planning/static/src/views/resource_list/resource_list_controller.js:0
+#, python-format
+msgid ""
+"Archiving this resource will transform all of its future shifts into open "
+"shifts. Are you sure you want to continue?"
+msgstr ""
+"Mengarsip sumber daya ini akan mengubah semua shift di masa depan menjadi "
+"shift kosong. Apakah Anda yakin ingin melanjutkan?"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_form/planning_form_view.js:0
+#, python-format
+msgid "Are you sure you want to delete this shift?"
+msgstr "Apakah Anda yakin ingin menghapus shift ini?"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid ""
+"As there is no running contract during this period, this resource is not "
+"expected to work a shift. Planned hours:"
+msgstr ""
+"Karena tidak ada kontrak yang berjalan selama periode ini, sumber daya ini "
+"tidak diharapkan untuk bekerja pada shift ini. Jam yang direncanakan:"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form_in_gantt
+msgid "Ask To Switch"
+msgstr "Minta Penggantian"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.period_report_template
+msgid "Ask to Switch"
+msgstr "Minta Penggantian"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/js/tours/planning.js:0
+#, python-format
+msgid ""
+"Assign a <b>resource</b>, or leave it open for the moment. <i>Tip: Create "
+"open shifts for the roles you will be needing to complete a mission. Then, "
+"assign those open shifts to the resources that are available.</i>"
+msgstr ""
+"Tetapkan <b>sumber daya</b>, atau biarkan kosong untuk saat ini. <i>Tip: "
+"Buat shift kosong untuk peran yang Anda butuhkan untuk menyelesaikan misi. "
+"Lalu, tugaskan shift kosong tersebut ke sumber daya yang tersedia.</i>"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.unwanted_slots_list_template
+msgid "Assignee"
+msgstr "Petugas"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_calendar/planning_calendar_controller.xml:0
+#: code:addons/planning/static/src/views/planning_gantt/planning_gantt_controller.xml:0
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form_in_gantt
+#, python-format
+msgid "Auto Plan"
+msgstr "Rencana Otomatis"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_calendar/planning_calendar_controller.xml:0
+#: code:addons/planning/static/src/views/planning_gantt/planning_gantt_controller.xml:0
+#, python-format
+msgid "Automatically plan open shifts and sales orders"
+msgstr "Otomatis rencanakan shift dan sales order kosong"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_calendar/planning_filter_panel/planning_calendar_filter_panel.xml:0
+#, python-format
+msgid "Avatar"
+msgstr "Avatar"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_resource_resource__avatar_128
+msgid "Avatar 128"
+msgstr "Avatar 128"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "Bartender"
+msgstr "Bartender"
+
+#. module: planning
+#: model:ir.model,name:planning.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "Karyawan Dasar"
+
+#. module: planning
+#: model:ir.ui.menu,name:planning.planning_menu_schedule_by_resource
+msgid "By Resource"
+msgstr "Berdasarkan Sumber Daya"
+
+#. module: planning
+#: model:ir.ui.menu,name:planning.planning_menu_schedule_by_role
+msgid "By Role"
+msgstr "Berdasarkan Peran"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.unwanted_slots_list_template
+msgid "CANCEL SWITCH"
+msgstr "BATALKAN PENGGANTIAN"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_res_company__planning_allow_self_unassign
+msgid "Can Employee Un-Assign Themselves?"
+msgstr "Apakah Karyawan Dapat Membatalkan Penugasan Mereka Sendiri?"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.period_report_template
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form_in_gantt
+msgid "Cancel Switch"
+msgstr "Batalkan Penggantian"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.hr_employee_view_form_simplified
+msgid "Chat"
+msgstr "Chat"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_role__color
+#: model:ir.model.fields,field_description:planning.field_planning_slot__color
+#: model:ir.model.fields,field_description:planning.field_resource_resource__color
+msgid "Color"
+msgstr "Warna"
+
+#. module: planning
+#: model:planning.role,name:planning.planning_role_cm
+msgid "Community Manager"
+msgstr "Manajer Komunitas"
+
+#. module: planning
+#: model:ir.model,name:planning.model_res_company
+msgid "Companies"
+msgstr "Perusahaan"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__company_id
+#: model:ir.model.fields,field_description:planning.field_planning_planning__company_id
+#: model:ir.model.fields,field_description:planning.field_planning_recurrency__company_id
+#: model:ir.model.fields,field_description:planning.field_planning_slot__company_id
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+msgid "Company"
+msgstr "Perusahaan"
+
+#. module: planning
+#: model:ir.model.fields,help:planning.field_planning_planning__company_id
+msgid ""
+"Company linked to the material resource. Leave empty for the resource to be "
+"available in every company."
+msgstr ""
+"Perusahaan yang dihubungkan ke sumber daya materi. Biarkan kosong untuk "
+"sumber daya agar tersedia di seluruh perusahaan."
+
+#. module: planning
+#: model:ir.model,name:planning.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfigurasi"
+
+#. module: planning
+#: model:ir.ui.menu,name:planning.planning_menu_settings
+msgid "Configuration"
+msgstr "Konfigurasi"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__confirm_delete
+msgid "Confirm Slots Deletion"
+msgstr "Konfirmasi Penghapusan Slot"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__conflicting_slot_ids
+msgid "Conflicting Slot"
+msgstr "Slot yang Konflik"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_calendar/planning_calendar_controller.xml:0
+#, python-format
+msgid "Copy previous"
+msgstr "Salin sebelumnya"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_calendar/planning_calendar_controller.xml:0
+#: code:addons/planning/static/src/views/planning_gantt/planning_gantt_controller.xml:0
+#: code:addons/planning/static/src/views/planning_gantt/planning_gantt_controller.xml:0
+#, python-format
+msgid "Copy previous week"
+msgstr "Salin minggu lalu"
+
+#. module: planning
+#: model:planning.role,name:planning.planning_role_crane
+msgid "Crane"
+msgstr "Crane"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_planning__create_uid
+#: model:ir.model.fields,field_description:planning.field_planning_recurrency__create_uid
+#: model:ir.model.fields,field_description:planning.field_planning_role__create_uid
+#: model:ir.model.fields,field_description:planning.field_planning_send__create_uid
+#: model:ir.model.fields,field_description:planning.field_planning_slot__create_uid
+#: model:ir.model.fields,field_description:planning.field_planning_slot_template__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_planning__create_date
+#: model:ir.model.fields,field_description:planning.field_planning_recurrency__create_date
+#: model:ir.model.fields,field_description:planning.field_planning_role__create_date
+#: model:ir.model.fields,field_description:planning.field_planning_send__create_date
+#: model:ir.model.fields,field_description:planning.field_planning_slot__create_date
+#: model:ir.model.fields,field_description:planning.field_planning_slot_template__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.open_slots_list_template
+#: model_terms:ir.ui.view,arch_db:planning.period_report_template
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+msgid "Date"
+msgstr "Tanggal"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_planning__date_end
+msgid "Date End"
+msgstr "Tanggal Akhir"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_planning__date_start
+msgid "Date Start"
+msgstr "Tanggal awal"
+
+#. module: planning
+#: model:ir.model.fields.selection,name:planning.selection__planning_recurrency__repeat_unit__day
+#: model:ir.model.fields.selection,name:planning.selection__planning_slot__repeat_unit__day
+msgid "Days"
+msgstr "Hari"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_planning__self_unassign_days_before
+#: model:ir.model.fields,field_description:planning.field_planning_slot__self_unassign_days_before
+#: model:ir.model.fields,field_description:planning.field_res_company__planning_self_unassign_days_before
+#: model:ir.model.fields,field_description:planning.field_res_config_settings__planning_self_unassign_days_before
+msgid "Days before shift for unassignment"
+msgstr "Hari sebelum shift untuk membatalkan penugasan"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.res_config_settings_view_form
+msgid "Deadline"
+msgstr "Batas waktu"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__unassign_deadline
+msgid "Deadline for unassignment"
+msgstr "Deadline untuk membatalkan penugasan"
+
+#. module: planning
+#: model:ir.model.fields,help:planning.field_planning_planning__self_unassign_days_before
+#: model:ir.model.fields,help:planning.field_planning_slot__self_unassign_days_before
+#: model:ir.model.fields,help:planning.field_res_company__planning_self_unassign_days_before
+#: model:ir.model.fields,help:planning.field_res_config_settings__planning_self_unassign_days_before
+msgid "Deadline in days for shift unassignment"
+msgstr "Deadline dalam hari untuk membatalkan penugasan shift"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_hr_employee__default_planning_role_id
+#: model:ir.model.fields,field_description:planning.field_resource_resource__default_role_id
+msgid "Default Role"
+msgstr "Peran Default"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.resource_resource_search_view_inherit
+msgid "Default Roles"
+msgstr "Peran-Peran Default"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.employee_no_email_list_wizard
+msgid ""
+"Define a work email address for the following employees so they will receive"
+" the planning."
+msgstr ""
+"Definisikan alamat email kerja untuk karyawan-karyawan berikut supaya mereka"
+" akan menerima perencanaan."
+
+#. module: planning
+#: model:ir.model.fields,help:planning.field_planning_slot__role_id
+msgid ""
+"Define the roles your resources perform (e.g. Chef, Bartender, Waiter...). "
+"Create open shifts for the roles you need to complete a mission. Then, "
+"assign those open shifts to the resources that are available."
+msgstr ""
+"Definisikan peran yang sumber daya lakukan (contoh Koki, Bartender, "
+"Waiter...). Buat shift kosong untuk peran yang Anda butuhkan untuk "
+"menyelesaikan misi. Lalu, tugaskan shift kosong tersebut ke sumber daya yang"
+" tersedia."
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid ""
+"Define the roles your resources perform (e.g. Chef, Bartender, Waiter...). "
+"Create open shifts for the roles you will be needing to complete a mission. "
+"Then, assign those open shifts to the resources that are available."
+msgstr ""
+"Definisikan peran yang sumber daya lakukan (contoh Koki, Bartender, "
+"Waiter...). Buat shift kosong untuk peran yang akan Anda butuhkan untuk "
+"menyelesaikan misi. Lalu, tugaskan shift kosong tersebut ke sumber daya yang"
+" tersedia."
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_form/planning_form_view.js:0
+#: model_terms:ir.ui.view,arch_db:planning.planning_role_view_kanban
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_kanban
+#, python-format
+msgid "Delete"
+msgstr "Hapus"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/components/address_recurrency_confirmation_dialog/address_recurrency_confirmation_dialog.js:0
+#, python-format
+msgid "Delete Recurring Shift"
+msgstr "Hapus Shift Berulang"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__department_id
+#: model:ir.model.fields,field_description:planning.field_planning_slot__department_id
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+msgid "Department"
+msgstr "Departemen"
+
+#. module: planning
+#: model:ir.model,name:planning.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr "Departure Wizard"
+
+#. module: planning
+#: model:planning.role,name:planning.planning_role_developer
+msgid "Developer"
+msgstr "Developer"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.employee_no_email_list_wizard
+#: model_terms:ir.ui.view,arch_db:planning.planning_send_view_form
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form_in_gantt
+msgid "Discard"
+msgstr "Buang"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__display_name
+#: model:ir.model.fields,field_description:planning.field_planning_planning__display_name
+#: model:ir.model.fields,field_description:planning.field_planning_recurrency__display_name
+#: model:ir.model.fields,field_description:planning.field_planning_role__display_name
+#: model:ir.model.fields,field_description:planning.field_planning_send__display_name
+#: model:ir.model.fields,field_description:planning.field_planning_slot__display_name
+#: model:ir.model.fields,field_description:planning.field_planning_slot_template__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_resources
+msgid "Distribute your material resources across projects and sales orders."
+msgstr "Distribusikan sumber daya materi diseluruh project dan sale order."
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "Doris Cole (Bartender)"
+msgstr "Doris Cole (Bartender)"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_calendar/planning_calendar_controller.xml:0
+#: model:ir.model.fields.selection,name:planning.selection__planning_analysis_report__state__draft
+#: model:ir.model.fields.selection,name:planning.selection__planning_slot__state__draft
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+#, python-format
+msgid "Draft"
+msgstr "Draft"
+
+#. module: planning
+#: model_terms:digest.tip,tip_description:planning.digest_tip_planning_0
+msgid ""
+"Drag a shift to another day to reschedule it, or to another row to reassign "
+"the shift. Press CTRL (or Cmd on Mac) while dragging a shift to duplicate "
+"it."
+msgstr ""
+"Tarik shift ke hari lain untuk menjadwalkan ulang, atau ke baris lain untuk "
+"menugaskan ulang shift tersebut. Pencet CTRL (atau Cmd pada Mac) selagi "
+"menarik shift untuk menggandakannya."
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__duration
+#: model:ir.model.fields,field_description:planning.field_planning_slot_template__duration
+msgid "Duration"
+msgstr "Durasi"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot_template__duration_days
+msgid "Duration Days"
+msgstr "Durasi Hari"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_role_view_kanban
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_kanban
+msgid "Edit"
+msgstr "Edit"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "Eli Lambert (Waiter)"
+msgstr "Eli Lambert (Waiter)"
+
+#. module: planning
+#: model:mail.template,description:planning.email_template_shift_switch_email
+msgid ""
+"Email sent automatically when employee self assigns to an unwanted shift of "
+"another employee"
+msgstr ""
+"Email dikirim secara otomatis saat karyawan menugaskan diri sendiri ke shift"
+" yang tidak inginkan oleh karyawan lain"
+
+#. module: planning
+#: model:mail.template,description:planning.email_template_slot_single
+msgid "Email sent automatically when publishing a shift"
+msgstr "Email dikirim secara otomatis saat menerbitkan shift"
+
+#. module: planning
+#: model:mail.template,description:planning.email_template_planning_planning
+msgid ""
+"Email sent automatically when publishing the schedule of your employees"
+msgstr "Email dikirim secara otomatis saat menerbitkan jadwal karyawan Anda"
+
+#. module: planning
+#: model:ir.model,name:planning.model_hr_employee
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__employee_id
+#: model:ir.model.fields,field_description:planning.field_planning_slot__employee_id
+msgid "Employee"
+msgstr "Karyawan"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.hr_employee_view_form_simplified
+msgid "Employee Name"
+msgstr "Nama Karyawan"
+
+#. module: planning
+#: model:ir.ui.menu,name:planning.planning_menu_settings_employee
+#: model_terms:ir.ui.view,arch_db:planning.planning_role_view_search
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+msgid "Employees"
+msgstr "Karyawan"
+
+#. module: planning
+#: model:ir.model.fields,help:planning.field_planning_send__employee_ids
+msgid ""
+"Employees who will receive planning by email if you click on publish & send."
+msgstr ""
+"Karyawan akan menerima perencanaan melalui email bila Anda mengeklik "
+"terbitkan & kirim."
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.employee_no_email_list_wizard
+msgid "Employees with no Work Email"
+msgstr "Karyawan tanpa Email Kerja"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_send__employees_no_email
+msgid "Employees without email"
+msgstr "Karyawan tanpa email"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.resource_planning
+msgid "End"
+msgstr "Akhir"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__end_datetime
+#: model:ir.model.fields,field_description:planning.field_planning_slot__end_datetime
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+msgid "End Date"
+msgstr "Tanggal Berakhir"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot_template__end_time
+msgid "End Hour"
+msgstr "Jam Tutup"
+
+#. module: planning
+#: model:ir.model.constraint,message:planning.constraint_hr_employee_employee_token_unique
+msgid "Error: each employee token must be unique"
+msgstr "Error: setiap token karyawan harus unik"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+msgid "Every"
+msgstr "Setiap"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning_recurrency.py:0
+#, python-format
+msgid "Every %s week(s) until %s"
+msgstr "Setiap %s minggu sampai %s"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_send__note
+msgid "Extra Message"
+msgstr "Pesan Ekstra"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_my_calendar
+msgid ""
+"Find here your planning. Assign yourself open shifts that match your roles, "
+"or indicate your unavailability."
+msgstr ""
+"Cari di sini perencanaan Anda. Tugaskan diri Anda ke shift kosong yang cocok"
+" dengan peran Anda, atau indikasikan ketidaksediaan Anda."
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.view_employee_filter_inherit_hr
+msgid "Fixed Hours"
+msgstr "Jam-Jam Tetap"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.view_employee_filter_inherit_hr
+msgid "Flexible Hours"
+msgstr "Jam-Jam Fleksibel"
+
+#. module: planning
+#: model:ir.model.fields.selection,name:planning.selection__planning_slot__allocation_type__forecast
+msgid "Forecast"
+msgstr "Prakiraan"
+
+#. module: planning
+#: model:ir.model.fields.selection,name:planning.selection__planning_recurrency__repeat_type__forever
+#: model:ir.model.fields.selection,name:planning.selection__planning_slot__repeat_type__forever
+msgid "Forever"
+msgstr "Selamanya"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning_recurrency.py:0
+#, python-format
+msgid "Forever, every %s week(s)"
+msgstr "Selamanya, setiap %s minggu"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.res_config_settings_view_form
+msgid "Generate shifts"
+msgstr "Buat shift"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.brand_promotion
+msgid "Give depth to your"
+msgstr "Berikan kedalam ke"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_role_view_search
+#: model_terms:ir.ui.view,arch_db:planning.planning_slot_template_view_search
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+msgid "Group By"
+msgstr "Dikelompokkan berdasarkan"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_hr_employee__has_slots
+#: model:ir.model.fields,field_description:planning.field_hr_employee_base__has_slots
+#: model:ir.model.fields,field_description:planning.field_hr_employee_public__has_slots
+msgid "Has Slots"
+msgstr "Memiliki Slot"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__request_to_switch
+#: model:ir.model.fields,field_description:planning.field_planning_slot__request_to_switch
+msgid "Has there been a request to switch on this shift slot?"
+msgstr "Apakah terdapat permintaan untuk mengganti slot shift ini?"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot_template__name
+msgid "Hours"
+msgstr "Jam"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/fields/many2many_avatar_resource/many2many_avatar_resource_field.js:0
+#: model:ir.model.fields.selection,name:planning.selection__planning_analysis_report__resource_type__user
+#, python-format
+msgid "Human"
+msgstr "Manusia"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form_in_gantt
+msgid "I Am Unavailable"
+msgstr "Saya Tidak Tersedia"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.open_slots_list_template
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form_in_gantt
+msgid "I Take It"
+msgstr "Saya Ambil"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.period_report_template
+msgid "I am unavailable"
+msgstr "Saya tidak tersedia"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__id
+#: model:ir.model.fields,field_description:planning.field_planning_planning__id
+#: model:ir.model.fields,field_description:planning.field_planning_recurrency__id
+#: model:ir.model.fields,field_description:planning.field_planning_role__id
+#: model:ir.model.fields,field_description:planning.field_planning_send__id
+#: model:ir.model.fields,field_description:planning.field_planning_slot__id
+#: model:ir.model.fields,field_description:planning.field_planning_slot_template__id
+msgid "ID"
+msgstr "ID"
+
+#. module: planning
+#: model:ir.model.fields,help:planning.field_planning_analysis_report__publication_warning
+#: model:ir.model.fields,help:planning.field_planning_slot__publication_warning
+msgid ""
+"If checked, it means that the shift contains has changed since its last "
+"publish."
+msgstr ""
+"Bila dicentang, ini berarti isi shift telah berubah semenjak terakhir kali "
+"diterbitkan."
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/js/tours/planning.js:0
+#, python-format
+msgid ""
+"If you are happy with your planning, you can now <b>send</b> it to your "
+"employees."
+msgstr ""
+"Bila Anda senang dengan perencanaan jadwal Anda, Anda sekarang dapat "
+"<b>mengirimkannya</b> ke karyawan Anda."
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_send__include_unassigned
+msgid "Include Open Shifts"
+msgstr "Masukkan Shift Kosong"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_planning__include_unassigned
+msgid "Includes Open Shifts"
+msgstr "Masukkan Shift-Shift Kosong"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__is_hatched
+msgid "Is Hatched"
+msgstr "Is Hatched"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__is_assigned_to_me
+msgid "Is This Shift Assigned To The Current User"
+msgstr "Apakah Shift ini Ditugaskan Ke User Saat Ini"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__is_past
+msgid "Is This Shift In The Past?"
+msgstr "Apakah Shift Ini Di Masa Lalu?"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__is_users_role
+msgid "Is the shifts role one of the current user roles"
+msgstr "Apakah peran shift salah satu peran user"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__is_unassign_deadline_passed
+msgid "Is unassignement deadline not past"
+msgstr "Apakah deadline membatalkan penugasan di masa lalu"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "Jeffrey Kelly (Bartender)"
+msgstr "Jeffrey Kelly (Bartender)"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__job_title
+#: model:ir.model.fields,field_description:planning.field_planning_slot__job_title
+#: model_terms:ir.ui.view,arch_db:planning.hr_employee_view_form_simplified
+msgid "Job Title"
+msgstr "Jabatan"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_recurrency__last_generated_end_datetime
+msgid "Last Generated End Date"
+msgstr "Tanggal Akhir yang Dibuat Terakhir"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_planning__write_uid
+#: model:ir.model.fields,field_description:planning.field_planning_recurrency__write_uid
+#: model:ir.model.fields,field_description:planning.field_planning_role__write_uid
+#: model:ir.model.fields,field_description:planning.field_planning_send__write_uid
+#: model:ir.model.fields,field_description:planning.field_planning_slot__write_uid
+#: model:ir.model.fields,field_description:planning.field_planning_slot_template__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_planning__write_date
+#: model:ir.model.fields,field_description:planning.field_planning_recurrency__write_date
+#: model:ir.model.fields,field_description:planning.field_planning_role__write_date
+#: model:ir.model.fields,field_description:planning.field_planning_send__write_date
+#: model:ir.model.fields,field_description:planning.field_planning_slot__write_date
+#: model:ir.model.fields,field_description:planning.field_planning_slot_template__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_calendar/planning_calendar_controller.xml:0
+#, python-format
+msgid "Legend"
+msgstr "Legenda"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_planning__allow_self_unassign
+#: model:ir.model.fields,field_description:planning.field_planning_slot__allow_self_unassign
+msgid "Let Employee Unassign Themselves"
+msgstr "Izinkan Karyawan Membatalkan Penugasan Mereka Sendiri"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.res_config_settings_view_form
+msgid "Let employees unassign themselves from shifts"
+msgstr "Biarkan karyawan membatalkan penugasan dari shift mereka sendiri"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/js/tours/planning.js:0
+#, python-format
+msgid ""
+"Let's create your first <b>shift</b>. <i>Tip: use the (+) shortcut available"
+" on each cell of the Gantt view to save time.</i>"
+msgstr ""
+"Mari buat <b>shift</b> pertama Anda. <i>Tip: gunakan shortcut (+) yang "
+"tersedia pada setiap cell tampilan Gantt untuk menghemat waktu.</i>"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/js/tours/planning.js:0
+#, python-format
+msgid "Let's start managing your employees' schedule!"
+msgstr "Mari mulai mengelola jadwal karyawan Anda!"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/js/planning_calendar_front.js:0
+#, python-format
+msgid "List"
+msgstr "Daftar"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_shift_template
+msgid "Make encoding shifts easy with templates."
+msgstr "Buat encoding shift lebih mudah dengan templat."
+
+#. module: planning
+#: model:planning.role,name:planning.planning_role_management
+msgid "Management"
+msgstr "Manajemen"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__manager_id
+#: model:ir.model.fields,field_description:planning.field_planning_slot__manager_id
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+#: model_terms:ir.ui.view,arch_db:planning.resource_planning
+msgid "Manager"
+msgstr "Manajer"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.slot_report
+msgid "Marc Demo"
+msgstr "Marc Demo"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/fields/many2many_avatar_resource/many2many_avatar_resource_field.js:0
+#: model:ir.model.fields.selection,name:planning.selection__planning_analysis_report__resource_type__material
+#, python-format
+msgid "Material"
+msgstr "Material"
+
+#. module: planning
+#: model:ir.actions.act_window,name:planning.planning_action_resources
+#: model:ir.ui.menu,name:planning.planning_menu_settings_resource
+#: model_terms:ir.ui.view,arch_db:planning.planning_role_view_search
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+msgid "Materials"
+msgstr "Material"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__publication_warning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__publication_warning
+msgid "Modified Since Last Publication"
+msgstr "Dimodifikasi Semenjak Diterbitkan"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "Monday, 13"
+msgstr "Senin, 13"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/js/planning_calendar_front.js:0
+#, python-format
+msgid "Month"
+msgstr "Bulan"
+
+#. module: planning
+#: model:ir.model.fields.selection,name:planning.selection__planning_recurrency__repeat_unit__month
+#: model:ir.model.fields.selection,name:planning.selection__planning_slot__repeat_unit__month
+msgid "Months"
+msgstr "Bulan"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_role_view_search
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+msgid "My Department"
+msgstr "Departemen Saya"
+
+#. module: planning
+#: model:ir.actions.act_window,name:planning.planning_action_my_calendar
+#: model:ir.actions.act_window,name:planning.planning_action_open_shift
+#: model:ir.ui.menu,name:planning.planning_menu_my_planning
+msgid "My Planning"
+msgstr "Jadwal Saya"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_role_view_search
+#: model_terms:ir.ui.view,arch_db:planning.planning_slot_template_view_search
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+msgid "My Roles"
+msgstr "Peran Saya"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+msgid "My Shifts"
+msgstr "Shift Saya"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_role_view_search
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+msgid "My Team"
+msgstr "Kelompok ku"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_role__name
+msgid "Name"
+msgstr "Nama"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_calendar/planning_calendar_controller.js:0
+#, python-format
+msgid "New Shift"
+msgstr "Shift Baru"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/wizard/planning_send.py:0
+#, python-format
+msgid "No Email Address For Some Employees"
+msgstr "Tidak Ada Alamat Email Untuk Beberapa Karyawan"
+
+#. module: planning
+#: model:ir.model.fields,help:planning.field_planning_recurrency__repeat_number
+msgid "No Of Repetitions of the plannings"
+msgstr "Jumlah Pengulangan perencanaan"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_report_action_analysis
+msgid "No data yet!"
+msgstr "Belum ada data!"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_resources
+msgid "No material resources found. Let's create one!"
+msgstr "Tidak ada sumber daya materi yang ditemukan. Ayo buat baru!"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "No roles found. Let's create one!"
+msgstr "Tidak ada peran yang ditemukan. Ayo buat baru!"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_shift_template
+msgid "No shift templates found. Let's create one!"
+msgstr "TIdak ada templat shift yang ditemukan. Ayo buat baru!"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_my_calendar
+#: model_terms:ir.actions.act_window,help:planning.planning_action_schedule_by_resource
+#: model_terms:ir.actions.act_window,help:planning.planning_action_schedule_by_role
+msgid "No shifts found. Let's create one!"
+msgstr "Tidak ada shift yang ditemukan. Mari membuat shift!"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__name
+#: model:ir.model.fields,field_description:planning.field_planning_slot__name
+#: model_terms:ir.ui.view,arch_db:planning.open_slots_list_template
+#: model_terms:ir.ui.view,arch_db:planning.period_report_template
+#: model_terms:ir.ui.view,arch_db:planning.resource_planning
+msgid "Note"
+msgstr "Catatan"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/js/tours/planning.js:0
+#, python-format
+msgid ""
+"Now that this week is ready, let's get started on <b>next week's "
+"schedule</b>."
+msgstr ""
+"Sekarang karena minggu ini sudah siap, ayo mulai <b>jadwal minggu depan</b>."
+
+#. module: planning
+#: model:ir.model.fields.selection,name:planning.selection__planning_slot__repeat_type__x_times
+msgid "Number of Occurrences"
+msgstr "Jumlah Occurence"
+
+#. module: planning
+#: model:ir.model.fields.selection,name:planning.selection__planning_recurrency__repeat_type__x_times
+msgid "Number of Repetitions"
+msgstr "Jumlah Pengulangan"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_tree
+msgid "Open Shift"
+msgstr "Shift Kosong"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_calendar/planning_calendar_model.js:0
+#: code:addons/planning/static/src/views/planning_gantt/planning_gantt_model.js:0
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+#: model_terms:ir.ui.view,arch_db:planning.slot_report
+#, python-format
+msgid "Open Shifts"
+msgstr "Shift-Shift Kosong"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.open_slots_list_template
+msgid "Open Shifts Available"
+msgstr "Shift Kosong yang Tersedia"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid ""
+"Operation not supported, you should always compare overlap_slot_count to 0 "
+"value with = or > operator."
+msgstr ""
+"Operasi tidak didukung, Anda harus selalu membandingkan overlap_slot_count "
+"to 0 value with = or > operator."
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__overlap_slot_count
+msgid "Overlapping Slots"
+msgstr "Slot yang Tumpang Tindih"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_send__start_datetime
+#: model_terms:ir.ui.view,arch_db:planning.planning_send_view_form
+msgid "Period"
+msgstr "Periode"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/js/tours/planning.js:0
+#, python-format
+msgid ""
+"Plan all of your shifts in one click by <b>copying the previous week's "
+"schedule</b>."
+msgstr ""
+"Rencanakan semua shift Anda dengan satu klik dengan <b>menyalin jadwal "
+"minggu lalu</b>."
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.res_config_settings_view_form
+msgid ""
+"Plan resource allocation across projects and estimate deadlines more "
+"accurately"
+msgstr ""
+"Rencanakan alokasi sumber daya di seluruh project dan perkirakan deadline "
+"dengan lebih akurat"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot_template__start_time
+msgid "Planned Hours"
+msgstr "Jam awal direncanakan"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#: model:ir.actions.report,name:planning.report_planning_slot
+#: model:ir.model.fields.selection,name:planning.selection__planning_slot__allocation_type__planning
+#: model:ir.ui.menu,name:planning.planning_menu_root
+#: model_terms:ir.ui.view,arch_db:planning.hr_employee_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_calendar
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_graph
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_my_calendar
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_pivot
+#: model_terms:ir.ui.view,arch_db:planning.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:planning.slot_report
+#, python-format
+msgid "Planning"
+msgstr "Perencanaan"
+
+#. module: planning
+#: model:ir.actions.act_window,name:planning.planning_report_action_analysis
+#: model:ir.ui.menu,name:planning.planning_menu_planning_analysis
+#: model_terms:ir.ui.view,arch_db:planning.planning_slot_report_view_graph
+#: model_terms:ir.ui.view,arch_db:planning.planning_slot_report_view_pivot
+msgid "Planning Analysis"
+msgstr "Analisis Perencanaan"
+
+#. module: planning
+#: model:ir.model,name:planning.model_planning_analysis_report
+msgid "Planning Analysis Report"
+msgstr "Laporan Analisis Rencana"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.resource_planning
+msgid "Planning Meeting"
+msgstr "Perencanaan Meeting"
+
+#. module: planning
+#: model:ir.model,name:planning.model_planning_recurrency
+msgid "Planning Recurrence"
+msgstr "Pengulangan Rencana"
+
+#. module: planning
+#: model:ir.model,name:planning.model_planning_role
+#: model_terms:ir.ui.view,arch_db:planning.planning_role_view_form
+msgid "Planning Role"
+msgstr "Merencanakan peran"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_role_view_tree
+msgid "Planning Role List"
+msgstr "Daftar Peran Rencana"
+
+#. module: planning
+#: model:ir.model,name:planning.model_planning_slot
+msgid "Planning Shift"
+msgstr "Merencanakan Shift"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__slot_id
+msgid "Planning Slot"
+msgstr "Merencanakan Slot"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_role__slot_properties_definition
+msgid "Planning Slot Properties"
+msgstr "Properti Slot Rencana"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.period_report_template
+msgid "Planning:"
+msgstr "Planning:"
+
+#. module: planning
+#: model:mail.template,name:planning.email_template_planning_planning
+msgid "Planning: New Schedule"
+msgstr "Planning: Jadwal Baru"
+
+#. module: planning
+#: model:mail.template,name:planning.email_template_slot_single
+msgid "Planning: New Shift"
+msgstr "Planning: Shift Baru"
+
+#. module: planning
+#: model:mail.template,name:planning.email_template_shift_switch_email
+msgid "Planning: Shift Re-assigned"
+msgstr "Planning: Shift Ditugaskan ulang"
+
+#. module: planning
+#: model:ir.actions.server,name:planning.ir_cron_forecast_schedule_ir_actions_server
+msgid "Planning: generate next recurring shifts"
+msgstr "Planning: buat shift rutin berikutnya"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "Planning: new open shift available on"
+msgstr "Planning: shift kosong baru tersedia pada"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "Planning: new shift on"
+msgstr "Planning: shift baru pada"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.brand_promotion
+msgid "Plans"
+msgstr "Rencana"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__previous_template_id
+msgid "Previous Template"
+msgstr "Templat Sebelumnya"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_res_config_settings__module_project_forecast
+msgid "Project Planning"
+msgstr "Perencanaan Proyek"
+
+#. module: planning
+#: model:planning.role,name:planning.planning_role_projector
+msgid "Projector"
+msgstr "Proyektor"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__slot_properties
+msgid "Properties"
+msgstr "Properti-Properti"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_calendar/planning_calendar_controller.xml:0
+#: code:addons/planning/static/src/views/planning_gantt/planning_gantt_controller.xml:0
+#, python-format
+msgid "Publish"
+msgstr "Publikasikan"
+
+#. module: planning
+#: model:ir.actions.server,name:planning.model_planning_slot_action_publish_and_send
+#: model_terms:ir.ui.view,arch_db:planning.planning_send_view_form
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form_in_gantt
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_tree
+msgid "Publish & Send"
+msgstr "Terbitkan & Kirim"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_calendar/planning_calendar_controller.xml:0
+#: model:ir.model.fields.selection,name:planning.selection__planning_analysis_report__state__published
+#: model:ir.model.fields.selection,name:planning.selection__planning_slot__state__published
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+#, python-format
+msgid "Published"
+msgstr "Terpublikasi"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_res_company__planning_generation_interval
+#: model:ir.model.fields,field_description:planning.field_res_config_settings__planning_generation_interval
+msgid "Rate Of Shift Generation"
+msgstr "Tingkat Pembuatan Shift"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__recurrence_update
+msgid "Recurrence Update"
+msgstr "Update Pengulangan"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__recurrency_id
+#: model:ir.model.fields,field_description:planning.field_planning_slot__recurrency_id
+msgid "Recurrency"
+msgstr "Recurrency"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.res_config_settings_view_form
+msgid "Recurring Shifts"
+msgstr "Shift-Shift Rutin"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning_recurrency.py:0
+#, python-format
+msgid ""
+"Recurring shifts cannot be planned further than 999 days in the future. If "
+"you need to schedule beyond this limit, please set the recurrence to repeat "
+"forever instead."
+msgstr ""
+"Shift-Shift Rutin tidak dapat direncanakan lebih dari 999 hari di masa "
+"depan. Bila Anda ingin menjadwalkan melebihi batas ini, mohon tetapkan "
+"pengulangan untuk berulang selamanya."
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_recurrency__slot_ids
+msgid "Related Planning Entries"
+msgstr "Entri Planning Terkait"
+
+#. module: planning
+#: model:ir.model.fields,help:planning.field_planning_slot__user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "Nama pengguna terkait untuk sumber daya untuk mengelola aksesnya."
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form_in_gantt
+msgid "Remove"
+msgstr "Hapus"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__repeat
+msgid "Repeat"
+msgstr "Ulangi"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_recurrency__repeat_interval
+msgid "Repeat Every"
+msgstr "Ulangi Setiap"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__repeat_type
+msgid "Repeat Type"
+msgstr "Tipe Pengulangan"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_recurrency__repeat_unit
+#: model:ir.model.fields,field_description:planning.field_planning_slot__repeat_unit
+msgid "Repeat Unit"
+msgstr "Unit Berulang"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_recurrency__repeat_until
+#: model:ir.model.fields,field_description:planning.field_planning_slot__repeat_until
+msgid "Repeat Until"
+msgstr "Ulangi Hingga"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__repeat_interval
+msgid "Repeat every"
+msgstr "Ulangi setiap"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_recurrency__repeat_number
+#: model:ir.model.fields,field_description:planning.field_planning_slot__repeat_number
+msgid "Repetitions"
+msgstr "Pengulangan-Pengulangan"
+
+#. module: planning
+#: model:ir.ui.menu,name:planning.planning_menu_reporting
+msgid "Reporting"
+msgstr "Laporan"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+msgid "Requests to Switch"
+msgstr "Permintaan untuk Penggantian"
+
+#. module: planning
+#: model:ir.actions.server,name:planning.model_planning_slot_action_reset_to_draft
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form_in_gantt
+msgid "Reset to Draft"
+msgstr "Reset ke Rancangan"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__resource_id
+#: model:ir.model.fields,field_description:planning.field_planning_slot__resource_id
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+msgid "Resource"
+msgstr "Sumber Daya"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__resource_color
+msgid "Resource color"
+msgstr "Warna sumber daya"
+
+#. module: planning
+#: model:ir.model,name:planning.model_resource_resource
+#: model:ir.model.fields,field_description:planning.field_planning_role__resource_ids
+#: model:ir.model.fields,field_description:planning.field_planning_send__employee_ids
+#: model_terms:ir.ui.view,arch_db:planning.planning_role_view_search
+msgid "Resources"
+msgstr "Sumber Daya"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__role_id
+#: model:ir.model.fields,field_description:planning.field_planning_slot__role_id
+#: model:ir.model.fields,field_description:planning.field_planning_slot_template__role_id
+#: model_terms:ir.ui.view,arch_db:planning.open_slots_list_template
+#: model_terms:ir.ui.view,arch_db:planning.period_report_template
+#: model_terms:ir.ui.view,arch_db:planning.planning_slot_template_view_search
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+#: model_terms:ir.ui.view,arch_db:planning.resource_planning
+msgid "Role"
+msgstr "Peran"
+
+#. module: planning
+#: model:ir.model.fields,help:planning.field_hr_employee__default_planning_role_id
+msgid ""
+"Role that will be selected by default when creating a shift for this employee.\n"
+"This role will also have precedence over the other roles of the employee when planning orders."
+msgstr ""
+"Peran yang akan dipilih secara default saat membuat shift untuk karyawan ini.\n"
+"Peran ini juga akan diutamakan di atas peran lain karyawan saat merencanakan order."
+
+#. module: planning
+#: model:ir.model.fields,help:planning.field_resource_resource__default_role_id
+msgid ""
+"Role that will be selected by default when creating a shift for this resource.\n"
+"This role will also have precedence over the other roles of the resource when planning shifts."
+msgstr ""
+"Peran yang akan dipilih secara default saat membuat shift untuk sumber daya ini.\n"
+"Peran ini juga akan diutamakan di atas peran sumber daya lain saat merencanakan shift."
+
+#. module: planning
+#: model:ir.actions.act_window,name:planning.planning_action_roles
+#: model:ir.model.fields,field_description:planning.field_hr_employee__planning_role_ids
+#: model:ir.model.fields,field_description:planning.field_resource_resource__role_ids
+#: model:ir.ui.menu,name:planning.planning_menu_settings_role
+#: model_terms:ir.ui.view,arch_db:planning.resource_resource_search_view_inherit
+#: model_terms:ir.ui.view,arch_db:planning.view_employee_filter_inherit_hr
+msgid "Roles"
+msgstr "Peran-Peran"
+
+#. module: planning
+#: model:ir.model.fields,help:planning.field_hr_employee__planning_role_ids
+msgid ""
+"Roles that the employee can fill in. When creating a shift for this employee, only the shift templates for these roles will be displayed.\n"
+"Similarly, only the open shifts available for these roles will be sent to the employee when the schedule is published.\n"
+"Additionally, the employee will only be assigned orders for these roles (with the default planning role having precedence over the other ones).\n"
+"Leave empty for the employee to be assigned shifts regardless of the role."
+msgstr ""
+"Peran-Peran yang karyawan dapat isi. Saat membuat shift untuk karyawan ini, hanya templat shift untuk peran-peran ini yang akan ditampilkan.\n"
+"Sama seperti itu, hanya shift kosong yang tersedia untuk peran-peran tersebut yang akan dikirim ke karyawan saat jadwal diterbitkan.\n"
+"Sebagai tambahan, karyawan hanya akan ditugaskan order untuk peran-peran ini (dengan peran planning default yang diutamakan di atas yang lain).\n"
+"Biarkan kosong agar karyawan ditugaskan shift terlepas dari peran."
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form_in_gantt
+msgid "Save"
+msgstr "Simpan"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.employee_no_email_list_wizard
+msgid "Save & Send Schedule"
+msgstr "Simpan & Kirim Jadwal"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__template_creation
+msgid "Save as Template"
+msgstr "Simpan sebagai Templat"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/js/tours/planning.js:0
+#, python-format
+msgid "Save this shift once it is ready."
+msgstr "Simpan shift ini setelah siap."
+
+#. module: planning
+#: model:planning.role,name:planning.planning_role_scanner
+msgid "Scanner"
+msgstr "Pemindai"
+
+#. module: planning
+#: model:ir.model,name:planning.model_planning_planning
+#: model:ir.ui.menu,name:planning.planning_menu_schedule
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_gantt
+msgid "Schedule"
+msgstr "Jadwal"
+
+#. module: planning
+#: model:ir.actions.act_window,name:planning.planning_action_schedule_by_resource
+msgid "Schedule by Resource"
+msgstr "Jadwalkan berdasarkan Sumber Daya"
+
+#. module: planning
+#: model:ir.actions.act_window,name:planning.planning_action_schedule_by_role
+msgid "Schedule by Role"
+msgstr "Jadwalkan berdasarkan Peran"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_schedule_by_resource
+#: model_terms:ir.actions.act_window,help:planning.planning_action_schedule_by_role
+msgid ""
+"Schedule your human and material resources across roles, projects and sales "
+"orders."
+msgstr ""
+"Jadwalkan sumber daya manusia dan materi diseluruh peran, projek dan sales "
+"order."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "Search operation not supported"
+msgstr "Operasi pencarian tidak ditemukan"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_hr_employee__employee_token
+#: model:ir.model.fields,field_description:planning.field_planning_planning__access_token
+#: model:ir.model.fields,field_description:planning.field_planning_slot__access_token
+msgid "Security Token"
+msgstr "Token Keamanan"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form_in_gantt
+msgid "Send"
+msgstr "Kirim"
+
+#. module: planning
+#: model:ir.model,name:planning.model_planning_send
+msgid "Send Planning"
+msgstr "Kirim Planning"
+
+#. module: planning
+#: model:ir.actions.act_window,name:planning.planning_send_action
+msgid "Send Planning By Email"
+msgstr "Kirim Planning Melalui Email"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_calendar/planning_calendar_controller.xml:0
+#: code:addons/planning/static/src/views/planning_gantt/planning_gantt_controller.xml:0
+#, python-format
+msgid "Send schedule"
+msgstr "Kirim jadwal"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_role__sequence
+#: model:ir.model.fields,field_description:planning.field_planning_slot_template__sequence
+msgid "Sequence"
+msgstr "Urutan"
+
+#. module: planning
+#: model:ir.actions.act_window,name:planning.planning_action_settings
+#: model:ir.ui.menu,name:planning.planning_menu_settings_config
+msgid "Settings"
+msgstr "Pengaturan"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+#, python-format
+msgid "Shift"
+msgstr "Shift"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_tree
+msgid "Shift List"
+msgstr "List Shift"
+
+#. module: planning
+#: model:ir.model,name:planning.model_planning_slot_template
+msgid "Shift Template"
+msgstr "Shfit Templat"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_slot_template_view_form
+msgid "Shift Template Form"
+msgstr "Formulir Templat Shift"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_slot_template_view_tree
+msgid "Shift Template List"
+msgstr "List Templat Shift"
+
+#. module: planning
+#: model:ir.actions.act_window,name:planning.planning_action_shift_template
+#: model:ir.model.fields,field_description:planning.field_planning_slot__template_id
+#: model:ir.ui.menu,name:planning.planning_menu_settings_shift_template
+msgid "Shift Templates"
+msgstr "Templat-Templat Shift"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+msgid "Shifts Planned"
+msgstr "Shift yang Direncanakan"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.period_report_template
+msgid "Shifts from"
+msgstr "Shift dari"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+#, python-format
+msgid "Shifts in Conflict"
+msgstr "Shift yang Konflik"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+msgid "Shifts of Your Department Member"
+msgstr "Shift Anggota Departemen Anda"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+msgid "Shifts of Your Team Member"
+msgstr "Shift dari Anggota Tim Anda"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_send__slot_ids
+msgid "Slot"
+msgstr "Slot"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_gantt
+msgid "Some changes were made since this shift was published."
+msgstr "Beberapa perubahan telah dibuat semenjak shift ini diterbitkan."
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.resource_planning
+msgid "Start"
+msgstr "Mulai"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_slot_template_view_form
+msgid "Start & End Hours"
+msgstr "Jam Mulai & Akhir"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__start_datetime
+#: model:ir.model.fields,field_description:planning.field_planning_planning__start_datetime
+#: model:ir.model.fields,field_description:planning.field_planning_slot__start_datetime
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_search_base
+msgid "Start Date"
+msgstr "Tanggal Mulai"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__state
+#: model:ir.model.fields,field_description:planning.field_planning_slot__state
+msgid "Status"
+msgstr "Status"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_planning__end_datetime
+#: model:ir.model.fields,field_description:planning.field_planning_send__end_datetime
+msgid "Stop Date"
+msgstr "Tanggal Berhenti"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__template_autocomplete_ids
+msgid "Template Autocomplete"
+msgstr "Selesaikan otomatis Templat"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__template_reset
+msgid "Template Reset"
+msgstr "Reset Templat"
+
+#. module: planning
+#: model:ir.model.constraint,message:planning.constraint_res_company_planning_self_unassign_days_before_positive
+msgid ""
+"The amount of days before unassignment must be positive or equal to zero."
+msgstr ""
+"Jumlah hari sebelum membatalkan penugasan harus positif atau sama dengan "
+"nol."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "The company does not allow you to self unassign."
+msgstr ""
+"Perusahaan tidak mengizinkan Anda untuk membatalkan penugasan sendiri."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "The deadline for unassignment has passed."
+msgstr "Deadline untuk membatalkan penugasan sudah berlalu."
+
+#. module: planning
+#: model:ir.model.constraint,message:planning.constraint_planning_slot_template_check_duration_positive
+msgid "The duration cannot be negative."
+msgstr "Durasi tidak boleh negatif."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning_template.py:0
+#, python-format
+msgid "The duration is too long."
+msgstr "Durasi terlalu panjang."
+
+#. module: planning
+#: model:ir.model.constraint,message:planning.constraint_planning_slot_check_start_date_lower_end_date
+msgid "The end date of a shift should be after its start date."
+msgstr "Tanggal akhir shift harus setelah tanggal mulainya."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning_recurrency.py:0
+#, python-format
+msgid "The number of repetitions cannot be negative."
+msgstr "Jumlah pengulangan tidak boleh negatif."
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_hooks.js:0
+#, python-format
+msgid "The open shifts have been successfully assigned."
+msgstr "Shift-shift kosong telah berhasil ditugaskan."
+
+#. module: planning
+#: model:ir.model.constraint,message:planning.constraint_planning_recurrency_check_repeat_interval_positive
+msgid "The recurrence should be greater than 0."
+msgstr "Pengulangan harus lebih besar dari 0."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "The recurrence's end date should fall after the shift's start date."
+msgstr "Tanggal akhir pengulangan harus setelah tanggal mulai shift."
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_form/planning_form_view.js:0
+#, python-format
+msgid "The recurring shifts have successfully been created."
+msgstr "Shift-shift berulang telah berhasil dibuat."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/wizard/planning_send.py:0
+#, python-format
+msgid "The schedule was successfully sent to your employees."
+msgstr "Jadwal telah sukses dikirim ke karyawan Anda."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning_template.py:0
+#, python-format
+msgid "The selected duration creates a date too far into the future."
+msgstr ""
+"Durasi yang dipilih membuat tanggal yang tidak terlalu jauh ke masa depan."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "The shift has successfully been sent."
+msgstr "Shift telah berhasil dikirim."
+
+#. module: planning
+#. odoo-javascript
+#. odoo-python
+#: code:addons/planning/static/src/views/planning_hooks.js:0
+#: code:addons/planning/wizard/planning_send.py:0
+#, python-format
+msgid ""
+"The shifts have already been published, or there are no shifts to publish."
+msgstr "Shift sudah diterbitkan, atau tidak ada shift untuk dipublikasikan."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "The shifts have been successfully reset to draft."
+msgstr "Shift telah sukes direset menjadi draft."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "The shifts have successfully been published and sent."
+msgstr "Shift-shift telah sukses diterbitkan dan dikirim."
+
+#. module: planning
+#: model:ir.model.constraint,message:planning.constraint_planning_slot_template_check_start_time_lower_than_24
+msgid "The start hour cannot be greater than 24."
+msgstr "Jam mulai tidak boleh lebih besar dari 24."
+
+#. module: planning
+#: model:ir.model.constraint,message:planning.constraint_planning_slot_template_check_start_time_positive
+msgid "The start hour cannot be negative."
+msgstr "Jam mulai tidak boleh negatif."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning_template.py:0
+#, python-format
+msgid "The start hour must be greater or equal to 0 and lower than 24."
+msgstr ""
+"Jam mulai harus lebih besar dari atau sama dengan 0 dan lebih kecil dari 24."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "There are no resources available for this open shift."
+msgstr "Tidak ada sumber daya yang tersedia untuk shift kosong ini."
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_hooks.js:0
+#, python-format
+msgid ""
+"There are no shifts planned for the previous week, or they have already been"
+" copied."
+msgstr ""
+"Tidak ada shift yang direncanakan untuk minggu sebelumnya, atau mereka sudah"
+" disalin"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "There are no shifts to publish and send."
+msgstr "Tidak ada shift untuk diterbitkan dan dikirim."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "There are no shifts to reset to draft."
+msgstr "Tidak ada shift untuk direset menjadi draft."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "This Progress Bar is not implemented."
+msgstr "Progress Bar ini tidak diimplementasi."
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__was_copied
+msgid "This Shift Was Copied From Previous Week"
+msgstr "Shift Ini Disalin Dari Minggu Lalu"
+
+#. module: planning
+#: model:ir.model.fields.selection,name:planning.selection__planning_slot__recurrence_update__subsequent
+msgid "This and following shifts"
+msgstr "Ini dan shift yang mengikuti"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.period_report_template
+msgid ""
+"This open shift is no longer available, or the planning has been updated in "
+"the meantime. Please contact your manager for further information."
+msgstr ""
+"Shift kosong ini tidak lagi tersedia, atau planning sudah diupdate. Mohon "
+"hubungi manajer Anda untuk informasi lebih lanjut."
+
+#. module: planning
+#: model:ir.model.fields.selection,name:planning.selection__planning_slot__recurrence_update__this
+msgid "This shift"
+msgstr "Shift ini"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/components/address_recurrency_confirmation_dialog/address_recurrency_confirmation_dialog.xml:0
+#, python-format
+msgid "This shift is recurrent. Delete:"
+msgstr "Shift ini berulang. Hapus:"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/views/planning_form/planning_form_view.js:0
+#, python-format
+msgid "This shift was successfully saved as a template."
+msgstr "Shift ini sukses disimpan sebagai templat."
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.resource_resource_kanban_view
+msgid "Timezone:"
+msgstr "Timezone:"
+
+#. module: planning
+#: model:digest.tip,name:planning.digest_tip_planning_0
+msgid "Tip: Record your planning faster"
+msgstr "Tip: Catat planning Anda dengan lebih cepat"
+
+#. module: planning
+#: model:ir.model.fields,help:planning.field_planning_slot__repeat
+msgid ""
+"To avoid polluting your database and performance issues, shifts are only "
+"created for the next 6 months. They are then gradually created as time "
+"passes by in order to always get shifts 6 months ahead. This value can be "
+"modified from the settings of Planning, in debug mode."
+msgstr ""
+"Untuk mencegah mencemari database dan mengalami masalah performa, shift "
+"hanya dibuat untuk 6 bulan berikutnya. Mereka lalu secara perlahan dibuat "
+"selagi waktu berjalan secara berurutan agar selalu terdapat 6 bulan shift ke"
+" depannya. Nilai ini dapat dimodifikasi dari pengaturan Planning, di mode "
+"debug."
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/js/planning_calendar_front.js:0
+#, python-format
+msgid "Today"
+msgstr "Hari Ini"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "Total"
+msgstr "Total"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "Tuesday, 14"
+msgstr "Selasa, 14"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__resource_type
+#: model:ir.model.fields,field_description:planning.field_planning_slot__resource_type
+msgid "Type"
+msgstr "Jenis"
+
+#. module: planning
+#: model:ir.model.fields.selection,name:planning.selection__planning_recurrency__repeat_type__until
+#: model:ir.model.fields.selection,name:planning.selection__planning_slot__repeat_type__until
+msgid "Until"
+msgstr "Hingga"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.unwanted_slots_list_template
+msgid "Unwanted Shifts Available"
+msgstr "Tersedia Shift yang Tidak Diinginkan"
+
+#. module: planning
+#: model:ir.model.fields,help:planning.field_planning_recurrency__repeat_until
+msgid "Up to which date should the plannings be repeated"
+msgstr "Sampai dengan tanggal mana planning akan diulang"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__user_id
+#: model:ir.model.fields,field_description:planning.field_planning_slot__user_id
+#: model:res.groups,name:planning.group_planning_user
+msgid "User"
+msgstr "Pengguna"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/hr.py:0
+#: model:ir.actions.server,name:planning.model_hr_employee_action_planning_view
+#: model:ir.actions.server,name:planning.model_hr_employee_public_action_planning_view
+#, python-format
+msgid "View Planning"
+msgstr "Lihat Perencanaan"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "Waiter"
+msgstr "Waiter"
+
+#. module: planning
+#: model_terms:ir.actions.act_window,help:planning.planning_action_roles
+msgid "Wednesday, 15"
+msgstr "Rabu, 15"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/js/planning_calendar_front.js:0
+#, python-format
+msgid "Week"
+msgstr "Pekan"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_recurrency__repeat_type
+#: model:ir.model.fields.selection,name:planning.selection__planning_recurrency__repeat_unit__week
+#: model:ir.model.fields.selection,name:planning.selection__planning_slot__repeat_unit__week
+msgid "Weeks"
+msgstr "Minggu"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__work_address_id
+msgid "Work Address"
+msgstr "Alamat Tempat Kerja"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__work_email
+msgid "Work Email"
+msgstr "Email Kantor"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_slot__work_location_id
+msgid "Work Location"
+msgstr "Lokasi Kerja"
+
+#. module: planning
+#: model:ir.model.fields,field_description:planning.field_planning_analysis_report__working_days_count
+#: model:ir.model.fields,field_description:planning.field_planning_slot__working_days_count
+msgid "Working Days"
+msgstr "Hari-Hari Kerja"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/js/tours/planning.js:0
+#, python-format
+msgid ""
+"Write the <b>role</b> your employee will perform (<i>e.g. Chef, Bartender, "
+"Waiter, etc.</i>). <i>Tip: Create open shifts for the roles you will be "
+"needing to complete a mission. Then, assign those open shifts to the "
+"resources that are available.</i>"
+msgstr ""
+"Tulis <b>peran</b> yang karyawan Anda akan lakukan (<i>contoh Koki, "
+"Bartender, Waiter, dsb.</i>). <i>Tip: Buat shift kosong untuk peran yang "
+"Anda butuhkan untuk menyelesaikan misi. Lalu, tugaskan shift kosong tersebut"
+" ke sumber daya yang tersedia.</i>"
+
+#. module: planning
+#: model:ir.model.fields.selection,name:planning.selection__planning_recurrency__repeat_unit__year
+#: model:ir.model.fields.selection,name:planning.selection__planning_slot__repeat_unit__year
+msgid "Years"
+msgstr "Tahun"
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "You are not allowed to reset to draft shifts."
+msgstr "Anda tidak diizinkan untuk mereset draft shift."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "You can not assign yourself to an already assigned shift."
+msgstr "Anda tidak dapat menugaskan diri Anda ke shift yang sudah ditugaskan."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "You can not cancel a request to switch made by another user."
+msgstr ""
+"Anda tidak boleh membatalkan permintaan penggantian yang dibuat oleh user "
+"lain."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid ""
+"You can not request to switch a shift that is assigned to another user."
+msgstr ""
+"Anda tidak dapat meminta penggantian shift yang ditugaskan ke user lain."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "You can not unassign another employee than yourself."
+msgstr ""
+"Anda tidak dapat membatalkan penugasan karyawan lain kecuali diri Anda "
+"sendiri."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "You cannot cancel a request to switch that is in the past."
+msgstr ""
+"Anda tidak dapat membatalkan permintaan penggantian yang di masa lalu."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "You cannot switch a shift that is in the past."
+msgstr "Anda tidak dapat mengganti shift yang ada di masa lalu."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "You don't have the right to cancel a request to switch."
+msgstr "Anda tidak memiliki hak untuk membatalkan permintaan penggantian."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "You don't have the right to self assign."
+msgstr "Anda tidak memiliki hak untuk memberikan tugas ke diri Anda sendiri."
+
+#. module: planning
+#. odoo-python
+#: code:addons/planning/models/planning.py:0
+#, python-format
+msgid "You don't have the right to switch shifts."
+msgstr "Anda tidak memiliki hak untuk mengganti shift."
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.slot_unassign
+msgid "You have been successfully unassigned from this shift"
+msgstr "Anda telah sukses dibatalkan penugasannya dari shift ini"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.slot_unassign
+msgid "Your Planning"
+msgstr "Planning Anda"
+
+#. module: planning
+#: model:mail.template,subject:planning.email_template_planning_planning
+msgid ""
+"Your planning from {{ format_date(ctx.get('start_datetime')) }} to {{ "
+"format_date(ctx.get('end_datetime')) }}"
+msgstr ""
+"Planning Anda dari {{ format_date(ctx.get('start_datetime')) }} sampai {{ "
+"format_date(ctx.get('end_datetime')) }}"
+
+#. module: planning
+#: model:mail.template,subject:planning.email_template_shift_switch_email
+msgid ""
+"Your shift on {{ ctx.get('start_datetime') }} was re-assigned to {{ "
+"ctx.get('new_assignee_name', 'Marc Demo') }}"
+msgstr ""
+"Shift Anda pada {{ ctx.get('start_datetime') }} telah ditugaskan ulang ke {{"
+" ctx.get('new_assignee_name', 'Marc Demo') }}"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/components/address_recurrency_confirmation_dialog/address_recurrency_confirmation_dialog.xml:0
+#, python-format
+msgid "all shifts"
+msgstr "semua shif"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.res_config_settings_view_form
+msgid "days before the beginning of the shift"
+msgstr "hari sebelum memulai shift"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_slot_template_view_form
+msgid "days span)"
+msgstr "rentang hari)"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_tree
+msgid "e.g. Bartender"
+msgstr "contoh Bartender"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_role_view_tree
+msgid "e.g. Cleaner"
+msgstr "contoh Tukang Bersih"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.resource_resource_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:planning.resource_resource_tree_view_inherit
+msgid "e.g. Crane"
+msgstr "contoh Crane"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.hr_employee_view_form_simplified
+#: model_terms:ir.ui.view,arch_db:planning.planning_role_view_tree
+msgid "e.g. John Doe"
+msgstr "misalnya John Doe"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_form
+msgid "other shift(s)"
+msgstr "shift lain"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.planning_view_gantt
+msgid "other shift(s) in conflict."
+msgstr "shift lain konflik."
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/components/address_recurrency_confirmation_dialog/address_recurrency_confirmation_dialog.xml:0
+#, python-format
+msgid "this and following shifts"
+msgstr "ini dan shift berikutnya"
+
+#. module: planning
+#. odoo-javascript
+#: code:addons/planning/static/src/components/address_recurrency_confirmation_dialog/address_recurrency_confirmation_dialog.xml:0
+#, python-format
+msgid "this shift"
+msgstr "shift ini"
+
+#. module: planning
+#: model_terms:ir.ui.view,arch_db:planning.period_report_template
+msgid "to"
+msgstr "kepada"
+
+#. module: planning
+#: model:mail.template,subject:planning.email_template_slot_single
+msgid "{{ ctx.get('mail_subject', '') }} {{ ctx.get('start_datetime' , '') }}"
+msgstr ""
+"{{ ctx.get('mail_subject', '') }} {{ ctx.get('start_datetime' , '') }}"

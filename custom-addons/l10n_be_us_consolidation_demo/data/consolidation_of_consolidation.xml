@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--CONSOLIDATION CHART-->
+        <record id="top_consolidation" model="consolidation.chart">
+            <field name="name">Top Consolidation</field>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="children_ids" eval="[(6,0, [ref('test_chart')])]"/>
+        </record>
+        <!--ANALYSIS PERIODs-->
+        <record id="top_first_period" model="consolidation.period">
+            <field name="chart_id" ref="top_consolidation"/>
+            <field name="date_analysis_begin" eval="time.strftime('%Y-01-01')"/>
+            <field name="date_analysis_end" eval="time.strftime('%Y-12-31')"/>
+        </record>
+        <!--COMPOSITIONS-->
+        <record id="composition" model="consolidation.period.composition">
+            <field name="composed_period_id" ref="first_period"/>
+            <field name="using_period_id" ref="top_first_period"/>
+            <field name="rate_consolidation">10</field>
+        </record>
+        <!-- CONSO ACCOUNTS -->
+        <record id="consolidation_account_assets" model="consolidation.account">
+            <field name="name">Assets</field>
+            <field name="chart_id" ref="top_consolidation"/>
+            <field name="using_ids" model="account.account"
+                   eval="[(6,0, [
+                   ref('intangible_asset_account'),
+                   ref('investment_in_associates_account'),
+                   ref('property_plan_equipment_account'),
+                   ref('cash_and_equivalent_account'),
+                   ref('trade_and_other_receivables_account'),
+                   ref('specific_receivable_liaison_account')
+                   ])]"/>
+        </record>
+        <record id="consolidation_account_equity" model="consolidation.account">
+            <field name="name">Equity</field>
+            <field name="chart_id" ref="top_consolidation"/>
+            <field name="using_ids" model="account.account"
+                   eval="[(6,0, [
+                   ref('share_capital_account'),
+                   ref('share_premium_account'),
+                   ref('reserves_account'),
+                   ref('retained_earnings_account')
+                   ])]"/>
+        </record>
+        <record id="consolidation_account_liabilities" model="consolidation.account">
+            <field name="name">Liabilities</field>
+            <field name="chart_id" ref="top_consolidation"/>
+            <field name="using_ids" model="account.account"
+                   eval="[(6,0, [
+                   ref('financial_debt_long_term_account'),
+                   ref('financial_debt_short_term_account'),
+                   ref('social_benefit_payable_account'),
+                   ref('deferred_revenue_account'),
+                   ref('trade_other_payable_account'),
+                   ref('other_tax_liability_account'),
+                   ref('specific_payable_liaison_account')
+                   ])]"/>
+        </record>
+        <record id="consolidation_account_expense" model="consolidation.account">
+            <field name="name">Expense</field>
+            <field name="chart_id" ref="top_consolidation"/>
+            <field name="using_ids" model="account.account"
+                   eval="[(6,0, [
+                   ref('cost_of_sales_account'),
+                   ref('compensation_account'),
+                   ref('depreciation_amortization_account'),
+                   ref('general_administrative_expenses_account'),
+                   ref('finance_costs_account'),
+                   ref('income_tax_account'),
+                   ref('other_operating_expense_account'),
+                  ref('specific_expense_liaison_account')
+                   ])]"/>
+        </record>
+        <record id="consolidation_account_income" model="consolidation.account">
+            <field name="name">Income</field>
+            <field name="chart_id" ref="top_consolidation"/>
+            <field name="using_ids" model="account.account"
+                   eval="[(6,0, [
+                   ref('revenue_account'),
+                   ref('finance_income_account'),
+                   ref('other_operating_income_account'),
+                   ref('specific_income_liaison_account')
+                   ])]"/>
+        </record>
+        <record id="consolidation_account_result_allocation" model="consolidation.account">
+            <field name="name">Result allocation</field>
+            <field name="chart_id" ref="top_consolidation"/>
+            <field name="using_ids" model="account.account"
+                   eval="[(6,0, [ref('reserves_transfer_account')])]"/>
+        </record>
+
+        <!-- GENERATE JOURNALS FOR CONSOLIDATION -->
+        <function model="consolidation.period" name="action_generate_journals">
+            <value eval="[ref('top_first_period')]"/>
+        </function>
+    </data>
+</odoo>

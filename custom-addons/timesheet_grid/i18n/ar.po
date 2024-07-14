@@ -1,0 +1,1561 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* timesheet_grid
+# 
+# Translators:
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid "%s Spent"
+msgstr "%s مقضي "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#, python-format
+msgid "+ [A] to add"
+msgstr "+ [A] للإضافة "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.project_task_view_kanban
+msgid "<i class=\"fa fa-pause text-warning\" title=\"Timer is Paused\"/>"
+msgstr "<i class=\"fa fa-pause text-warning\" title=\"تم إيقاف الموقّت مؤقتاً \"/>"
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.project_task_view_kanban
+msgid "<i class=\"fa fa-play text-success\" title=\"Timer is Running\"/>"
+msgstr "<i class=\"fa fa-play text-success\" title=\"المؤقت جارٍ \"/>"
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.res_config_settings_view_form
+msgid "<span class=\"col-auto ms-2\">min</span>"
+msgstr "<span class=\"col-auto ms-2\">دقائق</span> "
+
+#. module: timesheet_grid
+#: model:mail.template,body_html:timesheet_grid.mail_template_timesheet_reminder_user
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Your Timesheets</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Abigail Peterson</span>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not object.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <t t-set=\"timesheet_hours\" t-value=\"ctx.get('timesheet_hours', 0)\"></t>\n"
+"                    <t t-set=\"working_hours\" t-value=\"ctx.get('working_hours', 0)\"></t>\n"
+"                    <div>\n"
+"                        Hello <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"                        This is a friendly reminder to log your hours for the following period: <t t-out=\"ctx.get('date_start') or ''\">05/05/2021</t> <i class=\"fa fa-long-arrow-right\"></i> <t t-out=\"ctx.get('date_stop') or ''\">05/06/2021</t>.\n"
+"                        For the time being, you <t t-if=\"timesheet_hours != 0\">only</t> logged <t t-out=\"'%d' %int(timesheet_hours)\">2</t><t t-if=\"timesheet_hours % 1 != 0\" t-out=\"':%02d' % (round(timesheet_hours % 1 * 60))\">:30</t> hours on the <t t-out=\"'%d' %int(working_hours)\">8</t><t t-if=\"working_hours % 1 != 0\" t-out=\"':%02d' % (round(working_hours % 1 * 60))\">:30</t> requested.<br>\n"
+"                        <div t-if=\"ctx.get('action_url')\" style=\"margin: 16px 0px 16px 0px;\">\n"
+"                            <a t-att-href=\"ctx.get('action_url')\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;\">Fill in your timesheet</a>\n"
+"                        </div>\n"
+"                        <br>Thank you,<br>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"object.company_id.email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=mail\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">جداولك الزمنية</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">أبيغيل بيترسون</span>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not object.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <t t-set=\"timesheet_hours\" t-value=\"ctx.get('timesheet_hours', 0)\"></t>\n"
+"                    <t t-set=\"working_hours\" t-value=\"ctx.get('working_hours', 0)\"></t>\n"
+"                    <div>\n"
+"                        مرحباً <t t-out=\"object.name or ''\">أبيغيل بيترسون</t>,<br><br>\n"
+"                        نود تذكيرك بتسجيل ساعاتك للفترة التالية: <t t-out=\"ctx.get('date_start') or ''\">05/05/2021</t> <i class=\"fa fa-long-arrow-right\"></i> <t t-out=\"ctx.get('date_stop') or ''\">05/06/2021</t>.\n"
+"                        في الوقت الحالي، لقد قمت <t t-if=\"timesheet_hours != 0\">فقط</t> بتسجيل <t t-out=\"'%d' %int(timesheet_hours)\">2</t><t t-if=\"timesheet_hours % 1 != 0\" t-out=\"':%02d' % (round(timesheet_hours % 1 * 60))\">:30</t> ساعات من أصل <t t-out=\"'%d' %int(working_hours)\">8</t><t t-if=\"working_hours % 1 != 0\" t-out=\"':%02d' % (round(working_hours % 1 * 60))\">:30</t> المطلوبة.<br>\n"
+"                        <div t-if=\"ctx.get('action_url')\" style=\"margin: 16px 0px 16px 0px;\">\n"
+"                            <a t-att-href=\"ctx.get('action_url')\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;\">قم بتعبئة جداولك الزمنية</a>\n"
+"                        </div>\n"
+"                        <br>شكراً لك،<br>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <t t-out=\"user.signature or ''\">--<br>ميتشل آدمن</t>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.company_id.name or ''\">شركتك</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"object.company_id.email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        مشغل بواسطة <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=mail\" style=\"color: #875A7B;\">أودو</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+
+#. module: timesheet_grid
+#: model:mail.template,body_html:timesheet_grid.mail_template_timesheet_reminder
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Your Timesheets</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Abigail Peterson</span>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not object.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Hello <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"                        This is a friendly reminder to approve your team's timesheets for the following period: <t t-out=\"ctx.get('date_start') or ''\">05/05/2021</t> - <t t-out=\"ctx.get('date_stop') or ''\">06/05/2021</t>.<br>\n"
+"                        <div t-if=\"ctx.get('action_url')\" style=\"margin: 16px 0px 16px 0px;\">\n"
+"                            <a t-att-href=\"ctx.get('action_url')\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;\">Validate the Timesheets</a>\n"
+"                        </div>\n"
+"                        <br>Thank you,<br>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"object.company_id.email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=mail\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">جداولك الزمنية</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">أبيغيل بيترسون</span>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not object.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        مرحباً <t t-out=\"object.name or ''\">أبيغيل بيترسون</t>،<br><br>\n"
+"                        نود تذكيرك بالموافقة على جداول فريقك الزمنية للفترة التالية: <t t-out=\"ctx.get('date_start') or ''\">05/05/2021</t> - <t t-out=\"ctx.get('date_stop') or ''\">06/05/2021</t>.<br>\n"
+"                        <div t-if=\"ctx.get('action_url')\" style=\"margin: 16px 0px 16px 0px;\">\n"
+"                            <a t-att-href=\"ctx.get('action_url')\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;\">تصديق الجداول الزمنية</a>\n"
+"                        </div>\n"
+"                        <br>شكراً لك،<br>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <t t-out=\"user.signature or ''\">--<br>ميتشل آدمن</t>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.company_id.name or ''\">شركتك</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"object.company_id.email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        مشغل بواسطة <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=mail\" style=\"color: #875A7B;\">أودو</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#, python-format
+msgid "A timer is running in another company."
+msgstr "هناك مؤقِّت جارٍ في شركة أخرى. "
+
+#. module: timesheet_grid
+#: model:ir.ui.menu,name:timesheet_grid.menu_timesheet_grid_validate_all_timesheets
+msgid "All Timesheets"
+msgstr "كافة الجداول الزمنية "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_account_analytic_line__amount
+msgid "Amount"
+msgstr "مبلغ"
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid "An employee must be linked to your user to record time."
+msgstr "يجب أن يكون الموظف مرتبطاً بمستخدم لتسجيل الوقت. "
+
+#. module: timesheet_grid
+#: model:ir.model,name:timesheet_grid.model_account_analytic_line
+msgid "Analytic Account"
+msgstr "الحساب التحليلي"
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_res_company__timesheet_mail_allow
+#: model:ir.model.fields,field_description:timesheet_grid.field_res_config_settings__reminder_allow
+msgid "Approver Reminder"
+msgstr "تذكير مانح الموافقة "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_res_company__timesheet_mail_delay
+msgid "Approver Reminder Days"
+msgstr "أيام تذكير مانح الموافقات "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_res_company__timesheet_mail_interval
+#: model:ir.model.fields,field_description:timesheet_grid.field_res_config_settings__reminder_interval
+msgid "Approver Reminder Frequency"
+msgstr "معدل تذكير مانح الموافقات "
+
+#. module: timesheet_grid
+#: model_terms:ir.actions.act_window,help:timesheet_grid.timesheet_grid_to_validate_action
+msgid ""
+"Check that your employees correctly filled in their timesheets and that "
+"their time is billable."
+msgstr ""
+"تحقق من أن موظفيك قد قاموا بملء جداولهم الزمنية بشكل صحيح وأن وقتهم قابل "
+"للفوترة. "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/js/tours/timesheet_grid.js:0
+#: code:addons/timesheet_grid/static/src/js/tours/timesheet_grid.js:0
+#, python-format
+msgid ""
+"Click on the cell to set the number of hours you spent on this project."
+msgstr "اضغط على الخلية لتحديد عدد الساعات التي قضيتها في هذا المشروع. "
+
+#. module: timesheet_grid
+#: model:ir.model,name:timesheet_grid.model_res_company
+msgid "Companies"
+msgstr "الشركات"
+
+#. module: timesheet_grid
+#: model:ir.model,name:timesheet_grid.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات "
+
+#. module: timesheet_grid
+#: model:mail.template,description:timesheet_grid.mail_template_timesheet_reminder
+msgid ""
+"Configure reminders in timesheet settings to remind approvers to validate "
+"timesheets"
+msgstr ""
+"قم بتهيئة التذكيرات في إعدادات الجداول الزمنية لتذكير مانحي الموافقات بتصديق"
+" الجداول الزمنية "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/task.py:0
+#, python-format
+msgid "Confirm Time Spent"
+msgstr "تأكيد الوقت المقضي "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/js/tours/timesheet_grid.js:0
+#, python-format
+msgid "Congratulations, you are now a master of Timesheets."
+msgstr "تهانينا، أصبحت الآن محترفاً في الحداول الزمنية. "
+
+#. module: timesheet_grid
+#: model_terms:ir.actions.act_window,help:timesheet_grid.action_timesheet_previous_month
+#: model_terms:ir.actions.act_window,help:timesheet_grid.action_timesheet_previous_week
+msgid ""
+"Congratulations, you are up to date. <br>\n"
+"                    Let's wait for your employees to start new activities."
+msgstr ""
+"تهانينا، لقد أصبحت الآن مواكباً للتحديثات! <br>\n"
+"                    نحن في انتظار بدء موظفيك بالعمل. "
+
+#. module: timesheet_grid
+#: model:ir.model,name:timesheet_grid.model_project_task_create_timesheet
+msgid "Create Timesheet from task"
+msgstr "إنشاء جداول زمنية من مهمة "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_hr_timesheet_merge_wizard__create_uid
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task_create_timesheet__create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_hr_timesheet_merge_wizard__create_date
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task_create_timesheet__create_date
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/views/timer_timesheet_grid/timer_timesheet_grid_renderer.xml:0
+#, python-format
+msgid "Daily overtime"
+msgstr "الوقت الإضافي اليومي "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_hr_timesheet_merge_wizard__date
+msgid "Date"
+msgstr "التاريخ"
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_grid_by_employee
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_grid_by_project
+msgid "Day"
+msgstr "اليوم"
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.project_task_view_gantt_timesheet
+msgid "Days Spent —"
+msgstr "الأيام المقضية — "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_res_config_settings__reminder_delay
+msgid "Days to Remind Approver"
+msgstr "عدد الأيام حتى تذكير مانح الموافقات "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_res_config_settings__reminder_user_delay
+msgid "Days to Remind User"
+msgstr "عدد الأيام حتى تذكير المستخدم"
+
+#. module: timesheet_grid
+#: model:ir.model.fields,help:timesheet_grid.field_account_analytic_line__employee_id
+msgid ""
+"Define an 'hourly cost' on the employee to track the cost of their time."
+msgstr "قم بتحديد التكلفة بالساعة للموظف لتتبع تكلفة وقته. "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.project_task_create_timesheet_view_form
+msgid "Delete"
+msgstr "حذف"
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_merge_wizard_view_form
+msgid "Describe your activity"
+msgstr "قم بوصف نشاطك "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/js/tours/timesheet_grid.js:0
+#, python-format
+msgid ""
+"Describe your activity <i>(e.g. sent an e-mail, meeting with the "
+"customer...)</i>."
+msgstr ""
+"قم بوصف نشاطك <i>(مثال: إرسال بريد إلكتروني، حضور اجتماع مع عميل، ...)</i>. "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/grid_timesheet_timer_header/grid_timesheet_timer_header.js:0
+#: code:addons/timesheet_grid/static/src/hooks/timesheet_timer_hooks.js:0
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.project_task_create_timesheet_view_form
+#, python-format
+msgid "Describe your activity..."
+msgstr "قم بوصف نشاطك..."
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_hr_timesheet_merge_wizard__name
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task_create_timesheet__description
+msgid "Description"
+msgstr "الوصف"
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_overtime_indication/timesheet_overtime_indication.js:0
+#, python-format
+msgid ""
+"Difference between the number of %s allocated to the project and the number "
+"of %s recorded"
+msgstr "الفرق بين عدد %s المخصصة للمشروع وعدد %s المسجلة "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_overtime_indication/timesheet_overtime_indication.js:0
+#, python-format
+msgid ""
+"Difference between the number of %s allocated to the task and the number of "
+"%s recorded"
+msgstr "الفرق بين عدد %s المخصصة للمهمة وعدد %s المسجلة "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/employee_overtime_indication/employee_overtime_indication.xml:0
+#, python-format
+msgid ""
+"Difference between the number of hours recorded and the number of hours the "
+"employee was supposed to work according to his contract"
+msgstr ""
+"الفرق بين عدد الساعات المسجلة وعدد الساعات التي يفترض من الموظف عملها وفقاً "
+"لعقده "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_overtime_indication/timesheet_overtime_indication.js:0
+#, python-format
+msgid "Difference between the time allocated and the time recorded"
+msgstr "الفرق بين الوقت المخصص والوقت المسجل "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.project_task_create_timesheet_view_form
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_merge_wizard_view_form
+#, python-format
+msgid "Discard"
+msgstr "إهمال "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_hr_timesheet_merge_wizard__display_name
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task_create_timesheet__display_name
+msgid "Display Name"
+msgstr "اسم العرض "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_account_analytic_line__display_timer
+msgid "Display Timer"
+msgstr "مؤقت العرض "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_account_analytic_line__display_timer_pause
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task__display_timer_pause
+msgid "Display Timer Pause"
+msgstr "إيقاف مؤقت العرض "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_account_analytic_line__display_timer_resume
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task__display_timer_resume
+msgid "Display Timer Resume"
+msgstr "مواصلة مؤقت العرض "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_account_analytic_line__display_timer_start_primary
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task__display_timer_start_primary
+msgid "Display Timer Start Primary"
+msgstr "بداية مؤقت العرض الرئيسي "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task__display_timer_start_secondary
+msgid "Display Timer Start Secondary"
+msgstr "بداية مؤقت العرض الثانوي "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_account_analytic_line__display_timer_stop
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task__display_timer_stop
+msgid "Display Timer Stop"
+msgstr "عرض إيقاف المؤقت "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task__display_timesheet_timer
+msgid "Display Timesheet Time"
+msgstr "عرض وقت الجداول الزمنية "
+
+#. module: timesheet_grid
+#: model:ir.model.fields.selection,name:timesheet_grid.selection__account_analytic_line__validated_status__draft
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_search
+msgid "Draft"
+msgstr "مسودة"
+
+#. module: timesheet_grid
+#: model:ir.model,name:timesheet_grid.model_hr_employee
+#: model:ir.model.fields,field_description:timesheet_grid.field_account_analytic_line__employee_id
+#: model:ir.model.fields,field_description:timesheet_grid.field_hr_timesheet_merge_wizard__employee_id
+msgid "Employee"
+msgstr "الموظف"
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_res_company__timesheet_mail_employee_interval
+msgid "Employee Frequency"
+msgstr "معدل الموظف"
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_res_company__timesheet_mail_employee_allow
+#: model:ir.model.fields,field_description:timesheet_grid.field_res_config_settings__reminder_user_allow
+msgid "Employee Reminder"
+msgstr "تذكير الموظف"
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_res_company__timesheet_mail_employee_delay
+msgid "Employee Reminder Days"
+msgstr "أيام تذكير الموظف"
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_hr_timesheet_merge_wizard__encoding_uom_id
+msgid "Encoding Uom"
+msgstr "وحدة قياس الترميز "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#, python-format
+msgid "Enter"
+msgstr "إدخال "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.res_config_settings_view_form
+msgid "Frequency"
+msgstr "معدل الحدوث "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/views/timesheet_grid/timesheet_grid_search_model.js:0
+#, python-format
+msgid "Grouping by date is not supported"
+msgstr "خاصية التجميع حسب التاريخ غير مدعومة "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.project_task_create_timesheet_view_form
+msgid "Hours Spent"
+msgstr "الساعات المستغرقة "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.project_task_view_gantt_timesheet
+msgid "Hours Spent —"
+msgstr "الساعات المقضية — "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_hr_timesheet_merge_wizard__id
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task_create_timesheet__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_account_analytic_line__is_timer_running
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task__is_timer_running
+#: model:ir.model.fields,field_description:timesheet_grid.field_timesheets_analysis_report__is_timer_running
+msgid "Is Timer Running"
+msgstr "المؤقت يجري  "
+
+#. module: timesheet_grid
+#: model:ir.ui.menu,name:timesheet_grid.menu_timesheet_grid_validate_previous_month
+msgid "Last Month"
+msgstr "الشهر الماضي"
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_hr_timesheet_merge_wizard__write_uid
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task_create_timesheet__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_hr_timesheet_merge_wizard__write_date
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task_create_timesheet__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_hr_employee__last_validated_timesheet_date
+msgid "Last Validated Timesheet Date"
+msgstr "  تاريخ آخر جداول زمنية تم تصديقها "
+
+#. module: timesheet_grid
+#: model:ir.ui.menu,name:timesheet_grid.menu_timesheet_grid_validate_previous_week
+msgid "Last Week"
+msgstr "الأسبوع الماضي"
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/js/tours/timesheet_grid.js:0
+#, python-format
+msgid ""
+"Launch the <b>timer</b> for this project by pressing the <b>[a] key</b>. "
+"Easily switch from one project to another by using those keys. <i>Tip: you "
+"can also directly add 15 minutes to this project by hitting the <b>shift + "
+"[A] keys</b>.</i>"
+msgstr ""
+"قم بتشغيل <b>المؤقت</b> لهذا المشروع عن طريق الضغط على <b>مفتاح [a]</b>. "
+"يمكنك التنقل من مشروع لآخر بكل سهولة باستخدام تلك المفاتيح. <i>نصيحة: يمكنك "
+"أيضاً إضافة 15 دقيقة إلى المشروع عن طريق الضغط على <b>المفاتيح shift + "
+"[A]</b>.</i> "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/js/tours/timesheet_grid.js:0
+#, python-format
+msgid "Launch the <b>timer</b> to start a new activity."
+msgstr "قم بتشغيل <b>المؤقت</b> لبدء نشاط جديد. "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_merge_wizard_view_form
+msgid "Merge"
+msgstr "دمج"
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_merge_wizard_view_form
+msgid "Merge Timesheet"
+msgstr "دمج الجداول الزمنية "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#: model:ir.actions.server,name:timesheet_grid.merge_timesheet_action
+#: model:ir.model,name:timesheet_grid.model_hr_timesheet_merge_wizard
+#, python-format
+msgid "Merge Timesheets"
+msgstr "دمج الجداول الزمنية "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_res_config_settings__timesheet_min_duration
+msgid "Minimal Duration"
+msgstr "المدة الدنيا "
+
+#. module: timesheet_grid
+#: model:ir.model,name:timesheet_grid.model_ir_module_module
+msgid "Module"
+msgstr "التطبيق "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_grid_by_employee
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_grid_by_project
+msgid "Month"
+msgstr "الشهر"
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_search
+msgid "My Department"
+msgstr "قسمي "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_search
+msgid "My Projects"
+msgstr "مشاريعي "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_search
+msgid "My Tasks"
+msgstr "مهامي "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_search
+msgid "My Team"
+msgstr "فريقي"
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_res_company__timesheet_mail_nextdate
+msgid "Next scheduled date for approver reminder"
+msgstr "تاريخ التذكير التالي لمانح الموافقات "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_res_company__timesheet_mail_employee_nextdate
+msgid "Next scheduled date for employee reminder"
+msgstr "تاريخ التذكير التالي للموظف"
+
+#. module: timesheet_grid
+#: model_terms:ir.actions.act_window,help:timesheet_grid.action_timesheet_previous_month
+#: model_terms:ir.actions.act_window,help:timesheet_grid.action_timesheet_previous_week
+msgid "No activities to validate."
+msgstr "لا توجد أي أنشطة لتصديقها. "
+
+#. module: timesheet_grid
+#: model_terms:ir.actions.act_window,help:timesheet_grid.timesheet_grid_to_validate_action
+msgid "No timesheets to validate"
+msgstr "لا توجد جداول زمنية لتصديقها "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,help:timesheet_grid.field_res_config_settings__reminder_delay
+msgid ""
+"Number of days after the end of the week/month after which an automatic "
+"email reminder will be sent to timesheet managers that still have timesheets"
+" to validate."
+msgstr ""
+"عدد الأيام بعد نهاية الأسبوع/الشهر الذي سيتم بعدها إرسال تذكير عن طريق "
+"البريد الإلكتروني إلى مدراء الجداول الزمنية الذين لا يزال لديهم جداول زمنية "
+"لتصديقها. "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,help:timesheet_grid.field_res_config_settings__reminder_user_delay
+msgid ""
+"Numbers of days after the end of the week/month after which an automatic "
+"email reminder will be sent to timesheet users that still have timesheets to"
+" encode (according to their working hours)."
+msgstr ""
+"عدد الأيام بعد نهاية الأسبوع/الشهر الذي سيتم بعدها إرسال تذكير عن طريق "
+"البريد الإلكتروني إلى مستخدمي الجداول الزمنية الذين لا يزال لديهم جداول "
+"زمنية لتشفيرها (وفقاً لساعات عملهم). "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid ""
+"Only a Timesheets Approver or Manager is allowed to modify a validated "
+"entry."
+msgstr ""
+"يُسمح فقط للموظف المسؤول عن الموافقة على الجداول الزمنية أو المدير تعديل قيد"
+" قد تم تصديقه. "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.project_task_view_form
+msgid "Pause"
+msgstr "إيقاف مؤقت "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#, python-format
+msgid "Press"
+msgstr "اضغط على "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#, python-format
+msgid "Press Esc to discard"
+msgstr "اضغط على Esc للتجاهل "
+
+#. module: timesheet_grid
+#: model:ir.model,name:timesheet_grid.model_project_project
+#: model:ir.model.fields,field_description:timesheet_grid.field_hr_timesheet_merge_wizard__project_id
+msgid "Project"
+msgstr "المشروع"
+
+#. module: timesheet_grid
+#: model:ir.model,name:timesheet_grid.model_hr_employee_public
+msgid "Public Employee"
+msgstr "موظف في القطاع العام"
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_hr_timesheet_merge_wizard__unit_amount
+msgid "Quantity"
+msgstr "الكمية"
+
+#. module: timesheet_grid
+#: model:mail.template,subject:timesheet_grid.mail_template_timesheet_reminder_user
+msgid "Reminder to log your timesheets"
+msgstr "تذكير لتسجيل جداولك الزمنية "
+
+#. module: timesheet_grid
+#: model:mail.template,subject:timesheet_grid.mail_template_timesheet_reminder
+msgid "Reminder to validate your team's timesheets"
+msgstr "تذكير لتصديق جداول فريقك الزمنية "
+
+#. module: timesheet_grid
+#: model:ir.actions.server,name:timesheet_grid.invalidate_timesheet_action
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_form_view
+msgid "Reset to draft"
+msgstr "إعادة التعيين كمسودة "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.project_task_view_form
+msgid "Resume"
+msgstr "المتابعة "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_res_config_settings__timesheet_rounding
+msgid "Round up"
+msgstr "تقريب "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.res_config_settings_view_form
+msgid "Rounding applied when tracking your time using the timer"
+msgstr "يتم تطبيق التقريب عند تتبع وقتك باستخدام المؤقت "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.project_task_create_timesheet_view_form
+msgid "Save"
+msgstr "حفظ"
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.project_task_create_timesheet_view_form
+msgid "Save time"
+msgstr "حفظ الوقت "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/js/tours/timesheet_grid.js:0
+#, python-format
+msgid "Select the <b>project</b> on which you are working."
+msgstr "قم بتحديد <b>المشروع</b> الذي تعمل عليه. "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,help:timesheet_grid.field_hr_employee__timesheet_manager_id
+#: model:ir.model.fields,help:timesheet_grid.field_res_users__timesheet_manager_id
+msgid ""
+"Select the user responsible for approving \"Timesheet\" of this employee.\n"
+"If empty, the approval is done by a Timesheets > Administrator or a Timesheets > User: all timesheets (as determined in the users settings)."
+msgstr ""
+"قم بتحديد المستخدم المسؤول عن الموافقة على \"الجداول الزمنية\" لهذا الموظف.\n"
+"إذا كان فارغاً، تتم الموافقة بواسطة الجداول الزمنية > المدير، أو الجداول الزمنية > المستخدم: كافة الجداول الزمنية (كما هو محدد في إعدادات المستخدم). "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,help:timesheet_grid.field_account_analytic_line__is_timesheet
+msgid "Set if this analytic line represents a line of timesheet."
+msgstr "قم بتحديده إذا كان هذا البند التحليلي يمثل بنداً في الجداول الزمنية. "
+
+#. module: timesheet_grid
+#: model:mail.template,description:timesheet_grid.mail_template_timesheet_reminder_user
+msgid ""
+"Set reminders in settings to notify employees who didn't record their "
+"timesheet"
+msgstr ""
+"قم بضبط التذكيرات في الإعدادات لإخطار الموظفين الذين لم يقوموا بتسجيل "
+"جداولهم الزمنية "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/js/tours/timesheet_grid.js:0
+#, python-format
+msgid ""
+"Set the number of hours you spent on this project (e.g. 1:30 or 1.5). "
+"<i>Tip: use the tab keys to easily navigate from one cell to another.</i>"
+msgstr ""
+"قم بتحديد عدد الساعات التي قضيتها في هذا المشروع (مثال: 1:30 أو 1.5). "
+"<i>نصيحة: استخدم مفاتيح الشريط للتنقل بسهولة بين الخلايا.</i> "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#, python-format
+msgid "Shift"
+msgstr "نوبة العمل "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid "Sorry, you cannot use a timer for a validated timesheet"
+msgstr ""
+"عذراً، لا يمكنك استخدام مؤقت في الجداول الزمنية التي قد تم تصديقها بالفعل. "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#: code:addons/timesheet_grid/static/src/components/timesheet_uom_hour_timer/timesheet_uom_hour_timer.js:0
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.project_task_view_form
+#, python-format
+msgid "Start"
+msgstr "بدء"
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#: code:addons/timesheet_grid/static/src/components/timesheet_uom_hour_timer/timesheet_uom_hour_timer.js:0
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.project_task_view_form
+#, python-format
+msgid "Stop"
+msgstr "إيقاف"
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/js/tours/timesheet_grid.js:0
+#, python-format
+msgid ""
+"Stop the <b>timer</b> when you are done. <i>Tip: hit <b>[Enter]</b> in the "
+"description to automatically log your activity.</i>"
+msgstr ""
+"قم بإيقاف <b>المؤقت</b> عند انتهائك. <i>نصيحة: اضغط على <b>[Enter]</b> من "
+"الوصف لتسجيل القيد نشاطك تلقائياً.</i> "
+
+#. module: timesheet_grid
+#: model:ir.model,name:timesheet_grid.model_project_task
+#: model:ir.model.fields,field_description:timesheet_grid.field_hr_timesheet_merge_wizard__task_id
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task_create_timesheet__task_id
+msgid "Task"
+msgstr "المهمة"
+
+#. module: timesheet_grid
+#: model:ir.model.fields,help:timesheet_grid.field_project_task_create_timesheet__task_id
+msgid "Task for which we are creating a sales order"
+msgstr "المهام التي ننشئ أمر مبيعات لها "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,help:timesheet_grid.field_account_analytic_line__display_timer
+msgid ""
+"Technical field used to display the timer if the encoding unit is 'Hours'."
+msgstr "حقل تقني يُستخدم لعرض المؤقت إذا كانت وحدة الترميز هي \"الساعات\". "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.res_config_settings_view_form
+msgid ""
+"The duration of timesheets encoded through the timer will automatically be "
+"rounded up to this number. For instance, if you stop your timer at 00:16:56,"
+" the duration of the timesheet entry will automatically be rounded up to "
+"00:30 (assuming you have a round up of 15 min). We recommend having the same"
+" value for the minimal duration and for the round up."
+msgstr ""
+"مدة الجداول الزمنية المشفرة من خلال المؤقت سيتم تقريبها تلقائياً إلى هذا "
+"العدد. على سبيل المثال، إذا قمت بإيقاف المؤقت على 00:16:56، سيتم تقريب مدة "
+"مدخلات الجداول الزمنية تلقائياً إلى 00:30 (مع افتراض أنه لديك عامل تقريب "
+"لـ15 دقيقة). نوصي بأن يكون للمدة الدنيا والتقريب نفس القيمة. "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/views/timesheet_grid/timesheet_grid_controller.js:0
+#, python-format
+msgid "The timesheet entry has successfully been created."
+msgstr "لقد تم إنشاء قيد الجداول الزمنية بنجاح. "
+
+#. module: timesheet_grid
+#: model:ir.model.constraint,message:timesheet_grid.constraint_project_task_create_timesheet_time_positive
+msgid "The timesheet's time must be positive"
+msgstr "يجب أن يكون الوقت المسجل في الجداول الزمنية موجباً "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/wizard/timesheet_merge_wizard.py:0
+#, python-format
+msgid "The timesheets have successfully been merged."
+msgstr "لقد تم دمج الجداول الزمية بنجاح. "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid "The timesheets have successfully been reset to draft."
+msgstr "لقد تمت إعادة تعيين الجداول الزمنية إلى حالة المسودة بنجاح. "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid "The timesheets have successfully been validated."
+msgstr "لقد تم تصديق الجداول الزمنية بنجاح. "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/wizard/timesheet_merge_wizard.py:0
+#, python-format
+msgid "The timesheets must have the same encoding unit"
+msgstr "يجب أن يكون للجداول الزمنية نفس وحدة الترميز "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid "There are no timesheets to merge."
+msgstr "لا توجد جداول زمنية لدمجها. "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid ""
+"There are no timesheets to reset to draft or they have already been "
+"invoiced."
+msgstr ""
+"لا توجد جداول زمنية لإعادة تعيينها إلى حالة المسودة أو أنه قد تمت فوترتها "
+"بالفعل. "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/task.py:0
+#, python-format
+msgid ""
+"This project isn't expected to have task during this period. Planned hours :"
+msgstr ""
+"ليس من المتوقع أن يكون لهذا المشروع أي مهام أثناء هذه الفترة. الساعات المخطط"
+" لها: "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task_create_timesheet__time_spent
+msgid "Time"
+msgstr "الوقت"
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.res_config_settings_view_form
+msgid "Time Rounding"
+msgstr "تقريب الوقت "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_merge_wizard_view_form
+msgid "Time Spent"
+msgstr "الوقت المستغرق"
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_account_analytic_line__timer_pause
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task__timer_pause
+msgid "Timer Last Pause"
+msgstr "آخر إيقاف للمؤقت "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_account_analytic_line__timer_start
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task__timer_start
+msgid "Timer Start"
+msgstr "بداية المؤقت "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_hr_employee__timesheet_manager_id
+#: model:ir.model.fields,field_description:timesheet_grid.field_hr_employee_public__timesheet_manager_id
+#: model:ir.model.fields,field_description:timesheet_grid.field_res_users__timesheet_manager_id
+msgid "Timesheet"
+msgstr "الجدول الزمني "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.view_employee_tree_inherit_timesheet
+msgid "Timesheet Approver"
+msgstr "مانح موافقات الجداول الزمنية "
+
+#. module: timesheet_grid
+#: model:ir.model,name:timesheet_grid.model_timesheet_grid_mixin
+msgid "Timesheet Grid mixin"
+msgstr "mixin شبكة الجداول الزمنية "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_account_analytic_line__duration_unit_amount
+msgid "Timesheet Init Amount"
+msgstr "مبلغ وحدة الجداول الزمنية "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_account_analytic_line__is_timesheet
+#: model:ir.model.fields,field_description:timesheet_grid.field_timesheets_analysis_report__is_timesheet
+msgid "Timesheet Line"
+msgstr "بند الجداول الزمنية "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_account_analytic_line__unit_amount_validate
+msgid "Timesheet Unit Time"
+msgstr "وقت وحدة الجداول الزمنية "
+
+#. module: timesheet_grid
+#: model:ir.actions.server,name:timesheet_grid.timesheet_reminder_ir_actions_server
+msgid "Timesheet: Approvers Email Reminder"
+msgstr "الجداول الزمنية: البريد الإلكتروني لتذكير مانحي الموافقات "
+
+#. module: timesheet_grid
+#: model:ir.actions.server,name:timesheet_grid.timesheet_reminder_user_ir_actions_server
+msgid "Timesheet: Employees Email Reminder"
+msgstr "الجداول الزمنية: البريد الإلكتروني لتذكير الموظفين "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_hr_timesheet_merge_wizard__timesheet_ids
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_grid_by_employee
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_grid_by_project
+msgid "Timesheets"
+msgstr "الجداول الزمنية "
+
+#. module: timesheet_grid
+#: model:ir.model,name:timesheet_grid.model_timesheets_analysis_report
+msgid "Timesheets Analysis Report"
+msgstr "تقرير تحليل الجداول الزمنية "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid ""
+"Timesheets before the %s (included) have been validated, and can no longer "
+"be %s."
+msgstr "لقد تم تصديق الجداول الزمنية قبل %s (شاملة)، ولا يمكن %sبعد الآن. "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.res_config_settings_view_form
+msgid ""
+"Timesheets encoded via the timer that do not meet the minimal duration will "
+"automatically be rounded up to the defined value. For instance, if you stop "
+"your timer at 00:04:36, the duration of the timesheet entry will "
+"automatically be rounded up to 00:15 (assuming you have a minimal duration "
+"of 15 min). We recommend having the same value for the minimal duration and "
+"for the round up."
+msgstr ""
+"الجداول الزمنية المشفرة من خلال المؤقت سيتم تقريبها تلقائياً إلى القيمة "
+"المحددة. على سبيل المثال، إذا قمت بإيقاف المؤقت على 00:04:36، سيتم تقريب مدة"
+" مدخلات الجداول الزمنية تلقائياً إلى 00:15 (مع افتراض أنه لديك عامل تقريب "
+"لـ15 دقيقة). نوصي بأن يكون للمدة الدنيا والتقريب نفس القيمة. "
+
+#. module: timesheet_grid
+#: model:ir.actions.act_window,name:timesheet_grid.action_timesheet_previous_month
+#: model:ir.actions.act_window,name:timesheet_grid.action_timesheet_previous_week
+#: model:ir.actions.act_window,name:timesheet_grid.timesheet_grid_to_validate_action
+msgid "Timesheets to Validate"
+msgstr "الجداول الزمنية بانتظار التصديق "
+
+#. module: timesheet_grid
+#: model:mail.template,name:timesheet_grid.mail_template_timesheet_reminder
+msgid "Timesheets: Approver Reminder"
+msgstr "الجداول الزمنية: تذكير مانح الموافقات "
+
+#. module: timesheet_grid
+#: model:mail.template,name:timesheet_grid.mail_template_timesheet_reminder_user
+msgid "Timesheets: Employee Reminder"
+msgstr "الجداول الزمنية: تذكير الموظف "
+
+#. module: timesheet_grid
+#: model:ir.ui.menu,name:timesheet_grid.menu_timesheet_grid_validate
+msgid "To Validate"
+msgstr "بانتظار التصديق "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/js/tours/timesheet_grid.js:0
+#, python-format
+msgid "Track the <b>time spent</b> on your projects. <i>It starts here.</i>"
+msgstr "قم بتتبع <b>الوقت المقضي</b> على مشاريعك. <i>إنه يبدأ هنا.</i> "
+
+#. module: timesheet_grid
+#: model:ir.model,name:timesheet_grid.model_res_users
+msgid "User"
+msgstr "المستخدم"
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_account_analytic_line__user_can_validate
+msgid "User Can Validate"
+msgstr "بوسع المستخدم التصديق "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_res_config_settings__reminder_user_interval
+msgid "User Reminder Frequency"
+msgstr "معدل تذكير المستخدم"
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_account_analytic_line__user_timer_id
+#: model:ir.model.fields,field_description:timesheet_grid.field_project_task__user_timer_id
+msgid "User Timer"
+msgstr "مؤقت المستَخدِم "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,help:timesheet_grid.field_hr_employee_public__timesheet_manager_id
+msgid "User responsible of timesheet validation. Should be Timesheet Manager."
+msgstr ""
+"المستخدم المسؤول عن تصديق الجداول الزمنية. يجب أن يكون أحد مدراء الجداول "
+"الزمنية. "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/js/views/timesheet_pivot/timesheet_validation_pivot_controller.xml:0
+#: code:addons/timesheet_grid/static/src/views/timesheet_kanban/timesheet_validation_kanban_controller.xml:0
+#: model:ir.actions.server,name:timesheet_grid.timesheet_validate_action
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_form_view
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_grid_by_employee_validation
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_tree_user_inherited
+#, python-format
+msgid "Validate"
+msgstr "تصديق "
+
+#. module: timesheet_grid
+#: model:ir.model.fields.selection,name:timesheet_grid.selection__account_analytic_line__validated_status__validated
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_search
+msgid "Validated"
+msgstr "تم التصديق "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_account_analytic_line__validated_status
+msgid "Validated Status"
+msgstr "حالة تم التصديق "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,field_description:timesheet_grid.field_account_analytic_line__validated
+#: model:ir.model.fields,field_description:timesheet_grid.field_timesheets_analysis_report__validated
+msgid "Validated line"
+msgstr "البند المصدَّق "
+
+#. module: timesheet_grid
+#: model:ir.actions.server,name:timesheet_grid.timesheet_grid_all_timesheets_action_server
+msgid "Validation All Timesheet Server Action"
+msgstr "إجراء الخادم لتصديق كافة الجداول الزمنية "
+
+#. module: timesheet_grid
+#: model:ir.actions.server,name:timesheet_grid.timesheet_grid_week_action_server
+msgid "Validation Timesheet Week_view Server Action"
+msgstr "إجراء خادم تصديق الجداول الزمنية Week_view "
+
+#. module: timesheet_grid
+#: model:ir.actions.server,name:timesheet_grid.timesheet_grid_month_action_server
+msgid "Validation Timesheet month_view Server Action"
+msgstr "إجراء خادم تصديق الجداول الزمنية month_view "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_grid_by_employee
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.timesheet_view_grid_by_project
+msgid "Week"
+msgstr "الأسبوع"
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/views/timer_timesheet_grid/timer_timesheet_grid_renderer.xml:0
+#, python-format
+msgid "Weekly overtime"
+msgstr "الوقت الإضافي الأسبوعي "
+
+#. module: timesheet_grid
+#: model:ir.model.fields,help:timesheet_grid.field_account_analytic_line__user_can_validate
+msgid ""
+"Whether or not the current user can validate/reset to draft the record."
+msgstr ""
+"ما إذا كان بوسع المستخدم الحالي تصديق/إعادة تعيين السجل إلى حالة المسودة. "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/hr_employee.py:0
+#: code:addons/timesheet_grid/models/res_users.py:0
+#, python-format
+msgid "You are not allowed to see timesheets."
+msgstr "لا يسمح لك برؤية الجداول الزمنية. "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid ""
+"You can only reset to draft the timesheets of employees of whom you are the "
+"manager or the timesheet approver."
+msgstr ""
+"يمكنك فقط إعادة تعيين الجداول الزمنية إلى حالة المسودة للموظفين الذين تديرهم"
+" أو الذين تكون مانحاً لموافقاتهم. "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid ""
+"You can only validate the timesheets of employees of whom you are the "
+"manager or the timesheet approver."
+msgstr ""
+"يمكنك فقط تصديق الجداول الزمنية للموظفين الذين تديرهم أو الذين تكون مانحاً "
+"لموافقاتهم. "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid "You cannot access timesheets that are not yours."
+msgstr "لا يمكنك الوصول إلى جداول زمنية لشخص آخر. "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid ""
+"You cannot adjust the time of the timesheet for a project with timesheets "
+"disabled."
+msgstr ""
+"لا يمكنك تعديل الوقت في الجداول الزمنية لمشروع تم تعطيل الجداول الزمنية فيه."
+" "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid ""
+"You cannot delete a validated entry. Please, contact your manager or your "
+"timesheet approver."
+msgstr ""
+"لا يمكنك حذف قيد قد تم تصديقه. يرجى التواصل مع مديرك أو مانح موافقاتك. "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/project.py:0
+#, python-format
+msgid ""
+"You cannot start the timer for a project in a company encoding its "
+"timesheets in days."
+msgstr ""
+"لا يمكنك بدء المؤقت لمشروع في شركة تقوم بتشفير جداولها الزمنية بالأيام. "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#: code:addons/timesheet_grid/models/analytic.py:0
+#: code:addons/timesheet_grid/models/analytic.py:0
+#: code:addons/timesheet_grid/models/analytic.py:0
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid "You cannot use the timer on validated timesheets."
+msgstr ""
+"لا يمكنك استخدام المؤقت في الجداول الزمنية التي قد تم تصديقها بالفعل. "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid ""
+"You cannot validate the selected timesheets as they either belong to "
+"employees who are not part of your team or are not in a state that can be "
+"validated. This may be due to the fact that they are dated in the future."
+msgstr ""
+"لا يمكنك تصديق الجداول الزمنية المحددة حيث إنها إما تنتمي إلى موظفين خارج "
+"فريقك أو إنها ليست في حالة تسمح بأن يتم تصديقها. قد يكون السبب أن تاريخها في"
+" المستقبل. "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid ""
+"Your timesheet entry is missing a project. Please either group the Grid view"
+" by project or enter your timesheets through another view."
+msgstr ""
+"هناك مشروع ناقص من قيود جداولك الزمنية. يرجى إما تجميع عرض الشبكة حسب "
+"المشاريع أو إدخال جداولك الزمنية باستخدام نافذة عرض أخرى. "
+
+#. module: timesheet_grid
+#: model:ir.model.fields.selection,name:timesheet_grid.selection__res_company__timesheet_mail_employee_interval__months
+#: model:ir.model.fields.selection,name:timesheet_grid.selection__res_company__timesheet_mail_interval__months
+msgid "after the end of the month"
+msgstr "بعد نهاية الشهر "
+
+#. module: timesheet_grid
+#: model:ir.model.fields.selection,name:timesheet_grid.selection__res_company__timesheet_mail_employee_interval__weeks
+#: model:ir.model.fields.selection,name:timesheet_grid.selection__res_company__timesheet_mail_interval__weeks
+msgid "after the end of the week"
+msgstr "بعد نهاية الأسبوع "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#, python-format
+msgid "and click on"
+msgstr "ثم اضغط على "
+
+#. module: timesheet_grid
+#: model_terms:ir.ui.view,arch_db:timesheet_grid.res_config_settings_view_form
+msgid "days"
+msgstr "أيام "
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid "deleted"
+msgstr "محذوف "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#, python-format
+msgid "min"
+msgstr "دقيقة"
+
+#. module: timesheet_grid
+#. odoo-python
+#: code:addons/timesheet_grid/models/analytic.py:0
+#, python-format
+msgid "modified"
+msgstr "معدل"
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#, python-format
+msgid "or [a] to launch the timer"
+msgstr "أو [a] لتشغيل المؤقِّت "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#, python-format
+msgid "or click on"
+msgstr "أو اضغط على "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#, python-format
+msgid "to add 15 min"
+msgstr "لإضافة 15 دقيقة "
+
+#. module: timesheet_grid
+#. odoo-javascript
+#: code:addons/timesheet_grid/static/src/components/timesheet_timer_header/timesheet_timer_header.xml:0
+#, python-format
+msgid "to launch the timer"
+msgstr "لتشغيل المؤقِّت "

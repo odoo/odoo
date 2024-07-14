@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="sdd_report_invoice_document" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@t-if='not is_html_empty(o.narration)']" position="before">
+                <!--This code breaks HTML standards but kepts to avoid breaking customization-->
+                <p t-if="o.sdd_mandate_id">
+                  <span><p/><p/></span>
+                </p>
+                <div t-if="o.sdd_mandate_id">
+                    <div>
+                      <p>
+                        This invoice will be paid using direct debit and is only
+                        sent for informative purposes.
+                      </p>
+                      <p>
+                        Please do not pay it manually, the payment will be asked to your bank to be processed
+                        automatically.
+                      </p>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

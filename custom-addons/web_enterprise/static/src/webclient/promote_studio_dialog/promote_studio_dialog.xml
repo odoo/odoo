@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+
+    <t t-name="web_enterprise.PromoteStudioDialog">
+        <Dialog title="props.title" modalRef="modalRef">
+            <div class="modal-studio">
+                <div id="studio_install_dialog"
+                    class="d-flex flex-row align-items-center flex-wrap">
+                    <div id="studio_dialog_pitch"
+                        class="w-100 w-md-50">
+                        <h4>Want to tailor-make your Odoo?</h4>
+                        <p>Unleash the power of Odoo Studio:</p>
+                        <ul>
+                            <li>Create automation rules</li>
+                            <li>Customize any screen</li>
+                            <li>Customize Reports</li>
+                            <li>Build new reports</li>
+                            <li>Build new apps from scratch</li>
+                            <li>Define webhooks</li>
+                            <li>and more!</li>
+                        </ul>
+                        <a role="button" class="btn btn-secondary btn-block"
+                            href="https://www.odoo.com/app/studio" target="_blank"> Learn More <i
+                                class="fa fa-external-link" />
+                        </a>
+                    </div>
+                    <div id="studio_video" class="o_video_embed w-100 w-md-50 ratio ratio-16x9">
+                        <iframe class="embed-responsive-item"
+                            t-attf-src="https://www.youtube.com/embed/xCvFZrrQq7k?autoplay=1"
+                            frameborder="0" allowfullscreen="true" />
+                    </div>
+                </div>
+
+                <t t-set-slot="footer">
+                    <button class="btn btn-primary btn-block o_install_studio"
+                        t-on-click.stop="onClickInstallStudio"
+                        data-tooltip="Install Odoo Studio and its dependencies">
+                        Start using Odoo Studio
+                    </button>
+
+                    <button class="btn btn-secondary btn-block"
+                        t-on-click="props.close">
+                        Discard
+                    </button>
+                </t>
+            </div>
+        </Dialog>
+    </t>
+
+
+    <t t-name="web_enterprise.PromoteStudioAutomationDialog"
+        t-inherit="web_enterprise.PromoteStudioDialog" t-inherit-mode="primary">
+        <xpath expr="//div[@id='studio_video']" position="replace">
+            <img class="w-100 w-md-50"
+                src="/web_enterprise/static/img/automation.svg" />
+        </xpath>
+    </t>
+
+</template>

@@ -1,0 +1,92 @@
+.o_studio {
+    .o_web_studio_action_editor {
+        @include o-web-studio-thumbnails-container;
+
+        .o_web_studio_views {
+            flex: 1 1 auto;
+            @include o-web-studio-thumbnails;
+
+            @include media-breakpoint-up(lg) {
+                flex-flow: column wrap;
+            }
+
+            @include media-breakpoint-up(xl) {
+                align-content: center;
+            }
+
+            .o_web_studio_view_category {
+                > h6 {
+                    margin-bottom: $grid-gutter-width*0.5;
+                }
+
+                .o_web_studio_view_type {
+                    @include o-web-studio-thumbnail;
+
+                    transition: all .2s ease 0s;
+
+                    &.o_web_studio_inactive {
+                        opacity: 0.5;
+                        overflow: hidden;
+                        transition: all 0.3s ease 0s;
+
+                        .o_web_studio_view_label {
+                            z-index: 1;
+                            border-radius: 2px 0 0 2px;
+                            padding: 2px 17px 2px 10px;
+                            font-size: 0.8em;
+                            background: desaturate($o-brand-primary,20%);
+                            color: white;
+                            @include o-position-absolute(4px, -100px);
+                            transition: all 0.2s ease 0.1s;
+                        }
+
+                        .o_web_studio_thumbnail {
+                            height: 100%;
+                            padding-bottom: 20px;
+                            -webkit-filter: grayscale(100%);
+                            filter: grayscale(100%);
+                        }
+
+                        .o_web_studio_name, .o_web_studio_thumbnail img {
+                            pointer-events: none;
+                        }
+
+                        &:hover {
+                            opacity: 1;
+                            .o_web_studio_thumbnail{
+                                -webkit-filter: grayscale(0%);
+                                filter: grayscale(0%);
+                            }
+                            .o_web_studio_view_label {
+                                right: 0px;
+                            }
+                        }
+                    }
+
+                    .o_web_studio_default_view {
+                        font-size: 10px;
+                        color: darken($o-brand-primary, 5%);
+                        .fa-home {
+                            color: white;
+                        }
+                    }
+
+                    .o_web_studio_more {
+                        border: 1px solid white;
+                        border-width: 1px 1px 0 1px;
+                        padding: 5px 9px;
+                        border-radius: 50%;
+                        font-size: 10px;
+                        cursor: pointer;
+                        color: $o-web-studio-bg-dark;
+                        background-color: white;
+
+                        &:hover, &:focus {
+                            background-color: $o-web-studio-bg-light;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

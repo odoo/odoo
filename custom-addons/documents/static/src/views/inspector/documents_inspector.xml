@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.DocumentsInspector">
+        <t t-set="records" t-value="props.documents"/>
+        <t t-set="currentFolder" t-value="getCurrentFolder()"/>
+        <div class="o_documents_inspector h-100 overflow-x-hidden">
+            <t t-set="nbPreviews" t-value="props.documents.length"/>
+            <div class="o_documents_inspector_preview d-flex flex-row flex-wrap align-items-center justify-content-center position-relative">
+                <div t-if="nbPreviews === 0">
+                    <t t-if="currentFolder">
+                        <div class="o_inspector_folder_description">
+                            <t t-if="currentFolder.description" t-out="getFolderDescription()"/>
+                        </div>
+                    </t>
+                </div>
+                <t t-else="" t-call="documents.DocumentsInspector.previews"/>
+            </div>
+            <div class="o_documents_inspector_info">
+                <t t-if="nbPreviews === 0" t-call="documents.DocumentsInspector.globalInfo"/>
+                <t t-else="">
+                    <t t-call="documents.DocumentsInspector.buttons"/>
+                    <t t-call="documents.DocumentsInspector.documentsInfo" />
+                </t>
+            </div>
+        </div>
+        <div t-if="state.showChatter and props.documents.length === 1" class="o_document_chatter_container o-mail-ChatterContainer mt-2" t-att-class="{ 'h-100 o-aside': !isMobile }" t-ref="chatterContainer">
+            <Chatter close="isMobile ? undefined : () => state.showChatter = false" hasActivities="records[0].resModel === 'documents.document'" threadId="records[0].resId" threadModel="records[0].resModel" compactHeight="true" isChatterAside="!isMobile"/>
+        </div>
+    </t>
+
+    <t t-name="documents.DocumentsInspector.previews">
+        <t t-foreach="records.slice(0, 4)" t-as="record" t-key="record_index">
+            <t t-set="additionalRecordData" t-value="getRecordAdditionalData(record)"/>
+            <div name="document_preview" t-att-class="getPreviewClasses(record, additionalRecordData)">
+                <t t-set="mimetype" t-value="record.data.mimetype"/>
+                <!-- Some image formats (such as webp) do not support dynamic server resizing, hence the need for an additional class-->
+                <t t-set="imageClass" t-value="nbPreviews === 1 ? 'o_documents_inspector_img_preview_300_150'
+                                             : nbPreviews === 2 ? 'o_documents_inspector_img_preview_120_130'
+                                             : 'o_documents_inspector_img_preview_120_75'"/>
+                <t t-if="additionalRecordData.isImage or additionalRecordData.isGif or additionalRecordData.isYoutubeVideo or (record.isPdf() and record.hasThumbnail())">
+                    <t t-set="size" t-value="nbPreviews === 1 ? '268x130' : nbPreviews === 2 ? '120x130' : '120x75'"/>
+                    <img t-if="additionalRecordData.isYoutubeVideo"
+                         t-on-click.stop.prevent="() => this.openPreview(record)"
+                         t-att-data-id="record.resId"
+                         class="o_preview_available"
+                         t-attf-src="https://img.youtube.com/vi/{{additionalRecordData.youtubeToken}}/0.jpg"
+                         alt="Youtube Video"/>
+                    <t t-else="">
+                        <t t-set="unique" t-value="record.data.checksum ? record.data.checksum.slice(-8) : ''"/>
+                        <img t-if="!record.isPdf()" t-attf-class="o_preview_available o_documents_image_background #{imageClass}"
+                             t-on-click.stop.prevent="() => this.openPreview(record)"
+                             draggable="false"
+                             t-attf-src="/documents/image/{{record.resId}}/{{size}}?unique={{unique}}"
+                             t-att-title="record.data.name"/>
+                        <img t-else="" t-attf-class="o_preview_available o_documents_image_background #{imageClass}"
+                             t-on-click.stop.prevent="() => this.openPreview(record)"
+                             draggable="false"
+                             t-attf-src="/documents/image/{{record.resId}}/{{size}}?field=thumbnail&amp;unique={{unique}}"
+                             t-att-title="record.data.name"/>
+                    </t>
+                </t>
+                <t t-elif="record.data.url and record.data.url_preview_image">
+                    <a target="new" t-att-href="record.data.url">
+                        <img t-att-src="record.data.url_preview_image"
+                            t-att-title="record.data.name"
+                            t-att-href="record.data.url"
+                            t-attf-class="#{imageClass} o_preview_available o_object_fit_contain"/>
+                    </a>
+                </t>
+                <div t-elif="record.data.url" class="o_image o_mimetype_icon"
+                    t-att-data-mimetype="mimetype"
+                    t-on-click.stop.prevent="() => this.openPreview(record)"
+                    t-att-title="record.data.name"/>
+                <div t-elif="record.data.type === 'empty'"
+                     class="o_inspector_request_icon fa fa-upload fa-5x"
+                     t-att-title="record.data.name"
+                     t-on-click.stop.prevent="() => { this.documentsReplaceInput.el.setAttribute('data-index', record_index); this.documentsReplaceInput.el.click() }"/>
+                <div t-else=""
+                     t-attf-class="o_image o_mimetype_icon {{
+                        (mimetype and (mimetype.indexOf('pdf') !== -1 or
+                        mimetype.indexOf('video') !== -1 or
+                        mimetype.indexOf('text') !== -1)) and 'o_preview_available' or ''}}"
+                     t-att-data-mimetype="mimetype"
+                     t-on-click.stop.prevent="() => this.openPreview(record)"
+                     t-att-title="record.data.name"/>
+                <span t-if="record.data.type === 'empty'">
+                    Upload Document
+                </span>
+            </div>
+            <div t-if="record_index == 1 and record_size == 4" class="w-100"/>
+        </t>
+        <div t-if="nbPreviews &gt; 1" class="o_selection_info w-100 text-center mt-2">
+            <i class="o_selection_size"><b><t t-esc="nbPreviews"/></b> documents selected</i>
+        </div>
+    </t>
+
+    <t t-name="documents.DocumentsInspector.globalInfo">
+        <div class="o_inspector_info_columns">
+            <table class="o_inspector_table">
+                <tbody>
+                    <t t-call="documents.DocumentsInspector.infoRow">
+                        <t t-set="label">Documents</t>
+                        <t t-set="value" t-value="props.count"/>
+                    </t>
+                    <t t-call="documents.DocumentsInspector.infoRow">
+                        <t t-set="label">Size</t>
+                        <t t-set="value" t-value="(props.fileSize || 0) + ' MB'"/>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </t>
+
+    <t t-name="documents.DocumentsInspector.infoRow">
+        <tr>
+            <td class="o_inspector_label align-middle">
+                <i t-if="icon" t-att-class="icon"/>
+                <t t-esc="label"/>
+            </td>
+            <td class="o_inspector_value w-100">
+                <t t-esc="value"/>
+            </td>
+        </tr>
+    </t>
+
+    <t t-name="documents.DocumentsInspector.buttons">
+        <div class="mb-3">
+            <div class="btn-group">
+                <t t-set="locked" t-value="isLocked"/>
+                <t t-set="editDisabled" t-value="isEditDisabled"/>
+                <t t-if="records.length and records.every(record => record.data.type === 'url')">
+                    <t t-set="url" t-value="records[0].data.url"/>
+                    <a t-if="url and (url.startsWith('https://') || url.startsWith('http://') || url.startsWith('ftp://'))"
+                        t-att-href="url" target="new" class="o_inspector_button btn " t-att-disabled="nbPreviews > 1" t-att-class="nbPreviews > 1 ? 'pe-none' : ''">
+                        <i class="fa fa-fw fa-link"/>
+                    </a>
+                </t>
+                <t t-else="">
+                    <button class="o_inspector_button o_inspector_download btn" title="Download" t-on-click.stop.prevent="onDownload" t-att-disabled="records.every(record => record.data.type === 'empty')" data-hotkey="y">
+                        <i class="fa fa-fw fa-download"/>
+                    </button>
+                </t>
+                <t t-if="records.some(record => record.data.active)">
+                    <!-- groups does not work here -->
+                    <button t-if="currentFolder.id and !records.every(rec => ['empty', 'url'].includes(rec._values.type))" class="o_inspector_button o_inspector_share btn" title="Share this selection" groups="documents.group_documents_user" t-on-click.stop.prevent="onShare" data-hotkey="m">
+                        <i class="fa fa-fw fa-share-alt"/>
+                    </button>
+                    <input type="file" t-ref="replaceFileInput" class="o_inspector_replace_input o_input_file o_hidden" t-on-change.stop="onReplace"/>
+                    <t t-if="nbPreviews === 1">
+                        <button t-if="records[0].data.type !== 'url'" class="o_inspector_button o_inspector_replace btn" title="Replace" t-on-click.stop.prevent="() => this.documentsReplaceInput.el.click()" t-att-disabled="editDisabled || locked">
+                            <i class="fa fa-fw fa-retweet"/>
+                        </button>
+                        <button t-att-class="'o_inspector_button o_inspector_lock btn' + (records[0].data.lock_uid ? ' o_locked' : '')" title="Lock" t-on-click.stop.prevent="onLock" t-att-disabled="editDisabled || locked" data-hotkey="b">
+                            <i t-att-class="'fa fa-fw ' + (records[0].data.lock_uid ? 'fa-lock o_locked' : 'fa-unlock-alt')"/>
+                        </button>
+                    </t>
+                    <t t-if="isPdfOnly()">
+                        <button class="btn o_inspector_button o_inspector_split" aria-label="Split" title="Split" t-on-click.stop.prevent="() => this.openPreview(false, true)" t-att-disabled="editDisabled || locked">
+                            <i class="fa fa-fw fa-scissors"/>
+                        </button>
+                    </t>
+                </t>
+            </div>
+            <button t-if="records[0].data.active" class="o_inspector_button o_inspector_archive o_active btn float-end" title="Move to trash"
+            t-on-click.stop.prevent="onArchive" t-att-disabled="editDisabled || locked" data-hotkey="delete">
+                <i class="fa fa-fw fa-trash"/>
+            </button>
+            <t t-else="">
+                <button class="o_inspector_button o_inspector_delete btn float-end" title="Delete" t-on-click.stop.prevent="onDelete" t-att-disabled="editDisabled || locked">
+                    <i class="fa fa-fw fa-trash"/>
+                </button>
+                <button class="o_inspector_button o_archived btn float-end" style="margin-right:4px" title="Restore"
+                    t-on-click.stop.prevent="onUnarchive" t-att-disabled="editDisabled || locked">
+                    <i class="fa fa-fw fa-history"/>
+                </button>
+            </t>
+            <button t-if="nbPreviews === 1 and !isMobile and !state.showChatter" class="o_inspector_button o_inspector_open_chatter btn float-end rounded-circle me-1 px-2" title="Open chatter"
+                t-on-click.stop.prevent="() => state.showChatter = true" data-hotkey="d">
+                <i class="fa fa-comments"/>
+            </button>
+        </div>
+    </t>
+
+    <t t-name="documents.DocumentsInspector.field">
+        <t t-set="field" t-value="props.fields[fieldName]"/>
+        <tr>
+            <td class="o_inspector_label align-middle">
+                <span>
+                    <i t-if="icon" t-attf-class="o_documents_model_color pe-1 fa {{icon}}"/>
+                    <label t-att-for="fieldName">
+                        <t t-esc="field.string"/>
+                    </label>
+                </span>
+            </td>
+            <td class="o_inspector_value w-100">
+                <DocumentsInspectorField t-props="this.getFieldProps(fieldName, additionalProps)"/>
+            </td>
+        </tr>
+    </t>
+
+    <t t-name="documents.DocumentsInspector.documentsInfo">
+        <div class="o_inspector_section mt4 o_inspector_fields">
+            <table class="o_inspector_table table table-sm table-borderless">
+                <tbody>
+                    <t t-if="nbPreviews === 1">
+                        <t t-call="documents.DocumentsInspector.field">
+                            <t t-set="fieldName" t-translation="off">name</t>
+                        </t>
+                        <t t-if="isDebugMode and records[0].data.type === 'binary'" t-call="documents.DocumentsInspector.field">
+                            <t t-set="fieldName">file_extension</t>
+                        </t>
+                        <t t-if="records[0].data.type === 'url'" t-call="documents.DocumentsInspector.field">
+                            <t t-set="fieldName" t-translation="off">url</t>
+                        </t>
+                    </t>
+                    <t t-call="documents.DocumentsInspector.field">
+                        <t t-set="fieldName" t-translation="off">partner_id</t>
+                        <t t-set="additionalProps" t-value="{canOpen: false}"/>
+                    </t>
+                    <t t-call="documents.DocumentsInspector.field">
+                        <t t-set="fieldName" t-translation="off">owner_id</t>
+                        <t t-set="additionalProps" t-value="{canOpen: false, canCreate: false, canCreateEdit: false, canQuickCreate: false}"/>
+                    </t>
+                    <t t-call="documents.DocumentsInspector.field">
+                        <t t-set="icon" t-translation="off">fa fa-folder text-primary</t>
+                        <t t-set="fieldName" t-translation="off">folder_id</t>
+                        <t t-set="additionalProps" t-value="{canOpen: false, canCreate: false, canCreateEdit: false, canQuickCreate: false}"/>
+                    </t>
+                    <tr class="o_inspector_divider"/>
+                    <tr t-if="nbPreviews === 1 &amp;&amp; records[0].data.res_id &amp;&amp; records[0].data.res_model_name &amp;&amp; records[0].data.res_model !== 'documents.document'" class="o_inspector_custom_field o_model_container">
+                        <td class="o_inspector_label align-middle">
+                            <label t-att-title="records[0].data.res_model_name" class="o_inspector_model_name">
+                                <i class="o_documents_model_color fa fa-file-text"/> <t t-esc="records[0].data.res_model_name"/>
+                            </label>
+                        </td>
+                        <td class="w-100 o_inspector_trigger_hover_target o_inspector_model_flex">
+                            <t t-set="isModifiableAttachment" t-value="records[0].data.is_editable_attachment and !isLocked and !isEditDisabled"/>
+                            <span t-att-class="'o_inspector_model o_inspector_object_name ' + (isModifiableAttachment ? 'o_inspector_model_editable' : '')" t-att-title="records[0].data.res_name"
+                            t-att-href="`#id=${records[0].data.res_id}&amp;model=${records[0].data.res_model}`"
+                            t-on-click.prevent="onClickResModel">
+                                <t t-esc="records[0].data.res_name || records[0].data.res_model"/>
+                            </span>
+                            <t t-if="isModifiableAttachment">
+                                <span class="o_inspector_model_buttons">
+                                    <span class="o_inspector_model_button o_inspector_model_edit fa fa-pencil" t-on-click.stop.prevent="onEditModel"/>
+                                    <span class="o_inspector_model_button o_inspector_model_delete fa-fw ps-1" t-on-click.stop.prevent="onDeleteModel">&#215;</span>
+                                </span>
+                            </t>
+                        </td>
+                    </tr>
+                    <tr class="o_inspector_custom_field">
+                        <td class="o_inspector_label align-baseline">
+                            <label>
+                                <i class="o_documents_tag_color fa fa-tag"/> Tags
+                            </label>
+                        </td>
+                        <td class="o_inspector_value w-100">
+                            <t t-call="documents.DocumentsInspector.tags"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="o_inspector_section o_inspector_section_rules mt-3" t-if="records[0].data.active and !isLocked and !isEditDisabled">
+            <label>
+                <i class="o_documents_action_color fa fa-play"/> Actions
+            </label>
+            <div class="o_inspector_rules">
+                <t t-foreach="getCommonRules()" t-as="rule" t-key="rule.resId">
+                    <div class="o_inspector_rule o_inspector_trigger_hover_target mb-2" t-att-data-id="rule.resId">
+                        <button t-att-tile="rule.data.note || ''" class="btn fa fa-play o_inspector_trigger_rule"
+                            t-on-click.stop.prevent="(ev) => this.triggerRule(rule)"/>
+                        <span class="ms-2" t-att-title="rule.data.note || ''"><t t-esc="rule.data.display_name"/></span>
+                    </div>
+                </t>
+            </div>
+        </div>
+        <t t-if="nbPreviews === 1 and records[0].data.previous_attachment_ids.count > 0">
+            <div class="o_inspector_section o_inspector_section_history mt-3">
+                <label><i class="o_documents_history_color fa fa-history"/> History</label>
+                <div class="o_inspector_history">
+                    <t t-if="state.previousAttachmentData" t-call="documents.DocumentsInspector.attachmentHistory"/>
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="documents.DocumentsInspector.attachmentHistory">
+        <t t-foreach="state.previousAttachmentData" t-as="attachment" t-key="attachment.id">
+            <div class="o_inspector_history_line">
+                <t t-set="createDate" t-value="deserializeDateTime(attachment.create_date)"/>
+                <t t-set="fullDate" t-value="createDate.toString()"/>
+                <t t-set="date" t-value="createDate.toLocaleString()"/>
+                <t t-set="createUserName" t-value="attachment.create_uid[1]"/>
+                <div class="o_inspector_history_title">
+                    <span class="o_inspector_history_name" t-att-aria-label="attachment.name" t-att-tile="attachment.name" t-esc="attachment.name"/>
+                    <span class="o_inspector_history_info">
+                        <span class="o_inspector_history_create_name" t-att-aria-label="createUserName" t-att-tile="createUserName" t-esc="createUserName"/>
+                        <i class="o_inspector_history_info_separator">-</i>
+                        <span class="o_inspector_history_info_date" t-att-aria-label="fullDate" t-att-title="fullDate" t-esc="date"/>
+                    </span>
+                </div>
+                <div class="o_inspector_history_buttons">
+                    <button aria-label="delete" title="delete" class="o_inspector_history_button btn fa fa-trash text-white ms-1 float-end o_inspector_history_item_delete"
+                        t-on-click.stop.prevent="(ev) => this.onDeletePreviousAttachment(attachment.id)"/>
+                    <button aria-label="download" title="download" class="o_inspector_history_button btn fa fa-download text-white ms-1 float-end o_inspector_history_item_download"
+                        t-on-click.stop.prevent="(ev) => this.onDownloadPreviousAttachment(attachment.id)"/>
+                    <button aria-label="restore" title="restore" class="o_inspector_history_button btn fa fa-retweet text-white ms-1 float-end o_inspector_history_item_restore"
+                        t-on-click.stop.prevent="(ev) => this.onRestorePreviousAttachment(attachment.id)"/>
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="documents.DocumentsInspector.tags">
+        <div class="o_inspector_tags">
+            <t t-set="tags" t-value="getCommonTags()"/>
+            <t t-set="additionalTags" t-value="getAdditionalTags(tags)"/>
+            <t t-foreach="tags" t-as="tag" t-key="tag.id">
+                <div class="o_inspector_tag o_inspector_trigger_hover_target">
+                    <span class="o_tag_prefix" t-att-title="tag.group_name" t-esc="tag.group_name"/> &gt;
+                    <span class="o_documents_tag_name" t-att-title="tag.display_name" t-esc="tag.name"/>
+                    <span t-if="!isLocked and !isEditDisabled" class="o_inspector_tag_remove float-end o_inspector_trigger_hover fa-fw"
+                        t-on-click.stop.prevent="(ev) => this.removeTag(tag)">
+                        &#215;
+                    </span>
+                </div>
+            </t>
+            <AutoComplete t-if="!isLocked and !isEditDisabled and additionalTags.length" t-props="getTagAutocompleteProps(additionalTags)"/>
+        </div>
+    </t>
+
+    <t t-name="documents.DocumentsInspectorMobile">
+        <details t-attf-class="{{props.documents.length ? '' : 'd-none'}} o_documents_mobile_inspector" t-ref="inspectorMobile">
+            <summary class="o_documents_toggle_inspector btn btn-primary d-flex align-items-center">
+                <i class="o_documents_close_inspector oi oi-fw oi-arrow-left"/>
+                <span class="m-auto">
+                    <t t-esc="props.documents.length"/>
+                    <t t-if="props.documents.length > 1"> documents</t>
+                    <t t-if="props.documents.length === 1"> document</t>
+                    selected
+                </span>
+            </summary>
+            <t t-call="documents.DocumentsInspector"/>
+        </details>
+    </t>
+</templates>

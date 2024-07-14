@@ -1,0 +1,466 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* partner_commission
+# 
+# Translators:
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
+# Irina Fedulova <istartlin@gmail.com>, 2023
+# Константин Коровин <korovin74@gmail.com>, 2023
+# Alena Vlasova, 2023
+# Martin Trigaux, 2023
+# Wil Odoo, 2024
+# nadia martynova, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: nadia martynova, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid ""
+"\n"
+"%s: from %s to %s"
+msgstr ""
+"\n"
+"%s: от %s до %s"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid " (%d month(s))"
+msgstr " (%d месяц(ы))"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__active
+msgid "Active"
+msgstr "Активный"
+
+#. module: partner_commission
+#: model:res.groups,name:partner_commission.group_commission_manager
+msgid "All Documents"
+msgstr "Все документы"
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.commission_plan_search_view
+msgid "Archived"
+msgstr "Архивировано"
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid "Automatic PO frequency"
+msgstr "Автоматическая частота PO"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__is_capped
+msgid "Capped"
+msgstr "Насадка"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__purchase_order__purchase_type__commission
+#: model:product.template,name:partner_commission.product_commission_product_template
+msgid "Commission"
+msgstr "Комиссия"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_res_company__commission_automatic_po_frequency
+#: model:ir.model.fields,field_description:partner_commission.field_res_config_settings__commission_automatic_po_frequency
+msgid "Commission Automatic Po Frequency"
+msgstr "Комиссионный автомат Po Frequency"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_res_partner__commission_plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_res_users__commission_plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order__commission_plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order_log_report__commission_plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_subscription_report__commission_plan_id
+msgid "Commission Plan"
+msgstr "План комиссии"
+
+#. module: partner_commission
+#: model:ir.actions.act_window,name:partner_commission.action_commission_plans
+#: model:ir.ui.menu,name:partner_commission.menu_commission_plans
+msgid "Commission Plans"
+msgstr "Планы комиссии"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid "Commission on %(invoice)s, %(partner)s, %(amount)s"
+msgstr "Комиссия по %(invoice)s, %(partner)s, %(amount)s"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_commission_plan
+msgid "Commission plan"
+msgstr "План комиссии"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid "Commission refunded. Invoice: %s. Amount: %s."
+msgstr "Комиссия возвращена. Счет-фактура: %s. Сумма: %s."
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_commission_rule
+msgid "Commission rules management."
+msgstr "Управление правилами комиссии."
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_res_company
+msgid "Companies"
+msgstr "Компании"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__company_id
+msgid "Company"
+msgstr "Компания"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_res_config_settings
+msgid "Config Settings"
+msgstr "Параметры конфигурации"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_res_partner
+msgid "Contact"
+msgstr "Контакты"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__create_uid
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__create_uid
+msgid "Created by"
+msgstr "Создано"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__create_date
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__create_date
+msgid "Created on"
+msgstr "Создано"
+
+#. module: partner_commission
+#: model:ir.actions.act_window,name:partner_commission.action_view_customer_invoices
+msgid "Customer Invoices"
+msgstr "Счета-фактуры для клиентов"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_res_partner_grade__default_commission_plan_id
+msgid "Default Commission Plan"
+msgstr "План комиссионных по умолчанию"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__display_name
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order__commission_plan_frozen
+msgid "Freeze Plan"
+msgstr "План замораживания"
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid "Frequency at which purchase orders will be automatically confirmed"
+msgstr "Частота автоматического подтверждения заказов на поставку"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__id
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_commission_rule__product_id
+msgid ""
+"If set, the rule does not apply to the whole category but only on the given product.\n"
+"The product must belong to the selected category.\n"
+"Use several rules if you need to match multiple products within a category."
+msgstr ""
+"Если установлено, правило применяется не ко всей категории, а только к данному товару.\n"
+"Продукт должен принадлежать выбранной категории.\n"
+"Используйте несколько правил, если вам нужно сопоставить несколько продуктов в одной категории."
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_purchase_order__invoice_commission_count
+msgid "Invoices that have generated commissions included in this order"
+msgstr "Счета, по которым были получены комиссионные, включенные в этот заказ"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_account_move
+msgid "Journal Entry"
+msgstr "Запись в журнале"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_account_move_line
+msgid "Journal Item"
+msgstr "Наименование в журнале"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__write_uid
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__write_uid
+msgid "Last Updated by"
+msgstr "Последнее обновление"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__write_date
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__write_date
+msgid "Last Updated on"
+msgstr "Последнее обновление"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Лид/Возможность"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__res_company__commission_automatic_po_frequency__manually
+msgid "Manually"
+msgstr "Вручную"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__max_commission
+msgid "Max Commission"
+msgstr "Максимальная комиссия"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_commission_rule__max_commission
+msgid "Maximum amount, specified in the currency of the pricelist, if given."
+msgstr "Максимальная сумма, указанная в валюте прейскуранта, если она задана."
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid "Minimum PO amount total"
+msgstr "Минимальная общая сумма ПО"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_res_company__commission_po_minimum
+#: model:ir.model.fields,field_description:partner_commission.field_res_config_settings__commission_po_minimum
+msgid "Minimum Total Amount for PO commission"
+msgstr "Минимальная общая сумма для комиссии PO"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__res_company__commission_automatic_po_frequency__monthly
+msgid "Monthly"
+msgstr "Ежемесячно"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__name
+msgid "Name"
+msgstr "Имя"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid "New commission. Invoice: %s. Amount: %s."
+msgstr "Новая комиссия. Счет-фактура: %s. Сумма: %s."
+
+#. module: partner_commission
+#: model:res.groups,name:partner_commission.group_commission_user
+msgid "Own Documents Only"
+msgstr "Только собственные документы"
+
+#. module: partner_commission
+#: model:ir.actions.server,name:partner_commission.cron_confirm_purchase_orders_ir_actions_server
+msgid "Partner Commission: confirm purchase orders"
+msgstr "Партнерская комиссия: подтверждение заказов на поставку"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_res_partner_grade
+msgid "Partner Grade"
+msgstr "Класс партнера"
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid "Partners Commissions"
+msgstr "Партнеры Комиссионные"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__pricelist_id
+msgid "Pricelist"
+msgstr "Прайс-лист"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__purchase_order__purchase_type__procurement
+msgid "Procurement"
+msgstr "Снабжение"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__product_id
+msgid "Product"
+msgstr "Товар"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/commission_plan.py:0
+#, python-format
+msgid "Product %s does not belong to category %s"
+msgstr "Продукт %s не относится к категории %s"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__category_id
+msgid "Product Category"
+msgstr "Категория товара"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__product_id
+msgid "Purchase Default Product"
+msgstr "Приобрести продукт по умолчанию"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_purchase_order
+msgid "Purchase Order"
+msgstr "Заказ на покупку"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_purchase_order__purchase_type
+msgid "Purchase Type"
+msgstr "Тип закупки"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__res_company__commission_automatic_po_frequency__quarterly
+msgid "Quarterly"
+msgstr "Ежеквартально"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__rate
+msgid "Rate"
+msgstr "Ставка"
+
+#. module: partner_commission
+#: model:ir.model.constraint,message:partner_commission.constraint_commission_rule_check_rate
+msgid "Rate should be between 0 and 100."
+msgstr "Скорость должна быть в диапазоне от 0 до 100."
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_account_bank_statement_line__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_account_move__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_account_payment__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order_log_report__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_subscription_report__referrer_id
+#: model_terms:ir.ui.view,arch_db:partner_commission.account_move_view_search_inherit_partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.sale_order_log_search
+#: model_terms:ir.ui.view,arch_db:partner_commission.sale_order_subsciption_view_search_inherit_partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.sale_order_view_search_inherit_partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.sale_subscription_report_search
+msgid "Referrer"
+msgstr "Реферер"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order__commission
+msgid "Referrer Commission"
+msgstr "Комиссия за привлечение рефералов"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_account_bank_statement_line__commission_po_line_id
+#: model:ir.model.fields,field_description:partner_commission.field_account_move__commission_po_line_id
+#: model:ir.model.fields,field_description:partner_commission.field_account_payment__commission_po_line_id
+msgid "Referrer Purchase Order line"
+msgstr "Позиция заказа на покупку референта"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__commission_rule_ids
+#: model_terms:ir.ui.view,arch_db:partner_commission.commission_plan_form_view
+msgid "Rules"
+msgstr "Правила"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__template_id
+msgid "Sale Order Template"
+msgstr "Шаблон заказа на продажу"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_sale_order_log_report
+msgid "Sales Log Analysis Report"
+msgstr "Отчет об анализе журнала продаж"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_sale_order
+msgid "Sales Order"
+msgstr "Заказ на продажу"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__sequence
+msgid "Sequence"
+msgstr "Последовательность"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_purchase_order__invoice_commission_count
+#: model_terms:ir.ui.view,arch_db:partner_commission.purchase_order_form_inherit_partner_commission
+msgid "Source Invoices"
+msgstr "Исходные счета-фактуры"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_sale_subscription_report
+msgid "Subscription Analysis"
+msgstr "Анализ подписки"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_sale_order__commission_plan_id
+msgid "Takes precedence over the Referrer's commission plan."
+msgstr "Имеет приоритет над комиссионным планом реферера."
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid ""
+"The commission partner order %s must be checked manually (especially refund "
+"lines which can be duplicated)."
+msgstr ""
+"Заказ партнера по комиссии %s должен быть проверен вручную (особенно строки "
+"возврата, которые могут дублироваться)."
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_res_partner_grade__default_commission_plan_id
+msgid ""
+"The default commission plan used for this grade. Can be overwritten on the "
+"partner form."
+msgstr ""
+"План комиссионных по умолчанию, используемый для данного класса. Может быть "
+"изменен в форме партнера."
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid ""
+"The required minimum amount total needed to automatically confirm purchase "
+"orders"
+msgstr ""
+"Минимальная сумма, необходимая для автоматического подтверждения заказов на "
+"поставку"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__res_company__commission_automatic_po_frequency__weekly
+msgid "Weekly"
+msgstr "Еженедельно"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_commission_rule__is_capped
+msgid "Whether the commission is capped."
+msgstr "Ограничена ли комиссия."
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_sale_order__commission_plan_frozen
+msgid ""
+"Whether the commission plan is frozen. When checked, the commission plan "
+"won't automatically be updated according to the partner level."
+msgstr ""
+"Замораживается ли план комиссионных. Если флажок установлен, план "
+"комиссионных не будет автоматически обновляться в соответствии с уровнем "
+"партнера."

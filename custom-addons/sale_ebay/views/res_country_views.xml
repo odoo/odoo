@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_country_ebay_tree" model="ir.ui.view">
+            <field name="name">res.country.ebay.tree</field>
+            <field name="model">res.country</field>
+            <field name="inherit_id" ref="base.view_country_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='code']" position="after">
+                    <field name="ebay_available"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_country_ebay_form" model="ir.ui.view">
+            <field name="name">res.country.ebay.form</field>
+            <field name="model">res.country</field>
+            <field name="inherit_id" ref="base.view_country_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='code']" position="after">
+                    <field name="ebay_available"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_country_all_form" model="ir.actions.act_window">
+            <field name="name">Countries</field>
+            <field name="res_model">res.country</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="context">{'active_test': False}</field>
+        </record>
+    </data>
+</odoo>

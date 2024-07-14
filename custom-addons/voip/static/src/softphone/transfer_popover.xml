@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="voip.TransferPopover">
+        <div class="o-voip-TransferPopover" t-on-keydown="onKeydown">
+            <h3 class="popover-header d-flex">
+                Transfer to
+                <span class="flex-grow-1"/> <!-- separator  -->
+                <button class="btn-close btn-sm" data-hotkey="x" t-on-click="props.close"/>
+            </h3>
+            <div class="o-voip-TransferPopover-suggestionList overflow-auto p-2" t-if="recipientSuggestions.length > 0">
+                <table class="table table-sm table-hover">
+                    <tbody>
+                        <tr class="cursor-pointer" t-foreach="recipientSuggestions" t-as="suggestion" t-key="suggestion_index">
+                            <td t-att-data-number="suggestion.phoneNumber" t-out="suggestion.match" t-on-click="onClickRecipient"/>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex p-2">
+                <input class="form-control" type="text" placeholder="Enter number or name" autocomplete="off" t-model.trim="state.inputValue" t-ref="input" t-on-keydown="onKeydownInput" t-on-input="onInputDebounced"/>
+                <button class="btn btn-primary ms-2" data-hotkey="q" t-on-click="transfer">Transfer</button>
+            </div>
+        </div>
+    </t>
+
+</templates>

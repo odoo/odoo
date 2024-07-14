@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="input_leave_loading_lump" model="hr.payslip.input.type">
+        <field name="name">Leave loading lump sum</field>
+        <field name="code">LEAVE.LOAD</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="input_cents_per_kilometre" model="hr.payslip.input.type">
+        <field name="name">Cents per kilometre</field>
+        <field name="code">CD</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_allowance">True</field>
+    </record>
+
+    <record id="input_award_transport_payments" model="hr.payslip.input.type">
+        <field name="name">Award transport payments</field>
+        <field name="code">AD</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_allowance">True</field>
+    </record>
+
+    <record id="input_laundry" model="hr.payslip.input.type">
+        <field name="name">Laundry</field>
+        <field name="code">LD</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_allowance">True</field>
+    </record>
+
+    <record id="input_overtime_meal_allowances" model="hr.payslip.input.type">
+        <field name="name">Overtime meal allowances</field>
+        <field name="code">MD</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_allowance">True</field>
+    </record>
+
+    <record id="input_domestic_or_overseas_travel_allowances_and_overseas_accommodation_allowances" model="hr.payslip.input.type">
+        <field name="name">Domestic or overseas travel allowances and overseas accommodation allowances</field>
+        <field name="code">RD</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_allowance">True</field>
+    </record>
+
+    <record id="input_tool_allowances" model="hr.payslip.input.type">
+        <field name="name">Tool allowances</field>
+        <field name="code">TD</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_allowance">True</field>
+    </record>
+
+    <record id="input_qualification_and_certification_allowances" model="hr.payslip.input.type">
+        <field name="name">Qualification and certification allowances</field>
+        <field name="code">QN</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_allowance">True</field>
+    </record>
+
+    <record id="input_task_allowances" model="hr.payslip.input.type">
+        <field name="name">Task allowances</field>
+        <field name="code">KN</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_allowance">True</field>
+    </record>
+
+    <record id="input_other_allowances_h1" model="hr.payslip.input.type">
+        <field name="name">Other allowances - H1 (home office)</field>
+        <field name="code">OD</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_allowance">True</field>
+    </record>
+
+    <record id="input_other_allowances_nd" model="hr.payslip.input.type">
+        <field name="name">Other allowances - ND (non-deductible)</field>
+        <field name="code">OD</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_allowance">True</field>
+    </record>
+
+    <record id="input_other_allowances_t1" model="hr.payslip.input.type">
+        <field name="name">Other allowances - T1 (transport or fares)</field>
+        <field name="code">OD</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_allowance">True</field>
+    </record>
+
+    <record id="input_other_allowances_u1" model="hr.payslip.input.type">
+        <field name="name">Other allowances - U1 (uniform)</field>
+        <field name="code">OD</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_allowance">True</field>
+    </record>
+
+    <record id="input_other_allowances_v1" model="hr.payslip.input.type">
+        <field name="name">Other allowances - V1 (private vehicle)</field>
+        <field name="code">OD</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_allowance">True</field>
+    </record>
+
+    <record id="input_other_allowances_g1" model="hr.payslip.input.type">
+        <field name="name">Other allowances - G1 (general)</field>
+        <field name="code">OD</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_allowance">True</field>
+    </record>
+
+    <record id="input_gross_bonuses_and_commissions" model="hr.payslip.input.type">
+        <field name="name">Gross bonuses and commissions A</field>
+        <field name="code">INPT.BONUS</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="input_gross_director_fee" model="hr.payslip.input.type">
+        <field name="name">Gross Director's Fees</field>
+        <field name="code">INPT.DIRFEE</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="input_gross_cdep" model="hr.payslip.input.type">
+        <field name="name">Gross Individual Non-Business Community Development Employment Project</field>
+        <field name="code">INPT.CDEP</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="input_fees" model="hr.payslip.input.type">
+        <field name="name">Fees</field>
+        <field name="code">F</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <!-- Employee Termination Payments (ETP) -->
+    <!-- ETP capped -->
+    <record id="input_early_retirement_scheme" model="hr.payslip.input.type">
+        <field name="name">Early Retirement Scheme</field>
+        <field name="code">ETP.ERS</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_etp">True</field>
+        <field name="l10n_au_etp_type">excluded</field>
+        <field name="l10n_au_etp_cap">True</field>
+    </record>
+
+    <record id="input_genuine_redundancy" model="hr.payslip.input.type">
+        <field name="name">Genuine Redundancy</field>
+        <field name="code">ETP.GRN</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_etp">True</field>
+        <field name="l10n_au_etp_type">excluded</field>
+        <field name="l10n_au_etp_cap">True</field>
+    </record>
+
+    <record id="input_permanent_disability" model="hr.payslip.input.type">
+        <field name="name">Permanent Disability</field>
+        <field name="code">ETP.DIS</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_etp">True</field>
+        <field name="l10n_au_etp_type">excluded</field>
+        <field name="l10n_au_etp_cap">True</field>
+    </record>
+
+    <record id="input_personal_injury" model="hr.payslip.input.type">
+        <field name="name">Compensation for Personal Injury</field>
+        <field name="code">ETP.INJ</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_etp">True</field>
+        <field name="l10n_au_etp_type">excluded</field>
+        <field name="l10n_au_etp_cap">True</field>
+    </record>
+
+    <record id="input_unfair_dismissal" model="hr.payslip.input.type">
+        <field name="name">Compensation for Unfair Dismissal</field>
+        <field name="code">ETP.UDS</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_etp">True</field>
+        <field name="l10n_au_etp_type">excluded</field>
+        <field name="l10n_au_etp_cap">True</field>
+    </record>
+
+    <record id="input_harassment" model="hr.payslip.input.type">
+        <field name="name">Compensation for Harassment</field>
+        <field name="code">ETP.HRS</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_etp">True</field>
+        <field name="l10n_au_etp_type">excluded</field>
+        <field name="l10n_au_etp_cap">True</field>
+    </record>
+
+    <record id="input_discrimination" model="hr.payslip.input.type">
+        <field name="name">Compensation for Discrimination</field>
+        <field name="code">ETP.DIS</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_etp">True</field>
+        <field name="l10n_au_etp_type">excluded</field>
+        <field name="l10n_au_etp_cap">True</field>
+    </record>
+
+    <record id="input_lumpsum_death" model="hr.payslip.input.type">
+        <field name="name">Lump Sum Paid on Death of Employee</field>
+        <field name="code">ETP.DED</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_etp">True</field>
+        <field name="l10n_au_etp_type">excluded</field>
+        <field name="l10n_au_etp_cap">True</field>
+    </record>
+
+<!-- ETP/whoic capped -->
+    <record id="input_golden_handshake" model="hr.payslip.input.type">
+        <field name="name">Golden Handshake</field>
+        <field name="code">ETP.GLD</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_etp">True</field>
+        <field name="l10n_au_etp_type">non_excluded</field>
+        <field name="l10n_au_etp_cap">False</field>
+    </record>
+
+    <record id="input_non_genuine_redundancy" model="hr.payslip.input.type">
+        <field name="name">Non-Genuine Redundancy</field>
+        <field name="code">ETP.NGR</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_etp">True</field>
+        <field name="l10n_au_etp_type">non_excluded</field>
+        <field name="l10n_au_etp_cap">False</field>
+    </record>
+
+    <record id="input_severance_pay" model="hr.payslip.input.type">
+        <field name="name">Severance Pay</field>
+        <field name="code">ETP.SEV</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_etp">True</field>
+        <field name="l10n_au_etp_type">non_excluded</field>
+        <field name="l10n_au_etp_cap">False</field>
+    </record>
+
+    <record id="input_gratuity" model="hr.payslip.input.type">
+        <field name="name">Gratuity</field>
+        <field name="code">ETP.GRT</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_etp">True</field>
+        <field name="l10n_au_etp_type">non_excluded</field>
+        <field name="l10n_au_etp_cap">False</field>
+    </record>
+
+    <record id="input_in_lieu_of_notice" model="hr.payslip.input.type">
+        <field name="name">Payment in Lieu of Notice</field>
+        <field name="code">ETP.ILO</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_etp">True</field>
+        <field name="l10n_au_etp_type">non_excluded</field>
+        <field name="l10n_au_etp_cap">False</field>
+    </record>
+
+    <record id="input_etp_other" model="hr.payslip.input.type">
+        <field name="name">Other ETP</field>
+        <field name="code">ETP.OTH</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="l10n_au_is_etp">True</field>
+        <field name="l10n_au_etp_type">non_excluded</field>
+        <field name="l10n_au_etp_cap">False</field>
+    </record>
+
+    <!-- Return To Work -->
+    <record id="input_b2work" model="hr.payslip.input.type">
+        <field name="name">Return To Work payment</field>
+        <field name="code">B2WORK</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <!-- For Commissions and Extra Pay -->
+    <record id="input_extra_pay" model="hr.payslip.input.type">
+        <field name="name">Extra Pay Item</field>
+        <field name="code">EXTRA</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+</odoo>

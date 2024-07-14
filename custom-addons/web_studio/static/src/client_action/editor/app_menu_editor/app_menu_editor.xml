@@ -1,0 +1,53 @@
+<templates>
+
+    <t t-name="web_studio.AppMenuEditor">
+        <a t-if="menus.getCurrentApp()" href="#" class="o_web_edit_menu o_nav_entry" role="button" t-on-click="onClick">
+            <i class="fa fa-fw fa-pencil" />Edit Menu
+        </a>
+    </t>
+
+    <t t-name="web_studio.AppMenuEditor.EditMenuDialog">
+        <Dialog title="title" contentClass="'o-web-studio-appmenu-editor'" size="'md'" >
+            <div t-ref="root" class="d-flex flex-column gap-3">
+                <t t-set="item" t-value="mainItem" />
+                <div t-if="item" class="w-100">
+                    <ul class="oe_menu_editor list-unstyled mb-0" t-att-data-item-id="item.id" t-key="state.renderId" t-att-id="item.id">
+                        <t t-call="web_studio.InteractiveItemsList.Item" />
+                    </ul>
+                </div>
+                <div class="o_web_studio_edit_menu_desc small align-self-end">
+                    <i class="fa fa-info-circle me-1"/>Drag a menu to the right to create a sub-menu
+                </div>
+            </div>
+
+            <t t-set-slot="footer" t-slot-scope="dialog">
+                <button type="button" class="btn btn-primary" t-on-click="confirm">Confirm</button>
+
+                <button type="button" class="btn btn-secondary" t-on-click="cancel">Cancel</button>
+
+                <button type="button" class="btn btn-secondary js_add_menu ms-auto" t-on-click="onNewMenu">
+                    <i class="fa fa-fw o_button_icon fa-plus-circle" />
+                    New Menu
+                </button>
+            </t>
+        </Dialog>
+    </t>
+
+    <t t-name="web_studio.InteractiveItemsList.Item">
+        <li t-att-data-sequence="itemSequence" t-attf-class="{{ item.isDraggable ? 'o-draggable': '' }}" t-att-data-item-id="item.id" t-att-id="item.id">
+            <div class="input-group mb-1">
+                <span class="input-group-text fa fa-bars bg-view" role="img" aria-label="Value of list" title="Value of list" t-attf-class="{{ item.isDraggable ? 'o-draggable-handle' : '' }}" t-attf-style="{{ item.isDraggable ? 'cursor: move;' : '' }}" />
+                <span class="form-control o-web-studio-interactive-list-item-label" t-esc="item.name" />
+
+                <button type="button" class="btn btn-secondary fa fa-pencil-square-o o-web-studio-interactive-list-edit-item" aria-label="Edit selection" data-tooltip="Edit selection" t-on-click="() => this.editItem(item)" />
+
+                <button type="button" t-att-class="{ disabled: !item.isRemovable }"  class="btn btn-secondary fa fa-trash-o o-web-studio-interactive-list-remove-item" aria-label="Remove selection" data-tooltip="Remove selection" t-on-click="() => this.removeItem(item)" />
+            </div>
+            <ul class="p-0 ms-5" t-if="item.children">
+                <t t-foreach="item.children" t-as="item" t-key="item.id">
+                    <t t-call="web_studio.InteractiveItemsList.Item" />
+                </t>
+            </ul>
+        </li>
+    </t>
+</templates>

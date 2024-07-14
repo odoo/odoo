@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_workorder_eco_view_form" model="ir.ui.view">
+        <field name="name">mrp.workorder.eco.view.form</field>
+        <field name="model">mrp.eco</field>
+        <field name="inherit_id" ref="mrp_plm.mrp_eco_view_form"/>
+        <field name="arch" type="xml">
+            <field name="operation_name" position="after">
+                <field name="step"/>
+                <field name="test_type"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,28 @@
+<templates>
+
+    <t t-name="web_studio.ViewEditor.Snackbar">
+
+        <div class="o_web_studio_menu_undo_redo d-flex d-flex-row align-items-center">
+            <button class="btn cursor-default text-uppercase text-nowrap o_web_studio_undo" t-attf-class="{{ props.operations.canUndo ? 'o_web_studio_active' : '' }}" t-on-click="() => props.operations.undo()">
+                <i class="fa fa-undo me-2"/>Undo
+            </button>
+
+            <div class="align-self-center" />
+
+            <button class="btn cursor-default text-uppercase text-nowrap o_web_studio_redo" t-attf-class="{{ props.operations.canRedo ? 'o_web_studio_active' : '' }}" t-on-click="() => props.operations.redo()">
+                <i class="fa fa-repeat me-2"/>Redo
+            </button>
+        </div>
+
+        <div class="o_web_studio_snackbar mx-2">
+            <t t-set="state" t-value="props.saveIndicator.state" />
+            <span class="fw-bold text-nowrap" t-if="state">
+                <t t-if="state ==='loading'"><i class="fa fa-circle-o-notch fa-spin me-2"/>Saving</t>
+                <t t-elif="state === 'loaded'"><i class="fa fa-check me-2"/>Saved</t>
+                <t t-else=""><i class="fa fa-warning me-2" />Error</t>
+            </span>
+        </div>
+
+    </t>
+
+</templates>

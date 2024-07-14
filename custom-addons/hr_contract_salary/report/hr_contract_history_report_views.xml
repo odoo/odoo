@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_history_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.history.form</field>
+        <field name="model">hr.contract.history</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_history_view_form"/>
+        <field name="arch" type="xml">
+            <field name="wage" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </field>
+            <xpath expr="//notebook/page[@name='contract_history']//tree/field[@name='wage']" position="replace">
+                <field name="wage_on_signature" string="Monthly Wage"/>
+                <field name="monthly_yearly_costs" string="Monthly Cost" widget="monetary"/>
+                <field name="final_yearly_costs" string="Yearly Cost" widget="monetary"/>
+            </xpath>
+            <field name="job_id" position="after">
+                <field name="reference_yearly_cost" optional="hide"/>
+                <field name="reference_monthly_wage" optional="hide"/>
+            </field>
+            <field name="resource_calendar_id" position="after">
+                <field name="contract_type_id"/>
+            </field>
+            <field name="hr_responsible_id" position="after">
+                <field name="contract_update_template_id"/>
+            </field>
+        </field>
+    </record>
+    <record id="hr_contract_history_view_list" model="ir.ui.view">
+        <field name="name">hr.contract.history.form</field>
+        <field name="model">hr.contract.history</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_history_view_list"/>
+        <field name="arch" type="xml">
+            <field name="wage" position="after">
+                <field name="reference_yearly_cost" optional="hide"/>
+                <field name="reference_monthly_wage" optional="hide"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="project_enterprise.MilestonesPopover">
+        <div class="popover-body">
+            <ul class="mb-0 list-unstyled">
+                <t t-set="previousProjectId" t-value="false"></t>
+                <li t-foreach="props.milestones" t-as="milestone" t-key="milestone_index">
+                    <t t-if="props.displayProjectName and previousProjectId != milestone.project_id[0]">
+                        <div><u><t t-out="milestone.project_id[1]"/></u></div>
+                    </t>
+                    <t t-if="milestone.is_deadline_exceeded">
+                        <i t-attf-class="fa fa-square-o fa-fw text-start o_unreached_props."></i>
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-fw text-start" t-attf-class="{{milestone.is_reached ? 'fa-check-square-o o_milestones_reached' : 'fa-square-o'}}"></i>
+                    </t>
+                    <strong><t t-out="milestone.name"/></strong>
+                    <span t-if="props.displayMilestoneDates"><br/><t t-out="getDeadline(milestone)"/></span>
+                    <t t-set="previousProjectId" t-value="milestone.project_id[0]"></t>
+                </li>
+            </ul>
+        </div>
+    </t>
+
+</templates>

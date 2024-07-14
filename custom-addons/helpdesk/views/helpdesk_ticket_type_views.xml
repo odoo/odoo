@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="helpdesk_ticket_type_view_tree" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.type.tree</field>
+        <field name="model">helpdesk.ticket.type</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" string="Tag" sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name" placeholder="e.g. Question"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_type_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.type.form</field>
+        <field name="model">helpdesk.ticket.type</field>
+        <field name="arch" type="xml">
+            <form string="Tag">
+                <group>
+                    <field name="sequence" invisible="1"/>
+                    <field name="name"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_type_action" model="ir.actions.act_window">
+        <field name="name">Types</field>
+        <field name="res_model">helpdesk.ticket.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No types found. Let's create one!
+          </p><p>
+            Types are perfect for categorizing your tickets.
+          </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="account_activity_view_form_popup" model="ir.ui.view">
+        <field name="name">mail.activity.form.inherit.account.tax</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_form_popup"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_done']" position="attributes">
+                  <attribute name="invisible">activity_category == 'tax_report' or chaining_type == 'trigger'</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

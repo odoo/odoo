@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="daily_report" inherit_id="point_of_sale.report_saledetails" name="Daily Report">
+        <xpath expr="//div[hasclass('page')]" position="inside">
+            <br/>
+            <div style="break-inside: avoid;">
+                <h5>Pro Forma order:</h5>
+                <div class="row">
+                    <div class="col-12">
+                        <strong>Number of Pro format</strong>:
+                        <t t-esc="PF_number"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <strong>Amount of Pro Forma VAT tickets (PS)</strong>:
+                        <t t-esc="PF_Amount"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

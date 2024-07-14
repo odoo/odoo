@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_account_report_de" model="ir.actions.client">
+            <field name="name">Disallowed Expenses Report</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_disallowed_expenses.disallowed_expenses_report')}" />
+        </record>
+
+        <menuitem id="menu_action_account_report_de"
+                  name="Disallowed Expenses"
+                  action="action_account_report_de"
+                  parent="account.account_reports_management_menu"
+                  groups="account.group_account_readonly"/>
+    </data>
+</odoo>

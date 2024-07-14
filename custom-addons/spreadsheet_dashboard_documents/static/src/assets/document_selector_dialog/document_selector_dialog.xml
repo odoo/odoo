@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="spreadsheet_dashboard_documents.DocumentSelectorDialog">
+        <Dialog title="title">
+            <div class="o_spreadsheet_selector_dialog">
+                <div class="o-sp-dialog-spreadsheets">
+                    <div class="o-sp-dialog-content">
+                        <DocumentsSelectorPanel onSpreadsheetSelected.bind="onSpreadsheetSelected"
+                            onSpreadsheetDblClicked.bind="_confirm" />
+                    </div>
+                </div>
+                <t t-set-slot="footer">
+                    <button class="btn btn-primary" t-on-click="_confirm">Confirm</button>
+                    <button class="btn btn-secondary" t-on-click="_cancel">Cancel</button>
+                </t>
+            </div>
+        </Dialog>
+    </t>
+
+</templates>

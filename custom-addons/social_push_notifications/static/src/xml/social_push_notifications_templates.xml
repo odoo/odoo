@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="social_push_notifications.NotificationRequestPopup">
+        <div class="o_social_push_notifications_permission_request position-fixed w-100">
+            <div class="container-fluid">
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle invisible" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"></a>
+                    <div class="dropdown-menu px-3 pt-3 border shadow" t-name="">
+                        <button class="btn px-1 py-0 close">&#215;</button>
+                        <div class="d-flex text-start">
+                            <div class="me-2 pt-1">
+                                <img width="48" height="auto" t-att-src="widget.notificationIcon" alt="Notification Request Icon"/>
+                            </div>
+                            <div class="o_social_push_notifications_permission_content">
+                                <h6 class="o_social_push_notifications_permission_content_title pe-1"
+                                    t-esc="widget.notificationTitle"/>
+                                <p class="o_social_push_notifications_permission_content_body text-muted small mb-1"
+                                    t-esc="widget.notificationBody"/>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <button class="o_social_push_notifications_permission_deny btn btn-light">Deny</button>
+                            <button class="o_social_push_notifications_permission_allow btn btn-primary">Allow</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</odoo>

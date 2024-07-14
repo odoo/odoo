@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="rental_report_search_view_inherit_lots" model="ir.ui.view">
+        <field name="name">sale.rental.report.search.inherit.stock</field>
+        <field name="model">sale.rental.report</field>
+        <field name="inherit_id" ref="sale_renting.rental_report_search_view"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="lot_id" groups="stock.group_production_lot"/>
+            </field>
+            <filter name="Product" position="after">
+                <filter string="Serial Number" name="Lot" context="{'group_by': 'lot_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>

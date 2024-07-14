@@ -1,0 +1,1595 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_consolidation
+# 
+# Translators:
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
+# Jakub Smolka, 2023
+# Ivana Bartonkova, 2023
+# Wil Odoo, 2023
+# Tomáš Píšek, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Tomáš Píšek, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__account_ids_count
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__chart_account_ids_count
+msgid "# Accounts"
+msgstr "počet uživatelských účtů"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__group_ids_count
+msgid "# Groups"
+msgstr "počet Skupin"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__journal_ids_count
+msgid "# Journals"
+msgstr "# Účetní deníky"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__period_ids_count
+msgid "# Periods"
+msgstr "# Období"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "% Control"
+msgstr "% Kontrola"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "% Ownership"
+msgstr "% Vlastnictví"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/builder/abstract.py:0
+#, python-format
+msgid "%s (%s Currency Conversion Method)"
+msgstr "%s (%s Metoda převodu měny)"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_period.py:0
+#, python-format
+msgid "%s Consolidated Accounting"
+msgstr "%s Konsolidované účetnictví"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "(Re)Compute"
+msgstr "(Pře)počítat"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "(Re)compute"
+msgstr "(Re) výpočet"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#, python-format
+msgid ") and the consolidated company ("
+msgstr ") a konsolidovaná společnost ("
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#, python-format
+msgid ") have different currencies and the company is consolidated at"
+msgstr ") má různou měnu a společnost je konsolidována v"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#, python-format
+msgid ") have different currencies."
+msgstr ") mají různé měny."
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/header.xml:0
+#, python-format
+msgid "/ End Rate: 1"
+msgstr "/ Koncová rychlost: 1"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+msgid "<span class=\"o_form_label oe_inline\">%</span>"
+msgstr "<span class=\"o_form_label oe_inline\">%</span>"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "<span class=\"o_stat_text\">Consolidated Balance</span>"
+msgstr "<span class=\"o_stat_text\">Konsolidovaný zůstatek </span>"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "<span class=\"o_stat_text\">Edit</span>"
+msgstr "<span class=\"o_stat_text\">Upravit</span>"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "<span role=\"separator\">Actions</span>"
+msgstr "<span role=\"separator\">Akce</span>"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "<span role=\"separator\">View</span>"
+msgstr "<span role=\"separator\">Zobrazení</span>"
+
+#. module: account_consolidation
+#: model:ir.model.constraint,message:account_consolidation.constraint_consolidation_account_code_uniq
+msgid ""
+"A consolidation account with the same code already exists in this "
+"consolidation."
+msgstr "Konsolidační účet se stejným kódem již v této konsolidaci existuje."
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid ""
+"A journal entry should only be linked to a company period OR to a analysis "
+"period of another consolidation!"
+msgstr ""
+"Účetní záznam může být svázán pouze s obdobím společnosti NEBO s analytickým"
+" obdobím jiné konsolidace!"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_account_account
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__line_ids
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "Account"
+msgstr "Účet"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_res_company__account_consolidation_currency_is_different
+msgid "Account Consolidation Currency Is Different"
+msgstr "Měna konsolidace účtů je jiná"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding,name:account_consolidation.onboarding_onboarding_account_consolidation_dashboard
+msgid "Account Consolidation Dashboard Onboarding"
+msgstr "Panel počátečního nastavení konsolidace"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_tree
+msgid "Account Group"
+msgstr "Skupina účtů"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_group_action
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__group_ids
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration_account_sections
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_tree
+msgid "Account Groups"
+msgstr "Skupiny účtů"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.account_mapping_action
+#: model:ir.actions.act_window,name:account_consolidation.account_mapping_from_period_action
+msgid "Account Mapping"
+msgstr "Mapování účtů"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_coa.py:0
+#, python-format
+msgid "Account Mapping: %(chart)s"
+msgstr "Mapování účtu: %(chart)s"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/res_company.py:0
+#, python-format
+msgid "Account Mapping: %(company)s"
+msgstr "Mapování účtu: %(company)s"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_period.py:0
+#, python-format
+msgid "Account Mapping: %s (for %s)"
+msgstr "Mapování účtu: %s (for %s)"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+msgid "Account Name"
+msgstr "Název účtu"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.account_mapping_search
+msgid "Account with Entries"
+msgstr "Účet se záznamy"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__account_ids
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Accounts"
+msgstr "Účty"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_res_company__consolidation_color
+msgid "Accounts color"
+msgstr "Barva účtů"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_needaction
+msgid "Action Needed"
+msgstr "Vyžadována akce"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Active"
+msgstr "Aktivní"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/views/trial_balance_grid/trial_balance_grid_controller.js:0
+#: code:addons/account_consolidation/static/src/views/trial_balance_grid/trial_balance_grid_controller.xml:0
+#, python-format
+msgid "Add a column"
+msgstr "Přidat sloupec"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+msgid "Additional Information"
+msgstr "Dodatečné informace"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Advanced Consolidation"
+msgstr "Pokročilá konsolidace"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.account_mapping_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_search_mapping
+msgid "Already Mapped"
+msgstr "Již mapováno"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__amount
+msgid "Amount"
+msgstr "Částka"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_coa.py:0
+#, python-format
+msgid ""
+"An account group can only have accounts or other groups children but not "
+"both!"
+msgstr ""
+"Skupina účtů může obsahovat buďto účty nebo jiné skupiny, ale ne obojí!"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__period_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Analysis Period"
+msgstr "Období analýzy"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__using_period_id
+msgid "Analysis Period Using This"
+msgstr "Analytické období pomocí tohoto"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.analysis_period_config_action
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__period_ids
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_tree
+msgid "Analysis Periods"
+msgstr "Období analýzy"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,title:account_consolidation.onboarding_onboarding_step_create_consolidation_period
+msgid "Analysis period"
+msgstr "Období analýzy"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,done_text:account_consolidation.onboarding_onboarding_step_create_consolidation_period
+msgid "Analysis period created!"
+msgstr "Analytické období vytvořeno"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form_onboarding
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form_onboarding
+msgid "Apply"
+msgstr "Použít"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_attachment_count
+msgid "Attachment Count"
+msgstr "Počet příloh"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_search
+msgid "Auto-generated"
+msgstr "Automaticky generováno"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__auto_generated
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__auto_generated
+msgid "Automatically Generated"
+msgstr "Automaticky vytvořeno"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__currency_rate_avg
+msgid "Average Currency Rate"
+msgstr "Průměrný kurz měny"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_account__currency_mode__avg
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+msgid "Average Rate"
+msgstr "Průměrné hodnocení"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/header.xml:0
+#, python-format
+msgid "Avg Rate: 1"
+msgstr "Průměrná sazba: 1"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__balance
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+msgid "Balance"
+msgstr "Zůstatek"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form_onboarding
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form_onboarding
+msgid "Cancel"
+msgstr "Zrušit"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__chart_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__chart_id
+msgid "Chart"
+msgstr "Graf"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,title:account_consolidation.onboarding_onboarding_step_setup_ccoa
+msgid "Chart of Accounts"
+msgstr "Účtová osnova"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "Chart of accounts"
+msgstr "Účtová osnova"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,done_text:account_consolidation.onboarding_onboarding_step_setup_ccoa
+msgid "Chart of accounts set!"
+msgstr "Účtová osnova nastavena!"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_tree
+msgid "Charts"
+msgstr "Grafy"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__child_ids
+msgid "Children"
+msgstr "Potomci"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Close"
+msgstr "Zavřít"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "Close period"
+msgstr "Zavřít období"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_period__state__closed
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Closed"
+msgstr "Uzavřeno"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_account__currency_mode__end
+msgid "Closing Rate"
+msgstr "Míra uzavření"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__code
+msgid "Code"
+msgstr "Kód"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_account_account__consolidation_color
+msgid "Color"
+msgstr "Barva"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__color
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__color
+msgid "Color Index"
+msgstr "Barevný index"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_res_company
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__company_ids
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__company_ids
+msgid "Companies"
+msgstr "Společnosti"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__company_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__company_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.trial_balance_grid_search
+msgid "Company"
+msgstr "Společnost"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__currency_company_id
+msgid "Company Currency"
+msgstr "Měna společnosti"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__company_name
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Company Name"
+msgstr " Název společnosti "
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__company_period_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+msgid "Company Period"
+msgstr "Firemní období"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_company_period_action
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__company_period_ids
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration_company_periods
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Company Periods"
+msgstr "Vykazovací období"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__company_unmapped_accounts_counts
+msgid "Company Unmapped Accounts Counts"
+msgstr "Počty nezmapovaných účtů společnosti"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/filters/filters.xml:0
+#, python-format
+msgid "Comparison:"
+msgstr "Porovnání:"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__composed_period_id
+msgid "Composed Analysis Period"
+msgstr "Složené období analýzy"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__composed_chart_currency_id
+msgid "Composed Consolidation Currency"
+msgstr "Složená konsolidační měna"
+
+#. module: account_consolidation
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration
+msgid "Configuration"
+msgstr "Konfigurace"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/header.xml:0
+#, python-format
+msgid "Conso Rate:"
+msgstr "Sazba conso:"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__account_id
+msgid "Consolidated Account"
+msgstr "Konsolidovaný účet"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.account_mapping_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+msgid "Consolidated Accounts"
+msgstr "Konsolidované účty"
+
+#. module: account_consolidation
+#: model:account.report,name:account_consolidation.consolidated_balance_report
+#: model:ir.actions.client,name:account_consolidation.trial_balance_report_action
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "Consolidated Balance"
+msgstr "Konsolidovaný zůstatek"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Consolidated Companies"
+msgstr "Konsolidované společnosti"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__parents_ids
+msgid "Consolidated In"
+msgstr "Konsolidováno v"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__used_in_ids
+msgid "Consolidated in"
+msgstr "Konsolidováno v "
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_chart_action
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_chart_action_onboarding
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__chart_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__chart_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__chart_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__chart_id
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration_charts
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Consolidation"
+msgstr "Konsolidace"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_account_account__consolidation_account_ids
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__account_ids
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "Consolidation Account"
+msgstr "Konsolidační účet"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_account_account__consolidation_account_chart_filtered_ids
+msgid "Consolidation Account Chart Filtered"
+msgstr "Graf konsolidovaného účtu filtrován"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_account_action
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__using_ids
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__account_ids
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration_accounts
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "Consolidation Accounts"
+msgstr "Konsolidační účty"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Consolidation Chart"
+msgstr "Konsolidační graf"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_company_period
+msgid "Consolidation Company Period"
+msgstr "Konsolidační období společnosti"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__currency_chart_id
+msgid "Consolidation Currency"
+msgstr "Konsolidační měna"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.Consolidation_journal_line_action
+msgid "Consolidation Entries"
+msgstr "Konsolidační záznamy"
+
+#. module: account_consolidation
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_operations_consolidation_entries
+msgid "Consolidation Entry"
+msgstr "Konsolidační položky"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_group
+msgid "Consolidation Group"
+msgstr "Konsolidační skupina"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_tree
+msgid "Consolidation Items"
+msgstr "Konsolidační položky"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_journal
+msgid "Consolidation Journal"
+msgstr "Konsolidační deník"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_account_move_line__consolidation_journal_line_ids
+msgid "Consolidation Journal Line"
+msgstr "Konsolidační řádek deníku"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__consolidation_method
+msgid "Consolidation Method"
+msgstr "Konsolidační metoda"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__chart_name
+msgid "Consolidation Name"
+msgstr "Název konsolidace"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_period
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__composition_id
+msgid "Consolidation Period"
+msgstr "Konsolidační období"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_period_composition
+msgid "Consolidation Period Composition"
+msgstr "Složení konsolidačního období"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_rate
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__rate_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__rate_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__rate_consolidation
+msgid "Consolidation Rate"
+msgstr "Míra konsolidace"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Consolidation Rate (%)"
+msgstr "Míra konsolidace (%)"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_account
+msgid "Consolidation account"
+msgstr "Konsolidační účet"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_chart
+msgid "Consolidation chart"
+msgstr "Konsolidační graf"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__line_ids
+msgid "Consolidation items"
+msgstr "Konsolidační položky"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_journal_line
+msgid "Consolidation journal line"
+msgstr "Konsolidační účetní položka"
+
+#. module: account_consolidation
+#: model:res.groups,name:account_consolidation.group_consolidation_user
+msgid "Consolidation user"
+msgstr "Konsolidační uživatel"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,button_text:account_consolidation.onboarding_onboarding_step_create_consolidation_period
+msgid "Create"
+msgstr "Vytvořit"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_period_action_onboarding
+msgid "Create First Period"
+msgstr "Vytvořte první období"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,description:account_consolidation.onboarding_onboarding_step_create_consolidation_period
+msgid "Create your first analysis period & set the currency rates."
+msgstr "Vytvořte své první analytické období a nastavte směnné kurzy."
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__create_uid
+msgid "Created by"
+msgstr "Vytvořeno uživatelem"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__create_date
+msgid "Created on"
+msgstr "Vytvořeno dne"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__currencies_are_different
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__currencies_are_different
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__currencies_are_different
+msgid "Currencies Are Different"
+msgstr "Měny se liší"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Currency"
+msgstr "Měna"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__currency_amount
+msgid "Currency Amount"
+msgstr "Částka měny"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__currency_mode
+msgid "Currency Conversion Method"
+msgstr "Metoda převodu měny"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__currency_rate
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+msgid "Currency Rate"
+msgstr "Směnný kurz"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period_composition__currency_rate
+msgid "Currency rate from composed chart currency to using chart currency"
+msgstr "Kurz měny od složené měny grafu k používání měny grafu"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_period_action
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_home
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__dashboard_sections
+msgid "Dashboard Sections"
+msgstr "Sekce dashboardů"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_tree
+msgid "Date"
+msgstr "Datum"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,button_text:account_consolidation.onboarding_onboarding_step_setup_consolidation
+msgid "Define"
+msgstr "Definovat"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,description:account_consolidation.onboarding_onboarding_step_setup_consolidation
+msgid ""
+"Define the companies that should be consolidated & the target currency."
+msgstr ""
+"Vyberte společnosti, které mají být konsolidovány a nastavte cílovou měnu."
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__note
+msgid "Description"
+msgstr "Popis"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__display_dates
+msgid "Display Dates"
+msgstr "Zobrazit data"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__display_name
+msgid "Display Name"
+msgstr "Zobrazovací název"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_period__state__draft
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Draft"
+msgstr "Návrh"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#, python-format
+msgid "Edit"
+msgstr "Upravit"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#, python-format
+msgid "Edit %s"
+msgstr "Upravit %s"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__currency_rate_end
+msgid "End Currency Rate"
+msgstr "Koncový kurz měny"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__date_company_end
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__date_analysis_end
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__date_end
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "End Date"
+msgstr "Datum do"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+msgid "End Rate"
+msgstr "Konečná sazba"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_company_period__consolidation_method__equity
+msgid "Equity"
+msgstr "Základní kapitál"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__exclude_journal_ids
+msgid "Exclude Journals"
+msgstr "Vyloučit účetní deníky"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__filtered_used_in_ids
+msgid "Filtered Used In"
+msgstr "Filtrováno použito v"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_follower_ids
+msgid "Followers"
+msgstr "Odběratelé"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Odběratelé (partneři)"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__full_name
+msgid "Full Name"
+msgstr "Celé jméno"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_company_period__consolidation_method__full
+msgid "Full consolidation"
+msgstr "Úplná konsolidace"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__group_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__group_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.trial_balance_grid_search
+msgid "Group"
+msgstr "Skupina"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "Group Name"
+msgstr "Název Skupiny"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Groups"
+msgstr "Přístupové skupiny"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__has_message
+msgid "Has Message"
+msgstr "Má zprávu"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid "Hierarchy and Subtotals"
+msgstr "Hierarchie a mezisoučty"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_account__currency_mode__hist
+msgid "Historical Rate"
+msgstr "Historická rychlost"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Historical Rates"
+msgstr "Historické ceny"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/res_company.py:0
+#, python-format
+msgid "Historical Rates: %(company)s"
+msgstr "Historické ceny: %(company)s"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_company_period__currency_rate_avg
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_company_period__currency_rate_end
+msgid ""
+"How many units of company currency is needed to get 1 unit of chart currency"
+msgstr ""
+"Kolik jednotek měny společnosti je potřeba k získání 1 jednotky měny grafu"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Pokud zaškrtnuto, nové zprávy vyžadují vaši pozornost."
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__message_has_error
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Pokud zaškrtnuto, některé zprávy mají chybu při doručení."
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "In The Future"
+msgstr "V budoucnu"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "In The Past"
+msgstr "V minulosti"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__invert_sign
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__invert_sign
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__invert_sign
+msgid "Invert Balance Sign"
+msgstr "Obrátit znaménko zůstatku"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_is_follower
+msgid "Is Follower"
+msgstr "Je odběratel"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__journal_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_form
+msgid "Journal"
+msgstr "Účetní deník"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_account_move_line
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_form
+msgid "Journal Item"
+msgstr "Účetní položka"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.view_account_move_line_filter
+msgid "Journal Items"
+msgstr "Účetní položky"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__line_ids
+msgid "Journal lines"
+msgstr "Řádky deníku"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_journal_action
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__journal_ids
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "Journals"
+msgstr "Účetní deníky"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/filters/filters.xml:0
+#, python-format
+msgid "Journals:"
+msgstr "Účetní deníky:"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__write_uid
+msgid "Last Updated by"
+msgstr "Naposledy upraveno uživatelem"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__write_date
+msgid "Last Updated on"
+msgstr "Naposledy upraveno dne"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_search
+msgid "Manually Created"
+msgstr "Ručně vytvořeno"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Map Accounts"
+msgstr "Mapové účty"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_tree
+msgid "Mapped Accounts"
+msgstr "Mapované účty"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_search_mapping
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_tree_mapping
+msgid "Mapped In"
+msgstr "Mapováno"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_has_error
+msgid "Message Delivery error"
+msgstr "Chyba při doručování zprávy"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_ids
+msgid "Messages"
+msgstr "Zprávy"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__move_line_ids
+msgid "Move Line"
+msgstr "Položka záznamu"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__name
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_tree
+msgid "Name"
+msgstr "Název"
+
+#. module: account_consolidation
+#: model_terms:ir.actions.act_window,help:account_consolidation.account_mapping_action
+msgid ""
+"No accounts have been found. Make sure you have installed a chart of account"
+" for this company or that you have access right to see the accounts of this "
+"company."
+msgstr ""
+"Nebyly nalezeny žádné účty. Ujistěte se, že jste nainstalovali účtovou "
+"osnovu pro tuto společnost nebo že máte přístupové právo zobrazit účty této "
+"společnosti."
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.account_mapping_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_search_mapping
+msgid "Not Mapped"
+msgstr "Není mapováno"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_company_period__consolidation_method__none
+msgid "Not consolidated"
+msgstr "Není konsolidováno"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Počet akcí"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_has_error_counter
+msgid "Number of errors"
+msgstr "Počet chyb"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Počet zpráv vyžadujících akci"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Počet zpráv s chybou při doručení"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_onboarding_onboarding
+msgid "Onboarding"
+msgstr "Tutoriál"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,step_image_alt:account_consolidation.onboarding_onboarding_step_create_consolidation_period
+msgid "Onboarding Analysis period"
+msgstr "Počáteční nastavení Analytického období"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,step_image_alt:account_consolidation.onboarding_onboarding_step_setup_ccoa
+msgid "Onboarding Chart of Accounts"
+msgstr "Počáteční nastavení Účtové onovy"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_onboarding_onboarding_step
+msgid "Onboarding Step"
+msgstr "Krok tutoriálu"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,step_image_alt:account_consolidation.onboarding_onboarding_step_setup_consolidation
+msgid "Onboarding The Scope of Consolidation"
+msgstr "Počáteční nastavení Rozsahu konsolidace"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid ""
+"Only one entry by account should be created for a generated journal entry!"
+msgstr ""
+"Pro vygenerovaný záznam deníku by měl být vytvořen pouze jeden záznam k "
+"účtu."
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Only the periods containing today"
+msgstr "Pouze období, která dnes obsahují"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Only the periods in the future"
+msgstr "Pouze období v budoucnosti"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Only the periods in the past"
+msgstr "Pouze období v minulosti"
+
+#. module: account_consolidation
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_operations
+msgid "Operations"
+msgstr "Operace"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__originating_currency_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__journal_originating_currency_id
+msgid "Originating Currency"
+msgstr "Původní měna"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#, python-format
+msgid "PDF"
+msgstr "PDF"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__parent_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_search
+msgid "Parent"
+msgstr "Nadřazená"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__parent_path
+msgid "Parent Path"
+msgstr "Nadřazená cesta"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__period_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__period_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Period"
+msgstr "Období"
+
+#. module: account_consolidation
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration_analysis_periods
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Periods"
+msgstr "Období"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_company_period__consolidation_method__proportional
+msgid "Proportional consolidation"
+msgstr "Poměrná konsolidace"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__rate
+msgid "Rate"
+msgstr "Kurz"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__rate_control
+msgid "Rate Control"
+msgstr "Řízení rychlosti"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__rate_ownership
+msgid "Rate Ownership"
+msgstr "Ohodnoťte vlastnictví"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_rate_action
+msgid "Rate Ranges"
+msgstr "Hodnotit rozsahy"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__rating_ids
+msgid "Ratings"
+msgstr "Hodnocení"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "Reopen period"
+msgstr "Znovuotevření období"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Reset To Draft"
+msgstr "Resetovat na návrh"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Review Chart Of Accounts"
+msgstr "Zkontrolovat účtovou osnovu"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Chyba doručení SMS"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,done_text:account_consolidation.onboarding_onboarding_step_setup_consolidation
+msgid "Scope of Consolidation defined!"
+msgstr "Rozsah konsolidace byl nastaven!"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__sequence
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__sequence
+msgid "Sequence"
+msgstr "Sekvence"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+msgid "Settings"
+msgstr "Nastavení"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,button_text:account_consolidation.onboarding_onboarding_step_setup_ccoa
+msgid "Setup"
+msgstr "Nastavení"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,description:account_consolidation.onboarding_onboarding_step_setup_ccoa
+msgid ""
+"Setup your consolidated accounts and their currency conversion method.\n"
+"                Then map them with the companies accounts."
+msgstr ""
+"Nastavte své konsolidované účty a jejich metodu převodu měny.\n"
+"                   Poté je namapujte pomocí účtů společností."
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_company_period__rate_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_company_period__rate_control
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_company_period__rate_ownership
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period_composition__rate_consolidation
+msgid "Should be between 0 and 100 %"
+msgstr "Mělo by být mezi 0 a 100%"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__show_on_dashboard
+msgid "Show On Dashboard"
+msgstr "Zobrazit na dashboardu"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid "Show Zero Balance Accounts"
+msgstr "Zobrazit účty s nulovým zůstatkem"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__sign
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__sign
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__sign
+msgid "Sign"
+msgstr "Znaménko"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__date_company_begin
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__date_analysis_begin
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__date_start
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Start Date"
+msgstr "Počáteční datum"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__state
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__state
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "State"
+msgstr "Stát"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Sub-consolidated Chart"
+msgstr "Subkonsolidovaný graf"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__linked_chart_ids
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__children_ids
+msgid "Sub-consolidations"
+msgstr "Subkonsolidace"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Sub-consolidations Periods"
+msgstr "Subkonsolidační období"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Sub-consolidations periods"
+msgstr "Období subkonsolidace"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "Subgroups"
+msgstr "Podskupiny"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#, python-format
+msgid "Take into account that the consolidation ("
+msgstr "Vezměte v úvahu, že tato konsolidace ("
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#, python-format
+msgid "Take into account that this company is consolidated at"
+msgstr "Vezměte v úvahu, že tato společnost je konsolidována na"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__currency_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__currency_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__chart_currency_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__chart_currency_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__using_chart_currency_id
+msgid "Target Currency"
+msgstr "Cílová měna"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_period.py:0
+#, python-format
+msgid ""
+"The Composed Analysis Period must be different from the Analysis Period"
+msgstr "Složené období analýzy se musí lišit od období analýzy"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,title:account_consolidation.onboarding_onboarding_step_setup_consolidation
+msgid "The Scope of Consolidation"
+msgstr "Rozsah konsolidace"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+msgid ""
+"The rate used for the consolidation (basically this rate will multiply the "
+"sum of everything"
+msgstr ""
+"Kurz použitý pro konsolidaci (v podstatě tento kurz vynásobí součet všeho"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+msgid "This journal has been automatically generated on"
+msgstr "Tento deník byl automaticky vygenerován v "
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/builder/abstract.py:0
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_tree
+#, python-format
+msgid "Total"
+msgstr "Celkem"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.view_trial_balance_report_graph
+#: model_terms:ir.ui.view,arch_db:account_consolidation.view_trial_balance_report_grid
+#, python-format
+msgid "Trial Balance"
+msgstr "Předvaha"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_trial_balance_report_handler
+msgid "Trial Balance Custom Handler"
+msgstr "Vlastní 'handler' hlavní knihy"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_period.py:0
+#, python-format
+msgid "Trial Balance: %s"
+msgstr "Hlavní kniha: %s"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.trial_balance_grid_search
+msgid "Trial balance"
+msgstr "Hlavní kniha"
+
+#. module: account_consolidation
+#: model:ir.model.constraint,message:account_consolidation.constraint_consolidation_period_composition__unique_composition
+msgid ""
+"Two compositions of the same analysis period by the same analysis period "
+"cannot be created"
+msgstr ""
+"Nelze vytvořit dvě kompozice stejného období analýzy podle stejného období "
+"analýzy"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+msgid "Update"
+msgstr "Aktualizace"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__used_in_composition_ids
+msgid "Used In Composition"
+msgstr "Používá se ve složení"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_chart__color
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__color
+msgid "Used in the kanban view"
+msgstr "Používá se v kanbanovém pohledu"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__using_composition_ids
+msgid "Using Composition"
+msgstr "Pomocí složení"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__website_message_ids
+msgid "Website Messages"
+msgstr "Webové zprávy"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__website_message_ids
+msgid "Website communication history"
+msgstr "Webová historie komunikace"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid ""
+"When setting a period on a consolidation journal, the selected consolidation"
+" chart for the journal cannot be different from the one of the chosen "
+"period."
+msgstr ""
+"Při nastavování období v konsolidačním deníku se vybraný konsolidační graf "
+"pro deník nemůže lišit od vybraného období."
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#, python-format
+msgid "XLSX"
+msgstr "XLSX"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid ""
+"You can here define complex consolidations based on other sub-"
+"consolidations, as part of a whole scheme"
+msgstr ""
+"Zde můžete definovat komplexní konsolidace založené na jiných "
+"subkonsolidacích jako součást celého schématu"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid "You can't delete an auto-generated journal entry."
+msgstr "Automaticky vygenerovaný záznam deníku nelze odstranit."
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid "You can't edit an auto-generated journal entry."
+msgstr "Nelze upravovat automaticky generovaný záznam deníku."
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid "You cannot add journals to a closed period!"
+msgstr "Nemůžete přidat deníky do uzavřeného období!"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "e.g. Profit and Loss"
+msgstr "např. Zisk a ztráta"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+msgid "e.g. Revenue"
+msgstr "např. Příjmy"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/builder/comparison.py:0
+#, python-format
+msgid "n/a"
+msgstr "n/a"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/dashboard_widget/dashboard_widget.xml:0
+#, python-format
+msgid "unmapped accounts"
+msgstr "nezmapované účty"

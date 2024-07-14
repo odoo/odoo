@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="knowledge_base_articles_card" inherit_id="website_helpdesk.knowledge_base">
+        <xpath expr="//div[@id='o_knowledge_base_sections']" position="inside">
+            <div class="col" t-if="team.show_knowledge_base_article">
+                <div class="card position-relative h-100 overflow-visible">
+                    <div class="card-body d-flex align-items-start">
+                        <img src="/website_helpdesk/static/src/img/books.svg"
+                             class="position-md-absolute top-0 end-0 translate-middle order-1 order-md-0 ms-3 ms-md-0"/>
+                        <div class="d-flex flex-wrap">
+                            <h5 class="h5-fs card-title">Articles</h5>
+                            <p class="mb-0">Search our documentation for answers to common questions</p>
+                        </div>
+                    </div>
+                    <div class="card-body h-100">
+                        <t t-if="team.website_latest_articles" class="card-title">
+                            <small class="text-muted text-uppercase">
+                                <t t-if="len(team.website_latest_articles) &gt; 4">Favorites</t>
+                                <t t-else="">Quick Links</t>
+                            </small>
+                            <ul class="nav flex-column gap-1 mt-2">
+                                <t t-foreach="team.website_latest_articles" t-as="article">
+                                    <li class="nav-item">
+                                        <a class="nav-link rounded py-2 bg-100"
+                                            t-attf-href="/knowledge/article/#{article.id}"
+                                            target="_blank"
+                                            t-att-title="article.name"
+                                        >
+                                            <t t-esc="article.name"/>
+                                        </a>
+                                    </li>
+                                </t>
+                            </ul>
+                        </t>
+                    </div>
+                    <div class="card-body d-flex justify-content-center">
+                        <a class="btn btn-secondary flex-grow-1"
+                            t-attf-href="/helpdesk/{{ slug(team) }}/knowledge/home?auto_unfold=1'"
+                            target="_blank"
+                        >
+                            Browse articles
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="search_result" name="Knowledge Base: Knowledge Search Result">
+        <div class="website_forum d-flex w-100 mb-0 py-4 border-top">
+            <p class="mt-1 text-400">
+                <i class="fa fa-fw fa-2x fa-book" title="Knowledge Article"/>
+            </p>
+            <div class="w-100 ms-3">
+                <h5>
+                    <a t-att-href="url" target="_blank" t-out="record.display_name" class="fw-bold"/>
+                </h5>
+                <small>
+                    <time t-field="record.create_date" class="ps-2 border-start" t-options='{"format": "d MMM yyyy"}'/>, by <a t-attf-href="/profile/user/{{record.create_uid.id}}" class="fw-bold" t-out="record.create_uid.name"/>
+                    <t t-if="record.parent_id">
+                    | <t t-out="record.parent_id.sudo().display_name"/>
+                    </t>
+                    <t t-if="record.is_user_favorite">
+                    | <div class="fa fa-star text-warning"/>
+                    </t>
+                </small>
+            </div>
+        </div>
+    </template>
+</odoo>

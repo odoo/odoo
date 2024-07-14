@@ -1,0 +1,401 @@
+// ------------------------------------------------------------------
+// Campaign Kanban
+// ------------------------------------------------------------------
+
+.o_marketing_automation_campaign_kanban {
+    .o_ma_campaign_header {
+        padding-bottom: 8px;
+        border-bottom: 1px solid $o-ma-border-color;
+    }
+    .o_ma_campaign_item {
+        border-right: 1px solid $o-ma-border-color;
+    }
+    .o_ma_campaign_item:last-child {
+        border-right: none;
+    }
+}
+
+
+// ------------------------------------------------------------------
+// Abstract Hierarchy
+// ------------------------------------------------------------------
+.o_ma_hierarchy {
+    margin-left: calc(var(--formView-sheet-padding-x) * -1);
+    margin-right: calc(var(--formView-sheet-padding-x) * -1);
+    margin-bottom: calc(var(--formView-sheet-padding-x) * -1);
+    padding: var(--formView-sheet-padding-x);
+    background-color: $o-ma-hierarchy-background;
+
+    .o_kanban_renderer {
+        --Kanban-gap: 0;
+    }
+    
+    .o_ma_hierarchy_title {
+        padding: 0px 0px 0px 72px;
+        font-size: 18px;
+    }
+    .o_ma_hierarchy_readonly {
+        padding: 40px 0px 0px 40px;
+    }
+    .o_ma_hierarchy_container {
+        // Add new button
+        .o-kanban-button-new {
+            padding: 2px 12px;
+            margin: 0px 0px 0px 44px;
+            border-radius: 25px;
+        }
+        .o_field_x2many_kanban .o_kanban_ungrouped .o_kanban_record {
+            display: flex;
+            flex: 0 0 100%;
+            border: 0px;
+            padding: 0px 0px 0px 100px;
+            margin: 0px 0px 0px 0px;
+            background-color: transparent;
+            .o_ma_body_wrapper {
+                padding-left: 133px;
+                margin-left: 8px;
+                border-left: 1px dashed $o-ma-border-color;
+            }
+            // Record with all children
+            .o_ma_body {
+                // Timeline Border
+                &:before {
+                    content: '';
+                    display: block;
+                    @include o-position-absolute($bottom: 0px);
+                    height: 100%;
+                    border-left: 1px dashed $o-ma-border-color;
+                }
+                margin-left: 8px;
+                padding-top: 20px;
+                // Timeline Pill: Display time
+                .o_ma_timeline {
+                    @include o-position-absolute($top: 32px, $left: -102px);
+                    width: 90px;
+                    padding: 3px 0px;
+                    border-radius: 3px;
+                    background-color: $o-ma-color-white;
+                    box-shadow: 0 1px 2px rgba(0,0,0,.1);
+                }
+                // Current Record (not children or timeline)
+                .o_ma_card {
+                    position: relative;
+                    margin-left: 22px;
+                    margin-bottom: 2px;
+                    width: 500px;
+                    border-radius: 3px;
+                    background: $o-ma-color-white;
+                    box-shadow: 0 1px 2px rgba(0,0,0,.1);
+                    // Triangle arrow for the card
+                    &:before {
+                        content: '';
+                        @include o-position-absolute($top: 12px, $left: -17px);
+                        margin-left: 10px;
+                        width: 14px;
+                        height: 14px;
+                        background: $o-ma-color-white;
+                        border: 1px solid $card-border-color;
+                        transform: rotate(45deg);
+                    }
+                    // Timeline dot
+                    &:after {
+                        content: '';
+                        @include o-position-absolute($top: 14px, $left: -28px);
+                        width: 12px;
+                        height: 12px;
+                        border: 2px solid $o-brand-primary;
+                        border-radius: 10px;
+                        background: $o-ma-hierarchy-background;
+                    }
+                }
+            }
+            &:last-child:before {
+                height: 40px;
+            }
+        }
+    }
+}
+
+.o_form_editable{
+    .o_ma_hierarchy .o_ma_hierarchy_container .o_field_x2many_kanban .o_kanban_ungrouped > .o_kanban_record:last-child:before{
+        height: 100%;
+    }
+}
+
+// ------------------------------------------------------------------
+// Campaign Card
+// ------------------------------------------------------------------
+.o_ma_hierarchy_container.o_ma_campaign_hierarchy {
+    .o_field_x2many_kanban .o_kanban_ungrouped  .o_kanban_record {
+        & > div {
+            background-color: transparent;
+            border: 0;
+            padding: 0;
+        }
+
+        .o_ma_title_bar {
+            position: relative;
+            border-bottom: 1px solid $o-ma-border-color;
+            @include border-top-radius(3px);
+            background-color: $o-ma-color-white;
+            .o_ma_icon {
+                display: inline-block;
+                padding: 3px 7px;
+                margin: 5px;
+                width: 28px;
+                height: 28px;
+                color: white;
+                font-size: 14px;
+                border-radius: 3px;
+                background: linear-gradient(to right bottom, $o-brand-primary, darken($o-brand-primary, 5%));
+            }
+            .o_ma_title {
+                @include o-position-absolute;
+                display: inline-block;
+                margin-top: 5px;
+                h3 {
+                    font-weight: 500;
+                    a {
+                        @include o-text-overflow;
+                        width: 296px;
+                        &.o_ma_full {
+                            width: 378px;
+                        }
+                    }
+                }
+                .o_ma_desc {
+                    margin-top: -2px;
+                    font-size: 11px;
+                    color: #999999;
+                }
+            }
+            .o_ma_switch {
+                @include o-position-absolute($top: 0px, $right: 0px);
+                > span {
+                    width: 39px;
+                    height: 39px;
+                    display: inline-block;
+                    border-left: 1px solid $o-ma-border-color;
+                    border-bottom: 1px solid transparent;
+                    transition: all 0.2s ease 0s;
+                    .fa {
+                        font-size: 16px;
+                        margin: 12px;
+                    }
+                    &:hover:not(.active) {
+                        cursor: pointer;
+                        background-color: $o-ma-border-color;
+                        border-bottom-color: $o-ma-border-color;
+                    }
+                    &.active {
+                        color: map-get($o-theme-text-colors, 'primary');
+                        border-bottom-color: $o-ma-color-white;
+                        background-color: $o-ma-color-white;
+                    }
+                }
+            }
+        }
+        .o_pane_graph {
+            overflow: hidden;
+            > .row {
+                margin-left: 0px;
+                margin-right: 0px;
+            }
+            .o_ma_graph {
+                padding: 0px;
+                .o_field_marketing_activity_graph {
+                    width: 100%;
+                    .o_ma_activity_graph {
+                        height: 110px;
+                        .o_graph_canvas_container {
+                            position: relative;
+                            top: 0px;
+                            left: 0px;
+                        }
+                    }
+                    .o_ma_chart_time {
+                        @include o-position-absolute($top: 5px, $left: 170px);
+                        font-size: 10px;
+                        color: #A7A7A7;
+                    }
+                }
+            }
+            .o_ma_email_details {
+                border-top: 1px solid $o-ma-border-color;
+                z-index: 1;  // force buttons to go above chart canvas
+                @include border-bottom-radius(3px);
+                > div {
+                    padding: 4px 0px;
+                    border-right: 1px solid $o-ma-border-color;
+                }
+                div:last-child {
+                    border-right: 0px;
+                }
+                div:first-child {
+                    font-weight: 500;
+                }
+            }
+        }
+        .o_pane_filter {
+            padding: 10px;
+            min-height: 140px;
+        }
+        .o_ma_child_activity {
+            background: $o-ma-hierarchy-background;
+            width: 100%;
+            height: 18px;
+            overflow: hidden;
+            transition: all 0.3s ease 0s;
+            .o_ma_child_activity_title {
+                padding: 2px;
+                font-size: 11px;
+                font-weight: bold;
+            }
+            .o_ma_child_activity_buttons {
+                display: flex;
+                justify-content: space-around;
+                i.fa {
+                    flex: 1 0 auto;
+                    padding: 10px;
+                    border-top: 1px solid var(--MarketingAutomation__ChildActivityButtons-border-color, #{$border-color});
+                    border-left: 1px solid var(--MarketingAutomation__ChildActivityButtons-border-color, #{$border-color});
+                    cursor: pointer;
+                    &:hover {
+                        background-color: rgba(0,0,0, .1);
+                    }
+                    &:first-child {
+                        border-bottom: 1px solid var(--MarketingAutomation__ChildActivityButtons-border-color, #{$border-color});
+                        border-top-width: 0px;
+                        border-left-width: 0px;
+                    }
+                }
+            }
+            &:hover {
+                height: 53px;
+            }
+        }
+    }
+}
+
+// ------------------------------------------------------------------
+// Workitem Card
+// ------------------------------------------------------------------
+.o_ma_hierarchy_container.o_ma_workitem_hierarchy {
+    .o_field_x2many_kanban .o_kanban_ungrouped  .o_kanban_record {
+        & > div {
+            background-color: transparent;
+            border: 0;
+            padding: 0;
+        }
+
+        .o_ma_body .o_ma_timeline {
+            top: 20px;
+        }
+        .o_ma_icon {
+            position: relative;
+            display: inline-block;
+            padding: 4px 7px;
+            margin: 5px;
+            width: 28px;
+            height: 28px;
+            color: $o-ma-color-white;
+            font-size: 14px;
+            border-radius: 3px;
+        }
+        .o_ma_type {
+            margin-left: 3px;
+            font-size: 10px;
+            color: #A7A7A7;
+        }
+        .o_ma_status_text {
+            font-size: 10px;
+        }
+        .o_ma_actions {
+            display: flex;
+            justify-content: space-around;
+            span {
+                flex: 1 0 auto;
+                padding: 3px;
+                border-top: 1px solid $o-ma-border-color;
+                border-left: 1px solid $o-ma-border-color;
+                font-size: 11px;
+                color: #C3C3C3;
+                &:first-child {
+                    border-left-width: 0px;
+                }
+                &.active {
+                    color: $o-brand-primary;
+                }
+            }
+        }
+        .o_ma_test_buttons {
+            @include o-position-absolute($top: 5px, $right: -70px);
+            margin-left: -10px;
+            .btn {
+                border-radius: 3px;
+            }
+        }
+    }
+}
+
+// ------------------------------------------------------------------
+// Colors
+// ------------------------------------------------------------------
+.o_ma_text_canceled {
+    color: map-get($o-theme-text-colors, 'warning');
+}
+.o_ma_text_error {
+    color: $text-muted;
+}
+.o_ma_processed {
+    background-color: $o-brand-primary;
+}
+.o_ma_rejected {
+    background-color: map-get($theme-colors, 'danger');
+}
+.o_ma_canceled {
+    background-color: map-get($theme-colors, 'warning');
+}
+.o_ma_error {
+    background-color: #8F8F8F;
+}
+.o_ma_scheduled {
+    background-color: $o-brand-odoo;
+}
+
+.o_ma_templates_container {
+    pointer-events: auto;
+    .marketing-template {
+        &, * {
+            transition: all .15s;
+        }
+        min-height: 17vh; 
+        img {
+            filter: invert(.5);
+        }
+
+        &:hover {
+            * {
+                color: $o-enterprise-color !important;
+            }
+
+            background-color: var(--o-color-4);
+            box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 2px 0 rgba(0, 0, 0, 0.05);
+            border-color: $o-enterprise-color !important;
+
+            img {
+                filter: invert(0);
+            }
+
+            .card-body {
+                background-color: var(--o-color-4) !important;
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .o_view_nocontent.o_ma_campaign_container  {
+        align-items: start;
+    }
+}

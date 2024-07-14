@@ -1,0 +1,83 @@
+.o_mrp_mps {
+
+    button {
+        &.o_mrp_mps_procurement {
+            background-color: $gray-200;
+            border: none;
+        }
+        &.o_no_padding {
+            padding: 0 0 0 0;
+        }
+    }
+
+    input:not(.form-check-input) {
+        border-style: groove;
+        height: 100%;
+        padding-top: 0;
+    }
+
+    table {
+        thead th {
+            @include o-position-sticky($top: 0px, $left: 0px);
+            z-index: 10;
+            border-top: none;
+            &:first-child,&:nth-child(2) {
+                z-index: 11;
+                height: 1em;
+            }
+            &:nth-child(2) {
+                @include o-position-sticky($top: 0px, $left: 31px);
+            }
+        }
+        tbody th {
+            @include o-position-sticky($left: 0px);
+            &:first-child,&:nth-child(2) {
+                z-index: 1;
+                background-color: $gray-200;
+            }
+            &:nth-child(2){
+                @include o-position-sticky($left: 31px);
+                padding-left: 0;
+            }
+        }
+        th {
+            vertical-align: middle;
+        }
+        .o_mps_inline {
+            display: inline-flex;
+            max-width: 38%;
+        }
+    }
+
+    tr {
+        line-height: 1em;
+        min-height: 1em;
+        height: 1em;
+    }
+
+    .btn {
+        line-height: 1em;
+    }
+
+    .form-control {
+        padding: 0em 0em;
+        color: $black;
+    }
+
+    .o_input {
+        line-height: 1em;
+    }
+
+    .o_mrp_mps_hover {
+        background-color: #d6d8d9;
+
+        &.alert-success {
+            background-color: darken(#dff0d8, 10%);
+        }
+
+        &.alert-warning {
+            background-color: darken(#fcf8e3, 10%);
+        }
+    }
+
+}

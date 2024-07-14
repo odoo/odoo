@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- fsm timesheet form view -->
+    <record id="timesheet_view_form" model="ir.ui.view">
+        <field name="name">account.analytic.line.form</field>
+        <field name="model">account.analytic.line</field>
+        <field name="priority">5000</field>
+        <field name="arch" type="xml">
+            <form string="Timesheet">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="project_id" required="1"/>
+                            <field name="task_id" context="{'default_project_id': project_id}"/>
+                            <field name="user_id" invisible="1" groups="hr_timesheet.group_timesheet_manager"/>
+                            <field name="employee_id" groups="hr_timesheet.group_timesheet_manager"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="unit_amount" string="Time Spent" widget="timesheet_uom"/>
+                            <field name="name" widget="text"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- fsm timesheet tree view -->
+    <record id="timesheet_view_tree_user_inherit" model="ir.ui.view">
+        <field name="name">account.analytic.line.view.tree.with.user.inherit.industry.fsm</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.timesheet_view_tree_user"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='project_id']" position="attributes">
+                <attribute name="column_invisible">context.get('default_project_id')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='task_id']" position="attributes">
+                <attribute name="column_invisible">context.get('default_task_id')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="attributes">
+                <attribute name="column_invisible">context.get('fsm_mode')</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

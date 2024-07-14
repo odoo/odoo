@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_quality_check_wizard" model="ir.ui.view">
+        <field name="name">quality_check_wizard</field>
+        <field name="model">quality.check.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Quality Checks">
+                <field name="current_check_id" invisible="1"/>
+                <field name="measure_on" invisible="1"/>
+                <field name="test_type" invisible="1"/>
+                <field name="quality_state" invisible="1"/>
+                <field name="is_last_check" invisible="1"/>
+                <field name="testing_percentage_within_lot" invisible="1"/>
+                <field name="is_lot_tested_fractionally" invisible="1"/>
+                <field name="show_lot_text" invisible="1"/>
+                <field name="product_tracking" invisible="1"/>
+
+                <div class="o_row d-flex justify-content-between">
+                    <span>
+                        <field name="note" readonly="1"/>
+                    </span>
+                    <h5>
+                        <field name="position_current_check" readonly="1"/> /
+                        <field name="nb_checks" readonly="1"/>
+                    </h5>
+                </div>
+                <group invisible="measure_on != 'move_line'">
+                    <group>
+                        <label for="qty_to_test" invisible="not is_lot_tested_fractionally"/>
+                        <div class="o_row" invisible="not is_lot_tested_fractionally">
+                            <field name="qty_to_test"/>
+                            <field name="uom_id"/>
+                        </div>
+                        <label for="qty_tested" invisible="not is_lot_tested_fractionally"/>
+                        <div class="o_row" invisible="not is_lot_tested_fractionally">
+                            <field name="qty_tested" readonly="quality_state != 'none'"/>
+                            <field name="uom_id"/>
+                        </div>
+                    </group>
+                </group>
+                <group>
+                    <group>
+                        <label for="measure" invisible="test_type != 'measure'"/>
+                        <div invisible="test_type != 'measure'" class="o_row">
+                            <field name="measure" readonly="quality_state != 'none'"/>
+                            <field name="norm_unit" string="Unit of Measure"/>
+                        </div>
+                    </group>
+                </group>
+                <label for="picture" invisible="1"/>
+                <div invisible="test_type != 'picture'">
+                    <field name="picture" widget="image" readonly="quality_state != 'none'"/>
+                </div>
+                <field name="additional_note" readonly="quality_state != 'none'" placeholder="Write quality check notes..."/>
+                <footer>
+                    <button name="do_measure" type="object" class="btn-primary" string="Validate"
+                        invisible="quality_state != 'none' or test_type != 'measure'" data-hotkey="q"/>
+                    <button name="do_pass" type="object" class="btn-primary" string="Validate"
+                        invisible="quality_state != 'none' or test_type not in ('picture', 'instructions')" data-hotkey="w"/>
+                    <button name="do_pass" type="object" class="btn-success " string="Pass"
+                        invisible="quality_state != 'none' or test_type != 'passfail'" data-hotkey="w"/>
+                    <button name="do_fail" type="object" class="btn-danger" string="Fail"
+                        invisible="quality_state != 'none' or test_type != 'passfail'" data-hotkey="k"/>
+                    <button name="action_generate_previous_window" type="object" class="btn-secondary" string="Previous" invisible="position_current_check == 1"/>
+                    <button name="action_generate_next_window" type="object" class="btn-secondary" string="Next" invisible="is_last_check"/>
+                    <button string="Discard" class="btn btn-secondary" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="quality_check_wizard_form_failure" model="ir.ui.view">
+        <field name="name">quality.check.wizard.form.failure</field>
+        <field name="priority">1000</field>
+        <field name="model">quality.check.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Quality Check Failed">
+                <field name="test_type" invisible="1"/>
+                <field name="measure_on" invisible="1"/>
+                <field name="show_lot_text" invisible="1"/>
+                <field name="product_tracking" invisible="1"/>
+                <field name="potential_failure_location_ids" invisible="1"/>
+                <group>
+                    <group invisible="measure_on != 'move_line'">
+                        <label for="qty_failed" string="Quantity Failed"/>
+                        <div>
+                            <field name="qty_failed" required="True" class="oe_inline"/>
+                            <field name="uom_id" class="oe_inline"/>
+                        </div>
+                        <field name="lot_name" string="Lot/SN" invisible="not show_lot_text or product_tracking == 'none'"/>
+                        <field name="lot_line_id" string="Lot/SN" invisible="show_lot_text or product_tracking == 'none'"/>
+                        <field name="failure_location_id" invisible="not potential_failure_location_ids" widget="selection_badge" domain="[('id', 'in', potential_failure_location_ids)]"/>
+                    </group>
+                    <group >
+                        <div class="alert" role="alert" colspan="2" invisible="test_type != 'measure'" >
+                            <field name="warning_message" nolabel="1"/>
+                        </div>
+                        <div colspan="2">
+                            <field name="failure_message" nolabel="1"/>
+                        </div>
+                    </group>
+                </group>
+                <footer>
+
+                    <button name="confirm_measure" type="object" class="btn-primary" string="Confirm Measure"
+                        invisible="test_type != 'measure'" data-hotkey="w"/>
+                    <button name="confirm_fail" type="object" class="btn-primary" string="Confirm"
+                            invisible="measure_on != 'move_line' or test_type == 'measure'" data-hotkey="w"/>
+                    <button name="action_generate_next_window" type="object" class="btn-primary" string="OK"
+                        invisible="measure_on == 'move_line' or test_type == 'measure'" data-hotkey="w"/>
+                    <button name="correct_measure" type="object" class="btn-secondary" string="Correct Measure"
+                        invisible="test_type != 'measure'" data-hotkey="q"/>
+                    <button name="action_generate_previous_window" type="object" class="btn-secondary" string="Back"
+                        invisible="measure_on != 'move_line' or test_type == 'measure'" data-hotkey="q"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_quality_check_wizard" model="ir.actions.act_window">
+        <field name="name">Quality Check</field>
+        <field name="res_model">quality.check.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

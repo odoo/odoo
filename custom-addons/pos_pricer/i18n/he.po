@@ -1,0 +1,323 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_pricer
+# 
+# Translators:
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
+# Netta Waizer, 2024
+# Martin Trigaux, 2024
+# Yihya Hugirat <hugirat@gmail.com>, 2024
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-31 15:25+0000\n"
+"PO-Revision-Date: 2024-02-07 08:49+0000\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2024\n"
+"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: he\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+
+#. module: pos_pricer
+#: model:ir.model.constraint,message:pos_pricer.constraint_pricer_tag_name_unique
+msgid "A Pricer tag with this barcode id already exists"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__pricer_store_id
+msgid "Associated Pricer Store"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__product_id
+msgid "Associated Product"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__auth_url
+msgid "Auth Url"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__create_or_update_products_url
+msgid "Create Or Update Products Url"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__create_uid
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__create_uid
+msgid "Created by"
+msgstr "נוצר על-ידי"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__create_date
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__create_date
+msgid "Created on"
+msgstr "נוצר ב-"
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_store__last_update_datetime
+msgid "Date and time of the last synchronization with Pricer"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__display_name
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__display_name
+msgid "Display Name"
+msgstr "שם לתצוגה"
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+#, python-format
+msgid "Error: %s - %s"
+msgstr ""
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+#, python-format
+msgid "Error: check Pricer credentials"
+msgstr ""
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+#, python-format
+msgid "Failed to unlink Pricer tag %s at API url %s"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__id
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__id
+msgid "ID"
+msgstr "מזהה"
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_store__pricer_store_identifier
+msgid "Identifier of the store in the Pricer system"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_tag__name
+msgid "It is recommended to use a barcode scanner for input"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__last_update_datetime
+msgid "Last Update"
+msgstr "עדכון אחרון"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__last_update_status_message
+msgid "Last Update Status"
+msgstr "סטטוס עדכון אחרון"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__write_uid
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__write_uid
+msgid "Last Updated by"
+msgstr "עודכן לאחרונה על-ידי"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__write_date
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__write_date
+msgid "Last Updated on"
+msgstr "עדכון אחרון ב"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__link_tags_url
+msgid "Link Tags Url"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_store__pricer_login
+msgid "Login of your Pricer account"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.actions.server,name:pos_pricer.pricer_sync_cron_ir_actions_server
+msgid "POS Pricer: tags update synchronization "
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_store__pricer_password
+msgid "Password of your Pricer account"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.ui.menu,name:pos_pricer.pos_menu_pricer_configuration
+#: model_terms:ir.ui.view,arch_db:pos_pricer.product_template_form_view_pricers
+msgid "Pricer"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_product_product__pricer_display_price
+#: model:ir.model.fields,field_description:pos_pricer.field_product_template__pricer_display_price
+msgid "Pricer Display Price"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__pricer_login
+msgid "Pricer Login"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__pricer_password
+msgid "Pricer Password"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_product_product__pricer_product_to_create_or_update
+#: model:ir.model.fields,field_description:pos_pricer.field_product_template__pricer_product_to_create_or_update
+msgid "Pricer Product To Create Or Update"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__pricer_product_to_link
+msgid "Pricer Product To Link"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_product_product__pricer_store_id
+#: model:ir.model.fields,field_description:pos_pricer.field_product_template__pricer_store_id
+#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_form_view
+#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_view_list
+msgid "Pricer Store"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__pricer_store_identifier
+msgid "Pricer Store ID"
+msgstr ""
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+#, python-format
+msgid ""
+"Pricer Store ID must only contain lowercase a-z, 0-9 or '-' and not start "
+"with '-'"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_store__name
+msgid "Pricer Store name in Odoo database"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model,name:pos_pricer.model_pricer_store
+msgid "Pricer Store regrouping pricer tags"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.actions.act_window,name:pos_pricer.action_open_pricer_stores
+#: model:ir.ui.menu,name:pos_pricer.menu_pos_pricer_stores
+msgid "Pricer Stores"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_tag__name
+msgid "Pricer Tag Barcode ID"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.actions.act_window,name:pos_pricer.action_open_pricer_tags
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__pricer_tag_ids
+#: model:ir.ui.menu,name:pos_pricer.menu_pos_pricer_tags
+msgid "Pricer Tags"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__pricer_tenant_name
+msgid "Pricer Tenant Name"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model,name:pos_pricer.model_pricer_tag
+msgid "Pricer electronic tag"
+msgstr ""
+
+#. module: pos_pricer
+#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_tag_view_list
+msgid "Pricer tag"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_product_product__pricer_tag_ids
+#: model:ir.model.fields,field_description:pos_pricer.field_product_template__pricer_tag_ids
+msgid "Pricer tags ids"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model,name:pos_pricer.model_product_template
+msgid "Product"
+msgstr "מוצר"
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__product_ids
+msgid "Products"
+msgstr "מוצרים"
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_store__last_update_status_message
+msgid "Status message of the last synchronization with Pricer"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,field_description:pos_pricer.field_pricer_store__name
+msgid "Store Name"
+msgstr ""
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_tag.py:0
+#, python-format
+msgid ""
+"Tag id should be a 17 characters string composed of a letter followed by 16 "
+"digits"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_tag__pricer_store_id
+#: model:ir.model.fields,help:pos_pricer.field_product_product__pricer_store_id
+#: model:ir.model.fields,help:pos_pricer.field_product_template__pricer_store_id
+msgid ""
+"This product will be linked to and displayed on the Pricer tags of the store"
+" selected here"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_product_product__pricer_tag_ids
+#: model:ir.model.fields,help:pos_pricer.field_product_template__pricer_tag_ids
+msgid ""
+"This product will be linked to and displayed on the Pricer tags with ids "
+"listed here. It is recommended to use a barcode scanner"
+msgstr ""
+
+#. module: pos_pricer
+#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_view_list
+msgid "Update all tags"
+msgstr ""
+
+#. module: pos_pricer
+#. odoo-python
+#: code:addons/pos_pricer/models/pricer_store.py:0
+#, python-format
+msgid "Update successfully sent to Pricer"
+msgstr ""
+
+#. module: pos_pricer
+#: model_terms:ir.ui.view,arch_db:pos_pricer.pricer_pricer_store_view_list
+msgid "Update tags"
+msgstr ""
+
+#. module: pos_pricer
+#: model:ir.model.fields,help:pos_pricer.field_pricer_store__pricer_tenant_name
+msgid "Your company identifier at Pricer"
+msgstr ""

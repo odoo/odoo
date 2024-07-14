@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="mrp_workorder.WorkingEmployeePopupWOList">
+        <div role="dialog">
+            <div class="popup popup-selection text-center">
+                <div class="o_popup_title">
+                    <div>
+                        Connected Employees
+                    </div>
+                </div>
+
+                <t t-if="!connectedEmployeesList[0]" >
+                    <div class="o_popup_empty_employee">
+                        No connected employees
+                    </div>
+                </t>
+                <div class="selection scrollable-y">
+                    <t t-foreach="connectedEmployeesList" t-as="employee" t-key="employee.id">
+                        <div class="o_employee_selection">
+                            <div>
+                                <button class="btn_employee bg-100" t-on-click="()=> this.becomeAdmin(employee.id,pin)">
+                                    <img t-att-src="employee.src" class="ml8 rounded img_employee" />
+                                    <span class="ml8">
+                                        <t t-esc="employee.name"/>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="o_workorder_list">
+                                <t t-if="!employee.workorder[0]" >
+                                    <div class="text-start">
+                                        No workorders
+                                    </div>
+                                </t>
+                                <t t-foreach="employee.workorder" t-as="wo" t-key="wo.id">
+                                    <div class="o_workorder_item">
+                                        <div class="o_workorder_name">
+                                            <t t-esc="wo.name"/>
+                                        </div>
+                                        <div class="o_workorder_timer">
+                                            <MrpTimer ongoing="wo.ongoing" value="wo.duration"/>
+                                        </div>
+                                        <div class="o_button_timer">
+                                            <button t-if="wo.ongoing" class="btn btn-danger o_btn_start_stop" t-on-click="() => this.stopEmployee(employee.id,wo.id)">Pause</button>
+                                            <button t-if="!wo.ongoing" class="btn btn-warning o_btn_start_stop" t-on-click="() => this.startEmployee(employee.id,wo.id)">Continue</button>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+                <footer class="footer">
+                    <button class="btn btn-link" t-on-click="addEmployee">+ New Operator</button>
+                    <button class="btn btn-link text-dark" t-on-click="close">Close</button>
+                </footer>
+            </div>
+        </div>
+    </t>
+</templates>

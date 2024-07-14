@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="approval_request_view_form" model="ir.ui.view">
+        <field name="name">approval.request.view.form.inherit</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <field name="attachment_number" position="before">
+                <field name="documents_enabled" invisible="1"/>
+            </field>
+            <field name="attachment_number" position="attributes">
+                <attribute name="invisible">documents_enabled</attribute>
+            </field>
+            <field name="attachment_number" position="after">
+                <field name="documents_count" widget="statinfo" string="Documents"
+                       invisible="not documents_enabled" options="{'reload_on_button': true}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

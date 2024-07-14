@@ -1,0 +1,40 @@
+.o_barcode_client_action .o_barcode_lines {
+    & .o_barcode_line.o_faulty .o_barcode_line_summary {
+        background-color: rgba(map-get($theme-colors, 'danger'), 0.25);
+    }
+
+    & .o_barcode_line.o_line_completed .o_barcode_line_summary {
+        background: var(--barcode__line--completed, #befdcc);
+    }
+
+    & .o_barcode_line.o_line_not_completed .o_barcode_line_summary {
+        background: var(--barcode__line--notCompleted, #fcf9f2);
+    }
+
+    .o_barcode_line_summary {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        flex-basis: 100%;
+
+        &.o_unfolded {
+            border-bottom-width: 2px;
+            border-bottom-style: solid;
+            border-bottom-color: inherit;
+        }
+    }
+
+    .o_sublines .o_barcode_line {
+        border-left-width: 12px;
+
+        &:last-child {
+            margin-bottom: 0;
+            box-shadow: none;
+            border-bottom: 0;
+
+            &.o_selected {
+                box-shadow: inset 0px 0px 0px 3px $o-enterprise-action-color;
+            }
+        }
+    }
+}

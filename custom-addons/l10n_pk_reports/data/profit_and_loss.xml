@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_pk_profitandloss" model="account.report">
+        <field name="name">Profit and Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.pk"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_pk_profitandloss_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_balance_report_pk_gross_profit" model="account.report.line">
+                <field name="name">Gross Profit</field>
+                <field name="code">PK_GP</field>
+                <field name="expression_ids">
+                    <record id="account_balance_report_pk_gross_profit_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PK_REV.balance + PK_CoS.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_pk_revenue" model="account.report.line">
+                        <field name="name">Revenue</field>
+                        <field name="code">PK_REV</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pk_revenue_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-3111</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pk_cost_sales" model="account.report.line">
+                        <field name="name">Cost of Sales</field>
+                        <field name="code">PK_CoS</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pk_cost_sales_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-41</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_balance_report_pk_profit_before_income_tax" model="account.report.line">
+                <field name="name">Profit Before Income Tax</field>
+                <field name="code">PK_PBIT</field>
+                <field name="expression_ids">
+                    <record id="account_balance_report_pk_profit_before_income_tax_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PK_GP.balance + PK_OTINC.balance + PK_GAE.balance + PK_SDE.balance + PK_BFC.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_pk_other_income" model="account.report.line">
+                        <field name="name">Other Income</field>
+                        <field name="code">PK_OTINC</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pk_other_income_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">3112</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pk_general_administrative_expenses" model="account.report.line">
+                        <field name="name">General and Administrative Expenses</field>
+                        <field name="code">PK_GAE</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pk_general_administrative_expenses_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-42</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pk_selling_distribution_expenses" model="account.report.line">
+                        <field name="name">Selling and Distribution Expenses</field>
+                        <field name="code">PK_SDE</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pk_selling_distribution_expenses_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-43</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pk_banking_finance_costs" model="account.report.line">
+                        <field name="name">Banking And Finance Costs</field>
+                        <field name="code">PK_BFC</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pk_banking_finance_costs_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-44</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_balance_report_pk_profit_for_the_year" model="account.report.line">
+                <field name="name">Profit for the Year</field>
+                <field name="code">PK_PftY</field>
+                <field name="expression_ids">
+                    <record id="account_balance_report_pk_profit_for_the_year_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PK_PBIT.balance + PK_ITE.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_pk_income_tax_expense" model="account.report.line">
+                        <field name="name">Income Tax expense</field>
+                        <field name="code">PK_ITE</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pk_income_tax_expense_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-45</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    <t t-name="appointment.resources_list">
+        <label for="resource_id" class="mb-1">Make your choice</label>
+        <select class="o_resources_list form-select cursor-pointer" name="resource_id">
+            <option t-foreach="availableResources" t-as="availableResource" t-key="availableResource_index"
+                t-att-value="availableResource['id']" t-att-data-resource-capacity="availableResource['capacity']">
+                <t t-out="availableResource['name']"/>
+            </option>
+        </select>
+        <button name="submitSlotInfoSelected" class="btn btn-primary w-100 mt-3">Confirm</button>
+    </t>
+
+</template>

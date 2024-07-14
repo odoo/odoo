@@ -1,0 +1,1767 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_barcode
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
+#, python-format
+msgid "%s can't be inventoried. Only storable products can be inventoried."
+msgstr "%s 不能盤點。只有可儲存產品可以盤點。"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode
+msgid "<i class=\"fa fa-fw fa-lg fa-archive me-3\" title=\"Package\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-archive me-3\" title=\"包裹\"/>"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+msgid "<i class=\"fa fa-fw fa-lg fa-archive me-3\" title=\"Source Package\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-archive me-3\" title=\"來源包裹\"/>"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+msgid ""
+"<i class=\"fa fa-fw fa-lg fa-barcode me-3\" title=\"Serial/Lot Number\" "
+"invisible=\"tracking not in ['serial', 'lot']\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-lg fa-barcode me-3\" title=\"序號/批次號碼\" "
+"invisible=\"tracking not in ['serial', 'lot']\"/>"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode
+msgid "<i class=\"fa fa-fw fa-lg fa-barcode me-3\" title=\"Serial/Lot Number\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-barcode me-3\" title=\"序號/批次\"/>"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode
+msgid "<i class=\"fa fa-fw fa-lg fa-cube me-3\" title=\"Counted Quantity\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-cube me-3\" title=\"點算數量\"/>"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+msgid "<i class=\"fa fa-fw fa-lg fa-cube me-3\" title=\"Quantity\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-cube me-3\" title=\"數量\"/>"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+msgid "<i class=\"fa fa-fw fa-lg fa-cubes me-3\" title=\"Locations\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-cubes me-3\" title=\"位置\"/>"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+msgid ""
+"<i class=\"fa fa-fw fa-lg fa-long-arrow-right me-3\" title=\"Destination "
+"Location\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-long-arrow-right me-3\" title=\"目的地位置\"/>"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+msgid ""
+"<i class=\"fa fa-fw fa-lg fa-long-arrow-right me-3\" title=\"Destination "
+"Package\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-long-arrow-right me-3\" title=\"目的地包裹\"/>"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode
+msgid "<i class=\"fa fa-fw fa-lg fa-map-marker me-3\" title=\"Location\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-map-marker me-3\" title=\"位置\"/>"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+msgid ""
+"<i class=\"fa fa-fw fa-lg fa-map-marker text-center me-3\" title=\"Source "
+"Location\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-map-marker text-center me-3\" title=\"來源位置\"/>"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode
+msgid "<i class=\"fa fa-fw fa-lg fa-tags me-3\" title=\"Product\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-tags me-3\" title=\"產品\"/>"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode
+msgid "<i class=\"fa fa-fw fa-lg fa-user-o me-3\" title=\"Owner\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-user-o me-3\" title=\"擁有人\"/>"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+msgid "<i class=\"fa fa-fw fa-lg fa-user-o text-center me-3\" title=\"Owner\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-user-o text-center me-3\" title=\"擁有人\"/>"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode_kanban_2
+msgid "<i class=\"fa fa-lg fa-archive\" title=\"Package\"/>"
+msgstr "<i class=\"fa fa-lg fa-archive\" title=\"包裹\"/>"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode_kanban_2
+msgid "<i class=\"fa fa-lg fa-user-o\" title=\"Owner\"/>"
+msgstr "<i class=\"fa fa-lg fa-user-o\" title=\"擁有人\"/>"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.res_config_settings_view_form
+msgid "<i class=\"fa fa-print\"/> Print barcode commands and operation types"
+msgstr "<i class=\"fa fa-print\"/> 列印條碼指令及操作類型"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.res_config_settings_view_form
+msgid "<i class=\"fa fa-print\"/> Print barcode demo sheet"
+msgstr "<i class=\"fa fa-print\"/> 列印條碼示範單張"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.res_config_settings_view_form
+msgid "<i class=\"fa fa-print\"/> Print storage locations"
+msgstr "<i class=\"fa fa-print\"/> 列印儲存位置"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_model.js:0
+#, python-format
+msgid ""
+"A product tracked by serial numbers can't have multiple quantities for the "
+"same serial number."
+msgstr "以序號追蹤的產品，同一個序號中不可有多個數量。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/main.js:0
+#, python-format
+msgid "Add Product"
+msgstr "加入產品"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Add extra product?"
+msgstr "加入額外產品？"
+
+#. module: stock_barcode
+#: model:ir.model.fields.selection,name:stock_barcode.selection__stock_picking_type__restrict_put_in_pack__mandatory
+#: model:ir.model.fields.selection,name:stock_barcode.selection__stock_picking_type__restrict_scan_dest_location__mandatory
+msgid "After each product"
+msgstr "在每個產品後"
+
+#. module: stock_barcode
+#: model:ir.model.fields.selection,name:stock_barcode.selection__stock_picking_type__restrict_put_in_pack__optional
+#: model:ir.model.fields.selection,name:stock_barcode.selection__stock_picking_type__restrict_scan_dest_location__optional
+msgid "After group of Products"
+msgstr "在產品組別後"
+
+#. module: stock_barcode
+#. odoo-python
+#: code:addons/stock_barcode/models/stock_picking.py:0
+#, python-format
+msgid "All products have been returned already"
+msgstr "所有產品都已經退貨"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "All products need to be packed"
+msgstr "所有產品都需要包裝"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_picking_barcode
+msgid "Allocation"
+msgstr "分配"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_picking_type__barcode_validation_full
+msgid "Allow full picking validation"
+msgstr "允許完整揀貨驗證"
+
+#. module: stock_barcode
+#: model:ir.model.fields,help:stock_barcode.field_stock_picking_type__barcode_validation_full
+msgid ""
+"Allow to validate a picking even if nothing was scanned yet (and so, do an "
+"immediate transfert)"
+msgstr "允許驗證揀貨單，即使尚未掃瞄任何內容（即是，立即進行庫存調撥）"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_model.js:0
+#, python-format
+msgid ""
+"An unexisting package type was scanned. This part of the barcode can't be "
+"processed."
+msgstr "掃瞄的包裹類型不存在。此部份條碼未能處理。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/main.xml:0
+#: code:addons/stock_barcode/static/src/components/manual_barcode.xml:0
+#, python-format
+msgid "Apply"
+msgstr "套用"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_barcode_cancel_operation_view
+msgid "Are you sure you want to cancel this operation?"
+msgstr "確定要取消此操作？"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/backorder_dialog.xml:0
+#, python-format
+msgid "Backorder"
+msgstr "缺貨訂單"
+
+#. module: stock_barcode
+#: model:ir.model,name:stock_barcode.model_stock_backorder_confirmation
+msgid "Backorder Confirmation"
+msgstr "缺貨訂單確認"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#: model:ir.actions.client,name:stock_barcode.stock_barcode_action_main_menu
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_move_line__product_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_scrap__product_barcode
+#: model:ir.ui.menu,name:stock_barcode.stock_barcode_menu
+#, python-format
+msgid "Barcode"
+msgstr "條碼"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_barcode_view_picking_type_form
+msgid "Barcode App"
+msgstr "條碼應用程式"
+
+#. module: stock_barcode
+#: model:ir.actions.client,name:stock_barcode.stock_barcode_inventory_client_action
+msgid "Barcode Inventory Client Action"
+msgstr "條碼庫存客戶端動作"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/manual_barcode.js:0
+#, python-format
+msgid "Barcode Manual Entry"
+msgstr "手動輸入條碼"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.res_config_settings_view_form
+msgid "Barcode Nomenclature"
+msgstr "條碼命名規則"
+
+#. module: stock_barcode
+#: model:ir.actions.client,name:stock_barcode.stock_barcode_picking_client_action
+msgid "Barcode Picking Client Action"
+msgstr "條碼揀貨客戶端動作"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_scrap___barcode_scanned
+msgid "Barcode Scanned"
+msgstr "掃瞄到條碼"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "Barcode Scanning"
+msgstr "條碼掃描"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_model.js:0
+#, python-format
+msgid "Barcode scan is ambiguous with several model: %s. Use the most likely."
+msgstr "條碼掃描不確定，有幾個模型:%s。請使用最可能的。"
+
+#. module: stock_barcode
+#. odoo-python
+#: code:addons/stock_barcode/controllers/stock_barcode.py:0
+#, python-format
+msgid "Barcodes are not available."
+msgstr "條碼不可用。"
+
+#. module: stock_barcode
+#: model:product.template,name:stock_barcode.product_cable_management_box_2_product_template
+msgid "Cable Management Box"
+msgstr "理線盒"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/manual_barcode.xml:0
+#: code:addons/stock_barcode/static/src/models/barcode_model.js:0
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_barcode_cancel_operation_view
+#, python-format
+msgid "Cancel"
+msgstr "取消"
+
+#. module: stock_barcode
+#: model:ir.model,name:stock_barcode.model_stock_barcode_cancel_operation
+msgid "Cancel Operation"
+msgstr "取消操作"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Cancel Transfer"
+msgstr "取消調撥"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_barcode_cancel_operation_view
+msgid "Cancel operation"
+msgstr "取消操作"
+
+#. module: stock_barcode
+#. odoo-python
+#: code:addons/stock_barcode/models/stock_picking.py:0
+#, python-format
+msgid "Cancel this operation?"
+msgstr "取消此操作？"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/main.xml:0
+#: code:addons/stock_barcode/static/src/components/main.xml:0
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#: code:addons/stock_barcode/static/src/widgets/image_preview.xml:0
+#: code:addons/stock_barcode/static/src/widgets/image_preview.xml:0
+#, python-format
+msgid "Close"
+msgstr "關閉"
+
+#. module: stock_barcode
+#: model:ir.model,name:stock_barcode.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.res_config_settings_view_form
+msgid "Configure Product Barcodes"
+msgstr "配置產品的條碼"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_picking_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode
+msgid "Confirm"
+msgstr "確認"
+
+#. module: stock_barcode
+#: model:ir.model,name:stock_barcode.model_res_partner
+msgid "Contact"
+msgstr "聯絡人"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode
+msgid "Counted Quantity"
+msgstr "盤點實數"
+
+#. module: stock_barcode
+#: model_terms:ir.actions.act_window,help:stock_barcode.stock_picking_action_kanban
+msgid "Create a new transfer"
+msgstr "建立新調撥"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_barcode_cancel_operation__create_uid
+msgid "Created by"
+msgstr "建立人員"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_barcode_cancel_operation__create_date
+msgid "Created on"
+msgstr "建立於"
+
+#. module: stock_barcode
+#: model:product.template,name:stock_barcode.product_custom_cabinet_metric_product_template
+msgid "Customized Cabinet (Metric)"
+msgstr "定制櫥櫃（公制）"
+
+#. module: stock_barcode
+#: model:product.template,name:stock_barcode.product_custom_cabinet_usa_product_template
+msgid "Customized Cabinet (USA)"
+msgstr "定制櫥櫃（美國）"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/main.xml:0
+#, python-format
+msgid "Delete"
+msgstr "刪除"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_res_config_settings__stock_barcode_demo_active
+msgid "Demo Data Active"
+msgstr "演示數據啟用"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/line.xml:0
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_barcode_view_picking_type_form
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+#, python-format
+msgid "Destination Location"
+msgstr "目的地位置"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+msgid "Destination Package"
+msgstr "目的地包裹"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Destination location must be scanned"
+msgstr "必須掃描目標位置"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_picking_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode
+msgid "Discard"
+msgstr "捨棄"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_barcode_cancel_operation__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.js:0
+#, python-format
+msgid ""
+"Do you want to permanently remove this message ? It won't appear anymore, so"
+" make sure you don't need the barcodes sheet or you have a copy."
+msgstr "確定永久移除此訊息？它不會再出現，因此請確保你不再需要條碼表，或已有副本。"
+
+#. module: stock_barcode
+#: model:ir.model.fields,help:stock_barcode.field_stock_picking_type__restrict_put_in_pack
+msgid ""
+"Does the picker have to put in a package the scanned products? If yes, at "
+"which rate?"
+msgstr "揀貨員是否必須將掃描的產品放入包裹中？如果是，以什麼速度？"
+
+#. module: stock_barcode
+#: model:ir.model.fields,help:stock_barcode.field_stock_picking_type__restrict_scan_dest_location
+msgid "Does the picker have to scan the destination? If yes, at which rate?"
+msgstr "揀貨員必須掃描目的位置嗎？如果是，以什麼速度？"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_barcode_cancel_operation_view
+msgid "Don't cancel"
+msgstr "不取消"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.js:0
+#, python-format
+msgid "Don't show this message again"
+msgstr "不再顯示此消息"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/backorder_dialog.xml:0
+#, python-format
+msgid "Done /"
+msgstr "完成 /"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "Download"
+msgstr "下載"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_move_line__dummy_id
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_quant__dummy_id
+msgid "Dummy"
+msgstr "模擬"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_backorder_confirmation__empty_move_count
+msgid "Empty Move Count"
+msgstr "空的移動計數"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_barcode_view_picking_type_form
+msgid "Final Validation"
+msgstr "最終確認"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Following backorder was created:"
+msgstr "以下是已創建的欠單："
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Following backorders were created:"
+msgstr "以下是已創建的欠單："
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_picking_type__restrict_scan_dest_location
+msgid "Force Destination Location scan?"
+msgstr "必須掃描目標位置？"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_picking_type__restrict_scan_tracking_number
+msgid "Force Lot/Serial scan?"
+msgstr "強制掃描批次/序號?"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_picking_type__restrict_scan_product
+msgid "Force Product scan?"
+msgstr "強制掃描產品?"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_picking_type__restrict_scan_source_location
+msgid "Force Source Location scan?"
+msgstr "強制掃描來源位置?"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_picking_type__barcode_validation_after_dest_location
+msgid "Force a destination on all products"
+msgstr "強制所有產品掃描目的位置"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_picking_type__barcode_validation_all_product_packed
+msgid "Force all products to be packed"
+msgstr "強制包裝所有產品"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_picking_type__restrict_put_in_pack
+msgid "Force put in pack?"
+msgstr "強制放入包裝?"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_move_line__hide_lot
+msgid "Hide Lot"
+msgstr "隱藏批次"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_move_line__hide_lot_name
+msgid "Hide Lot Name"
+msgstr "隱藏批次名稱"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_barcode_cancel_operation__id
+msgid "ID"
+msgstr "識別號"
+
+#. module: stock_barcode
+#. odoo-python
+#: code:addons/stock_barcode/models/stock_picking.py:0
+#, python-format
+msgid ""
+"If the source location must be scanned, then the destination location must "
+"either be scanned after each product or not scanned at all."
+msgstr "如果必須掃描來源地，則須在各產品之後掃描目標地點，或者完全不掃描。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/backorder_dialog.xml:0
+#, python-format
+msgid ""
+"If you validate now, the remaining products will be added to a backorder."
+msgstr "如果您現在驗證，剩餘產品將被添加到欠單中。"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_move_line__image_1920
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_quant__image_1920
+msgid "Image"
+msgstr "圖片"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_picking_type_kanban
+msgid "In #{kanban_getcolorname(record.color.raw_value)}"
+msgstr "在 #{kanban_getcolorname(record.color.raw_value)}"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/backorder_dialog.js:0
+#, python-format
+msgid "Incomplete Transfer"
+msgstr "調撥未完成"
+
+#. module: stock_barcode
+#: model:ir.model.fields,help:stock_barcode.field_stock_move_line__product_barcode
+#: model:ir.model.fields,help:stock_barcode.field_stock_scrap__product_barcode
+msgid "International Article Number used for product identification."
+msgstr "國際物品編碼用於產品標識"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
+#, python-format
+msgid "Inventory Adjustment"
+msgstr "庫存盤點"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "Inventory Adjustments ("
+msgstr "庫存調整（"
+
+#. module: stock_barcode
+#: model:ir.model,name:stock_barcode.model_stock_location
+msgid "Inventory Locations"
+msgstr "盤點位置"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_picking_type__is_barcode_picking_type
+msgid "Is Barcode Picking Type"
+msgstr "是條碼提取類型"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_barcode_cancel_operation__write_uid
+msgid "Last Updated by"
+msgstr "最後更新者"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_barcode_cancel_operation__write_date
+msgid "Last Updated on"
+msgstr "最後更新於"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.js:0
+#, python-format
+msgid "Leave it"
+msgstr "就這樣"
+
+#. module: stock_barcode
+#: model:ir.model.fields,help:stock_barcode.field_stock_picking_type__restrict_scan_product
+msgid "Line's product must be scanned before the line can be edited"
+msgstr "在編輯產品行之前，必須掃描行內產品"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode
+msgid "Location"
+msgstr "地點"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_move_line__location_processed
+msgid "Location Processed"
+msgstr "處理的位置"
+
+#. module: stock_barcode
+#: model:ir.model,name:stock_barcode.model_stock_lot
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_barcode_view_picking_type_form
+msgid "Lot/Serial"
+msgstr "批次/序列號"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Mandatory Destination Location"
+msgstr "強制性目的位置"
+
+#. module: stock_barcode
+#: model:ir.model.fields.selection,name:stock_barcode.selection__stock_picking_type__restrict_scan_source_location__mandatory
+#: model:ir.model.fields.selection,name:stock_barcode.selection__stock_picking_type__restrict_scan_tracking_number__mandatory
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_barcode_view_picking_type_form
+msgid "Mandatory Scan"
+msgstr "強制掃描"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Mandatory Source Location"
+msgstr "強制性源位置"
+
+#. module: stock_barcode
+#: model:ir.model.fields.selection,name:stock_barcode.selection__stock_picking_type__restrict_put_in_pack__no
+#: model:ir.model.fields.selection,name:stock_barcode.selection__stock_picking_type__restrict_scan_dest_location__no
+msgid "No"
+msgstr "否"
+
+#. module: stock_barcode
+#. odoo-python
+#: code:addons/stock_barcode/models/stock_picking.py:0
+#, python-format
+msgid "No %(picking_type)s ready for this %(barcode_type)s"
+msgstr "沒有 %(picking_type)s為 %(barcode_type)s設置"
+
+#. module: stock_barcode
+#: model:ir.model.fields.selection,name:stock_barcode.selection__stock_picking_type__restrict_scan_source_location__no
+msgid "No Scan"
+msgstr "沒有掃描"
+
+#. module: stock_barcode
+#. odoo-python
+#: code:addons/stock_barcode/controllers/stock_barcode.py:0
+#, python-format
+msgid ""
+"No internal operation type. Please configure one in warehouse settings."
+msgstr "沒有內部操作類型。 請在倉庫設置中配置 。"
+
+#. module: stock_barcode
+#. odoo-python
+#: code:addons/stock_barcode/controllers/stock_barcode.py:0
+#, python-format
+msgid "No picking or location or product corresponding to barcode %(barcode)s"
+msgstr "沒有找到對應條碼%(barcode)s的揀貨單或庫存產品或產品"
+
+#. module: stock_barcode
+#. odoo-python
+#: code:addons/stock_barcode/controllers/stock_barcode.py:0
+#, python-format
+msgid "No picking or product corresponding to barcode %(barcode)s"
+msgstr "沒有找到對應的條碼%(barcode)s的揀貨單或者產品"
+
+#. module: stock_barcode
+#. odoo-python
+#: code:addons/stock_barcode/models/stock_picking.py:0
+#, python-format
+msgid "No product, lot or package found for barcode %s"
+msgstr "找不到條碼為 %s 的產品、批次或包裝"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_res_config_settings__barcode_nomenclature_id
+msgid "Nomenclature"
+msgstr "命名規則"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Not the expected scan"
+msgstr "不是預計的掃描"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.picking_view_kanban_inherit_barcode
+msgid "Open picking"
+msgstr "打開揀貨單"
+
+#. module: stock_barcode
+#. odoo-python
+#: code:addons/stock_barcode/models/stock_picking.py:0
+#: model:ir.actions.act_window,name:stock_barcode.open_picking
+#, python-format
+msgid "Open picking form"
+msgstr "打開揀貨表單"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#: model:ir.actions.act_window,name:stock_barcode.stock_picking_action_kanban
+#: model:ir.actions.act_window,name:stock_barcode.stock_picking_type_action_kanban
+#, python-format
+msgid "Operations"
+msgstr "製程"
+
+#. module: stock_barcode
+#: model:ir.model.fields.selection,name:stock_barcode.selection__stock_picking_type__restrict_scan_tracking_number__optional
+msgid "Optional Scan"
+msgstr "可選的掃描"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode
+msgid "Owner"
+msgstr "所有者"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode
+msgid "Package"
+msgstr "包裹"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
+#, python-format
+msgid "Package type %s was correctly applied to the package %s"
+msgstr "包裹類型%s被正確地應用於%s包裹"
+
+#. module: stock_barcode
+#: model:ir.model,name:stock_barcode.model_stock_quant_package
+msgid "Packages"
+msgstr "包裹"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_move_line__product_packaging_id
+msgid "Packaging"
+msgstr "包裝"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_move_line__product_packaging_uom_qty
+msgid "Packaging Quantity"
+msgstr "包裝數量"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_move_line__parent_location_id
+msgid "Parent Location"
+msgstr "上級位置"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_move_line__parent_location_dest_id
+msgid "Parent Location Dest"
+msgstr "母項位置目的地"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_backorder_confirmation__partial_move_count
+msgid "Partial Move Count"
+msgstr "部分移動計數"
+
+#. module: stock_barcode
+#: model:ir.actions.act_window,name:stock_barcode.stock_picking_action_form
+msgid "Picking"
+msgstr "揀貨"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_picking_barcode
+msgid "Picking Details"
+msgstr "揀貨明細"
+
+#. module: stock_barcode
+#: model:ir.model,name:stock_barcode.model_stock_picking_type
+msgid "Picking Type"
+msgstr "揀貨類型"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Please scan destination location for %s before scanning other product"
+msgstr "在掃描其他產品前,請為 %s掃描目標位置, "
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/main.js:0
+#: code:addons/stock_barcode/static/src/kanban/stock_barcode_kanban_renderer.js:0
+#: code:addons/stock_barcode/static/src/main_menu.js:0
+#, python-format
+msgid "Please, Scan again!"
+msgstr "請再次掃描！"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Press Validate or scan another product"
+msgstr "點擊驗證按鈕或掃描其他產品"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Print Barcodes"
+msgstr "列印條碼"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Print Delivery Slip"
+msgstr "列印送貨單"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
+#, python-format
+msgid "Print Inventory"
+msgstr "打印庫存"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Print Packages"
+msgstr "打印包裹"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Print Picking Operations"
+msgstr "打印揀貨操作"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/backorder_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_barcode_view_picking_type_form
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode
+#, python-format
+msgid "Product"
+msgstr "商品"
+
+#. module: stock_barcode
+#: model:ir.actions.act_window,name:stock_barcode.product_action_barcodes
+#: model_terms:ir.ui.view,arch_db:stock_barcode.product_view_list_barcodes
+msgid "Product Barcodes"
+msgstr "產品條碼"
+
+#. module: stock_barcode
+#: model:ir.model,name:stock_barcode.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "產品移動(移庫明細)"
+
+#. module: stock_barcode
+#: model:ir.model,name:stock_barcode.model_product_packaging
+msgid "Product Packaging"
+msgstr "產品包裝"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_move_line__product_reference_code
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_quant__product_reference_code
+msgid "Product Reference Code"
+msgstr "產品參考代碼"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_move_line__product_stock_quant_ids
+msgid "Product Stock Quant"
+msgstr "產品庫存量"
+
+#. module: stock_barcode
+#: model:ir.model,name:stock_barcode.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "產品測量單位"
+
+#. module: stock_barcode
+#: model:ir.model,name:stock_barcode.model_product_product
+msgid "Product Variant"
+msgstr "產品款式"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/main.xml:0
+#, python-format
+msgid "Put In Pack"
+msgstr "放入包裹"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_barcode_view_picking_type_form
+msgid "Put in Pack"
+msgstr "放入包裹"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_move_line__qty_done
+msgid "Qty Done"
+msgstr "已完成數量"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+msgid "Quantity"
+msgstr "數量"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode_kanban
+msgid "Quantity Done"
+msgstr "完成數量"
+
+#. module: stock_barcode
+#: model:ir.model.fields,help:stock_barcode.field_stock_move_line__product_packaging_uom_qty
+msgid "Quantity of the Packaging in the UoM of the Stock Move Line."
+msgstr "庫存移動中計量單位的包裝數量。"
+
+#. module: stock_barcode
+#: model:ir.model,name:stock_barcode.model_stock_quant
+msgid "Quants"
+msgstr "數量"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.js:0
+#, python-format
+msgid "Remove it"
+msgstr "移除它"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/main.xml:0
+#, python-format
+msgid "Return Products"
+msgstr "退回產品"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid ""
+"Returns can only be created for pickings that are done, please validate "
+"first."
+msgstr "只能為已完成的揀貨創建退貨，請先驗證。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "Scan a"
+msgstr "掃描"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
+#, python-format
+msgid "Scan a location"
+msgstr "掃描位置條碼"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a lot number"
+msgstr "掃描批次"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a lot number or a packages then the destination location"
+msgstr "先掃描批次或者包裹，然後掃描目的位置。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a lot number then the destination location"
+msgstr "先掃描批次，然後掃描目的位置。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a package"
+msgstr "掃描包裹"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a package or put in pack"
+msgstr "掃描包裹或放入包裹"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a package or the destination location"
+msgstr "掃描包裹或者目的位置"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a package, the destination location or another product"
+msgstr "掃描包裹，目的位置或者另一產品"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
+#, python-format
+msgid "Scan a product"
+msgstr "掃描產品"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a product before scanning a tracking number"
+msgstr "在掃描追蹤號碼之前掃描產品"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a product from %s"
+msgstr "掃描來自 %s的產品"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
+#, python-format
+msgid "Scan a product in %s or scan another location"
+msgstr "掃描來自 %s 的產品或者掃描另一位置"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a product or a package"
+msgstr "掃描產品或者包裹"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a product or another package"
+msgstr "掃描產品或者另一包裹"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a product or the destination location."
+msgstr "掃描產品或者目的位置"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a product then the destination location"
+msgstr "掃描產品，然後掃描目的位置"
+
+#. module: stock_barcode
+#. odoo-python
+#: code:addons/stock_barcode/models/stock_picking.py:0
+#, python-format
+msgid ""
+"Scan a product, a lot/serial number or a package to filter the transfers."
+msgstr "掃瞄產品、批次/序號或包裝，以篩選轉移。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a product, a package or the destination location"
+msgstr "掃描產品，包裹或目的位置"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a product, a package or the destination location."
+msgstr "掃描產品，包裹或目的位置"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a serial number"
+msgstr "掃描序列號碼"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a serial number or a package"
+msgstr "掃描序列號碼或者包裹"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a serial number or a package then the destination location"
+msgstr "掃描序列號碼或者包裹，然後掃描目的位置"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan a serial number then the destination location"
+msgstr "掃描序列號碼，然後掃描目的位置"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/kanban/stock_barcode_kanban_renderer.xml:0
+#, python-format
+msgid "Scan a transfer or a product to filter your records"
+msgstr "通過掃描調撥單號或者產品篩選記錄"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/kanban/stock_barcode_kanban_renderer.xml:0
+#, python-format
+msgid "Scan a transfer, a product or a package to filter your records"
+msgstr "通過掃描調撥單號，產品或者包裹號篩選記錄"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "Scan an"
+msgstr "掃描"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan another serial number"
+msgstr "掃描其他的序列號碼"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
+#, python-format
+msgid "Scan lot numbers for product %s to change their quantity"
+msgstr "掃描產品批次號%s以更改其數量"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan more lot numbers"
+msgstr "掃描更多的批次"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan more lot numbers or a package"
+msgstr "掃描更多的批次或者包裹"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
+#, python-format
+msgid "Scan more products in %s or scan another location"
+msgstr "在 %s掃描更多的產品或者掃描其他的位置條碼"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan more products or a package"
+msgstr "掃描更多的產品或者包裹"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan more products, or scan a new source location"
+msgstr "掃描更多產品，或掃描新的來源位置"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
+#, python-format
+msgid "Scan serial numbers for product %s to change their quantity"
+msgstr "掃描產品序列號碼%s，以更改其數量"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan the destination location"
+msgstr "掃描目的位置"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan the package %s"
+msgstr "掃描包裹%s"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan the source location"
+msgstr "掃描來源位置"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scan the source location or a package"
+msgstr "掃描來源位置，或掃描包裹"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid ""
+"Scanned quantity uses %s as Unit of Measure, but this UoM is not compatible "
+"with the line's one (%s)."
+msgstr "掃描數量使用 %s 作為計量單位，但此計量單位與行的計量單位 (%s) 不兼容。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_model.js:0
+#: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
+#, python-format
+msgid ""
+"Scanned quantity uses %s as Unit of Measure, but this UoM is not compatible "
+"with the product's one (%s)."
+msgstr "掃描的數量使用%s作為計量單位，但這個計量單位與產品的計量單位（%s）不兼容。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "Scanning package"
+msgstr "掃瞄包裹"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#: model:ir.model,name:stock_barcode.model_stock_scrap
+#, python-format
+msgid "Scrap"
+msgstr "報廢"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+msgid "Select a Product"
+msgstr "選擇產品"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode
+msgid "Serial/Lot Number"
+msgstr "序列號／批次號碼"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_res_config_settings__show_barcode_nomenclature
+msgid "Show Barcode Nomenclature"
+msgstr "顯示條碼命名規則"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_picking_type__show_barcode_validation
+msgid "Show Barcode Validation"
+msgstr "顯示條碼驗證"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/line.xml:0
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_barcode_view_picking_type_form
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+#, python-format
+msgid "Source Location"
+msgstr "來源位置"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+msgid "Source Package"
+msgstr "來源包裹"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/backorder_dialog.xml:0
+#, python-format
+msgid "Stay on transfer"
+msgstr "繼續調撥"
+
+#. module: stock_barcode
+#: model:ir.model,name:stock_barcode.model_stock_package_type
+msgid "Stock package type"
+msgstr "庫存包裝類型"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "Tap to scan"
+msgstr "點擊即可掃描"
+
+#. module: stock_barcode
+#: model:ir.model.fields,help:stock_barcode.field_stock_picking_type__is_barcode_picking_type
+msgid ""
+"Technical field indicating if should be used in barcode app and used to "
+"control visibility in the related UI."
+msgstr "技術欄位，表示是否應在條碼應用程式使用，及用於控制是否在相關操作界面中顯示。"
+
+#. module: stock_barcode
+#: model:ir.model.fields,help:stock_barcode.field_stock_picking_type__show_barcode_validation
+msgid ""
+"Technical field used to compute whether the \"Final Validation\" group "
+"should be displayed, solving combined groups/invisible complexity."
+msgstr "計算是否顯示「最終確認」組的技術領域，解決組合群組/不可見的複雜性。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
+#: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
+#, python-format
+msgid "The inventory adjustment has been validated"
+msgstr "庫存調整已驗證"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "The scanned location doesn't belong to this operation's destination"
+msgstr "掃瞄的位置不屬於此操作的目標位置"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "The scanned location doesn't belong to this operation's location"
+msgstr "掃瞄的位置不屬於此操作的位置"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_model.js:0
+#, python-format
+msgid "The scanned serial number is already used."
+msgstr "掃描的序列號已被使用。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "The transfer has been cancelled"
+msgstr "調撥已取消"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "The transfer has been validated"
+msgstr "調撥已驗證"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
+#, python-format
+msgid "There is nothing to apply in this page."
+msgstr "此頁面沒有任何東西可以應用。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
+#, python-format
+msgid "There is nothing to print in this page."
+msgstr "此頁面中沒有任何要打印的內容。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
+#, python-format
+msgid "This package is already scanned."
+msgstr "這個包裹已掃描過。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "This picking is already done"
+msgstr "揀貨早已完成"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "This picking is cancelled"
+msgstr "此揀貨已取消"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_model.js:0
+#, python-format
+msgid "This serial number is already used."
+msgstr "該序列號已被使用。"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_picking_type_kanban
+msgid "To Process"
+msgstr "待處理"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/backorder_dialog.xml:0
+#, python-format
+msgid "To do"
+msgstr "待辦"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "To use packages, enable 'Packages' in the settings"
+msgstr "要使用包裹，在設置中啟用 「包裹」"
+
+#. module: stock_barcode
+#: model:ir.model,name:stock_barcode.model_stock_picking
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_barcode_cancel_operation__picking_id
+msgid "Transfer"
+msgstr "轉移"
+
+#. module: stock_barcode
+#: model:ir.model.fields,field_description:stock_barcode.field_stock_barcode_cancel_operation__picking_name
+msgid "Transfer Name"
+msgstr "調撥名稱"
+
+#. module: stock_barcode
+#: model_terms:ir.actions.act_window,help:stock_barcode.stock_picking_action_kanban
+msgid "Transfers allow you to move products from one location to another."
+msgstr "調撥允許您將產品從一個位置移動到另一個位置。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/manual_barcode.xml:0
+#, python-format
+msgid "Type barcode you want to scan here"
+msgstr "輸入您想要在此掃描的條碼"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_move_line_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode.stock_quant_barcode_kanban
+msgid "Unit of Measure"
+msgstr "量度單位"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.view_stock_quant_tree
+msgid "UoM"
+msgstr "計量單位"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/manual_barcode.xml:0
+#, python-format
+msgid "Use camera to scan"
+msgstr "使用相機掃描"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/components/backorder_dialog.xml:0
+#: code:addons/stock_barcode/static/src/components/main.xml:0
+#, python-format
+msgid "Validate"
+msgstr "核實"
+
+#. module: stock_barcode
+#: model:ir.model.fields,help:stock_barcode.field_stock_scrap___barcode_scanned
+msgid "Value of the last barcode scanned."
+msgstr "上次掃瞄到的條碼的值."
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/widgets/image_preview.xml:0
+#, python-format
+msgid "Viewer"
+msgstr "查看者"
+
+#. module: stock_barcode
+#: model:ir.model,name:stock_barcode.model_stock_warehouse
+msgid "Warehouse"
+msgstr "倉庫"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid ""
+"We have created a few demo data with barcodes for you to explore the "
+"features. Print the"
+msgstr "我們已經創建了一些帶有條碼的演示數據，供您探索這些功能。 打印"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_model.js:0
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#: code:addons/stock_barcode/static/src/models/barcode_quant_model.js:0
+#, python-format
+msgid "Wrong Unit of Measure"
+msgstr "錯誤的計量單位"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid ""
+"You are about to take the product %(productName)s from the location %(locationName)s but this product isn't reserved in this location.\n"
+"Scan the current location to confirm that."
+msgstr ""
+"你即將從位置 %(locationName)s 取得產品 %(productName)s，但此產品未在此位置保留。\n"
+"請掃瞄目前位置，以確認這一點。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_model.js:0
+#, python-format
+msgid ""
+"You are expected to scan one or more products or a package available at the "
+"picking location"
+msgstr "你要掃描一或多個產品，或揀貨位置可獲得的包裹"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_model.js:0
+#, python-format
+msgid "You are expected to scan one or more products."
+msgstr "你需要掃描一或多個產品。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "You are supposed to scan %s or another source location"
+msgstr "您應該掃描 %s 或者其他的來源位置"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "You can't apply a package type. First, scan product or select a line"
+msgstr "你不能應用包裹類型。首先，掃描產品或選擇資料行"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "You can't register scrap at this state of the operation"
+msgstr "在此運行狀態下，無法登記報廢"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid ""
+"You have already scanned %s items of this package. Do you want to scan the "
+"whole package?"
+msgstr "你已掃瞄此包裹中的 %s 個項目。要掃瞄整個包裹嗎？"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.view_backorder_confirmation
+msgid "You have processed less products than the initial demand:"
+msgstr "您處理的產品少於初始需求："
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "You must scan a package or put in pack"
+msgstr "你必須掃描包裹或放入包裹"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "You must scan a product"
+msgstr "必須掃描產品"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid "[${product.code}] "
+msgstr "[${product.code}] "
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "commands and operation types"
+msgstr "指令及操作類型"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "document"
+msgstr "單據"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "location"
+msgstr "位置"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "operation type"
+msgstr "操作類型"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "package"
+msgstr "包裹"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "product"
+msgstr "商品"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.view_backorder_confirmation
+msgid "products were not processed at all."
+msgstr "產品未被處理。"
+
+#. module: stock_barcode
+#: model_terms:ir.ui.view,arch_db:stock_barcode.view_backorder_confirmation
+msgid "products were partially processed."
+msgstr "產品部份處理。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "stock barcodes sheet"
+msgstr "庫存條碼表格"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "to check out what this module can do! You can also print the barcode"
+msgstr "看看這個模組可以做什麼！您還可以打印條碼"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "to create a new transfer from this location."
+msgstr "從此位置創建新調撥。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "to create a new transfer."
+msgstr "以創建新的調撥。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "to know its content."
+msgstr "了解其內容。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "to open it."
+msgstr "打開它。"
+
+#. module: stock_barcode
+#. odoo-javascript
+#: code:addons/stock_barcode/static/src/main_menu.xml:0
+#, python-format
+msgid "to show its location and quantity."
+msgstr "以顯示其位置和數量。"

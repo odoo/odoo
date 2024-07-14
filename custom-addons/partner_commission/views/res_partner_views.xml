@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_grade_form_inherit_partner_commission" model="ir.ui.view">
+        <field name="name">res.partner.grade.form.partner.commission</field>
+        <field name="model">res.partner.grade</field>
+        <field name="inherit_id" ref="website_crm_partner_assign.view_partner_grade_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="default_commission_plan_id"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_crm_partner_assign_form_inherit_partner_commission" model="ir.ui.view">
+        <field name="name">res.partner.form.partner.commission</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="website_crm_partner_assign.view_crm_partner_assign_form"/>
+        <field name="arch" type="xml">
+            <field name="grade_id" position="after">
+                <field name="commission_plan_id" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" />
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_reporting_l10n_ke"
+        name="Kenya"
+        sequence="40"
+        parent="hr_payroll.menu_hr_payroll_report"/>
+
+    <menuitem
+        id="l10n_ke_hr_payroll_menu_tax_deduction_card"
+        name="Tax Deduction Card"
+        action="l10n_ke_tax_deduction_card_action"
+        parent="l10n_ke_hr_payroll.menu_reporting_l10n_ke"
+        sequence="41"/>
+
+    <menuitem
+        id="menu_l10n_ke_hr_payroll_nhif_report_wizard"
+        name="NHIF Report"
+        action="l10n_ke_hr_payroll_nhif_report_wizard_action"
+        parent="l10n_ke_hr_payroll.menu_reporting_l10n_ke"
+        sequence="42"/>
+
+    <menuitem
+        id="menu_l10n_ke_hr_payroll_nssf_report_wizard"
+        name="NSSF Report"
+        action="l10n_ke_hr_payroll_nssf_report_wizard_action"
+        parent="l10n_ke_hr_payroll.menu_reporting_l10n_ke"
+        sequence="43"/>
+</odoo>

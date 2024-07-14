@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="planning.PlanningCalendarFilterPanel.filter" t-inherit="web.CalendarFilterPanel.filter" t-inherit-mode="primary">
+        <xpath expr="//input[@class='o_cw_filter_input_bg form-check-input']" position="attributes">
+            <attribute name="t-attf-class">{{ getNoColor(filter) }}</attribute>
+        </xpath>
+        <xpath expr="//t[@t-if='section.hasAvatar and filter.hasAvatar']" position="replace">
+            <t t-if="section.hasAvatar and filter.hasAvatar">
+                <t t-if="filter.resourceType == 'user'">
+                    <img
+                        class="o_cw_filter_avatar o_avatar rounded"
+                        t-attf-src="/web/image/{{ section.avatar.model }}/{{ filter.value }}/{{ section.avatar.field }}"
+                        alt="Avatar"
+                    />
+                </t>
+                <t t-elif="filter.resourceType == 'material'">
+                    <i t-attf-class="o_cw_filter_avatar o_avatar rounded fa fa-wrench"/>
+                </t>
+            </t>
+        </xpath>
+    </t>
+</templates>

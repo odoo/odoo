@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="xml_polizas"><PLZ:Polizas
+    xmlns:PLZ="http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/PolizasPeriodo"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/PolizasPeriodo http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/PolizasPeriodo/PolizasPeriodo_1_3.xsd"
+    Version="1.3"
+    t-att-TipoSolicitud="export_type"
+    t-att-NumOrden="order_number"
+    t-att-NumTramite="process_number"
+    t-att-Anio="period.year"
+    t-att-Mes="period.month"
+    t-att-RFC="vat"><t t-foreach="moves" t-as="move_key">
+    <PLZ:Poliza
+         t-att-Fecha="move_key.date"
+         t-att-Concepto="move_key.journal_name"
+         t-att-NumUnIdenPol="move_key.name"><t t-foreach="moves[move_key]" t-as="line">
+        <PLZ:Transaccion
+            t-att-Concepto="line['line_label']"
+            t-att-DesCta="line['account_name']"
+            t-att-NumCta="line['account_code']" 
+            t-att-Haber="line['credit']"
+            t-att-Debe="line['debit']">
+            <PLZ:CompNal
+                t-if="line.get('uuid')"
+                t-att-UUID_CFDI="line['uuid']"
+                t-att-RFC="line['partner_rfc']"
+                t-att-MontoTotal="line['amount_total']"
+                t-att-Moneda="line['currency_name']"
+                t-att-TipCamb="line['currency_conversion_rate']"/>
+          </PLZ:Transaccion>
+      </t>
+    </PLZ:Poliza></t>
+</PLZ:Polizas>
+</template>
+</odoo>

@@ -1,0 +1,37 @@
+.o_gantt_view {
+    // ========================= Pills Split Tool ==========================
+    $splitToolWidth: 15px;//min 10
+    .o_gantt_pill_split_tool {
+        z-index: 100;
+        width: $splitToolWidth;
+        margin-left: -$splitToolWidth * 0.5;
+        .fa-scissors {   
+            display: none;
+            position: relative;
+            bottom: -13px;
+            width: 10px;
+            height: 15px;
+            margin: 0 ($splitToolWidth - 12px) * 0.5;
+            color: $o-black;
+            text-shadow: -1px 0 1px $o-white, 0 1px 1px $o-white, 1px 0 1px $o-white, 0 -1px 1px $o-white;
+        }
+        .o_slot_dashed_cut_line {
+            display: none;
+            position: relative;
+            top: 2px;
+            opacity: 0.6;
+            border-left: 2px dashed black;
+            height: 87%;
+            margin: 0 $splitToolWidth * 0.5 - 1.5px;
+        }
+    }
+    .o_gantt_pill_split_tool:hover {
+        cursor: pointer;
+        .fa-scissors {   
+            display: block;
+        }
+        .o_slot_dashed_cut_line {
+            display: block;
+        }
+    }
+}

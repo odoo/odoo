@@ -1,0 +1,58 @@
+
+<templates xml:space="preserve">
+    <t t-name="spreadsheet_edition.PivotDialog">
+        <Dialog footer="false" title="props.title">
+            <div class="o_missing_values_dialog">
+                <div class="form-check">
+                    <input id="missing_values" type="checkbox" t-model="state.showMissingValuesOnly" class="form-check-input " />
+                    <label for="missing_values" class="form-check-label">Display missing cells only</label>
+                </div>
+                <t t-set="tableData" t-value="getTableData()"/>
+                <PivotDialogTable  t-if="tableData.values.length > 0 or tableData.rows.length > 0"
+                    colHeaders="tableData.columns"
+                    rowHeaders="tableData.rows"
+                    values="tableData.values"
+                    onCellSelected.bind="_onCellClicked" />
+
+                <div class="alert alert-info" role="alert" t-else="1"><span t-esc="props.title" /> has no cell missing from this sheet</div>
+
+            </div>
+        </Dialog>
+    </t>
+
+    <t t-name="spreadsheet_edition.PivotDialogTable">
+        <table class="o_pivot_table_dialog">
+            <t t-foreach="props.colHeaders" t-as="col" t-key="col_index">
+                    <tr>
+                        <t t-if="col_index === 0">
+                            <th t-att-rowspan="props.colHeaders.length"/>
+                        </t>
+                        <t t-foreach="col" t-as="cell" t-key="cell_index">
+                            <th t-att-colspan="cell.span"
+                                t-att-style="cell.style"
+                                t-att-class="{ o_missing_value: cell.isMissing }"
+                                t-on-click="() => this._onCellClicked(cell.formula)">
+                                <t t-esc="cell.value" />
+                            </th>
+                        </t>
+                    </tr>
+            </t>
+            <t t-foreach="props.rowHeaders" t-as="row" t-key="row_index">
+                <tr>
+                    <th t-att-style="row.style"
+                        t-att-class="{ o_missing_value: row.isMissing }"
+                        t-on-click="() => this._onCellClicked(row.formula)">
+                        <t t-esc="row.value"/>
+                    </th>
+                    <t t-foreach="props.values" t-as="col" t-key="col_index">
+                        <td
+                            t-att-class="{ o_missing_value: col[row_index].isMissing }"
+                            t-on-click="() => this._onCellClicked(col[row_index].args.formula)">
+                            <t t-esc="col[row_index].args.value" />
+                        </td>
+                    </t>
+                </tr>
+            </t>
+        </table>
+    </t>
+</templates>

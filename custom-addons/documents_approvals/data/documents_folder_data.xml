@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="documents_approvals_folder" model="documents.folder" forcecreate="0">
+            <field name="name">Approvals</field>
+            <field name="group_ids" eval="[(4, ref('approvals.group_approval_user'))]"/>
+        </record>
+    </data>
+</odoo>

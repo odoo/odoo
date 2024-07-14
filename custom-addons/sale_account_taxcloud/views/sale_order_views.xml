@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <form position="inside">
+                <field name="is_taxcloud" invisible="1"/>
+                <field name="is_taxcloud_configured" invisible="1"/>
+            </form>
+            <xpath expr="//tree/field[@name='tax_id']" position="attributes">
+                <attribute name="column_invisible">parent.is_taxcloud</attribute>
+                <attribute name="readonly">qty_invoiced &gt; 0 or is_downpayment</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='price_tax']" position="replace"/>
+            <xpath expr="//tree/field[@name='tax_id']" position="after">
+                <field name="price_tax" string="Tax" column_invisible="not parent.is_taxcloud"/>
+            </xpath>
+            <xpath expr="//header" position="after">
+                <div class="alert alert-info text-center" role="alert"
+                     invisible="is_taxcloud_configured or not is_taxcloud">
+                    Please enter your Taxcloud credentials to compute tax rates automatically.
+                    <a class="alert-link" href="/web#action=account.action_account_config" role="button">Go to Settings.</a>
+                </div>
+            </xpath>
+            <div name="so_button_below_order_lines" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </div>
+            <div name="so_button_below_order_lines" position="inside">
+                <button name="validate_taxes_on_sales_order"
+                        string="Update taxes"
+                        type="object"
+                        invisible="not is_taxcloud"/>
+            </div>
+        </field>
+    </record>
+</odoo>

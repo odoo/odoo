@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.l10n.lu.hr.payroll</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
+        <field name="arch" type="xml">
+            <field name="job_id" position="after">
+                <field name="l10n_lu_tax_classification" invisible="company_country_code != 'LU'" required="company_country_code == 'LU'"/>
+                <field name="l10n_lu_tax_card_number" invisible="company_country_code != 'LU'"/>
+            </field>
+            <xpath expr="//div[@name='div_km_home_work']" position="after">
+                <label for="l10n_lu_travel_expense" invisible="company_country_code != 'LU'"/>
+                <div class="o_row" name="div_l10n_lu_travel_expense" invisible="company_country_code != 'LU'">
+                    <field name="l10n_lu_travel_expense" groups="hr.group_hr_user"/>
+                    <a target="_blank" role="button" href="http://data.legilux.public.lu/file/eli-etat-leg-rmin-2017-12-01-a1021-jo-fr-pdf.pdf" title="Travel Expense Unit more information">
+                        <i class="fa fa-question-circle fa-1x o-icon"/>
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,868 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_ups
+# 
+# Translators:
+# Martin Trigaux, 2023
+# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023
+# Milan Bojovic <mbojovic@outlook.com>, 2023
+# コフスタジオ, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:47+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: コフスタジオ, 2024\n"
+"Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sr\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"A shipment cannot have a KGS/IN or LBS/CM as its unit of measurements. "
+"Configure it from the delivery method."
+msgstr ""
+"A shipment cannot have a KGS/IN or LBS/CM as its unit of measurements. "
+"Configure it from the delivery method."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"Access License number is Invalid. Provide a valid number (Length should be "
+"0-35 alphanumeric characters)"
+msgstr ""
+"Access License number is Invalid. Provide a valid number (Length should be "
+"0-35 alphanumeric characters)"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Access License number is invalid for this delivery provider."
+msgstr "Access License number is invalid for this delivery provider."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Access License number is invalid for this provider.Please re-license."
+msgstr "Access License number is invalid for this provider.Please re-license."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Access License number is revoked contact UPS to get access."
+msgstr "Access License number is revoked contact UPS to get access."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Authorization system is currently unavailable , try again later."
+msgstr "Authorization system is currently unavailable , try again later."
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_bill_my_account
+#: model:ir.model.fields,field_description:delivery_ups.field_res_partner__bill_my_account
+#: model:ir.model.fields,field_description:delivery_ups.field_res_users__bill_my_account
+#: model:ir.model.fields,field_description:delivery_ups.field_sale_order__ups_bill_my_account
+msgid "Bill My Account"
+msgstr "Bill My Account"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_cod_funds_code
+msgid "COD Funding Option"
+msgstr "COD Funding Option"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Cancel shipment not available at this time , Please try again Later."
+msgstr "Cancel shipment not available at this time , Please try again Later."
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_stock_package_type__package_carrier_type
+msgid "Carrier"
+msgstr "Prevoznik"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_cod_funds_code__8
+msgid "Cashier's Check or MoneyOrder"
+msgstr "Cashier's Check or MoneyOrder"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_package_dimension_unit__cm
+msgid "Centimeters"
+msgstr "Centimetri"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_cod_funds_code__0
+msgid "Check, Cashier's Check or MoneyOrder"
+msgstr "Check, Cashier's Check or MoneyOrder"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_cod
+msgid "Collect on Delivery"
+msgstr "Collect on Delivery"
+
+#. module: delivery_ups
+#: model:ir.model,name:delivery_ups.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Duties paid by"
+msgstr "Carina plaćena od strane"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_label_file_type__epl
+msgid "EPL"
+msgstr "EPL"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid ""
+"Error:\n"
+"%s"
+msgstr ""
+"Greška:\n"
+"%s"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"Exceeds Total Number of allowed pieces per World Wide Express Shipment."
+msgstr ""
+"Exceeds Total Number of allowed pieces per World Wide Express Shipment."
+
+#. module: delivery_ups
+#: model:ir.model.fields,help:delivery_ups.field_delivery_carrier__ups_bill_my_account
+#: model:ir.model.fields,help:delivery_ups.field_res_partner__bill_my_account
+#: model:ir.model.fields,help:delivery_ups.field_res_users__bill_my_account
+#: model:ir.model.fields,help:delivery_ups.field_sale_order__ups_bill_my_account
+msgid ""
+"If checked, ecommerce users will be prompted their UPS account number\n"
+"and delivery fees will be charged on it."
+msgstr ""
+"If checked, ecommerce users will be prompted their UPS account number\n"
+"and delivery fees will be charged on it."
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_package_dimension_unit__in
+msgid "Inches"
+msgstr "Inči"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_package_weight_unit__kgs
+msgid "Kilograms"
+msgstr "Kilogrami"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Label Format"
+msgstr "Format nalepnice"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Options"
+msgstr "Opcije"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_label_file_type__gif
+msgid "PDF"
+msgstr "PDF"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_package_dimension_unit
+msgid "Package Size Unit"
+msgstr "Package Size Unit"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Package Weight Unit"
+msgstr "Package Weight Unit"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Packages %s do not have a positive shipping weight."
+msgstr "Packages %s do not have a positive shipping weight."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid "Packages:"
+msgstr ""
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid City in the warehouse address."
+msgstr "Please provide a valid City in the warehouse address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid Country in recipient's address."
+msgstr "Please provide a valid Country in recipient's address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid Country in the warehouse address."
+msgstr "Please provide a valid Country in the warehouse address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid State in the warehouse address."
+msgstr "Please provide a valid State in the warehouse address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid Zip in the warehouse address."
+msgstr "Please provide a valid Zip in the warehouse address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid city in the recipient address."
+msgstr "Please provide a valid city in the recipient address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid city in the shipper's address."
+msgstr "Please provide a valid city in the shipper's address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid country in the shipper's address."
+msgstr "Please provide a valid country in the shipper's address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"Please provide a valid package type available for service and selected "
+"locations."
+msgstr ""
+"Please provide a valid package type available for service and selected "
+"locations."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid phone number for the recipient."
+msgstr "Please provide a valid phone number for the recipient."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid shipper Number/Carrier Account."
+msgstr "Please provide a valid shipper Number/Carrier Account."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid shipper number/Carrier Account."
+msgstr "Please provide a valid shipper number/Carrier Account."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid shipper phone number."
+msgstr "Please provide a valid shipper phone number."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid state in the recipient address."
+msgstr "Please provide a valid state in the recipient address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid state in the shipper's address."
+msgstr "Please provide a valid state in the shipper's address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid street in shipper's address."
+msgstr "Please provide a valid street in shipper's address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid street in the recipient address."
+msgstr "Please provide a valid street in the recipient address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid street in the warehouse address."
+msgstr "Please provide a valid street in the warehouse address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid warehouse Phone Number"
+msgstr "Please provide a valid warehouse Phone Number"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid zip code in the recipient address."
+msgstr "Please provide a valid zip code in the recipient address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid zip code in the shipper's address."
+msgstr "Please provide a valid zip code in the shipper's address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid zip code in the warehouse address."
+msgstr "Please provide a valid zip code in the warehouse address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid zipcode in the recipient address."
+msgstr "Please provide a valid zipcode in the recipient address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide at least one item to ship"
+msgstr "Please provide at least one item to ship"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide at least one item to ship."
+msgstr "Please provide at least one item to ship."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please set a valid country in the recipient address."
+msgstr "Please set a valid country in the recipient address."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please set a valid country in the warehouse address."
+msgstr "Please set a valid country in the warehouse address."
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_package_weight_unit__lbs
+msgid "Pounds"
+msgstr "Pounds"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Provided Access License Number not found in the UPS database"
+msgstr "Provided Access License Number not found in the UPS database"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Provided Tracking Ref. Number is invalid."
+msgstr "Provided Tracking Ref. Number is invalid."
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "Provajder"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_duty_payment__recipient
+msgid "Recipient"
+msgstr "Primalac"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Recipient Phone must be at least 10 alphanumeric characters."
+msgstr "Recipient Phone must be at least 10 alphanumeric characters."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Recipient PhoneExtension cannot exceed the length of 4."
+msgstr "Recipient PhoneExtension cannot exceed the length of 4."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Recipient PhoneExtension must contain only numbers."
+msgstr "Recipient PhoneExtension must contain only numbers."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid "Return label generated"
+msgstr ""
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_label_file_type__spl
+msgid "SPL"
+msgstr "SPL"
+
+#. module: delivery_ups
+#: model:ir.model,name:delivery_ups.model_sale_order
+msgid "Sales Order"
+msgstr "Porudžbenica"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Saturday Delivery"
+msgstr "Saturday Delivery"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_duty_payment__sender
+msgid "Sender"
+msgstr "Pošiljalac"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid "Shipment #%s has been cancelled"
+msgstr "Isporuka #%s je otkazana"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid "Shipment created into UPS"
+msgstr ""
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Shipper Phone must be at least 10 alphanumeric characters."
+msgstr "Shipper Phone must be at least 10 alphanumeric characters."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Shipper number must contain alphanumeric characters only."
+msgstr "Shipper number must contain alphanumeric characters only."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Shipper phone extension cannot exceed the length of 4."
+msgstr "Shipper phone extension cannot exceed the length of 4."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Shipper phone extension must contain only numbers."
+msgstr "Shipper phone extension must contain only numbers."
+
+#. module: delivery_ups
+#: model:ir.model,name:delivery_ups.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "Metode isporuke"
+
+#. module: delivery_ups
+#: model:ir.model,name:delivery_ups.model_stock_package_type
+msgid "Stock package type"
+msgstr "akcija vrste paketa"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "The UserId is currently locked out; please try again in 24 hours."
+msgstr "The UserId is currently locked out; please try again in 24 hours."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The address of your company is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr ""
+"The address of your company is missing or wrong.\n"
+"(Missing field(s) : %s)"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The address of your warehouse is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr ""
+"The address of your warehouse is missing or wrong.\n"
+"(Missing field(s) : %s)"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The delivery cannot be done because the weight of your product is missing."
+msgstr ""
+"The delivery cannot be done because the weight of your product is missing."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The estimated shipping price cannot be computed because the weight is missing for the following product(s): \n"
+" %s"
+msgstr ""
+"The estimated shipping price cannot be computed because the weight is missing for the following product(s): \n"
+" %s"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The maximum number of user access attempts was exceeded. So please try again"
+" later"
+msgstr ""
+"The maximum number of user access attempts was exceeded. So please try again"
+" later"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "The name of the customer should be no more than 35 characters."
+msgstr "The name of the customer should be no more than 35 characters."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The recipient address is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr ""
+"The recipient address is missing or wrong.\n"
+"(Missing field(s) : %s)"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "The requested service is unavailable between the selected locations."
+msgstr "The requested service is unavailable between the selected locations."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The selected service is invalid from the requested warehouse, please choose "
+"another service."
+msgstr ""
+"The selected service is invalid from the requested warehouse, please choose "
+"another service."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The selected service is invalid to the recipient address, please choose "
+"another service."
+msgstr ""
+"The selected service is invalid to the recipient address, please choose "
+"another service."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The selected service is not possible from your warehouse to the recipient "
+"address, please choose another service."
+msgstr ""
+"The selected service is not possible from your warehouse to the recipient "
+"address, please choose another service."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "The selected service is not valid with the selected packaging."
+msgstr "The selected service is not valid with the selected packaging."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"This measurement system is not valid for the selected country. Please switch"
+" from LBS/IN to KGS/CM (or vice versa). Configure it from delivery method"
+msgstr ""
+"This measurement system is not valid for the selected country. Please switch"
+" from LBS/IN to KGS/CM (or vice versa). Configure it from delivery method"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"This measurement system is not valid for the selected country. Please switch"
+" from LBS/IN to KGS/CM (or vice versa). Configure it from the delivery "
+"method."
+msgstr ""
+"This measurement system is not valid for the selected country. Please switch"
+" from LBS/IN to KGS/CM (or vice versa). Configure it from the delivery "
+"method."
+
+#. module: delivery_ups
+#: model:ir.model.fields,help:delivery_ups.field_delivery_carrier__ups_cod
+msgid ""
+"This value added service enables UPS to collect the payment of the shipment "
+"from your customer."
+msgstr ""
+"This value added service enables UPS to collect the payment of the shipment "
+"from your customer."
+
+#. module: delivery_ups
+#: model:ir.model.fields,help:delivery_ups.field_delivery_carrier__ups_saturday_delivery
+msgid ""
+"This value added service will allow you to ship the package on saturday "
+"also."
+msgstr ""
+"This value added service will allow you to ship the package on saturday "
+"also."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid "Tracking Numbers:"
+msgstr "Brojevi za praćenje:"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__stock_package_type__package_carrier_type__ups
+msgid "UPS"
+msgstr "UPS"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_access_number
+msgid "UPS Access Key"
+msgstr "UPS Access Key"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_shipper_number
+#: model:ir.model.fields,field_description:delivery_ups.field_res_partner__property_ups_carrier_account
+#: model:ir.model.fields,field_description:delivery_ups.field_res_users__property_ups_carrier_account
+msgid "UPS Account Number"
+msgstr "UPS Account Number"
+
+#. module: delivery_ups
+#: model:delivery.carrier,name:delivery_ups.delivery_carrier_ups_be
+#: model:product.template,name:delivery_ups.product_product_delivery_ups_be_product_template
+msgid "UPS BE"
+msgstr "UPS BE"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "UPS Configuration"
+msgstr "UPS Configuration"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_label_file_type
+msgid "UPS Label File Type"
+msgstr "UPS Label File Type"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__delivery_type__ups
+msgid "UPS Legacy"
+msgstr ""
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_default_package_type_id
+msgid "UPS Legacy Package Type"
+msgstr ""
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_passwd
+msgid "UPS Password"
+msgstr "UPS Password"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_saturday_delivery
+msgid "UPS Saturday Delivery"
+msgstr "UPS Saturday Delivery"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "UPS Server Not Found"
+msgstr "UPS Server Not Found"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_default_service_type
+msgid "UPS Service Type"
+msgstr "UPS Service Type"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:delivery_ups.res_config_settings_view_form_stock
+msgid "UPS Shipping Methods"
+msgstr "UPS Shipping Methods"
+
+#. module: delivery_ups
+#: model:delivery.carrier,name:delivery_ups.delivery_carrier_ups_us
+#: model:product.template,name:delivery_ups.product_product_delivery_ups_us_product_template
+msgid "UPS US"
+msgstr "UPS US"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_username
+msgid "UPS Username"
+msgstr "UPS Username"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_sale_order__partner_ups_carrier_account
+msgid "UPS account number"
+msgstr "UPS account number"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"UPS address lines can only contain a maximum of 35 characters. You can split"
+" the contacts addresses on multiple lines to try to avoid this limitation."
+msgstr ""
+"UPS address lines can only contain a maximum of 35 characters. You can split"
+" the contacts addresses on multiple lines to try to avoid this limitation."
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_duty_payment
+msgid "Ups Duty Payment"
+msgstr "Ups Duty Payment"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_package_weight_unit
+msgid "Ups Package Weight Unit"
+msgstr "Ups Package Weight Unit"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Username/Password is invalid for this delivery provider."
+msgstr "Username/Password is invalid for this delivery provider."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Warehouse Phone must be at least 10 alphanumeric characters."
+msgstr "Warehouse Phone must be at least 10 alphanumeric characters."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Warehouse Phone must contain only numbers."
+msgstr "Warehouse Phone must contain only numbers."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Warehouse PhoneExtension cannot exceed the length of 4."
+msgstr "Warehouse PhoneExtension cannot exceed the length of 4."
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/sale.py:0
+#, python-format
+msgid "You must enter an UPS account number."
+msgstr "You must enter an UPS account number."
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_label_file_type__zpl
+msgid "ZPL"
+msgstr "ZPL"

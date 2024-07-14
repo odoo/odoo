@@ -1,0 +1,744 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_avatax
+# 
+# Translators:
+# Malaz Abuidris <msea@odoo.com>, 2023
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "%(response)s"
+msgstr "%(response)s"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "- %s (ID: %s) on %s"
+msgstr "- %s (المعرف: %s) في %s "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i class=\"oi oi-fw oi-arrow-right\"/>\n"
+"                                How to Get Credentials"
+msgstr ""
+"<i class=\"oi oi-fw oi-arrow-right\"/>\n"
+"                                كيفية الحصول على بيانات الاعتماد "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Go to Avatax portal\" role=\"img\" aria-label=\"Go to Avatax portal\" class=\"fa fa-external-link-square fa-fw\"/>\n"
+"                                Avatax portal"
+msgstr ""
+"<i title=\"اذهب إلى بوابة Avatax \" role=\"img\" aria-label=\"Go to Avatax portal\" class=\"fa fa-external-link-square fa-fw\"/>\n"
+"                                 بوابة Avatax "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Show logs\" role=\"img\" aria-label=\"Show logs\" class=\"fa fa-file-text-o\"/>\n"
+"                                Show logs"
+msgstr ""
+"<i title=\"إظهار السجلات \" role=\"img\" aria-label=\"Show logs\" class=\"fa fa-file-text-o\"/>\n"
+"                                إظهار السجلات "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Start logging for 30 minutes\" role=\"img\" aria-label=\"Start logging for 30 minutes\" class=\"fa fa-file-text-o\"/>\n"
+"                                Start logging for 30 minutes"
+msgstr ""
+"<i title=\"بدء التسجيل لمدة 30 دقيقة \" role=\"img\" aria-label=\"Start logging for 30 minutes\" class=\"fa fa-file-text-o\"/>\n"
+"                                بدء التسجيل لمدة 30 دقيقة "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Sync Parameters\" role=\"img\" aria-label=\"Sync Parameters\" class=\"fa fa-refresh\"/>\n"
+"                                Sync Parameters"
+msgstr ""
+"<i title=\"مزامنة المعايير \" role=\"img\" aria-label=\"Sync Parameters\" class=\"fa fa-refresh\"/>\n"
+"                                مزامنة المعايير "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Test connection\" role=\"img\" aria-label=\"Test connection\" class=\"fa fa-plug fa-fw\"/>\n"
+"                                Test connection"
+msgstr ""
+"<i title=\"اختبار الاتصال \" role=\"img\" aria-label=\"Test connection\" class=\"fa fa-plug fa-fw\"/>\n"
+"                                اختبار الاتصال "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "API ID"
+msgstr "معرف الواجهة البرمجية للتطبيق (API) "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "API KEY"
+msgstr "مفتاح الواجهة البرمجية للتطبيق (API) "
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_account_fiscal_position__avatax_invoice_account_id
+msgid "Account that will be used by Avatax taxes for invoices."
+msgstr "حساب سوف تستخدمه ضرائب Avatax للفواتير. "
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_account_fiscal_position__avatax_refund_account_id
+msgid "Account that will be used by Avatax taxes for refunds."
+msgstr "حساب سوف تستخدمه ضرائب Avatax لاسترداد الأموال. "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Address Validation"
+msgstr "التحقق من العنوان "
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/wizard/avatax_validate_address.py:0
+#, python-format
+msgid "Address validation is only supported for North American addresses."
+msgstr "خاصية التحقق من العناوين مدعومة فقط للعناوين في أمريكا الشمالية. "
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/res_company.py:0
+#, python-format
+msgid "Authentication failed."
+msgstr "فشلت المصادقة. "
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/res_company.py:0
+#, python-format
+msgid "Authentication success."
+msgstr "تمت المصادقة بنجاح. "
+
+#. module: account_avatax
+#: model:account.fiscal.position,name:account_avatax.account_fiscal_position_avatax_us
+msgid "Automatic Tax Mapping (AvaTax)"
+msgstr "التخطيط التلقائي للضرائب (AvaTax) "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_api_id
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_api_id
+msgid "Avalara API ID"
+msgstr "معرف الواجهة البرمجية لـ Avalara "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_api_key
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_api_key
+msgid "Avalara API KEY"
+msgstr "مفتاح الواجهة البرمجية لـ Avalara "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_address_validation
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_address_validation
+msgid "Avalara Address Validation"
+msgstr "التحقق من عنوان Avalara "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_avatax_unique_code__avatax_unique_code
+#: model:ir.model.fields,field_description:account_avatax.field_account_bank_statement_line__avatax_unique_code
+#: model:ir.model.fields,field_description:account_avatax.field_account_move__avatax_unique_code
+#: model:ir.model.fields,field_description:account_avatax.field_account_payment__avatax_unique_code
+#: model:ir.model.fields,field_description:account_avatax.field_res_partner__avatax_unique_code
+#: model:ir.model.fields,field_description:account_avatax.field_res_users__avatax_unique_code
+msgid "Avalara Code"
+msgstr "رمز Alavara "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_partner_code
+msgid "Avalara Company Code"
+msgstr "رمز شركة Alavara "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_environment
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_environment
+msgid "Avalara Environment"
+msgstr "بيئة Alavara "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_partner__avalara_exemption_id
+#: model:ir.model.fields,field_description:account_avatax.field_res_users__avalara_exemption_id
+msgid "Avalara Exemption"
+msgstr "إعفاء Alavara "
+
+#. module: account_avatax
+#: model:ir.actions.act_window,name:account_avatax.ir_logging_avalara_action
+msgid "Avalara Logging"
+msgstr "تسجيل Alavara "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_partner__avalara_partner_code
+#: model:ir.model.fields,field_description:account_avatax.field_res_users__avalara_partner_code
+msgid "Avalara Partner Code"
+msgstr "رمز شريك Alavara "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_partner__avalara_show_address_validation
+#: model:ir.model.fields,field_description:account_avatax.field_res_users__avalara_show_address_validation
+msgid "Avalara Show Address Validation"
+msgstr "إظهار التحقق من عنوان Alavara "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.account_fiscal_position_form_inherit
+msgid "Avatax"
+msgstr "Avatax "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_product_category__avatax_category_id
+#: model:ir.model.fields,field_description:account_avatax.field_product_product__avatax_category_id
+#: model:ir.model.fields,field_description:account_avatax.field_product_template__avatax_category_id
+msgid "Avatax Category"
+msgstr "فئة Avatax "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_bank_statement_line__avatax_tax_date
+#: model:ir.model.fields,field_description:account_avatax.field_account_move__avatax_tax_date
+#: model:ir.model.fields,field_description:account_avatax.field_account_payment__avatax_tax_date
+msgid "Avatax Date"
+msgstr "تاريخ Avatax "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_fiscal_position__avatax_invoice_account_id
+msgid "Avatax Invoice Account"
+msgstr "حساب فاتورة Avatax "
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_avatax_exemption
+msgid "Avatax Partner Exemption Codes"
+msgstr "رموز إعفاء شركاء Avatax "
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_product_avatax_category
+msgid "Avatax Product Category"
+msgstr "فئة منتج Avatax "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_fiscal_position__avatax_refund_account_id
+msgid "Avatax Refund Account"
+msgstr "حساب استرداد الأموال Avatax "
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_account_bank_statement_line__avatax_tax_date
+#: model:ir.model.fields,help:account_avatax.field_account_move__avatax_tax_date
+#: model:ir.model.fields,help:account_avatax.field_account_payment__avatax_tax_date
+msgid ""
+"Avatax will use this date to calculate the tax on this invoice. If not "
+"specified it will use the Invoice Date."
+msgstr ""
+"سوف تستخدم Avatax هذا التاريخ لاحتساب ضريبة هذه الفاتورة. إذا لم يكن محدداً،"
+" سوف يستخدم تاريخ الفاتورة. "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Cancel"
+msgstr "إلغاء"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__city
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "City"
+msgstr "المدينة"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_connection_test_result_view_form
+msgid "Close"
+msgstr "إغلاق"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__code
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__code
+msgid "Code"
+msgstr "رمز "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Commit Transactions"
+msgstr "الالتزام في المعاملات "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_commit
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_commit
+msgid "Commit in Avatax"
+msgstr "الالتزام في Avatax "
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_res_company
+msgid "Companies"
+msgstr "الشركات"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__company_id
+msgid "Company"
+msgstr "الشركة "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Company Code"
+msgstr "رمز الشركة "
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات "
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_res_partner
+msgid "Contact"
+msgstr "جهة الاتصال"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__country_id
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Country"
+msgstr "الدولة"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__create_uid
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__create_uid
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__create_uid
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__create_date
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__create_date
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__create_date
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__create_date
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_res_partner__avalara_partner_code
+#: model:ir.model.fields,help:account_avatax.field_res_users__avalara_partner_code
+msgid "Customer Code set in Avalara for this partner."
+msgstr "كود العميل المعين في Avalara لهذا الشريك. "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__description
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__description
+msgid "Description"
+msgstr "الوصف"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__display_name
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__display_name
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__display_name
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__display_name
+msgid "Display Name"
+msgstr "اسم العرض "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Environment"
+msgstr "البيئة"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_account_fiscal_position
+msgid "Fiscal Position"
+msgstr "الوضع المالي "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_latitude
+msgid "Geo Latitude"
+msgstr "خط العرض الجغرافي"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_longitude
+msgid "Geo Longitude"
+msgstr "خط الطول الجغرافي"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "Go to the configuration panel"
+msgstr "الذهاب للوحة التهيئة "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__id
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__id
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__id
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__is_already_valid
+msgid "Is Already Valid"
+msgstr "صالح بالفعل "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_bank_statement_line__is_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_external_tax_mixin__is_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_move__is_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_payment__is_avatax
+msgid "Is Avatax"
+msgstr "Avatax "
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_account_move
+msgid "Journal Entry"
+msgstr "قيد اليومية"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__write_uid
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__write_uid
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__write_uid
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__write_date
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__write_date
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__write_date
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Latitude"
+msgstr "خط العرض الجغرافي"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Longitude"
+msgstr "خط الطول الجغرافي"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_account_avatax_unique_code
+msgid "Mixin to generate unique ids for Avatax"
+msgstr "مجموعة مخصصات لإنشاء معرفات فريدة لـ Avatax "
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_account_external_tax_mixin
+msgid "Mixin to manage common parts of external tax calculation"
+msgstr "Mixin لإدارة الأجزاء المشتركة لحساب الضرائب الخارجية "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__name
+msgid "Name"
+msgstr "الاسم"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid ""
+"Odoo could not change the state of the transaction related to %(document)s in AvaTax\n"
+"Please check the status of `%(technical)s` in the AvaTax portal."
+msgstr ""
+" لم يتمكن أودو من تغيير حالة المعاملة المتعلقة بـ%(document)s في Avatax \n"
+"يرجى تفقد حالة `%(technical)s` في بوابة AvaTax. "
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/res_company.py:0
+#, python-format
+msgid "Odoo could not fetch the exemption codes of %(company)s"
+msgstr "لم يتمكن أودو من جلب رموز الإعفاء لـ %(company)s "
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid ""
+"Odoo could not fetch the taxes related to %(document)s.\n"
+"Please check the status of `%(technical)s` in the AvaTax portal."
+msgstr ""
+"لم يتمكن أودو من جلب الضرائب المتعلقة بـ %(document)s. \n"
+"يرجى التحقق من حالة `%(technical)s` في بوابة AvaTax. "
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/wizard/avatax_validate_address.py:0
+#, python-format
+msgid "Odoo could not validate the address of %(partner)s with Avalara."
+msgstr "لم يتمكن أودو من التحقق من عنوان %(partner)s باستخدام Alavara. "
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid ""
+"Odoo could not void the transaction related to %(document)s in AvaTax\n"
+"Please check the status of `%(technical)s` in the AvaTax portal."
+msgstr ""
+" لم يتمكن أودو من إبطال المعاملة المتعلقة بـ%(document)s في Avatax \n"
+"يرجى تفقد حالة `%(technical)s` في بوابة AvaTax. "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Original Address"
+msgstr "العنوان الأصلي "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__partner_id
+msgid "Partner"
+msgstr "الشريك"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "Please add your AvaTax credentials"
+msgstr "يرجى إضافة بيانات اعتماد AvaTax الخاصة بك "
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_product_template
+msgid "Product"
+msgstr "المنتج"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_product_category
+msgid "Product Category"
+msgstr "فئة المنتج"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_product_product
+msgid "Product Variant"
+msgstr "متغير المنتج "
+
+#. module: account_avatax
+#: model:ir.model.fields.selection,name:account_avatax.selection__res_company__avalara_environment__production
+msgid "Production"
+msgstr "الإنتاج"
+
+#. module: account_avatax
+#: model:ir.model.fields.selection,name:account_avatax.selection__res_company__avalara_environment__sandbox
+msgid "Sandbox"
+msgstr "Sandbox"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Save Validated"
+msgstr "حفظ ما تم تصديقه "
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_avatax_unique_code.py:0
+#, python-format
+msgid "Search operation not supported"
+msgstr "عملية البحث غير مدعومة "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__server_response
+msgid "Server Response"
+msgstr "رد الخادم "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__state_id
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "State"
+msgstr "الولاية "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__street
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Street"
+msgstr "الشارع"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__street2
+msgid "Street2"
+msgstr "الشارع 2"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_avatax_validate_address
+msgid "Suggests validated addresses from Avatax"
+msgstr "يقترح عناويناً تم التحقق منها من AvaTax "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Synchronize the exemption codes from Avatax"
+msgstr "قم بمزامنة رموز الإعفاء من AvaTax "
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/res_company.py:0
+#, python-format
+msgid "Test Result"
+msgstr "نتائج الاختبار "
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_avatax_connection_test_result
+msgid "Test connection with avatax"
+msgstr "اختبار الاتصال مع avatax "
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_res_config_settings__avalara_partner_code
+msgid ""
+"The Avalara Company Code for this company. Avalara will interpret as DEFAULT"
+" if it is not set."
+msgstr ""
+"رمز شركة Avalara لهذه الشركة. سوف تقوم Avalara بترجمته كالافتراضي، إذا لم "
+"يكن معيناً. "
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid ""
+"The Avalara Tax Code is required for %(name)s (#%(id)s)\n"
+"See https://taxcode.avatax.avalara.com/"
+msgstr ""
+"رمز ضريبة Avalara ضروري لـ %(name)s (#%(id)s) \n"
+"انظر https://taxcode.avatax.avalara.com/ "
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid ""
+"The following customer(s) need to have a zip, state and country when using "
+"Avatax:"
+msgstr ""
+"يجب أن يكون للعميل (العملاء) التالين رمز zip مع تحديد الولاية والدولة عند "
+"استخدام Avatax: "
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_res_config_settings__avalara_commit
+msgid "The transactions will be committed for reporting in Avatax."
+msgstr "سوف يتم فرض المعاملات لإعداد التقارير في Avatax. "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "This is already a valid address."
+msgstr "هذا العنوان صالح بالفعل. "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__setting_account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__setting_account_avatax
+msgid "Use AvaTax"
+msgstr "استخدم AvaTax "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_fiscal_position__is_avatax
+msgid "Use AvaTax API"
+msgstr "استخدام الواجهة البرمجية لـ Avatax "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_use_upc
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_use_upc
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Use UPC"
+msgstr "استخدام UPC "
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_res_config_settings__avalara_use_upc
+msgid "Use Universal Product Code instead of custom defined codes in Avalara."
+msgstr "استخدم رمز المنتج العالمي عوضاً عن الرموز المخصصة في Avalara. "
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_account_avatax_unique_code__avatax_unique_code
+#: model:ir.model.fields,help:account_avatax.field_account_bank_statement_line__avatax_unique_code
+#: model:ir.model.fields,help:account_avatax.field_account_move__avatax_unique_code
+#: model:ir.model.fields,help:account_avatax.field_account_payment__avatax_unique_code
+#: model:ir.model.fields,help:account_avatax.field_res_partner__avatax_unique_code
+#: model:ir.model.fields,help:account_avatax.field_res_users__avatax_unique_code
+msgid "Use this code to cross-reference in the Avalara portal."
+msgstr "استخدم هذا الكود للإسناد الترافقي في بوابة Avalara. "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__valid_country_ids
+msgid "Valid Country"
+msgstr "دولة صالحة "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_partner_form_inherit
+msgid "Validate"
+msgstr "تصديق "
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/res_partner.py:0
+#, python-format
+msgid "Validate address of %s"
+msgstr "التحقق من عنوان %s "
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_res_config_settings__avalara_address_validation
+msgid ""
+"Validate and correct the addresses of partners in North America with "
+"Avalara."
+msgstr "تحقق من عناوين الشركاء في أمريكا الشمالية وصححها مع Avalara. "
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Validated Address"
+msgstr "تم التحقق من العنوان "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_city
+msgid "Validated City"
+msgstr "تم التحقق من المدينة "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_country_id
+msgid "Validated Country"
+msgstr "تم التحقق من الدولة "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_state_id
+msgid "Validated State"
+msgstr "تم التحقق من الولاية "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_street
+msgid "Validated Street"
+msgstr "تم التحقق من الشارع "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_street2
+msgid "Validated Street2"
+msgstr "تم التحقق من الشارع2 "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_zip
+msgid "Validated Zip Code"
+msgstr "تم التحقق من Zip "
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__zip
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Zip Code"
+msgstr "رمز Zip "
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/product.py:0
+#, python-format
+msgid "[%s] %s"
+msgstr "[%s] %s"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_product_category__avatax_category_id
+#: model:ir.model.fields,help:account_avatax.field_product_product__avatax_category_id
+#: model:ir.model.fields,help:account_avatax.field_product_template__avatax_category_id
+msgid "https://taxcode.avatax.avalara.com/"
+msgstr "https://taxcode.avatax.avalara.com/"

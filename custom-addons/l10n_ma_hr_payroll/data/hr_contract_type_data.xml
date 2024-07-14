@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Contract Types -->
+        <record id="hr_contract_type_emp" model="hr.contract.type">
+            <field name="name">Employee</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+
+        <record id="hr_contract_type_wrkr" model="hr.contract.type">
+            <field name="name">Worker</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+
+        <record id="hr_contract_type_sub" model="hr.contract.type">
+            <field name="name">Subcontractor</field>
+            <field name="country_id" ref="base.ma"/>
+        </record>
+    </data>
+</odoo>

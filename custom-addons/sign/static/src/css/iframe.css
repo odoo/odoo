@@ -1,0 +1,433 @@
+:root {
+    --gray-200-rgb: 231, 233, 237;
+    --gray-300-rgb: 216, 218, 221;
+    --bs-primary-rgb: 113, 75, 103;
+    --bs-secondary-rgb: var(--gray-200-rgb);
+    --bs-danger-rgb: 212, 76, 89;
+    --bs-dark-rgb: 17, 24, 39;
+    --bs-white-rgb: 255, 255, 255;
+    --bs-body-color-rgb: 55, 65, 81;
+    --bs-body-bg-rgb: 249, 250, 251;
+    --btn-font-weight: 500;
+    --btn-font-size: 0.875rem;
+    --btn-line-height: 1.5;
+    --border-radius: 0.25rem;
+}
+
+.btn {
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+    padding: 0.3125rem 0.625rem;
+    background-color: rgba(var(--btn-bg-color-rgb, --bs-body-bg-rgb), 1);
+    text-align: center;
+    font-size: var(--btn-font-weight);
+    font-weight: var(--btn-font-weight);
+    line-height: var(--btn-line-height);
+    color: rgba(var(--btn-body-color-rgb, --bs-body-color-rgba), 1);
+    user-select: none;
+    cursor: pointer;
+    transition: none;
+}
+
+.btn-primary {
+    --btn-body-color-rgb: var(--bs-white-rgb);
+    --btn-bg-color-rgb: var(--bs-primary-rgb);
+}
+
+.btn-primary:hover {
+    --btn-bg-color-rgb: 98, 65, 89;
+}
+
+.btn-secondary {
+    --btn-bg-color-rgb: var(--bs-secondary-rgb);
+}
+
+.btn-secondary:hover {
+    --btn-bg-color-rgb: var(--gray-300-rgb);
+}
+
+.toolbar {
+    z-index: 1020;
+}
+
+#viewerContainer { /* PDFJS Viewer */
+    visibility: hidden;
+    opacity: 1;
+}
+
+#viewer { /* PDFJS Viewer */
+    padding-top: 21px; /* Allow space for the types toolbar */
+}
+
+.page { /* PDFJS Viewer */
+    position: relative;
+}
+
+.o_sign_sign_item {
+    position: absolute;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    text-align: center;
+    border: 1px dashed rgb(var(--bs-primary-rgb));
+    vertical-align: middle;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    box-shadow: 0px 0px 3px 1px rgb(var(--bs-primary-rgb));
+    resize: none;
+    background-color: rgba(var(--bs-white-rgb), 0.9);
+    font-family: Helvetica;
+    line-height: 1.25;
+    z-index: 100;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.o_sign_sign_item.o_readonly_mode {
+    border:none;
+}
+
+.o_sign_sign_item .o_placeholder {
+    vertical-align: middle;
+    padding-left: 30px;
+}
+
+.o_sign_sign_item_required {
+    background-color: rgba(var(--bs-danger-rgb), 0.1);
+    font-size: 10pt;
+}
+
+.o_sign_sign_textarea {
+    white-space: pre-wrap !important;
+}
+
+.o_sign_sign_item_pdfview {
+    border: 1px dashed silver;
+    box-shadow: 0px 0px 0px 0px white;
+    overflow: visible;
+    background: transparent;
+    color: black;
+    cursor: auto;
+    white-space: pre;
+}
+
+.o_sign_sign_item .o_sign_helper {
+    vertical-align: middle;
+    height: 100%;
+    color: #757575;
+    display: inline-block;
+}
+
+.o_sign_sign_item img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top:0;
+    left:0;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.o_sign_sign_item .o_sign_config_area {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 0.5em;
+    text-align: right;
+    margin-right: 2px;
+    padding-right: 2px;
+}
+
+.o_sign_sign_item .o_sign_config_area .fa.fa-times {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+}
+
+.o_sign_config_handle {
+    display: block;
+    float: left;
+    height: calc(100% - 2px);
+    background-color: rgba(197, 166, 182, 0.9);
+    width: 25px;
+    border: 1px dashed black;
+    text-align: center;
+    cursor: url(/web/static/img/openhand.cur), grab;
+}
+
+.o_sign_config_handle .fa-arrows {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.o_sign_sign_item .o_sign_config_area .o_sign_item_display {
+    display: block;
+    width: 100%;
+    height: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+.o_sign_select_options_display {
+    height: 100%;
+    width: calc(100% - 25px);
+    align-items: center;
+    justify-content: left;
+    padding-left: 25px;
+}
+
+.o_sign_select_options_display_edit{
+    display: flex;
+    padding-left: 0;
+}
+
+.o_sign_item_option {
+    padding: 5px;
+}
+
+.o_sign_option_separator {
+    padding: 5px;
+}
+
+.o_sign_selected_option {
+    text-decoration-line: none;
+    color: black;
+}
+
+.o_sign_not_selected_option  {
+    text-decoration-line: line-through;
+    color: black;
+}
+
+.ui-selected, .ui-selecting { /* jQuery UI */
+    box-shadow: 0px 0px 5px 1px orange;
+}
+.o_resize_handler {
+    text-align: center;
+    display: block;
+    float: right;
+    position: absolute;
+    z-index: 90;
+}
+
+.resize_both {
+    clip-path: polygon(100% 0, 0% 100%, 100% 100%);
+    right: 0px;
+    bottom: 0px;
+    cursor: se-resize;
+    height: 10px;
+    width: 10px;
+    background-color: black;
+}
+
+.resize_height {
+    width: calc(100% - 25px);
+    height: 7px;
+    cursor: s-resize;
+    right: 0;
+    bottom: -5px;
+}
+
+.resize_width {
+    height: 100%;
+    width: 7px;
+    cursor: e-resize;
+    right: -5px;
+    top: 0;
+}
+
+.ui-draggable .ui-draggable-handle, .o_sign_field_type_button.ui-draggable { /* jQuery UI */
+    /* See o-grab-cursor mixin */
+    cursor: url(/web/static/img/openhand.cur), grab;
+}
+
+.ui-draggable-dragging .ui-draggable-handle,
+.o_sign_sign_item_to_add.ui-draggable-dragging,
+.o_sign_sign_item.ui-draggable-dragging { /* jQuery UI */
+    box-shadow: 0 5px 25px -10px black;
+    transition: box-shadow 0.3s;
+    cursor: grabbing;
+}
+
+.o_sign_sign_item_navigator {
+    position: fixed;
+    top: 15%;
+    left: 0;
+    line-height: 50px;
+    height: 50px;
+    font-size: 1.4em;
+    text-transform: uppercase;
+    z-index: 90;
+    padding: 0 10px 0 5px;
+    color: white;
+    cursor: pointer;
+    background-color:rgb(var(--bs-primary-rgb));
+}
+
+.o_sign_sign_item_navigator:after {
+    content: "";
+    position: absolute;
+    margin-left: 10px;
+    width: 0px;
+    height: 1px;
+    border-top: 24px solid transparent;
+    border-bottom: 25px solid transparent;
+    border-left: 25px solid rgb(var(--bs-primary-rgb));
+}
+
+@media (max-width: 767px) { /* @screen-xs-max */
+    .o_sign_sign_item_navigator {
+        width: 100%;
+        top: initial !important;
+        bottom: 0;
+        z-index: 9999;
+        line-height: 25px;
+        height: 35px;
+        padding: 5px 0 0;
+        font-size: var(--btn-font-size);
+        box-shadow: 0 0 5px 0 rgba(0,0,0,0.75);
+        text-align: center;
+    }
+    .o_sign_sign_item_navline {
+        display: none !important;
+    }
+}
+
+.o_sign_sign_item_navline {
+    position: fixed;
+    top: 15%;
+    left: 1%;
+
+    pointer-events: none;
+    z-index: 80;
+
+    width: 99%;
+    height: 25px;
+    border-bottom: 1px dashed silver;
+    opacity: 0.5;
+}
+
+@media (max-width: 767px) { /* @screen-xs-max */
+    .o_sign_sign_item_navline {
+        line-height: 12.5px;
+        height: 12.5px;
+    }
+}
+
+.o_sign_field_type_toolbar {
+    width: 14rem;
+    z-index: 1030;
+    height: 100%;
+    position: absolute;
+    border: 1px solid rgb(var(--gray-300-rgb)) !important;
+}
+
+.o_sign_field_type_toolbar_title {
+    height: 12px;
+    font-size: 12px;
+}
+
+.o_sign_field_type_button:hover {
+    cursor: move;
+    transition: transform 200ms ease 0s;
+    box-shadow: 0 5px 15px -10px rgb(var(--bs-dark-rgb));
+    transform: translateX(1px) translateY(-1px) scale(1.05) rotate(1deg);
+}
+
+.o_sign_field_type_toolbar_items {
+    overflow: auto;
+}
+
+#outerContainer.o_sign_field_type_toolbar_visible {
+    margin-left: 14rem;
+    width: auto;
+}
+
+#outerContainer.o_sign_field_type_toolbar_visible #thumbnailView {
+    width: auto;
+}
+
+.o_sign_sign_item_navigator.o_sign_field_type_toolbar_visible {
+    margin-left: 14rem;
+}
+
+.o_tooltip > .o_tooltip_content {
+    font-size: 12px !important;
+    box-sizing: border-box;
+}
+
+.o_edit_mode_dropdown_content {
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  display: block;
+  padding: 5px;
+}
+
+.o_edit_mode_dropdown {
+    position: absolute;
+}
+
+.o_edit_mode_dropdown_item {
+    display: flex;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.o_edit_mode_dropdown_item:hover {
+    background-color:lightgray;
+    cursor: pointer;
+}
+
+.dropdown_close_icon {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.o_sign_editable_input {
+    z-index: 10;
+    position: relative;
+    background: inherit;
+    border: 0px;
+    font-size: 1em;
+    text-align: center;
+    vertical-align: middle;
+    width: calc(100% - 54px);
+}
+
+.o_sign_editable_config_area{
+    font-size: 0.4em !important;
+}
+
+.o_sign_drag_helper {
+    position: fixed;
+    z-index: 103;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.o_sign_drag_side_helper {
+    width: 0;
+    height: 100%;
+    border-left: 1px dashed orange;
+    top: 0;
+}
+
+.o_sign_drag_top_helper {
+    border-top: 1px dashed orange;
+    width: 100%;
+    height: 0;
+    left: 0;
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp_workorder.WorkOrder">
+        <li class="o_mrp_record_line list-group-item d-flex justify-content-between align-items-center gap-2 flex-wrap"
+            t-att-class="cssClass"
+            t-on-click="onClick"
+            t-on-animationend="onAnimationEnd">
+            <span class="flex-grow-1">
+                <span class="me-1" t-esc="name"/>
+                <span> <t t-esc="checksInfo"/></span>
+            </span>
+
+            <button t-if="!isComplete" class="btn flex-grow-1 flex-basis-0"
+                t-on-click.stop="() => props.selectWorkcenter(workcenter[0])"
+                t-attf-class="o_workcenter_item_color_{{workcenter[0] % 11}}">
+                <span class="text-truncate" t-out="workcenter[1]"/>
+                <i class="oi oi-arrow-right ms-2"/>
+            </button>
+             <button t-else="" class="btn btn-lg pass fa fa-check px-0 text-success"/>
+        </li>
+    </t>
+</templates>

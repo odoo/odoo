@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="input_commission" model="hr.payslip.input.type">
+        <field name="name">Commission</field>
+        <field name="code">COMMISSION</field>
+        <field name="country_id" ref="base.us"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_us_hr_payroll.hr_payroll_structure_us_employee_salary'))]"/>
+    </record>
+
+    <record id="input_tips" model="hr.payslip.input.type">
+        <field name="name">Tips</field>
+        <field name="code">TIPS</field>
+        <field name="country_id" ref="base.us"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_us_hr_payroll.hr_payroll_structure_us_employee_salary'))]"/>
+    </record>
+
+    <record id="input_allocated_tips" model="hr.payslip.input.type">
+        <field name="name">Allocated Tips</field>
+        <field name="code">ALLOCATEDTIPS</field>
+        <field name="country_id" ref="base.us"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_us_hr_payroll.hr_payroll_structure_us_employee_salary'))]"/>
+    </record>
+</odoo>

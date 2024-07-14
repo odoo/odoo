@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="pos_hr_mobile.LoginScreen" t-inherit="pos_hr.LoginScreen" t-inherit-mode="extension">
+        <xpath expr="//img[hasclass('login-barcode-img')]" position="replace">
+            <div t-if="hasMobileScanner" class="o_barcode_mobile_container" t-on-click="open_mobile_scanner">
+                <a role="button" class="btn btn-primary o_mobile_barcode">
+                    <i class="fa fa-camera fa-2x o_barcode_mobile_camera"/>
+                    Tap to scan
+                </a>
+                <img src="/point_of_sale/static/img/barcode.png" alt="Barcode"/>
+                <span class="o_barcode_laser"/>
+            </div>
+            <img t-else="" class="login-barcode-img" src="/point_of_sale/static/img/barcode.png" />
+        </xpath>
+    </t>
+</templates>

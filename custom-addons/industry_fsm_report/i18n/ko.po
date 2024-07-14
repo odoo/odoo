@@ -1,0 +1,551 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* industry_fsm_report
+# 
+# Translators:
+# Wil Odoo, 2023
+# Sarah Park, 2023
+# Daye Jeong, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Daye Jeong, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: industry_fsm_report
+#: model:ir.actions.report,print_report_name:industry_fsm_report.task_custom_report
+msgid ""
+"'Field Service Report - %s - %s' % (object.name, object.partner_id.name)"
+msgstr "'현장 서비스 보고서 - %s - %s' % (object.name, object.partner_id.name)"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "10 days"
+msgstr "10일"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "10:00"
+msgstr "10:00"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "2023-01-01"
+msgstr "2023-01-01"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "5 days"
+msgstr "5일"
+
+#. module: industry_fsm_report
+#. odoo-javascript
+#: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
+#, python-format
+msgid "<b>Review and sign</b> the <b>task report</b> with your customer."
+msgstr "고객과 함께 <b>작업 보고서</b>를 <b>검토 및 서명</b>하세요."
+
+#. module: industry_fsm_report
+#. odoo-javascript
+#: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
+#: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
+#, python-format
+msgid "<b>Send your task report</b> to your customer."
+msgstr "<b>작업 보고서</b>를 고객에게 전송합니다."
+
+#. module: industry_fsm_report
+#: model:mail.template,body_html:industry_fsm_report.mail_template_data_task_report
+msgid ""
+"<p>\n"
+"                Dear <t t-out=\"object.partner_id.name or 'Customer'\">Customer</t>,<br><br>\n"
+"                Please find attached the field service report for our onsite operation. <br><br>\n"
+"                Feel free to contact us if you have any questions.<br><br>\n"
+"                Best regards,<br><br>\n"
+"            </p>\n"
+"        "
+msgstr ""
+"<p>\n"
+"                안녕하세요, <t t-out=\"object.partner_id.name or 'Customer'\">Customer</t>님.<br><br>\n"
+"                현장 운영과 관련된 현장 서비스 보고서를 첨부해 드립니다. <br><br>\n"
+"                첨부 파일과 관련하여 궁금한 점이 있으시면 언제든지 문의주시기 바랍니다.<br><br>\n"
+"                감사합니다.<br><br>\n"
+"            </p>\n"
+"        "
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.view_project_kanban_inherit_industry_fsm_report
+msgid ""
+"<span class=\"fa fa-pencil me-1\" aria-label=\"Worksheet Template\" "
+"title=\"Worksheet Template\"/>"
+msgstr "<span class=\"fa fa-pencil me-1\" aria-label=\"작업계획표 서식\" title=\"작업계획표 서식\"/>"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.view_worksheet_template_kanban
+msgid "<span class=\"o_label ms-2\">Worksheets</span>"
+msgstr "<span class=\"o_label ms-2\">작업계획표</span>"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.view_task_form2_inherit
+msgid "<span class=\"o_stat_text\">Worksheet</span>"
+msgstr "<span class=\"o_stat_text\">작업계획표</span>"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.view_task_form2_inherit
+msgid ""
+"<span class=\"o_stat_text\">Worksheet</span>\n"
+"                            <span class=\"o_stat_text\">Complete</span>"
+msgstr ""
+"<span class=\"o_stat_text\">작업계획표</span>\n"
+"                            <span class=\"o_stat_text\">완료</span>"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid ""
+"<span style=\"                             font-size: 10px;                             color: #fff;                             text-transform: uppercase;                             text-align: center;                             font-weight: bold; line-height: 20px;                             transform: rotate(45deg);                             width: 100px; height: auto; display: block;                             background: green;                             position: absolute;                             top: 19px; right: -21px; left: auto;                             padding: 0;\">\n"
+"                            Signed\n"
+"                        </span>"
+msgstr ""
+"<span style=\"                             font-size: 10px;                             color: #fff;                             text-transform: uppercase;                             text-align: center;                             font-weight: bold; line-height: 20px;                             transform: rotate(45deg);                             width: 100px; height: auto; display: block;                             background: green;                             position: absolute;                             top: 19px; right: -21px; left: auto;                             padding: 0;\">\n"
+"                            서명함\n"
+"                        </span>"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "<strong class=\"me-2\">Total</strong>"
+msgstr "<strong class=\"me-2\">합계</strong>"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "<strong>Customer: </strong>"
+msgstr "<strong>고객 : </strong>"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.project_task_view_gantt_fsm_worksheet
+msgid "<strong>Template — </strong>"
+msgstr "<strong>서식 — </strong>"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "<strong>Worker: </strong>"
+msgstr "<strong>작업자: </strong>"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.report_custom_x_project_task_worksheet_template_3
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.x_project_task_worksheet_template_3_ir_ui_view_1
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.x_project_task_worksheet_template_4_ir_ui_view_1
+msgid "Add details about your intervention..."
+msgstr "중재에 관한 세부 정보 추가..."
+
+#. module: industry_fsm_report
+#: model:ir.model,name:industry_fsm_report.model_project_task_burndown_chart_report
+msgid "Burndown Chart"
+msgstr "번다운 차트"
+
+#. module: industry_fsm_report
+#: model:ir.ui.menu,name:industry_fsm_report.project_task_menu_planning_by_project_fsm
+msgid "By Worksheet Template"
+msgstr "워크시트 서식별"
+
+#. module: industry_fsm_report
+#: model:ir.model.fields,field_description:industry_fsm_report.field_project_task__worksheet_color
+msgid "Color"
+msgstr "색상"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.report_custom_x_project_task_worksheet_template_3
+msgid "Comments"
+msgstr "의견"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.project_project_form_inherit_industry_fsm_report
+msgid "Create reports to be signed off by your customers"
+msgstr "고객이 서명할 보고서 만들기"
+
+#. module: industry_fsm_report
+#: model:ir.model.fields,help:industry_fsm_report.field_project_task__worksheet_template_id
+msgid ""
+"Create templates for each type of intervention you have and customize their "
+"content with your own custom fields."
+msgstr "개입 유형별 서식을 만들고 직접 고객 필드에서 콘텐츠를 커스터마이징하세요."
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.x_project_task_worksheet_template_3_ir_ui_view_3
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.x_project_task_worksheet_template_4_ir_ui_view_3
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.view_task_form2_inherit
+msgid "Customer Preview"
+msgstr "고객 리뷰"
+
+#. module: industry_fsm_report
+#: model_terms:ir.actions.act_window,help:industry_fsm_report.fsm_worksheets_action_settings
+msgid "Customize worksheet templates for each type of intervention.<br>"
+msgstr "개입 유형별 워크시트 서식을 커스터마이징합니다.<br>"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.report_custom_x_project_task_worksheet_template_4
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "Date"
+msgstr "날짜"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "Days Spent"
+msgstr "소요 일자"
+
+#. module: industry_fsm_report
+#: model:ir.model,name:industry_fsm_report.x_project_task_worksheet_template_3_ir_model_1
+#: model:ir.model.fields,field_description:industry_fsm_report.field_project_project__worksheet_template_id
+msgid "Default Worksheet"
+msgstr "기본 작업 계획표"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "Description"
+msgstr "설명"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.report_custom_x_project_task_worksheet_template_4
+msgid "Description of the Intervention"
+msgstr "중재에 대한 설명"
+
+#. module: industry_fsm_report
+#: model:ir.model,name:industry_fsm_report.x_project_task_worksheet_template_4_ir_model_1
+msgid "Device Installation and Maintenance"
+msgstr "장치 설치 및 유지관리"
+
+#. module: industry_fsm_report
+#: model:ir.model.fields,field_description:industry_fsm_report.field_project_task__display_send_report_primary
+msgid "Display Send Report Primary"
+msgstr "기본 보고서 전송 표시"
+
+#. module: industry_fsm_report
+#: model:ir.model.fields,field_description:industry_fsm_report.field_project_task__display_send_report_secondary
+msgid "Display Send Report Secondary"
+msgstr "2차 보고서 전송 표시"
+
+#. module: industry_fsm_report
+#: model:ir.model.fields,field_description:industry_fsm_report.field_project_task__display_sign_report_primary
+msgid "Display Sign Report Primary"
+msgstr "기본 보고서 서명 표시"
+
+#. module: industry_fsm_report
+#: model:ir.model.fields,field_description:industry_fsm_report.field_project_task__display_sign_report_secondary
+msgid "Display Sign Report Secondary"
+msgstr "2차 보고서 서명 표시"
+
+#. module: industry_fsm_report
+#: model:mail.template,description:industry_fsm_report.mail_template_data_task_report
+msgid "Email sent when clicking on \"send report\" in a task"
+msgstr "작업에서 '보고서 보내기'를 클릭하면 이메일이 전송됩니다"
+
+#. module: industry_fsm_report
+#: model:ir.actions.report,name:industry_fsm_report.task_custom_report
+msgid "Field Service Report"
+msgstr "현장 서비스 보고서"
+
+#. module: industry_fsm_report
+#: model:mail.template,subject:industry_fsm_report.mail_template_data_task_report
+msgid "Field Service Report - {{ object.name }}"
+msgstr "현장 서비스 보고서 - {{ object.name }}"
+
+#. module: industry_fsm_report
+#: model:mail.template,name:industry_fsm_report.mail_template_data_task_report
+msgid "Field Service: Field Service Report"
+msgstr "현장 서비스: 현장 서비스 보고서"
+
+#. module: industry_fsm_report
+#. odoo-javascript
+#: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
+#, python-format
+msgid "Fill in your <b>worksheet</b> with the details of your intervention."
+msgstr "<b>중재</b>에 관한 세부 사항을 작업 계획표에 입력하세요."
+
+#. module: industry_fsm_report
+#. odoo-javascript
+#: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
+#, python-format
+msgid "Go back to your Field Service <b>task</b>."
+msgstr "현장 서비스 <b>작업</b>으로 돌아갑니다."
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "Hours Spent"
+msgstr "소요 시간"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.report_custom_x_project_task_worksheet_template_4
+msgid ""
+"I hereby certify that this device meets the requirements of an acceptable "
+"device at the time of testing."
+msgstr "본인은 이 장치가 테스트시 허용되는 장치의 요구 사항을 충족함을 보증합니다."
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.report_custom_x_project_task_worksheet_template_4
+msgid "Intervention Type"
+msgstr "중재 유형"
+
+#. module: industry_fsm_report
+#. odoo-python
+#: code:addons/industry_fsm_report/controllers/portal.py:0
+#, python-format
+msgid "Invalid Task."
+msgstr "잘못된 작업."
+
+#. module: industry_fsm_report
+#. odoo-python
+#: code:addons/industry_fsm_report/controllers/portal.py:0
+#, python-format
+msgid "Invalid signature data."
+msgstr "서명 데이터가 유효하지 않습니다."
+
+#. module: industry_fsm_report
+#. odoo-javascript
+#: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
+#, python-format
+msgid "Invite your customer to <b>validate and sign your task report</b>."
+msgstr "고객을 초대하여 <b>작업 보고서를 승인하고 서명</b>하도록 요청합니다."
+
+#. module: industry_fsm_report
+#: model:ir.model.fields,field_description:industry_fsm_report.field_project_task__fsm_is_sent
+msgid "Is Worksheet sent"
+msgstr "작업 계획표 전송 여부"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "Jane Worker"
+msgstr "Jane Worker"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "Jane smith"
+msgstr "Jane smith"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "Manage SME"
+msgstr "중소기업 관리"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.report_custom_x_project_task_worksheet_template_4
+msgid "Manufacturer"
+msgstr "제조사"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "Marc Demo"
+msgstr "Marc Demo"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.report_custom_x_project_task_worksheet_template_4
+msgid "Model"
+msgstr "모델"
+
+#. module: industry_fsm_report
+#: model_terms:ir.actions.act_window,help:industry_fsm_report.project_task_action_fsm_planning_groupby_worksheet
+msgid "No tasks found. Let's create one!"
+msgstr "작업 내용이 없습니다. 새로 작성해 주세요."
+
+#. module: industry_fsm_report
+#: model_terms:ir.actions.act_window,help:industry_fsm_report.fsm_worksheets_action_settings
+msgid "No worksheet templates found. Let's create one!"
+msgstr "워크시트 서식을 찾을 수 없습니다. 새로 작성해 주세요."
+
+#. module: industry_fsm_report
+#. odoo-javascript
+#: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
+#, python-format
+msgid ""
+"Open your <b>worksheet</b> in order to fill it in with the details of your "
+"intervention."
+msgstr "<b>작업 계획표</b>를 열어 중재에 관한 세부 정보를 입력하세요."
+
+#. module: industry_fsm_report
+#: model:ir.actions.act_window,name:industry_fsm_report.project_task_action_fsm_planning_groupby_worksheet
+msgid "Planning by Worksheet Template"
+msgstr "워크시트 서식 계획"
+
+#. module: industry_fsm_report
+#: model:ir.model,name:industry_fsm_report.model_project_project
+msgid "Project"
+msgstr "프로젝트"
+
+#. module: industry_fsm_report
+#. odoo-javascript
+#: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
+#, python-format
+msgid "Save time by automatically generating a <b>signature</b>."
+msgstr "<b>서명</b>을 자동으로 생성하여 시간을 절약할 수 있습니다."
+
+#. module: industry_fsm_report
+#: model_terms:ir.actions.act_window,help:industry_fsm_report.project_task_action_fsm_planning_groupby_worksheet
+msgid "Schedule your tasks and assign them to your workers."
+msgstr "작업 일정을 예약하고 작업자에게 배정합니다."
+
+#. module: industry_fsm_report
+#: model:ir.actions.server,name:industry_fsm_report.action_fsm_task_send_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.view_task_form2_inherit
+msgid "Send Report"
+msgstr "보고서 보내기"
+
+#. module: industry_fsm_report
+#. odoo-python
+#: code:addons/industry_fsm_report/models/project_task.py:0
+#, python-format
+msgid "Send report"
+msgstr "보고서 보내기"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.report_custom_x_project_task_worksheet_template_4
+msgid "Serial Number"
+msgstr "일련번호"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.view_task_form2_inherit
+msgid "Sign Report"
+msgstr "서명 보고서"
+
+#. module: industry_fsm_report
+#: model:ir.model.fields,field_description:industry_fsm_report.field_project_task__worksheet_signature
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.portal_my_task
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "Signature"
+msgstr "서명"
+
+#. module: industry_fsm_report
+#. odoo-python
+#: code:addons/industry_fsm_report/controllers/portal.py:0
+#, python-format
+msgid "Signature is missing."
+msgstr "서명이 없습니다."
+
+#. module: industry_fsm_report
+#: model:ir.model.fields,field_description:industry_fsm_report.field_project_task__worksheet_signed_by
+msgid "Signed By"
+msgstr "서명인"
+
+#. module: industry_fsm_report
+#: model:ir.model,name:industry_fsm_report.model_project_task
+msgid "Task"
+msgstr "작업"
+
+#. module: industry_fsm_report
+#: model:ir.model,name:industry_fsm_report.model_project_task_recurrence
+msgid "Task Recurrence"
+msgstr "반복되는 작업"
+
+#. module: industry_fsm_report
+#: model:ir.model,name:industry_fsm_report.model_report_industry_fsm_report_worksheet_custom
+msgid "Task Worksheet Custom Report"
+msgstr "작업용 작업 계획표 사용자 정의 보고서"
+
+#. module: industry_fsm_report
+#: model:ir.model,name:industry_fsm_report.model_report_project_task_user
+msgid "Tasks Analysis"
+msgstr "작업 분석"
+
+#. module: industry_fsm_report
+#. odoo-python
+#: code:addons/industry_fsm_report/controllers/portal.py:0
+#, python-format
+msgid "The worksheet has been signed"
+msgstr "작업 계획표가 서명되었습니다"
+
+#. module: industry_fsm_report
+#. odoo-python
+#: code:addons/industry_fsm_report/controllers/portal.py:0
+#, python-format
+msgid "The worksheet is not in a state requiring customer signature."
+msgstr "작업 계획표의 단계가 고객 서명이 필요한 상태가 아닙니다."
+
+#. module: industry_fsm_report
+#. odoo-python
+#: code:addons/industry_fsm_report/models/project_task.py:0
+#, python-format
+msgid "There are no reports to send."
+msgstr "전송할 보고서가 없습니다."
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "Timesheets"
+msgstr "작업 기록"
+
+#. module: industry_fsm_report
+#. odoo-python
+#: code:addons/industry_fsm_report/models/project_task.py:0
+#, python-format
+msgid "To send the report, you need to select a worksheet template"
+msgstr "보고서를 전송하려면 워크시트 템플릿을 선택해야 합니다."
+
+#. module: industry_fsm_report
+#. odoo-javascript
+#: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
+#, python-format
+msgid "Use the breadcrumbs to return to your <b>task</b>."
+msgstr "사이트 이동 경로를 사용하여 <b>작업</b>으로 돌아갑니다."
+
+#. module: industry_fsm_report
+#. odoo-javascript
+#: code:addons/industry_fsm_report/static/src/js/tours/industry_fsm_report_tour.js:0
+#, python-format
+msgid "Validate the <b>signature</b>."
+msgstr "<b>서명</b>을 확인합니다."
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "Worker"
+msgstr "작업자"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.report_custom_x_project_task_worksheet_template_4
+msgid "Worker Signature"
+msgstr "작업자 서명"
+
+#. module: industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.portal_my_task
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.worksheet_custom_page
+msgid "Worksheet"
+msgstr "작업 계획표"
+
+#. module: industry_fsm_report
+#: model:ir.model.fields,field_description:industry_fsm_report.field_project_task__worksheet_count
+msgid "Worksheet Count"
+msgstr "작업 계획표 수"
+
+#. module: industry_fsm_report
+#: model:ir.model,name:industry_fsm_report.model_worksheet_template
+#: model:ir.model.fields,field_description:industry_fsm_report.field_project_task__worksheet_template_id
+#: model:ir.model.fields,field_description:industry_fsm_report.field_project_task_burndown_chart_report__worksheet_template_id
+#: model:ir.model.fields,field_description:industry_fsm_report.field_report_project_task_user__worksheet_template_id
+#: model:ir.model.fields,field_description:industry_fsm_report.field_report_project_task_user_fsm__worksheet_template_id
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.project_project_form_inherit_industry_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.project_task_map_view_inherit_fsm_report
+#: model_terms:ir.ui.view,arch_db:industry_fsm_report.project_task_view_search_fsm_report
+msgid "Worksheet Template"
+msgstr "작업 계획표 서식"
+
+#. module: industry_fsm_report
+#: model:ir.actions.act_window,name:industry_fsm_report.action_fsm_worksheets
+#: model:ir.actions.act_window,name:industry_fsm_report.fsm_worksheets_action_settings
+#: model:ir.ui.menu,name:industry_fsm_report.fsm_settings_worksheets
+msgid "Worksheet Templates"
+msgstr "작업 계획표 서식"
+
+#. module: industry_fsm_report
+#: model:ir.actions.act_window,name:industry_fsm_report.x_project_task_worksheet_template_3_ir_actions_act_window_1
+#: model:ir.actions.act_window,name:industry_fsm_report.x_project_task_worksheet_template_4_ir_actions_act_window_1
+#: model:ir.model.fields,field_description:industry_fsm_report.field_project_project__allow_worksheets
+#: model:ir.model.fields,field_description:industry_fsm_report.field_project_task__allow_worksheets
+msgid "Worksheets"
+msgstr "작업 계획표"

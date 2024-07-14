@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ch_employee_is_line_view_tree" model="ir.ui.view">
+        <field name="name">hr.employee.is.line.tree</field>
+        <field name="model">hr.employee.is.line</field>
+        <field name="arch" type="xml">
+            <tree string="IS Lines">
+                <field name="employee_id"/>
+                <field name="reason"/>
+                <field name="valid_as_of"/>
+                <field name="correction_date"/>
+                <field name="payslips_to_correct"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_ch_employee_is_line_form" model="ir.ui.view">
+        <field name="name">hr.employee.is.line.view.form</field>
+        <field name="model">hr.employee.is.line</field>
+        <field name="arch" type="xml">
+            <form string="Work address">
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="reason"/>
+                        <field name="valid_as_of"/>
+                        <field name="correction_date"/>
+                        <field name="payslips_to_correct" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_ch_is_line" model="ir.actions.act_window">
+        <field name="name">IS Line</field>
+        <field name="res_model">hr.employee.is.line</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_ch_employee_is_line"
+        name="IS Corrections"
+        parent="l10n_ch_hr_payroll.menu_configuration_l10n_ch"
+        action="action_l10n_ch_is_line"
+        sequence="30"
+        groups="hr_payroll.group_hr_payroll_user"
+    />
+</odoo>

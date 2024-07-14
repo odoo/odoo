@@ -1,0 +1,1465 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_it_sp" model="account.report">
+        <field name="name">Balance sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="country_id" ref="base.it"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_it_sp_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_line_it_sp_assets" model="account.report.line">
+                <field name="name">ACTIVE</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_it_sp_ATT_A" model="account.report.line">
+                        <field name="name">A. RECEIVABLES FROM MEMBERS FOR VERS. STILL DUE</field>
+                        <field name="code">IT_ATT_A</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">10</field>
+                    </record>
+                    <record id="account_financial_report_line_it_sp_ATT_B" model="account.report.line">
+                        <field name="name">B. FIXED ASSETS</field>
+                        <field name="code">IT_ATT_B</field>
+                        <field name="aggregation_formula">IT_ATT_B_I.balance + IT_ATT_B_II.balance + IT_ATT_B_III.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_it_sp_ATT_B_I" model="account.report.line">
+                                <field name="name">I. Intangible fixed assets</field>
+                                <field name="code">IT_ATT_B_I</field>
+                                <field name="aggregation_formula">IT_ATT_B_I_1.balance + IT_ATT_B_I_2.balance + IT_ATT_B_I_3.balance + IT_ATT_B_I_4.balance + IT_ATT_B_I_5.balance + IT_ATT_B_I_6.balance + IT_ATT_B_I_7.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_ATT_B_I_1" model="account.report.line">
+                                        <field name="name">1. Start-up and expansion costs</field>
+                                        <field name="code">IT_ATT_B_I_1</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">IT_ATT_B_I_1.it_att_b_i_1_v_balance + IT_ATT_B_I_1.it_att_b_i_1_f_balance</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_1_it_att_b_i_1_v_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_i_1_v_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1102 + 1101</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_1_it_att_b_i_1_f_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_i_1_f_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1111 + 1112</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_B_I_2" model="account.report.line">
+                                        <field name="name">2. Development costs</field>
+                                        <field name="code">IT_ATT_B_I_2</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">IT_ATT_B_I_2.it_att_b_i_2_v_balance + IT_ATT_B_I_2.it_att_b_i_2_f_balance</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_2_it_att_b_i_2_v_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_i_2_v_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1103</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_2_it_att_b_i_2_f_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_i_2_f_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1113</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_B_I_3" model="account.report.line">
+                                        <field name="name">3. Industrial patent rights and rights of use of intellectual works</field>
+                                        <field name="code">IT_ATT_B_I_3</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">IT_ATT_B_I_3.it_att_b_i_3_v_balance + IT_ATT_B_I_3.it_att_b_i_3_f_balance</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_3_it_att_b_i_3_v_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_i_3_v_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1104</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_3_it_att_b_i_3_f_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_i_3_f_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1114</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_B_I_4" model="account.report.line">
+                                        <field name="name">4. Concessions, licenses, trademarks and similar rights</field>
+                                        <field name="code">IT_ATT_B_I_4</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_4_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">IT_ATT_B_I_4.it_att_b_i_4_v_balance + IT_ATT_B_I_4.it_att_b_i_4_f_balance</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_4_it_att_b_i_4_v_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_i_4_v_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1106 + 1107 + 1105</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_4_it_att_b_i_4_f_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_i_4_f_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1116 + 1117 + 1115</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_B_I_5" model="account.report.line">
+                                        <field name="name">5. Startup</field>
+                                        <field name="code">IT_ATT_B_I_5</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_5_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">IT_ATT_B_I_5.it_att_b_i_5_v_balance + IT_ATT_B_I_5.it_att_b_i_5_f_balance</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_5_it_att_b_i_5_v_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_i_5_v_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1108</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_5_it_att_b_i_5_f_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_i_5_f_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1118</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_B_I_6" model="account.report.line">
+                                        <field name="name">6. Construction in progress and advances</field>
+                                        <field name="code">IT_ATT_B_I_6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1131 + 1130</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_B_I_7" model="account.report.line">
+                                        <field name="name">7. Other</field>
+                                        <field name="code">IT_ATT_B_I_7</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_7_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">IT_ATT_B_I_7.it_att_b_i_7_v_balance + IT_ATT_B_I_7.it_att_b_i_7_f_balance</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_7_it_att_b_i_7_v_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_i_7_v_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1109</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_I_7_it_att_b_i_7_f_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_i_7_f_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1119</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_ATT_B_II" model="account.report.line">
+                                <field name="name">II. Tangible fixed assets</field>
+                                <field name="code">IT_ATT_B_II</field>
+                                <field name="aggregation_formula">IT_ATT_B_II_1.balance + IT_ATT_B_II_2.balance + IT_ATT_B_II_3.balance + IT_ATT_B_II_4.balance + IT_ATT_B_II_5.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_ATT_B_II_1" model="account.report.line">
+                                        <field name="name">1. Land and buildings</field>
+                                        <field name="code">IT_ATT_B_II_1</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_B_II_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">IT_ATT_B_II_1.it_att_b_ii_1_v_balance + IT_ATT_B_II_1.it_att_b_ii_1_f_balance</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_II_1_it_att_b_ii_1_v_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_ii_1_v_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1201</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_II_1_it_att_b_ii_1_f_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_ii_1_f_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1211</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_B_II_2" model="account.report.line">
+                                        <field name="name">2. Plant and machinery</field>
+                                        <field name="code">IT_ATT_B_II_2</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_B_II_2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">IT_ATT_B_II_2.it_att_b_ii_2_v_balance + IT_ATT_B_II_2.it_att_b_ii_2_f_balance</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_II_2_it_att_b_ii_2_v_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_ii_2_v_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1202</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_II_2_it_att_b_ii_2_f_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_ii_2_f_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1212</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_B_II_3" model="account.report.line">
+                                        <field name="name">3. Industrial and commercial equipment</field>
+                                        <field name="code">IT_ATT_B_II_3</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_B_II_3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">IT_ATT_B_II_3.it_att_b_ii_3_v_balance + IT_ATT_B_II_3.it_att_b_ii_3_f_balance</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_II_3_it_att_b_ii_3_v_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_ii_3_v_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1204</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_II_3_it_att_b_ii_3_f_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_ii_3_f_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1214</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_B_II_4" model="account.report.line">
+                                        <field name="name">4. Other assets</field>
+                                        <field name="code">IT_ATT_B_II_4</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_B_II_4_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">IT_ATT_B_II_4.it_att_b_ii_4_v_balance + IT_ATT_B_II_4.it_att_b_ii_4_f_balance</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_II_4_it_att_b_ii_4_v_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_ii_4_v_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1208 + 1205 + 1206 + 1207</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_II_4_it_att_b_ii_4_f_balance" model="account.report.expression">
+                                                <field name="label">it_att_b_ii_4_f_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1217 + 1218 + 1215 + 1216</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_B_II_5" model="account.report.line">
+                                        <field name="name">5. Construction in progress and advances</field>
+                                        <field name="code">IT_ATT_B_II_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">122</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_ATT_B_III" model="account.report.line">
+                                <field name="name">III. Financial fixed assets</field>
+                                <field name="code">IT_ATT_B_III</field>
+                                <field name="aggregation_formula">IT_ATT_B_III_1.balance + IT_ATT_B_III_2.balance + IT_ATT_B_III_3.balance + IT_ATT_B_III_4.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_ATT_B_III_1" model="account.report.line">
+                                        <field name="name">1. Holdings in:</field>
+                                        <field name="code">IT_ATT_B_III_1</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="aggregation_formula">IT_ATT_B_III_1_a.balance + IT_ATT_B_III_1_b.balance + IT_ATT_B_III_1_c.balance + IT_ATT_B_III_1_d.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_B_III_1_a" model="account.report.line">
+                                                <field name="name">a. Subsidiary enterprises</field>
+                                                <field name="code">IT_ATT_B_III_1_a</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">1302</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_III_1_b" model="account.report.line">
+                                                <field name="name">b. Related enterprises</field>
+                                                <field name="code">IT_ATT_B_III_1_b</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">1303</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_III_1_c" model="account.report.line">
+                                                <field name="name">c. Parent companies</field>
+                                                <field name="code">IT_ATT_B_III_1_c</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">1304</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_III_1_d" model="account.report.line">
+                                                <field name="name">d. Enterprises under the control of parent companies</field>
+                                                <field name="code">IT_ATT_B_III_1_d</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">1305</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_III_1_d_bis" model="account.report.line">
+                                                <field name="name">d-bis. Other enterprises</field>
+                                                <field name="code">IT_ATT_B_III_1_d_bis</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">1306</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_B_III_2" model="account.report.line">
+                                        <field name="name">2. Credits:</field>
+                                        <field name="code">IT_ATT_B_III_2</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="aggregation_formula">IT_ATT_B_III_2_a.balance + IT_ATT_B_III_2_b.balance + IT_ATT_B_III_2_c.balance + IT_ATT_B_III_2_d.balance + IT_ATT_B_III_2_d_bis.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_B_III_2_a" model="account.report.line">
+                                                <field name="name">a. To subsidiaries</field>
+                                                <field name="code">IT_ATT_B_III_2_a</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="aggregation_formula">IT_ATT_B_III_2_a_entro.balance + IT_ATT_B_III_2_a_oltro.balance</field>
+                                                <field name="children_ids">
+                                                    <record id="account_financial_report_line_it_sp_ATT_B_III_2_a_entro" model="account.report.line">
+                                                        <field name="name">Within 12 months</field>
+                                                        <field name="code">IT_ATT_B_III_2_a_entro</field>
+                                                        <field name="groupby">account_id</field>
+                                                        <field name="hide_if_zero" eval="True"/>
+                                                        <field name="foldable" eval="True"/>
+                                                        <field name="account_codes_formula">1310\(131099)</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_it_sp_ATT_B_III_2_a_oltro" model="account.report.line">
+                                                        <field name="name">Over 12 months</field>
+                                                        <field name="code">IT_ATT_B_III_2_a_oltro</field>
+                                                        <field name="groupby">account_id</field>
+                                                        <field name="hide_if_zero" eval="True"/>
+                                                        <field name="foldable" eval="True"/>
+                                                        <field name="account_codes_formula">131099</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_III_2_b" model="account.report.line">
+                                                <field name="name">b. To affiliated companies</field>
+                                                <field name="code">IT_ATT_B_III_2_b</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="aggregation_formula">IT_ATT_B_III_2_b_entro.balance + IT_ATT_B_III_2_b_oltro.balance</field>
+                                                <field name="children_ids">
+                                                    <record id="account_financial_report_line_it_sp_ATT_B_III_2_b_entro" model="account.report.line">
+                                                        <field name="name">Within 12 months</field>
+                                                        <field name="code">IT_ATT_B_III_2_b_entro</field>
+                                                        <field name="groupby">account_id</field>
+                                                        <field name="hide_if_zero" eval="True"/>
+                                                        <field name="foldable" eval="True"/>
+                                                        <field name="account_codes_formula">1311\(131199)</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_it_sp_ATT_B_III_2_b_oltro" model="account.report.line">
+                                                        <field name="name">Over 12 months</field>
+                                                        <field name="code">IT_ATT_B_III_2_b_oltro</field>
+                                                        <field name="groupby">account_id</field>
+                                                        <field name="hide_if_zero" eval="True"/>
+                                                        <field name="foldable" eval="True"/>
+                                                        <field name="account_codes_formula">131199</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_III_2_c" model="account.report.line">
+                                                <field name="name">c. To parent companies</field>
+                                                <field name="code">IT_ATT_B_III_2_c</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="aggregation_formula">IT_ATT_B_III_2_c_entro.balance + IT_ATT_B_III_2_c_oltro.balance</field>
+                                                <field name="children_ids">
+                                                    <record id="account_financial_report_line_it_sp_ATT_B_III_2_c_entro" model="account.report.line">
+                                                        <field name="name">Within 12 months</field>
+                                                        <field name="code">IT_ATT_B_III_2_c_entro</field>
+                                                        <field name="groupby">account_id</field>
+                                                        <field name="hide_if_zero" eval="True"/>
+                                                        <field name="foldable" eval="True"/>
+                                                        <field name="account_codes_formula">1312\(131299)</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_it_sp_ATT_B_III_2_c_oltro" model="account.report.line">
+                                                        <field name="name">Over 12 months</field>
+                                                        <field name="code">IT_ATT_B_III_2_c_oltro</field>
+                                                        <field name="groupby">account_id</field>
+                                                        <field name="hide_if_zero" eval="True"/>
+                                                        <field name="foldable" eval="True"/>
+                                                        <field name="account_codes_formula">131299</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_III_2_d" model="account.report.line">
+                                                <field name="name">d. To enterprises under the control of parent companies</field>
+                                                <field name="code">IT_ATT_B_III_2_d</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="aggregation_formula">IT_ATT_B_III_2_d_entro.balance + IT_ATT_B_III_2_d_oltro.balance</field>
+                                                <field name="children_ids">
+                                                    <record id="account_financial_report_line_it_sp_ATT_B_III_2_d_entro" model="account.report.line">
+                                                        <field name="name">Within 12 months</field>
+                                                        <field name="code">IT_ATT_B_III_2_d_entro</field>
+                                                        <field name="groupby">account_id</field>
+                                                        <field name="hide_if_zero" eval="True"/>
+                                                        <field name="foldable" eval="True"/>
+                                                        <field name="account_codes_formula">1313\(131399)</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_it_sp_ATT_B_III_2_d_oltro" model="account.report.line">
+                                                        <field name="name">Over 12 months</field>
+                                                        <field name="code">IT_ATT_B_III_2_d_oltro</field>
+                                                        <field name="groupby">account_id</field>
+                                                        <field name="hide_if_zero" eval="True"/>
+                                                        <field name="foldable" eval="True"/>
+                                                        <field name="account_codes_formula">131399</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_III_2_d_bis" model="account.report.line">
+                                                <field name="name">d-bis. To others</field>
+                                                <field name="code">IT_ATT_B_III_2_d_bis</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="aggregation_formula">IT_ATT_B_III_2_d_bis_entro.balance + IT_ATT_B_III_2_d_bis_oltro.balance</field>
+                                                <field name="children_ids">
+                                                    <record id="account_financial_report_line_it_sp_ATT_B_III_2_d_bis_entro" model="account.report.line">
+                                                        <field name="name">Within 12 months</field>
+                                                        <field name="code">IT_ATT_B_III_2_d_bis_entro</field>
+                                                        <field name="groupby">account_id</field>
+                                                        <field name="hide_if_zero" eval="True"/>
+                                                        <field name="foldable" eval="True"/>
+                                                        <field name="account_codes_formula">1315 + 1314\(131499) + 1301</field>
+                                                    </record>
+                                                    <record id="account_financial_report_line_it_sp_ATT_B_III_2_d_bis_oltro" model="account.report.line">
+                                                        <field name="name">Over 12 months</field>
+                                                        <field name="code">IT_ATT_B_III_2_d_bis_oltro</field>
+                                                        <field name="groupby">account_id</field>
+                                                        <field name="hide_if_zero" eval="True"/>
+                                                        <field name="foldable" eval="True"/>
+                                                        <field name="account_codes_formula">131499</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_B_III_3" model="account.report.line">
+                                        <field name="name">3. Other titles</field>
+                                        <field name="code">IT_ATT_B_III_3</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="aggregation_formula">IT_ATT_B_III_3_entro.balance + IT_ATT_B_III_3_oltro.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_B_III_3_entro" model="account.report.line">
+                                                <field name="name">Within 12 months</field>
+                                                <field name="code">IT_ATT_B_III_3_entro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">1350\(135099)</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_III_3_oltro" model="account.report.line">
+                                                <field name="name">Over 12 months</field>
+                                                <field name="code">IT_ATT_B_III_3_oltro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">135099</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_B_III_4" model="account.report.line">
+                                        <field name="name">4. Active derivative financial instruments</field>
+                                        <field name="code">IT_ATT_B_III_4</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="aggregation_formula">IT_ATT_B_III_4_entro.balance + IT_ATT_B_III_4_oltro.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_B_III_4_entro" model="account.report.line">
+                                                <field name="name">Within 12 months</field>
+                                                <field name="code">IT_ATT_B_III_4_entro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">1340\(134099)</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_B_III_4_oltro" model="account.report.line">
+                                                <field name="name">Over 12 months</field>
+                                                <field name="code">IT_ATT_B_III_4_oltro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">134099</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_it_sp_ATT_C" model="account.report.line">
+                        <field name="name">C. CURRENT ASSETS</field>
+                        <field name="code">IT_ATT_C</field>
+                        <field name="aggregation_formula">IT_ATT_C_I.balance + IT_ATT_C_II.balance + IT_ATT_C_III.balance + IT_ATT_C_IV.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_it_sp_ATT_C_I" model="account.report.line">
+                                <field name="name">I. Inventories</field>
+                                <field name="code">IT_ATT_C_I</field>
+                                <field name="aggregation_formula">IT_ATT_C_I_1.balance + IT_ATT_C_I_2.balance + IT_ATT_C_I_3.balance + IT_ATT_C_I_4.balance + IT_ATT_C_I_5.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_ATT_C_I_1" model="account.report.line">
+                                        <field name="name">1. Materie prime, sussidiarie e di consumo</field>
+                                        <field name="code">IT_ATT_C_I_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1401 + 1402 + 1403</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_I_2" model="account.report.line">
+                                        <field name="name">2. Work in progress and semi-finished products</field>
+                                        <field name="code">IT_ATT_C_I_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1405 + 1406</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_I_3" model="account.report.line">
+                                        <field name="name">3. Contract work in progress</field>
+                                        <field name="code">IT_ATT_C_I_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1407</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_I_4" model="account.report.line">
+                                        <field name="name">4. Finished products and goods</field>
+                                        <field name="code">IT_ATT_C_I_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1404</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_I_5" model="account.report.line">
+                                        <field name="name">5. Advances</field>
+                                        <field name="code">IT_ATT_C_I_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1410</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_ATT_C_II" model="account.report.line">
+                                <field name="name">II. Credits</field>
+                                <field name="code">IT_ATT_C_II</field>
+                                <field name="aggregation_formula">IT_ATT_C_II_1.balance + IT_ATT_C_II_2.balance + IT_ATT_C_II_3.balance + IT_ATT_C_II_4.balance + IT_ATT_C_II_5.balance + IT_ATT_C_II_5_bis.balance + IT_ATT_C_II_5_ter.balance + IT_ATT_C_II_5_quater.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_ATT_C_II_1" model="account.report.line">
+                                        <field name="name">1. Toward customers</field>
+                                        <field name="code">IT_ATT_C_II_1</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">IT_ATT_C_II_1.it_att_c_ii_1_v_balance + IT_ATT_C_II_1.it_att_c_ii_1_f_balance</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_1_it_att_c_ii_1_v_balance" model="account.report.expression">
+                                                <field name="label">it_att_c_ii_1_v_balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">IT_ATT_C_II_1_entro.balance + IT_ATT_C_II_1_oltro.balance</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_1_it_att_c_ii_1_f_entro_balance" model="account.report.expression">
+                                                <field name="label">it_att_c_ii_1_f_entro_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1540\(154099) + 1541</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_1_it_att_c_ii_1_f_oltro_balance" model="account.report.expression">
+                                                <field name="label">it_att_c_ii_1_f_oltro_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">154099</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_1_it_att_c_ii_1_f_balance" model="account.report.expression">
+                                                <field name="label">it_att_c_ii_1_f_balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">IT_ATT_C_II_1.it_att_c_ii_1_f_entro_balance + IT_ATT_C_II_1.it_att_c_ii_1_f_oltro_balance</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_1_entro" model="account.report.line">
+                                                <field name="name">Within 12 months</field>
+                                                <field name="code">IT_ATT_C_II_1_entro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">1531 + 1503 + 1501\(150199) + 1502 + 1507 + 1508 + 1505 + 1510 + 1506 + 1511 + 1509</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_1_oltro" model="account.report.line">
+                                                <field name="name">Over 12 months</field>
+                                                <field name="code">IT_ATT_C_II_1_oltro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">150199</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_II_2" model="account.report.line">
+                                        <field name="name">2. To subsidiary companies</field>
+                                        <field name="code">IT_ATT_C_II_2</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="aggregation_formula">IT_ATT_C_II_2_entro.balance + IT_ATT_C_II_2_oltro.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_2_entro" model="account.report.line">
+                                                <field name="name">Within 12 months</field>
+                                                <field name="code">IT_ATT_C_II_2_entro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">1550\(155099)</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_2_oltro" model="account.report.line">
+                                                <field name="name">Over 12 months</field>
+                                                <field name="code">IT_ATT_C_II_2_oltro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">155099</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_II_3" model="account.report.line">
+                                        <field name="name">3. To affiliated companies</field>
+                                        <field name="code">IT_ATT_C_II_3</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="aggregation_formula">IT_ATT_C_II_3_entro.balance + IT_ATT_C_II_3_oltro.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_3_entro" model="account.report.line">
+                                                <field name="name">Within 12 months</field>
+                                                <field name="code">IT_ATT_C_II_3_entro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">1551\(155199)</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_3_oltro" model="account.report.line">
+                                                <field name="name">Over 12 months</field>
+                                                <field name="code">IT_ATT_C_II_3_oltro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">155199</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_II_4" model="account.report.line">
+                                        <field name="name">4. To parent companies</field>
+                                        <field name="code">IT_ATT_C_II_4</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="aggregation_formula">IT_ATT_C_II_4_entro.balance + IT_ATT_C_II_4_oltro.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_4_entro" model="account.report.line">
+                                                <field name="name">Within 12 months</field>
+                                                <field name="code">IT_ATT_C_II_4_entro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">1552\(155299)</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_4_oltro" model="account.report.line">
+                                                <field name="name">Over 12 months</field>
+                                                <field name="code">IT_ATT_C_II_4_oltro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">155299</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_II_5" model="account.report.line">
+                                        <field name="name">5. To enterprises under the control of parent companies</field>
+                                        <field name="code">IT_ATT_C_II_5</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="aggregation_formula">IT_ATT_C_II_5_entro.balance + IT_ATT_C_II_5_oltro.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_5_entro" model="account.report.line">
+                                                <field name="name">Within 12 months</field>
+                                                <field name="code">IT_ATT_C_II_5_entro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">1553\(155399)</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_5_oltro" model="account.report.line">
+                                                <field name="name">Over 12 months</field>
+                                                <field name="code">IT_ATT_C_II_5_oltro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">155399</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_II_5_bis" model="account.report.line">
+                                        <field name="name">5-bis. Tax credits</field>
+                                        <field name="code">IT_ATT_C_II_5_bis</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="aggregation_formula">IT_ATT_C_II_5_bis_entro.balance + IT_ATT_C_II_5_bis_oltro.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_5_bis_entro" model="account.report.line">
+                                                <field name="name">Within 12 months</field>
+                                                <field name="code">IT_ATT_C_II_5_bis_entro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">1601\(160199) + 1609 + 1607 + 1605 + 1602 + 1608</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_5_bis_oltro" model="account.report.line">
+                                                <field name="name">Over 12 months</field>
+                                                <field name="code">IT_ATT_C_II_5_bis_oltro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">160199</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_II_5_ter" model="account.report.line">
+                                        <field name="name">5-ter. Deferred tax assets</field>
+                                        <field name="code">IT_ATT_C_II_5_ter</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="aggregation_formula">IT_ATT_C_II_5_ter_entro.balance + IT_ATT_C_II_5_ter_oltro.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_5_ter_entro" model="account.report.line">
+                                                <field name="name">Within 12 months</field>
+                                                <field name="code">IT_ATT_C_II_5_ter_entro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">1650\(165099)</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_5_ter_oltro" model="account.report.line">
+                                                <field name="name">Over 12 months</field>
+                                                <field name="code">IT_ATT_C_II_5_ter_oltro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">165099</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_II_5_quater" model="account.report.line">
+                                        <field name="name">5-quater. Toward others</field>
+                                        <field name="code">IT_ATT_C_II_5_quater</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="aggregation_formula">IT_ATT_C_II_5_quater_entro.balance + IT_ATT_C_II_5_quater_oltro.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_5_quater_entro" model="account.report.line">
+                                                <field name="name">Within 12 months</field>
+                                                <field name="code">IT_ATT_C_II_5_quater_entro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">1620 + 1640 + 1610\(161099) + 1611 + 1630</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_C_II_5_quater_oltro" model="account.report.line">
+                                                <field name="name">Over 12 months</field>
+                                                <field name="code">IT_ATT_C_II_5_quater_oltro</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">161099</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_ATT_C_III" model="account.report.line">
+                                <field name="name">III. Financial assets</field>
+                                <field name="code">IT_ATT_C_III</field>
+                                <field name="aggregation_formula">IT_ATT_C_III_1.balance + IT_ATT_C_III_2.balance + IT_ATT_C_III_3.balance + IT_ATT_C_III_3_bis.balance + IT_ATT_C_III_4.balance + IT_ATT_C_III_5.balance + IT_ATT_C_III_6.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_ATT_C_III_1" model="account.report.line">
+                                        <field name="name">1. Equity investments in subsidiaries</field>
+                                        <field name="code">IT_ATT_C_III_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1701</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_III_2" model="account.report.line">
+                                        <field name="name">2. Investments in affiliated companies</field>
+                                        <field name="code">IT_ATT_C_III_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1702</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_III_3" model="account.report.line">
+                                        <field name="name">3. Holdings in parent companies</field>
+                                        <field name="code">IT_ATT_C_III_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1703</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_III_3_bis" model="account.report.line">
+                                        <field name="name">3-bis. holdings in enterprises under the control of parent companies</field>
+                                        <field name="code">IT_ATT_C_III_3_bis</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1704</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_III_4" model="account.report.line">
+                                        <field name="name">4. Other holdings</field>
+                                        <field name="code">IT_ATT_C_III_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1705</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_III_5" model="account.report.line">
+                                        <field name="name">5. Derivative financial instruments assets</field>
+                                        <field name="code">IT_ATT_C_III_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1706</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_III_6" model="account.report.line">
+                                        <field name="name">6. Other titles</field>
+                                        <field name="code">IT_ATT_C_III_6</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_it_sp_ATT_C_III_6_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">IT_ATT_C_III_6.it_att_c_iii_6_v_balance + IT_ATT_C_III_6.it_att_c_iii_6_f_balance</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_C_III_6_it_att_c_iii_6_v_balance" model="account.report.expression">
+                                                <field name="label">it_att_c_iii_6_v_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">171</field>
+                                            </record>
+                                            <record id="account_financial_report_line_it_sp_ATT_C_III_6_it_att_c_iii_6_f_balance" model="account.report.expression">
+                                                <field name="label">it_att_c_iii_6_f_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">172</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_ATT_C_IV" model="account.report.line">
+                                <field name="name">IV. Cash and cash equivalents</field>
+                                <field name="code">IT_ATT_C_IV</field>
+                                <field name="aggregation_formula">IT_ATT_C_IV_1.balance + IT_ATT_C_IV_2.balance + IT_ATT_C_IV_3.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_ATT_C_IV_1" model="account.report.line">
+                                        <field name="name">1. Bank and postal deposits</field>
+                                        <field name="code">IT_ATT_C_IV_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">181 + 180</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_IV_2" model="account.report.line">
+                                        <field name="name">2. Checks</field>
+                                        <field name="code">IT_ATT_C_IV_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1821</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_ATT_C_IV_3" model="account.report.line">
+                                        <field name="name">3. Money and valuables in the cash box</field>
+                                        <field name="code">IT_ATT_C_IV_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1820 + 1830</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_it_sp_ATT_D" model="account.report.line">
+                        <field name="name">D. ACCRUALS AND DEFERRALS</field>
+                        <field name="code">IT_ATT_D</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">1901 + 1902</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_it_sp_assets_total" model="account.report.line">
+                <field name="name">TOTAL ACTIVE</field>
+                <field name="code">IT_ASSETS_TOTAL</field>
+                <field name="aggregation_formula">IT_ATT_A.balance + IT_ATT_B.balance + IT_ATT_C.balance + IT_ATT_D.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="account_financial_report_line_it_sp_passif" model="account.report.line">
+                <field name="name">PASSIVE</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_it_sp_PASS_A" model="account.report.line">
+                        <field name="name">A. EQUITY</field>
+                        <field name="code">IT_PASS_A</field>
+                        <field name="aggregation_formula">IT_PASS_A_I.balance + IT_PASS_A_II.balance + IT_PASS_A_III.balance + IT_PASS_A_IV.balance + IT_PASS_A_V.balance + IT_PASS_A_VI.balance + IT_PASS_A_VII.balance + IT_PASS_A_VIII.balance + IT_PASS_A_IX.balance + IT_PASS_A_X.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_it_sp_PASS_A_I" model="account.report.line">
+                                <field name="name">I. Capital</field>
+                                <field name="code">IT_PASS_A_I</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 2101 - 2104 - 2105</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_A_II" model="account.report.line">
+                                <field name="name">II. Share premium reserve</field>
+                                <field name="code">IT_PASS_A_II</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2106</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_A_III" model="account.report.line">
+                                <field name="name">III. Revaluation reserves</field>
+                                <field name="code">IT_PASS_A_III</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2107</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_A_IV" model="account.report.line">
+                                <field name="name">IV. Legal reserve</field>
+                                <field name="code">IT_PASS_A_IV</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2108</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_A_V" model="account.report.line">
+                                <field name="name">V. Statutory reserves</field>
+                                <field name="code">IT_PASS_A_V</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2109</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_A_VI" model="account.report.line">
+                                <field name="name">VI. Other reserves</field>
+                                <field name="code">IT_PASS_A_VI</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2110</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_A_VII" model="account.report.line">
+                                <field name="name">VII. Reserve for expected cash flow hedging transactions</field>
+                                <field name="code">IT_PASS_A_VII</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2111</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_A_VIII" model="account.report.line">
+                                <field name="name">VIII. Retained earnings (losses) brought forward</field>
+                                <field name="code">IT_PASS_A_VIII</field>
+                                <field name="groupby" eval="False"/>
+                                <field name="foldable" eval="False"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_it_sp_PASS_A_VIII_balance_account_codes" model="account.report.expression">
+                                        <field name="label">balance_account_codes</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-2102 - 2103 - 9101</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_PASS_A_VIII_balance_aggregate" model="account.report.expression">
+                                        <field name="label">balance_aggregate</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">UTILE_PERDITA.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                        <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_PASS_A_VIII_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">IT_PASS_A_VIII.balance_account_codes + IT_PASS_A_VIII.balance_aggregate</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_A_IX" model="account.report.line">
+                                <field name="name">IX. Profit (loss) for the year</field>
+                                <field name="code">IT_PASS_A_IX</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="action_id" ref="action_account_financial_report_it_ce"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_it_sp_PASS_A_IX_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">UTILE_PERDITA.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_A_X" model="account.report.line">
+                                <field name="name">X. Negative reserve for treasury stock in portfolio</field>
+                                <field name="code">IT_PASS_A_X</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2113</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_it_sp_PASS_B" model="account.report.line">
+                        <field name="name">B. PROVISIONS FOR RISKS AND CHARGES</field>
+                        <field name="code">IT_PASS_B</field>
+                        <field name="aggregation_formula">IT_PASS_B_1.balance + IT_PASS_B_2.balance + IT_PASS_B_3.balance + IT_PASS_B_4.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_it_sp_PASS_B_1" model="account.report.line">
+                                <field name="name">1. For retirement benefits and the like</field>
+                                <field name="code">IT_PASS_B_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2202</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_B_2" model="account.report.line">
+                                <field name="name">2. For taxes, including deferred taxes</field>
+                                <field name="code">IT_PASS_B_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2201</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_B_3" model="account.report.line">
+                                <field name="name">3. Passive derivative financial instruments</field>
+                                <field name="code">IT_PASS_B_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2203</field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_B_4" model="account.report.line">
+                                <field name="name">4. More</field>
+                                <field name="code">IT_PASS_B_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2211 - 2204 - 2205</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_it_sp_PASS_C" model="account.report.line">
+                        <field name="name">C. SEVERANCE PAY</field>
+                        <field name="code">IT_PASS_C</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-2301</field>
+                    </record>
+                    <record id="account_financial_report_line_it_sp_PASS_D" model="account.report.line">
+                        <field name="name">D. DEBTS</field>
+                        <field name="code">IT_PASS_D</field>
+                        <field name="aggregation_formula">IT_PASS_D_1.balance + IT_PASS_D_2.balance + IT_PASS_D_3.balance + IT_PASS_D_4.balance + IT_PASS_D_5.balance + IT_PASS_D_6.balance + IT_PASS_D_7.balance + IT_PASS_D_8.balance + IT_PASS_D_9.balance + IT_PASS_D_10.balance + IT_PASS_D_11.balance + IT_PASS_D_11_bis.balance + IT_PASS_D_12.balance + IT_PASS_D_13.balance + IT_PASS_D_14.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_it_sp_PASS_D_1" model="account.report.line">
+                                <field name="name">1. Bonds</field>
+                                <field name="code">IT_PASS_D_1</field>
+                                <field name="aggregation_formula">IT_PASS_D_1_entro.balance + IT_PASS_D_1_oltro.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_PASS_D_1_entro" model="account.report.line">
+                                        <field name="name">Within 12 months</field>
+                                        <field name="code">IT_PASS_D_1_entro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2400\(240099)</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_PASS_D_1_oltro" model="account.report.line">
+                                        <field name="name">Over 12 months</field>
+                                        <field name="code">IT_PASS_D_1_oltro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-240099</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_D_2" model="account.report.line">
+                                <field name="name">2. Convertible bonds</field>
+                                <field name="code">IT_PASS_D_2</field>
+                                <field name="aggregation_formula">IT_PASS_D_2_entro.balance + IT_PASS_D_2_oltro.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_PASS_D_2_entro" model="account.report.line">
+                                        <field name="name">Within 12 months</field>
+                                        <field name="code">IT_PASS_D_2_entro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2401\(240199)</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_PASS_D_2_oltro" model="account.report.line">
+                                        <field name="name">Over 12 months</field>
+                                        <field name="code">IT_PASS_D_2_oltro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-240199</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_D_3" model="account.report.line">
+                                <field name="name">3. Payables to shareholders for loans</field>
+                                <field name="code">IT_PASS_D_3</field>
+                                <field name="aggregation_formula">IT_PASS_D_3_entro.balance + IT_PASS_D_3_oltro.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_PASS_D_3_entro" model="account.report.line">
+                                        <field name="name">Within 12 months</field>
+                                        <field name="code">IT_PASS_D_3_entro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2405\(240599)</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_PASS_D_3_oltro" model="account.report.line">
+                                        <field name="name">Over 12 months</field>
+                                        <field name="code">IT_PASS_D_3_oltro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-240599</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_D_4" model="account.report.line">
+                                <field name="name">4. Due to banks</field>
+                                <field name="code">IT_PASS_D_4</field>
+                                <field name="aggregation_formula">IT_PASS_D_4_entro.balance + IT_PASS_D_4_oltro.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_PASS_D_4_entro" model="account.report.line">
+                                        <field name="name">Within 12 months</field>
+                                        <field name="code">IT_PASS_D_4_entro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-242 - 241\(241099)</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_PASS_D_4_oltro" model="account.report.line">
+                                        <field name="name">Over 12 months</field>
+                                        <field name="code">IT_PASS_D_4_oltro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-241099</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_D_5" model="account.report.line">
+                                <field name="name">5. Debts to other lenders</field>
+                                <field name="code">IT_PASS_D_5</field>
+                                <field name="aggregation_formula">IT_PASS_D_5_entro.balance + IT_PASS_D_5_oltro.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_PASS_D_5_entro" model="account.report.line">
+                                        <field name="name">Within 12 months</field>
+                                        <field name="code">IT_PASS_D_5_entro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2440\(244099)</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_PASS_D_5_oltro" model="account.report.line">
+                                        <field name="name">Over 12 months</field>
+                                        <field name="code">IT_PASS_D_5_oltro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-244099</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_D_6" model="account.report.line">
+                                <field name="name">6. Advances</field>
+                                <field name="code">IT_PASS_D_6</field>
+                                <field name="aggregation_formula">IT_PASS_D_6_entro.balance + IT_PASS_D_6_oltro.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_PASS_D_6_entro" model="account.report.line">
+                                        <field name="name">Within 12 months</field>
+                                        <field name="code">IT_PASS_D_6_entro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2530\(253099)</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_PASS_D_6_oltro" model="account.report.line">
+                                        <field name="name">Over 12 months</field>
+                                        <field name="code">IT_PASS_D_6_oltro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-253099</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_D_7" model="account.report.line">
+                                <field name="name">7. Accounts payable to suppliers</field>
+                                <field name="code">IT_PASS_D_7</field>
+                                <field name="aggregation_formula">IT_PASS_D_7_entro.balance + IT_PASS_D_7_oltro.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_PASS_D_7_entro" model="account.report.line">
+                                        <field name="name">Within 12 months</field>
+                                        <field name="code">IT_PASS_D_7_entro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2501\(250199) - 252</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_PASS_D_7_oltro" model="account.report.line">
+                                        <field name="name">Over 12 months</field>
+                                        <field name="code">IT_PASS_D_7_oltro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-250199</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_D_8" model="account.report.line">
+                                <field name="name">8. Debts represented by debt securities</field>
+                                <field name="code">IT_PASS_D_8</field>
+                                <field name="aggregation_formula">IT_PASS_D_8_entro.balance + IT_PASS_D_8_oltro.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_PASS_D_8_entro" model="account.report.line">
+                                        <field name="name">Within 12 months</field>
+                                        <field name="code">IT_PASS_D_8_entro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2503\(250399)</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_PASS_D_8_oltro" model="account.report.line">
+                                        <field name="name">Over 12 months</field>
+                                        <field name="code">IT_PASS_D_8_oltro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-250399</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_D_9" model="account.report.line">
+                                <field name="name">9. Accounts payable to subsidiaries</field>
+                                <field name="code">IT_PASS_D_9</field>
+                                <field name="aggregation_formula">IT_PASS_D_9_entro.balance + IT_PASS_D_9_oltro.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_PASS_D_9_entro" model="account.report.line">
+                                        <field name="name">Within 12 months</field>
+                                        <field name="code">IT_PASS_D_9_entro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2540\(254099)</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_PASS_D_9_oltro" model="account.report.line">
+                                        <field name="name">Over 12 months</field>
+                                        <field name="code">IT_PASS_D_9_oltro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-254099</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_D_10" model="account.report.line">
+                                <field name="name">10. Accounts payable to affiliated companies</field>
+                                <field name="code">IT_PASS_D_10</field>
+                                <field name="aggregation_formula">IT_PASS_D_10_entro.balance + IT_PASS_D_10_oltro.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_PASS_D_10_entro" model="account.report.line">
+                                        <field name="name">Within 12 months</field>
+                                        <field name="code">IT_PASS_D_10_entro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2541\(254199)</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_PASS_D_10_oltro" model="account.report.line">
+                                        <field name="name">Over 12 months</field>
+                                        <field name="code">IT_PASS_D_10_oltro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-254199</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_D_11" model="account.report.line">
+                                <field name="name">11. Payables to parent companies</field>
+                                <field name="code">IT_PASS_D_11</field>
+                                <field name="aggregation_formula">IT_PASS_D_11_entro.balance + IT_PASS_D_11_oltro.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_PASS_D_11_entro" model="account.report.line">
+                                        <field name="name">Within 12 months</field>
+                                        <field name="code">IT_PASS_D_11_entro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2542\(254299)</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_PASS_D_11_oltro" model="account.report.line">
+                                        <field name="name">Over 12 months</field>
+                                        <field name="code">IT_PASS_D_11_oltro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-254299</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_D_11_bis" model="account.report.line">
+                                <field name="name">11-bis. Accounts payable to companies under the control of parent companies</field>
+                                <field name="code">IT_PASS_D_11_bis</field>
+                                <field name="aggregation_formula">IT_PASS_D_11_bis_entro.balance + IT_PASS_D_11_bis_oltro.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_PASS_D_11_bis_entro" model="account.report.line">
+                                        <field name="name">Within 12 months</field>
+                                        <field name="code">IT_PASS_D_11_bis_entro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2543\(254399)</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_PASS_D_11_bis_oltro" model="account.report.line">
+                                        <field name="name">Over 12 months</field>
+                                        <field name="code">IT_PASS_D_11_bis_oltro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-254399</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_D_12" model="account.report.line">
+                                <field name="name">12. Tax debts</field>
+                                <field name="code">IT_PASS_D_12</field>
+                                <field name="aggregation_formula">IT_PASS_D_12_entro.balance + IT_PASS_D_12_oltro.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_PASS_D_12_entro" model="account.report.line">
+                                        <field name="name">Within 12 months</field>
+                                        <field name="code">IT_PASS_D_12_entro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-260\(260099)</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_PASS_D_12_oltro" model="account.report.line">
+                                        <field name="name">Over 12 months</field>
+                                        <field name="code">IT_PASS_D_12_oltro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-260099</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_D_13" model="account.report.line">
+                                <field name="name">13. Amounts owed to pension and social security institutions</field>
+                                <field name="code">IT_PASS_D_13</field>
+                                <field name="aggregation_formula">IT_PASS_D_13_entro.balance + IT_PASS_D_13_oltro.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_PASS_D_13_entro" model="account.report.line">
+                                        <field name="name">Within 12 months</field>
+                                        <field name="code">IT_PASS_D_13_entro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-263\(263099)</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_PASS_D_13_oltro" model="account.report.line">
+                                        <field name="name">Over 12 months</field>
+                                        <field name="code">IT_PASS_D_13_oltro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-263099</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_it_sp_PASS_D_14" model="account.report.line">
+                                <field name="name">14. Other debts</field>
+                                <field name="code">IT_PASS_D_14</field>
+                                <field name="aggregation_formula">IT_PASS_D_14_entro.balance + IT_PASS_D_14_oltro.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_it_sp_PASS_D_14_entro" model="account.report.line">
+                                        <field name="name">Within 12 months</field>
+                                        <field name="code">IT_PASS_D_14_entro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-262 - 264 - 261\(261099)</field>
+                                    </record>
+                                    <record id="account_financial_report_line_it_sp_PASS_D_14_oltro" model="account.report.line">
+                                        <field name="name">Over 12 months</field>
+                                        <field name="code">IT_PASS_D_14_oltro</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-261099</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_it_sp_PASS_E" model="account.report.line">
+                        <field name="name">E. ACCRUALS AND DEFERRALS</field>
+                        <field name="code">IT_PASS_E</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-270 - 280 - 281</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_it_sp_passif_total" model="account.report.line">
+                <field name="name">TOTAL PASSIVE</field>
+                <field name="code">IT_PASSIF_TOTAL</field>
+                <field name="aggregation_formula">IT_PASS_A.balance + IT_PASS_B.balance + IT_PASS_C.balance + IT_PASS_D.balance + IT_PASS_E.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="account_financial_report_line_it_sp_CONTI_ORDINE" model="account.report.line">
+                <field name="name">ORDINARY ACCOUNTS</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_it_sp_CONTI_ORDINE_RISCHI" model="account.report.line">
+                        <field name="name">Risks</field>
+                        <field name="code">IT_RISCHI</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-2921 - 2926 - 2931 - 2922</field>
+                    </record>
+                    <record id="account_financial_report_line_it_sp_CONTI_ORDINE_IMPEGNI" model="account.report.line">
+                        <field name="name">Commitments</field>
+                        <field name="code">IT_IMPEGNI</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-2932 - 2927 - 291</field>
+                    </record>
+                    <record id="account_financial_report_line_it_sp_CONTI_ORDINE_BENI" model="account.report.line">
+                        <field name="name">Third party assets</field>
+                        <field name="code">IT_BENI</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-290</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

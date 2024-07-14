@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_subscription_report_search" model="ir.ui.view">
+        <field name="name">sale.report.search</field>
+        <field name="model">sale.subscription.report</field>
+        <field name="inherit_id" ref="sale_subscription.sale_subscription_report_search"/>
+        <field name="arch" type="xml">
+            <filter name="group_by_sales_person" position="after">
+                <filter string="Referrer" name="group_by_referrer" domain="[]" context="{'group_by': 'referrer_id'}"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

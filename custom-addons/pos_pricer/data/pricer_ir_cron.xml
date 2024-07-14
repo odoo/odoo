@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Cron used to synchronize Odoo Products with Pricer tags -->
+        <record id="pricer_sync_cron" model="ir.cron">
+            <field name="name">POS Pricer: tags update synchronization </field>
+            <field name="model_id" ref="pos_pricer.model_pricer_store"/>
+            <field name="state">code</field>
+            <field name="code">model.search(([("pricer_tag_ids", "!=", False)]))._update_pricer_tags(update_all=False)</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_root"/>
+            <!-- Pricer has a guaranty for the battery life of their tags
+            The battery lifetime depends on the tag model and is guaranteed for:
+                - Max 2 updates per day
+                - Max 30 seconds led flashing per day
+            So, updating every 12 hours is the most frequent we can do -->
+            <field name="interval_number">12</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<odoo>
+    <data>
+        <template id="dte_subtemplate">
+            <Encabezado>
+                <IdDoc>
+                    <TipoDTE t-out="picking.l10n_latam_document_type_id.code"/>
+                    <Folio t-out="int(picking.l10n_latam_document_number)"/>
+                    <FchEmis t-out="picking._get_cl_current_datetime().date()"/>
+                    <IndTraslado t-out="picking.l10n_cl_delivery_guide_reason"/>
+                </IdDoc>
+                <Emisor>
+                    <RUTEmisor t-out="format_vat(picking.company_id.vat)"/>
+                    <RznSoc t-out="format_length(picking.company_id.partner_id.name, 100)"/>
+                    <GiroEmis t-out="format_length(picking.company_id.l10n_cl_activity_description, 80)"/>
+                    <Telefono t-if="picking.company_id.phone and not picking.l10n_latam_document_type_id._is_doc_type_voucher()" t-out="format_length(picking.company_id.phone, 20)"/>
+                    <CorreoEmisor t-out="picking.company_id.l10n_cl_dte_email"/>
+                <t t-foreach="picking.company_id.l10n_cl_company_activity_ids" t-as="activity">
+                    <Acteco t-out="activity.code"/>
+                </t>
+                    <DirOrigen t-out="format_length('%s %s' % (picking.company_id.partner_id.street, (picking.company_id.partner_id.street2 or '')), 70)"/>
+                    <CmnaOrigen t-out="picking.company_id.partner_id.city or ''"/>
+                </Emisor>
+                <Receptor>
+                    <RUTRecep t-out="format_vat(picking.partner_id.vat)"/>
+                    <RznSocRecep t-out="format_length(picking.partner_id.name, 100)"/>
+                    <GiroRecep t-out="format_length(picking.partner_id.l10n_cl_activity_description or picking.partner_id.commercial_partner_id.l10n_cl_activity_description, 40)"/>
+                    <Contacto t-out="format_length(picking.partner_id.phone or picking.partner_id.email or '', 80)"/>
+                    <CorreoRecep t-out="picking.partner_id.l10n_cl_dte_email or picking.partner_id.commercial_partner_id.l10n_cl_dte_email or picking.partner_id.email or picking.partner_id.commercial_partner_id.email"/>
+                    <DirRecep t-out="format_length(picking.partner_id.street or '' + ' ' + picking.partner_id.street2 or '', 70)"/>
+                    <CmnaRecep t-out="picking._l10n_cl_get_comuna_recep()"/>
+                </Receptor>
+                <Transporte>
+                    <DirDest/>
+                    <CmnaDest/>
+                    <CiudadDest/>
+                </Transporte>
+                <Totales>
+                    <MntExe t-if="amounts.get('subtotal_amount_exempt', False)" t-out="float_repr(amounts['subtotal_amount_exempt'], 0)"/>
+                    <MntNeto t-if="amounts.get('subtotal_amount_taxable', False)" t-out="float_repr(amounts['subtotal_amount_taxable'], 0)"/>
+                    <TasaIVA t-if="amounts.get('vat_percent', False)" t-out="amounts['vat_percent']"/>
+                    <IVA t-if="amounts.get('vat_percent', False)" t-out="float_repr(amounts['vat_amount'], 0)"/>
+                <t t-foreach="withholdings" t-as="tax">
+                    <ImptoReten>
+                        <TipoImp t-out="tax['tax_code']"/>
+                        <TasaImp t-out="tax['tax_percent']"/>
+                        <MontoImp t-out="float_repr(tax['tax_amount'], 0)"/>
+                    </ImptoReten>
+                </t>
+                    <MntTotal t-out="float_repr(amounts['total_amount'], 0) if not picking.l10n_latam_document_type_id._is_doc_type_export() else amounts['total_amount']"/>
+                </Totales>
+            </Encabezado>
+        <t t-set="line_number" t-value="1"/>
+        <t t-foreach="picking.move_ids.filtered(lambda x: x.quantity > 0)" t-as="line">
+            <t t-set="line_amounts" t-value="total_line_amounts.get(line, {})"/>
+            <Detalle>
+                <NroLinDet t-out="line_number"/>
+                <CdgItem t-if="line.product_id.default_code">
+                    <TpoCodigo>INT1</TpoCodigo>
+                    <VlrCodigo t-out="line.product_id.default_code"/>
+                </CdgItem>
+                <IndExe t-if="line_amounts.get('exempt', False)" t-out="'1'"/>
+                <IndExe t-if="line_amounts.get('total_amount', 0.0) == 0.0 and picking.l10n_cl_delivery_guide_reason == '1'" t-out="'4'"/>
+                <NmbItem t-out="format_length(line.product_id.name, 80)"/>
+                <DscItem t-out="format_length(line.product_id.name, 1000)"/>
+                <QtyItem t-out="float_repr(line.product_uom_qty, 6)"/>
+                <UnmdItem t-out="format_uom(line.product_uom)"/>
+                <PrcItem t-if="line_amounts.get('price_unit', False)" t-out="float_repr(line_amounts['price_unit'], 6)"/>
+            <t t-if="line_amounts.get('discount', False)">
+                <DescuentoPct t-out="float_repr(line_amounts['discount'], 2)"/>
+                <DescuentoMonto t-out="line_amounts['total_discount']"/>
+            </t>
+            <t t-foreach="line_amounts.get('wh_taxes', [])" t-as="tax">
+                <CodImpAdic t-out="tax.l10n_cl_sii_code"/>
+            </t>
+                <MontoItem t-out="float_repr(line_amounts.get('total_amount', 0.0), 0)"/>
+            </Detalle>
+        <t t-set="line_number" t-value="line_number + 1"/>
+        </t>
+        <t t-if="picking.sale_id.client_order_ref">
+            <Referencia>
+                <NroLinRef t-out="'1'"/>
+                <TpoDocRef t-out="'801'"/>
+                <FolioRef t-out="picking.sale_id.client_order_ref"/>
+                <FchRef t-out="picking.sale_id.date_order.date()"/>
+                <RazonRef t-out="'Orden de compra Ref Cliente'"/>
+            </Referencia>
+        </t>
+            <t t-out="dte"/>
+        </template>
+
+        <template id="documento_dte">
+            <Documento t-att-ID="doc_id">
+                <t t-call="l10n_cl_edi_stock.dte_subtemplate"/>
+            </Documento>
+        </template>
+
+        <template id="exportaciones_dte">
+            <Exportaciones t-att-ID="doc_id">
+                <t t-call="l10n_cl_edi_stock.dte_subtemplate"/>
+            </Exportaciones>
+        </template>
+
+        <template id="dte_template">
+            <DTE xmlns="http://www.sii.cl/SiiDte" version="1.0">
+                <t t-if="picking.partner_id._l10n_cl_is_foreign()">
+                    <Exportaciones t-att-ID="doc_id">
+                        <t t-call="l10n_cl_edi_stock.dte_subtemplate"/>
+                    </Exportaciones>
+                </t>
+                <t t-else="">
+                    <t t-call="l10n_cl_edi_stock.documento_dte"/>
+                </t>
+            </DTE>
+        </template>
+    </data>
+</odoo>

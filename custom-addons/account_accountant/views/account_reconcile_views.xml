@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_account_move_line_reconcile_search" model="ir.ui.view">
+        <field name="name">account.move.line.reconcile.search</field>
+        <field name="model">account.move.line</field>
+        <field name="priority" eval="300"/>
+        <field name="arch" type="xml">
+            <search string="Search Journal Items to Reconcile">
+                <field name="name"
+                       string="Journal Item"
+                       filter_domain="['|', '|', '|', ('name', 'ilike', self), ('ref', 'ilike', self), ('account_id', 'ilike', self), ('partner_id', 'ilike', self)]"/>
+                <field name="name"/>
+                <field name="ref"/>
+                <field name="invoice_date"/>
+                <field name="date"/>
+                <field name="balance" string="Amount" filter_domain="['|', ('credit', '=', self), ('debit', '=', self)]"/>
+                <field name="account_id"/>
+                <field name="account_type"/>
+                <field name="partner_id"/>
+                <field name="journal_id"/>
+                <field name="move_id"
+                       string="Journal Entry"
+                       filter_domain="['|', '|', ('move_id.name', 'ilike', self), ('move_id.ref', 'ilike', self), ('move_id.partner_id', 'ilike', self)]"/>
+                <field name="tax_ids" />
+                <field name="tax_line_id" string="Originator Tax"/>
+                <field name="reconcile_model_id"/>
+                <separator/>
+                <filter string="Unreconciled" domain="[('amount_residual', '!=', 0), ('account_id.reconcile', '=', True)]" help="Journal items where matching number isn't set" name="unreconciled"/>
+                <separator/>
+                <filter string="Payable" domain="[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]" help="From Trade Payable accounts" name="trade_payable"/>
+                <filter string="Receivable" domain="[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]" help="From Trade Receivable accounts" name="trade_receivable"/>
+                <separator/>
+                <filter string="Date" name="date" date="date"/>
+                <filter string="Invoice Date" name="invoice_date" date="invoice_date"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Journal Entry" name="group_by_move" domain="[]" context="{'group_by': 'move_name'}"/>
+                    <filter string="Account" name="group_by_account" domain="[]" context="{'group_by': 'account_id'}"/>
+                    <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
+                    <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
+                    <filter string="Invoice Date" name="groupby_invoice_date" domain="[]" context="{'group_by': 'invoice_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_move_line_reconcile_tree" model="ir.ui.view">
+        <field name="name">account.move.line.tree.reconcile</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <tree string="Journal Items" js_class="account_move_line_reconcile_list" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1" sample="1">
+                <header>
+                    <button name="action_reconcile" type="object" string="Reconcile" groups="account.group_account_user"/>
+                </header>
+                <field name="move_id" column_invisible="True"/>
+                <field name="invoice_date" string="Invoice Date" optional="hide"/>
+                <field name="date" readonly="1"/>
+                <field name="company_id" column_invisible="True"/>
+                <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
+                <field name="journal_id" readonly="1" options='{"no_open":True}' optional="hide"/>
+                <field name="move_name" string="Journal Entry" widget="open_move_widget"/>
+                <field name="account_id" options="{'no_open': True, 'no_create': True}" domain="[('company_id', 'parent_of', company_id), ('deprecated', '=', False)]" groups="account.group_account_readonly" optional="hide"/>
+                <field name="partner_id" optional="hide" readonly="move_type != 'entry'"/>
+                <field name="ref" optional="hide" readonly="False"/>
+                <field name="product_id" readonly="1" optional="hide"/>
+                <field name="name" optional="show"/>
+                <field name="tax_ids" widget="many2many_tags" optional="hide" readonly="1"/>
+                <field name="amount_currency" groups="base.group_multi_currency" optional="show" readonly="1" invisible="is_same_currency"/>
+                <field name="currency_id" groups="base.group_multi_currency" optional="hide" string="Currency" readonly="1" invisible="is_same_currency"/>
+                <field name="debit" sum="Total Debit" readonly="1"/>
+                <field name="credit" sum="Total Credit" readonly="1"/>
+                <field name="tax_tag_ids" string="Tax Grids" widget="many2many_tags" optional="hide"/>
+                <field name="discount_date" string="Discount Date" optional="hide" />
+                <field name="discount_amount_currency" string="Discount Amount" optional="hide" />
+                <field name="tax_line_id" string="Originator Tax" optional="hide" readonly="1"/>
+                <field name="date_maturity" readonly="1" optional="hide"/>
+                <field name="balance" sum="Total Balance" optional="hide" readonly="1"/>
+                <field name="matching_number" readonly="1" optional="show" widget="matching_link_widget"/>
+                <field name="amount_residual" sum="Total Residual" string="Residual" optional="show" readonly="1" invisible="not is_account_reconcile"/>
+                <field name="amount_residual_currency" sum="Total Residual in Currency" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile"/>
+                <field name="analytic_distribution" widget="analytic_distribution"
+                       groups="analytic.group_analytic_accounting"
+                       optional="show"
+                       options="{'product_field': 'product_id', 'account_field': 'account_id', 'force_applicability': 'optional'}"/>
+                <field name="move_type" column_invisible="True"/>
+                <field name="parent_state" column_invisible="True"/>
+                <field name="account_type" column_invisible="True"/>
+                <field name="statement_line_id" column_invisible="True"/>
+                <field name="company_currency_id" column_invisible="True"/>
+                <field name="is_same_currency" column_invisible="True"/>
+                <field name="is_account_reconcile" column_invisible="True"/>
+                <field name="sequence" column_invisible="True"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Open the auto-reconcile wizard in modal -->
+    <record id="action_open_auto_reconcile_wizard" model="ir.actions.act_window">
+        <field name="name">Find Entries to Reconcile Automatically</field>
+        <field name="res_model">account.auto.reconcile.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Open amls to reconcile in a view dedicated for reconciliation -->
+    <record id="action_move_line_posted_unreconciled" model="ir.actions.act_window">
+        <field name="name">Journal Items to reconcile</field>
+        <field name="res_model">account.move.line</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="view_account_move_line_reconcile_search"/>
+        <field name="view_id" ref="view_move_line_reconcile_tree"/>
+        <field name="domain">[('display_type', 'not in', ('line_section', 'line_note')), ('account_id.reconcile', '=', True), ('parent_state', '=', 'posted'), ('full_reconcile_id', '=', False)]</field>
+        <field name="context">{'journal_type': 'general', 'search_default_unreconciled': True, 'search_default_group_by_account': True, 'search_default_group_by_partner': True}</field>
+    </record>
+</odoo>

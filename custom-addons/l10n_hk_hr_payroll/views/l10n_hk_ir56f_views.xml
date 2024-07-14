@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_hk_ir56f_view_form" model="ir.ui.view">
+        <field name="name">l10n_hk_ir56f.view.form</field>
+        <field name="model">l10n_hk.ir56f</field>
+        <field name="arch" type="xml">
+            <form string="IR56F Sheet">
+                <header>
+                    <button string="Create XML" name="action_generate_xml" type="object" class="btn-primary" />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_declarations" type="object" class="oe_stat_button" icon="fa-users">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="lines_count"/></span>
+                                <span class="o_stat_text">Eligible Employees</span>
+                            </div>
+                        </button>
+                    </div>
+                    <field name="state" invisible="1" />
+                    <field name="xml_filename" invisible="1" />
+                    <group>
+                        <group>
+                            <field name="start_year" class="o_hr_narrow_field" options="{'type': 'number'}" />
+                            <field name="start_month" class="o_hr_narrow_field"/>
+                        </group>
+                    </group>
+                    <group string="Extra">
+                        <field name="type_of_form" />
+                        <field name="submission_date" />
+                        <field name="year_of_employer_return" placeholder="YYYY" required="type_of_form == 'O'" />
+                        <field name="name_of_signer" />
+                        <field name="designation_of_signer" />
+                    </group>
+                    <div class="mt-3" invisible="state not in ['waiting', 'done']">
+                        <h2>Generation Complete</h2>
+                        <p invisible="not xml_file" class="oe_inline">
+                            Download the IR56F XML file: <field name="xml_file" readonly="1" filename="xml_filename"/>
+                            <field name="xml_validation_state" class="ms-2 mb-0" widget="state_selection" nolabel="1"/>
+                            <field name="error_message" invisible="xml_validation_state != 'invalid'" nolabel="1"/>
+                        </p>
+                    </div>
+                    <div class="mt-3" invisible="not pdf_error">
+                        <p class="oe_inline">
+                            <field name="pdf_error" readonly="1" nolabel="1"/>
+                        </p>
+                    </div>
+                    <p name="save_warning" invisible="state != 'done'">The files won't be posted in the employee portal if you don't have the Documents app.</p>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_hk_ir56f_view_tree" model="ir.ui.view">
+        <field name="name">l10n_hk.ir56f.view.tree</field>
+        <field name="model">l10n_hk.ir56f</field>
+        <field name="arch" type="xml">
+            <tree string="IR56F Sheets">
+                <field name="display_name" string="Name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_hk_ir56f_action" model="ir.actions.act_window">
+        <field name="name">IR56F Sheet</field>
+        <field name="res_model">l10n_hk.ir56f</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

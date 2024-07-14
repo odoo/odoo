@@ -1,0 +1,17 @@
+@for $i from 1 through length($o-colors-complete){
+    $color: adjust-color(nth($o-colors-complete, $i), $lightness: 25%, $saturation: 15%);
+
+    .o_cw_filter_color_#{$i - 1} {
+        .o_cw_filter_avatar.fa-wrench {
+            background-color: $color;
+        }
+    }
+}
+
+[class*="o_cw_filter_color_"] {
+    input.no_filter_color, input.no_filter_color:hover {
+        border-color: $light;
+        background-color: transparent !important;
+        filter: invert(1) grayscale(1);
+    }
+}

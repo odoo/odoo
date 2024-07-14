@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="social_media_facebook" model="social.media">
+            <field name="name">Facebook</field>
+            <field name="media_type">facebook</field>
+            <field name="media_description">Manage your Facebook pages and schedule posts</field>
+            <field name="image" type="base64" file="social_facebook/static/src/img/facebook.svg"/>
+        </record>
+
+        <record id="stream_type_page_posts" model="social.stream.type">
+            <field name="name">Page Posts</field>
+            <field name="stream_type">facebook_page_posts</field>
+            <field name="media_id" ref="social_media_facebook"></field>
+        </record>
+
+        <record id="stream_type_page_mentions" model="social.stream.type">
+            <field name="name">Page Mentions</field>
+            <field name="stream_type">facebook_page_mentions</field>
+            <field name="media_id" ref="social_media_facebook"></field>
+        </record>
+    </data>
+</odoo>

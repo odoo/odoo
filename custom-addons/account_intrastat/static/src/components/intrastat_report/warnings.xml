@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_intrastat.intrastat_warning_expired_trans">
+        Some lines have expired intrastat
+        <a
+            type="action"
+            t-on-click="(ev) => controller.reportAction(ev, 'action_invalid_code_moves', warningParams)"
+        >
+            transaction codes
+        </a>.
+    </t>
+
+    <t t-name="account_intrastat.intrastat_warning_premature_trans">
+        Some lines have premature intrastat
+        <a
+            type="action"
+            t-on-click="(ev) => controller.reportAction(ev, 'action_invalid_code_moves', warningParams)"
+        >
+            transaction codes
+        </a>.
+    </t>
+
+    <t t-name="account_intrastat.intrastat_warning_missing_trans">
+        Some lines have undefined
+        <a
+            type="action"
+            t-on-click="(ev) => controller.reportAction(ev, 'action_invalid_code_moves', warningParams)"
+        >
+            transaction codes
+        </a>.
+    </t>
+
+    <t t-name="account_intrastat.intrastat_warning_expired_comm">
+        Check the expired
+        <a
+            type="action"
+            t-on-click="(ev) => controller.reportAction(ev, 'action_invalid_code_products', warningParams)"
+        >
+            product commodity codes
+        </a>.
+    </t>
+
+    <t t-name="account_intrastat.intrastat_warning_premature_comm">
+        Check the premature
+        <a
+            type="action"
+            t-on-click="(ev) => controller.reportAction(ev, 'action_invalid_code_products', warningParams)"
+        >
+            product's commodity codes
+        </a>.
+    </t>
+
+    <t t-name="account_intrastat.intrastat_warning_missing_comm">
+        Some products have undefined
+        <a
+            type="action"
+            t-on-click="(ev) => controller.reportAction(ev, 'action_invalid_code_products', warningParams)"
+        >
+            commodity codes
+        </a>.
+    </t>
+
+    <t t-name="account_intrastat.intrastat_warning_missing_weight">
+        Some products have undefined
+        <a
+            type="action"
+            t-on-click="(ev) => controller.reportAction(ev, 'action_undefined_weight_products', warningParams)"
+        >
+            weights
+        </a>
+        when they are required.
+    </t>
+
+    <t t-name="account_intrastat.intrastat_warning_missing_unit">
+        Some products have undefined
+        <a
+            type="action"
+            t-on-click="(ev) => controller.reportAction(ev, 'action_undefined_units_products', warningParams)"
+        >
+            supplementary units
+        </a>
+        when they are required.
+    </t>
+</templates>

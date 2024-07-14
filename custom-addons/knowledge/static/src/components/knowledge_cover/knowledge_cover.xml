@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.KnowledgeCover">
+        <div t-if="props.record.data.cover_image_url" t-ref="root"
+             t-attf-class="o_knowledge_cover position-relative #{state.repositioning ? 'o_cursor_grab' : ''} #{state.grabbing ? 'o_cursor_grabbing' : ''}">
+            <img t-att-src="props.record.data.cover_image_url" alt="cover"
+                 t-ref="image" t-att-class="state.repositioning ? '' : 'pe-none'"
+                 t-attf-style="object-position: 50% #{state.verticalPosition}%;"/>
+            <span t-if="state.repositioning" class="o_reposition_hint position-absolute top-50 start-50 translate-middle pe-none p-1 rounded opacity-75">
+                Click and hold to reposition
+            </span>
+            <span t-if="isEditable" class="o_knowledge_edit_cover_buttons position-absolute bottom-0 end-0 mb-2 me-3 text-muted d-print-none">
+                <t t-if="state.repositioning">
+                    <!-- no action attached, see "repositionCover" and the document "pointerdown" listener -->
+                    <a role="button" class="btn btn-light text-capitalize me-3 o_knowledge_save_cover_move">
+                        <i class="fa fa-lg fa-floppy-o me-1" title="Save Position"/> Save position
+                    </a>
+                    <a role="button" class="btn btn-light text-capitalize me-3 o_knowledge_undo_cover_move">
+                        <i class="fa fa-lg fa-undo me-1"/> Cancel
+                    </a>
+                </t>
+                <t t-else="">
+                    <a role="button" t-on-click="changeCover"
+                       class="btn btn-light text-capitalize me-3 o_knowledge_replace_cover o_knowledge_option_button">
+                        <i class="fa fa-lg fa-picture-o" title="Change cover"/>
+                        <span class="d-none d-sm-inline ms-1">Replace cover</span>
+                        <span class="d-sm-none ms-1">Replace</span>
+                    </a>
+                    <a t-if="!this.env.isSmall" role="button" t-on-click="repositionCover"
+                       class="btn btn-light text-capitalize me-3 o_knowledge_reposition_cover o_knowledge_option_button">
+                        <i class="oi oi-large oi-arrows-v me-1" title="Reposition cover"/> Reposition
+                    </a>
+                    <a role="button" t-on-click="removeCover"
+                       class="btn btn-light text-capitalize o_knowledge_remove_cover o_knowledge_option_button">
+                        <i class="fa fa-lg fa-trash-o" title="Remove cover"/><span class="d-none d-sm-inline ms-1">Remove</span>
+                    </a>
+                </t>
+            </span>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,771 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* data_merge
+# 
+# Translators:
+# Emanuel Bruda, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Cozmin Candea <office@terrabit.ro>, 2024
+# Claudia Baisan, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Claudia Baisan, 2024\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (copie)"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_group.py:0
+#, python-format
+msgid "%s - Similarity: %s%%"
+msgstr ""
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid "%s records have been merged"
+msgstr "%s înregistrările au fost îmbinate"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid ""
+"' deduplication rule.<br/>\n"
+"You can merge them"
+msgstr ""
+"' deduplication rule.<br/>\n"
+"Le puteți îmbina"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "<span class=\"me-1\">Every</span>"
+msgstr "<span class=\"me-1\">Fiecare</span>"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "<span class=\"oe_inline\">%</span>"
+msgstr ""
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "<span invisible=\"not custom_merge_method\">Model specific</span>"
+msgstr ""
+
+#. module: data_merge
+#: model:ir.model.constraint,message:data_merge.constraint_data_merge_rule_uniq_model_id_field_id
+msgid "A field can only appear once!"
+msgstr "Un câmp poate apărea doar o dată!"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__active
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__active
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__active
+msgid "Active"
+msgstr "Activ"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__removal_mode__archive
+msgid "Archive"
+msgstr "Arhivează"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_model_view_search
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Archived"
+msgstr "Arhivat"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid ""
+"Are you sure that you want to merge the selected records in their respective"
+" group?"
+msgstr ""
+"Sigur doriți să îmbinați înregistrările selectate în grupul lor respectiv?"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid "Are you sure that you want to merge these records?"
+msgstr "Sigur doriți să îmbinați aceste înregistrări?"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__merge_mode__automatic
+msgid "Automatic"
+msgstr "Automat"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_ir_model__is_merge_enabled
+#: model_terms:ir.ui.view,arch_db:data_merge.ir_model_view_search
+msgid "Can Be Merged"
+msgstr "Poate fi îmbinat"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_rule.py:0
+#, python-format
+msgid "Case/Accent Insensitive Match"
+msgstr "Potrivire insensibilă la majuscule/minuscule"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__company_id
+msgid "Company"
+msgstr "Companie"
+
+#. module: data_merge
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record_notification
+msgid "Configure rules to identify duplicate records"
+msgstr "Configurați reguli pentru identificare înregistrări duplicat"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_res_partner
+msgid "Contact"
+msgstr "Contact"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_ir_model__ref_merge_ir_act_server_id
+msgid ""
+"Contextual menu action that redirects to the deduplicate view of data_merge."
+msgstr ""
+"Acțiunea de meniu contextual care redirecționează la vizualizarea "
+"deduplicate "
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_create_uid
+msgid "Created By"
+msgstr "Creat de"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_create_date
+msgid "Created On"
+msgstr "Creat În"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__create_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__create_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__create_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__create_uid
+msgid "Created by"
+msgstr "Creat de"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__create_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__create_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__create_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__create_date
+msgid "Created on"
+msgstr "Creat în"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__mix_by_company
+msgid "Cross-Company"
+msgstr "Între companii"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__custom_merge_method
+msgid "Custom Merge Method"
+msgstr "Metodă de îmbinare personalizată"
+
+#. module: data_merge
+#: model:ir.actions.server,name:data_merge.ir_cron_cleanup_ir_actions_server
+msgid "Data Merge: Cleanup Records"
+msgstr "Îmbinare Date: Ștergere Înregistrări"
+
+#. module: data_merge
+#: model:ir.actions.server,name:data_merge.ir_cron_find_duplicates_ir_actions_server
+msgid "Data Merge: Find Duplicate Records"
+msgstr "Combinarea datelor: găsiți înregistrări duplicate"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__notify_frequency_period__days
+msgid "Days"
+msgstr "Zile"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+#, python-format
+msgid "Deduplicate"
+msgstr "Deduplicați"
+
+#. module: data_merge
+#: model:ir.ui.menu,name:data_merge.menu_data_merge_config_rules_deduplication
+#: model:ir.ui.menu,name:data_merge.menu_data_merge_group
+msgid "Deduplication"
+msgstr "Deduplicare"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_group
+msgid "Deduplication Group"
+msgstr "Grup de deduplicare"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_model
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__model_id
+msgid "Deduplication Model"
+msgstr "Model de deduplicare"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_record
+msgid "Deduplication Record"
+msgstr "Înregistrare de deduplicare"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_rule
+msgid "Deduplication Rule"
+msgstr "Regulă de deduplicare"
+
+#. module: data_merge
+#: model:ir.actions.act_window,name:data_merge.action_data_merge_config
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__rule_ids
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "Deduplication Rules"
+msgstr "Reguli de deduplicare"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "Deduplication is forbidden on the model: %s"
+msgstr "Deduplicarea este interzisă pe modelul: %s"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__removal_mode__delete
+msgid "Delete"
+msgstr "Șterge"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__differences
+msgid "Differences"
+msgstr "Diferențe"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_record__differences
+msgid "Differences with the master record"
+msgstr "Diferențe cu înregistrarea de bază"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.ir_model_view_form
+msgid "Disable Merge"
+msgstr "Dezactivați îmbinarea"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_list
+msgid "Discard"
+msgstr "Abandonează"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Discarded"
+msgstr "Abandonat"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__display_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__display_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__display_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__divergent_fields
+msgid "Divergent Fields"
+msgstr "Câmpuri divergente"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__domain
+msgid "Domain"
+msgstr "Domeniu"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__removal_mode
+msgid "Duplicate Removal"
+msgstr "Eliminare Duplicat"
+
+#. module: data_merge
+#: model:ir.actions.act_window,name:data_merge.action_data_merge_record
+#: model:ir.actions.act_window,name:data_merge.action_data_merge_record_notification
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "Duplicates"
+msgstr "Duplicate"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "Duplicates to Merge"
+msgstr ""
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__create_threshold
+msgid ""
+"Duplicates with a similarity below this threshold will not be suggested"
+msgstr "Duplicatele cu o similaritate sub acest prag nu vor fi sugerate"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.ir_model_view_form
+msgid "Enable Merge"
+msgstr "Activați îmbinarea"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_rule.py:0
+#, python-format
+msgid "Exact Match"
+msgstr "Potrivire Perfectă"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__field_values
+msgid "Field Values"
+msgstr "Valoare Câmp"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_ir_model__hide_merge_action
+msgid "Hide merge action button"
+msgstr "Ascundeți butonul de acțiune de îmbinare"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid "I've identified"
+msgstr "Am identificat"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__id
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_list
+msgid "ID"
+msgstr "ID"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_ir_model__is_merge_enabled
+msgid ""
+"If True, the generic data merge tool is available in the contextual menu of "
+"this model."
+msgstr ""
+"Dacă este adevărat, uneltele de îmbinare generice sunt disponibile în meniul"
+" contextual al acestui model."
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__is_contextual_merge_action
+msgid ""
+"If True, this record is used for contextual menu action \"Merge\" on the "
+"target model."
+msgstr ""
+"Dacă este adevărat, această înregistrare este utilizată pentru acțiunea de "
+"meniu contextual \"Îmbinare\" pe modelul țintă."
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_ir_model__hide_merge_action
+msgid ""
+"If the model already has a custom merge method, the class attribute `_merge_disabled` is set to true on\n"
+"             that model and the generic data merge action should not be available on that model."
+msgstr ""
+"Dacă modelul are deja o metodă de îmbinare personalizată, atributul de clasă `_merge_disabled` este setat la true pe\n"
+"             acel model și acțiunea de îmbinare generice nu ar trebui să fie disponibil pe acel model."
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__is_deleted
+msgid "Is Deleted"
+msgstr "Este șters"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__is_discarded
+msgid "Is Discarded"
+msgstr "Este aruncat"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__is_master
+msgid "Is Master"
+msgstr "Este Master"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__last_notification
+msgid "Last Notification"
+msgstr "Ultima notificare"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__write_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__write_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__write_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__write_uid
+msgid "Last Updated by"
+msgstr "Ultima actualizare făcută de"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__write_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__write_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__write_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__write_date
+msgid "Last Updated on"
+msgstr "Ultima actualizare pe"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_record__used_in
+msgid "List of other models referencing this record"
+msgstr "Lista cu alte modele care se referă la această înregistrare"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__notify_user_ids
+msgid "List of users to notify when there are new records to merge"
+msgstr ""
+"Lista utilizatorilor de notificat când există înregistrări noi de îmbinat"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__merge_mode__manual
+msgid "Manual"
+msgstr "Manual"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "Manual Selection - %s"
+msgstr "Selectare manuală - %s"
+
+#. module: data_merge
+#. odoo-javascript
+#. odoo-python
+#: code:addons/data_merge/models/ir_model.py:0
+#: code:addons/data_merge/static/src/views/data_merge_list_view.xml:0
+#: model:ir.actions.server,name:data_merge.merge_action_crm_lost_reason
+#: model:ir.actions.server,name:data_merge.merge_action_crm_tag
+#: model:ir.actions.server,name:data_merge.merge_action_helpdesk_tag
+#: model:ir.actions.server,name:data_merge.merge_action_helpdesk_ticket
+#: model:ir.actions.server,name:data_merge.merge_action_project_tags
+#: model:ir.actions.server,name:data_merge.merge_action_project_task
+#: model:ir.actions.server,name:data_merge.merge_action_res_country
+#: model:ir.actions.server,name:data_merge.merge_action_res_country_state
+#: model:ir.actions.server,name:data_merge.merge_action_res_partner_category
+#: model:ir.actions.server,name:data_merge.merge_action_res_partner_industry
+#: model:ir.actions.server,name:data_merge.merge_action_res_partner_title
+#: model:ir.actions.server,name:data_merge.merge_action_utm_campaign
+#: model:ir.actions.server,name:data_merge.merge_action_utm_medium
+#: model:ir.actions.server,name:data_merge.merge_action_utm_source
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_list
+#, python-format
+msgid "Merge"
+msgstr "Îmbină"
+
+#. module: data_merge
+#: model:ir.ui.menu,name:data_merge.ir_model_menu_merge_action_manager
+msgid "Merge Action Manager"
+msgstr "Manager de acțiuni de îmbinare"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__match_mode
+msgid "Merge If"
+msgstr "Îmbinați dacă"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__merge_mode
+msgid "Merge Mode"
+msgstr "Modul Îmbinare"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_ir_model__ref_merge_ir_act_server_id
+msgid "Merge Server Action"
+msgstr "Acțiune Server Îmbinare"
+
+#. module: data_merge
+#: model:ir.actions.act_window,name:data_merge.ir_model_action_merge
+msgid "Merge action Manager"
+msgstr "Manager de acțiuni de îmbinare"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__is_contextual_merge_action
+msgid "Merge action attached"
+msgstr "Acțiune de îmbinare atașată"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "Missing required PostgreSQL extension: unaccent"
+msgstr "Lipsește extensia PostgreSQL necesară: unaccent"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__res_model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__res_model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__res_model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__res_model_id
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Model"
+msgstr "Model"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__res_model_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__res_model_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__res_model_name
+msgid "Model Name"
+msgstr "Nume model"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_ir_model
+msgid "Models"
+msgstr "Modele"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__notify_frequency_period__months
+msgid "Months"
+msgstr "Luni"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__name
+msgid "Name"
+msgstr "Nume"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record_notification
+#, python-format
+msgid "No duplicates found"
+msgstr "Nu s-au găsit duplicate"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__notify_frequency
+msgid "Notify"
+msgstr "Notificare"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__notify_frequency_period
+msgid "Notify Frequency Period"
+msgstr "Notificare Perioadă Frecvență"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__notify_user_ids
+msgid "Notify Users"
+msgstr "Notificare Utilizatori"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "Query Failed."
+msgstr "Interogare eșuată."
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__record_ids
+msgid "Record"
+msgstr "Înregistrare"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__group_id
+msgid "Record Group"
+msgstr "Înregistrare Grup"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__res_id
+msgid "Record ID"
+msgstr "ID Înregistrare"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Records"
+msgstr "Înregistrări"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__records_to_merge_count
+msgid "Records To Merge Count"
+msgstr "Număr Înregistrări de Îmbinat"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__domain
+msgid "Records eligible for the deduplication process"
+msgstr "Înregistrări eligibile pentru procesul de deduplicare"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "Records must be of the same model"
+msgstr "Înregistrările trebuie să fie ale aceluiași model"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__merge_threshold
+msgid ""
+"Records with a similarity percentage above this threshold will be "
+"automatically merged"
+msgstr ""
+"Înregistrările cu un procent de similaritate peste acest prag vor fi "
+"combinate automat"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Rule"
+msgstr "Regulă"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "Select a model to configure deduplication rules"
+msgstr "Selectați un model pentru a configura regulile de deduplicare"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__sequence
+msgid "Sequence"
+msgstr "Secvență"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__similarity
+msgid "Similarity %"
+msgstr "Similaritate %"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__merge_threshold
+msgid "Similarity Threshold"
+msgstr "Prag de Similaritate"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_group__similarity
+msgid ""
+"Similarity coefficient based on the amount of text fields exactly in common."
+msgstr ""
+"Coeficient de similitudine bazat pe cantitatea de câmpuri de text exact în "
+"comun."
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__rule_ids
+msgid "Suggest to merge records matching at least one of these rules"
+msgstr ""
+"Sugerați să îmbinați înregistrările care corespund cel puțin uneia dintre "
+"aceste reguli"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__create_threshold
+msgid "Suggestion Threshold"
+msgstr "Prag de Sugestie "
+
+#. module: data_merge
+#: model:ir.model.constraint,message:data_merge.constraint_data_merge_model_check_notif_freq
+msgid "The notification frequency should be greater than 0"
+msgstr "Frecvența notificării trebuie să fie mai mare de 0"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "The referenced record does not exist"
+msgstr "Înregistrarea referită nu există"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid "The selected records have been merged"
+msgstr "Înregistrările selectate au fost îmbinate"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "The target model does not exists."
+msgstr "Modelul țintă nu există."
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "There is not referenced record"
+msgstr "Nu există înregistrare referită"
+
+#. module: data_merge
+#: model:ir.model.constraint,message:data_merge.constraint_data_merge_model_uniq_name
+msgid "This name is already taken"
+msgstr "Acest numa este folosit deja"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__field_id
+msgid "Unique ID Field"
+msgstr "Câmp ID Unic"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.xml:0
+#, python-format
+msgid "Unselect"
+msgstr "Neselectat"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_write_uid
+msgid "Updated By"
+msgstr "Actualizat De"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_write_date
+msgid "Updated On"
+msgstr "Actualizat în"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__used_in
+msgid "Used In"
+msgstr "Utilizat în"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__notify_frequency_period__weeks
+msgid "Weeks"
+msgstr "Săptămâni"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__mix_by_company
+msgid "When enabled, duplicates across different companies will be suggested"
+msgstr ""
+"Când este activată, vor fi sugerate duplicate pentru diferite companii"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "You must select at least two %s in order to merge them."
+msgstr "Trebuie să selectați cel puțin două %s pentru a le îmbina."
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid "duplicate records with the '"
+msgstr "înregistrări duplicate cu '"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid "here"
+msgstr "aici"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_merged
+msgid "merged into"
+msgstr "Îmbinare în"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_main
+msgid "merged into this one"
+msgstr "îmbinați în aceasta"

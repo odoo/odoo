@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="ticket_creation">
+        <p>
+            This <t t-out="self.env['ir.model']._get(self._name).name.lower()"/> has been created from ticket:
+            <a href="#" data-oe-model="helpdesk.ticket" t-att-data-oe-id="ticket.id"> <t t-out="ticket.display_name"/></a>
+        </p>
+    </template>
+
+    <template id="ticket_conversion_link">
+        <p>
+            <a href="#" t-att-data-oe-model="created_record._name" t-att-data-oe-id="created_record.id" class="pe-1">
+                <t t-out="created_record.display_name"/>
+            </a>
+            <t t-out="message"/>
+        </p>
+    </template>
+</odoo>

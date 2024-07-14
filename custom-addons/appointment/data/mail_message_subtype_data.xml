@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="mt_calendar_event_booked" model="mail.message.subtype">
+        <field name="name">Appointment Booked</field>
+        <field name="res_model">calendar.event</field>
+        <field name="default" eval="False"/>
+        <field name="track_recipients" eval="True"/>
+        <field name="description">Appointment Booked</field>
+        <field name="hidden" eval="True"/>
+    </record>
+    <record id="mt_calendar_event_canceled" model="mail.message.subtype">
+        <field name="name">Appointment Canceled</field>
+        <field name="res_model">calendar.event</field>
+        <field name="default" eval="True"/>
+        <field name="track_recipients" eval="True"/>
+        <field name="description">Appointment Canceled</field>
+        <field name="hidden" eval="True"/>
+    </record>
+    <record id="mt_appointment_type_booked" model="mail.message.subtype">
+        <field name="name">Appointment Booked</field>
+        <field name="sequence">10</field>
+        <field name="res_model">appointment.type</field>
+        <field name="default" eval="True"/>
+        <field name="parent_id" ref="mt_calendar_event_booked"/>
+        <field name="relation_field">appointment_type_id</field>
+    </record>
+    <record id="mt_appointment_type_canceled" model="mail.message.subtype">
+        <field name="name">Appointment Canceled</field>
+        <field name="sequence">11</field>
+        <field name="res_model">appointment.type</field>
+        <field name="default" eval="True"/>
+        <field name="parent_id" ref="mt_calendar_event_canceled"/>
+        <field name="relation_field">appointment_type_id</field>
+    </record>
+</odoo>

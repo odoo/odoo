@@ -1,0 +1,138 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product_unspsc
+# 
+# Translators:
+# Alena Vlasova, 2023
+# ILMIR <karamov@it-projects.info>, 2023
+# alenafairy, 2023
+# Martin Trigaux, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
+# Collex100, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-08 07:11+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Collex100, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__active
+msgid "Active"
+msgstr "Активно"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__applies_to
+msgid "Applies To"
+msgstr "Применяется к"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__code
+msgid "Code"
+msgstr "Код"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__create_uid
+msgid "Created by"
+msgstr "Создано"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__create_date
+msgid "Created on"
+msgstr "Дата создания"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__display_name
+msgid "Display Name"
+msgstr "Показывать название"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__id
+msgid "ID"
+msgstr "Идентификатор"
+
+#. module: product_unspsc
+#: model:ir.model.fields,help:product_unspsc.field_product_unspsc_code__applies_to
+msgid "Indicate if this code could be used in products or in UoM"
+msgstr "Укажите, можно ли использовать этот код в продуктах или в UoM"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__write_uid
+msgid "Last Updated by"
+msgstr "Последний раз обновил"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__write_date
+msgid "Last Updated on"
+msgstr "Последнее обновление"
+
+#. module: product_unspsc
+#: model:ir.model,name:product_unspsc.model_product_template
+msgid ""
+"Model adding the necessary fields to products to use with Pricer electronic "
+"tags"
+msgstr ""
+"Модель добавления необходимых полей к товарам для использования с "
+"электронными метками Pricer"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__name
+msgid "Name"
+msgstr "Название"
+
+#. module: product_unspsc
+#: model:ir.model.fields.selection,name:product_unspsc.selection__product_unspsc_code__applies_to__product
+msgid "Product"
+msgstr "Продукт"
+
+#. module: product_unspsc
+#: model:ir.model,name:product_unspsc.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Ед. изм. продукта"
+
+#. module: product_unspsc
+#: model:ir.model,name:product_unspsc.model_product_unspsc_code
+msgid "Product and UOM Codes from UNSPSC"
+msgstr "Коды товаров и UOM из UNSPSC"
+
+#. module: product_unspsc
+#: model:ir.model.fields,help:product_unspsc.field_uom_uom__unspsc_code_id
+msgid "The UNSPSC code related to this UoM. "
+msgstr "Код UNSPSC, относящийся к этому UoM."
+
+#. module: product_unspsc
+#: model:ir.model.fields,help:product_unspsc.field_product_product__unspsc_code_id
+#: model:ir.model.fields,help:product_unspsc.field_product_template__unspsc_code_id
+msgid ""
+"The UNSPSC code related to this product.  Used for edi in Colombia, Peru, "
+"Mexico and Denmark"
+msgstr ""
+"Код UNSPSC, относящийся к этому продукту.  Используется для edi в Колумбии, "
+"Перу, Мексике и Дании"
+
+#. module: product_unspsc
+#: model_terms:ir.ui.view,arch_db:product_unspsc.product_template_unspsc
+msgid "UNSPSC"
+msgstr "UNSPSC"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_product__unspsc_code_id
+#: model:ir.model.fields,field_description:product_unspsc.field_product_template__unspsc_code_id
+#: model:ir.model.fields,field_description:product_unspsc.field_uom_uom__unspsc_code_id
+#: model_terms:ir.ui.view,arch_db:product_unspsc.view_product_unspsc_code_form
+#: model_terms:ir.ui.view,arch_db:product_unspsc.view_product_uom_categ_tree_unspsc
+msgid "UNSPSC Category"
+msgstr "Категория UNSPSC"
+
+#. module: product_unspsc
+#: model:ir.model.fields.selection,name:product_unspsc.selection__product_unspsc_code__applies_to__uom
+msgid "UoM"
+msgstr "ЕИ"

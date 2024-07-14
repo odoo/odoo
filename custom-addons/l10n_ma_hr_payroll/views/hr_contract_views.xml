@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_contract_view_form_l10n_ma_payroll" model="ir.ui.view">
+            <field name="name">hr.contract.view.form.l10n.ma_payroll</field>
+            <field name="model">hr.contract</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+            <field name="arch" type="xml">
+                <page name="information" class="o_hr_contract_salary_information" position="inside">
+                    <group name="untaxed" string="Moroccan Localization"
+                        invisible="country_code != 'MA'">
+                        <field name="l10n_ma_hra"
+                            class="o_hr_narrow_field"/>
+                        <field name="l10n_ma_da"
+                            class="o_hr_narrow_field"/>
+                        <field name="l10n_ma_meal_allowance"
+                            class="o_hr_narrow_field"/>
+                        <field name="l10n_ma_medical_allowance"
+                            class="o_hr_narrow_field"/>
+                        <field name="l10n_ma_kilometric_exemption"
+                            class="o_hr_narrow_field"/>
+                        <field name="l10n_ma_transport_exemption"
+                            class="o_hr_narrow_field"/>
+                    </group>
+                </page>
+            </field>
+        </record>
+    </data>
+</odoo>

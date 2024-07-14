@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<odoo noupdate="1">
+    <record id="whatsapp_template_pos_attach" model="ir.attachment">
+        <field name="name">receipt.png</field>
+        <field name="type">binary</field>
+        <field name="datas" type="base64" file="whatsapp_pos/static/src/img/pos.png"/>
+        <field name="res_model">whatsapp.template</field>
+    </record>
+
+    <record id="whatsapp_template_pos" model="whatsapp.template">
+        <field name="name">POS Receipt</field>
+        <field name="template_name">pos_receipt</field>
+        <field name="lang_code">en</field>
+        <field name="template_type">utility</field>
+        <field name="header_attachment_ids" eval="[(4, ref('whatsapp_pos.whatsapp_template_pos_attach'), 0)]"/>
+        <field name="header_type">image</field>
+        <field name="footer_text">Write 'stop' to stop receiving messages</field>
+        <field name="phone_field">partner_id.mobile</field>
+        <field name="model_id" ref="point_of_sale.model_pos_order"/>
+        <field name="body">Dear {{1}},
+
+Here’s your electronic receipt for your order *{{2}}* from *{{3}}*
+
+Thank you for shopping with us.
+        </field>
+        <field name="variable_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {
+                'name': '{{1}}',
+                'demo_value': 'Customer',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'partner_id'
+            }),
+            (0, 0, {
+                'name': '{{2}}',
+                'demo_value': 'Order 0001',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'name'
+            }),
+            (0, 0, {
+                'name': '{{3}}',
+                'demo_value': 'My Company',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'company_id'
+            })
+        ]" />
+    </record>
+</odoo>

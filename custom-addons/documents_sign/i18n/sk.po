@@ -1,0 +1,89 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* documents_sign
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: documents_sign
+#: model:ir.model,name:documents_sign.model_documents_workflow_rule
+msgid ""
+"A set of condition and actions which will be available to all attachments "
+"matching the conditions"
+msgstr ""
+"Zoznam podmienok a akcií, ktoré budú k dispozícii pre všetky prílohy "
+"zodpovedajúce podmienkam"
+
+#. module: documents_sign
+#: model:ir.model.fields,field_description:documents_sign.field_documents_workflow_rule__create_model
+msgid "Create"
+msgstr "Vytvoriť"
+
+#. module: documents_sign
+#: model_terms:ir.ui.view,arch_db:documents_sign.res_config_settings_view_form_inherit_documents_sign
+msgid ""
+"Each document template can be configured to centralize signed documents into"
+" a specific workspace."
+msgstr ""
+
+#. module: documents_sign
+#: model_terms:ir.ui.view,arch_db:documents_sign.res_config_settings_view_form_inherit_documents_sign
+msgid "Go to Sign Document Templates"
+msgstr ""
+
+#. module: documents_sign
+#. odoo-python
+#: code:addons/documents_sign/models/documents_workflow_rule.py:0
+#, python-format
+msgid "New templates"
+msgstr "Nové šablóny"
+
+#. module: documents_sign
+#: model:ir.model.fields.selection,name:documents_sign.selection__documents_workflow_rule__create_model__sign_template_direct
+msgid "PDF to Sign"
+msgstr "PDF do Sign"
+
+#. module: documents_sign
+#: model:documents.workflow.rule,name:documents_sign.documents_sign_rule_sign_directly
+#: model_terms:ir.ui.view,arch_db:documents_sign.res_config_settings_view_form_inherit_documents_sign
+msgid "Sign"
+msgstr "E-podpis"
+
+#. module: documents_sign
+#: model:ir.model.fields.selection,name:documents_sign.selection__documents_workflow_rule__create_model__sign_template_new
+msgid "Signature PDF Template"
+msgstr ""
+
+#. module: documents_sign
+#: model:ir.model,name:documents_sign.model_sign_request
+msgid "Signature Request"
+msgstr "Podpisová žiadosť"
+
+#. module: documents_sign
+#: model:ir.model,name:documents_sign.model_sign_template
+msgid "Signature Template"
+msgstr "Podpisová šablóna"
+
+#. module: documents_sign
+#: model:ir.model.fields,field_description:documents_sign.field_sign_template__documents_tag_ids
+msgid "Signed Document Tags"
+msgstr "Tagy podpísaných dokumentov"
+
+#. module: documents_sign
+#: model:ir.model.fields,field_description:documents_sign.field_sign_template__folder_id
+msgid "Signed Document Workspace"
+msgstr "Pracovný priestor podpísaného dokumentu"

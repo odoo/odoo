@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sign</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="55"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Sign" string="Sign" name="sign" groups="sign.group_sign_manager">
+                    <block title="Sign Settings" name="sign">
+                        <setting help="Show standard terms &amp; conditions on signature requests" id="use_sign_terms">
+                            <field name="use_sign_terms"/>
+                            <div class="content-group" invisible="not use_sign_terms">
+                                <div class="mt16">
+                                    <field name="sign_terms_type" class="o_light_label" widget="radio"/>
+                                    <div class="d-flex">
+                                        <field name="sign_terms"
+                                                invisible="sign_terms_type == 'html'"
+                                                class="oe_sign_terms"
+                                                placeholder="Insert your terms &amp; conditions here..."/>
+                                        <field name="sign_terms_html"
+                                                invisible="sign_terms_type == 'plain'"
+                                                class="oe_sign_terms o_light_label"
+                                                placeholder="Insert your terms &amp; conditions here..."/>
+                                    </div>
+                                    <field name="sign_preview_ready" invisible="1"/>
+                                    <div invisible="not sign_preview_ready">
+                                        <a href="/sign/terms">
+                                            <i class="oi oi-arrow-right"></i>
+                                            Preview
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting help="Allow signatories to provide their identity using itsme® (available in Belgium and the Netherlands)." id="module_sign_itsme">
+                            <field name="module_sign_itsme"/>
+                            <widget name="iap_buy_more_credits" service_name="itsme_proxy" hide_service="1"/>
+                        </setting>
+                        <setting help="Allow users to define the users or groups which have access to the template." id="manage_template_access">
+                            <field name="group_manage_template_access"/>
+                        </setting>
+                        <setting id="sms" string="Authenticate by SMS" documentation="/applications/marketing/sms_marketing/pricing/pricing_and_faq.html" help="Deliver one-time codes by SMS to identify signatories when signing a document.">
+                            <widget name="iap_buy_more_credits" service_name="sms" hide_service="1"/>
+                        </setting>
+                        <setting id="field_types" string="Field Types" help="Configure the field types that can be used to sign documents (placeholder, auto-completion, ...), as well as the values for selection fields in signable documents.">
+                            <button name="%(sign.sign_item_type_action)d" icon="oi-arrow-right" type="action" string="Edit field types" class="btn-link"/>
+                            <div class="mt8">
+                                <button name="%(sign.sign_item_option_action)d" icon="oi-arrow-right" type="action" string="Edit selection values" class="btn-link"/>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

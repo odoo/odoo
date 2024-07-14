@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="whatsapp.SendWhatsAppButton">
+        <a 
+            t-att-title="title"
+            t-att-href="'whatsapp:' + props.record.data[props.name]"
+            t-on-click.prevent.stop="onClick"
+            class="ms-3 d-inline-flex align-items-center o_field_phone_whatsapp"
+        >
+            <i class="fa fa-whatsapp"/>
+            <small class="fw-bold ms-1">WhatsApp</small>
+        </a>
+    </t>
+
+</templates>

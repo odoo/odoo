@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="l10n_account_customer_statements.CustomerStatementsPartnerLedgerLineName" t-inherit="account_reports.PartnerLedgerLineName" t-inherit-mode="extension">
+
+        <xpath expr="//td[@data-id='line_name']//div[hasclass('wrapper')]//div[hasclass('content')]" position="inside">
+            <!-- It wouldn't make sense to print the report for the unknown partner group. It is blocked in the python code,
+            but the button shouldn't show anyway -->
+            <t t-if="props.line.unfoldable &amp;&amp; !props.line.id.includes('no_partner')">
+                <button
+                    class="btn btn_action"
+                    t-on-click="(ev) => controller.reportAction(ev, 'action_print_customer_statements', { line_id: props.line.id})"
+                >
+                    Customer Statements
+                </button>
+            </t>
+        </xpath>
+    </t>
+</templates>

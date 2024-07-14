@@ -1,0 +1,160 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* documents_project_sale
+# 
+# Translators:
+# Wil Odoo, 2024
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:11+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: documents_project_sale
+#: model_terms:ir.ui.view,arch_db:documents_project_sale.product_template_form_view_inherit_documents_project_sale
+msgid ""
+"<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are "
+"company-specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"此處設定的值是特定於每間公司的。\" "
+"groups=\"base.group_multi_company\"/>"
+
+#. module: documents_project_sale
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_product__documents_allowed_company_id
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_template__documents_allowed_company_id
+msgid "Documents Allowed Company"
+msgstr "允許文件公司"
+
+#. module: documents_project_sale
+#: model:ir.model,name:documents_project_sale.model_documents_folder
+msgid "Documents Workspace"
+msgstr "文件工作區"
+
+#. module: documents_project_sale
+#: model:documents.tag,name:documents_project_sale.documents_folder_facet_1_tag_3
+msgid "Done/Archived"
+msgstr "完成 / 封存"
+
+#. module: documents_project_sale
+#: model:documents.tag,name:documents_project_sale.documents_folder_facet_1_tag_2
+msgid "In Use"
+msgstr "使用中"
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder_template_child_3
+msgid "Miscellaneous"
+msgstr "雜項"
+
+#. module: documents_project_sale
+#: model:documents.tag,name:documents_project_sale.documents_folder_facet_1_tag_1
+msgid "New/Unsorted"
+msgstr "新 / 未排序"
+
+#. module: documents_project_sale
+#: model:ir.model.fields,help:documents_project_sale.field_product_product__template_folder_id
+#: model:ir.model.fields,help:documents_project_sale.field_product_template__template_folder_id
+msgid ""
+"On sales order confirmation, a workspace will be automatically generated for"
+" the project based on this template."
+msgstr "銷售訂單確認後，將基於此模板為項目自動生成工作區。"
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder_template_child_2
+msgid "Photos"
+msgstr "照片"
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder_template_child_1
+msgid "Plans"
+msgstr "計劃"
+
+#. module: documents_project_sale
+#: model:ir.model,name:documents_project_sale.model_product_template
+msgid "Product"
+msgstr "商品"
+
+#. module: documents_project_sale
+#: model:ir.model.fields,field_description:documents_project_sale.field_documents_folder__product_template_ids
+msgid "Product Template"
+msgstr "產品範本"
+
+#. module: documents_project_sale
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_product__project_template_use_documents
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_template__project_template_use_documents
+msgid "Project Template - Documents"
+msgstr "專案範本 - 文件"
+
+#. module: documents_project_sale
+#: model:product.template,name:documents_project_sale.product_1
+msgid "Renovation Architect (Workspace Template)"
+msgstr "翻新工程建築師（工作區範本）"
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder
+msgid "Renovation Projects"
+msgstr "翻新項目"
+
+#. module: documents_project_sale
+#: model:ir.model,name:documents_project_sale.model_sale_order
+msgid "Sales Order"
+msgstr "銷售訂單"
+
+#. module: documents_project_sale
+#: model:documents.facet,name:documents_project_sale.documents_folder_facet_1
+msgid "Status"
+msgstr "狀態"
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder_template
+msgid "Template"
+msgstr "範本文字"
+
+#. module: documents_project_sale
+#. odoo-python
+#: code:addons/documents_project_sale/models/product_template.py:0
+#, python-format
+msgid ""
+"The \"%s\" workspace template should either be in the \"%s\" company like "
+"this product or be open to all companies."
+msgstr "\"%s\"工作區應與本產品一樣在\"%s\"公司內,或對所有公司開放。"
+
+#. module: documents_project_sale
+#. odoo-python
+#: code:addons/documents_project_sale/models/documents_folder.py:0
+#, python-format
+msgid ""
+"This workspace should remain in the same company as the \"%s\" product for "
+"which it is a template. Please update the company of the \"%s\" product, or "
+"leave the company of this workspace empty."
+msgstr "此工作區應與作為其範本的\"%s\"產品位於同一公司。請更新\"%s\"產品的公司，或將此工作區的公司留空。"
+
+#. module: documents_project_sale
+#. odoo-python
+#: code:addons/documents_project_sale/models/documents_folder.py:0
+#, python-format
+msgid ""
+"This workspace should remain in the same company as the following products for which it is a template:\n"
+"%s\n"
+"\n"
+"Please update the company of those products, or leave the company of this workspace empty."
+msgstr ""
+"此工作區應與作為其範本的下列產品保持在同一公司：\n"
+"%s\n"
+"\n"
+"請更新這些產品的公司，或將此工作區的公司留空。"
+
+#. module: documents_project_sale
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_product__template_folder_id
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_template__template_folder_id
+msgid "Workspace Template"
+msgstr "工作區範本"

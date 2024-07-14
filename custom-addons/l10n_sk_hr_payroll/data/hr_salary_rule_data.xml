@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 
+        Sources:
+        https://www.lano.io/global-payroll-guide/slovakia
+        https://accace.com/labour-law-and-employment-in-slovakia/
+    -->
+    <record id="l10n_sk_meal_voucher_employee" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_meal_vouchers_employee"/>
+        <field name="name">Meal Vouchers</field>
+        <field name="code">MEALEMPLOYEE</field>
+        <field name="sequence">80</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 'WORK100' in worked_days and worked_days['WORK100'].number_of_days
+result = contract.l10n_sk_meal_voucher_employee
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_meal_voucher_employer" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_meal_vouchers_employer"/>
+        <field name="name">Meal Vouchers (Employer)</field>
+        <field name="code">MEALEMPLOYER</field>
+        <field name="sequence">81</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = 'WORK100' in worked_days and worked_days['WORK100'].number_of_days
+result = -contract.l10n_sk_meal_voucher_employer
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <!-- GROSS -->
+
+    <record id="l10n_sk_sickness_insurance_employee" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_social_security_employee"/>
+        <field name="name">Sickness Insurance</field>
+        <field name="code">SICK</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = min(categories['GROSS'], payslip._rule_parameter('l10n_sk_monthly_taxable_max'))
+result_rate = -1.4
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_sickness_insurance_employer" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Sickness Insurance (Employer)</field>
+        <field name="code">SICKEMPLOYER</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = min(categories['GROSS'], payslip._rule_parameter('l10n_sk_monthly_taxable_max'))
+result_rate = 1.4
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_pension_contribution_employee" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_social_security_employee"/>
+        <field name="name">Pension Contribution</field>
+        <field name="code">PENSION</field>
+        <field name="sequence">115</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = min(categories['GROSS'], payslip._rule_parameter('l10n_sk_monthly_taxable_max'))
+result_rate = -4
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_pension_contribution_employer" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Pension Contribution (Employer)</field>
+        <field name="code">PENSIONEMPLOYER</field>
+        <field name="sequence">115</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = min(categories['GROSS'], payslip._rule_parameter('l10n_sk_monthly_taxable_max'))
+result_rate = 14
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_disability_insurance_employee" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_social_security_employee"/>
+        <field name="name">Disability Insurance</field>
+        <field name="code">DISABILITY</field>
+        <field name="sequence">120</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = min(categories['GROSS'], payslip._rule_parameter('l10n_sk_monthly_taxable_max'))
+result_rate = -3
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_disability_insurance_employer" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Disability Insurance (Employer)</field>
+        <field name="code">DISABILITYEMPLOYER</field>
+        <field name="sequence">120</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = min(categories['GROSS'], payslip._rule_parameter('l10n_sk_monthly_taxable_max'))
+result_rate = 3
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_unemployment_insurance_employee" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_social_security_employee"/>
+        <field name="name">Unemployment Insurance</field>
+        <field name="code">UNEMPLOYMENT</field>
+        <field name="sequence">125</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = min(categories['GROSS'], payslip._rule_parameter('l10n_sk_monthly_taxable_max'))
+result_rate = -1
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_unemployment_insurance_employer" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Unemployment Insurance (Employer)</field>
+        <field name="code">UNEMPLOYMENTEMPLOYER</field>
+        <field name="sequence">125</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = min(categories['GROSS'], payslip._rule_parameter('l10n_sk_monthly_taxable_max'))
+result_rate = 0.5
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_short_time_work_employer" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Insurance to Finance Support during Short-Time Work (Employer)</field>
+        <field name="code">SHORTTIMEEMPLOYER</field>
+        <field name="sequence">130</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = min(categories['GROSS'], payslip._rule_parameter('l10n_sk_monthly_taxable_max'))
+result_rate = 0.5
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_guarantee_insurance_employer" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Guarantee Insurance (Employer)</field>
+        <field name="code">GUARANTEEEMPLOYER</field>
+        <field name="sequence">135</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = min(categories['GROSS'], payslip._rule_parameter('l10n_sk_monthly_taxable_max'))
+result_rate = 0.25
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_accident_insurance_employer" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Accident Insurance (Employer)</field>
+        <field name="code">ACCIDENT</field>
+        <field name="sequence">140</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['GROSS']
+result_rate = 0.80
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_reserve_fund_employer" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Reserve Fund (Employer)</field>
+        <field name="code">RESERVEFUNDEMPLOYER</field>
+        <field name="sequence">145</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = min(categories['GROSS'], payslip._rule_parameter('l10n_sk_monthly_taxable_max'))
+result_rate = 4.75
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_health_insurance_employee" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_social_security_employee"/>
+        <field name="name">Health Insurance</field>
+        <field name="code">HEALTH</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['GROSS']
+result_rate = -4
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_health_insurance_employer" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Health Insurance (Employer)</field>
+        <field name="code">HEALTHEMPLOYER</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['GROSS']
+result_rate = 10
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_income_tax_19_employee" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_income_tax_employee"/>
+        <field name="name">Income Tax</field>
+        <field name="code">INCOMETAX19</field>
+        <field name="sequence">170</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+taxable = categories['GROSS']
+already_taxed = payslip.search([
+    ('employee_id', '=', payslip.employee_id.id),
+    ('state', 'in', ['paid', 'done']),
+    ('date_from', '&gt;=', payslip.date_from + relativedelta(day=1, month=1)),
+    ('date_to', '&lt;=', payslip.date_from + relativedelta(day=31, months=-1)),
+])._get_line_values(['GROSS'], compute_sum=True)['GROSS']['sum']['total']
+threshold = payslip._rule_parameter('l10n_sk_income_tax_threshold')
+
+if already_taxed &gt; threshold:
+    result = 0
+else:
+    result = max(min(threshold - already_taxed, taxable), 0)
+result_rate = -19
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_income_tax_25_employee" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_income_tax_employee"/>
+        <field name="name">Income Tax</field>
+        <field name="code">INCOMETAX25</field>
+        <field name="sequence">170</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+taxable = categories['GROSS']
+already_taxed = payslip.search([
+    ('employee_id', '=', payslip.employee_id.id),
+    ('state', 'in', ['paid', 'done']),
+    ('date_from', '&gt;=', payslip.date_from + relativedelta(day=1, month=1)),
+    ('date_to', '&lt;=', payslip.date_from + relativedelta(day=31, months=-1)),
+])._get_line_values(['GROSS'], compute_sum=True)['GROSS']['sum']['total']
+threshold = payslip._rule_parameter('l10n_sk_income_tax_threshold')
+
+if already_taxed &gt; threshold:
+    result = taxable
+else:
+    result = max(already_taxed + taxable - threshold, 0)
+result_rate = -25
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary')),
+            ('code', '=', 'NET')]"/>
+        <value eval="{'amount_python_compute': &quot;result = max(0, BASIC + categories['ALW'] + categories['DED'] - result_rules['MEALEMPLOYEE']['total'] - result_rules['MEALEMPLOYER']['total'])&quot;}"/>
+    </function>
+
+    <record id="l10n_sk_social_security_total_employee" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_social_security_employee_total"/>
+        <field name="name">Social Security Total (Employee)</field>
+        <field name="code">SOCIALEMPLOYEETOTAL</field>
+        <field name="sequence">500</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -categories['SOCIALEMPLOYEE']
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_social_security_total_employer" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_social_security_employer_total"/>
+        <field name="name">Social Security Total (Employee)</field>
+        <field name="code">SOCIALEMPLOYERTOTAL</field>
+        <field name="sequence">500</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['SOCIALEMPLOYER']
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+
+    <record id="l10n_sk_income_tax_total" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_sk_hr_payroll.hr_payroll_income_tax_employee_total"/>
+        <field name="name">Income Tax Total</field>
+        <field name="code">INCOMETAXTOTAL</field>
+        <field name="sequence">510</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -categories['INCOMETAX']
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_sk_hr_payroll.hr_payroll_structure_sk_employee_salary"/>
+    </record>
+</odoo>
+
+

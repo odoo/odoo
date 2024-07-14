@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ONBOARDING STEPS -->
+        <record id="onboarding_onboarding_step_payment_provider" model="onboarding.onboarding.step">
+            <field name="title">Online Payments</field>
+            <field name="description">Enable credit &amp; debit card payments supported by Stripe.</field>
+            <field name="button_text">Activate Stripe</field>
+            <field name="panel_step_open_action_name">action_open_step_payment_provider_website_sale</field>
+            <field name="step_image" type="base64" file="base/static/img/onboarding_bank-account.png"></field>
+            <field name="step_image_filename">onboarding_bank-account.png</field>
+            <field name="step_image_alt">Onboarding Online Payments</field>
+        </record>
+
+        <!-- ONBOARDING PANEL -->
+        <record id="onboarding_onboarding_website_sale_dashboard" model="onboarding.onboarding">
+            <field name="name">Website Sale Dashboard</field>
+            <field name="step_ids" eval="[
+                Command.link(ref('account.onboarding_onboarding_step_company_data')),
+                Command.link(ref('website_sale_dashboard.onboarding_onboarding_step_payment_provider')),
+                Command.link(ref('account.onboarding_onboarding_step_sales_tax'))
+            ]"/>
+            <field name="route_name">website_sale_dashboard</field>
+            <field name="panel_close_action_name">action_close_panel_website_sale_dashboard</field>
+            <field name="text_completed">The configuration is done. Happy selling!</field>
+        </record>
+    </data>
+</odoo>

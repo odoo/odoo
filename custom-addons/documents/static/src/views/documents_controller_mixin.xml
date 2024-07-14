@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <div t-name="documents.DocumentsViews.ControlPanel" class="o_cp_buttons d-lg-flex gap-1" role="toolbar" aria-label="Control panel buttons" t-ref="cpButtons">
+        <t t-set="isShareable" t-value="hasShareDocuments()"/>
+        <t t-set="folder" t-value="this.env.searchModel.getSelectedFolder()"/>
+        <t t-set="tooltip">You cannot upload content in this workspace</t>
+        <t t-set="hasShareableWorkspace" t-value="env.searchModel.getFolders().some((workspaceFolder) => workspaceFolder.id and workspaceFolder.id !== 'TRASH')"/>
+        <div class="btn-group">
+
+            <span t-att-data-tooltip="!folder.id and tooltip">
+                <label for="uploadFileInput" t-attf-class="btn btn-primary o_documents_kanban_upload #{!folder.id or folder.id === 'TRASH' ? 'pe-none opacity-25' : ''}" data-hotkey="a">Upload</label>
+            </span>
+            <button type="button" class="btn btn-primary dropdown-toggle
+             dropdown-toggle-split"
+             t-att-disabled="!hasShareableWorkspace or folder.id === 'TRASH'"
+             data-bs-toggle="dropdown" aria-expanded="false" data-hotkey="c">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+                <button type="button" class="btn btn-link dropdown-item o_documents_kanban_request"
+                    t-att-disabled="folder.id and !folder.has_write_access"
+                    t-on-click.stop.prevent="onClickDocumentsRequest" data-hotkey="r">
+                    Request
+                </button>
+                <button type="button" class="btn btn-link dropdown-item o_documents_kanban_url"
+                    t-att-disabled="folder.id and !folder.has_write_access"
+                    t-on-click.stop.prevent="onClickDocumentsAddUrl" data-hotkey="l">
+                    Add a Link
+                </button>
+                <button type="button" class="btn btn-link dropdown-item o_documents_kanban_share_domain" title="Share this domain" t-att-disabled="isShareable" groups="documents.group_documents_user"
+                    t-on-click.stop.prevent="onClickShareDomain" data-hotkey="s">
+                    Share
+                </button>
+            </ul>
+        </div>
+        <input type="file" multiple="true" id="uploadFileInput" class="o_input_file o_hidden" t-on-change.stop="onFileInputChange"/>
+    </div>
+</templates>

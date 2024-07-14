@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="spreadsheet_document_to_dashboard_view_form" model="ir.ui.view">
+        <field name="name">spreadsheet.document.to.dashboard.view.form</field>
+        <field name="model">spreadsheet.document.to.dashboard</field>
+        <field name="arch" type="xml">
+            <form >
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="dashboard_group_id"/>
+                    </group>
+                    <group>
+                        <field name="group_ids" widget="many2many_tags"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Create" name="create_dashboard" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

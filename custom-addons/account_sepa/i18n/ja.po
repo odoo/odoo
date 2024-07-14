@@ -1,0 +1,413 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_sepa
+# 
+# Translators:
+# Wil Odoo, 2023
+# Junko Augias, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid "A bank account is not defined."
+msgstr "銀行口座が指定されていません。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_payment_register.py:0
+#, python-format
+msgid "A bank account must be set on the following documents: "
+msgstr "銀行口座は以下のドキュメントで設定する必要があります："
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03_austrian_004
+msgid "Austrian"
+msgstr "オーストリア"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"Bank account %s 's bank does not have any BIC number associated. Please "
+"define one."
+msgstr "銀行口座%sの銀行には関連するBIC番号がありません。定義してください。"
+
+#. module: account_sepa
+#: model_terms:ir.ui.view,arch_db:account_sepa.view_batch_payment_form_inherit
+msgid "Batch Booking"
+msgstr "バッチ記帳"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_batch_payment
+msgid "Batch Payment"
+msgstr "バッチ支払"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_res_company
+msgid "Companies"
+msgstr "会社"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_res_config_settings
+msgid "Config Settings"
+msgstr "コンフィグ設定"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_res_partner
+msgid "Contact"
+msgstr "連絡先"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_company__sepa_orgid_issr
+msgid ""
+"Entity that assigns the identification (eg. KBE-BCO or Finanzamt Muenchen "
+"IV)."
+msgstr "IDを付与する取引先（例：KBE-BCOまたはFinanzamt Muenchen IV）。"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03
+msgid "Generic"
+msgstr "汎用"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03_de
+msgid "German"
+msgstr "ドイツ"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_journal__has_sepa_ct_payment_method
+msgid "Has Sepa Ct Payment Method"
+msgstr "Sepa Ct支払方法を有する"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_res_company__sepa_orgid_id
+#: model:ir.model.fields,field_description:account_sepa.field_res_config_settings__sepa_orgid_id
+msgid "Identification"
+msgstr "身元確認"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_company__sepa_orgid_id
+#: model:ir.model.fields,help:account_sepa.field_res_config_settings__sepa_orgid_id
+msgid "Identification assigned by an institution (eg. VAT number)."
+msgstr "機関によって割り当てられた識別番号（VAT番号等）"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_res_company__sepa_orgid_issr
+#: model:ir.model.fields,field_description:account_sepa.field_res_config_settings__sepa_orgid_issr
+msgid "Issuer"
+msgstr "発行元"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_journal
+msgid "Journal"
+msgstr "仕訳帳"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_res_company__account_sepa_lei
+#: model:ir.model.fields,field_description:account_sepa.field_res_partner__account_sepa_lei
+#: model:ir.model.fields,field_description:account_sepa.field_res_users__account_sepa_lei
+msgid "LEI"
+msgstr "LEI(法人識別子)"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_company__account_sepa_lei
+#: model:ir.model.fields,help:account_sepa.field_res_partner__account_sepa_lei
+#: model:ir.model.fields,help:account_sepa.field_res_users__account_sepa_lei
+msgid "Legal Entity Identifier"
+msgstr "法人識別子"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid "Maximum amount is %s for payments in Euros, %s for other currencies."
+msgstr "最高額は、ユーロでの支払いの場合%s、その他の通貨の支払の場合%sです。"
+
+#. module: account_sepa
+#: model_terms:ir.ui.view,arch_db:account_sepa.res_partner_sepa_inherit_form
+msgid "Miscellaneous"
+msgstr "その他"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_config_settings__sepa_initiating_party_name
+msgid ""
+"Name of the Creditor Reference Party. Usage Rule: Limited to 70 characters "
+"in length."
+msgstr "債権者参照当事者の名前。使用規則：70文字以内"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_09
+msgid "New generic version (09)"
+msgstr "新ジェネリック版(09)"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid "Partner %s has no country code defined."
+msgstr "取引先%sには国コードが定義されていません。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid "Partner %s has not bank account defined."
+msgstr "取引先%sには銀行口座が定義されていません。"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_payment_method
+msgid "Payment Methods"
+msgstr "支払方法"
+
+#. module: account_sepa
+#: model_terms:ir.ui.view,arch_db:account_sepa.account_journal_dashboard_kanban_view_inherited
+msgid "Payment to send via SEPA"
+msgstr "SEPA経由で送金する支払"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_payment
+msgid "Payments"
+msgstr "支払"
+
+#. module: account_sepa
+#: model_terms:ir.ui.view,arch_db:account_sepa.account_journal_dashboard_kanban_view_inherited
+msgid "Payments to send via SEPA"
+msgstr "SEPA経由で送金する支払"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"Please first set a SEPA identification number in the accounting settings."
+msgstr "最初に会計設定でSEPA識別番号を設定して下さい。"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_payment_register
+msgid "Register Payment"
+msgstr "支払を登録"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_account_batch_payment__sct_batch_booking
+msgid "Request batch booking from the bank for the related bank statements."
+msgstr "銀行からの関連する銀行取引明細書の一括記入を要求します。"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_batch_payment__sct_batch_booking
+msgid "SCT Batch Booking"
+msgstr "SCTバッチ記帳"
+
+#. module: account_sepa
+#: model:account.payment.method,name:account_sepa.account_payment_method_sepa_ct
+msgid "SEPA Credit Transfer"
+msgstr "SEPA信用振替"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal_dashboard.py:0
+#, python-format
+msgid "SEPA Credit Transfers to Send"
+msgstr "送金されるSEPA Credit Transfers"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_journal__sepa_pain_version
+#: model:ir.model.fields,field_description:account_sepa.field_account_payment__sepa_pain_version
+#: model_terms:ir.ui.view,arch_db:account_sepa.view_account_journal_form
+msgid "SEPA Pain Version"
+msgstr "SEPA Painバージョン"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_account_journal__sepa_pain_version
+#: model:ir.model.fields,help:account_sepa.field_account_payment__sepa_pain_version
+msgid ""
+"SEPA may be a generic format, some countries differ from the SEPA "
+"recommendations made by the EPC (European Payment Council) and thus the XML "
+"created need some tweaking."
+msgstr ""
+"SEPAは汎用フォーマットかもしれませんが、国によっては EPC (European Payment "
+"Council)が作成したSEPA推奨と異なるため、作成されたXMLには若干の調整が必要です。"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_batch_payment__sct_generic
+msgid "Sct Generic"
+msgstr "Sct汎用"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid "Some payments are above the maximum amount allowed."
+msgstr "許容限度額を超えている支払があります。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"Some payments are not made on an IBAN recipient account. This batch might "
+"not be accepted by certain banks because of that."
+msgstr "IBANの受取人口座で行われない支払があります。そのため銀行によってはこのバッチを受け付けない場合があります。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid "Some payments have no recipient bank account set."
+msgstr "受取人の銀行口座が設定されていない支払いがあります。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"Some payments were instructed in another currency than Euro. This batch "
+"might not be accepted by certain banks because of that."
+msgstr "ユーロ以外の通貨で指示された支払があります。そのため、このバッチは銀行によっては受け付けられない場合があります。"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03_se
+msgid "Swedish"
+msgstr "スウェーデン"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03_ch_02
+msgid "Swiss"
+msgstr "スイス"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_account_batch_payment__sct_generic
+msgid ""
+"Technical feature used during the file creation. A SEPA message is said to "
+"be 'generic' if it cannot be considered as a standard european credit "
+"transfer. That is if the bank journal is not in €, a transaction is not in €"
+" or a payee is not identified by an IBAN account number."
+msgstr ""
+"ファイル作成時に使用される技術的特徴。SEPAメッセージは、欧州の標準的なクレジットトランスファーと見なされない場合、「汎用的」とされます。つまり、銀行仕訳がユーロ建てでない場合、取引がユーロ建てでない場合、または受取人がIBAN口座番号で識別されない場合です。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"The BIC code '%s' associated to the bank '%s' of bank account '%s' of partner '%s' does not respect the required convention.\n"
+"It must contain 8 or 11 characters and match the following structure:\n"
+"- 4 letters: institution code or bank code\n"
+"- 2 letters: country code\n"
+"- 2 letters or digits: location code\n"
+"- 3 letters or digits: branch code, optional\n"
+msgstr ""
+"BICコード '%s' （以下に関連付けられているもの：銀行'%s' 銀行口座 '%s' 取引先'%s' ）は必要な規約に従っていません。\n"
+"BICコードは8文字または11文字で構成され、以下の構造と一致する必要があります：\n"
+"- 4 文字：機関コードまたは銀行コード\n"
+"- 2 文字：国コード\n"
+"- 2文字または数字：所在地コード\n"
+"- 3文字または数字：支店コード、任意\n"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/res_partner.py:0
+#, python-format
+msgid ""
+"The LEI number must contain 20 characters and match the following structure:\n"
+"- 18 alphanumeric characters with capital letters\n"
+"- 2 digits in the end\n"
+msgstr ""
+"LEI 番号は 20 文字で構成され、以下の構成と一致している必要があります: \n"
+"- 大文字の英数字 18 文字\n"
+"- 末尾に 2 桁の数字\n"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"The account %s, linked to partner '%s', is not of type IBAN.\n"
+"A valid IBAN account is required to use SEPA features."
+msgstr ""
+"口座%s（取引先 '%s'にリンクされているもの）はIBANタイプではありません。\n"
+"SEPA機能を使用するには、有効なIBAN口座が必要です。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"The account %s, of journal '%s', is not of type IBAN.\n"
+"A valid IBAN account is required to use SEPA features."
+msgstr ""
+"口座%s（仕訳%sの）がIBANタイプではありません。\n"
+"SEPAの機能を使用するには、有効なIBAN口座が必要です。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"The amount of the payment '%(payment)s' is too high. The maximum permitted "
+"is %(limit)s."
+msgstr "支払額'%(payment)s'が高すぎます。許可されている最高限度額は%(limit)sです。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"The bank defined on account %s (from partner %s) has no BIC. Please first "
+"set one."
+msgstr "口座%sに定義されている銀行 （取引先 %sから）にBICがありません。まずBICを設定して下さい。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_payment.py:0
+#, python-format
+msgid ""
+"The journal '%s' requires a proper IBAN account to pay via SEPA. Please "
+"configure it first."
+msgstr "仕訳'%s'はSEPA経由での支払いに適切なIBAN口座を必要としています。まずIBAN口座を設定して下さい。"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid "Too many transactions for a single file."
+msgstr "1つのファイルに対して取引の数が多すぎます。"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_payment__sepa_uetr
+msgid "UETR"
+msgstr "UETR"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_account_payment__sepa_uetr
+msgid "Unique end-to-end transaction reference"
+msgstr "一意のエンド・ツー・エンドの取引参照"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_company__sepa_initiating_party_name
+#: model:ir.model.fields,help:account_sepa.field_res_config_settings__sepa_orgid_issr
+msgid ""
+"Will appear in SEPA payments as the name of the party initiating the "
+"payment. Limited to 70 characters."
+msgstr "SEPA支払では、支払いを行う当事者の名前として表示されます。文字制限は70文字です。"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_res_company__sepa_initiating_party_name
+#: model:ir.model.fields,field_description:account_sepa.field_res_config_settings__sepa_initiating_party_name
+msgid "Your Company Name"
+msgstr "会社の名前"

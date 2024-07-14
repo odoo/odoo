@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="helpdesk_sla_report_analysis_view_pivot" model="ir.ui.view">
+        <field name="name">helpdesk.sla.report.analysis.pivot</field>
+        <field name="model">helpdesk.sla.report.analysis</field>
+        <field name="arch" type="xml">
+        <pivot string="SLA Status Analysis" disable_linking="1" sample="1">
+            <field name="team_id" type="row"/>
+            <field name="sla_id" type="row"/>
+            <field name="sla_status_failed"/>
+            <field name="sla_status" type="col"/>
+            <field name="ticket_close_hours" widget="float_time"/>
+            <field name="ticket_assignation_hours" widget="float_time"/>
+            <field name="sla_exceeded_hours" widget="float_time"/>
+            <field name="rating_avg" type="measure" invisible="1"/>
+         </pivot>
+     </field>
+    </record>
+
+    <record id="helpdesk_sla_report_analysis_view_pivot_dashboard" model="ir.ui.view">
+        <field name="name">helpdesk.sla.report.analysis.pivot.dashboard</field>
+        <field name="model">helpdesk.sla.report.analysis</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_sla_report_analysis_view_pivot"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='team_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="helpdesk_sla_report_analysis_view_graph" model="ir.ui.view">
+        <field name="name">helpdesk.sla.report.analysis.graph</field>
+        <field name="model">helpdesk.sla.report.analysis</field>
+        <field name="arch" type="xml">
+            <graph string="SLA Status Analysis" disable_linking="1" sample="1">
+                 <field name="sla_id"/>
+                 <field name="sla_status"/>
+                 <!-- Remove me in master -->
+                 <field name="sla_status_failed" invisible="1"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="helpdesk_sla_report_graph_analysis_dashboard" model="ir.ui.view">
+        <field name="name">helpdesk.sla.report.graph.analysis.dashboard</field>
+        <field name="model">helpdesk.sla.report.analysis</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_sla_report_analysis_view_graph"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="attributes">
+                <attribute name="stacked">False</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="helpdesk_sla_report_analysis_view_cohort" model="ir.ui.view">
+        <field name="name">helpdesk.sla.report.analysis.cohort</field>
+        <field name="model">helpdesk.sla.report.analysis</field>
+        <field name="arch" type="xml">
+            <cohort string="SLA Status Analysis" date_start="create_date" date_stop="close_date" disable_linking="True" interval="day" sample="1" measure="sla_status_failed"/>
+        </field>
+    </record>
+
+    <record id="helpdesk_sla_report_analysis_view_search" model="ir.ui.view">
+        <field name="name">helpdesk.sla.report.analysis.search</field>
+        <field name="model">helpdesk.sla.report.analysis</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="helpdesk_tickets_view_search_base"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <search position="attributes"/>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="helpdesk_sla_report_analysis_action" model="ir.actions.act_window">
+        <field name="name">SLA Status Analysis</field>
+        <field name="res_model">helpdesk.sla.report.analysis</field>
+        <field name="view_mode">pivot,graph,cohort</field>
+        <field name="search_view_id" ref="helpdesk_sla_report_analysis_view_search"/>
+        <field name="domain">['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]</field>
+        <field name="context">{'search_default_month': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data yet!
+            </p><p>
+                Track the performance of your teams, the success rate of your tickets, and how quickly you reach your service level agreements (SLAs).
+            </p>
+        </field>
+    </record>
+
+    <record id="action_appraisal_view_report_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="helpdesk_sla_report_analysis_view_pivot"/>
+        <field name="act_window_id" ref="helpdesk_sla_report_analysis_action"/>
+    </record>
+
+    <record id="action_appraisal_view_report_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="helpdesk_sla_report_analysis_view_graph"/>
+        <field name="act_window_id" ref="helpdesk_sla_report_analysis_action"/>
+    </record>
+
+    <record id="action_appraisal_view_report_cohort" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">cohort</field>
+        <field name="view_id" ref="helpdesk_sla_report_analysis_view_cohort"/>
+        <field name="act_window_id" ref="helpdesk_sla_report_analysis_action"/>
+    </record>
+
+    <record id="helpdesk_sla_report_analysis_dashboard_action" model="ir.actions.act_window">
+        <field name="name">SLA Status Analysis</field>
+        <field name="res_model">helpdesk.sla.report.analysis</field>
+        <field name="view_mode">pivot,graph,cohort</field>
+        <field name="context">{'search_default_month': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data yet!
+            </p><p>
+                Track the performance of your teams, the success rate of your tickets, and how quickly you reach your service level agreements (SLAs).
+            </p>
+        </field>
+    </record>
+
+    <record id="helpdesk_sla_report_analysis_dashboard_pivot_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="helpdesk_sla_report_analysis_view_pivot_dashboard"/>
+        <field name="act_window_id" ref="helpdesk_sla_report_analysis_dashboard_action"/>
+    </record>
+
+    <record id="helpdesk_sla_report_analysis_dashboard_graph_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="helpdesk_sla_report_graph_analysis_dashboard"/>
+        <field name="act_window_id" ref="helpdesk_sla_report_analysis_dashboard_action"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,1654 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_renting
+# 
+# Translators:
+# Wil Odoo, 2023
+# Maitê Dietze, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Maitê Dietze, 2024\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"\n"
+"%(from_date)s to %(to_date)s"
+msgstr ""
+"\n"
+"%(from_date)s a %(to_date)s"
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/product_template.py:0
+#, python-format
+msgid "%(amount)s (fixed)"
+msgstr "%(amount)s (fixo)"
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/product_pricing.py:0
+#, python-format
+msgid "%(amount)s / %(duration)s"
+msgstr "%(amount)s/%(duration)s"
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/sale_order_recurrence.py:0
+#, python-format
+msgid "%(duration)s %(unit)s"
+msgstr "%(duration)s %(unit)s"
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/product_product.py:0
+#: code:addons/sale_renting/models/product_template.py:0
+#, python-format
+msgid "%s (Rental)"
+msgstr "%s (Locação)"
+
+#. module: sale_renting
+#: model:ir.actions.report,print_report_name:sale_renting.action_report_rental_saleorder
+msgid ""
+"(object.rental_status not in ('draft', 'sent') and 'Delivery or Return "
+"Receipt - %s' %(object.name)) or 'Order - %s' % (object.name)"
+msgstr ""
+"(object.rental_status not in ('draft', 'sent') and 'Recibo de entrega ou "
+"devolução - %s' %(object.name)) or 'Pedido - %s' % (object.name)"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "123 Main St"
+msgstr "123 Main St"
+
+#. module: sale_renting
+#: model:sale.temporal.recurrence,name:sale_renting.recurrence_2_weeks
+msgid "2 Weeks"
+msgstr "2 semanas"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "2023-08-01"
+msgstr "2023-08-01"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "2023-08-10"
+msgstr "2023-08-10"
+
+#. module: sale_renting
+#: model:sale.temporal.recurrence,name:sale_renting.recurrence_3_hours
+msgid "3 Hours"
+msgstr "3 horas"
+
+#. module: sale_renting
+#: model:sale.temporal.recurrence,name:sale_renting.recurrence_3_year
+msgid "3 years"
+msgstr "3 anos"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "456 Other St"
+msgstr "456 Other St"
+
+#. module: sale_renting
+#: model:sale.temporal.recurrence,name:sale_renting.recurrence5_year
+msgid "5 Years"
+msgstr "5 anos"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_kanban
+msgid "<i class=\"fa fa-warning\"/> Late"
+msgstr "<i class=\"fa fa-warning\"/> Atrasado"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.product_product_form_view_rental_gantt
+#: model_terms:ir.ui.view,arch_db:sale_renting.product_template_form_view_rental_gantt
+msgid "<span class=\"o_stat_text\">in Rental</span>"
+msgstr "<span class=\"o_stat_text\">Alugados</span>"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_form_view
+msgid ""
+"<span invisible=\"duration_days != 1\"> day </span>\n"
+"                    <span invisible=\"duration_days in [0,1]\"> days </span>\n"
+"                    <span invisible=\"duration_days == 0 or remaining_hours == 0\">and </span>"
+msgstr ""
+"<span invisible=\"duration_days != 1\"> dia </span>\n"
+"                    <span invisible=\"duration_days in [0,1]\"> dias </span>\n"
+"                    <span invisible=\"duration_days == 0 or remaining_hours == 0\">e </span>"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_form_view
+msgid ""
+"<span invisible=\"remaining_hours != 1\"> hour </span>\n"
+"                    <span invisible=\"remaining_hours in [0,1]\"> hours </span>"
+msgstr ""
+"<span invisible=\"remaining_hours != 1\"> hora </span>\n"
+"                    <span invisible=\"remaining_hours in [0,1]\"> horas </span>"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_gantt
+msgid "<strong>Order # — </strong>"
+msgstr "<strong>Nº do pedido — </strong>"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_gantt
+msgid "<strong>Pickup  — </strong>"
+msgstr "<strong>Retirada  — </strong>"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_gantt
+msgid "<strong>Return — </strong>"
+msgstr "<strong>Devolução — </strong>"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "<strong>Salesperson:</strong>"
+msgstr "<strong>Vendedor:</strong>"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "<strong>Shipping Address:</strong>"
+msgstr "<strong>Endereço de entrega:</strong>"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_gantt
+msgid "<strong>Status — </strong>"
+msgstr "<strong>Status — </strong>"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_temporal_recurrence__active
+msgid "Active"
+msgstr "Ativo"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.product_template_form_view_rental
+msgid "Add a price"
+msgstr "Adicionar um preço"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.res_config_settings_view_form
+msgid "Additional costs for late returns"
+msgstr "Custos adicionais para devolução atrasada"
+
+#. module: sale_renting
+#: model:ir.model.fields,help:sale_renting.field_product_product__rent_ok
+#: model:ir.model.fields,help:sale_renting.field_product_template__rent_ok
+#: model:ir.model.fields,help:sale_renting.field_sale_order_line__is_product_rentable
+msgid "Allow renting of this product."
+msgstr "Permitir locação deste produto."
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__analytic_account_id
+msgid "Analytic Account"
+msgstr "Conta analítica"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.res_config_settings_view_form
+msgid "Apply after"
+msgstr "Aplicar após"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.res_config_settings_view_form
+msgid "Ask customer to sign documents on the spot."
+msgstr "Pedir que clientes assinem documentos na hora."
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "At first, let's create some products to rent."
+msgstr "Primeiro, crie alguns produtos para locação."
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_form_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_form
+msgid "Booked"
+msgstr "Reservado"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_product__rent_ok
+#: model:ir.model.fields,field_description:sale_renting.field_product_template__rent_ok
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order_line__is_product_rentable
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_product_template_search_view
+msgid "Can be Rented"
+msgstr "Pode ser alugado"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_wizard_view_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: sale_renting
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_order__rental_status__cancel
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_rental_report__state__cancel
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_rental_schedule__rental_status__cancel
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_rental_schedule__state__cancel
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "Click here to create a new quotation."
+msgstr "Clique aqui para criar uma nova cotação."
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "Click here to register the pickup."
+msgstr "Clique aqui para registrar a retirada."
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "Click here to set up your first rental product."
+msgstr "Clique aqui para configurar o seu primeiro produto de locação."
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "Click here to start filling the quotation."
+msgstr "Clique aqui para começar a preencher a cotação."
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__color
+msgid "Color"
+msgstr "Cor"
+
+#. module: sale_renting
+#: model:ir.model,name:sale_renting.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_pricing__company_id
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_report__company_id
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__company_id
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_report_search_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+msgid "Company"
+msgstr "Empresa"
+
+#. module: sale_renting
+#: model:ir.model,name:sale_renting.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configurações"
+
+#. module: sale_renting
+#: model:ir.ui.menu,name:sale_renting.menu_rental_config
+msgid "Configuration"
+msgstr "Configuração"
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "Confirm the order when the customer agrees with the terms."
+msgstr "Confirme o pedido quando o cliente concordar com os termos."
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "Confirm the returned quantities and hit Validate."
+msgstr "Confirme as quantidades devolvidas e clique em Validar."
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_report_search_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+msgid "Confirmed Orders"
+msgstr "Pedidos confirmados"
+
+#. module: sale_renting
+#: model:ir.actions.act_window,name:sale_renting.action_create_rental_order
+msgid "Create Rental Orders"
+msgstr "Criar pedidos de locação"
+
+#. module: sale_renting
+#: model_terms:ir.actions.act_window,help:sale_renting.sale_temporal_recurrence_action
+msgid "Create a new period"
+msgstr "Criar novo período"
+
+#. module: sale_renting
+#: model_terms:ir.actions.act_window,help:sale_renting.rental_order_action
+msgid "Create a new quotation, the first step of a new rental!"
+msgstr "Crie uma nova cotação, o primeiro passo para uma nova locação!"
+
+#. module: sale_renting
+#: model_terms:ir.actions.act_window,help:sale_renting.product_pricing_action
+msgid "Create a new recurrence"
+msgstr "Criar nova recorrência"
+
+#. module: sale_renting
+#: model_terms:ir.actions.act_window,help:sale_renting.action_rental_report
+msgid "Create a new rental order"
+msgstr "Criar um novo pedido de locação"
+
+#. module: sale_renting
+#: model_terms:ir.actions.act_window,help:sale_renting.rental_product_template_action
+msgid "Create a new rental product!"
+msgstr "Crie um novo produto de locação!"
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "Create or select a customer here."
+msgstr "Crie ou selecione um cliente aqui."
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order__is_rental_order
+msgid "Created In App Rental"
+msgstr "Criado no app de Locação"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_pricing__create_uid
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard__create_uid
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard_line__create_uid
+#: model:ir.model.fields,field_description:sale_renting.field_sale_temporal_recurrence__create_uid
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_pricing__create_date
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard__create_date
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard_line__create_date
+#: model:ir.model.fields,field_description:sale_renting.field_sale_temporal_recurrence__create_date
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_pricing__currency_id
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_report__currency_id
+msgid "Currency"
+msgstr "Moeda"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_product__product_pricing_ids
+#: model:ir.model.fields,field_description:sale_renting.field_product_template__product_pricing_ids
+msgid "Custom Pricings"
+msgstr "Preços personalizados"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_report__partner_id
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__partner_id
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_search
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_report_search_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__country_id
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+msgid "Customer Country"
+msgstr "País do cliente"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__commercial_partner_id
+msgid "Customer Entity"
+msgstr "Entidade do cliente"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__card_name
+msgid "Customer Name"
+msgstr "Nome do cliente"
+
+#. module: sale_renting
+#: model:ir.ui.menu,name:sale_renting.menu_orders_customers
+msgid "Customers"
+msgstr "Clientes"
+
+#. module: sale_renting
+#: model:sale.temporal.recurrence,name:sale_renting.recurrence_daily
+msgid "Daily"
+msgstr "Diário"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_report__price
+msgid "Daily Amount"
+msgstr "Quantia diária"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_report__quantity
+msgid "Daily Ordered Qty"
+msgstr "Qtd. solicitada diariamente"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_report__qty_delivered
+msgid "Daily Picked-Up Qty"
+msgstr "Qtd. retirada diariamente"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_report__qty_returned
+msgid "Daily Returned Qty"
+msgstr "Qtd. devolvida diariamente"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_report__date
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_report_search_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+msgid "Date"
+msgstr "Data"
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/sale_order_recurrence.py:0
+#, python-format
+msgid "Day"
+msgstr "Dia"
+
+#. module: sale_renting
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_temporal_recurrence__unit__day
+msgid "Days"
+msgstr "Dias"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.res_config_settings_view_form
+msgid "Default Delay Costs"
+msgstr "Custos padrão por atraso"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_res_config_settings__extra_product
+msgid "Delay Product"
+msgstr "Atrasar produto"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_pricing__description
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__description
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "Description"
+msgstr "Descrição"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_res_config_settings__module_sale_renting_sign
+msgid "Digital Documents"
+msgstr "Documentos digitais"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_pricing__display_name
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard__display_name
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard_line__display_name
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_report__display_name
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__display_name
+#: model:ir.model.fields,field_description:sale_renting.field_sale_temporal_recurrence__display_name
+msgid "Display Name"
+msgstr "Nome exibido"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_temporal_recurrence__duration
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_form_view
+msgid "Duration"
+msgstr "Duração"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_pricing__name
+#: model:ir.model.fields,field_description:sale_renting.field_sale_temporal_recurrence__duration_display
+msgid "Duration Display"
+msgstr "Exibição da duração"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order__duration_days
+msgid "Duration in days"
+msgstr "Duração em dias"
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "Enter the product name."
+msgstr "Insira o nome do produto."
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "Expected Return"
+msgstr "Estimativa de devolução"
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/sale_order_line.py:0
+#, python-format
+msgid "Expected: %(date)s"
+msgstr "Data prevista: %(date)s"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_product__extra_daily
+#: model:ir.model.fields,field_description:sale_renting.field_product_template__extra_daily
+msgid "Extra Day"
+msgstr "Dia extra"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_product__extra_hourly
+#: model:ir.model.fields,field_description:sale_renting.field_product_template__extra_hourly
+msgid "Extra Hour"
+msgstr "Hora extra"
+
+#. module: sale_renting
+#: model:ir.model.fields,help:sale_renting.field_product_product__extra_daily
+#: model:ir.model.fields,help:sale_renting.field_product_template__extra_daily
+msgid "Fine by day overdue"
+msgstr "Multa por dia de atraso"
+
+#. module: sale_renting
+#: model:ir.model.fields,help:sale_renting.field_product_product__extra_hourly
+#: model:ir.model.fields,help:sale_renting.field_product_template__extra_hourly
+msgid "Fine by hour overdue"
+msgstr "Multa por hora de atraso"
+
+#. module: sale_renting
+#: model:ir.model.fields,help:sale_renting.field_product_product__display_price
+#: model:ir.model.fields,help:sale_renting.field_product_template__display_price
+msgid "First rental pricing of the product"
+msgstr "Preço de primeira locação do produto"
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "Go to the orders menu."
+msgstr "Acesse o menu de pedidos."
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_search
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_report_search_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order__show_update_duration
+msgid "Has Duration Changed"
+msgstr "Tem alteração na duração"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order__has_pickable_lines
+msgid "Has Pickable Lines"
+msgstr "Tem linhas com retirada possível"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order__has_rented_products
+msgid "Has Rented Products"
+msgstr "Tem produtos alugados"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order__has_returnable_lines
+msgid "Has Returnable Lines"
+msgstr "Tem linhas com devolução possível"
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/sale_order_recurrence.py:0
+#, python-format
+msgid "Hour"
+msgstr "Hora"
+
+#. module: sale_renting
+#: model:sale.temporal.recurrence,name:sale_renting.recurrence_hourly
+msgid "Hourly"
+msgstr "Por hora"
+
+#. module: sale_renting
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_temporal_recurrence__unit__hour
+msgid "Hours"
+msgstr "Horas"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_pricing__id
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard__id
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard_line__id
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_report__id
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__id
+#: model:ir.model.fields,field_description:sale_renting.field_sale_temporal_recurrence__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "Invoicing Address:"
+msgstr "Endereço de faturamento:"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "Invoicing and Shipping Address:"
+msgstr "Endereço de faturamento e entrega:"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__late
+msgid "Is Late"
+msgstr "Está atrasado"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order_line__is_rental
+msgid "Is Rental"
+msgstr "É locação"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard__is_late
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order__is_late
+msgid "Is overdue"
+msgstr "Está atrasado"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "Jane Doe"
+msgstr "Jane Doe"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "John Doe"
+msgstr "John Doe"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_pricing__write_uid
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard__write_uid
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard_line__write_uid
+#: model:ir.model.fields,field_description:sale_renting.field_sale_temporal_recurrence__write_uid
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_pricing__write_date
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard__write_date
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard_line__write_date
+#: model:ir.model.fields,field_description:sale_renting.field_sale_temporal_recurrence__write_date
+msgid "Last Updated on"
+msgstr "Última atualização em"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_search
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_gantt
+msgid "Late"
+msgstr "Atrasado"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_form_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_form
+msgid "Late Pickup"
+msgstr "Retirada tardia"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_form_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_form
+msgid "Late Return"
+msgstr "Devolução tardia"
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "Let's now create an order."
+msgstr "Agora, crie um pedido."
+
+#. module: sale_renting
+#: model:product.template,name:sale_renting.rental_product_2_product_template
+msgid "Meeting Room"
+msgstr "Sala de reuniões"
+
+#. module: sale_renting
+#: model:ir.model.constraint,message:sale_renting.constraint_res_company_min_extra_hour
+msgid "Minimal delay time before applying fines has to be positive."
+msgstr ""
+"O tempo mínimo de atraso antes da aplicação de multas deve ser positivo."
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_res_company__min_extra_hour
+#: model:ir.model.fields,field_description:sale_renting.field_res_config_settings__min_extra_hour
+msgid "Minimum delay time before applying fines."
+msgstr "Tempo mínimo de atraso antes de aplicar multas."
+
+#. module: sale_renting
+#: model:ir.model.fields,help:sale_renting.field_sale_temporal_recurrence__duration
+msgid ""
+"Minimum duration before this rule is applied. If set to 0, it represents a "
+"fixedrental price."
+msgstr ""
+"Duração mínima antes de aplicar esta regra. Se definido como 0, representa "
+"um preço de locação fixo."
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/sale_order_recurrence.py:0
+#, python-format
+msgid "Month"
+msgstr "Mês"
+
+#. module: sale_renting
+#: model:sale.temporal.recurrence,name:sale_renting.recurrence_monthly
+msgid "Monthly"
+msgstr "Mensal"
+
+#. module: sale_renting
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_temporal_recurrence__unit__month
+msgid "Months"
+msgstr "Meses"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_search
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+msgid "My Orders"
+msgstr "Meus pedidos"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_temporal_recurrence__name
+msgid "Name"
+msgstr "Nome"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order__next_action_date
+msgid "Next Action"
+msgstr "Próxima ação"
+
+#. module: sale_renting
+#: model_terms:ir.actions.act_window,help:sale_renting.action_rental_report
+msgid "No data yet!"
+msgstr "Sem dados ainda!"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_form
+msgid "Ok"
+msgstr "Ok"
+
+#. module: sale_renting
+#: model_terms:ir.actions.act_window,help:sale_renting.rental_order_action
+msgid ""
+"Once the quotation is confirmed, it becomes a rental order.<br> You will be "
+"able to create an invoice and collect the payment."
+msgstr ""
+"Depois que a cotação for confirmada, ela se tornará um pedido de "
+"locação.<br> Em seguida, você poderá criar uma fatura e receber o pagamento."
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "Once the rental is done, you can register the return."
+msgstr "Quando a locação for concluída, você pode registrar a devolução."
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard__order_id
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_search
+msgid "Order"
+msgstr "Pedido"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_report__order_id
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__order_id
+msgid "Order #"
+msgstr "Pedido nº"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__order_date
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+msgid "Order Date"
+msgstr "Data do pedido"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard_line__order_line_id
+msgid "Order Line"
+msgstr "Linha do pedido"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__name
+msgid "Order Reference"
+msgstr "Referência do pedido"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__order_line_id
+msgid "Order line #"
+msgstr "Nº da linha do pedido"
+
+#. module: sale_renting
+#: model:ir.ui.menu,name:sale_renting.rental_order_menu
+#: model:ir.ui.menu,name:sale_renting.rental_orders_all
+msgid "Orders"
+msgstr "Pedidos"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_res_company__extra_day
+#: model:ir.model.fields,field_description:sale_renting.field_res_config_settings__extra_day
+msgid "Per Day"
+msgstr "Por dia"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_res_company__extra_hour
+#: model:ir.model.fields,field_description:sale_renting.field_res_config_settings__extra_hour
+msgid "Per Hour"
+msgstr "Por hora"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.product_pricelist_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.product_template_form_view_rental
+msgid "Period"
+msgstr "Período"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.sale_temporal_recurrence_view_form
+#: model_terms:ir.ui.view,arch_db:sale_renting.sale_temporal_recurrence_view_tree
+msgid "Periodicity"
+msgstr "Periodicidade"
+
+#. module: sale_renting
+#: model:ir.actions.act_window,name:sale_renting.sale_temporal_recurrence_action
+msgid "Periods"
+msgstr "Períodos"
+
+#. module: sale_renting
+#: model:ir.model,name:sale_renting.model_rental_order_wizard
+msgid "Pick-up/Return products"
+msgstr "Retirada/devolução de produtos"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_gantt
+msgid "Picked-Up"
+msgstr "Retirado"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard_line__qty_delivered
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_form_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_form
+msgid "Picked-up"
+msgstr "Retirado"
+
+#. module: sale_renting
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_order__rental_status__return
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_rental_schedule__rental_status__return
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_rental_schedule__report_line_status__pickedup
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "Pickedup"
+msgstr "Retirado"
+
+#. module: sale_renting
+#: model:ir.model.fields.selection,name:sale_renting.selection__rental_order_wizard__status__pickup
+#: model:ir.ui.menu,name:sale_renting.rental_orders_pickup
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_form_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_gantt
+msgid "Pickup"
+msgstr "Retirada"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__pickup_date
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_search
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "Pickup Date"
+msgstr "Data de retirada"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "Pickup Receipt #"
+msgstr "Nº do recibo de retirada"
+
+#. module: sale_renting
+#: model:ir.actions.report,name:sale_renting.action_report_rental_saleorder
+msgid "Pickup and Return Receipt"
+msgstr "Recibo de retirada e devolução"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order_line__reservation_begin
+msgid "Pickup date - padding time"
+msgstr "Data de retirada - tempo adicional"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_kanban
+msgid "Pickup:"
+msgstr "Retirada:"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_pricing__price
+msgid "Price"
+msgstr "Preço"
+
+#. module: sale_renting
+#: model:ir.model,name:sale_renting.model_product_pricelist
+#: model:ir.model.fields,field_description:sale_renting.field_product_pricing__pricelist_id
+msgid "Pricelist"
+msgstr "Lista de preço"
+
+#. module: sale_renting
+#: model:ir.actions.act_window,name:sale_renting.product_pricing_action
+#: model_terms:ir.ui.view,arch_db:sale_renting.product_pricing_tree
+msgid "Prices"
+msgstr "Preços"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.product_template_form_view_rental
+msgid "Pricing"
+msgstr "Preços"
+
+#. module: sale_renting
+#: model:ir.model,name:sale_renting.model_product_pricing
+msgid "Pricing rule of rental products"
+msgstr "Regra de preço para produtos de locação"
+
+#. module: sale_renting
+#: model:ir.model,name:sale_renting.model_product_template
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard_line__product_id
+#: model:ir.model.fields,field_description:sale_renting.field_res_company__extra_product
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_report__product_id
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__product_id
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_search
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_report_search_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+#: model_terms:ir.ui.view,arch_db:sale_renting.res_config_settings_view_form
+msgid "Product"
+msgstr "Produto"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "Product A"
+msgstr "Produto A"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_report__categ_id
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__categ_id
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_report_search_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+msgid "Product Category"
+msgstr "Categoria de produtos"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__product_name
+msgid "Product Reference"
+msgstr "Referência do produto"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_pricing__product_template_id
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_report__product_tmpl_id
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__product_tmpl_id
+msgid "Product Template"
+msgstr "Modelo de produto"
+
+#. module: sale_renting
+#: model:ir.model,name:sale_renting.model_product_product
+#: model:ir.model.fields,field_description:sale_renting.field_product_pricing__product_variant_ids
+msgid "Product Variant"
+msgstr "Variante do produto"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.res_config_settings_view_form
+msgid "Product to charge extra time"
+msgstr "Produto a cobrar tempo extra"
+
+#. module: sale_renting
+#: model:ir.actions.act_window,name:sale_renting.rental_product_template_action
+#: model:ir.ui.menu,name:sale_renting.menu_rental_products
+#: model_terms:ir.ui.view,arch_db:sale_renting.product_pricelist_view
+msgid "Products"
+msgstr "Produtos"
+
+#. module: sale_renting
+#: model:product.template,name:sale_renting.rental_product_1_product_template
+msgid "Projector"
+msgstr "Projetor"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__product_uom_qty
+msgid "Qty Ordered"
+msgstr "Qtd pedida"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__qty_delivered
+msgid "Qty Picked-Up"
+msgstr "Qtd. retirada"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__qty_returned
+msgid "Qty Returned"
+msgstr "Qtd. devolvida"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_product__qty_in_rent
+#: model:ir.model.fields,field_description:sale_renting.field_product_template__qty_in_rent
+msgid "Quantity currently in rent"
+msgstr "Quantidade em locação atualmente"
+
+#. module: sale_renting
+#: model:sale.temporal.recurrence,name:sale_renting.recurrence_quarterly
+msgid "Quarterly"
+msgstr "Trimestral"
+
+#. module: sale_renting
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_order__rental_status__draft
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_rental_report__state__draft
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_rental_schedule__rental_status__draft
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_rental_schedule__state__draft
+msgid "Quotation"
+msgstr "Cotação"
+
+#. module: sale_renting
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_order__rental_status__sent
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_rental_report__state__sent
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_rental_schedule__rental_status__sent
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_rental_schedule__state__sent
+msgid "Quotation Sent"
+msgstr "Cotação enviada"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_report_search_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+msgid "Quotations"
+msgstr "Cotações"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_form_view
+msgid "Recompute all prices based on this duration"
+msgstr "Recalcular todos os preços com base nesta duração"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order__remaining_hours
+msgid "Remaining duration in hours"
+msgstr "Duração restante em horas"
+
+#. module: sale_renting
+#: model:ir.ui.menu,name:sale_renting.rental_menu_root
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_gantt
+#: model_terms:ir.ui.view,arch_db:sale_renting.res_config_settings_view_form
+msgid "Rental"
+msgstr "Locação"
+
+#. module: sale_renting
+#: model:ir.actions.act_window,name:sale_renting.action_rental_report
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_report_graph_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_report_pivot_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_report_search_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+#: model_terms:ir.ui.view,arch_db:sale_renting.sale_rental_report_view_tree
+msgid "Rental Analysis"
+msgstr "Análise de locação"
+
+#. module: sale_renting
+#: model:ir.model,name:sale_renting.model_sale_rental_report
+msgid "Rental Analysis Report"
+msgstr "Relatório de análise de locações"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_form
+msgid "Rental Order"
+msgstr "Pedido de aluguel"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard_line__rental_order_wizard_id
+msgid "Rental Order Wizard"
+msgstr "Assistente de pedidos de locação"
+
+#. module: sale_renting
+#: model:ir.actions.act_window,name:sale_renting.rental_order_action
+#: model:ir.actions.act_window,name:sale_renting.rental_order_today_pickup_action
+#: model:ir.actions.act_window,name:sale_renting.rental_order_today_return_action
+msgid "Rental Orders"
+msgstr "Pedidos de locação"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.product_pricelist_view
+msgid "Rental Pricelist Rules"
+msgstr "Regras de listas de preço para locação"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order__rental_return_date
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order_line__return_date
+msgid "Rental Return Date"
+msgstr "Data de devolução do aluguel"
+
+#. module: sale_renting
+#: model:ir.model,name:sale_renting.model_sale_rental_schedule
+msgid "Rental Schedule"
+msgstr "Cronograma de aluguel"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order__rental_start_date
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order_line__start_date
+msgid "Rental Start Date"
+msgstr "Data de início do aluguel"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order__rental_status
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__rental_status
+msgid "Rental Status"
+msgstr "Situação do aluguel"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__report_line_status
+msgid "Rental Status (advanced)"
+msgstr "Status da Locação (avançado)"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard__rental_wizard_line_ids
+msgid "Rental Wizard Line"
+msgstr "Linha do assistente de locação"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_form_view
+msgid "Rental period"
+msgstr "Período de locação"
+
+#. module: sale_renting
+#: model:ir.ui.menu,name:sale_renting.menu_sale_renting_periods
+msgid "Rental periods"
+msgstr "Períodos de locação"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_product__display_price
+#: model:ir.model.fields,field_description:sale_renting.field_product_template__display_price
+msgid "Rental price"
+msgstr "Preço de locação"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.product_template_form_view_rental
+msgid "Rental prices"
+msgstr "Preços de locação"
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/sale_order.py:0
+#, python-format
+msgid "Rental prices have been recomputed with the new period."
+msgstr "Preços de locação foram recalculados com o novo período"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.product_pricelist_view
+msgid "Rental rules"
+msgstr "Regras de locação"
+
+#. module: sale_renting
+#: model:ir.model,name:sale_renting.model_rental_order_wizard_line
+msgid "RentalOrderLine transient representation"
+msgstr "Representação transitória de RentalOrderLine"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_search
+msgid "Rentals"
+msgstr "Aluguéis"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_pricing__recurrence_id
+msgid "Renting Period"
+msgstr "Período de aluguel"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_product_pricelist__product_pricing_ids
+msgid "Renting Price Rules"
+msgstr "Regras de preços de aluguel"
+
+#. module: sale_renting
+#: model:ir.ui.menu,name:sale_renting.menu_rental_reporting
+msgid "Reporting"
+msgstr "Relatórios"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.product_template_form_view_rental
+msgid "Reservations"
+msgstr "Reservas"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard_line__qty_reserved
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_order__rental_status__pickup
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_rental_schedule__rental_status__pickup
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_rental_schedule__report_line_status__reserved
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_gantt
+msgid "Reserved"
+msgstr "Reservado"
+
+#. module: sale_renting
+#: model:ir.model.fields.selection,name:sale_renting.selection__rental_order_wizard__status__return
+#: model:ir.ui.menu,name:sale_renting.rental_orders_return
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_form_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_gantt
+msgid "Return"
+msgstr "Devolução"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__return_date
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_search
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+msgid "Return Date"
+msgstr "Data de devolução"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_kanban
+msgid "Return:"
+msgstr "Devolução:"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard_line__qty_returned
+#: model:ir.model.fields,field_description:sale_renting.field_sale_order_line__qty_returned
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_order__rental_status__returned
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_rental_schedule__rental_status__returned
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_rental_schedule__report_line_status__returned
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_form_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_gantt
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "Returned"
+msgstr "Devolvido"
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/sale_order_line.py:0
+#, python-format
+msgid "Returned: %(date)s"
+msgstr "Devolvido: %(date)s"
+
+#. module: sale_renting
+#: model:ir.model,name:sale_renting.model_sale_temporal_recurrence
+msgid "Sale temporal Recurrence"
+msgstr "Recorrência temporal de venda"
+
+#. module: sale_renting
+#: model:ir.model,name:sale_renting.model_sale_order
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_rental_report__state__sale
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_rental_schedule__state__sale
+msgid "Sales Order"
+msgstr "Pedido de venda"
+
+#. module: sale_renting
+#: model:ir.model,name:sale_renting.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Linha do pedido de vendas"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__team_id
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_search
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+msgid "Sales Team"
+msgstr "Equipe de vendas"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_report__user_id
+msgid "Salesman"
+msgstr "Vendedor"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__user_id
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_search
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_report_search_view
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+msgid "Salesperson"
+msgstr "Vendedor"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.report_rental_order_document
+msgid "Sample Document"
+msgstr "Amostra de documento"
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "Save the product."
+msgstr "Salve o produto."
+
+#. module: sale_renting
+#: model:ir.ui.menu,name:sale_renting.menu_rental_schedule
+msgid "Schedule"
+msgstr "Agendar"
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/product_product.py:0
+#: code:addons/sale_renting/models/product_template.py:0
+#: model:ir.actions.act_window,name:sale_renting.action_rental_order_schedule
+#, python-format
+msgid "Scheduled Rentals"
+msgstr "Locações agendadas"
+
+#. module: sale_renting
+#: model:ir.model.fields,help:sale_renting.field_product_pricing__product_variant_ids
+msgid ""
+"Select Variants of the Product for which this rule applies.Leave empty if "
+"this rule applies for any variant of this template."
+msgstr ""
+"Selecione variantes do produto para as quais essa regra se aplica. Deixe em "
+"branco se essa regra se aplicar a qualquer variante desse modelo."
+
+#. module: sale_renting
+#: model:ir.model.fields,help:sale_renting.field_product_pricing__product_template_id
+msgid "Select products on which this pricing will be applied."
+msgstr "Selecione os produtos aos quais esse preço será aplicado."
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "Select the rental dates and check the price."
+msgstr "Selecione as datas de locação e verifique o preço."
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "Select your rental product."
+msgstr "Selecione o produto de locação."
+
+#. module: sale_renting
+#: model:ir.actions.act_window,name:sale_renting.action_rental_config_settings
+#: model:ir.ui.menu,name:sale_renting.menu_rental_settings
+msgid "Settings"
+msgstr "Definições"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_wizard_view_form
+msgid "Some delay cost will be added to the sales order."
+msgstr "Um custo de atraso será adicionado ao pedido de venda."
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_report_search_view
+msgid "State"
+msgstr "Estado"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard__status
+#: model:ir.model.fields,field_description:sale_renting.field_rental_order_wizard_line__status
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_report__state
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__state
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_search
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+msgid "Status"
+msgstr "Status"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.sale_rental_report_view_tree
+msgid "Sum of Daily Amount"
+msgstr "Soma da quantia diária"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.sale_rental_report_view_tree
+msgid "Sum of Daily Ordered Qty"
+msgstr "Soma da qtd. solicitada diariamente"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.sale_rental_report_view_tree
+msgid "Sum of Daily Picked-Up Qty"
+msgstr "Some da qtd. retirada diariamente"
+
+#. module: sale_renting
+#: model:ir.model.fields,help:sale_renting.field_sale_order__duration_days
+msgid "The duration in days of the rental period."
+msgstr "A duração em dias do período de locação."
+
+#. module: sale_renting
+#: model:ir.model.fields,help:sale_renting.field_sale_order__remaining_hours
+msgid "The leftover hours of the rental period."
+msgstr "As horas restantes do período de locação."
+
+#. module: sale_renting
+#: model:ir.model.constraint,message:sale_renting.constraint_sale_temporal_recurrence_temporal_recurrence_duration
+msgid "The pricing duration has to be greater or equal to 0."
+msgstr "A duração do preço deve ser maior ou igual a 0."
+
+#. module: sale_renting
+#: model:ir.model.fields,help:sale_renting.field_res_company__extra_product
+msgid "The product is used to add the cost to the sales order"
+msgstr "O produto é utilizado para adicionar o custo ao pedido de venda"
+
+#. module: sale_renting
+#: model:ir.model.fields,help:sale_renting.field_rental_order_wizard__is_late
+#: model:ir.model.fields,help:sale_renting.field_sale_order__is_late
+msgid "The products haven't been picked-up or returned in time"
+msgstr "Os produtos não foram retirados ou devolvidos a tempo"
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "The rental configuration is available here."
+msgstr "A configuração de locação está disponível aqui."
+
+#. module: sale_renting
+#: model:ir.model.constraint,message:sale_renting.constraint_sale_order_rental_period_coherence
+msgid "The rental start date must be before the rental return date if any."
+msgstr ""
+"A data de início de locação deve ser anterior à data de retorno, se houver."
+
+#. module: sale_renting
+#: model_terms:ir.actions.act_window,help:sale_renting.rental_order_today_pickup_action
+#: model_terms:ir.actions.act_window,help:sale_renting.rental_order_today_return_action
+msgid "There isn't any scheduled pickup or return."
+msgstr "Não há retiradas ou devoluções agendadas."
+
+#. module: sale_renting
+#: model:ir.model.fields,help:sale_renting.field_res_config_settings__extra_day
+msgid ""
+"This is the default extra cost per day set on newly created products. You "
+"can change this value for existing products directly on the product itself."
+msgstr ""
+"Esse é o custo extra padrão por dia definido em produtos novos. Você pode "
+"alterar esse valor para produtos existentes diretamente no próprio produto."
+
+#. module: sale_renting
+#: model:ir.model.fields,help:sale_renting.field_res_config_settings__extra_hour
+msgid ""
+"This is the default extra cost per hour set on newly created products. You "
+"can change this value for existing products directly on the product itself."
+msgstr ""
+"Esse é o custo extra padrão por hora definido em produtos novos. Você pode "
+"alterar esse valor para produtos existentes diretamente no próprio produto."
+
+#. module: sale_renting
+#: model:ir.model.fields,help:sale_renting.field_res_config_settings__extra_product
+msgid "This product will be used to add fines in the Rental Order."
+msgstr ""
+"Este produto será utilizado para adicionar multas no pedido de locação."
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_form_view
+msgid ""
+"This will update the unit price of all rental products based on the new "
+"period."
+msgstr ""
+"Isso atualizará o preço unitário de todos os produtos com base na nova lista"
+" de preço."
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.res_config_settings_view_form
+msgid ""
+"Those values are applied to any new rental product and can be changed on "
+"product forms."
+msgstr ""
+"Esses valores são aplicados a qualquer novo produto de locação e podem ser "
+"alterados nos formulários de produtos."
+
+#. module: sale_renting
+#: model:ir.ui.menu,name:sale_renting.rental_orders_today
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_search
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_schedule_view_search
+msgid "To Do Today"
+msgstr "A fazer hoje"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_search_without_searchpanel
+msgid "To Pickup"
+msgstr "A ser retirado"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_search_without_searchpanel
+msgid "To Return"
+msgstr "A ser devolvido"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_view_tree
+msgid "Total Tax Included"
+msgstr "Total com impostos"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_temporal_recurrence__unit
+msgid "Unit"
+msgstr "Unidade"
+
+#. module: sale_renting
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_report__product_uom
+#: model:ir.model.fields,field_description:sale_renting.field_sale_rental_schedule__product_uom
+msgid "Unit of Measure"
+msgstr "Unidade de medida"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_form_view
+msgid "Update Rental Prices"
+msgstr "Atualizar preços de locação"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.rental_order_wizard_view_form
+msgid "Validate"
+msgstr "Validar"
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/sale_order.py:0
+#, python-format
+msgid "Validate a pickup"
+msgstr "Validar uma retirada"
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/sale_order.py:0
+#, python-format
+msgid "Validate a return"
+msgstr "Validar uma devolução"
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "Validate the operation after checking the picked-up quantities."
+msgstr "Valide a operação depois de verificar as quantidades retiradas."
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.product_pricelist_view
+msgid "Variants"
+msgstr "Variantes"
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid ""
+"Want to <b>rent products</b>? \n"
+" Let's discover Odoo Rental App."
+msgstr ""
+"Deseja <b>alugar produtos</b>? \n"
+"Descubra o aplicativo Odoo Locação."
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/sale_order_recurrence.py:0
+#, python-format
+msgid "Week"
+msgstr "Semana"
+
+#. module: sale_renting
+#: model:sale.temporal.recurrence,name:sale_renting.recurrence_weekly
+msgid "Weekly"
+msgstr "Semanal"
+
+#. module: sale_renting
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_temporal_recurrence__unit__week
+msgid "Weeks"
+msgstr "Semanas"
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/sale_order_recurrence.py:0
+#, python-format
+msgid "Year"
+msgstr "Ano"
+
+#. module: sale_renting
+#: model:sale.temporal.recurrence,name:sale_renting.recurrence_yearly
+msgid "Yearly"
+msgstr "Anual"
+
+#. module: sale_renting
+#: model:ir.model.fields.selection,name:sale_renting.selection__sale_temporal_recurrence__unit__year
+msgid "Years"
+msgstr "Anos"
+
+#. module: sale_renting
+#: model_terms:ir.actions.act_window,help:sale_renting.rental_product_template_action
+msgid ""
+"You can also create additional products or services to sell by checking *Can"
+" be Sold* in the product form (e.g. insurance)."
+msgstr ""
+"Você também pode criar produtos ou serviços adicionais para vender marcando "
+"*Pode ser vendido* no formulário do produto (por exemplo, seguro)."
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/product_pricelist.py:0
+#, python-format
+msgid "You can not have a time-based rule for products that are not rentable."
+msgstr ""
+"Não é possível ter uma regra baseada em tempo para produtos que não sejam "
+"alugáveis."
+
+#. module: sale_renting
+#: model_terms:ir.actions.act_window,help:sale_renting.rental_order_today_pickup_action
+#: model_terms:ir.actions.act_window,help:sale_renting.rental_order_today_return_action
+msgid ""
+"You can search on a larger period using the filters here above\n"
+"                <br>\n"
+"                or create a new rental order."
+msgstr ""
+"Você pode pesquisar em um período maior usando os filtros acima\n"
+"                <br>\n"
+"                ou criar um novo pedido de locação."
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/wizard/rental_processing.py:0
+#, python-format
+msgid "You can't return more than what's been picked-up."
+msgstr "Você não pode devolver mais do que foi retirado."
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/product_pricing.py:0
+#, python-format
+msgid ""
+"You cannot have multiple pricing for the same variant, recurrence and "
+"pricelist"
+msgstr ""
+"Você não pode ter vários preços para a mesma variante, recorrência e lista "
+"de preços"
+
+#. module: sale_renting
+#: model:ir.model.constraint,message:sale_renting.constraint_sale_order_line_rental_stock_coherence
+msgid "You cannot return more than what has been picked up."
+msgstr "Você não pode devolver mais do que foi retirado."
+
+#. module: sale_renting
+#. odoo-javascript
+#: code:addons/sale_renting/static/src/js/tours/rental.js:0
+#, python-format
+msgid "You're done with your fist rental. Congratulations!"
+msgstr "Você concluiu a sua primeira locação. Parabéns!"
+
+#. module: sale_renting
+#. odoo-python
+#: code:addons/sale_renting/models/product_pricing.py:0
+#: code:addons/sale_renting/models/product_pricing.py:0
+#, python-format
+msgid "all variants"
+msgstr "todas as variantes"
+
+#. module: sale_renting
+#: model_terms:ir.ui.view,arch_db:sale_renting.res_config_settings_view_form
+msgid "hours"
+msgstr "horas"

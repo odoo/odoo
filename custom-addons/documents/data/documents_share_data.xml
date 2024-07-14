@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <record id="share_account_folder" model="documents.share" forcecreate="0">
+        <field name="name">Inbox Financial</field>
+        <field name="alias_name">inbox-financial</field>
+        <field name="type">domain</field>
+        <field name="folder_id" ref="documents_finance_folder"/>
+        <field name="action">downloadupload</field>
+        <field name="tag_ids" eval="[(6,0,[ref('documents_finance_status_inbox')])]"/>
+        <field name="email_drop">True</field>
+        <field name="activity_option">True</field>
+        <field name="activity_type_id" ref="mail_documents_activity_data_Inbox"/>
+        <field name="activity_date_deadline_range">0</field>
+        <field name="activity_date_deadline_range_type">days</field>
+    </record>
+
+    <record id="share_internal_folder" model="documents.share" forcecreate="0">
+        <field name="name">Inbox Internal</field>
+        <field name="alias_name">inbox</field>
+        <field name="type">domain</field>
+        <field name="folder_id" ref="documents_internal_folder"/>
+        <field name="action">downloadupload</field>
+        <field name="tag_ids" eval="[(6,0,[ref('documents_internal_status_inbox')])]"/>
+        <field name="email_drop">True</field>
+        <field name="activity_option">True</field>
+        <field name="activity_type_id" ref="mail_documents_activity_data_Inbox"/>
+        <field name="activity_date_deadline_range">0</field>
+        <field name="activity_date_deadline_range_type">days</field>
+    </record>
+</data></odoo>

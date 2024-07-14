@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.SalesReportFilters" t-inherit="account_reports.AccountReportFiltersCustomizable">
+        <xpath expr="//t[@t-if='controller.options.available_variants.length > 1']" position="before">
+            <t t-if="controller.options.sales_report_taxes?.operation_category?.goods">
+                <t t-call="account_reports.SalesReportFilterCode"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

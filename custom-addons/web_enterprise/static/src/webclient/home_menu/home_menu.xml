@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web_enterprise.HomeMenu">
+    <div t-ref="root" class="o_home_menu h-100 overflow-auto" t-att-class="{ o_ios_app: state.isIosApp }">
+        <div class="container">
+            <input t-ref="input" type="text" class="o_search_hidden visually-hidden w-auto" data-allow-hotkeys="true" t-on-input="_onInputSearch" t-on-blur="_onInputBlur" t-on-compositionstart="_onCompositionStart"
+                role="combobox"
+                t-att-aria-activedescendant="'result_app_' + state.focusedIndex"
+                t-att-aria-expanded="displayedApps.length ? 'true' : 'false'"
+                aria-autocomplete="list"
+                aria-haspopup="listbox"
+            />
+            <!-- When the subscription has expired, the expiration panel is show over the whole UI instead of here -->
+            <ExpirationPanel t-if="subscription.warningType and !subscription.isWarningHidden and subscription.daysLeft &lt;= 30 and subscription.daysLeft > 0"/>
+            <div t-if="displayedApps.length" role="listbox" class="o_apps row user-select-none mt-5 mx-0">
+                <div t-foreach="displayedApps" t-as="app" t-key="app.id" class="col-3 col-md-2 o_draggable mb-3 px-0">
+                    <a t-att-id="'result_app_' + app_index"
+                        role="option"
+                        t-att-aria-selected="state.focusedIndex === app_index ? 'true' : 'false'"
+                        class="o_app o_menuitem d-flex flex-column rounded-3 justify-content-start align-items-center w-100 p-1 p-md-2"
+                        t-att-class="{o_focused: state.focusedIndex === app_index}"
+                        t-att-data-menu-xmlid="app.xmlid"
+                        t-att-href="app.href || ('#menu_id='+app.id+'&amp;action_id='+app.actionID)"
+                        t-on-click.prevent="() => this._onAppClick(app)"
+                        >
+                        <img t-if="app.webIconData" class="o_app_icon rounded-3"
+                            t-attf-src="{{app.webIconData}}"
+                        />
+                        <div t-else="" class="o_app_icon position-relative d-flex justify-content-center align-items-center p-2 rounded-3 ratio ratio-1x1"
+                            t-attf-style="background-color: {{app.webIcon.backgroundColor}};"
+                        >
+                            <i t-attf-class="{{app.webIcon.iconClass}} position-relative w-auto h-auto" t-attf-style="color: {{app.webIcon.color}};"/>
+                        </div>
+                        <div class="o_caption w-100 text-center text-truncate mt-2" t-esc="app.label or app.name"/>
+                    </a>
+                </div>
+            </div>
+            <div t-elif="!displayedApps.length" id="result_menu_0" role="option" aria-selected="true" class="o_no_result">
+                No result
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="web_enterprise.HomeMenu.CommandPalette.Footer">
+    <span>
+        <span class='fw-bolder text-primary'>TIP</span> — open me anywhere with <span t-esc="controlKey" class='fw-bolder text-primary'/> + <span class='fw-bolder text-primary'>K</span>
+    </span>
+</t>
+
+</templates>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.mx" model="res.country">
+        <field name="enforce_cities" eval="1" />
+        <field name="address_view_id" ref="l10n_mx_edi_extended.mx_partner_address_form"/>
+        <field eval="'%(street)s %(street2)s\n%(l10n_mx_edi_colony)s\n%(zip)s %(city)s, %(state_code)s\n%(country_name)s'" name="address_format"/>
+    </record>
+</odoo>

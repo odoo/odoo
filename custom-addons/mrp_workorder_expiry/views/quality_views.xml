@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="quality_check_view_form_tablet_inherit_expiry" model="ir.ui.view">
+        <field name="name">quality.check.tablet.view.form.inherit.expiry</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="mrp_workorder.quality_check_view_form_tablet"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_workorder_lot')]" position="inside">
+                <field name="is_expired" invisible="1"/>
+                <div class="o_expired_alert" invisible="not is_expired">
+                    <span class="fa fa-exclamation-triangle"/> This lot is expired.
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    </odoo>

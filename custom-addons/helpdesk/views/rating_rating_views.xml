@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="rating_rating_view_tree_inherit_helpdesk" model="ir.ui.view">
+        <field name="name">rating.rating.tree.helpdesk</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">64</field>
+        <field name="arch" type="xml">
+            <field name="rated_partner_id" position="attributes">
+                <attribute name="string">Assigned to</attribute>
+            </field>
+            <field name="res_name" position="attributes">
+                <attribute name="string">Ticket</attribute>
+            </field>
+            <field name="parent_res_name" position="attributes">
+                <attribute name="string">Helpdesk Team</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="rating_rating_view_today_pivot_inherit_helpdesk" model="ir.ui.view">
+        <field name="name">rating.rating.today.pivot.helpdesk</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_pivot"/>
+        <field name="mode">primary</field>
+        <field name="priority">64</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='rated_partner_id']" position="attributes">
+                <attribute name="name">res_name</attribute>
+            </xpath>
+            <field name="create_date" position="replace"/>
+        </field>
+    </record>
+
+    <record id="rating_rating_view_seven_days_pivot_inherit_helpdesk" model="ir.ui.view">
+        <field name="name">rating.rating.seven.days.pivot.helpdesk</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_pivot"/>
+        <field name="mode">primary</field>
+        <field name="priority">80</field>
+        <field name="arch" type="xml">
+            <field name="create_date" type="col" position="replace"/>
+            <xpath expr="//field[@name='rated_partner_id']" position="replace">
+                <field name="create_date" interval="day" type="row"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="rating_rating_view_graph_inherit_helpdesk" model="ir.ui.view">
+        <field name="name">rating.rating.graph.helpdesk</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_graph"/>
+        <field name="mode">primary</field>
+        <field name="priority">64</field>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="attributes">
+                <attribute name="order">desc</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="rating_rating_view_today_graph_inherit_helpdesk" model="ir.ui.view">
+        <field name="name">rating.rating.graph.today.helpdesk</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating_rating_view_graph_inherit_helpdesk"/>
+        <field name="mode">primary</field>
+        <field name="priority">64</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_date']" position="attributes">
+                <attribute name="name">res_name</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="rating_rating_view_seven_days_graph_inherit_helpdesk" model="ir.ui.view">
+        <field name="name">rating.rating.graph.seven.days.helpdesk</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating_rating_view_graph_inherit_helpdesk"/>
+        <field name="mode">primary</field>
+        <field name="priority">80</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_date']" position="attributes">
+                <attribute name="interval">day</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="rating_rating_view_search_inherit_helpdesk" model="ir.ui.view">
+        <field name="name">rating.rating.search.helpdesk</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_search"/>
+        <field name="mode">primary</field>
+        <field name="priority">64</field>
+        <field name="arch" type="xml">
+            <field name="res_name" position="attributes">
+                <attribute name="string">Ticket</attribute>
+            </field>
+            <xpath expr="//field[@name='parent_res_name']" position="after">
+                <field name="res_name" position="move"/>
+            </xpath>
+            <field name="parent_res_name" position="attributes">
+                <attribute name="string">Helpdesk Team</attribute>
+            </field>
+            <field name="res_name" position="after">
+                <field name="feedback" string="Comment"/>
+            </field>
+            <field name="rated_partner_id" position="attributes">
+                <attribute name="string">Assigned to</attribute>
+            </field>
+            <filter name="responsible" position="attributes">
+                <attribute name="string">Assigned to</attribute>
+            </filter>
+            <filter name="customer" position="after">
+                <filter string="Helpdesk Team" name="res_team" context="{'group_by':'parent_res_name'}"/>
+            </filter>
+            <xpath expr="//filter[@name='resource']" position="after">
+                <filter name="rating_text" position="move"/>
+            </xpath>
+            <xpath expr="/search" position="inside">
+                <!-- TODO remove me in master -->
+                <filter string="Last 30 Days" name="rating_last_30_days" domain="[
+                    ('create_date','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))
+                ]"  invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="rating_rating_view_form_inherit_helpdesk" model="ir.ui.view">
+        <field name="name">rating.rating.form.helpdesk</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">64</field>
+        <field name="arch" type="xml">
+            <field name="resource_ref" position="attributes">
+                <attribute name="string">Ticket</attribute>
+            </field>
+            <field name="parent_ref" position="after">
+                <field name="resource_ref" position="move"/>
+            </field>
+            <field name="parent_ref" position="attributes">
+                <attribute name="string">Team</attribute>
+            </field>
+            <field name="parent_ref" position="before">
+                <field name="rated_partner_id" position="move"/>
+            </field>
+            <field name="rated_partner_id" position="attributes">
+                <attribute name="string">Assigned to</attribute>
+                <attribute name="readonly">1</attribute>
+            </field>
+            <field name="partner_id" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+            <field name="create_date" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+            <field name="feedback" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+            <field name="create_date" position="after">
+                <field name="is_internal" position="move"/>
+            </field>
+            <div name="rating_image_container" position="replace">
+                <label for="rating_text"/>
+                <div name="rating_image_container">
+                    <field name="rating_text" decoration-danger="rating_text == 'ko'" decoration-warning="rating_text == 'ok'" decoration-success="rating_text == 'top'" widget="badge"/>
+                </div>
+            </div>
+        </field>
+    </record>
+
+     <record id="helpdesk_ratings_server_action" model="ir.actions.server">
+        <field name="name">helpdesk view rating</field>
+        <field name="model_id" ref="helpdesk.model_helpdesk_team"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.action_view_helpdesk_rating()
+        </field>
+    </record>
+
+    <record id="rating_rating_action_helpdesk" model="ir.actions.act_window">
+        <field name="name">Customer Ratings</field>
+        <field name="res_model">rating.rating</field>
+        <field name="view_mode">kanban,tree,graph,pivot,form</field>
+        <field name="search_view_id" ref="helpdesk.rating_rating_view_search_inherit_helpdesk"/>
+        <field name="context">{
+            'pivot_measures': ['rating', '__count__'],
+        }</field>
+        <field name="domain">[('consumed', '=', True), ('res_model', '=', 'helpdesk.ticket')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data yet!
+            </p><p>
+                Measure your customer satisfaction by sending rating requests when your tickets are solved.
+            </p>
+        </field>
+    </record>
+
+    <record id="rating_rating_action_helpdesk_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">kanban</field>
+        <field name="act_window_id" ref="rating_rating_action_helpdesk"/>
+        <field name="view_id" ref="rating.rating_rating_view_kanban"/>
+    </record>
+
+    <record id="rating_rating_action_helpdesk_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="rating_rating_action_helpdesk"/>
+        <field name="view_id" ref="rating_rating_view_tree_inherit_helpdesk"/>
+    </record>
+
+    <record id="rating_rating_action_helpdesk_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="rating_rating_action_helpdesk"/>
+        <field name="view_id" ref="rating_rating_view_form_inherit_helpdesk"/>
+    </record>
+
+    <record id="rating_rating_action_helpdesk_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">pivot</field>
+        <field name="act_window_id" ref="rating_rating_action_helpdesk"/>
+        <field name="view_id" ref="rating.rating_rating_view_pivot"/>
+    </record>
+
+    <record id="rating_rating_action_helpdesk_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">graph</field>
+        <field name="act_window_id" ref="rating_rating_action_helpdesk"/>
+        <field name="view_id" ref="rating_rating_view_graph_inherit_helpdesk"/>
+    </record>
+
+</odoo>

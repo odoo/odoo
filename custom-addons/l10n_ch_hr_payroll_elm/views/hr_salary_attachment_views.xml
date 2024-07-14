@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_attachment_view_tree" model="ir.ui.view">
+        <field name="name">hr.salary.attachment.tree</field>
+        <field name="model">hr.salary.attachment</field>
+        <field name="inherit_id" ref="hr_payroll.hr_salary_attachment_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="paid_amount" position="after">
+                <field name="is_refund" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_salary_attachment_view_form" model="ir.ui.view">
+        <field name="name">hr.salary.attachment.form</field>
+        <field name="model">hr.salary.attachment</field>
+        <field name="inherit_id" ref="hr_payroll.hr_salary_attachment_view_form"/>
+        <field name="arch" type="xml">
+            <field name="monthly_amount" position="replace">
+                <field name="is_quantity" invisible="1"/>
+                <field name="monthly_amount" invisible="not is_quantity" widget="float"/>
+                <field name="monthly_amount" invisible="is_quantity"/>
+            </field>
+            <field name="total_amount" position="replace">
+                <field name="total_amount" invisible="not is_quantity or not has_total_amount" required="has_total_amount" widget="float"/>
+                <field name="total_amount" invisible="is_quantity or not has_total_amount" required="has_total_amount"/>
+            </field>
+            <field name="paid_amount" position="replace">
+                <field name="paid_amount" invisible="not is_quantity or paid_amount == 0" widget="float"/>
+                <field name="paid_amount" invisible="is_quantity or paid_amount == 0"/>
+                <field name="is_refund"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_salary_attachment_view_search" model="ir.ui.view">
+        <field name="name">hr.salary.attachment.search</field>
+        <field name="model">hr.salary.attachment</field>
+        <field name="inherit_id" ref="hr_payroll.hr_salary_attachment_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="active_this_year" position="after">
+                <filter string="Refunds" name="search_is_refund" domain="[('is_refund', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

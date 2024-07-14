@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.FileViewer" t-inherit="web.FileViewer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o-FileViewer-download')]" position="before">
+            <div t-if="hasSplitPdf" class="o-FileViewer-headerButton d-flex align-items-center px-3 cursor-pointer" t-on-click.stop="onClickPdfSplit" role="button" title="Split PDF">
+                <i class="fa fa-scissors fa-fw" t-att-class="{ 'o-hasLabel me-2': !env.isSmall }" role="img"/>
+                <t t-if="!env.isSmall">
+                    <span>Split PDF</span>
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o-FileViewer-download')]" position="replace">
+            <t t-if="!withDownload">$0</t>   
+        </xpath>
+        <xpath expr="//div[hasclass('o-FileViewer-navigation')][@aria-label='Previous']" position="attributes">
+            <attribute name="class" add="bg-dark" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o-FileViewer-navigation')][@aria-label='Next']" position="attributes">
+            <attribute name="class" add="bg-dark" separator=" "/>
+        </xpath>
+        <xpath expr="//span[hasclass('oi-chevron-left')]" position="attributes">
+            <attribute name="class" add="pe-1 text-white" separator=" "/>
+        </xpath>
+        <xpath expr="//span[hasclass('oi-chevron-right')]" position="attributes">
+            <attribute name="class" add="ps-1 text-white" separator=" "/>
+        </xpath>
+    </t>
+</templates>

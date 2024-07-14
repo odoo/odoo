@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_lu_annual_tax_report_section_appendix_bc" model="account.report">
+        <field name="name">Appendix B, C</field>
+        <field name="sequence">5</field>
+        <field name="country_id" ref="base.lu"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="l10n_lu_annual_tax_report_appendx_bc_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_lu_annual_tax_report_total_taxable" model="account.report.line">
+                <field name="name">389 - Assessment total of the taxable amount for non-business use of assets allocated to business</field>
+                <field name="code">L10N_LU_TAX_389</field>
+                <field name="hierarchy_level">0</field>
+                <field name="aggregation_formula">L10N_LU_TAX_386.balance + L10N_LU_TAX_388.balance</field>
+                <field name="children_ids">
+                    <record id="l10n_lu_annual_tax_report_section_appendix_b_motor" model="account.report.line">
+                        <field name="name">1. Motor vehicles</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_b_a" model="account.report.line">
+                                <field name="name">a. Values</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_363" model="account.report.line">
+                                        <field name="name">363 - Book (net asset) value at the beginning of the financial year</field>
+                                        <field name="code">L10N_LU_TAX_363</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_364" model="account.report.line">
+                                        <field name="name">364 - Acquisitions during the financial year</field>
+                                        <field name="code">L10N_LU_TAX_364</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_365" model="account.report.line">
+                                        <field name="name">365 - Sales during the financial year</field>
+                                        <field name="code">L10N_LU_TAX_365</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_366" model="account.report.line">
+                                        <field name="name">366 - Depreciation during the financial year</field>
+                                        <field name="code">L10N_LU_TAX_366</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_367" model="account.report.line">
+                                        <field name="name">367 - Book (net asset) value at the end of the financial year</field>
+                                        <field name="code">L10N_LU_TAX_367</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_b_b1" model="account.report.line">
+                                <field name="name">1b. Total of expenses during the financial year - Taxable amount</field>
+                                <field name="code">L10N_LU_TAX_381</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="aggregation_formula">sum_children</field>
+                                <field name="children_ids">
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_368" model="account.report.line">
+                                        <field name="name">368 - Fuel (petrol, diesel) and lubricants</field>
+                                        <field name="code">L10N_LU_TAX_368</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_372" model="account.report.line">
+                                        <field name="name">372 - LPG</field>
+                                        <field name="code">L10N_LU_TAX_372</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_374" model="account.report.line">
+                                        <field name="name">374 - Repairs and servicing</field>
+                                        <field name="code">L10N_LU_TAX_374</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_376" model="account.report.line">
+                                        <field name="name">376 - Tyres, etc.</field>
+                                        <field name="code">L10N_LU_TAX_376</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_378" model="account.report.line">
+                                        <field name="name">378 - Leasing / renting</field>
+                                        <field name="code">L10N_LU_TAX_378</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_380" model="account.report.line">
+                                        <field name="name">380 - Depreciation</field>
+                                        <field name="code">L10N_LU_TAX_380</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_b_b2" model="account.report.line">
+                                <field name="name">2b. Total of expenses during the financial year - Tax</field>
+                                <field name="code">L10N_LU_TAX_382</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="aggregation_formula">sum_children</field>
+                                <field name="children_ids">
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_369" model="account.report.line">
+                                        <field name="name">369 - Fuel (petrol, diesel) and lubricants</field>
+                                        <field name="code">L10N_LU_TAX_369</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_373" model="account.report.line">
+                                        <field name="name">373 - LPG</field>
+                                        <field name="code">L10N_LU_TAX_373</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_375" model="account.report.line">
+                                        <field name="name">375 - Repairs and servicing</field>
+                                        <field name="code">L10N_LU_TAX_375</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_377" model="account.report.line">
+                                        <field name="name">377 - Tyres, etc.</field>
+                                        <field name="code">L10N_LU_TAX_377</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_379" model="account.report.line">
+                                        <field name="name">379 - Leasing / renting</field>
+                                        <field name="code">L10N_LU_TAX_379</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_b_c" model="account.report.line">
+                                <field name="name">C. Number of km travelled during the financial year</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_383" model="account.report.line">
+                                        <field name="name">383 - km travelled</field>
+                                        <field name="code">L10N_LU_TAX_383</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_384" model="account.report.line">
+                                        <field name="name">384 - non-business portion (km)</field>
+                                        <field name="code">L10N_LU_TAX_384</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_385" model="account.report.line">
+                                        <field name="name">385 - non-business portion (in %)</field>
+                                        <field name="code">L10N_LU_TAX_385</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_a_386" model="account.report.line">
+                                        <field name="name">386 - Non-business part of expenditures for motor vehicules</field>
+                                        <field name="code">L10N_LU_TAX_386</field>
+                                        <field name="external_formula">monetary</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_b_other" model="account.report.line">
+                        <field name="name">2. Other assets</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="children_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_b_387" model="account.report.line">
+                                <field name="name">387 - Other (name)</field>
+                                <field name="code">L10N_LU_TAX_387</field>
+                                <field name="external_formula">string</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_388" model="account.report.line">
+                                <field name="name">388 - Other (value)</field>
+                                <field name="code">L10N_LU_TAX_388</field>
+                                <field name="external_formula">monetary</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_lu_annual_tax_report_supplies_special" model="account.report.line">
+                <field name="name">166 - Supplies carried out within the scope of the special arrangement of art. 56sexies</field>
+                <field name="code">L10N_LU_TAX_166</field>
+                <field name="hierarchy_level">0</field>
+                <field name="aggregation_formula">L10N_LU_TAX_106.balance + L10N_LU_TAX_107.balance</field>
+                <field name="children_ids">
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_106" model="account.report.line">
+                        <field name="name">106 - Services supplied by the declaring person himself as a registered taxpayer in Luxembourg</field>
+                        <field name="code">L10N_LU_TAX_106</field>
+                        <field name="external_formula">monetary</field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_107" model="account.report.line">
+                        <field name="name">107 - Services to be declared and taxed by the registered taxpayer in Luxembourg, which have been supplied by fixed establishments located in other Member States</field>
+                        <field name="code">L10N_LU_TAX_107</field>
+                        <field name="external_formula">monetary</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

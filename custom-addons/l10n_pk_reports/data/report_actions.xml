@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <data>
+        <record id="action_account_report_pkpnl" model="ir.actions.client">
+            <field name="name">Profit and Loss</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'model': 'account.report', 'report_id': ref('account_financial_report_pk_profitandloss')}"/>
+        </record>
+        <record id="account_financial_report_pk_current_year_earnings" model="account.report.line">
+            <field name="action_id" ref="action_account_report_pkpnl"/>
+        </record>
+    </data>
+</odoo>

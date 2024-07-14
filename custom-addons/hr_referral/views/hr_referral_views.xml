@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+    <record id="view_hr_referral_points_filter" model="ir.ui.view">
+        <field name="name">hr.referral.points.filter</field>
+        <field name="model">hr.referral.points</field>
+        <field name="arch" type="xml">
+            <search string="Search Points / Gifts">
+                <field name="ref_user_id"/>
+                <filter domain="[('hr_referral_reward_id', '!=', False)]" string="Gifts" name="filter_gifts"/>
+                <filter domain="[('hr_referral_reward_id', '=', False)]" string="Points" name="filter_points"/>
+                <group expand="1" string="Group By">
+                    <filter string="User" name="group_by_user_id" context="{'group_by':'ref_user_id'}"/>
+                    <filter string="Referral" name="group_by_applicant_id" context="{'group_by':'applicant_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_hr_referral_points_tree">
+        <field name="name">hr.referral.points.tree</field>
+        <field name="model">hr.referral.points</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="ref_user_id" widget="many2one_avatar_user"/>
+                <field name="applicant_id" column_invisible="True"/>
+                <field name="applicant_name" optional="show"/>
+                <field name="applicant_subject" optional="hide"/>
+                <field name="stage_id"/>
+                <field name="points" decoration-success="points > 0" decoration-danger="0 > points"/>
+                <field name="write_date" optional="show"/>
+                <field name="hr_referral_reward_id" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_hr_referral_gift_tree">
+        <field name="name">hr.referral.points.tree</field>
+        <field name="model">hr.referral.points</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="ref_user_id" widget="many2one_avatar_user"/>
+                <field name="points"/>
+                <field name="hr_referral_reward_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_hr_referral_points_form">
+        <field name="name">hr.referral.points.form</field>
+        <field name="model">hr.referral.points</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group name="main_details">
+                            <field name="ref_user_id" widget="many2one_avatar_user"/>
+                            <field name="points"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group name="configuration_details">
+                            <field name="hr_referral_reward_id" invisible="not hr_referral_reward_id"/>
+                            <field name="applicant_id" invisible="not applicant_id"/>
+                            <field name="stage_id" invisible="not applicant_id"/>
+                            <field name="sequence_stage" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_referral_points" model="ir.actions.act_window">
+        <field name="name">Points</field>
+        <field name="res_model">hr.referral.points</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_hr_referral_points_tree"/>
+        <field name="groups_id" eval="[(4, ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
+        <field name="context">{'search_default_group_by_user_id': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                Create new reward points
+            </p>
+        </field>
+    </record>
+
+    <record id="action_hr_referral_welcome_screen" model="ir.actions.client">
+        <field name="name">Dashboard</field>
+        <field name="tag">hr_referral_welcome</field>
+        <field name="target">main</field>
+    </record>
+
+    <menuitem parent="menu_hr_referral_root" id="menu_hr_applicant_employee_referral_dashboard" action="action_hr_referral_welcome_screen" sequence="1"/>
+    <menuitem parent="menu_hr_referral_root" id="menu_hr_points_referral" action="action_hr_referral_points" sequence="21" groups="base.group_no_one"/>
+
+    </data>
+</odoo>

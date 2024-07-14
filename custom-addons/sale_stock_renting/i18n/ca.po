@@ -1,0 +1,400 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_stock_renting
+# 
+# Translators:
+# Josep Anton Belchi, 2023
+# marcescu, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2023
+# eriiikgt, 2023
+# Arnau Ros, 2023
+# Martin Trigaux, 2023
+# Ivan Espinola, 2023
+# RGB Consulting <odoo@rgbconsulting.com>, 2023
+# jabiri7, 2023
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
+# Quim - eccit <quim@eccit.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:12+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Quim - eccit <quim@eccit.com>, 2024\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/product_product.py:0
+#, python-format
+msgid "%(product)s (%(qty)s item)"
+msgstr "%(product)s (%(qty)s element)"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/product_product.py:0
+#, python-format
+msgid "%(product)s (%(qty)s items)"
+msgstr "%(product)s (%(qty)s elements)"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.rental_order_wizard_view_form
+msgid ""
+"<i class=\"fa fa-warning\"/>\n"
+"                        <span>\n"
+"                            Some products don't have the requested qty available for pickup\n"
+"                        </span>"
+msgstr ""
+"<i class=\"fa fa-warning\"/>\n"
+"                        <span>\n"
+"                            Alguns productes no tenen la quantitat requerida disponible per a la recollida\n"
+"                        </span>"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.res_config_settings_inherit_view_form
+msgid "Activate to use stock deliveries and receipts for rental orders"
+msgstr ""
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,help:sale_stock_renting.field_res_company__padding_time
+#: model:ir.model.fields,help:sale_stock_renting.field_res_config_settings__padding_time
+msgid ""
+"Amount of time (in hours) during which a product is considered unavailable "
+"prior to renting (preparation time)."
+msgstr ""
+"Quantitat de temps (en hores) durant la qual un producte es considera no "
+"disponible abans del lloguer (temps de preparació)."
+
+#. module: sale_stock_renting
+#. odoo-javascript
+#: code:addons/sale_stock_renting/static/src/widgets/qty_at_date_widget.xml:0
+#, python-format
+msgid "Availability"
+msgstr "Disponibilitat"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__qty_available
+msgid "Available"
+msgstr "Disponible"
+
+#. module: sale_stock_renting
+#. odoo-javascript
+#: code:addons/sale_stock_renting/static/src/widgets/qty_at_date_widget.xml:0
+#, python-format
+msgid "Available for Rent"
+msgstr "Disponible per al Rent"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_res_company
+msgid "Companies"
+msgstr "Empreses"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paràmetres de configuració"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.res_config_settings_inherit_view_form
+msgid "Default Padding Time"
+msgstr ""
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,help:sale_stock_renting.field_rental_order_wizard_line__tracking
+#: model:ir.model.fields,help:sale_stock_renting.field_sale_order_line__tracking
+msgid "Ensure the traceability of a storable product in your warehouse."
+msgstr ""
+"Assegura la traçabilitat d’un producte emmagatzemable al vostre magatzem."
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard__has_lines_missing_stock
+msgid "Has lines whose products have insufficient stock"
+msgstr "Té línies els productes de les quals no tenen estoc suficient"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard__has_tracked_lines
+msgid "Has lines with tracked products"
+msgstr "Té línies amb productes rastrejats"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_res_company__rental_loc_id
+msgid "In rent"
+msgstr "En lloguer"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_rental_schedule__is_available
+msgid "Is Available"
+msgstr "Està disponible"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__is_product_storable
+msgid "Is Product Storable"
+msgstr "És un producte emmagatzemable"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_account_move
+msgid "Journal Entry"
+msgstr "Assentament comptable"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_stock_lot
+msgid "Lot/Serial"
+msgstr "Lot/núm. de sèrie"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.res_config_settings_inherit_view_form
+msgid "Minimum amount of time between two rentals"
+msgstr "Quantitat mínima de temps entre dos lloguers"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/sale_order_line.py:0
+#, python-format
+msgid "No valid quant has been found in location %s for serial number %s!"
+msgstr ""
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.rental_schedule_view_gantt_inherit_stock
+msgid "Other rental(s) in conflict."
+msgstr "Altre(s) lloguer(s) en conflicte."
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_res_config_settings__padding_time
+msgid "Padding"
+msgstr "Espaiament"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_res_company__padding_time
+msgid "Padding Time"
+msgstr "Temps de farciment"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_rental_order_wizard
+msgid "Pick-up/Return products"
+msgstr "Recollida i devolució de productes"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__pickeable_lot_ids
+msgid "Pickeable Lot"
+msgstr "Punt seleccionable"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__pickedup_lot_ids
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_order_line__pickedup_lot_ids
+msgid "Pickedup Lot"
+msgstr "Punt de recollida"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/wizard/rental_processing.py:0
+#, python-format
+msgid "Please specify the serial numbers picked up for the tracked products."
+msgstr ""
+"Especifiqueu els números de sèrie que es recullen per als productes seguits."
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/wizard/rental_processing.py:0
+#, python-format
+msgid "Please specify the serial numbers returned for the tracked products."
+msgstr ""
+"Especifiqueu els números de sèrie retornats per als productes seguits."
+
+#. module: sale_stock_renting
+#: model:product.template,name:sale_stock_renting.rental_stock_product_1_product_template
+msgid "Printer"
+msgstr "Impressora "
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_product_template
+msgid "Product"
+msgstr "Producte"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_product_product
+msgid "Product Variant"
+msgstr "Variant de producte"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_sale_rental_report
+msgid "Rental Analysis Report"
+msgstr "Informe d'anàlisi de lloguer"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_sale_rental_schedule
+msgid "Rental Schedule"
+msgstr "Planificació de lloguer"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.res_config_settings_inherit_view_form
+msgid "Rental Transfers"
+msgstr ""
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/sale_order_line.py:0
+#: code:addons/sale_stock_renting/models/sale_order_line.py:0
+#, python-format
+msgid "Rental move:"
+msgstr ""
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_res_config_settings__group_rental_stock_picking
+msgid "Rental pickings"
+msgstr ""
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_rental_order_wizard_line
+msgid "RentalOrderLine transient representation"
+msgstr "Representació transitòria de la línia de l'ordre de lliurament"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_order_line__reserved_lot_ids
+msgid "Reserved Lot"
+msgstr "Punt reservat"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Retorna albarà"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__returnable_lot_ids
+msgid "Returnable Lot"
+msgstr "Punt retornable"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__returned_lot_ids
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_order_line__returned_lot_ids
+msgid "Returned Lot"
+msgstr "Punt retornat"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_sale_order
+msgid "Sales Order"
+msgstr "Comanda"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línia comanda de venda"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_product_product__preparation_time
+#: model:ir.model.fields,field_description:sale_stock_renting.field_product_template__preparation_time
+msgid "Security Time"
+msgstr "Temps de seguretat"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_rental_report__lot_id
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_rental_schedule__lot_id
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.rental_report_search_view_inherit_lots
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.rental_schedule_view_search_inherit_lots
+msgid "Serial Number"
+msgstr "Núm. de sèrie"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.rental_order_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.report_rental_order_document
+msgid "Serial Numbers"
+msgstr "Números de sèrie"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_stock_move
+msgid "Stock Move"
+msgstr "Moviment d'estoc"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_stock_rule
+msgid "Stock Rule"
+msgstr "Regla d'estoc"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,help:sale_stock_renting.field_product_product__preparation_time
+#: model:ir.model.fields,help:sale_stock_renting.field_product_template__preparation_time
+msgid "Temporarily make this product unavailable before pickup."
+msgstr ""
+"Fa que aquest producte no estigui disponible temporalment abans de la "
+"recollida."
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,help:sale_stock_renting.field_res_company__rental_loc_id
+msgid ""
+"This technical location serves as stock for products currently in rentalThis"
+" location is internal because products in rentalare still considered as "
+"company assets."
+msgstr ""
+"Aquesta ubicació tècnica serveix d'estoc per a productes actualment en "
+"lloguer Aquesta ubicació és interna perquè els productes en rentalare encara"
+" es consideren actius de l'empresa."
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__tracking
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_order_line__tracking
+msgid "Tracking"
+msgstr "Seguiment"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/product_template.py:0
+#, python-format
+msgid ""
+"Tracking by lots isn't supported for rental products.\n"
+"You should rather change the tracking mode to unique serial numbers."
+msgstr ""
+"El seguiment per lots no és compatible amb els productes de lloguer.\n"
+"Preferiu canviar el mode de seguiment a números de sèrie únics."
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_order_line__unavailable_lot_ids
+msgid "Unavailable Lot"
+msgstr "Punt no disponible"
+
+#. module: sale_stock_renting
+#: model:res.groups,name:sale_stock_renting.group_rental_stock_picking
+msgid "Use pickings for rental orders"
+msgstr ""
+
+#. module: sale_stock_renting
+#. odoo-javascript
+#: code:addons/sale_stock_renting/static/src/widgets/qty_at_date_widget.xml:0
+#, python-format
+msgid "View Rentals"
+msgstr "Mostra els lligams"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_stock_warehouse
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_rental_schedule__warehouse_id
+msgid "Warehouse"
+msgstr "Magatzem"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/sale_order_line.py:0
+#, python-format
+msgid "You cannot change the product of lines linked to stock moves."
+msgstr ""
+"No podeu canviar el producte de les línies enllaçades als moviments d'estoc."
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.res_config_settings_inherit_view_form
+msgid "hours"
+msgstr "hores"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.product_template_inherit_view_form_stock_rental
+msgid "hours before orders"
+msgstr "hores abans de les comandes"
+
+#. module: sale_stock_renting
+#. odoo-javascript
+#: code:addons/sale_stock_renting/static/src/widgets/qty_at_date_widget.xml:0
+#, python-format
+msgid "to"
+msgstr "fins"

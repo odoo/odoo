@@ -1,0 +1,599 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_fedex
+#
+# Translators:
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2022
+# Bole <bole@dajmi5.com>, 2022
+# Martin Trigaux, 2022
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2022
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
+# Vladimir Vrgoč, 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-16 16:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: Vladimir Vrgoč, 2022\n"
+"Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid ", click on \"Get Production Key\" and follow all the steps."
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "<br/>According to your needs, you will need to contact different certifications:"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid ""
+"<span attrs=\"{'invisible': [('fedex_weight_unit', '!=', 'KG')]}\">CM</span>\n"
+"                                <span attrs=\"{'invisible': [('fedex_weight_unit', '!=', 'LB')]}\">IN</span>"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "<span class=\"o_form_label\">Package Length Unit</span>"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "Account Number"
+msgstr "Broj računa"
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "Advanced Services with Label Certification"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "Advanced Services without Label Certification"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_droppoff_type__business_service_center
+msgid "BUSINESS_SERVICE_CENTER"
+msgstr "BUSINESS_SERVICE_CENTER"
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_stock_package_type__package_carrier_type
+msgid "Carrier"
+msgstr "Prijevoznik"
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "Certification Process"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_delivery_carrier__fedex_document_stock_type
+msgid "Commercial Invoice Type"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_droppoff_type__drop_box
+msgid "DROP_BOX"
+msgstr "DROP_BOX"
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_delivery_carrier__fedex_developer_key
+msgid "Developer Key"
+msgstr "Razvojni ključ"
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "Duties paid by"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_file_type__epl2
+msgid "EPL2"
+msgstr "EPL2"
+
+#. module: delivery_fedex
+#. odoo-python
+#: code:addons/delivery_fedex/models/delivery_fedex.py:0
+#, python-format
+msgid ""
+"Error:\n"
+"%s"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "Extra Data"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_delivery_carrier__fedex_extra_data_rate_request
+msgid "Extra data for rate"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_delivery_carrier__fedex_extra_data_return_request
+msgid "Extra data for return"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_delivery_carrier__fedex_extra_data_ship_request
+msgid "Extra data for ship"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_delivery_carrier__fedex_label_file_type
+msgid "FEDEX Label File Type"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_service_type__fedex_2_day
+msgid "FEDEX_2_DAY"
+msgstr "FEDEX_2_DAY"
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_service_type__fedex_2_day_am
+msgid "FEDEX_2_DAY_AM"
+msgstr "FEDEX_2_DAY_AM"
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_service_type__fedex_3_day_freight
+msgid "FEDEX_3_DAY_FREIGHT"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_service_type__fedex_express_saver
+msgid "FEDEX_EXPRESS_SAVER"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_service_type__fedex_ground
+msgid "FEDEX_GROUND"
+msgstr "FEDEX_GROUND"
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_service_type__fedex_international_priority
+msgid "FEDEX_INTERNATIONAL_PRIORITY"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_service_type__fedex_international_priority_express
+msgid "FEDEX_INTERNATIONAL_PRIORITY_EXPRESS"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_service_type__fedex_next_day_afternoon
+msgid "FEDEX_NEXT_DAY_AFTERNOON"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_service_type__fedex_next_day_early_morning
+msgid "FEDEX_NEXT_DAY_EARLY_MORNING"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_service_type__fedex_next_day_end_of_day
+msgid "FEDEX_NEXT_DAY_END_OF_DAY"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_service_type__fedex_next_day_mid_morning
+msgid "FEDEX_NEXT_DAY_MID_MORNING"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_service_type__first_overnight
+msgid "FIRST_OVERNIGHT"
+msgstr "FIRST_OVERNIGHT"
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__delivery_type__fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__stock_package_type__package_carrier_type__fedex
+msgid "FedEx"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_delivery_carrier__fedex_account_number
+msgid "FedEx Account Number"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_delivery_carrier__fedex_saturday_delivery
+msgid "FedEx Saturday Delivery"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.res_config_settings_view_form_stock
+msgid "FedEx Shipping Methods"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "FedEx Web Services \"Move to Production\""
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "Fedex Configuration"
+msgstr "Fedex postavke"
+
+#. module: delivery_fedex
+#. odoo-python
+#: code:addons/delivery_fedex/models/delivery_fedex.py:0
+#, python-format
+msgid "Fedex Documents"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_delivery_carrier__fedex_droppoff_type
+msgid "Fedex Drop-Off Type"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_delivery_carrier__fedex_duty_payment
+msgid "Fedex Duty Payment"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:delivery.carrier,name:delivery_fedex.delivery_carrier_fedex_inter
+#: model:product.template,name:delivery_fedex.product_product_delivery_fedex_inter_product_template
+msgid "Fedex International"
+msgstr "Fedex međunarodno"
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_delivery_carrier__fedex_default_package_type_id
+msgid "Fedex Package Type"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_delivery_carrier__fedex_service_type
+msgid "Fedex Service Type"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "Fedex Tutorial"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:delivery.carrier,name:delivery_fedex.delivery_carrier_fedex_us
+#: model:product.template,name:delivery_fedex.product_product_delivery_fedex_us_product_template
+msgid "Fedex US"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "Fedex Website"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_delivery_carrier__fedex_weight_unit
+msgid "Fedex Weight Unit"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "Go to"
+msgstr "Idi na"
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_service_type__international_economy
+msgid "INTERNATIONAL_ECONOMY"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_service_type__international_priority
+msgid "INTERNATIONAL_PRIORITY"
+msgstr ""
+
+#. module: delivery_fedex
+#. odoo-python
+#: code:addons/delivery_fedex/models/delivery_fedex.py:0
+#, python-format
+msgid "Invalid syntax for FedEx extra data."
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_weight_unit__kg
+msgid "KG"
+msgstr "KG"
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_weight_unit__lb
+msgid "LB"
+msgstr "LB"
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "Label Format"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_delivery_carrier__fedex_label_stock_type
+msgid "Label Type"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_delivery_carrier__fedex_meter_number
+msgid "Meter Number"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "Once your account is created, go to"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "Options"
+msgstr "Opcije"
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_document_stock_type__paper_4x6
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_stock_type__paper_4x6
+msgid "PAPER_4X6"
+msgstr "PAPER_4X6"
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_document_stock_type__paper_4x6_75
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_stock_type__paper_4x6_75
+msgid "PAPER_4X6.75"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_document_stock_type__paper_4x8
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_stock_type__paper_4x8
+msgid "PAPER_4X8"
+msgstr "PAPER_4X8"
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_document_stock_type__paper_4x9
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_stock_type__paper_4x9
+msgid "PAPER_4X9"
+msgstr "PAPER_4X9"
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_document_stock_type__paper_7x4_75
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_stock_type__paper_7x4_75
+msgid "PAPER_7X4.75"
+msgstr "PAPER_7X4.75"
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_document_stock_type__paper_8_5x11_bottom_half_label
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_stock_type__paper_8_5x11_bottom_half_label
+msgid "PAPER_8.5X11_BOTTOM_HALF_LABEL"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_document_stock_type__paper_8_5x11_top_half_label
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_stock_type__paper_8_5x11_top_half_label
+msgid "PAPER_8.5X11_TOP_HALF_LABEL"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_document_stock_type__paper_letter
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_stock_type__paper_letter
+msgid "PAPER_LETTER"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_file_type__pdf
+msgid "PDF"
+msgstr "PDF"
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_file_type__png
+msgid "PNG"
+msgstr "PNG"
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_service_type__priority_overnight
+msgid "PRIORITY_OVERNIGHT"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "Package Weight Unit"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_delivery_carrier__fedex_developer_password
+msgid "Password"
+msgstr "Zaporka"
+
+#. module: delivery_fedex
+#: model:ir.model.fields,field_description:delivery_fedex.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "Davatelj "
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_droppoff_type__regular_pickup
+msgid "REGULAR_PICKUP"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_droppoff_type__request_courier
+msgid "REQUEST_COURIER"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_duty_payment__recipient
+msgid "Recipient"
+msgstr "Primatelj"
+
+#. module: delivery_fedex
+#. odoo-python
+#: code:addons/delivery_fedex/models/delivery_fedex.py:0
+#, python-format
+msgid "Return Label"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_service_type__standard_overnight
+msgid "STANDARD_OVERNIGHT"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_droppoff_type__station
+msgid "STATION"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_document_stock_type__stock_4x6
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_stock_type__stock_4x6
+msgid "STOCK_4X6"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_document_stock_type__stock_4x6_75
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_stock_type__stock_4x6_75
+msgid "STOCK_4X6.75"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_document_stock_type__stock_4x6_75_leading_doc_tab
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_stock_type__stock_4x6_75_leading_doc_tab
+msgid "STOCK_4X6.75_LEADING_DOC_TAB"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_document_stock_type__stock_4x6_75_trailing_doc_tab
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_stock_type__stock_4x6_75_trailing_doc_tab
+msgid "STOCK_4X6.75_TRAILING_DOC_TAB"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_document_stock_type__stock_4x8
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_stock_type__stock_4x8
+msgid "STOCK_4X8"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_document_stock_type__stock_4x9
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_stock_type__stock_4x9
+msgid "STOCK_4X9"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_document_stock_type__stock_4x9_leading_doc_tab
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_stock_type__stock_4x9_leading_doc_tab
+msgid "STOCK_4X9_LEADING_DOC_TAB"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_document_stock_type__stock_4x9_trailing_doc_tab
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_stock_type__stock_4x9_trailing_doc_tab
+msgid "STOCK_4X9_TRAILING_DOC_TAB"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "Saturday Delivery"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "Screenshot"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_duty_payment__sender
+msgid "Sender"
+msgstr "Pošiljalac"
+
+#. module: delivery_fedex
+#. odoo-python
+#: code:addons/delivery_fedex/models/delivery_fedex.py:0
+#, python-format
+msgid "Shipment #%s has been cancelled"
+msgstr ""
+
+#. module: delivery_fedex
+#. odoo-python
+#: code:addons/delivery_fedex/models/delivery_fedex.py:0
+#, python-format
+msgid "Shipment created into Fedex<br/><b>Tracking Numbers:</b> %s<br/><b>Packages:</b> %s"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model,name:delivery_fedex.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "Načini dostave"
+
+#. module: delivery_fedex
+#: model:ir.model.fields,help:delivery_fedex.field_delivery_carrier__fedex_saturday_delivery
+msgid ""
+"Special service:Saturday Delivery, can be requested on following days.\n"
+"                                                                                 Thursday:\n"
+"1.FEDEX_2_DAY.\n"
+"Friday:\n"
+"1.PRIORITY_OVERNIGHT.\n"
+"2.FIRST_OVERNIGHT.\n"
+"                                                                                 3.INTERNATIONAL_PRIORITY.\n"
+"(To Select Countries)"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "Standard Services"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model,name:delivery_fedex.model_stock_package_type
+msgid "Stock package type"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields,help:delivery_fedex.field_delivery_carrier__fedex_extra_data_rate_request
+#: model:ir.model.fields,help:delivery_fedex.field_delivery_carrier__fedex_extra_data_return_request
+#: model:ir.model.fields,help:delivery_fedex.field_delivery_carrier__fedex_extra_data_ship_request
+msgid ""
+"The extra data in FedEx is organized like the inside of a json file.\n"
+"This functionality is advanced/technical and should only be used if you know what you are doing.\n"
+"\n"
+"Example of valid value: ```\n"
+"\"ShipmentDetails\": {\"Pieces\": {\"Piece\": {\"AdditionalInformation\": \"extra info\"}}}\n"
+"```\n"
+"\n"
+"With the above example, the AdditionalInformation of each piece will be updated.\n"
+"More info on https://www.fedex.com/en-us/developer/web-services/process.html#documentation"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "The last step is the"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "These certifications usually require that you contact the FedEx support team by email."
+msgstr ""
+
+#. module: delivery_fedex
+#. odoo-python
+#: code:addons/delivery_fedex/models/delivery_fedex.py:0
+#, python-format
+msgid ""
+"Warning:\n"
+"%s"
+msgstr ""
+
+#. module: delivery_fedex
+#: model:ir.model.fields.selection,name:delivery_fedex.selection__delivery_carrier__fedex_label_file_type__zplii
+msgid "ZPLII"
+msgstr ""
+
+#. module: delivery_fedex
+#: model_terms:ir.ui.view,arch_db:delivery_fedex.view_delivery_carrier_form_with_provider_fedex
+msgid "to create a FedEx account of the following type:"
+msgstr ""

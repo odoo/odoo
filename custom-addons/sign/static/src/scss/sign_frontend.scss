@@ -1,0 +1,71 @@
+
+.o_sign_document {
+    height: 100%;
+
+    > header {
+        flex: 0 0 auto;
+        height: $nav-link-height;
+        background-color: $o-brand-lightsecondary;
+        .o_sign_info {
+            $logo-max-wdith: $nav-link-height * 3.75;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-wrap: nowrap;
+
+            .o_logo_wrapper {
+                overflow: hidden;
+                flex-wrap: wrap;
+                flex-shrink: 100000000;
+                min-width: $logo-max-wdith;
+                .o_logo {
+                    width: $logo-max-wdith;
+                    height: $nav-link-height;
+                    align-items: center;
+                    a {
+                        > img {
+                            max-height: $nav-link-height;
+                            max-width: $logo-max-wdith;
+                        }
+                    }
+                }
+                .o_odoo {
+                    $odoo_img_width: calc(#{$nav-link-height} * 300 / 97);
+                    width: calc(max(50vw - #{$logo-max-wdith}, #{$odoo_img_width} / 2) + #{$odoo_img_width} / 2);
+                    text-align: right;
+                    a {
+                        > img {
+                            height: $nav-link-height;
+                        }
+                    }
+                }
+            }
+            .o_sign_signer_status_wrapper {
+                height: $nav-link-height;
+            }
+            .o_sign_dropdown_placeholder {
+                padding-right: 9px;
+            }
+        }
+    }
+}
+
+@include media-breakpoint-down(md) {
+    .modal.o_sign_signature_dialog {
+        h1 {
+            font-size: $h1-font-size * 3 / 4;
+        }
+
+        h2, h3, h4, h5, h6 {
+            font-size: $o-font-size-base-touch;
+        }
+
+        .card.o_web_sign_signature_group {
+            padding: 0;
+
+            .row {
+                flex-wrap: nowrap;
+            }
+        }
+    }
+}

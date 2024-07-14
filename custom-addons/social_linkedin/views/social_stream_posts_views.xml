@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="social_stream_post_view_kanban" model="ir.ui.view">
+        <field name="name">social.stream.post.view.kanban.inherit.linkedin</field>
+        <field name="model">social.stream.post</field>
+        <field name="inherit_id" ref="social.social_stream_post_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stream_id']" position="after">
+                <field name="linkedin_post_urn"/>
+                <field name="linkedin_author_urn"/>
+                <field name="linkedin_likes_count"/>
+                <field name="linkedin_comments_count"/>
+                <field name="linkedin_author_image_url"/>
+            </xpath>
+            <xpath expr="//span[hasclass('o_social_stream_post_author_image')]" position="inside">
+                <img t-if="record.linkedin_author_image_url.raw_value" t-att-src="record.linkedin_author_image_url.raw_value" alt="Author Image" class="rounded"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_social_stream_post_message')]" position="inside">
+                <div class="o_social_stream_post_linkedin_stats px-2 d-flex justify-content-around"
+                    t-if="record.media_type.raw_value === 'linkedin'">
+                    <div t-if="record.linkedin_likes_count.raw_value !== 0"
+                         class="o_social_linkedin_likes o_social_subtle_btn_disabled ps-2 pe-3">
+                        <i class="fa fa-thumbs-up me-1" title="Likes"/>
+                        <field name="linkedin_likes_count" class="fw-bold"/>
+                    </div>
+                    <div class="o_social_linkedin_comments o_social_comments o_social_subtle_btn px-3">
+                        <i class="fa fa-comments me-1" title="Comments"/>
+                        <b t-esc="record.linkedin_comments_count.value !== '0' ? record.linkedin_comments_count.value : ''"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>

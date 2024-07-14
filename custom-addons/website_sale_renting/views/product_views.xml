@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="product_template_form_view">
+        <field name="name">product.template.form.inherit.website.sale.renting</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="website_sale.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="is_published" position="attributes">
+                <attribute name="invisible">not sale_ok and not rent_ok</attribute>
+            </field>
+            <field name="accessory_product_ids" position="attributes">
+                <attribute name="invisible">not sale_ok and not rent_ok</attribute>
+            </field>
+            <field name="alternative_product_ids" position="attributes">
+                <attribute name="invisible">not sale_ok and not rent_ok</attribute>
+            </field>
+            <group name="shop" position="attributes">
+                <attribute name="invisible">not sale_ok and not rent_ok</attribute>
+            </group>
+            <group name="product_template_images" position="attributes">
+                <attribute name="invisible">not sale_ok and not rent_ok</attribute>
+            </group>
+        </field>
+    </record>
+</odoo>

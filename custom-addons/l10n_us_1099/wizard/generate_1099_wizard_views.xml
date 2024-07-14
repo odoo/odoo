@@ -1,0 +1,42 @@
+<odoo>
+    <record id="view_l10n_us_1099_wizard" model="ir.ui.view">
+        <field name="name">Update the current value of the Goal</field>
+        <field name="model">l10n_us_1099.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate 1099 Report">
+                This will export a CSV file containing all the information you need to e-file 1099s through a 3rd party service. By default this wizard displays all liquid journal items posted in an account under Balance Sheet -> Assets. Review the items below and remove any that shouldn't be reported (e.g. credit card payments). If some are missing you can always add them manually. Modifying the Start Date or End Date will automatically re-populate the list below.
+                <group>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                </group>
+                <group>
+                    <field name="lines_to_export" nolabel="1" colspan="2" context="{'search_default_date_between': True, 'date_from': start_date, 'date_to': end_date}">
+                        <tree>
+                            <field name="date"/>
+                            <field name="partner_id"/>
+                            <field name="journal_id" optional="show"/>
+                            <field name="account_id" optional="show"/>
+                            <field name="move_id" optional="hide"/>
+                            <field name="name" optional="show"/>
+                            <field name="debit"/>
+                            <field name="credit"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button string="Generate" type="object" name="action_generate" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" special="cancel" data-hotkey="x" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_l10n_us_1099_wizard_act_window" model="ir.actions.act_window">
+        <field name="name">1099 Report</field>
+        <field name="res_model">l10n_us_1099.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem action="view_l10n_us_1099_wizard_act_window" id="menu_action_view_l10n_us_1099_wizard" name="1099 Report" sequence="20" parent="account.account_reports_management_menu"/>
+</odoo>

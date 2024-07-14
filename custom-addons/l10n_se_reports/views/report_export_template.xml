@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="tax_export_xml">
+            <eSKDUpload Version="6.0">
+                <OrgNr><t t-out="org_number"/></OrgNr>
+                <Moms>
+                    <Period><t t-out="period"/></Period>
+                    <ForsMomsEjAnnan><t t-out="se_05"/></ForsMomsEjAnnan>
+                    <UttagMoms><t t-out="se_06"/></UttagMoms>
+                    <UlagMargbesk><t t-out="se_07"/></UlagMargbesk>
+                    <HyrinkomstFriv><t t-out="se_08"/></HyrinkomstFriv>
+                    <InkopVaruAnnatEg><t t-out="se_20"/></InkopVaruAnnatEg>
+                    <InkopTjanstAnnatEg><t t-out="se_21"/></InkopTjanstAnnatEg>
+                    <InkopTjanstUtomEg><t t-out="se_22"/></InkopTjanstUtomEg>
+                    <InkopVaruSverige><t t-out="se_23"/></InkopVaruSverige>
+                    <InkopTjanstSverige><t t-out="se_24"/></InkopTjanstSverige>
+                    <MomsUlagImport><t t-out="se_50"/></MomsUlagImport>
+                    <ForsVaruAnnatEg><t t-out="se_35"/></ForsVaruAnnatEg>
+                    <ForsVaruUtomEg><t t-out="se_36"/></ForsVaruUtomEg>
+                    <InkopVaruMellan3p><t t-out="se_37"/></InkopVaruMellan3p>
+                    <ForsVaruMellan3p><t t-out="se_38"/></ForsVaruMellan3p>
+                    <ForsTjSkskAnnatEg><t t-out="se_39"/></ForsTjSkskAnnatEg>
+                    <ForsTjOvrUtomEg><t t-out="se_40"/></ForsTjOvrUtomEg>
+                    <ForsKopareSkskSverige><t t-out="se_41"/></ForsKopareSkskSverige>
+                    <ForsOvrigt><t t-out="se_42"/></ForsOvrigt>
+                    <MomsUtgHog><t t-out="se_10"/></MomsUtgHog>
+                    <MomsUtgMedel><t t-out="se_11"/></MomsUtgMedel>
+                    <MomsUtgLag><t t-out="se_12"/></MomsUtgLag>
+                    <MomsInkopUtgHog><t t-out="se_30"/></MomsInkopUtgHog>
+                    <MomsInkopUtgMedel><t t-out="se_31"/></MomsInkopUtgMedel>
+                    <MomsInkopUtgLag><t t-out="se_32"/></MomsInkopUtgLag>
+                    <MomsImportUtgHog><t t-out="se_60"/></MomsImportUtgHog>
+                    <MomsImportUtgMedel><t t-out="se_61"/></MomsImportUtgMedel>
+                    <MomsImportUtgLag><t t-out="se_62"/></MomsImportUtgLag>
+                    <MomsIngAvdr><t t-out="se_48"/></MomsIngAvdr>
+                    <MomsBetala><t t-out="se_49"/></MomsBetala>
+                    <TextUpplysningMoms><t t-out="comment"/></TextUpplysningMoms>
+                </Moms>
+            </eSKDUpload>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="quality_check_view_form_iot_inherit" model="ir.ui.view">
+        <field name="name">quality.check.view.form.inherit.iot</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="quality_mrp_workorder.quality_check_view_form_tablet_inherit_quality"/>
+        <field name="arch" type="xml">
+          <xpath expr="//field[@name='measure']" position="attributes">
+            <attribute name="widget">iot_measure</attribute>
+            <attribute name="options">{'ip_field': 'ip', 'identifier': 'identifier'}</attribute>
+          </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_mrp_mps" model="ir.actions.client">
+        <field name="name">Master Production Schedule</field>
+        <field name="res_model">mrp.production.schedule</field>
+        <field name="tag">mrp_mps_client_action</field>
+    </record>
+
+    <record id="action_mrp_mps_form_view" model="ir.actions.act_window">
+        <field name="name">Add a Product</field>
+        <field name="res_model">mrp.production.schedule</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="mrp_mps_production_schedule_form_view"/>
+    </record>
+
+    <menuitem id="mrp_mps_menu_planning"
+        name="MPS"
+        sequence="3"
+        parent="mrp.mrp_planning_menu_root"/>
+
+    <menuitem
+        id="mrp_mps_report_menu"
+        name="Master Production Schedule"
+        action="action_mrp_mps"
+        groups="mrp.group_mrp_manager"
+        sequence="1"
+        parent="mrp_mps_menu_planning"/>
+    <menuitem
+        id="stock_mrp_mps_report_menu"
+        name="Master Production Schedule"
+        action="action_mrp_mps"
+        groups="mrp.group_mrp_manager"
+        sequence="20"
+        parent="stock.menu_stock_procurement"/>
+</odoo>

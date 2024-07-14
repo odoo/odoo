@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- display ec sales list report menu item -->
+        <record model="ir.ui.menu" id="account_reports.menu_action_account_report_sales">
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+
+    <!-- Add the report variant -->
+    <record id="belgian_ec_sales_report" model="account.report">
+        <field name="name">EC Sales List</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="root_report_id" ref="account_reports.generic_ec_sales_report"/>
+        <field name="load_more_limit" eval="80"/>
+        <field name="search_bar" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="custom_handler_model_id" ref="model_l10n_be_ec_sales_report_handler"/>
+        <field name="column_ids">
+            <record id="account_financial_report_ec_sales_country" model="account.report.column">
+                <field name="name">Country Code</field>
+                <field name="expression_label">country_code</field>
+                <field name="figure_type">string</field>
+                <field name="sortable" eval="True"/>
+            </record>
+            <record id="account_financial_report_ec_sales_vat" model="account.report.column">
+                <field name="name">VAT Number</field>
+                <field name="expression_label">vat_number</field>
+                <field name="figure_type">string</field>
+                <field name="sortable" eval="True"/>
+            </record>
+            <record id="account_financial_report_ec_sales_tax" model="account.report.column">
+                <field name="name">Tax Code</field>
+                <field name="expression_label">sales_type_code</field>
+                <field name="figure_type">string</field>
+                <field name="sortable" eval="True"/>
+            </record>
+            <record id="account_financial_report_ec_sales_amount" model="account.report.column">
+                <field name="name">Amount</field>
+                <field name="expression_label">balance</field>
+                <field name="sortable" eval="True"/>
+            </record>
+        </field>
+    </record>
+</odoo>

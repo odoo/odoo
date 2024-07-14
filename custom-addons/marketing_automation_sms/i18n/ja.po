@@ -1,0 +1,218 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* marketing_automation_sms
+# 
+# Translators:
+# Wil Odoo, 2023
+# Junko Augias, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_campaign__mailing_sms_count
+msgid "# SMS Mailings"
+msgstr "SMSメール数"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid "<i class=\"fa fa-exclamation-circle\"/> Bounced after"
+msgstr "<i class=\"fa fa-exclamation-circle\"/> 不達後"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid "<i class=\"fa fa-hand-pointer-o\"/> Clicked after"
+msgstr "<i class=\"fa fa-hand-pointer-o\"/> クリック後"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid "<i class=\"fa fa-hand-pointer-o\"/> Not clicked within"
+msgstr "<i class=\"fa fa-hand-pointer-o\"/> 次の時間未クリック"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid "<i class=\"fa fa-pie-chart\"/> Details"
+msgstr "<i class=\"fa fa-pie-chart\"/> 詳細"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid ""
+"<i data-trigger-type=\"sms_click\" class=\"fa fa-hand-pointer-o o_ma_text_processed o_add_child_activity text-success\" title=\"Clicked\" role=\"img\" aria-label=\"Clicked\"/>\n"
+"                    <i data-trigger-type=\"sms_not_click\" class=\"fa fa-hand-pointer-o o_ma_text_rejected o_add_child_activity text-danger\" title=\"Not Clicked\" role=\"img\" aria-label=\"Not Clicked\"/>\n"
+"                    <i data-trigger-type=\"sms_bounce\" class=\"fa fa fa-exclamation-circle o_ma_text_rejected o_add_child_activity text-danger\" title=\"Bounced\" role=\"img\" aria-label=\"Bounced\"/>"
+msgstr ""
+"<i data-trigger-type=\"sms_click\" class=\"fa fa-hand-pointer-o o_ma_text_processed o_add_child_activity text-success\" title=\"Clicked\" role=\"img\" aria-label=\"Clicked\"/>\n"
+"                    <i data-trigger-type=\"sms_not_click\" class=\"fa fa-hand-pointer-o o_ma_text_rejected o_add_child_activity text-danger\" title=\"Not Clicked\" role=\"img\" aria-label=\"Not Clicked\"/>\n"
+"                    <i data-trigger-type=\"sms_bounce\" class=\"fa fa fa-exclamation-circle o_ma_text_rejected o_add_child_activity text-danger\" title=\"Bounced\" role=\"img\" aria-label=\"Bounced\"/>"
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_activity__activity_type
+msgid "Activity Type"
+msgstr "活動タイプ"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid "Bounced"
+msgstr "不達"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid "Clicked"
+msgstr "クリック済"
+
+#. module: marketing_automation_sms
+#. odoo-python
+#: code:addons/marketing_automation_sms/models/marketing_activity.py:0
+#, python-format
+msgid "Exception in SMS Marketing: %s"
+msgstr "SMSマーケティングの例外: %s"
+
+#. module: marketing_automation_sms
+#: model:ir.model,name:marketing_automation_sms.model_mailing_trace
+msgid "Mailing Statistics"
+msgstr "メール統計"
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_activity__mass_mailing_id_mailing_type
+msgid "Mailing Type"
+msgstr "メールタイプ"
+
+#. module: marketing_automation_sms
+#: model:ir.model,name:marketing_automation_sms.model_marketing_activity
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_sms_composer__marketing_activity_id
+msgid "Marketing Activity"
+msgstr "マーケティング活動"
+
+#. module: marketing_automation_sms
+#: model:ir.actions.act_window,name:marketing_automation_sms.mail_mass_mailing_action_marketing_automation_sms
+msgid "Marketing Automation SMS"
+msgstr "マーケティング自動化SMS"
+
+#. module: marketing_automation_sms
+#: model:ir.model,name:marketing_automation_sms.model_marketing_campaign
+msgid "Marketing Campaign"
+msgstr "マーケティングキャンペーン"
+
+#. module: marketing_automation_sms
+#: model:ir.model,name:marketing_automation_sms.model_marketing_trace
+msgid "Marketing Trace"
+msgstr "マーケティングトレース"
+
+#. module: marketing_automation_sms
+#: model:ir.model,name:marketing_automation_sms.model_mailing_mailing
+msgid "Mass Mailing"
+msgstr "メール一括配信"
+
+#. module: marketing_automation_sms
+#. odoo-python
+#: code:addons/marketing_automation_sms/models/marketing_trace.py:0
+#, python-format
+msgid "Parent activity SMS bounced"
+msgstr "親活動SMSバウンス"
+
+#. module: marketing_automation_sms
+#. odoo-python
+#: code:addons/marketing_automation_sms/models/marketing_trace.py:0
+#, python-format
+msgid "Parent activity SMS clicked"
+msgstr "親活動SMSクリック"
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields.selection,name:marketing_automation_sms.selection__marketing_activity__activity_type__sms
+#: model:ir.model.fields.selection,name:marketing_automation_sms.selection__marketing_activity__mass_mailing_id_mailing_type__sms
+#: model:ir.model.fields.selection,name:marketing_automation_sms.selection__marketing_activity__trigger_category__sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_tree
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_participant_view_form
+msgid "SMS"
+msgstr "SMS"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.mailing_mailing_view_form_marketing_activity
+msgid "SMS Content"
+msgstr "SMS内容"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.mailing_mailing_view_form_marketing_activity
+msgid "SMS Options"
+msgstr "SMSオプション"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid "SMS Sent"
+msgstr "SMS送信済"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_activity_view_form
+msgid "SMS Template"
+msgstr "SMSテンプレート"
+
+#. module: marketing_automation_sms
+#. odoo-python
+#: code:addons/marketing_automation_sms/models/marketing_activity.py:0
+#, python-format
+msgid "SMS canceled"
+msgstr "SMSが取消されました"
+
+#. module: marketing_automation_sms
+#. odoo-python
+#: code:addons/marketing_automation_sms/models/mailing_trace.py:0
+#: code:addons/marketing_automation_sms/models/marketing_activity.py:0
+#, python-format
+msgid "SMS failed"
+msgstr "SMS失敗"
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields.selection,name:marketing_automation_sms.selection__marketing_activity__trigger_type__sms_bounce
+msgid "SMS: bounced"
+msgstr "SMS: 不達"
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields.selection,name:marketing_automation_sms.selection__marketing_activity__trigger_type__sms_click
+msgid "SMS: clicked"
+msgstr "SMS: クリック"
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields.selection,name:marketing_automation_sms.selection__marketing_activity__trigger_type__sms_not_click
+msgid "SMS: not clicked"
+msgstr "SMS: 未クリック"
+
+#. module: marketing_automation_sms
+#: model:ir.model,name:marketing_automation_sms.model_sms_composer
+msgid "Send SMS Wizard"
+msgstr "SMS送信ウィザード"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid "Sent"
+msgstr "送信日"
+
+#. module: marketing_automation_sms
+#. odoo-python
+#: code:addons/marketing_automation_sms/models/marketing_activity.py:0
+#, python-format
+msgid ""
+"To use this feature you should be an administrator or belong to the "
+"marketing automation group."
+msgstr "この機能を使用するには、管理者であるか、マーケティング自動化グループに所属している必要があります。"
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_activity__trigger_category
+msgid "Trigger Category"
+msgstr "トリガーカテゴリ"
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_activity__trigger_type
+msgid "Trigger Type"
+msgstr "トリガータイプ"

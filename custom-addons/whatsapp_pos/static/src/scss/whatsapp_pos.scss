@@ -1,0 +1,67 @@
+.receipt-screen {
+    .default-view .actions .send-whatsapp {
+        display: flex;
+
+        .input-whatsapp {
+            display: flex;
+            flex: 1;
+            background: white;
+            border: solid 1px rgb(209, 209, 209);
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+        }
+
+        input {
+            flex: 1;
+            padding-left: 1rem;
+            border: none;
+            color: $gray-700;
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        button {
+            &.send {
+                padding: 1rem 40px;
+                margin: 2px;
+                border: none;
+                background: $gray-200;
+                color: $gray-500;
+
+                &:not(.highlight) {
+                    cursor: not-allowed;
+                }
+
+                &.highlight {
+                    color: white;
+                    background-color: $primary;
+                }
+            }
+
+            i {
+                width: 25px;
+            }
+        }
+    }
+
+    .whatsapp-notice {
+        margin-top: 6px;
+        display: flex;
+
+        .send-whatsapp-info {
+            width: 100%;
+            text-align: right;
+            font-style: italic;
+        }
+
+        .failed {
+            color: rgb(168, 89, 89);
+        }
+
+        .successful {
+            color: $primary;
+        }
+    }
+}

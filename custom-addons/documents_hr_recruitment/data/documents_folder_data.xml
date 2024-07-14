@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="documents_recruitment_folder" model="documents.folder" forcecreate="0">
+            <field name="name">Recruitment</field>
+            <field name="group_ids" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+            <field name="sequence">20</field>
+        </record>
+    </data>
+</odoo>

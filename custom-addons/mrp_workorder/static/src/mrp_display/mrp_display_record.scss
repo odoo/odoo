@@ -1,0 +1,62 @@
+@keyframes longpress {
+    0% {
+        background: linear-gradient(90deg, $list-group-active-bg 0%, $list-group-active-bg 50%, transparent 50%);
+        background-size: 200% 100%;
+        background-position: 100% 0%;
+    }
+    30% {
+        background-position: 100% 0%;
+    }
+    98% {
+        background-position: 0% 0%;
+    }
+    99% {
+        background: linear-gradient(90deg, $list-group-active-bg 0%, $list-group-active-bg 50%, transparent 50%);
+        background-size: 200% 100%;
+        background-position: 0% 0%;
+    }
+    100% {
+        background: transparent;
+    }
+}
+
+@keyframes fadeout {
+    0% {
+        display: block;
+        opacity: 0.8;
+    }
+    99% {
+        display: block;
+        opacity: 0;
+    }
+    100% {
+        display: none;
+        opacity: 0;
+    }
+}
+
+.o_mrp_display_record {
+    break-inside: avoid;
+
+    &.o_active {
+        .card-header {
+            background-color: $list-group-active-bg;
+        }
+    }
+
+    .list-group-item {
+        cursor: pointer;
+    }
+
+    .o_longpressable {
+        &:active {
+            animation: longpress 1.3s forwards;
+            animation-delay: 0.05s;
+        }
+    }
+
+    &.o_fadeout_animation {
+        animation: fadeout 5s ease-out;
+        animation-fill-mode: forwards;
+    }
+}

@@ -1,0 +1,138 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* approvals_purchase
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,help:approvals_purchase.field_approval_category__approval_type
+msgid ""
+"Allows you to define which documents you would like to create once the "
+"request has been approved"
+msgstr "요청 내용이 승인된 후 생성할 문서에 대해서 설정하실 수 있습니다."
+
+#. module: approvals_purchase
+#: model:ir.model,name:approvals_purchase.model_approval_category
+msgid "Approval Category"
+msgstr "결재 범주"
+
+#. module: approvals_purchase
+#: model:ir.model,name:approvals_purchase.model_approval_request
+msgid "Approval Request"
+msgstr "결재 요청"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_category__approval_type
+msgid "Approval Type"
+msgstr "승인 유형"
+
+#. module: approvals_purchase
+#: model:approval.category,name:approvals_purchase.approval_category_data_rfq
+#: model:ir.model.fields.selection,name:approvals_purchase.selection__approval_category__approval_type__purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.approval_purchase_request_view_form_inherit
+msgid "Create RFQ's"
+msgstr "RFQ 생성"
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid "Exception occurred: the Approval Request"
+msgstr "예외 사항 발생: 승인 요청"
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid "Exception(s):"
+msgstr "예외 :"
+
+#. module: approvals_purchase
+#. odoo-python
+#: code:addons/approvals_purchase/models/approval_product_line.py:0
+#, python-format
+msgid "Please set a vendor on product(s) %s."
+msgstr "%s 품목에 대한 공급업체를 설정하십시오."
+
+#. module: approvals_purchase
+#: model:ir.model,name:approvals_purchase.model_approval_product_line
+msgid "Product Line"
+msgstr "품목 내역"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_product_line__product_id
+msgid "Products"
+msgstr "품목"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_request__purchase_order_count
+msgid "Purchase Order Count"
+msgstr "발주서 수"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_product_line__purchase_order_line_id
+msgid "Purchase Order Line"
+msgstr "발주서 내역"
+
+#. module: approvals_purchase
+#. odoo-python
+#: code:addons/approvals_purchase/models/approval_request.py:0
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.approval_purchase_request_view_form_inherit
+#, python-format
+msgid "Purchase Orders"
+msgstr "구매 주문"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_product_line__po_uom_qty
+msgid "Purchase UoM Quantity"
+msgstr "구매 단위 수량"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,help:approvals_purchase.field_approval_product_line__po_uom_qty
+msgid ""
+"The quantity converted into the UoM used by the product in Purchase Order."
+msgstr "구매발주서에서 품목에 사용되는 단위 수량으로 변환한 수량입니다."
+
+#. module: approvals_purchase
+#. odoo-python
+#: code:addons/approvals_purchase/models/approval_request.py:0
+#, python-format
+msgid "You cannot create an empty purchase request."
+msgstr "구매 요청 내용은 공란으로 생성될 수 없습니다."
+
+#. module: approvals_purchase
+#. odoo-python
+#: code:addons/approvals_purchase/models/approval_request.py:0
+#, python-format
+msgid "You must select a product for each line of requested products."
+msgstr "요청한 품목의 각 항목에 대하여 품목을 선택해야 합니다."
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid "cancelled"
+msgstr "취소됨"
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid ""
+"has been canceled.\n"
+"            Manual actions may be needed."
+msgstr ""
+"취소되었습니다.\n"
+"          수기 작업이 필요할 수 있습니다."
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid "of"
+msgstr "of"

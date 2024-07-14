@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="appointment_progress_bar" inherit_id="website_appointment.appointment_progress_bar">
+    <xpath expr="//li[contains(@t-att-class, 'step==STEP_FORM')]" position="after">
+        <t t-set="STEP_PAYMENT" t-value="35"/>
+        <li t-if="appointment_type.has_payment_step and appointment_type.product_id"
+            t-att-class="'d-flex align-items-center ' + (step==STEP_PAYMENT and 'fw-bold' or step&gt;STEP_PAYMENT and '' or 'text-muted')">
+            <span>Payment</span>
+            <span class="d-inline-block mx-sm-3 fa fa-angle-right text-muted fs-5"/>
+        </li>
+    </xpath>
+</template>
+
+<template id="appointments_cards" inherit_id="website_appointment.appointments_cards">
+    <xpath expr="//div[hasclass('o_wappointment_card_location')]" position="before">
+        <div t-if="appointment.has_payment_step and appointment.product_id" class="mt-2">
+            <strong class="text-primary" t-esc="appointment.product_id.lst_price"
+                t-options="{'widget': 'monetary', 'display_currency': appointment.product_id.currency_id}"/>
+        </div>
+    </xpath>
+</template>
+</odoo>

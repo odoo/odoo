@@ -1,0 +1,114 @@
+// ===========   Colours      ===========
+$o-web-studio-color-danger: #e6586c;
+$o-web-studio-color-warning: #f0ad4e;
+$o-web-studio-color-success: #40ad67;
+$o-web-studio-color-info: #6999a8;
+
+$o-web-studio-bg-lighter: #f2f2f2;
+$o-web-studio-bg-light: #eaeaea;
+$o-web-studio-bg-medium: #3a3f46;
+$o-web-studio-bg-dark: #262c34;
+$o-web-studio-bg-darker: darken($o-web-studio-bg-dark, 2%);
+
+$o-web-studio-text-light: $o-web-studio-bg-light;
+$o-web-studio-text-inactive: darken($o-web-studio-text-light, 20%);
+$o-web-studio-text-disabled: gray;
+$o-web-studio-text-dark: #15161a;
+
+// ===========   Fonts      ===========
+$o-web-studio-font-family-monospace: Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro,
+  monospace;
+
+// ===========   Shadows     ===========
+$o-web-studio-shadow-base: 0 0px 26px -12px;
+$o-web-studio-shadow-active: 0 10px 26px -12px;
+
+// ===========   Fonts      ===========
+$o-web-studio-font-family-monospace: Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro,
+  monospace;
+
+// ===========   Layout      ===========
+$o-web-studio-sidebar-width: 300px;
+$o-web-studio-report-sidebar-width: 350px;
+$o-web-studio-sidebar-margin: $grid-gutter-width * 0.5;
+$o-web-studio-view-type-width: 115px;
+$o-web-studio-menu-height: $o-navbar-height;
+
+// ===========   Menu      ===========
+$o-web-studio-menu-item-border-width: 3px;
+
+// Dialog
+.o_web_client.o_in_studio .modal {
+  .modal-header,
+  .modal-footer {
+    background-color: lighten($o-web-studio-bg-light, 7%);
+  }
+  .btn-danger {
+    background-color: $o-web-studio-color-danger;
+  }
+  .btn-secondary {
+    color: $o-web-studio-bg-medium;
+  }
+  .o_field_many2one {
+    width: 100%;
+  }
+
+  // Edit menu modal
+  .o_web_studio_edit_menu_modal {
+    > ul {
+      padding: 1em 0 0;
+
+      > li:first-child > div .js_menu_label {
+        font-weight: bold;
+      }
+
+      li {
+        margin-top: -1px;
+      }
+
+      ul {
+        padding-left: 30px;
+      }
+
+      .form-control {
+        box-shadow: none;
+      }
+
+      .btn-primary {
+        border: 1px solid;
+        border-color: darken($o-brand-primary, 10%) $o-brand-primary;
+      }
+
+      .btn-danger {
+        border: 1px solid;
+        border-color: darken($o-web-studio-color-danger, 10%) $o-web-studio-color-danger;
+      }
+    }
+  }
+
+  // Edit menu icon modal
+  .o_web_studio_edit_menu_icon_modal .modal-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible !important;
+    background-color: $o-web-studio-bg-dark;
+  }
+
+  // New menu item modal
+  &.o_web_studio_add_menu_modal {
+    background: rgba(black, 0.5);
+
+    .o_field_widget {
+      width: 100%;
+    }
+
+    .modal-dialog {
+      margin-top: $grid-gutter-width;
+    }
+  }
+
+  .o_web_studio_preserve_space {
+    white-space: pre;
+  }
+}

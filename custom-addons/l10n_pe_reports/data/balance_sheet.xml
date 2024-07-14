@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_financial_report_bs" model="account.report">
+        <field name="name">Balance sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_analytic" eval="False"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="country_id" ref="base.pe"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_bs_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_bs_A_TOTAL" model="account.report.line">
+                <field name="name">Assets</field>
+                <field name="code">PE_BS_A_TOTAL</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_bs_A_TOTAL_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PE_BS_A_NC.balance + PE_BS_A_C.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_bs_A_C" model="account.report.line">
+                        <field name="name">Current Assets</field>
+                        <field name="code">PE_BS_A_C</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_bs_A_C_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">PE_BS_A_C_INV.balance + PE_BS_A_C_RE.balance + PE_BS_A_C_CASH.balance + PE_BS_A_C_FI.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_bs_A_C_CASH" model="account.report.line">
+                                <field name="name">Cash and cash equivalents</field>
+                                <field name="code">PE_BS_A_C_CASH</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_A_C_CASH_balance"
+                                            model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula">[ ('account_id.code', '=like', '10%'), ('account_id.account_type', '=', 'asset_cash') ]</field>
+                                        <field name="subformula">sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_A_C_FI" model="account.report.line">
+                                <field name="name">Financial Investments</field>
+                                <field name="code">PE_BS_A_C_FI</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_A_C_FI_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula">[ '|', '&amp;', ('account_id.code', '=like', '10%'), ('account_id.account_type', '!=', 'asset_cash'), ('account_id.code', '=like', '11%'), ]</field>
+                                        <field name="subformula">sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_A_C_RE" model="account.report.line">
+                                <field name="name">Trade and other receivables</field>
+                                <field name="code">PE_BS_A_C_RE</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_A_C_RE_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">1\(10,11,18)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_A_C_INV" model="account.report.line">
+                                <field name="name">Inventories</field>
+                                <field name="code">PE_BS_A_C_INV</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_A_C_INV_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">2</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_bs_A_NC" model="account.report.line">
+                        <field name="name">Non-Current Assets</field>
+                        <field name="code">PE_BS_A_NC</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_bs_A_NC_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">PE_BS_A_NC_PPE.balance + PE_BS_A_NC_INP.balance + PE_BS_A_NC_INT.balance + PE_BS_A_NC_FIN.balance + PE_BS_A_NC_BIO.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_bs_A_NC_INP" model="account.report.line">
+                                <field name="name">Investment properties</field>
+                                <field name="code">PE_BS_A_NC_INP</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_A_NC_INP_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">32 + 392 + 38 + 363 + 362</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_A_NC_FIN" model="account.report.line">
+                                <field name="name">Financial assets</field>
+                                <field name="code">PE_BS_A_NC_FIN</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_A_NC_FIN_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">367 + 394 + 37\(371)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_A_NC_PPE" model="account.report.line">
+                                <field name="name">Property, plant and equipment</field>
+                                <field name="code">PE_BS_A_NC_PPE</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_A_NC_PPE_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">31 + 361 + 395 + 364 + 33 + 393 + 30 + 391</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_A_NC_INT" model="account.report.line">
+                                <field name="name">Intangible assets</field>
+                                <field name="code">PE_BS_A_NC_INT</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_A_NC_INT_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">396 + 365 + 34</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_A_NC_BIO" model="account.report.line">
+                                <field name="name">Biological assets</field>
+                                <field name="code">PE_BS_A_NC_BIO</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_A_NC_BIO_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">398 + 35 + 366</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_bs_L" model="account.report.line">
+                <field name="name">Liabilities</field>
+                <field name="code">PE_BS_L</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_bs_L_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PE_BS_L_TAX.balance + PE_BS_L_PA.balance + PE_BS_L_PROV.balance + PE_BS_L_RPA.balance + PE_BS_L_FI.balance + PE_BS_L_NC.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_bs_L_TAX" model="account.report.line">
+                        <field name="name">Taxes and contributions payable</field>
+                        <field name="code">PE_BS_L_TAX</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_bs_L_TAX_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-40</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_bs_L_PA" model="account.report.line">
+                        <field name="name">Accounts payable</field>
+                        <field name="code">PE_BS_L_PA</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_bs_L_PA_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-42\(4211) - 43 - 47 - 46\(4699)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_bs_L_RPA" model="account.report.line">
+                        <field name="name">Remuneration payable</field>
+                        <field name="code">PE_BS_L_RPA</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_bs_L_RPA_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-41</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_bs_L_FI" model="account.report.line">
+                        <field name="name">Financial liabilities</field>
+                        <field name="code">PE_BS_L_FI</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_bs_L_FI_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-45</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_bs_L_PROV" model="account.report.line">
+                        <field name="name">Provisions for liabilities</field>
+                        <field name="code">PE_BS_L_PROV</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_bs_L_PROV_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-48\(489) - 49\(491) - 4699 - 4211 - 18</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_bs_L_NC" model="account.report.line">
+                        <field name="name">Non-Current Liabilities</field>
+                        <field name="code">PE_BS_L_NC</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_bs_L_NC_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">PE_BS_L_NC_PROV.balance + PE_BS_L_NC_DEF.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_bs_L_NC_PROV" model="account.report.line">
+                                <field name="name">Provisions for non-current liabilities</field>
+                                <field name="code">PE_BS_L_NC_PROV</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_L_NC_PROV_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-44 - 489</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_L_NC_DEF" model="account.report.line">
+                                <field name="name">Deferred tax on liabilities and assets</field>
+                                <field name="code">PE_BS_L_NC_DEF</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_L_NC_DEF_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-491 - 371 - 882</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_bs_E" model="account.report.line">
+                <field name="name">Equity</field>
+                <field name="code">PE_BS_E</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_bs_E_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PE_BS_E_U.balance + PE_BS_E_R.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_bs_E_U" model="account.report.line">
+                        <field name="name">Unallocated Earnings</field>
+                        <field name="code">PE_BS_E_U</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_bs_E_U_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">PE_BS_E_U_CY.balance + PE_BS_E_U_PY.balance + PE_BS_E_U_RNR.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_bs_E_U_CY" model="account.report.line">
+                                <field name="name">Profit and Loss for the current year</field>
+                                <field name="code">PE_BS_E_U_CY</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_E_U_CY_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">PE_BS_E_U_CY_U.balance + PE_BS_E_U_CY_A.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_bs_E_U_CY_U" model="account.report.line">
+                                        <field name="name">Unallocated Profit and Loss</field>
+                                        <field name="code">PE_BS_E_U_CY_U</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_E_U_CY_U_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">PE_PNL_F.balance</field>
+                                                <field name="subformula">cross_report</field>
+                                                <field name="date_scope">from_fiscalyear</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_bs_E_U_CY_A" model="account.report.line">
+                                        <field name="name">Allocated Profit and Loss</field>
+                                        <field name="code">PE_BS_E_U_CY_A</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_bs_E_U_CY_A_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-999999 - 8\(882)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_E_UE_PY" model="account.report.line">
+                                <field name="name">Profit and Loss for the previous year</field>
+                                <field name="code">PE_BS_E_U_PY</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_E_UE_PY_balance_codes" model="account.report.expression">
+                                        <field name="label">balance_codes</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-6 - 7 - 8\(882) - 999</field>
+                                        <field name="date_scope">from_beginning</field>
+                                    </record>
+                                    <record id="account_financial_report_bs_E_UE_PY_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">PE_BS_E_U_PY.balance_codes - PE_BS_E_U_CY.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_E_UE_RNR" model="account.report.line">
+                                <field name="name">Results registered but not yet realized</field>
+                                <field name="code">PE_BS_E_U_RNR</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_E_UE_RNR_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-56</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_bs_E_R" model="account.report.line">
+                        <field name="name">Retained Earnings</field>
+                        <field name="code">PE_BS_E_R</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_bs_E_R_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">PE_BS_E_R_PROV.balance + PE_BS_E_R_CA.balance + PE_BS_E_R_SPF.balance + PE_BS_E_R_SCA.balance + PE_BS_E_R_AC.balance + PE_BS_E_R_REF.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_bs_E_CA" model="account.report.line">
+                                <field name="name">Capital</field>
+                                <field name="code">PE_BS_E_R_CA</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_E_CA_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-50</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_E_PROV" model="account.report.line">
+                                <field name="name">Provisions</field>
+                                <field name="code">PE_BS_E_R_PROV</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_E_PROV_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-58</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_E_R_SCA" model="account.report.line">
+                                <field name="name">Share Capital</field>
+                                <field name="code">PE_BS_E_R_SCA</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_E_R_SCA_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-51</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_E_R_SPF" model="account.report.line">
+                                <field name="name">Share premium funds</field>
+                                <field name="code">PE_BS_E_R_SPF</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_E_R_SPF_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-52</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_E_R_AC" model="account.report.line">
+                                <field name="name">Accumulated Results</field>
+                                <field name="code">PE_BS_E_R_AC</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_E_R_AC_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-59</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_bs_E_R_REF" model="account.report.line">
+                                <field name="name">Revaluation funds</field>
+                                <field name="code">PE_BS_E_R_REF</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_bs_E_R_REF_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-57</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_bs_EL" model="account.report.line">
+                <field name="name">Equity and Liabilities</field>
+                <field name="code">PE_BS_EL_TOTAL</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_bs_EL_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PE_BS_E.balance + PE_BS_L.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

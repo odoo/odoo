@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="helpdesk.SLATagsList" t-inherit="web.TagsList">
+        <xpath expr='//div[contains(@class, "o_tag_badge_text")]' position="before">
+            <t t-set="statusIcon" t-value="getSLAStatusIcon(tag)"/>
+            <i t-if="statusIcon" t-att-class="statusIcon"/>
+        </xpath>
+    </t>
+
+</templates>

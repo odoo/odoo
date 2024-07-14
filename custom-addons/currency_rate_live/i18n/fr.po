@@ -1,0 +1,228 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* currency_rate_live
+# 
+# Translators:
+# Wil Odoo, 2023
+# Jolien De Paepe, 2024
+# Manon Rondou, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:11+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Manon Rondou, 2024\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bi
+msgid "Bank Indonesia"
+msgstr "Banque d'Indonésie"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bnm
+msgid "Bank Negara Malaysia"
+msgstr "Bank Negara Malaysia"
+
+#. module: currency_rate_live
+#: model_terms:ir.ui.view,arch_db:currency_rate_live.res_config_settings_view_form
+msgid ""
+"<i title=\"Update now\" role=\"img\" aria-label=\"Update now\" class=\"fa "
+"fa-fw fa-refresh\"/>"
+msgstr ""
+"<i title=\"Mettre à jour maintenant\" role=\"img\" aria-label=\"Mettre à "
+"jour maintenant\" class=\"fa fa-fw fa-refresh\"/>"
+
+#. module: currency_rate_live
+#: model:ir.model,name:currency_rate_live.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+
+#. module: currency_rate_live
+#: model:ir.model,name:currency_rate_live.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paramètres de configuration"
+
+#. module: currency_rate_live
+#: model:ir.actions.server,name:currency_rate_live.ir_cron_currency_update_ir_actions_server
+msgid "Currency: rate update"
+msgstr "Devise : mise à jour du taux de change"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_interval_unit__daily
+msgid "Daily"
+msgstr "Quotidien"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__ecb
+msgid "European Central Bank"
+msgstr "Banque centrale européenne"
+
+#. module: currency_rate_live
+#: model_terms:ir.ui.view,arch_db:currency_rate_live.res_config_settings_view_form
+msgid "Interval"
+msgstr "Intervalle"
+
+#. module: currency_rate_live
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_company__currency_interval_unit
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_config_settings__currency_interval_unit
+msgid "Interval Unit"
+msgstr "Unité d'intervalle"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_interval_unit__manually
+msgid "Manually"
+msgstr "Manuellement"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_interval_unit__monthly
+msgid "Monthly"
+msgstr "Mensuel"
+
+#. module: currency_rate_live
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_company__currency_next_execution_date
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_config_settings__currency_next_execution_date
+msgid "Next Execution Date"
+msgstr "Prochaine date d'exécution"
+
+#. module: currency_rate_live
+#: model_terms:ir.ui.view,arch_db:currency_rate_live.res_config_settings_view_form
+msgid "Next Run"
+msgstr "Prochaine exécution"
+
+#. module: currency_rate_live
+#: model_terms:ir.ui.view,arch_db:currency_rate_live.res_config_settings_view_form
+msgid "Service"
+msgstr "Service"
+
+#. module: currency_rate_live
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_company__currency_provider
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_config_settings__currency_provider
+msgid "Service Provider"
+msgstr "Fournisseur de service"
+
+#. module: currency_rate_live
+#. odoo-python
+#: code:addons/currency_rate_live/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"The selected exchange rate provider requires the GTQ and USD currencies to "
+"be active."
+msgstr ""
+"Le fournisseur de taux de change sélectionné exige que les devises GTQ et "
+"USB soient actives."
+
+#. module: currency_rate_live
+#. odoo-python
+#: code:addons/currency_rate_live/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Unable to connect to the online exchange rate platform %s. The web service "
+"may be temporarily down. Please try again in a moment."
+msgstr ""
+"Impossible de se connecter à la plateforme de taux de change en ligne %s. Le"
+" service web pourrait être temporairement hors service. Veuillez réessayer "
+"dans quelques minutes."
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_interval_unit__weekly
+msgid "Weekly"
+msgstr "Hebdomadaire"
+
+#. module: currency_rate_live
+#. odoo-python
+#: code:addons/currency_rate_live/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Your main currency (%s) is not supported by this exchange rate provider. "
+"Please choose another one."
+msgstr ""
+"Votre devise principale (%s) n'est pas prise en charge par ce fournisseur de"
+" taux de change. Veuillez en choisir un autre."
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__cbuae
+msgid "[AE] Central Bank of the UAE"
+msgstr "[AE] Banque centrale des Émirats arabes unis"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bnb
+msgid "[BG] Bulgaria National Bank"
+msgstr "[BG] Banque nationale bulgare"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bbr
+msgid "[BR] Central Bank of Brazil"
+msgstr "[BR] Banque centrale du Brésil"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__boc
+msgid "[CA] Bank of Canada"
+msgstr "[CA] Banque du Canada"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__fta
+msgid "[CH] Federal Tax Administration of Switzerland"
+msgstr "[CH] Administration fédérale des contributions de la Suisse"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__mindicador
+msgid "[CL] Central Bank of Chile via mindicador.cl"
+msgstr "[CL] Banque centrale du Chili via mindicador.cl"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__cnb
+msgid "[CZ] Czech National Bank"
+msgstr "[CZ] Banque nationale tchèque"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__cbegy
+msgid "[EG] Central Bank of Egypt"
+msgstr "[EG] Banque centrale d'Égypte"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__banguat
+msgid "[GT] Bank of Guatemala"
+msgstr "[GT] Banque du Guatemala"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__banxico
+msgid "[MX] Bank of Mexico"
+msgstr "[MX] Banque du Mexique"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bcrp
+msgid "[PE] SUNAT (replaces Bank of Peru)"
+msgstr "[PE] SUNAT (remplace la Banque du Pérou)"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__nbp
+msgid "[PL] National Bank of Poland"
+msgstr "[PL] Banque nationale de Pologne"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bnr
+msgid "[RO] National Bank of Romania"
+msgstr "[RO] Banque nationale de Roumanie"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__tcmb
+msgid "[TR] Central Bank of the Republic of Turkey"
+msgstr "[TR] Banque centrale de la République de Turquie"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__hmrc
+msgid "[UK] HM Revenue & Customs"
+msgstr "[UK] HM Revenue & Customs"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__xe_com
+msgid "xe.com"
+msgstr "xe.com"

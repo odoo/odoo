@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <record id="new_ticket_request_email_template" model="mail.template">
+        <field name="name">Helpdesk: Ticket Received</field>
+        <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="subject">{{ object.name }}</field>
+        <field name="email_from">{{ (object.team_id.alias_email_from or object.company_id.email_formatted or object.user_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ (object.partner_email if not object.sudo().partner_id.email or object.sudo().partner_id.email != object.partner_email else '') }}</field>
+        <field name="partner_to">{{ object.partner_id.id if object.sudo().partner_id.email and object.sudo().partner_id.email == object.partner_email else '' }}</field>
+        <field name="description">Send customers a confirmation email to notify them that their helpdesk ticket has been received and is currently being reviewed by the helpdesk team. Automatically send an email to customers when a ticket reaches a specific stage in a helpdesk team by setting this template on that stage.</field>
+        <field name="body_html" type="html">
+<div>
+    Dear <t t-out="object.sudo().partner_id.name or object.sudo().partner_name or 'Madam/Sir'">Madam/Sir</t>,<br /><br />
+    Your request
+    <t t-if="object.get_portal_url()">
+        <a t-attf-href="/my/ticket/{{ object.id }}/{{ object.access_token }}" t-out="object.name or ''">Table legs are unbalanced</a>
+    </t>
+    has been received and is being reviewed by our <t t-out="object.team_id.name or ''">VIP Support</t> team.<br/><br/>
+    The reference for your ticket is <strong><t t-out="object.ticket_ref or ''">15</t></strong>.<br /><br/>
+
+    To provide any additional information, simply reply to this email.<br/><br/>
+    <t t-if="object.team_id.show_knowledge_base">
+        Don't hesitate to visit our <a t-attf-href="{{ object.team_id.get_knowledge_base_url() }}">Help Center</a>. You might find the answer to your question.
+        <br/><br/>
+    </t>
+    <t t-if="object.team_id.allow_portal_ticket_closing">
+        Feel free to close your ticket if our help is no longer needed. Thank you for your collaboration.<br/><br/>
+    </t>
+
+    <div style="text-align: center; padding: 16px 0px 16px 0px;">
+        <a style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;" t-att-href="object.get_portal_url()" target="_blank">View Ticket</a>
+        <t t-if="object.team_id.allow_portal_ticket_closing">
+            <a style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;" t-att-href="'/my/ticket/close/%s/%s' % (object.id, object.access_token)" target="_blank">Close Ticket</a>
+        </t>
+        <t t-if="object.team_id.use_website_helpdesk_forum or object.team_id.use_website_helpdesk_knowledge or object.team_id.use_website_helpdesk_slides">
+            <a style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;" t-att-href="object.team_id.feature_form_url" target="_blank">Visit Help Center</a>
+        </t><br/><br/>
+    </div>
+
+    Best regards,<br/><br/>
+    <t t-out="object.team_id.name or 'Helpdesk'">Helpdesk</t> Team
+</div>
+        </field>
+        <field name="lang">{{ object.partner_id.lang or object.user_id.lang or user.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <record id="solved_ticket_request_email_template" model="mail.template">
+        <field name="name">Helpdesk: Ticket Closed</field>
+        <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="subject">Ticket Closed - Reference {{ object.id if object.id else 15 }}</field>
+        <field name="email_from">{{ (object.team_id.alias_email_from or object.company_id.email_formatted or object.user_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ (object.partner_email if not object.sudo().partner_id.email or object.sudo().partner_id.email != object.partner_email else '') }}</field>
+        <field name="partner_to">{{ object.partner_id.id if object.sudo().partner_id.email and object.sudo().partner_id.email == object.partner_email else '' }}</field>
+        <field name="description">Set this template on a project's stage to automate email when tasks reach stages</field>
+        <field name="body_html" type="html">
+    <div>
+        Dear <t t-out="object.sudo().partner_id.name or 'Madam/Sir'">Madam/Sir</t>,<br /><br />
+        We would like to inform you that we have closed your ticket (reference <t t-out="object.id or ''">15</t>). 
+        We trust that the services provided have met your expectations and that you have found a satisfactory resolution to your issue.<br /><br />
+        However, if you have any further questions or comments, please do not hesitate to reply to this email to re-open your ticket. 
+        Our team is always here to help you and we will be happy to assist you with any further concerns you may have.<br /><br />
+        Thank you for choosing our services and for your cooperation throughout this process. We truly value your business and appreciate the opportunity to serve you.<br /><br />
+        Kind regards,<br /><br />
+        <t t-out="object.team_id.name or 'Helpdesk'">Helpdesk</t> Team.
+    </div>
+        </field>
+        <field name="lang">{{ object.partner_id.lang or object.user_id.lang or user.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <record id="rating_ticket_request_email_template" model="mail.template">
+        <field name="name">Helpdesk: Ticket Rating Request</field>
+        <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="subject">{{ object.company_id.name or object.user_id.company_id.name or 'Helpdesk' }}: Service Rating Request</field>
+        <field name="email_from">{{ (object.team_id.alias_email_from or object.company_id.email_formatted or object._rating_get_operator().email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ (object.partner_email if not object.sudo().partner_id.email or object.sudo().partner_id.email != object.partner_email else '') }}</field>
+        <field name="partner_to">{{ object.partner_id.id if object.sudo().partner_id.email and object.sudo().partner_id.email == object.partner_email else '' }}</field>
+        <field name="description">Enable "customer ratings" feature on the helpdesk team</field>
+        <field name="body_html" type="html">
+<div>
+    <t t-set="access_token" t-value="object._rating_get_access_token()"/>
+    <t t-set="partner" t-value="object._rating_get_partner()"/>
+    <table border="0" cellpadding="0" cellspacing="0" style="width:100%; margin:0;">
+    <tbody>
+        <tr><td valign="top" style="font-size: 14px;">
+            <t t-if="partner.name">
+                Hello <t t-out="partner.name or ''">Brandon Freeman</t>,<br/><br/>
+            </t>
+            <t t-else="">
+                Hello,<br/>
+            </t>
+            Please take a moment to rate our services related to the ticket "<strong t-out="object.name or ''">Table legs are unbalanced</strong>"
+            <t t-if="object._rating_get_operator().name">
+                assigned to <strong t-out="object._rating_get_operator().name or ''">Mitchell Admin</strong>.<br/><br/>
+            </t>
+            <t t-else="">
+                .<br/><br/>
+            </t>
+        </td></tr>
+        <tr><td style="text-align: center;">
+            <table border="0" cellpadding="0" cellspacing="0" summary="o_mail_notification" style="width:100%; margin: 32px 0px 32px 0px;">
+                <tr><td style="font-size: 14px;">
+                    <strong>Tell us how you feel about our services</strong><br/>
+                    <span style="text-color: #888888">(click on one of these smileys)</span>
+                </td></tr>
+                <tr><td style="font-size: 14px;">
+                    <table style="width:100%;text-align:center;margin-top:2rem;">
+                        <tr>
+                            <td>
+                                <a t-attf-href="/rate/{{ access_token }}/5">
+                                    <img alt="Satisfied" src="/rating/static/src/img/rating_5.png" title="Satisfied"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a t-attf-href="/rate/{{ access_token }}/3">
+                                    <img alt="Okay" src="/rating/static/src/img/rating_3.png" title="Okay"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a t-attf-href="/rate/{{ access_token }}/1">
+                                    <img alt="Dissatisfied" src="/rating/static/src/img/rating_1.png" title="Dissatisfied"/>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </td></tr>
+            </table>
+        </td></tr>
+        <tr><td valign="top" style="font-size: 14px;">
+            We appreciate your feedback. It helps us improve continuously.
+            <br/><br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;">This customer survey has been sent because your ticket has been moved to the stage <b t-out="object.stage_id.name or ''">In Progress</b>.</span>
+        </td></tr>
+    </tbody>
+    </table>
+</div>
+        </field>
+        <field name="lang">{{ object.partner_id.lang or object.user_id.lang or user.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+</data></odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="account_reports.FileGenerationErrorWidget">
+        <ul>
+            <t t-foreach="errors" t-as="error" t-key="error_index">
+                <li>
+                    <span class="m-1 d-flex gap-1">
+                        <t t-out="error.message"/>
+                        <t t-if="error.action_name">
+                            <a
+                                href="#"
+                                class="oe_link fw-bold d-flex gap-1 align-items-baseline"
+                                t-on-click.prevent="() => this.handleOnClick(error)"
+                                t-att-actionName="error.action_name"
+                                t-att-actionParams="error.action_params"
+                            >
+                                <i class="fa fa-arrow-right"/>
+                                <t t-out="error.action_text"/>
+                                <t t-if="error.critical"><i class="fa fa-warning"/></t>
+                            </a>
+                        </t>
+                    </span>
+                </li>
+            </t>
+        </ul>
+    </t>
+
+</templates>

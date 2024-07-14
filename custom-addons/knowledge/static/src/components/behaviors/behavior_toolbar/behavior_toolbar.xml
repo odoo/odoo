@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.BehaviorToolbar">
+        <div class="o_knowledge_toolbar d-flex justify-content-end align-items-center" data-oe-transient-content="true">
+            <div t-attf-class="btn-group d-flex flex-wrap #{ props.buttonsGroupClass ? props.buttonsGroupClass : '' }">
+                <t t-slot="buttons"/>
+            </div>
+        </div>
+    </t>
+    <t t-name="knowledge.BehaviorToolbarButton">
+        <button t-if="!props.hidden" t-ref="buttonRef" t-on-click="props.onClick" t-att-name="props.name" t-att-title="props.title"
+            class="btn btn-primary btn-link btn-sm border-0 py-0 text-break text-start text-o-color-2 text-capitalize fw-bold border-transparent bg-transparent">
+            <i t-if="props.icon" t-attf-class="fa #{props.icon} me-1"/>
+            <span class="o_knowledge_toolbar_button_text" t-out="props.label"/>
+        </button>
+    </t>
+</templates>

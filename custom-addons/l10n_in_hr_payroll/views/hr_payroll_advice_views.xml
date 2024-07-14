@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_bank_advice_tree" model="ir.ui.view">
+        <field name="name">hr.payroll.advice.tree</field>
+        <field name="model">hr.payroll.advice</field>
+        <field name="arch" type="xml">
+            <tree string="Bank Advice">
+                <field name="date" readonly="state != 'draft'"/>
+                <field name="number"/>
+                <field name="name" readonly="state != 'draft'"/>
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="state != 'draft'"/>
+                <field name="bank_id" readonly="state != 'draft'"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hr_bank_advice_form" model="ir.ui.view">
+        <field name="name">hr.payroll.advice.form</field>
+        <field name="model">hr.payroll.advice</field>
+        <field name="arch" type="xml">
+            <form string="Bank Advice">
+                <header>
+                    <button name="confirm_sheet"  string="Confirm Sheet" invisible="state != 'draft'" type="object" class="oe_highlight"/>
+                    <button name="compute_advice" string="Compute Advice" invisible="state != 'draft'" type="object" class="oe_highlight"/>
+                    <button name="cancel_sheet" string="Cancel Advice" invisible="state != 'draft'"  type="object"/>
+                    <button name="set_to_draft" string="Set to Draft" invisible="state not in ('cancel', 'confirm')" type="object"/>
+                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Name" readonly="state != 'draft'"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="bank_id" readonly="state != 'draft'"/>
+                            <field name="date" placeholder="Date" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="number"/>
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Payment Lines" name="payment_lines">
+                            <field name="line_ids" nolabel="1" readonly="state != 'draft'">
+                                <tree string="Payment Lines" editable="bottom">
+                                    <field name="employee_id"/>
+                                    <field name="name"/>
+                                    <field name="ifsc" column_invisible="True"/>
+                                    <field name="ifsc_code" invisible="not ifsc" />
+                                    <field name="bysal"/>
+                                    <field name="debit_credit"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Other Information" name="other_info">
+                            <group col="4">
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="state != 'draft'"/>
+                                <field name="chaque_nos"/>
+                                <field name="neft"/>
+                                <field name="batch_id"/>
+                            </group>
+                            <group>
+                                <div colspan="2">
+                                    <span class="o_form_label o_hr_form_label cursor-default">Letter Details</span>
+                                    <field name="note"/>
+                                </div>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hr_payroll_advice_filter" model="ir.ui.view">
+        <field name="name">hr.payroll.advice.select</field>
+        <field name="model">hr.payroll.advice</field>
+        <field name="arch" type="xml">
+            <search string="Search Payment advice">
+                <group>
+                    <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Advices"/>
+                    <filter string="Confirm" name="confirm" domain="[('state','=','confirm')]" help="Confirm Advices"/>
+                    <separator orientation="vertical"/>
+                    <field name="date"/>
+                    <field name="number"/>
+                    <field name="name"/>
+                    <field name="bank_id"/>
+                    <field name="batch_id"/>
+                </group>
+                <newline/>
+                <group expand="0" string="Group By">
+                    <filter string="Bank" name="bank_id" context="{'group_by':'bank_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Status" name="state" context="{'group_by':'state'}"/>
+                    <separator orientation="vertical" />
+                    <filter string="Company" name="company_id" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_advice_line_form" model="ir.ui.view">
+        <field name="name">advice.line.form</field>
+        <field name="model">hr.payroll.advice.line</field>
+        <field name="arch" type="xml">
+            <form string="Advice Lines">
+                <sheet>
+                    <h1><field name="advice_id" placeholder="Bank Advice"/></h1>
+                    <group>
+                        <field name="employee_id" />
+                        <field name="name" />
+                        <field name="ifsc" invisible="1"/>
+                        <field name="ifsc_code" invisible="not ifsc" />
+                        <field name="bysal" />
+                        <field name="debit_credit" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_hr_bank_advice_tree" model="ir.actions.act_window">
+        <field name="name">Payment Advices</field>
+        <field name="res_model">hr.payroll.advice</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_hr_bank_advice_tree"/>
+        <field name="search_view_id" ref="view_hr_payroll_advice_filter"/>
+    </record>
+
+    <menuitem
+        action="action_view_hr_bank_advice_tree"
+        id="hr_menu_payment_advice"
+        parent="hr_work_entry_contract_enterprise.menu_hr_payroll_root"
+        sequence="45"
+    />
+
+
+    <record id="act_hr_emp_payslip_list" model="ir.actions.act_window">
+        <field name="name">Payslips</field>
+        <field name="res_model">hr.payslip</field>
+        <field name="view_id" ref="hr_payroll.view_hr_payslip_tree"/>
+        <field name="domain">[('advice_id', '=', active_id)]</field>
+        <field name="binding_model_id" ref="model_hr_payroll_advice"/>
+        <field name="binding_view_types">form</field>
+    </record>
+</odoo>

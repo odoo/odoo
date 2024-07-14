@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="documents_spreadsheet.DocumentsSpreadsheetControlPanel" t-inherit="spreadsheet_edition.SpreadsheetControlPanel">
+        <xpath expr="//t[@t-call='spreadsheet_edition.Breadcrumbs']" position="replace">
+            <t t-call="documents_spreadsheet.Breadcrumbs"/>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="l10n_mx_reports_closing.TrialBalanceFilterDate" t-inherit="account_reports.AccountReportFilterDate">
+        <xpath expr="//DropdownItem[contains(@class, 'filter_date_this_month_hook')]" position="attributes">
+            <attribute name="t-if">!controller.options.l10n_mx_month_13</attribute>
+        </xpath>
+
+        <xpath expr="//DropdownItem[contains(@class, 'filter_date_this_quarter_hook')]" position="attributes">
+            <attribute name="t-if">!controller.options.l10n_mx_month_13</attribute>
+        </xpath>
+
+        <xpath expr="//DropdownItem[contains(@class, 'filter_date_range_last_month_hook')]" position="attributes">
+            <attribute name="t-if">!controller.options.l10n_mx_month_13</attribute>
+        </xpath>
+
+        <xpath expr="//DropdownItem[contains(@class, 'filter_date_range_last_quarter_hook')]" position="attributes">
+            <attribute name="t-if">!controller.options.l10n_mx_month_13</attribute>
+        </xpath>
+
+        <xpath expr="//DropdownItem[contains(@class, 'filter_date_range_last_year_hook')]" position="after">
+            <t t-if="controller.groups.account_user &amp;&amp; 'l10n_mx_month_13' in controller.options &amp;&amp; controller.options.comparison.filter == 'no_comparison'">
+                <div class="dropdown-divider"/>
+
+                <DropdownItem
+                    class="{ 'selected': controller.options.l10n_mx_month_13 }"
+                    onSelected="() => this.toggleFilter('l10n_mx_month_13')"
+                >
+                    Month 13
+                </DropdownItem>
+            </t>
+        </xpath>
+    </t>
+</templates>

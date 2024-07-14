@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="sign.SMSSignerDialog">
+        <Dialog t-props="dialogProps">
+            <div class="mb-3 row">
+                <label class="col-sm-3 col-form-label" for="phone">Phone Number</label>
+                <div class="col-sm">
+                    <div class="input-group">
+                        <input type="text" name="phone" t-ref="phone" placeholder="e.g. +1 415 555 0100" class="form-control" t-att-value="SMSInfo.phoneNumber"/>
+                        <button class='btn btn-sm btn-primary o_sign_resend_sms' t-on-click="onSendSMSClick" t-ref="send-sms" t-att-disabled="state.sendingSMS">
+                            <t t-if="state.sendingSMS">
+                                <span>
+                                    <i class='fa fa-check'/> SMS Sent
+                                </span>
+                            </t>
+                            <t t-elif="state.SMSCount > 0">
+                                Re-send SMS
+                            </t>
+                            <t t-else="">
+                                Send SMS
+                            </t>
+                        </button>
+                    </div>
+                    <span class="text-muted form-text">A SMS will be sent to the following phone number. Please update it if it's not relevant.</span>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label class="col-sm-3 col-form-label" for="validation_code">Validation Code</label>
+                <div class="col-sm">
+                    <input type="text" name="validation_code" t-ref="code" id="o_sign_public_signer_sms_input" placeholder="e.g. 314159" class="form-control"/>
+                    <span class="text-muted form-text">Enter the code received through SMS to complete your signature</span>
+                </div>
+            </div>
+
+            <t t-set-slot="footer">
+                <button class="btn btn-primary o_sign_validate_sms" t-on-click="validateSMS">Verify</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

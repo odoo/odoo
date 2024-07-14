@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+
+    <t t-name="spreadsheet_edition.SpreadsheetControlPanel">
+        <div class="o_control_panel o_spreadsheet_control_panel d-flex py-1 px-3"
+            data-command-category="actions">
+            <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start gap-3 flex-grow-1">
+                <div
+                    class="o_control_panel_breadcrumbs d-flex align-items-center gap-1 order-0 h-lg-100">
+                    <!-- Add breadcrumbs -->
+                    <t t-call="spreadsheet_edition.Breadcrumbs"/>
+                </div>
+                <div
+                    class="o_control_panel_navigation d-flex flex-wrap flex-md-nowrap align-items-center justify-content-end gap-3 gap-lg-1 gap-xl-3 order-1 order-lg-2 flex-grow-1">
+                    <t t-call="spreadsheet_edition.ControlPanel.SpreadsheetInfo" />
+                    <SpreadsheetShareButton
+                        t-if="props.onSpreadsheetShared"
+                        model="props.model"
+                        onSpreadsheetShared="props.onSpreadsheetShared"
+                        togglerClass="'py-0 px-1'"
+                    />
+                </div>
+            </div>
+        </div>
+    </t>
+
+
+
+
+    <t t-name="spreadsheet_edition.SpreadsheetUsersTooltip">
+        <div t-foreach="users" t-as="user" t-key="user_index">
+            <span class="o_spreadsheet_user d-inline-flex">
+                <img t-att-src="user.avatar" class="p-1 rounded" />
+                <span class="pt-1">
+                    <t t-esc="user.name" />
+                </span>
+            </span>
+        </div>
+    </t>
+</templates>

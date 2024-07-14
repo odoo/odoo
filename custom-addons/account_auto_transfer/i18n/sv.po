@@ -1,0 +1,483 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_auto_transfer
+# 
+# Translators:
+# Daniel Osser <danielosser@gmail.com>, 2023
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
+# Kristoffer Grundström <lovaren@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Robin Calvin, 2023
+# Simon S, 2023
+# Peter Wickenberg <peter@wickenberg.nu>, 2023
+# Lasse L, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Lasse L, 2023\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "<span> to </span>"
+msgstr "<span> till </span>"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Kontoplan"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_transfer_model
+msgid "Account Transfer Model"
+msgstr "Modell för kontoöverföring"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_transfer_model_line
+msgid "Account Transfer Model Line"
+msgstr "Kontoöverföring Model rad"
+
+#. module: account_auto_transfer
+#: model:ir.actions.server,name:account_auto_transfer.ir_cron_auto_transfer_ir_actions_server
+msgid "Account automatic transfers: Perform transfers"
+msgstr ""
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Activate"
+msgstr "Aktivera"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,help:account_auto_transfer.field_account_transfer_model_line__analytic_account_ids
+msgid ""
+"Adds a condition to only transfer the sum of the lines from the origin "
+"accounts that match these analytic accounts to the destination account"
+msgstr ""
+"Lägger till ett villkor att endast överföra summan av raderna från "
+"ursprungskontona som matchar dessa analytiska konton till destinationskontot"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,help:account_auto_transfer.field_account_transfer_model_line__partner_ids
+msgid ""
+"Adds a condition to only transfer the sum of the lines from the origin "
+"accounts that match these partners to the destination account"
+msgstr ""
+"Lägger till ett villkor om att endast överföra summan av raderna från "
+"ursprungskontona som matchar dessa partners till destinationskontot"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__analytic_account_ids
+msgid "Analytic Filter"
+msgstr "Analytiskt filter"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Automated Transfer"
+msgstr "Automatiserad överföring"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (%s%% from account %s)"
+msgstr "Automatisk överföring (%s%% från konto %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (-%s%%)"
+msgstr "Automatisk överföring (-%s%%)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid ""
+"Automatic Transfer (entries with analytic account(s): %s and partner(s): %s)"
+msgstr ""
+"Automatisk överföring (poster med analyskonto(n): %s och partner(s): %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (entries with analytic account(s): %s)"
+msgstr "Automatisk överföring (poster med analyskonto(n): %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (entries with partner(s): %s)"
+msgstr "Automatisk överföring (bidrag med partner(s): %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid ""
+"Automatic Transfer (from account %s with analytic account(s): %s and "
+"partner(s): %s)"
+msgstr ""
+"Automatisk överföring (från konto %s med analyskonto(n): %s och partner(s): "
+"%s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (from account %s with analytic account(s): %s)"
+msgstr "Automatisk överföring (från konto %s med analyskonto(n): %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (from account %s with partner(s): %s)"
+msgstr "Automatisk överföring (från konto %s med partner(s): %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (to account %s)"
+msgstr "Automatisk överföring (till konto %s)"
+
+#. module: account_auto_transfer
+#: model:ir.actions.act_window,name:account_auto_transfer.transfer_model_action
+#: model:ir.ui.menu,name:account_auto_transfer.menu_auto_transfer
+msgid "Automatic Transfers"
+msgstr "Automatiska överföringar"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__company_id
+msgid "Company"
+msgstr "Bolag"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,help:account_auto_transfer.field_account_transfer_model__company_id
+msgid "Company related to this journal"
+msgstr "Företag relaterat till denna journal"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Compute Transfer"
+msgstr "Beräkna överföring"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__create_uid
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__create_date
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__create_date
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Description"
+msgstr "Beskrivning"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__account_id
+msgid "Destination Account"
+msgstr "Destinationskonto"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__line_ids
+msgid "Destination Accounts"
+msgstr "Destinationskonton"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__journal_id
+msgid "Destination Journal"
+msgstr "Destination Journal"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Disable"
+msgstr "Inaktivera"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__state__disabled
+msgid "Disabled"
+msgstr "Inaktiverad"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__display_name
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__frequency
+msgid "Frequency"
+msgstr "Frekvens"
+
+#. module: account_auto_transfer
+#: model:ir.actions.act_window,name:account_auto_transfer.generated_transfers_action
+msgid "Generated Entries"
+msgstr "Genererade poster"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__move_ids
+msgid "Generated Moves"
+msgstr "Genererade rörelser"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__id
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/demo/account_demo.py:0
+#, python-format
+msgid "IFRS Automatic Transfers"
+msgstr ""
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Journal"
+msgstr "Journal"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_move
+msgid "Journal Entry"
+msgstr "Journalanteckning"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_move_line
+msgid "Journal Item"
+msgstr "Transaktion"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__write_uid
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__write_date
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__frequency__month
+msgid "Monthly"
+msgstr "Månatlig"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/demo/account_demo.py:0
+#, python-format
+msgid "Monthly IFRS rent expense transfer"
+msgstr ""
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__move_ids_count
+msgid "Move Ids Count"
+msgstr ""
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Move Model"
+msgstr "Flytta modell"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_tree
+msgid "Move Models"
+msgstr "Flytta modeller"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__name
+msgid "Name"
+msgstr "Namn"
+
+#. module: account_auto_transfer
+#: model:ir.model.constraint,message:account_auto_transfer.constraint_account_transfer_model_line_unique_account_by_transfer_model
+msgid "Only one account occurrence by transfer model"
+msgstr "Endast en kontoförekomst per överföringsmodell"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__account_ids
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Origin Accounts"
+msgstr "Ursprungskonton"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_bank_statement_line__transfer_model_id
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_move__transfer_model_id
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_payment__transfer_model_id
+msgid "Originating Model"
+msgstr "Ursprunglig modell"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__partner_ids
+msgid "Partner Filter"
+msgstr "Filter för partner"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__percent
+msgid "Percent"
+msgstr "Procent"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Percent (%)"
+msgstr "Procent (%)"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__percent_is_readonly
+msgid "Percent Is Readonly"
+msgstr "Procent är skrivskyddad"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,help:account_auto_transfer.field_account_transfer_model_line__percent
+msgid ""
+"Percentage of the sum of lines from the origin accounts will be transferred "
+"to the destination account"
+msgstr ""
+"Procentandel av summan av rader från ursprungskontona som kommer att "
+"överföras till destinationskontot"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Period"
+msgstr "Period"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__frequency__quarter
+msgid "Quarterly"
+msgstr "Kvartalsvis"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__state__in_progress
+msgid "Running"
+msgstr "Pågående"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__sequence
+msgid "Sequence"
+msgstr "Sekvens"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__date_start
+msgid "Start Date"
+msgstr "Startdatum"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__state
+msgid "State"
+msgstr "Etapp"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__date_stop
+msgid "Stop Date"
+msgstr "Stoppdatum"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "The analytic filter %s is duplicated"
+msgstr "Det analytiska filtret %s är duplicerat"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid ""
+"The partner filter %s in combination with the analytic filter %s is "
+"duplicated"
+msgstr ""
+"Partnerfiltret %s i kombination med det analytiska filtret %s är duplicerat"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "The partner filter %s is duplicated"
+msgstr "Partnerfiltret %s är duplicerat"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "The total percentage (%s) should be less or equal to 100!"
+msgstr ""
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__total_percent
+msgid "Total Percent"
+msgstr "Totalt Procent"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__transfer_model_id
+msgid "Transfer Model"
+msgstr "Modell för överföring"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Transfers"
+msgstr "Flyttar"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__frequency__year
+msgid "Yearly"
+msgstr "Årligen"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/demo/account_demo.py:0
+#, python-format
+msgid "Yearly liabilites auto transfers"
+msgstr ""
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid ""
+"You cannot delete an automatic transfer that has draft moves attached "
+"('%s'). Please delete them before deleting this transfer."
+msgstr ""
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid ""
+"You cannot delete an automatic transfer that has posted moves attached "
+"('%s')."
+msgstr ""
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/account_move_line.py:0
+#, python-format
+msgid "You cannot set Tax on Automatic Transfer's entries."
+msgstr ""
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "e.g. Monthly Expense Transfer"
+msgstr "t.ex. överföring av månadskostnader"

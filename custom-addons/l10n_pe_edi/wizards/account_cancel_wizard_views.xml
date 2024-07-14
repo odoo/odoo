@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="invoice_cancel_wizard_view" model="ir.ui.view">
+        <field name="name">Invoice Cancel</field>
+        <field name="model">l10n_pe_edi.cancel</field>
+        <field name="arch" type="xml">
+            <form string="Wizard to cancel Invoice">
+                <group>
+                    <field name="l10n_pe_edi_cancel_reason"/>
+                </group>
+                <footer>
+                    <button string="Cancel invoice" name="button_cancel"  type="object" class="btn-primary" />
+                    <button string="Cancel" class="btn-default" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_l10n_pe_edi_cancel" model="ir.actions.act_window">
+        <field name="name">Cancel Invoice</field>
+        <field name="res_model">l10n_pe_edi.cancel</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="invoice_cancel_wizard_view"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

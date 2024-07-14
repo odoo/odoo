@@ -1,0 +1,968 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* frontdesk
+# 
+# Translators:
+# Sarah Park, 2023
+# Wil Odoo, 2023
+# Daye Jeong, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Daye Jeong, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_visitor.py:0
+#, python-format
+msgid " Check-In: %s"
+msgstr " 체크인: %s"
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_visitor.py:0
+#, python-format
+msgid " Check-In: %s to meet %s"
+msgstr " 체크인: %s 이후 회의 %s"
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_visitor.py:0
+#, python-format
+msgid "%(name)s just checked-in. Requested Drink: %(drink)s."
+msgstr "%(name)s님의 체크인이 완료되었습니다 . 요청하신 음료: %(drink)s."
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_visitor.py:0
+#, python-format
+msgid "%s just checked-in."
+msgstr "%s 체크인이 완료되었습니다."
+
+#. module: frontdesk
+#: model:mail.template,body_html:frontdesk.frontdesk_mail_template
+msgid ""
+"<div>\n"
+"                    <p>Hello <t t-if=\"ctx.get('host_name')\"><t t-out=\"ctx.get('host_name')\"></t>, </t><b><t t-out=\"object.name\"></t></b> <t t-if=\"object.phone\">(<t t-out=\"object.phone\"></t>)</t><t t-if=\"object.company\">, coming from <t t-out=\"object.company\"></t></t> is asking to meet you at <t t-out=\"object.station_id.name\"></t>. Please let them know you'll be there shortly.\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"                    <p>안녕하세요 <t t-if=\"ctx.get('host_name')\"><t t-out=\"ctx.get('host_name')\"></t>님, </t><b><t t-out=\"object.name\"></t></b> <t t-if=\"object.phone\">(<t t-out=\"object.phone\"></t>)</t><t t-if=\"object.company\">, <t t-out=\"object.company\"></t></t> 회사에서 <t t-out=\"object.station_id.name\"></t> 의 회의를 요청합니다. 곧 도착할 예정임을 알려주세요.\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__active
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__active
+msgid "Active"
+msgstr "활성화"
+
+#. module: frontdesk
+#: model:ir.actions.client,name:frontdesk.frontdesk_visitor_action_configure_properties_field
+msgid "Add Properties"
+msgstr "속성 추가"
+
+#. module: frontdesk
+#: model:res.groups,name:frontdesk.frontdesk_group_administrator
+msgid "Administrator"
+msgstr "관리자"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Allow visitor to select a drink during registration"
+msgstr "등록 시 방문자가 음료를 선택할 수 있도록 합니다."
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Allows the visitor to pick the host of the meeting from the list"
+msgstr "방문자가 목록에서 회의 호스트를 선택할 수 있도록 합니다."
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Archived"
+msgstr "보관됨"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/quick_check_in/quick_check_in.xml:0
+#, python-format
+msgid "Are you one of these people?"
+msgstr "다음 중 한 분이신가요?"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__authenticate_guest
+msgid "Authenticate Guest"
+msgstr "게스트 승인"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/navbar/navbar.xml:0
+#, python-format
+msgid "Back"
+msgstr "뒤로"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+msgid "By Responsible"
+msgstr "담당자별"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+msgid "Cancel"
+msgstr "취소"
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_visitor__state__canceled
+msgid "Canceled"
+msgstr "취소됨"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__check_in
+#, python-format
+msgid "Check In"
+msgstr "출근"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__check_out
+msgid "Check Out"
+msgstr "퇴근"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/welcome_page/welcome_page.xml:0
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+#, python-format
+msgid "Check in"
+msgstr "체크인"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "Check out"
+msgstr "체크아웃"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "CheckIn"
+msgstr "체크인"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "CheckIn Station"
+msgstr "체크인 스테이션"
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_visitor__state__checked_in
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Checked-In"
+msgstr "체크인"
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_visitor__state__checked_out
+msgid "Checked-Out"
+msgstr "체크아웃"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Checked-out"
+msgstr "체크아웃 완료"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "Checkout"
+msgstr "체크아웃"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/end_page/end_page.xml:0
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "Close"
+msgstr "닫기"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__company_id
+msgid "Company"
+msgstr "회사"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/navbar/navbar.xml:0
+#, python-format
+msgid "Company Logo"
+msgstr "회사 로고"
+
+#. module: frontdesk
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_config
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "Configuration"
+msgstr "설정"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Configure Drinks"
+msgstr "음료 설정"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/host_page/host_page.xml:0
+#, python-format
+msgid "Confirm"
+msgstr "승인"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__create_uid
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__create_uid
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__create_date
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__create_date
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__create_date
+msgid "Created on"
+msgstr "작성일"
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__theme__dark
+msgid "Dark"
+msgstr "어둡게"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Date"
+msgstr "날짜"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__description
+msgid "Description"
+msgstr "설명"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__display_name
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__display_name
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "Do you want something to drink?"
+msgstr "마실 것을 드릴까요?"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__drink_ids
+msgid "Drink"
+msgstr "음료"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__drink_image
+msgid "Drink Image"
+msgstr "음료 이미지"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_drink_view_form
+msgid "Drink Name"
+msgstr "음료 이름"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__served
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "Drink Served"
+msgstr "음료 제공"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/drink_page/drink_page.xml:0
+#, python-format
+msgid "Drink image"
+msgstr "음료 이미지"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Drink to Serve"
+msgstr "음료 제공"
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_drink
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_drinks_report
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__drink_ids
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_drinks_config
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_report_drinks
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_drink_report_view_graph
+msgid "Drinks"
+msgstr "음료수"
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_open_drink_to_serve_visitor
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__drink_to_serve
+msgid "Drinks to Serve"
+msgstr "음료 제공"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "Drinks to serve"
+msgstr "음료 제공"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__duration
+msgid "Duration"
+msgstr "소요시간"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+msgid "E.g. What's your Name"
+msgstr "예: 성함을 알려 주세요."
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__ask_email
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__email
+msgid "Email"
+msgstr "이메일"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__mail_template_id
+msgid "Email Template"
+msgstr "이메일 서식"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+msgid "Favorite"
+msgstr "즐겨찾기"
+
+#. module: frontdesk
+#: model:ir.model,name:frontdesk.model_frontdesk_frontdesk
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_root
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Frontdesk"
+msgstr "프론트 데스크"
+
+#. module: frontdesk
+#: model:ir.model,name:frontdesk.model_frontdesk_drink
+msgid "Frontdesk Drink"
+msgstr "프론트 데스크 음료"
+
+#. module: frontdesk
+#: model:mail.template,name:frontdesk.frontdesk_mail_template
+msgid "Frontdesk Email Template"
+msgstr "프론트 데스크 이메일 서식"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__name
+msgid "Frontdesk Name"
+msgstr "프론트 데스크 이름"
+
+#. module: frontdesk
+#: model:sms.template,name:frontdesk.frontdesk_sms_template
+msgid "Frontdesk SMS Template"
+msgstr "프론트 데스크 SMS 서식"
+
+#. module: frontdesk
+#: model:ir.model,name:frontdesk.model_frontdesk_visitor
+msgid "Frontdesk Visitors"
+msgstr "프론트 데스크 방문자"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Group By"
+msgstr "그룹별"
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_open_guest_on_site_visitor
+msgid "Guest On Site"
+msgstr "현장 게스트"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__guest_on_site
+msgid "Guests On Site"
+msgstr "현장 게스트"
+
+#. module: frontdesk
+#: model:sms.template,body:frontdesk.frontdesk_sms_template
+msgid ""
+"Hello, Your visitor {{ object.name }} {{ '(%s)' % object.phone if "
+"object.phone else '' }} {{ '(%s)' % object.company if object.company else ''"
+" }} wants to meet you at {{ object.station_id.name }}. Please let them know "
+"you'll be there shortly."
+msgstr ""
+"안녕하세요, {{ object.name }} {{ '(%s)' % object.phone if object.phone else '' }}"
+" {{ '(%s)' % object.company if object.company else '' }} 방문자가 있습니다. {{ "
+"object.station_id.name }}에서 뵙고자 합니다. 곧 도착할 예정임을 알려 주세요."
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "Host"
+msgstr "호스트"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__host_ids
+msgid "Host Name"
+msgstr "호스트 이름"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__host_selection
+msgid "Host Selection"
+msgstr "호스트 선택"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/drink_page/drink_page.xml:0
+#, python-format
+msgid "How can we delight you?"
+msgstr "어떻게 도와 드릴까요?"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__id
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__id
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__id
+msgid "ID"
+msgstr "ID"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__image
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_drink_view_kanban
+msgid "Image"
+msgstr "이미지"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__is_favorite
+msgid "Is Favorite"
+msgstr "즐겨찾기 여부"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "Kiosk"
+msgstr "키오스크"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__kiosk_url
+msgid "Kiosk URL"
+msgstr "키오스크 URL"
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_frontdesk.py:0
+#, python-format
+msgid "Last Check-In: %s hours ago"
+msgstr "최근 체크인: %s시간 전"
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_frontdesk.py:0
+#, python-format
+msgid "Last Check-In: %s minutes ago"
+msgstr "최근 체크인: %s분 전"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__write_uid
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__write_uid
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__write_uid
+msgid "Last Updated by"
+msgstr "최근 업데이트"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__write_date
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__write_date
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__write_date
+msgid "Last Updated on"
+msgstr "최근 업데이트 일자"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__latest_check_in
+msgid "Latest Check In"
+msgstr "최근 체크인"
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__theme__light
+msgid "Light"
+msgstr "가볍게"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/host_page/many2one/many2one.js:0
+#, python-format
+msgid "Loading..."
+msgstr "불러오는 중..."
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__message
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+msgid "Message"
+msgstr "메시지"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+msgid "My Station"
+msgstr "내 스테이션"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__name
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__name
+msgid "Name"
+msgstr "이름"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "No, thank you"
+msgstr "아니요, 감사합니다."
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_company__none
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_email__none
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_phone__none
+msgid "None"
+msgstr "없음"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/drink_page/drink_page.xml:0
+#, python-format
+msgid "Nothing, thanks."
+msgstr "괜찮습니다. 감사합니다."
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__notify_sms
+msgid "Notify by SMS"
+msgstr "SMS로 알리기"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__notify_discuss
+msgid "Notify by discuss"
+msgstr "메일및채팅으로 알리기"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__notify_email
+msgid "Notify by email"
+msgstr "이메일로 알리기"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Notify the host on guest arrival"
+msgstr "게스트 도착 시 호스트에게 알리기"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__drink_offer
+msgid "Offer Drinks"
+msgstr "음료 제안"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "On Site"
+msgstr "현장"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "Open Desk"
+msgstr "데스크 열기"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Open Kiosk"
+msgstr "키오스크 열기"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Open host chat window when guest arrives"
+msgstr "게스트 도착 시 호스트 채팅창 열기"
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_company__optional
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_email__optional
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_phone__optional
+msgid "Optional"
+msgstr "선택 사항"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Options"
+msgstr "옵션"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__ask_company
+msgid "Organization"
+msgstr "조직"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__pending
+msgid "Pending"
+msgstr "보류 중"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__notify_user_ids
+msgid "People to Notify"
+msgstr "알림 대상"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__ask_phone
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__phone
+msgid "Phone"
+msgstr "전화번호"
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_open_planned_visitor
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_visitor__state__planned
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Planned"
+msgstr "계획됨"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/end_page/end_page.xml:0
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "Please have a seat."
+msgstr "앉아서 기다려 주세요."
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_qr_expired
+msgid "Please rescan it."
+msgstr "다시 스캔해 주세요."
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__visitor_properties
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "Properties"
+msgstr "속성"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/welcome_page/welcome_page.xml:0
+#, python-format
+msgid "QR Code"
+msgstr "QR 코드"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_qr_expired
+msgid "QR Code Expired."
+msgstr "QR 코드가 만료되었습니다."
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/quick_check_in/quick_check_in.xml:0
+#, python-format
+msgid "Quick Check In"
+msgstr "빠른 체크인"
+
+#. module: frontdesk
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_report
+msgid "Reporting"
+msgstr "보고"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Request additional information upon registering"
+msgstr "등록 시 추가 정보를 요청하세요."
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_company__required
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_email__required
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_phone__required
+msgid "Required"
+msgstr "요청함"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+msgid "Responsible"
+msgstr "담당자"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__responsible_ids
+msgid "Responsibles"
+msgstr "담당자"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__sms_template_id
+msgid "SMS Template"
+msgstr "SMS 서식"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__access_token
+msgid "Security Token"
+msgstr "보안 토큰"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Select the color of the Desk"
+msgstr "책상 색상을 선택하세요."
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__self_check_in
+msgid "Self Check-In"
+msgstr "셀프 체크인"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Send an SMS to the host on guest arrival"
+msgstr "게스트 도착 시 호스트에게 SMS 알리기"
+
+#. module: frontdesk
+#: model:mail.template,description:frontdesk.frontdesk_mail_template
+msgid "Sent to hosts on guest arrival"
+msgstr "게스트 도착 시 호스트에게 전송하기"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__sequence
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_drink_view_form
+msgid "Sequence"
+msgstr "순서"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Show a QR code on the welcome screen to check-in from mobile"
+msgstr "모바일 체크인을 실행하려면 웰컴 화면에서 QR 코드를 표시하세요."
+
+#. module: frontdesk
+#: model:ir.model.fields,help:frontdesk.field_frontdesk_frontdesk__self_check_in
+msgid ""
+"Shows a QR code in the interface, for guests to check in from their mobile "
+"phone."
+msgstr "게스트가 핸드폰으로 체크인할 수 있도록 인터페이스에 QR 코드를 표시하세요."
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Side Message"
+msgstr "사이드 메시지"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__station_id
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Station"
+msgstr "스테이션"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+msgid "Station Name"
+msgstr "스테이션 이름"
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_open_station_visitor
+msgid "Station Visitors"
+msgstr "스테이션 방문자"
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_frontdesk_tree
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_stations
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_stations_config
+msgid "Stations"
+msgstr "스테이션"
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_station_report
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "Statistics"
+msgstr "통계"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__state
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Status"
+msgstr "상태"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/end_page/end_page.xml:0
+#, python-format
+msgid "Thank you for registering!"
+msgstr "등록해 주셔서 감사합니다!"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__theme
+msgid "Theme"
+msgstr "테마"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Today"
+msgstr "오늘"
+
+#. module: frontdesk
+#: model:res.groups,name:frontdesk.frontdesk_group_user
+msgid "User"
+msgstr "사용자"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Visitor"
+msgstr "방문자"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__company
+msgid "Visitor Company"
+msgstr "방문자 회사"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__visitor_properties_definition
+msgid "Visitor Properties"
+msgstr "방문자 속성"
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_frontdesk.py:0
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_visitor
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_visitors_report
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__visitor_ids
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_report_visitors
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_visitors
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_station_report_view_graph
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_report_view_graph
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_graph
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_pivot
+#, python-format
+msgid "Visitors"
+msgstr "방문자"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/welcome_page/welcome_page.xml:0
+#, python-format
+msgid "Welcome"
+msgstr "환영합니다"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/navbar/navbar.xml:0
+#, python-format
+msgid "Who are you visiting?"
+msgstr "방문 대상이 누구인가요?"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/navbar/navbar.xml:0
+#, python-format
+msgid "Who are you?"
+msgstr "당신은 누구십니까?"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Write message..."
+msgstr "메시지 작성..."
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "Yes, please"
+msgstr "네, 하겠습니다."
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "You have been registered!"
+msgstr "등록이 완료되었습니다!"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "Your Company"
+msgstr "내 회사"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "Your Email"
+msgstr "이메일"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "Your Name"
+msgstr "성명"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "Your Phone Number"
+msgstr "핸드폰 번호"
+
+#. module: frontdesk
+#: model:mail.template,subject:frontdesk.frontdesk_mail_template
+msgid "Your Visitor {{ object.name }} Requested To Meet You"
+msgstr "방문자 {{ object.name }}님이 회의를 요청하셨습니다."
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/end_page/end_page.xml:0
+#, python-format
+msgid "Your drink is on the way."
+msgstr "음료를 준비 중입니다."
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_drink_view_form
+msgid "e.g. Coca-Cola"
+msgstr "예: 콜라"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "e.g. John Doe"
+msgstr "예: 홍길동"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "e.g. My Company"
+msgstr "예: 회사명"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "e.g. john@company.com"
+msgstr "예: john@company.com"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/end_page/end_page.xml:0
+#, python-format
+msgid "has been informed."
+msgstr "정보를 받았습니다."
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/welcome_page/welcome_page.xml:0
+#, python-format
+msgid "to"
+msgstr "종료"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "will get back to you."
+msgstr "바로 연락드리겠습니다."

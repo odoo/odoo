@@ -1,0 +1,144 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_inter_company_rules
+# 
+# Translators:
+# Ali Reza Feizi Derakhshi, 2023
+# Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2023
+# Hanna Kheradroosta, 2023
+# Martin Trigaux, 2023
+# Hamed Mohammadi <hamed@dehongi.com>, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
+"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: account_inter_company_rules
+#. odoo-python
+#: code:addons/account_inter_company_rules/models/account_move.py:0
+#, python-format
+msgid "%s Invoice: %s"
+msgstr "%s فاکتور: %s"
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_account_move_send
+msgid "Account Move Send"
+msgstr "سند حسابداری ارسال شد"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_bank_statement_line__auto_generated
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_move__auto_generated
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_payment__auto_generated
+msgid "Auto Generated Document"
+msgstr "سند خودکار تولید شده"
+
+#. module: account_inter_company_rules
+#. odoo-python
+#: code:addons/account_inter_company_rules/models/account_move.py:0
+#, python-format
+msgid "Automatically generated from %(origin)s of company %(company)s."
+msgstr "به صورت خودکار از %(origin)s شرکت %(company)s صادر شده است."
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_res_company
+msgid "Companies"
+msgstr "شرکت‌ها"
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_res_config_settings
+msgid "Config Settings"
+msgstr "تنظیمات پیکربندی"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_company__intercompany_user_id
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_config_settings__intercompany_user_id
+msgid "Create as"
+msgstr "صدور فاکتور با عنوان"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields.selection,name:account_inter_company_rules.selection__res_company__rule_type__not_synchronize
+msgid "Do not synchronize"
+msgstr "همگام‌سازی نکن"
+
+#. module: account_inter_company_rules
+#. odoo-python
+#: code:addons/account_inter_company_rules/models/res_company.py:0
+#: code:addons/account_inter_company_rules/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Generate a bill/invoice when a company confirms an invoice/bill for %s. The "
+"new bill/invoice will be created in the first Purchase/Sales Journal of the "
+"Journals list view."
+msgstr ""
+"صدور یک صورت‌حساب/فاکتور هنگامی که شرکت فاکتور یا صورت‌حسابی را برای %s صادر"
+" می‌کند. صورت‌حساب/فاکتور جدید در اولین دفتر روزنامه‌ی خرید/فروش ایجاد "
+"می‌شود."
+
+#. module: account_inter_company_rules
+#: model_terms:ir.ui.view,arch_db:account_inter_company_rules.view_company_inter_change_inherit_form
+msgid "Inter-Company Transactions"
+msgstr "معاملات بین شرکتی"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_company__intercompany_transaction_message
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_config_settings__intercompany_transaction_message
+msgid "Intercompany Transaction Message"
+msgstr "پیام تراکنش بین شرکتی"
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_account_move
+msgid "Journal Entry"
+msgstr "سند دفترروزنامه‌"
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_account_move_line
+msgid "Journal Item"
+msgstr "آیتم دفترروزنامه"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,help:account_inter_company_rules.field_res_company__intercompany_user_id
+#: model:ir.model.fields,help:account_inter_company_rules.field_res_config_settings__intercompany_user_id
+msgid ""
+"Responsible user for creation of documents triggered by intercompany rules."
+msgstr "کاربر مسئول ایجاد اسناد طبق قوانین بین شرکتی."
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_company__rule_type
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_config_settings__rule_type
+msgid "Rule"
+msgstr "قانون"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_config_settings__rules_company_id
+msgid "Select Company"
+msgstr "انتخاب شرکت"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,help:account_inter_company_rules.field_res_company__rule_type
+#: model:ir.model.fields,help:account_inter_company_rules.field_res_config_settings__rule_type
+msgid "Select the type to setup inter company rules in selected company."
+msgstr ""
+"نوع قوانین بین شرکتی که باید در شرکت انتخاب شده رعایت شوند را مشخص کنید."
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_bank_statement_line__auto_invoice_id
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_move__auto_invoice_id
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_payment__auto_invoice_id
+msgid "Source Invoice"
+msgstr "فاکتور منبع"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields.selection,name:account_inter_company_rules.selection__res_company__rule_type__invoice_and_refund
+msgid "Synchronize invoices/bills"
+msgstr "همگام‌سازی فاکتورها/صورت‌حساب‌ها"

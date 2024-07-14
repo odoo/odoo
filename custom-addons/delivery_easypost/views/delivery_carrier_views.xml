@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+  <record id="view_delivery_carrier_form_inherit_delivery_easypost" model="ir.ui.view">
+    <field name="name">delivery.carrier.form.inherit.delivery.easypost</field>
+    <field name="model">delivery.carrier</field>
+    <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+    <field name="arch" type="xml">
+      <page name="destination" position="before">
+        <page string="Easypost Configuration" name="easypost_configuration" invisible="delivery_type != 'easypost'">
+          <group>
+            <group>
+              <field name="easypost_test_api_key" required="not easypost_production_api_key and delivery_type == 'easypost'"/>
+              <field name="easypost_production_api_key" required="delivery_type == 'easypost'"/>
+              <div colspan='2'>
+                <button name="action_get_carrier_type" string="Load your Easypost carrier accounts" type="object" class="oe_inline oi oi-arrow-right oe_link"/>
+              </div>
+              <div colspan="2" class="alert alert-warning" invisible="easypost_delivery_type or delivery_type != 'easypost'" role="status">
+                <p>Do not forget to load your Easypost carrier accounts for a valid configuration.</p>
+              </div>
+              <field name="easypost_delivery_type" string="Carrier Type" readonly="1" invisible="not easypost_delivery_type"/>
+              <field
+                name="easypost_default_package_type_id" string="Default Package Type"
+                context="{'default_easypost_carrier': easypost_delivery_type, 'default_package_carrier_type': delivery_type}"
+                invisible="not easypost_delivery_type"
+                required="easypost_delivery_type"/>
+              <field name="easypost_default_service_id" context="{'default_easypost_carrier': easypost_delivery_type}" invisible="not easypost_delivery_type"/>
+            </group>
+            <group>
+              <field name="easypost_label_file_type" string="Label Format" required="delivery_type == 'easypost'"/>
+            </group>
+            <group string="Options">
+              <field name="can_generate_return" invisible="1"/>
+              <field name="return_label_on_delivery" invisible="not can_generate_return"/>
+              <field name="get_return_label_from_portal" invisible="not return_label_on_delivery"/>
+            </group>
+          </group>
+          <group string="Easypost Tutorial" invisible="delivery_type != 'easypost'">
+            <ul>
+              <li>
+                <b>Go to
+                  <a href="https://www.easypost.com/signup" target="_blank">Easypost Website</a>
+                  to create a new account:</b>
+                <br/>
+                <img src="/delivery_easypost/static/src/img/signup.png" alt="Sign up" title="Sign up"/>
+              </li>
+              <li>
+                <b>Once your account is created, go to your Dashboard and click on the arrow next to your username to configure your carrier accounts. </b>
+                <b>You can add new carrier accounts on the right side of the same page.</b>
+                <br/>
+                <img src="/delivery_easypost/static/src/img/carrier_accounts.png" alt="Carrier accounts" title="Carrier accounts"/>
+              </li>
+              <li>
+                <b>Copy your API keys in Odoo</b>
+                <br/>
+                <img src="/delivery_easypost/static/src/img/api_keys.png" alt="API keys" title="API keys"/>
+              </li>
+            </ul>
+          </group>
+        </page>
+      </page>
+    </field>
+  </record>
+  <record id="view_stock_package_type_form_inherit_easypost" model="ir.ui.view">
+    <field name="name">stock.package.type.forms.inherit.easypost</field>
+    <field name="model">stock.package.type</field>
+    <field name="inherit_id" ref="stock.stock_package_type_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='package_carrier_type']" position='after'>
+        <field name="easypost_carrier" invisible="package_carrier_type != 'easypost'"/>
+      </xpath>
+      <xpath expr="//field[@name='length_uom_name']" position='replace'>
+        <field name="length_uom_name" invisible="package_carrier_type == 'easypost'"/>
+        <span invisible="package_carrier_type != 'easypost'">Inches</span>
+      </xpath>
+    </field>
+  </record>
+</odoo>

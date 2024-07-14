@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="helpdesk_ticket_select_forum_wizard_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.select.forum.wizard.view.form</field>
+        <field name="model">helpdesk.ticket.select.forum.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Select Forum">
+                <field name="ticket_id" invisible="1"/>
+                <sheet>
+                    <group>
+                        <field name="forum_id" options="{'no_open': True, 'no_create': True}"/>
+                        <field name="title"/>
+                        <field name="description" required="1"/>
+                        <field name="tag_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Create and View Post" name="action_create_view_post" type="object" class="oe_highlight"/>
+                    <button string="Create Post" name="action_create_post" type="object" class="btn-secondary"/>
+                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_select_forum_wizard_action" model="ir.actions.act_window">
+        <field name="name">Share on Forum</field>
+        <field name="res_model">helpdesk.ticket.select.forum.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

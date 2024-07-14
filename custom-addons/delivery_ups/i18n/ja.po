@@ -1,0 +1,844 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_ups
+# 
+# Translators:
+# Wil Odoo, 2023
+# Junko Augias, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:47+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"A shipment cannot have a KGS/IN or LBS/CM as its unit of measurements. "
+"Configure it from the delivery method."
+msgstr "出荷は、測定値の単位としてKGS / IN又はLBS / CMを持つことができません。配送方法から、それを構成します。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"Access License number is Invalid. Provide a valid number (Length should be "
+"0-35 alphanumeric characters)"
+msgstr "アクセスライセンス番号が無効です。有効な番号を提供してください(長さが0-35個の文字の英数字でなければなりません)"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Access License number is invalid for this delivery provider."
+msgstr "アクセスライセンス番号は、のため無効です。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Access License number is invalid for this provider.Please re-license."
+msgstr "アクセスライセンス番号ga.Please再ライセンスは無効です。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Access License number is revoked contact UPS to get access."
+msgstr "アクセスライセンス番号は、アクセスを得るために、コンタクトUPSを取り消されます。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Authorization system is currently unavailable , try again later."
+msgstr "認証システムが現在利用できません、後でもう一度試してください。"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_bill_my_account
+#: model:ir.model.fields,field_description:delivery_ups.field_res_partner__bill_my_account
+#: model:ir.model.fields,field_description:delivery_ups.field_res_users__bill_my_account
+#: model:ir.model.fields,field_description:delivery_ups.field_sale_order__ups_bill_my_account
+msgid "Bill My Account"
+msgstr "自分のアカウントに請求する"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_cod_funds_code
+msgid "COD Funding Option"
+msgstr "COD資金調達オプション"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Cancel shipment not available at this time , Please try again Later."
+msgstr "この時点では利用できません出荷を取消し、後でもう一度やり直して下さい。"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_stock_package_type__package_carrier_type
+msgid "Carrier"
+msgstr "運送会社"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_cod_funds_code__8
+msgid "Cashier's Check or MoneyOrder"
+msgstr "銀行小切手や為替"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_package_dimension_unit__cm
+msgid "Centimeters"
+msgstr "センチ"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_cod_funds_code__0
+msgid "Check, Cashier's Check or MoneyOrder"
+msgstr "銀行小切手や為替をチェック"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_cod
+msgid "Collect on Delivery"
+msgstr "代引き"
+
+#. module: delivery_ups
+#: model:ir.model,name:delivery_ups.model_res_partner
+msgid "Contact"
+msgstr "連絡先"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Duties paid by"
+msgstr "右のものにより支払われた税"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_label_file_type__epl
+msgid "EPL"
+msgstr "EPL"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid ""
+"Error:\n"
+"%s"
+msgstr ""
+"エラー:\n"
+"%s"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"Exceeds Total Number of allowed pieces per World Wide Express Shipment."
+msgstr "合計数がワールド・ワイド・エクスプレスで1出荷あたりに許可された枚数を超えています。"
+
+#. module: delivery_ups
+#: model:ir.model.fields,help:delivery_ups.field_delivery_carrier__ups_bill_my_account
+#: model:ir.model.fields,help:delivery_ups.field_res_partner__bill_my_account
+#: model:ir.model.fields,help:delivery_ups.field_res_users__bill_my_account
+#: model:ir.model.fields,help:delivery_ups.field_sale_order__ups_bill_my_account
+msgid ""
+"If checked, ecommerce users will be prompted their UPS account number\n"
+"and delivery fees will be charged on it."
+msgstr ""
+"チェックした場合、eコマースのユーザーには自分のUPS口座番号を求めるメッセージが表示されます\n"
+"そして、配達料が口座番号に課金されます。"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_package_dimension_unit__in
+msgid "Inches"
+msgstr "インチ"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_package_weight_unit__kgs
+msgid "Kilograms"
+msgstr "キログラム"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Label Format"
+msgstr "ラベルフォーマット"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Options"
+msgstr "オプション"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_label_file_type__gif
+msgid "PDF"
+msgstr "PDF"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_package_dimension_unit
+msgid "Package Size Unit"
+msgstr "パッケージサイズの単位"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Package Weight Unit"
+msgstr "パッケージの重量単位"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Packages %s do not have a positive shipping weight."
+msgstr "パッケージ%sの出荷重量は正の数ではありません。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid "Packages:"
+msgstr "梱包:"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid City in the warehouse address."
+msgstr "倉庫の住所に有効な都市を入力してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid Country in recipient's address."
+msgstr "受信者のアドレスに有効な国を入力してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid Country in the warehouse address."
+msgstr "倉庫の住所に有効な国を入力してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid State in the warehouse address."
+msgstr "倉庫の住所に有効な国を入力してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid Zip in the warehouse address."
+msgstr "倉庫の住所に有効な郵便番号を入力してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid city in the recipient address."
+msgstr "受信者のアドレスに有効な都市を入力してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid city in the shipper's address."
+msgstr "荷主のアドレスで有効な都市を入力してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid country in the shipper's address."
+msgstr "荷主の住所に有効な国を入力してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"Please provide a valid package type available for service and selected "
+"locations."
+msgstr "サービスおよび選択された場所で使用可能な有効なパッケージタイプを提供してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid phone number for the recipient."
+msgstr "受信者のための有効な電話番号を入力してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid shipper Number/Carrier Account."
+msgstr "有効な荷主番号/運送会社アカウントを入力してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid shipper number/Carrier Account."
+msgstr "有効な荷主番号/運送会社アカウントを入力してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid shipper phone number."
+msgstr "有効な荷主の電話番号を入力してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid state in the recipient address."
+msgstr "受信者のアドレスに、有効な状態を提供してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid state in the shipper's address."
+msgstr "荷主のアドレスで有効な状態にしてください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid street in shipper's address."
+msgstr "荷主のアドレスに有効な道を提供してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid street in the recipient address."
+msgstr "受信者のアドレスに有効な道を提供してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid street in the warehouse address."
+msgstr "倉庫の住所に有効な道を提供してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid warehouse Phone Number"
+msgstr "有効な倉庫の電話番号を入力してください"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid zip code in the recipient address."
+msgstr "受信者のアドレスに有効な郵便番号を入力してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid zip code in the shipper's address."
+msgstr "荷主のアドレスで有効な郵便番号を入力してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid zip code in the warehouse address."
+msgstr "倉庫の住所に有効な郵便番号を入力してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid zipcode in the recipient address."
+msgstr "受信者のアドレスで有効な郵便番号を入力してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide at least one item to ship"
+msgstr "船に少なくとも一つの項目を入力してください"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide at least one item to ship."
+msgstr "船に少なくとも一つのアイテムを提供してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please set a valid country in the recipient address."
+msgstr "受信者のアドレスに有効な国を設定してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please set a valid country in the warehouse address."
+msgstr "倉庫の住所に有効な国を設定してください。"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_package_weight_unit__lbs
+msgid "Pounds"
+msgstr "ポンド"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Provided Access License Number not found in the UPS database"
+msgstr "アクセスライセンス番号はUPSのデータベースで見つかリマせん。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Provided Tracking Ref. Number is invalid."
+msgstr "アクセス追跡番号が無効です。"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "プロバイダ"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_duty_payment__recipient
+msgid "Recipient"
+msgstr "宛先"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Recipient Phone must be at least 10 alphanumeric characters."
+msgstr "受信者の携帯電話は、少なくとも10個の文字の英数字でなければなりません。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Recipient PhoneExtension cannot exceed the length of 4."
+msgstr "受信者の電話内線は 4桁を超えることはできません。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Recipient PhoneExtension must contain only numbers."
+msgstr "受信者の電話内線は数字のみで構成されている必要があります。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid "Return label generated"
+msgstr "返却ラベルが生成されました"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_label_file_type__spl
+msgid "SPL"
+msgstr "SPL"
+
+#. module: delivery_ups
+#: model:ir.model,name:delivery_ups.model_sale_order
+msgid "Sales Order"
+msgstr "販売オーダ"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Saturday Delivery"
+msgstr "土曜日配達"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_duty_payment__sender
+msgid "Sender"
+msgstr "送信者"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid "Shipment #%s has been cancelled"
+msgstr "発送番号#%sが取消されました"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid "Shipment created into UPS"
+msgstr "UPSに配送が作成されました"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Shipper Phone must be at least 10 alphanumeric characters."
+msgstr "荷送人の電話番号は、少なくとも10個の文字の英数字でなければなりません。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Shipper number must contain alphanumeric characters only."
+msgstr "荷送人の番号は英数字のみを含める必要があります。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Shipper phone extension cannot exceed the length of 4."
+msgstr "荷送人の内線電話は4桁を超えることはできません。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Shipper phone extension must contain only numbers."
+msgstr "荷主の内線番号は数字のみを含める必要があります。"
+
+#. module: delivery_ups
+#: model:ir.model,name:delivery_ups.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "配送方法"
+
+#. module: delivery_ups
+#: model:ir.model,name:delivery_ups.model_stock_package_type
+msgid "Stock package type"
+msgstr "在庫梱包タイプ"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "The UserId is currently locked out; please try again in 24 hours."
+msgstr "ユーザーIDは、現在ロックアウトされます。 24時間後に再度お試しください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The address of your company is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr ""
+"会社のアドレスが見つからないか、間違っています。\n"
+"(欠落フィールド(複数ある可能性あり)：%s)"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The address of your warehouse is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr ""
+"倉庫のアドレスが見つからないか、間違っています。\n"
+"(欠落フィールド(複数ある可能性あり)：%s)"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The delivery cannot be done because the weight of your product is missing."
+msgstr "プロダクトの重量が不明のため、発送することができません。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The estimated shipping price cannot be computed because the weight is missing for the following product(s): \n"
+" %s"
+msgstr ""
+"以下のプロダクトの重量がないため、見積送料を計算できません: \n"
+" %s"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The maximum number of user access attempts was exceeded. So please try again"
+" later"
+msgstr "ユーザーのアクセス試行の最大数を超えました。後でもう一度試してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "The name of the customer should be no more than 35 characters."
+msgstr "顧客名は35文字以内にして下さい。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The recipient address is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr ""
+"受信者のアドレスが見つからないか、間違っています。\n"
+"(欠落フィールド(複数ある可能性あり)：%s)"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "The requested service is unavailable between the selected locations."
+msgstr "要求されたサービスは、選択された場所間では使用できません。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The selected service is invalid from the requested warehouse, please choose "
+"another service."
+msgstr "選択したサービスは、要求された倉庫では無効です、別のサービスを選択してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The selected service is invalid to the recipient address, please choose "
+"another service."
+msgstr "選択したサービスは、受信者のアドレスでは無効です、別のサービスを選択してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The selected service is not possible from your warehouse to the recipient "
+"address, please choose another service."
+msgstr "選択したサービスは、倉庫から受信者のアドレス間ではご利用できません。別のサービスを選択してください。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "The selected service is not valid with the selected packaging."
+msgstr "選択したサービスは、選択したパッケージでは有効ではありません。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"This measurement system is not valid for the selected country. Please switch"
+" from LBS/IN to KGS/CM (or vice versa). Configure it from delivery method"
+msgstr ""
+"この測定システムは、選択した国には有効ではありません。 KGS / CM(またはその逆)へLBS / "
+"INから切り替えてください。配送方法から、それを構成します"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"This measurement system is not valid for the selected country. Please switch"
+" from LBS/IN to KGS/CM (or vice versa). Configure it from the delivery "
+"method."
+msgstr ""
+"この測定システムは、選択した国には有効ではありません。 KGS / CM(またはその逆)へLBS / "
+"INから切り替えてください。配送方法から、それを構成します。"
+
+#. module: delivery_ups
+#: model:ir.model.fields,help:delivery_ups.field_delivery_carrier__ups_cod
+msgid ""
+"This value added service enables UPS to collect the payment of the shipment "
+"from your customer."
+msgstr "この付加価値サービスで、顧客からUPSが送料を収集できるようにします。"
+
+#. module: delivery_ups
+#: model:ir.model.fields,help:delivery_ups.field_delivery_carrier__ups_saturday_delivery
+msgid ""
+"This value added service will allow you to ship the package on saturday "
+"also."
+msgstr "この付加価値サービスで、土曜日に荷物を発送することができます。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid "Tracking Numbers:"
+msgstr "追跡番号:"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__stock_package_type__package_carrier_type__ups
+msgid "UPS"
+msgstr "UPS"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_access_number
+msgid "UPS Access Key"
+msgstr "UPSアクセスキー"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_shipper_number
+#: model:ir.model.fields,field_description:delivery_ups.field_res_partner__property_ups_carrier_account
+#: model:ir.model.fields,field_description:delivery_ups.field_res_users__property_ups_carrier_account
+msgid "UPS Account Number"
+msgstr "UPS口座番号"
+
+#. module: delivery_ups
+#: model:delivery.carrier,name:delivery_ups.delivery_carrier_ups_be
+#: model:product.template,name:delivery_ups.product_product_delivery_ups_be_product_template
+msgid "UPS BE"
+msgstr "UPS BE"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "UPS Configuration"
+msgstr "UPSの設定"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_label_file_type
+msgid "UPS Label File Type"
+msgstr "UPSラベルファイルタイプ"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__delivery_type__ups
+msgid "UPS Legacy"
+msgstr "UPS Legacy"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_default_package_type_id
+msgid "UPS Legacy Package Type"
+msgstr "UPS Legacy梱包タイプ"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_passwd
+msgid "UPS Password"
+msgstr "UPSパスワード"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_saturday_delivery
+msgid "UPS Saturday Delivery"
+msgstr "UPS土曜日配達"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "UPS Server Not Found"
+msgstr "UPSサーバーが見つかりません"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_default_service_type
+msgid "UPS Service Type"
+msgstr "UPSサービスタイプ"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:delivery_ups.res_config_settings_view_form_stock
+msgid "UPS Shipping Methods"
+msgstr "UPS配送方法"
+
+#. module: delivery_ups
+#: model:delivery.carrier,name:delivery_ups.delivery_carrier_ups_us
+#: model:product.template,name:delivery_ups.product_product_delivery_ups_us_product_template
+msgid "UPS US"
+msgstr "UPS米国"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_username
+msgid "UPS Username"
+msgstr "UPSのユーザー名"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_sale_order__partner_ups_carrier_account
+msgid "UPS account number"
+msgstr "UPS口座番号"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"UPS address lines can only contain a maximum of 35 characters. You can split"
+" the contacts addresses on multiple lines to try to avoid this limitation."
+msgstr ""
+"UPSのアドレスラインは、わずか35文字の最大を含めることができます。あなたは、この制限を回避しようとする複数行の連絡先アドレスを分割することができます。"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_duty_payment
+msgid "Ups Duty Payment"
+msgstr "アップデューティ支払い"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_package_weight_unit
+msgid "Ups Package Weight Unit"
+msgstr "アップパッケージの重量単位"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Username/Password is invalid for this delivery provider."
+msgstr "ユーザー名/パスワードは、この配信プロバイダは無効です。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Warehouse Phone must be at least 10 alphanumeric characters."
+msgstr "倉庫の電話番号は、少なくとも10個の文字の英数字でなければなりません。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Warehouse Phone must contain only numbers."
+msgstr "倉庫電話は、数字のみを含める必要があります。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Warehouse PhoneExtension cannot exceed the length of 4."
+msgstr "倉庫の内線電話は4桁を超えることはできません。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/sale.py:0
+#, python-format
+msgid "You must enter an UPS account number."
+msgstr "UPSの口座番号を入力する必要があります。"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_label_file_type__zpl
+msgid "ZPL"
+msgstr "FPO"

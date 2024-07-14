@@ -1,0 +1,457 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* partner_commission
+# 
+# Translators:
+# Simon S, 2023
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
+# Robin Calvin, 2023
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
+# Kristoffer Grundström <lovaren@gmail.com>, 2023
+# Lasse L, 2023
+# Kim Asplund <kim.asplund@gmail.com>, 2023
+# Martin Trigaux, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid ""
+"\n"
+"%s: from %s to %s"
+msgstr ""
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid " (%d month(s))"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__active
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: partner_commission
+#: model:res.groups,name:partner_commission.group_commission_manager
+msgid "All Documents"
+msgstr ""
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.commission_plan_search_view
+msgid "Archived"
+msgstr "Arkiverad"
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid "Automatic PO frequency"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__is_capped
+msgid "Capped"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__purchase_order__purchase_type__commission
+#: model:product.template,name:partner_commission.product_commission_product_template
+msgid "Commission"
+msgstr "Provision"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_res_company__commission_automatic_po_frequency
+#: model:ir.model.fields,field_description:partner_commission.field_res_config_settings__commission_automatic_po_frequency
+msgid "Commission Automatic Po Frequency"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_res_partner__commission_plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_res_users__commission_plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order__commission_plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order_log_report__commission_plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_subscription_report__commission_plan_id
+msgid "Commission Plan"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.actions.act_window,name:partner_commission.action_commission_plans
+#: model:ir.ui.menu,name:partner_commission.menu_commission_plans
+msgid "Commission Plans"
+msgstr ""
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid "Commission on %(invoice)s, %(partner)s, %(amount)s"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_commission_plan
+msgid "Commission plan"
+msgstr ""
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid "Commission refunded. Invoice: %s. Amount: %s."
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_commission_rule
+msgid "Commission rules management."
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_res_company
+msgid "Companies"
+msgstr "Bolag"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__company_id
+msgid "Company"
+msgstr "Bolag"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_res_config_settings
+msgid "Config Settings"
+msgstr "Inställningar"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__create_uid
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__create_date
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__create_date
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: partner_commission
+#: model:ir.actions.act_window,name:partner_commission.action_view_customer_invoices
+msgid "Customer Invoices"
+msgstr "Kundfakturor"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_res_partner_grade__default_commission_plan_id
+msgid "Default Commission Plan"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__display_name
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order__commission_plan_frozen
+msgid "Freeze Plan"
+msgstr ""
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid "Frequency at which purchase orders will be automatically confirmed"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__id
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_commission_rule__product_id
+msgid ""
+"If set, the rule does not apply to the whole category but only on the given product.\n"
+"The product must belong to the selected category.\n"
+"Use several rules if you need to match multiple products within a category."
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_purchase_order__invoice_commission_count
+msgid "Invoices that have generated commissions included in this order"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_account_move
+msgid "Journal Entry"
+msgstr "Journalanteckning"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_account_move_line
+msgid "Journal Item"
+msgstr "Transaktion"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__write_uid
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__write_date
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Affärsmöjlighet/Möjlighet"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__res_company__commission_automatic_po_frequency__manually
+msgid "Manually"
+msgstr "Manuellt"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__max_commission
+msgid "Max Commission"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_commission_rule__max_commission
+msgid "Maximum amount, specified in the currency of the pricelist, if given."
+msgstr ""
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid "Minimum PO amount total"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_res_company__commission_po_minimum
+#: model:ir.model.fields,field_description:partner_commission.field_res_config_settings__commission_po_minimum
+msgid "Minimum Total Amount for PO commission"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__res_company__commission_automatic_po_frequency__monthly
+msgid "Monthly"
+msgstr "Månatlig"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__name
+msgid "Name"
+msgstr "Namn"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid "New commission. Invoice: %s. Amount: %s."
+msgstr ""
+
+#. module: partner_commission
+#: model:res.groups,name:partner_commission.group_commission_user
+msgid "Own Documents Only"
+msgstr "Endast egna dokument"
+
+#. module: partner_commission
+#: model:ir.actions.server,name:partner_commission.cron_confirm_purchase_orders_ir_actions_server
+msgid "Partner Commission: confirm purchase orders"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_res_partner_grade
+msgid "Partner Grade"
+msgstr "Partnerbetyg"
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid "Partners Commissions"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__pricelist_id
+msgid "Pricelist"
+msgstr "Prislista"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__purchase_order__purchase_type__procurement
+msgid "Procurement"
+msgstr "Inköp"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__product_id
+msgid "Product"
+msgstr "Produkt"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/commission_plan.py:0
+#, python-format
+msgid "Product %s does not belong to category %s"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__category_id
+msgid "Product Category"
+msgstr "Produktkategori"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__product_id
+msgid "Purchase Default Product"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_purchase_order
+msgid "Purchase Order"
+msgstr "Inköpsorder"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_purchase_order__purchase_type
+msgid "Purchase Type"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__res_company__commission_automatic_po_frequency__quarterly
+msgid "Quarterly"
+msgstr "Kvartalsvis"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__rate
+msgid "Rate"
+msgstr "Kurs"
+
+#. module: partner_commission
+#: model:ir.model.constraint,message:partner_commission.constraint_commission_rule_check_rate
+msgid "Rate should be between 0 and 100."
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_account_bank_statement_line__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_account_move__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_account_payment__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order_log_report__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_subscription_report__referrer_id
+#: model_terms:ir.ui.view,arch_db:partner_commission.account_move_view_search_inherit_partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.sale_order_log_search
+#: model_terms:ir.ui.view,arch_db:partner_commission.sale_order_subsciption_view_search_inherit_partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.sale_order_view_search_inherit_partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.sale_subscription_report_search
+msgid "Referrer"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order__commission
+msgid "Referrer Commission"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_account_bank_statement_line__commission_po_line_id
+#: model:ir.model.fields,field_description:partner_commission.field_account_move__commission_po_line_id
+#: model:ir.model.fields,field_description:partner_commission.field_account_payment__commission_po_line_id
+msgid "Referrer Purchase Order line"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__commission_rule_ids
+#: model_terms:ir.ui.view,arch_db:partner_commission.commission_plan_form_view
+msgid "Rules"
+msgstr "Regler"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__template_id
+msgid "Sale Order Template"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_sale_order_log_report
+msgid "Sales Log Analysis Report"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_sale_order
+msgid "Sales Order"
+msgstr "Order"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__sequence
+msgid "Sequence"
+msgstr "Sekvens"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_purchase_order__invoice_commission_count
+#: model_terms:ir.ui.view,arch_db:partner_commission.purchase_order_form_inherit_partner_commission
+msgid "Source Invoices"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_sale_subscription_report
+msgid "Subscription Analysis"
+msgstr "Prenumerationsanalys"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_sale_order__commission_plan_id
+msgid "Takes precedence over the Referrer's commission plan."
+msgstr ""
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid ""
+"The commission partner order %s must be checked manually (especially refund "
+"lines which can be duplicated)."
+msgstr ""
+"Provisionspartnerordern %s måste kontrolleras manuellt (särskilt "
+"återbetalningsrader som kan dupliceras)."
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_res_partner_grade__default_commission_plan_id
+msgid ""
+"The default commission plan used for this grade. Can be overwritten on the "
+"partner form."
+msgstr ""
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid ""
+"The required minimum amount total needed to automatically confirm purchase "
+"orders"
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__res_company__commission_automatic_po_frequency__weekly
+msgid "Weekly"
+msgstr "Veckovis"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_commission_rule__is_capped
+msgid "Whether the commission is capped."
+msgstr ""
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_sale_order__commission_plan_frozen
+msgid ""
+"Whether the commission plan is frozen. When checked, the commission plan "
+"won't automatically be updated according to the partner level."
+msgstr ""

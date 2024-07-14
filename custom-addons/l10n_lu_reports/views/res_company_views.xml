@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_company_form" model="ir.ui.view">
+        <field name="name">res.company.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="matr_number" invisible="%(base.lu)d not in account_enabled_tax_country_ids" required="'matr_number' in context.get('required_fields', [])"/>
+                <field name="ecdf_prefix" invisible="%(base.lu)d not in account_enabled_tax_country_ids"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

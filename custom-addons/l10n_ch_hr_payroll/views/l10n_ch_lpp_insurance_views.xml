@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ch_lpp_insurance_view_tree" model="ir.ui.view">
+        <field name="name">l10n.ch.lpp.insurance.view.tree</field>
+        <field name="model">l10n.ch.lpp.insurance</field>
+        <field name="arch" type="xml">
+            <tree string="LPP Insurances">
+                <field name="name"/>
+                <field name="customer_number"/>
+                <field name="contract_number"/>
+                <field name="insurance_company_address_id"/>
+                <field name="fund_number"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_ch_lpp_insurance_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.lpp.insurance.view.form</field>
+        <field name="model">l10n.ch.lpp.insurance</field>
+        <field name="arch" type="xml">
+            <form string="LPP Insurances">
+                <sheet>
+                    <div role="alert" class="alert alert-warning text-center">
+                        The LPP amounts to pay (by the employee or the employer) are to be defined by hand from the <a type="action" name="%(hr_payroll.hr_salary_attachment_action)s" role="button">Salary Attachments</a>.
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder='e.g. "LPP Insurance AK Bern"'/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="customer_number"/>
+                            <field name="contract_number"/>
+                            <field name="insurance_company_address_id"/>
+                            <field name="fund_number"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_ch_lpp_insurance" model="ir.actions.act_window">
+        <field name="name">LPP Insurances</field>
+        <field name="res_model">l10n.ch.lpp.insurance</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

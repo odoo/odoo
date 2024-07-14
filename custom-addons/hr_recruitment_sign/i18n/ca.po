@@ -1,0 +1,269 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_recruitment_sign
+# 
+# Translators:
+# Josep Anton Belchi, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2023
+# Martin Trigaux, 2023
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
+# M Palau <mpalau@tda.ad>, 2023
+# Quim - eccit <quim@eccit.com>, 2023
+# Arnau Ros, 2023
+# marcescu, 2023
+# Ivan Espinola, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Ivan Espinola, 2023\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_applicant__sign_request_count
+msgid "# Signatures"
+msgstr "# Signatures"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid "%s and %s are the signatories."
+msgstr "%s i %s són els signataris."
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_applicant_sign_view_form
+msgid "<span class=\"o_stat_text\">Signature Requests</span>"
+msgstr "<span class=\"o_stat_text\">Peticions de signatura </span>"
+
+#. module: hr_recruitment_sign
+#: model:ir.model,name:hr_recruitment_sign.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__applicant_id
+msgid "Applicant"
+msgstr "Candidat"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__applicant_role_id
+msgid "Applicant Role"
+msgstr "Rol d'aspirant"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__partner_name
+msgid "Applicant's Name"
+msgstr "Nom del candidat"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,help:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__applicant_role_id
+msgid ""
+"Applicant's role on the templates to sign. The same role must be present in "
+"all the templates"
+msgstr ""
+"El rol de l'aspirant a les plantilles a signar. El mateix rol ha d'estar "
+"present a totes les plantilles"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Attach a file"
+msgstr "Adjunta un arxiu"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__attachment_ids
+msgid "Attachment"
+msgstr "Adjunt"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__partner_id
+msgid "Contact"
+msgstr "Contacte"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__cc_partner_ids
+msgid "Copy to"
+msgstr "Copiar a"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__create_uid
+msgid "Created by"
+msgstr "Creat per"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__create_date
+msgid "Created on"
+msgstr "Creat el"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Discard"
+msgstr "Descartar"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__display_name
+msgid "Display Name"
+msgstr "Nom mostrat"
+
+#. module: hr_recruitment_sign
+#: model:ir.actions.act_window,name:hr_recruitment_sign.sign_recruitment_wizard_action
+msgid "Document Signature"
+msgstr "Signatura del document"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__sign_template_ids
+msgid "Documents to sign"
+msgstr "Documents a signar"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,help:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__sign_template_ids
+msgid ""
+"Documents to sign. Only documents with 1 or 2 different responsible are selectable.\n"
+"        Documents with 1 responsible will only have to be signed by the applicant while documents with 2 different responsible will have to be signed by both the applicant and the responsible.\n"
+"        "
+msgstr ""
+"Documents a signar. Només es poden seleccionar documents amb 1 o 2 responsables diferents.\n"
+"        Els documents amb 1 responsable només hauran de ser signats pel sol·licitant, mentre que els documents amb 2 responsables diferents hauran de ser signats tant pel sol·licitant com pel responsable."
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__has_both_template
+msgid "Has Both Template"
+msgstr "Té totes dues plantilles"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Última actualització per"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__write_date
+msgid "Last Updated on"
+msgstr "Última actualització el"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Mail Options"
+msgstr "Opcions del correu"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__message
+msgid "Message"
+msgstr "Missatge"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid ""
+"No appropriate template could be found, please make sure you configured them"
+" properly."
+msgstr ""
+"No s'ha trobat cap plantilla apropiada, si us plau assegureu-vos que les heu"
+" configurat correctament."
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "No template available"
+msgstr "No hi ha cap plantilla disponible"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid "Only %s has to sign."
+msgstr "Només %s ha de signar."
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Optional Message..."
+msgstr "Missatge opcional"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__possible_template_ids
+msgid "Possible Template"
+msgstr "Plantilla possible"
+
+#. module: hr_recruitment_sign
+#: model:ir.actions.server,name:hr_recruitment_sign.action_request_signature
+msgid "Request Signature"
+msgstr "Sol·licitud de signatura"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__responsible_id
+msgid "Responsible"
+msgstr "Responsable"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Send"
+msgstr "Enviar"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Sign Request Options"
+msgstr "Opcions de la sol·licitud de signatura"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__sign_template_responsible_ids
+msgid "Sign Template Responsible"
+msgstr "Signa la plantilla responsable"
+
+#. module: hr_recruitment_sign
+#: model:ir.model,name:hr_recruitment_sign.model_hr_recruitment_sign_document_wizard
+msgid "Sign document in recruitment"
+msgstr "Signa el document en la contractació"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Signature Request"
+msgstr "Petició de signatura"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid "Signature Request - %s"
+msgstr "Sol·licitud de signatura - %s"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/models/hr_applicant.py:0
+#, python-format
+msgid "Signature Requests"
+msgstr "Sol·licituds de signatura"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__subject
+msgid "Subject"
+msgstr "Assumpte"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__template_warning
+msgid "Template Warning"
+msgstr "Avís de plantilla"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Write email or search contact..."
+msgstr "Escriure correu electrònic o cercar contacte"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/models/hr_applicant.py:0
+#, python-format
+msgid "You must define a Contact Name for this applicant."
+msgstr "Heu de definir un nom de contacte per a aquest sol·licitant."
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.message_signature_request
+msgid "requested a new signature on the following documents:"
+msgstr "s'ha sol·licitat una signatura nova en els documents següents:"

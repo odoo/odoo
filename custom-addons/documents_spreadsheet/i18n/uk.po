@@ -1,0 +1,580 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* documents_spreadsheet
+# 
+# Translators:
+# Wil Odoo, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/wizard/save_spreadsheet_template.py:0
+#, python-format
+msgid "\"%s\" saved as template"
+msgstr "\"%s\" збережено як шаблон"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.share_page
+msgid "#{'Download '}#{document.name}"
+msgstr "#{'Download '}#{document.name}"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/spreadsheet_template.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (копія)"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/bundle/actions/spreadsheet_action.js:0
+#, python-format
+msgid "%s - Template"
+msgstr "%s - Шаблон"
+
+#. module: documents_spreadsheet
+#: model:ir.model.constraint,message:documents_spreadsheet.constraint_spreadsheet_contributor_spreadsheet_user_unique
+msgid "A combination of the spreadsheet and the user already exist"
+msgstr "Комбінація таблиці та користувач уже існують"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.save_spreadsheet_template_view_form
+msgid ""
+"Any user will be able to create a new spreadsheet based on this template."
+msgstr ""
+"Будь-який користувач зможе створити нову електронну таблицю на основі цього "
+"шаблону."
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid ""
+"Ask an admin to configure the workspace to be accessible to the users you "
+"want."
+msgstr ""
+"Попросіть адміністратора налаштувати папку так, щоб вона була доступною для "
+"потрібних користувачів."
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#, python-format
+msgid "Blank spreadsheet"
+msgstr "Порожня електронна таблиця"
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid ""
+"By default, the spreadsheets in this workspace will only be seen and updated"
+" by their <strong>creator</strong>."
+msgstr ""
+"За замовчуванням електронні таблиці в цій папці бачитимуть та оновлюватимуть"
+" лише вони <strong>автори</strong>."
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.save_spreadsheet_template_view_form
+msgid "Cancel"
+msgstr "Скасувати"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.res_config_settings_view_form_inherit_documents_spreadsheet
+msgid "Centralize your spreadsheets"
+msgstr "Централізуйте ваші електронні таблиці"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_res_company
+msgid "Companies"
+msgstr "Компанії"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_res_config_settings
+msgid "Config Settings"
+msgstr "Налаштування"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.save_spreadsheet_template_view_form
+msgid "Confirm"
+msgstr "Підтвердити"
+
+#. module: documents_spreadsheet
+#: model:ir.actions.act_window,name:documents_spreadsheet.spreadsheet_contributor_action
+#: model:ir.ui.menu,name:documents_spreadsheet.menu_technical_spreadsheet_contributor
+msgid "Contributors"
+msgstr "Країни"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_documents_shared_spreadsheet
+msgid "Copy of a shared spreadsheet"
+msgstr "Копія поширеної електронної таблиці"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#, python-format
+msgid "Create"
+msgstr "Створити"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/spreadsheet_template_dialog.js:0
+#, python-format
+msgid "Create a Spreadsheet or select a Template"
+msgstr "Створіть електронну таблицю або оберіть шаблон"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__create_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__create_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__create_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__create_uid
+msgid "Created by"
+msgstr "Створив"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__create_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__create_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__create_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__create_date
+msgid "Created on"
+msgstr "Створено"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#, python-format
+msgid "Discard"
+msgstr "Відмінити"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__display_name
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__display_name
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__display_name
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__display_name
+msgid "Display Name"
+msgstr "Назва для відображення"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_documents_document
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__document_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__document_id
+msgid "Document"
+msgstr "Документ"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_documents_share
+msgid "Documents Share"
+msgstr "Спільний доступ до документів"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_res_company__documents_spreadsheet_folder_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_res_config_settings__documents_spreadsheet_folder_id
+msgid "Documents Spreadsheet Folder"
+msgstr "Папка електронної таблиці в документах"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_template_view_tree
+msgid "Edit"
+msgstr "Редагувати"
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid "Enjoy collaborative work on your spreadsheets."
+msgstr "Насолоджуйтесь спільною роботою над своїми електронними таблицями."
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__excel_export
+msgid "Excel Export"
+msgstr "Експорт Excel"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Format issue"
+msgstr "Проблема формату"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_share__freezed_spreadsheet_ids
+msgid "Freezed Spreadsheet"
+msgstr "Заморожена електронна таблиця"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__handler
+msgid "Handler"
+msgstr "Обробник"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__id
+msgid "ID"
+msgstr "ID"
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid "If you want to work together on those spreadsheets :"
+msgstr "Якщо ви хочете працювати разом у тих електронних таблицях:"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__write_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__write_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__write_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__write_uid
+msgid "Last Updated by"
+msgstr "Востаннє оновив"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__write_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__write_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__write_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__write_date
+msgid "Last Updated on"
+msgstr "Останнє оновлення"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__last_update_date
+msgid "Last update date"
+msgstr "Остання дата оновлення"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_template_view_tree
+msgid "Make a copy"
+msgstr "Зробити копію"
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid ""
+"Manage and work with all the <strong>spreadsheets</strong> created in other "
+"applications."
+msgstr ""
+"Працюйте з <strong>електронними таблицями</strong>, створеними в інших "
+"модулях."
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid "Move them to another workspace"
+msgstr "Перемістіть їх до іншої папки"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_template_view_search
+msgid "My Templates"
+msgstr "Мої шаблони"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__name
+msgid "Name"
+msgstr "Ім'я"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.xml:0
+#, python-format
+msgid "New Spreadsheet"
+msgstr "Нова електронна таблиця"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/spreadsheet_template_dialog.js:0
+#, python-format
+msgid "New sheet saved in Documents"
+msgstr "Нова таблиця збережена в Документах"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_template_view_tree
+msgid "New spreadsheet"
+msgstr "Нова таблиця"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#: code:addons/documents_spreadsheet/static/src/bundle/actions/spreadsheet_action.js:0
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_selector_dialog/document_selector_panel.js:0
+#, python-format
+msgid "New spreadsheet created in Documents"
+msgstr "Нова таблиця створеня у Документах"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/spreadsheet_template.py:0
+#: code:addons/documents_spreadsheet/static/src/bundle/actions/spreadsheet_template/spreadsheet_template_action.js:0
+#, python-format
+msgid "New spreadsheet template created"
+msgstr "Створено новий шаблон таблиці"
+
+#. module: documents_spreadsheet
+#: model:ir.model.constraint,message:documents_spreadsheet.constraint_documents_shared_spreadsheet__unique
+msgid "Only one freezed spreadsheet per document share"
+msgstr ""
+"Лише одна заморожена електронна таблиця на спільний доступ до документа"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Open with Odoo Spreadsheet"
+msgstr "Відкрити через Електронні таблиці Odoo"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Restore"
+msgstr "Відновлення"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Restore file?"
+msgstr "Відновити файл?"
+
+#. module: documents_spreadsheet
+#: model:ir.actions.act_window,name:documents_spreadsheet.save_spreadsheet_template_action
+msgid "Save as template"
+msgstr "Зберегти як шаблон"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_clone_xlsx_dialog/spreadsheet_clone_xlsx_dialog.xml:0
+#, python-format
+msgid "Send source file to trash"
+msgstr "Надіслати файл джерела в смітник"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__sequence
+msgid "Sequence"
+msgstr "Послідовність"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__server_revision_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__server_revision_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__server_revision_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__server_revision_id
+msgid "Server Revision"
+msgstr "Версія сервера"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__share_id
+msgid "Share"
+msgstr "Поділитися"
+
+#. module: documents_spreadsheet
+#: model:documents.folder,name:documents_spreadsheet.documents_spreadsheet_folder
+#: model:ir.model.fields.selection,name:documents_spreadsheet.selection__documents_document__handler__spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.document_view_search_spreadsheet
+msgid "Spreadsheet"
+msgstr "Електронна таблиця"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_spreadsheet_contributor
+msgid "Spreadsheet Contributor"
+msgstr "Співучасник таблиці"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__spreadsheet_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__spreadsheet_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__spreadsheet_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__spreadsheet_data
+msgid "Spreadsheet Data"
+msgstr "Дані електронної таблиці"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_document_view_kanban
+msgid "Spreadsheet Preview"
+msgstr "Попередній перегляд таблиці"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__spreadsheet_revision_ids
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__spreadsheet_revision_ids
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__spreadsheet_revision_ids
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__spreadsheet_revision_ids
+msgid "Spreadsheet Revision"
+msgstr "Ревізія електронної таблиці"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__spreadsheet_snapshot
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__spreadsheet_snapshot
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__spreadsheet_snapshot
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__spreadsheet_snapshot
+msgid "Spreadsheet Snapshot"
+msgstr "Знімок електронної таблиці"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_spreadsheet_template
+msgid "Spreadsheet Template"
+msgstr "Шаблон таблиці"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_save_spreadsheet_template
+msgid "Spreadsheet Template Save Wizard"
+msgstr "Помічник збереження електронних таблиць"
+
+#. module: documents_spreadsheet
+#: model:ir.actions.act_window,name:documents_spreadsheet.spreadsheet_template_action
+#: model:ir.ui.menu,name:documents_spreadsheet.menu_technical_spreadsheet_template
+msgid "Spreadsheet Templates"
+msgstr "Шаблони електронних таблиць"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__spreadsheet_binary_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__spreadsheet_binary_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__spreadsheet_binary_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__spreadsheet_binary_data
+msgid "Spreadsheet file"
+msgstr "Файл електронної таблиці"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid ""
+"Spreadsheet files cannot be handled from the Trash. Would you like to "
+"restore this document?"
+msgstr ""
+"Файли електронних таблиць не можна обробити з кошика. Бажаєте відновити цей "
+"документ?"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_clone_xlsx_dialog/spreadsheet_clone_xlsx_dialog.xml:0
+#, python-format
+msgid ""
+"Spreadsheet files cannot be previewed or edited in Odoo. Opening your file "
+"with Odoo Spreadsheet will allow you to do so."
+msgstr ""
+"Файли електронних таблиць не можна переглядати або редагувати в Odoo. "
+"Відкриття файлу за допомогою Електронних таблиць Odoo дозволить вам це "
+"зробити."
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.res_config_settings_view_form_inherit_documents_spreadsheet
+msgid "Spreadsheets"
+msgstr "Електронні таблиці"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/inspector/documents_inspector.js:0
+#, python-format
+msgid ""
+"Spreadsheets mass download not yet supported.\n"
+" Download spreadsheets individually instead."
+msgstr ""
+"Масове завантаження електронних таблиць ще не підтримується.\n"
+"Натомість завантажуйте електронні таблиці окремо."
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__template_name
+msgid "Template Name"
+msgstr "Назва шаблону"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "The file is not a xlsx file"
+msgstr "Цей файл не xlsx"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "The spreadsheet you are trying to access does not exist."
+msgstr "Електронна таблиця, до якої ви намагаєтесь отримати доступ, не існує."
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "The xlsx file is corrupted"
+msgstr "Файл xlsx пошкоджений"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "The xlsx file is too big"
+msgstr "Файл xlsx завеликий"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__thumbnail
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__thumbnail
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__thumbnail
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__thumbnail
+msgid "Thumbnail"
+msgstr "Ескіз"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/bundle/components/control_panel/spreadsheet_breadcrumbs.xml:0
+#: code:addons/documents_spreadsheet/static/src/bundle/components/control_panel/spreadsheet_breadcrumbs.xml:0
+#, python-format
+msgid "Toggle favorite"
+msgstr "Перемкнути закладку"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "Untitled spreadsheet"
+msgstr "Таблиця без назви"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/bundle/actions/spreadsheet_template/spreadsheet_template_action.js:0
+#, python-format
+msgid "Untitled spreadsheet template"
+msgstr "Шаблон таблиці без назви"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__user_id
+msgid "User"
+msgstr "Користувач"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.res_config_settings_view_form_inherit_documents_spreadsheet
+#, python-format
+msgid "Workspace"
+msgstr "Папка"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/controllers/documents.py:0
+#, python-format
+msgid "You cannot upload spreadsheets in a shared folder"
+msgstr "Ви не можете завантажити електронні таблиці в спільну папку"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/controllers/share.py:0
+#: code:addons/documents_spreadsheet/controllers/share.py:0
+#: code:addons/documents_spreadsheet/controllers/share.py:0
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "You don't have access to this document"
+msgstr "У вас немає доступу до цього документу"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_selector_dialog/document_selector_panel.xml:0
+#, python-format
+msgid "getPageTitle('SPREADSHEET')"
+msgstr "getPageTitle('SPREADSHEET')"

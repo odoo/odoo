@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="spreadsheet_edition.InputDialog">
+        <Dialog title="props.title || defaultTitle" size="'md'">
+            <div t-if="props.body" t-esc="props.body"/>
+            <input t-att-type="props.inputType" class="form-control" t-model="state.inputValue" />
+            <span t-if="state.error.length" class="text-danger" t-esc="state.error"/>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="confirm">Confirm</button>
+                <button class="btn btn-secondary" t-on-click="props.close">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

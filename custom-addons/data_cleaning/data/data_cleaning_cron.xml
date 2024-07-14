@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_clean_records" model="ir.cron">
+        <field name="name">Data Cleaning: Clean Records</field>
+        <field name="model_id" ref="model_data_cleaning_model"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_clean_records()</field>
+        <field name="active" eval="True"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="nextcall" eval="(DateTime.now().replace(hour=3, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+    </record>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_activity_plan_template_view_form" model="ir.ui.view">
+        <field name="model">mail.activity.plan.template</field>
+        <field name="inherit_id" ref="mail.mail_activity_plan_template_view_form"/>
+        <field name="arch" type="xml">
+            <field name="activity_type_id" position="after">
+                <field name="is_signature_request" invisible="1"/>
+                <field name="sign_template_responsible_ids" invisible="1"/>
+                <field name="sign_template_id" invisible="not is_signature_request" required="is_signature_request"/>
+                <field name="employee_role_id" options="{'no_create': True}" invisible="not is_signature_request" required="is_signature_request"/>
+            </field>
+        </field>
+    </record>
+</odoo>

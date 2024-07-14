@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- https://finances.belgium.be/fr/E-services/FinProf/description -->
+<odoo>
+    <data>
+        <template id="finprof_xml_report">
+            <Declaration274 t-att-CreationDate="creation_date">
+                <CoreHeader MessageType="REQUEST">
+                    <Origin>FINPROF</Origin>
+                    <DocumentType>Multiple_PRP_Declaration</DocumentType>
+                </CoreHeader>
+                <Declaration>
+                    <LastPeriod><t t-esc="last_period"/></LastPeriod>
+                    <t t-foreach="declarations" t-as="declaration">
+                        <t t-call="l10n_be_hr_payroll.finprof_xml_report_single_declaration"/>
+                    </t>
+                    <PositiveDeclarations>
+                        <Amount><t t-esc="positive_amount"/></Amount>
+                        <Total><t t-esc="positive_total"/></Total>
+                    </PositiveDeclarations>
+                    <NegativeDeclarations>
+                        <Amount><t t-esc="negative_amount"/></Amount>
+                        <Total><t t-esc="negative_total"/></Total>
+                    </NegativeDeclarations>
+                    <OfficeAmount>1</OfficeAmount>
+                </Declaration>
+            </Declaration274>
+        </template>
+
+        <template id="finprof_xml_report_single_declaration">
+            <SingleDeclaration>
+                <DeclarationNumber><t t-esc="declaration['declaration_number']"/></DeclarationNumber>
+                <Employer>
+                    <ReferenceNumber><t t-esc="declaration['reference_number']"/></ReferenceNumber>
+                    <Language>fr</Language>
+                </Employer>
+                <RevenuDeclaration>
+                    <Year><t t-esc="declaration['year']"/></Year>
+                    <Period><t t-esc="declaration['period']"/></Period>
+                    <RevenuNature><t t-esc="declaration['revenue_nature']"/></RevenuNature>
+                    <TaxableRevenu><t t-esc="declaration['taxable_revenue']"/></TaxableRevenu>
+                    <Prepayment><t t-esc="declaration['prepayment']"/></Prepayment>
+                </RevenuDeclaration>
+                <Receipt>
+                    <District><t t-esc="declaration['district']"/></District>
+                    <Office><t t-esc="declaration['office']"/></Office>
+                </Receipt>
+                <Payment>
+                    <PaymentReference><t t-esc="declaration['payment_reference']"/></PaymentReference>
+                </Payment>
+                <ThirdDeclarer>
+                    <SecretariatCode>9998</SecretariatCode>
+                    <Membership></Membership>
+                </ThirdDeclarer>
+            </SingleDeclaration>
+        </template>
+
+    </data>
+</odoo>

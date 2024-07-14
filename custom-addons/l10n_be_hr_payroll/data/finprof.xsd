@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="Declaration274">
+		<xs:annotation>
+			<xs:documentation>PRP declaration by Web</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="CoreHeader" type="CoreHeaderType"/>
+				<xs:element name="Declaration" type="DeclarationType"/>
+			</xs:sequence>
+			<xs:attribute name="CreationDate" type="xs:date" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="CoreHeaderType">
+		<xs:annotation>
+			<xs:documentation>UME2 header for routing</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Origin">
+				<xs:annotation>
+					<xs:documentation>logical name that unically identifies the application that is sending the message</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="FINPROF"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DocumentType">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Single_PRP_Declaration_By_Employer"/>
+						<xs:enumeration value="Single_PRP_Declaration_By_Third"/>
+						<xs:enumeration value="Multiple_PRP_Declaration"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="MessageType" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="DATAGRAM"/>
+					<xs:enumeration value="REQUEST"/>
+					<xs:enumeration value="RESPONSE"/>
+					<xs:enumeration value="TEMP_RESPONSE"/>
+					<xs:enumeration value="ACK"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="RevenuDeclarationType">
+		<xs:sequence>
+			<xs:element name="Year" type="xs:gYear"/>
+			<xs:element name="Period">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="RevenuNature">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="TaxableRevenu" type="xs:long">
+				<xs:annotation>
+					<xs:documentation>amount in eurocents</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Prepayment" type="xs:long">
+				<xs:annotation>
+					<xs:documentation>amount in eurocents</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Year325" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SingleDeclarationType">
+		<xs:sequence>
+			<xs:element name="DeclarationNumber" default="99999999" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="8"/>
+						<xs:minExclusive value="10000000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Employer" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="ReferenceNumber">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="12"/>
+									<xs:pattern value="[0-9]{3}\.[0-9]{3}\.[0-9]{3}"/>
+									<xs:pattern value="[0-9]{9}"/>
+									<xs:pattern value="0[0-9]{9}"/>
+									<xs:pattern value="0[0-9]{3}\.[0-9]{3}\.[0-9]{3}"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="Name" type="xs:string" minOccurs="0"/>
+						<xs:element name="Address" type="xs:string" minOccurs="0"/>
+						<xs:element name="PostCode" minOccurs="0">
+							<xs:simpleType>
+								<xs:restriction base="xs:decimal">
+									<xs:totalDigits value="4"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="City" type="xs:string" minOccurs="0"/>
+						<xs:element name="PhoneNumber" type="xs:string" minOccurs="0"/>
+						<xs:element name="Email" type="xs:string" minOccurs="0"/>
+						<xs:element name="Language" type="LanguageType" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="RevenuDeclaration" type="RevenuDeclarationType"/>
+			<xs:element name="Receipt">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="District">
+							<xs:simpleType>
+								<xs:restriction base="xs:decimal">
+									<xs:totalDigits value="2"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="Office">
+							<xs:simpleType>
+								<xs:restriction base="xs:decimal">
+									<xs:totalDigits value="2"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Payment">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="PaymentReference">
+							<xs:simpleType>
+								<xs:restriction base="xs:decimal">
+									<xs:totalDigits value="12"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="AccountNumber" minOccurs="0">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="14"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ThirdDeclarer" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="SecretariatCode">
+							<xs:annotation>
+								<xs:documentation>code or 9999 for a single declaration or 9998 for a non agreed third</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:decimal">
+									<xs:totalDigits value="4"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="Membership" minOccurs="0">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="11"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="NewMember" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DeclarationStatistics">
+		<xs:sequence>
+			<xs:element name="Amount" type="xs:integer"/>
+			<xs:element name="Total" type="xs:long"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DeclarationType">
+		<xs:annotation>
+			<xs:documentation>whole declaration may contain one or many single declarations</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="LastPeriod" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SingleDeclaration" type="SingleDeclarationType" maxOccurs="unbounded"/>
+			<xs:element name="PositiveDeclarations" type="DeclarationStatistics" />
+			<xs:element name="NegativeDeclarations" type="DeclarationStatistics" />
+			<xs:element name="OfficeAmount" >
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="LanguageType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="fr"/>
+			<xs:enumeration value="nl"/>
+			<xs:enumeration value="de"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

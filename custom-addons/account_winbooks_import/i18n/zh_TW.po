@@ -1,0 +1,217 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_winbooks_import
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid ""
+"<span/>\n"
+"                    <span class=\"text-warning mb4 mt16\" invisible=\"only_open\">\n"
+"                        The export of data from Winbooks for closed years might contain unbalanced entries. However if you want to try to import everything, Odoo will set the difference of balance in a Suspense Account.\n"
+"                    </span>"
+msgstr ""
+"<span/>\n"
+"                    <span class=\"text-warning mb4 mt16\" invisible=\"only_open\">\n"
+"                        從 Winbooks 匯出的已結算年份資料，可能包含不平衡記項。但是，如果你想嘗試匯入所有內容，Odoo 會以暫記賬戶記錄結餘差額。\n"
+"                    </span>"
+
+#. module: account_winbooks_import
+#: model:ir.model,name:account_winbooks_import.model_account_winbooks_import_wizard
+msgid "Account Winbooks import wizard"
+msgstr "會計 WinBooks 匯入精靈"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#, python-format
+msgid "Accounting Settings"
+msgstr "會計設定"
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid "Cancel"
+msgstr "取消"
+
+#. module: account_winbooks_import
+#: model:ir.model,name:account_winbooks_import.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#, python-format
+msgid "Company Settings"
+msgstr "公司設定"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#, python-format
+msgid "Counterpart (generated at import from Winbooks)"
+msgstr "對應項（從 WinBooks 匯入時生成）"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__create_uid
+msgid "Created by"
+msgstr "建立人員"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__create_date
+msgid "Created on"
+msgstr "建立於"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__zip_file
+msgid "File"
+msgstr "文件"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__id
+msgid "ID"
+msgstr "識別號"
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid "Import"
+msgstr "匯入"
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid "Import (safe-mode)"
+msgstr "匯入（安全模式）"
+
+#. module: account_winbooks_import
+#. odoo-javascript
+#: code:addons/account_winbooks_import/static/src/xml/account_winbooks_import.xml:0
+#, python-format
+msgid "Import WBK"
+msgstr "匯入 WBK"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__only_open
+msgid "Import only open years"
+msgstr "只匯入開放年份"
+
+#. module: account_winbooks_import
+#: model:ir.model,name:account_winbooks_import.model_account_move_line
+msgid "Journal Item"
+msgstr "日記賬項目"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__write_uid
+msgid "Last Updated by"
+msgstr "最後更新者"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__write_date
+msgid "Last Updated on"
+msgstr "最後更新於"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,help:account_winbooks_import.field_account_move_line__winbooks_line_id
+msgid "Line ID that was used in Winbooks"
+msgstr "在 WinBooks 中使用的資料行識別碼"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,help:account_winbooks_import.field_account_move_line__winbooks_matching_number
+msgid "Matching number that was used in Winbooks"
+msgstr "在 WinBooks 中使用的配對號碼"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#, python-format
+msgid "Please define the country on your company."
+msgstr "請為你公司設定所在國家/地區。"
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid "Stage Search"
+msgstr "階段搜尋"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__suspense_code
+msgid "Suspense Account Code"
+msgstr "暫記賬戶代碼"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#, python-format
+msgid ""
+"The code for the Suspense Account you entered doesn't match any account"
+msgstr "輸入的暫記賬戶代碼，不符合任何賬戶"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#, python-format
+msgid ""
+"The following banks were used for multiple partners in Winbooks, which is not allowed in Odoo. The bank number has been only set on one of each group:\n"
+"%s"
+msgstr ""
+"以下銀行在 WinBooks 中用於多個合作夥伴，但這在 Odoo 中是不允許的。因此，銀行號碼只為每組之一個合作夥伴設置：\n"
+"%s"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,help:account_winbooks_import.field_account_winbooks_import_wizard__suspense_code
+msgid ""
+"This is the code of the account in which you want to put the counterpart of "
+"unbalanced moves. This might be an account from your Winbooks data, or an "
+"account that you created in Odoo before the import."
+msgstr "此賬戶代碼是不平衡分錄的對應項記賬的賬戶。 這可能是你的 WinBooks 數據中的賬戶，或是匯入數據之前你在 Odoo 建立的賬戶。"
+
+#. module: account_winbooks_import
+#: model:ir.actions.act_window,name:account_winbooks_import.winbooks_import_action
+msgid "Winbooks Import"
+msgstr "WinBooks 匯入"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_move_line__winbooks_line_id
+msgid "Winbooks Line"
+msgstr "WinBooks 資料行"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_move_line__winbooks_matching_number
+msgid "Winbooks Matching Number"
+msgstr "WinBooks 配對號碼"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,help:account_winbooks_import.field_account_winbooks_import_wizard__only_open
+msgid ""
+"Years closed in Winbooks are likely to have incomplete data. The counter "
+"part of incomplete entries will be set in a suspense account"
+msgstr "在 WinBooks 中關閉的年份，數據可能不完整。不完整記項的對應項，會在暫記賬中記賬"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#, python-format
+msgid "You should install a Fiscal Localization first."
+msgstr "你應該先安裝財政本地化套裝。"

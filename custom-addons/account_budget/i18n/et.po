@@ -1,0 +1,660 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_budget
+# 
+# Translators:
+# Egon Raamat <egon@avalah.ee>, 2023
+# Andre Roomet <andreroomet@gmail.com>, 2023
+# Triine Aavik <triine@avalah.ee>, 2023
+# Martin Aavastik <martin@avalah.ee>, 2023
+# Patrick-Jordan Kiudorv, 2023
+# JanaAvalah, 2023
+# Eneli Õigus <enelioigus@gmail.com>, 2023
+# Piia Paurson <piia@avalah.ee>, 2023
+# Arma Gedonsky <armagedonsky@hot.ee>, 2023
+# Rivo Zängov <eraser@eraser.ee>, 2023
+# Anna, 2023
+# Martin Trigaux, 2023
+# Birgit Vijar, 2023
+# Aveli Kannel <aveli@avalah.ee>, 2023
+# Mihkel avalah, 2023
+# Leaanika Randmets, 2023
+# Katrin Kampura, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Katrin Kampura, 2023\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/account_budget.py:0
+#, python-format
+msgid ""
+"\"End Date\" of the budget line should be included in the Period of the "
+"budget"
+msgstr "Eelarverea lõppkuupäev tuleks lisada eelarveperioodi"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/account_budget.py:0
+#, python-format
+msgid ""
+"\"Start Date\" of the budget line should be included in the Period of the "
+"budget"
+msgstr "Eelarverea \"Alguskuupäev\" tuleks lisada eelarve perioodi"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_kanban
+msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Period\"/>"
+msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Period\"/>"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
+msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+msgid "<span class=\"o_stat_text\">Budget</span>"
+msgstr "<span class=\"o_stat_text\">Eelarve</span>"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__account_ids
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_post_form
+msgid "Accounts"
+msgstr "Kontod"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__percentage
+msgid "Achievement"
+msgstr "Saavutus"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_needaction
+msgid "Action Needed"
+msgstr "Vajalik toiming"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_ids
+msgid "Activities"
+msgstr "Tegevused"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Tegevuse erandlik kohendus"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_state
+msgid "Activity State"
+msgstr "Tegevuse staatus"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Tegevustüübi ikoon"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget_lines__practical_amount
+msgid "Amount really earned/spent."
+msgstr "Reaalselt teenitud/kulutatud summa"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget_lines__theoritical_amount
+msgid "Amount you are supposed to have earned/spent at this date."
+msgstr "Summa, mille olete sellel kuupäeval teeninud/kulutanud."
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget_lines__planned_amount
+msgid ""
+"Amount you plan to earn/spend. Record a positive amount if it is a revenue "
+"and a negative amount if it is a cost."
+msgstr ""
+"Summa, mida plaanite teenida/kulutada. Valige positiivne summa, kui tegemist"
+" on tuluga ja negatiivne summa, kui tegemist on kuluga. "
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_account_analytic_account
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__analytic_account_id
+msgid "Analytic Account"
+msgstr "Analüütiline konto"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__analytic_plan_id
+msgid "Analytic Plan"
+msgstr "Analüütiline plaan"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Approve"
+msgstr "Kinnita"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_attachment_count
+msgid "Attachment Count"
+msgstr "Manuste arv"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_crossovered_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__crossovered_budget_id
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_tree
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Budget"
+msgstr "Eelarve"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.act_account_analytic_account_cb_lines
+#: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+msgid "Budget Items"
+msgstr "Eelarve kirje"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_crossovered_budget_lines
+msgid "Budget Line"
+msgstr "Eelarve rida"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_analytic_account__crossovered_budget_line
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__crossovered_budget_line
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_tree
+msgid "Budget Lines"
+msgstr "Eelarveread"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__name
+msgid "Budget Name"
+msgstr "Eelarve nimi"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__crossovered_budget_state
+msgid "Budget State"
+msgstr "Eelarve staatus"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_account_budget_post
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__general_budget_id
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_post_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_post_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_post_tree
+msgid "Budgetary Position"
+msgstr "Eelarveline positsioon"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.open_budget_post_form
+#: model:ir.ui.menu,name:account_budget.menu_budget_post_form
+msgid "Budgetary Positions"
+msgstr "Eelarvepositsioonid"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
+#: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+msgid "Budgets"
+msgstr "Eelarved"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
+#: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
+msgid "Budgets Analysis"
+msgstr "Eelarveanalüüs"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Cancel Budget"
+msgstr "Tühista eelarve"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__crossovered_budget__state__cancel
+msgid "Cancelled"
+msgstr "Tühistatud"
+
+#. module: account_budget
+#: model_terms:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid "Click to create a new budget."
+msgstr "Vajuta, et luua uus eelarve."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__company_id
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__company_id
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__company_id
+msgid "Company"
+msgstr "Ettevõte"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget_lines__percentage
+msgid ""
+"Comparison between practical and theoretical amount. This measure tells you "
+"if you are below or over budget."
+msgstr ""
+"Praktilise ja teoreetilise summa võrdlus. Mõõdik näitab, kas eelarve on "
+"ületatud või olete tegutsenud eelarve piires. "
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Confirm"
+msgstr "Kinnitage"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__crossovered_budget__state__confirm
+msgid "Confirmed"
+msgstr "Kinnitatud"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__create_uid
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__create_uid
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__create_uid
+msgid "Created by"
+msgstr "Loodud (kelle poolt?)"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__create_date
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__create_date
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__create_date
+msgid "Created on"
+msgstr "Loodud"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__currency_id
+msgid "Currency"
+msgstr "Valuuta"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+msgid "Date"
+msgstr "Kuupäev"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__display_name
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__display_name
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__display_name
+msgid "Display Name"
+msgstr "Kuvatav nimi"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__crossovered_budget__state__done
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Done"
+msgstr "Tehtud"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__crossovered_budget__state__draft
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Draft"
+msgstr "Mustand"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Draft Budgets"
+msgstr "Eelarve mustandid"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__date_to
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__date_to
+msgid "End Date"
+msgstr "Lõppkuupäev"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Entries..."
+msgstr "Kanded..."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_follower_ids
+msgid "Followers"
+msgstr "Jälgijad"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Jälgijad(Partnerid)"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome icon nt. fa-tasks"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "From"
+msgstr "Kellelt?"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Future Activities"
+msgstr "Tulevased tegevused"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+msgid "Group By"
+msgstr "Rühmitamine"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__has_message
+msgid "Has Message"
+msgstr "On sõnum"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__id
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__id
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_exception_icon
+msgid "Icon"
+msgstr "sümbolit."
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikoon, mis näitab erandi tegevust."
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Kui kontrollitud, siis uued sõnumid nõuavad Teie tähelepanu."
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_has_error
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Kui valitud, on mõningate sõnumitel saatmiserror."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__is_above_budget
+msgid "Is Above Budget"
+msgstr "Üle eelarve"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_is_follower
+msgid "Is Follower"
+msgstr "On jälgija"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__write_uid
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__write_uid
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__write_uid
+msgid "Last Updated by"
+msgstr "Viimati uuendatud"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__write_date
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__write_date
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__write_date
+msgid "Last Updated on"
+msgstr "Viimati uuendatud"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Late Activities"
+msgstr "Hilinenud tegevused"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_has_error
+msgid "Message Delivery error"
+msgstr "Sõnumi saatmise veateade"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_ids
+msgid "Messages"
+msgstr "Sõnum"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Minu tegevuse tähtaeg"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__name
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__name
+msgid "Name"
+msgstr "Nimi"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Järgmine tegevus kalendris"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Järgmise tegevuse tähtaeg"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_summary
+msgid "Next Activity Summary"
+msgstr "Järgmise tegevuse kokkuvõte"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_type_id
+msgid "Next Activity Type"
+msgstr "Järgmise tegevuse tüüp"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+msgid "Not Cancelled"
+msgstr "Ei ole tühistatud"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Tegevuste arv"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_has_error_counter
+msgid "Number of errors"
+msgstr "Vigade arv"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Tegevust nõudvate sõnumite arv"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Veateatega sõnumite arv"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__paid_date
+msgid "Paid Date"
+msgstr "Maksmise kuupäev"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Period"
+msgstr "Periood"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__planned_amount
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Planned Amount"
+msgstr "Planeeritud summa"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+msgid "Planned amount"
+msgstr "Planeeritud summa"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__practical_amount
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+msgid "Practical Amount"
+msgstr "Praktiline summa"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+msgid "Practical amount"
+msgstr "Praktiline summa"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__rating_ids
+msgid "Ratings"
+msgstr "Hinnangud"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Reset to Draft"
+msgstr "Lähtesta mustandiks"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__user_id
+msgid "Responsible"
+msgstr "Vastutaja"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_user_id
+msgid "Responsible User"
+msgstr "Vastutav kasutaja"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Sõnumi kohaletoimetamise viga"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Näita kõiki andmeid, mille järgmise tegevuse kuupäev on ennem tänast "
+"kuupäeva"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__date_from
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__date_from
+msgid "Start Date"
+msgstr "Alguskuupäev"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__state
+msgid "Status"
+msgstr "Olek"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Tegevuspõhised staatused\n"
+"Üle aja: Tähtaeg on juba möödas\n"
+"Täna: Tegevuse tähtaeg on täna\n"
+"Planeeritud: Tulevased tegevused."
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/account_budget.py:0
+#, python-format
+msgid "The budget must have at least one account."
+msgstr "Eelarvel peab olema vähemalt üks konto."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__theoritical_amount
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+msgid "Theoretical Amount"
+msgstr "Teoreetiline summa"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+msgid "Theoretical amount"
+msgstr "Teoreetiline summa"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "To"
+msgstr "Saaja"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "To Approve"
+msgstr "Ootab kinnitamist"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "To Approve Budgets"
+msgstr "Kinnitamist ootavad eelarved"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Today Activities"
+msgstr "Tänased tegevused"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_analytic_account__total_planned_amount
+msgid "Total Planned Amount"
+msgstr "Planeeritud kogusumma"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_analytic_account__total_practical_amount
+msgid "Total Practical Amount"
+msgstr "Tegeliku koguse ülevaade"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Kirjel oleva erandtegevuse tüüp."
+
+#. module: account_budget
+#: model_terms:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid "Use budgets to compare actual with expected revenues and costs"
+msgstr ""
+"Kasutage eelarveid, et võrrelda tegelikke ja eeldatud tulusid ja kulusid"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__crossovered_budget__state__validate
+msgid "Validated"
+msgstr "Kinnitatud"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__website_message_ids
+msgid "Website Messages"
+msgstr "Veebilehe sõnumid"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__website_message_ids
+msgid "Website communication history"
+msgstr "Veebilehe suhtluse ajalugu"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/account_budget.py:0
+#, python-format
+msgid ""
+"You have to enter at least a budgetary position or analytic account on a "
+"budget line."
+msgstr ""
+"Eelarvereal peaks sisalduma vähemalt eelarveline positsioon või analüütiline"
+" konto."
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "e.g. Budget 2023: Optimistic"
+msgstr "nt. Eelarve 2023: optimistlik plaan"

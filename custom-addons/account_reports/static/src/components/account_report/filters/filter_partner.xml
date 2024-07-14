@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportFilterPartner">
+        <Dropdown togglerClass="'btn btn-secondary'">
+            <t t-set-slot="toggler">
+                <i class="fa fa-folder-open me-1"/>Partners
+            </t>
+
+            <div class="dropdown-item">
+                <label>Partners</label>
+                <MultiRecordSelector t-props="getMultiRecordSelectorProps('res.partner', 'partner_ids')"/>
+            </div>
+
+            <div class="dropdown-item">
+                <label>Tags</label>
+                <MultiRecordSelector t-props="getMultiRecordSelectorProps('res.partner.category', 'partner_categories')"/>
+            </div>
+        </Dropdown>
+    </t>
+</templates>

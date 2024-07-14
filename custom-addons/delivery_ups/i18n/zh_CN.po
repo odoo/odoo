@@ -1,0 +1,839 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_ups
+# 
+# Translators:
+# Wil Odoo, 2023
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# Chloe Wang, 2024
+# Yazi Tian, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:47+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Yazi Tian, 2024\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"A shipment cannot have a KGS/IN or LBS/CM as its unit of measurements. "
+"Configure it from the delivery method."
+msgstr "货物的计量单位不能是千克/英寸或磅/厘米。从传送方式进行配置。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"Access License number is Invalid. Provide a valid number (Length should be "
+"0-35 alphanumeric characters)"
+msgstr "访问许可证号无效。提供有效数字（长度应为0-35个字母数字字符）"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Access License number is invalid for this delivery provider."
+msgstr "访问许可证号码对此传递提供程序无效。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Access License number is invalid for this provider.Please re-license."
+msgstr "访问许可证号码对此无效提供者。请重新许可。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Access License number is revoked contact UPS to get access."
+msgstr "访问许可证号码被吊销请联系UPS获取访问权限。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Authorization system is currently unavailable , try again later."
+msgstr "授权系统当前不可用，请稍后再试。"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_bill_my_account
+#: model:ir.model.fields,field_description:delivery_ups.field_res_partner__bill_my_account
+#: model:ir.model.fields,field_description:delivery_ups.field_res_users__bill_my_account
+#: model:ir.model.fields,field_description:delivery_ups.field_sale_order__ups_bill_my_account
+msgid "Bill My Account"
+msgstr "账户结算"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_cod_funds_code
+msgid "COD Funding Option"
+msgstr "支持货到付款选项"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Cancel shipment not available at this time , Please try again Later."
+msgstr "此时无法取消运输，请稍后再试。"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_stock_package_type__package_carrier_type
+msgid "Carrier"
+msgstr "承运商"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_cod_funds_code__8
+msgid "Cashier's Check or MoneyOrder"
+msgstr "收银员提供的支票或汇票"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_package_dimension_unit__cm
+msgid "Centimeters"
+msgstr "厘米"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_cod_funds_code__0
+msgid "Check, Cashier's Check or MoneyOrder"
+msgstr "支票，收银员提供的支票或汇票"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_cod
+msgid "Collect on Delivery"
+msgstr "货到收款"
+
+#. module: delivery_ups
+#: model:ir.model,name:delivery_ups.model_res_partner
+msgid "Contact"
+msgstr "联系人"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Duties paid by"
+msgstr "缴纳的税款"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_label_file_type__epl
+msgid "EPL"
+msgstr "EPL"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid ""
+"Error:\n"
+"%s"
+msgstr ""
+"错误:\n"
+"%s"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"Exceeds Total Number of allowed pieces per World Wide Express Shipment."
+msgstr "超过了每批全球运输允许的总件数。"
+
+#. module: delivery_ups
+#: model:ir.model.fields,help:delivery_ups.field_delivery_carrier__ups_bill_my_account
+#: model:ir.model.fields,help:delivery_ups.field_res_partner__bill_my_account
+#: model:ir.model.fields,help:delivery_ups.field_res_users__bill_my_account
+#: model:ir.model.fields,help:delivery_ups.field_sale_order__ups_bill_my_account
+msgid ""
+"If checked, ecommerce users will be prompted their UPS account number\n"
+"and delivery fees will be charged on it."
+msgstr ""
+"如果选中，电子商务用户将被提示他们的 UPS 账号\n"
+"和派送费将被收取。"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_package_dimension_unit__in
+msgid "Inches"
+msgstr "英寸"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_package_weight_unit__kgs
+msgid "Kilograms"
+msgstr "千克"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Label Format"
+msgstr "标签格式"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Options"
+msgstr "选项"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_label_file_type__gif
+msgid "PDF"
+msgstr "PDF"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_package_dimension_unit
+msgid "Package Size Unit"
+msgstr "包裹尺寸单位"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Package Weight Unit"
+msgstr "包裹重量单位"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Packages %s do not have a positive shipping weight."
+msgstr "包裹%s没有正面的运输重量。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid "Packages:"
+msgstr "包裹："
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid City in the warehouse address."
+msgstr "请提供仓库地址中的有效城市。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid Country in recipient's address."
+msgstr "请在收件人地址中提供有效的国家/地区。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid Country in the warehouse address."
+msgstr "请在仓库地址中提供有效的国家/地区。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid State in the warehouse address."
+msgstr "请在仓库地址中提供有效状态。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid Zip in the warehouse address."
+msgstr "请在仓库地址中提供有效的邮政编码。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid city in the recipient address."
+msgstr "请在收件人地址中提供有效的城市。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid city in the shipper's address."
+msgstr "请在托运人地址中提供有效城市。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid country in the shipper's address."
+msgstr "请在托运人地址中提供有效的国家。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"Please provide a valid package type available for service and selected "
+"locations."
+msgstr "请提供可用于服务和选定位置的有效包类型。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid phone number for the recipient."
+msgstr "请提供收件人的有效电话号码。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid shipper Number/Carrier Account."
+msgstr "请提供有效的发货人编号/承运商帐户。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid shipper number/Carrier Account."
+msgstr "请提供有效的发货人编号/承运商帐户。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid shipper phone number."
+msgstr "请提供有效的托运人电话号码。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid state in the recipient address."
+msgstr "请在收件人地址中提供有效的状态。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid state in the shipper's address."
+msgstr "请在托运人地址中提供有效的国家。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid street in shipper's address."
+msgstr "请提供发货人地址中的有效街道。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid street in the recipient address."
+msgstr "请在收件人地址中提供有效街道。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid street in the warehouse address."
+msgstr "请提供仓库地址中的有效街道。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid warehouse Phone Number"
+msgstr "请提供有效的仓库电话号码"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid zip code in the recipient address."
+msgstr "请在收件人地址中提供有效的邮政编码。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid zip code in the shipper's address."
+msgstr "请提供发货人地址中的有效邮政编码。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid zip code in the warehouse address."
+msgstr "请在仓库地址中提供有效的邮政编码。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide a valid zipcode in the recipient address."
+msgstr "请在收件人地址中提供有效的zipcode。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide at least one item to ship"
+msgstr "请至少提供一个要装运的项目"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please provide at least one item to ship."
+msgstr "请提供至少一件要运送的物品。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please set a valid country in the recipient address."
+msgstr "请在收件人地址中设置有效的国家/地区。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Please set a valid country in the warehouse address."
+msgstr "请在仓库地址中设置有效的国家/地区。"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_package_weight_unit__lbs
+msgid "Pounds"
+msgstr "英镑"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Provided Access License Number not found in the UPS database"
+msgstr "在UPS数据库中找不到提供的访问许可证号码"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Provided Tracking Ref. Number is invalid."
+msgstr "提供的跟踪参考号无效。"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "物流商"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_duty_payment__recipient
+msgid "Recipient"
+msgstr "收件人"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Recipient Phone must be at least 10 alphanumeric characters."
+msgstr "收件人电话必须至少为10个字母数字字符。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Recipient PhoneExtension cannot exceed the length of 4."
+msgstr "收件人PhoneExtension的长度不能超过4。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Recipient PhoneExtension must contain only numbers."
+msgstr "收件人电话分机只能包含数字。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid "Return label generated"
+msgstr "已生成退货标签"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_label_file_type__spl
+msgid "SPL"
+msgstr "SPL"
+
+#. module: delivery_ups
+#: model:ir.model,name:delivery_ups.model_sale_order
+msgid "Sales Order"
+msgstr "销售订单"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "Saturday Delivery"
+msgstr "星期六交货"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_duty_payment__sender
+msgid "Sender"
+msgstr "发送者"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid "Shipment #%s has been cancelled"
+msgstr "运输#%s已取消"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid "Shipment created into UPS"
+msgstr "在 UPS 中创建快件"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Shipper Phone must be at least 10 alphanumeric characters."
+msgstr "托运人电话必须至少为10个字母数字字符。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Shipper number must contain alphanumeric characters only."
+msgstr "发货人编号只能包含字母数字字符。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Shipper phone extension cannot exceed the length of 4."
+msgstr "托运人电话分机长度不能超过4。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Shipper phone extension must contain only numbers."
+msgstr "托运人电话分机只能包含数字。"
+
+#. module: delivery_ups
+#: model:ir.model,name:delivery_ups.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "送货方式"
+
+#. module: delivery_ups
+#: model:ir.model,name:delivery_ups.model_stock_package_type
+msgid "Stock package type"
+msgstr "库存包裹类型"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "The UserId is currently locked out; please try again in 24 hours."
+msgstr "用户ID当前被锁定；请在24小时后重试。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The address of your company is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr ""
+"公司的地址缺失或错误。\n"
+"（缺少字段：%s）"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The address of your warehouse is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr "公司仓库的地址缺失或者错误（缺失字段：%s)"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The delivery cannot be done because the weight of your product is missing."
+msgstr "由于您的产品重量不足，因此无法送货。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The estimated shipping price cannot be computed because the weight is missing for the following product(s): \n"
+" %s"
+msgstr ""
+"因为缺少以下产品的重量，所以无法计算出估计的运输价格。\n"
+" %s"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The maximum number of user access attempts was exceeded. So please try again"
+" later"
+msgstr "已超出用户访问尝试的最大次数。所以请稍后再试"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "The name of the customer should be no more than 35 characters."
+msgstr "客户名称不应超过 35 个字符。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The recipient address is missing or wrong.\n"
+"(Missing field(s) : %s)"
+msgstr ""
+"收件人地址缺失或错误\n"
+"(丢失字段: %s)"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "The requested service is unavailable between the selected locations."
+msgstr "请求的服务在所选位置之间不可用。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The selected service is invalid from the requested warehouse, please choose "
+"another service."
+msgstr "从请求的仓库中选择的服务无效，请选择其他服务。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The selected service is invalid to the recipient address, please choose "
+"another service."
+msgstr "所选服务对收件人地址无效，请选择其他服务。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"The selected service is not possible from your warehouse to the recipient "
+"address, please choose another service."
+msgstr "所选服务无法从您的仓库发送到收件人地址，请选择其他服务。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "The selected service is not valid with the selected packaging."
+msgstr "所选服务对于所选打包无效。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"This measurement system is not valid for the selected country. Please switch"
+" from LBS/IN to KGS/CM (or vice versa). Configure it from delivery method"
+msgstr "此度量系统对所选国家/地区无效。请从磅/英寸切换到千克/厘米（反之亦然）。从传送方式配置"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"This measurement system is not valid for the selected country. Please switch"
+" from LBS/IN to KGS/CM (or vice versa). Configure it from the delivery "
+"method."
+msgstr "此度量系统对所选国家/地区无效。请从磅/英寸切换到千克/厘米（反之亦然）。从传送方式进行配置。"
+
+#. module: delivery_ups
+#: model:ir.model.fields,help:delivery_ups.field_delivery_carrier__ups_cod
+msgid ""
+"This value added service enables UPS to collect the payment of the shipment "
+"from your customer."
+msgstr "这种增值服务使 UPS 能够从客户那里收取装运付款。"
+
+#. module: delivery_ups
+#: model:ir.model.fields,help:delivery_ups.field_delivery_carrier__ups_saturday_delivery
+msgid ""
+"This value added service will allow you to ship the package on saturday "
+"also."
+msgstr "这种增值服务使您也可以在星期六运送包裹。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#: code:addons/delivery_ups/models/delivery_ups.py:0
+#, python-format
+msgid "Tracking Numbers:"
+msgstr "追踪号码："
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__stock_package_type__package_carrier_type__ups
+msgid "UPS"
+msgstr "UPS"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_access_number
+msgid "UPS Access Key"
+msgstr "UPS Access Key"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_shipper_number
+#: model:ir.model.fields,field_description:delivery_ups.field_res_partner__property_ups_carrier_account
+#: model:ir.model.fields,field_description:delivery_ups.field_res_users__property_ups_carrier_account
+msgid "UPS Account Number"
+msgstr "UPS帐号"
+
+#. module: delivery_ups
+#: model:delivery.carrier,name:delivery_ups.delivery_carrier_ups_be
+#: model:product.template,name:delivery_ups.product_product_delivery_ups_be_product_template
+msgid "UPS BE"
+msgstr "UPS BE"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.view_delivery_carrier_form_with_provider_ups
+msgid "UPS Configuration"
+msgstr "UPS配置"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_label_file_type
+msgid "UPS Label File Type"
+msgstr "UPS 标签文件类型"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__delivery_type__ups
+msgid "UPS Legacy"
+msgstr "UPS 传统"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_default_package_type_id
+msgid "UPS Legacy Package Type"
+msgstr "UPS 传统包裹类型"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_passwd
+msgid "UPS Password"
+msgstr "UPS 密码"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_saturday_delivery
+msgid "UPS Saturday Delivery"
+msgstr "UPS周六派送"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "UPS Server Not Found"
+msgstr "找不到UPS服务器"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_default_service_type
+msgid "UPS Service Type"
+msgstr "UPS服务方式"
+
+#. module: delivery_ups
+#: model_terms:ir.ui.view,arch_db:delivery_ups.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:delivery_ups.res_config_settings_view_form_stock
+msgid "UPS Shipping Methods"
+msgstr "UPS运输方式"
+
+#. module: delivery_ups
+#: model:delivery.carrier,name:delivery_ups.delivery_carrier_ups_us
+#: model:product.template,name:delivery_ups.product_product_delivery_ups_us_product_template
+msgid "UPS US"
+msgstr "UPS US"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_username
+msgid "UPS Username"
+msgstr "UPS 用户名"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_sale_order__partner_ups_carrier_account
+msgid "UPS account number"
+msgstr "UPS帐号"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid ""
+"UPS address lines can only contain a maximum of 35 characters. You can split"
+" the contacts addresses on multiple lines to try to avoid this limitation."
+msgstr "UPS地址行最多只能包含35个字符。您可以将联系人地址拆分为多行以避免此限制。"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_duty_payment
+msgid "Ups Duty Payment"
+msgstr "Ups关税款项"
+
+#. module: delivery_ups
+#: model:ir.model.fields,field_description:delivery_ups.field_delivery_carrier__ups_package_weight_unit
+msgid "Ups Package Weight Unit"
+msgstr "UPS 包裹重量单位"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Username/Password is invalid for this delivery provider."
+msgstr "用户名/密码对此传递提供程序无效。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Warehouse Phone must be at least 10 alphanumeric characters."
+msgstr "仓库电话必须至少有10个字母数字字符。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Warehouse Phone must contain only numbers."
+msgstr "仓库电话只能包含号码。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/ups_request.py:0
+#, python-format
+msgid "Warehouse PhoneExtension cannot exceed the length of 4."
+msgstr "仓库PhoneExtension的长度不能超过4。"
+
+#. module: delivery_ups
+#. odoo-python
+#: code:addons/delivery_ups/models/sale.py:0
+#, python-format
+msgid "You must enter an UPS account number."
+msgstr "您必须输入UPS帐号。"
+
+#. module: delivery_ups
+#: model:ir.model.fields.selection,name:delivery_ups.selection__delivery_carrier__ups_label_file_type__zpl
+msgid "ZPL"
+msgstr "ZPL"

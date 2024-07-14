@@ -1,0 +1,139 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product_unspsc
+# 
+# Translators:
+# Wil Odoo, 2023
+# Iran Villalobos López, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-08 07:11+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
+"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_419\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__applies_to
+msgid "Applies To"
+msgstr "Aplica a"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__code
+msgid "Code"
+msgstr "Código"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__display_name
+msgid "Display Name"
+msgstr "Nombre en pantalla"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__id
+msgid "ID"
+msgstr "ID"
+
+#. module: product_unspsc
+#: model:ir.model.fields,help:product_unspsc.field_product_unspsc_code__applies_to
+msgid "Indicate if this code could be used in products or in UoM"
+msgstr ""
+"Indique si este código podría usarse en productos o en la unidad de medida"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: product_unspsc
+#: model:ir.model,name:product_unspsc.model_product_template
+msgid ""
+"Model adding the necessary fields to products to use with Pricer electronic "
+"tags"
+msgstr ""
+"Modelo que agrega los campos necesarios a los productos para usarlos con las"
+" etiquetas electrónicas de precio."
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_unspsc_code__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: product_unspsc
+#: model:ir.model.fields.selection,name:product_unspsc.selection__product_unspsc_code__applies_to__product
+msgid "Product"
+msgstr "Producto"
+
+#. module: product_unspsc
+#: model:ir.model,name:product_unspsc.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Unidad de medida del producto"
+
+#. module: product_unspsc
+#: model:ir.model,name:product_unspsc.model_product_unspsc_code
+msgid "Product and UOM Codes from UNSPSC"
+msgstr ""
+"Códigos de producto y de unidad de medida del Código de Productos y "
+"Servicios Estándar de las Naciones Unidas (UNSPSC)"
+
+#. module: product_unspsc
+#: model:ir.model.fields,help:product_unspsc.field_uom_uom__unspsc_code_id
+msgid "The UNSPSC code related to this UoM. "
+msgstr "El código UNSPSC relacionado a esta unidad de medida. "
+
+#. module: product_unspsc
+#: model:ir.model.fields,help:product_unspsc.field_product_product__unspsc_code_id
+#: model:ir.model.fields,help:product_unspsc.field_product_template__unspsc_code_id
+msgid ""
+"The UNSPSC code related to this product.  Used for edi in Colombia, Peru, "
+"Mexico and Denmark"
+msgstr ""
+"El código UNSPSC relacionado a este producto. Usado para el intercambio de "
+"datos electrónicos en Colombia, Perú, México y Dinamarca."
+
+#. module: product_unspsc
+#: model_terms:ir.ui.view,arch_db:product_unspsc.product_template_unspsc
+msgid "UNSPSC"
+msgstr "UNSPSC"
+
+#. module: product_unspsc
+#: model:ir.model.fields,field_description:product_unspsc.field_product_product__unspsc_code_id
+#: model:ir.model.fields,field_description:product_unspsc.field_product_template__unspsc_code_id
+#: model:ir.model.fields,field_description:product_unspsc.field_uom_uom__unspsc_code_id
+#: model_terms:ir.ui.view,arch_db:product_unspsc.view_product_unspsc_code_form
+#: model_terms:ir.ui.view,arch_db:product_unspsc.view_product_uom_categ_tree_unspsc
+msgid "UNSPSC Category"
+msgstr "Categoría de UNSPSC"
+
+#. module: product_unspsc
+#: model:ir.model.fields.selection,name:product_unspsc.selection__product_unspsc_code__applies_to__uom
+msgid "UoM"
+msgstr "UdM"

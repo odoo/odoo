@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payslip_run_view_form" model="ir.ui.view">
+        <field name="name">hr.payslip.run.view.form.inherit.l10n.be.hr.payroll</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="l10n_be_display_eco_voucher_button" invisible="1"/>
+            </field>
+            <button name="action_draft" position="after">
+                <button string="Eco-Vouchers" name="action_l10n_be_eco_vouchers" type="object" invisible="not l10n_be_display_eco_voucher_button"/>
+            </button>
+        </field>
+    </record>
+
+    <record id="hr_payslip_run_view_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.run.view.tree.inherit.l10n.be.hr.payroll</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <header>
+                    <button name="%(l10n_be_hr_payroll.action_hr_payroll_generate_warrant_payslips)d" type="action" string="Generate Warrant Payslips" display="always"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+</odoo>

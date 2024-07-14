@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top menu / dashboard icon -->
+    <menuitem name="Documents" id="documents.menu_root" groups="documents.group_documents_user" web_icon="documents,static/description/icon.png" sequence="65"/>
+
+    <!-- Top bar menus -->
+        <menuitem name="Documents" id="documents.dashboard" parent="documents.menu_root" action="document_action" groups="documents.group_documents_user" sequence="0"/>
+        <menuitem name="Configuration" id="documents.Config" parent="documents.menu_root" groups="documents.group_documents_manager" sequence="1"/>
+
+            <menuitem name="Settings" id="documents.settings_menu" parent="documents.Config" action="configuration_action" groups="base.group_system" sequence="0"/>
+            <menuitem name="Workspaces" id="documents.folder_menu" parent="documents.Config" action="folder_action" groups="documents.group_documents_manager" sequence="1"/>
+            <menuitem name="Tags" id="documents.category_menu" parent="documents.Config" action="facet_action" groups="documents.group_documents_manager" sequence="2"/>
+            <menuitem name="Actions" id="documents.workflow_rules_menu" parent="documents.Config" groups="documents.group_documents_manager" action="workflow_rule_action" sequence="3"/>
+            <menuitem name="Shares &amp; Emails" id="documents.share_menu" parent="documents.Config" action="share_action" groups="documents.group_documents_manager" sequence="4"/>
+            <menuitem name="Activity Types" id="documents.mail_activity_type_menu" parent="documents.Config" action="mail_activity_type_action_document" groups="documents.group_documents_manager" sequence="5"/>
+            <menuitem name="Activity Plans" id="documents.mail_activity_plan_menu" parent="documents.Config" action="mail_activity_plan_action_document" groups="documents.group_documents_manager" sequence="6"/>
+
+</odoo>

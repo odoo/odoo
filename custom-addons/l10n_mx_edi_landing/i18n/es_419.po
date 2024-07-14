@@ -1,0 +1,101 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_mx_edi_landing
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-06-17 14:06+0000\n"
+"PO-Revision-Date: 2020-12-14 12:43-0600\n"
+"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>\n"
+"Language-Team: \n"
+"Language: es_419\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"X-Generator: Poedit 2.4.2\n"
+
+#. module: l10n_mx_edi_landing
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_landing.view_stock_landed_cost_form_l10n_mx_stock
+msgid "15  48  3009  0001234"
+msgstr "15  48  3009  0001234"
+
+#. module: l10n_mx_edi_landing
+#: model:ir.model.fields,field_description:l10n_mx_edi_landing.field_stock_landed_cost__l10n_mx_edi_customs_number
+msgid "Customs number"
+msgstr "Número de pedimento"
+
+#. module: l10n_mx_edi_landing
+#. odoo-python
+#: code:addons/l10n_mx_edi_landing/models/stock_landed_cost.py:0
+#, python-format
+msgid ""
+"Error!, The format of the customs number is incorrect. \n"
+"%s\n"
+"For example: 15  48  3009  0001234"
+msgstr ""
+"¡Error! El formato del número de pedimento es incorrecto. \n"
+"%s\n"
+"Por ejemplo: 15  48  3009  0001234"
+
+#. module: l10n_mx_edi_landing
+#: model:ir.model,name:l10n_mx_edi_landing.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: l10n_mx_edi_landing
+#: model:ir.model.fields,help:l10n_mx_edi_landing.field_stock_landed_cost__l10n_mx_edi_customs_number
+msgid ""
+"Optional field for entering the customs information in the case of first-"
+"hand sales of imported goods or in the case of foreign trade operations with "
+"goods or services.\n"
+"The format must be:\n"
+" - 2 digits of the year of validation followed by two spaces.\n"
+" - 2 digits of customs clearance followed by two spaces.\n"
+" - 4 digits of the serial number followed by two spaces.\n"
+" - 1 digit corresponding to the last digit of the current year, except in "
+"case of a consolidated customs initiated in the previous year of the "
+"original request for a rectification.\n"
+" - 6 digits of the progressive numbering of the custom."
+msgstr ""
+"Campo opcional para ingresar la información aduanera en el caso de ventas de "
+"bienes importados de primera mano o en el caso de operaciones de comercio "
+"exterior con bienes o servicios.\n"
+"El formato debe ser:\n"
+" - 2 dígitos del año de validación seguido por dos espacios.\n"
+" - 2 dígitos del despacho de aduana seguido de dos espacios.\n"
+" - 4 dígitos del número de serie seguido por dos espacios.\n"
+" - 1 dígito correspondiente al ultimo dígito del año actual, excepto en el "
+"caso de una aduana consolidada iniciada en el año anterior a la solicitud "
+"original de rectificación.\n"
+" - 6 dígitos de la numeración progresiva de la aduana."
+
+#. module: l10n_mx_edi_landing
+#: model:ir.model.fields,help:l10n_mx_edi_landing.field_stock_move__move_orig_fifo_ids
+msgid "Optional: previous stock move when chaining them"
+msgstr "Opcional: movimiento previo de existencias cuando se encadenan"
+
+#. module: l10n_mx_edi_landing
+#: model:ir.model.fields,field_description:l10n_mx_edi_landing.field_stock_move__move_orig_fifo_ids
+msgid "Original Fifo Move"
+msgstr "Movimiento PEPS original"
+
+#. module: l10n_mx_edi_landing
+#: model:ir.model,name:l10n_mx_edi_landing.model_stock_landed_cost
+msgid "Stock Landed Cost"
+msgstr "Coste en destinode existencias"
+
+#. module: l10n_mx_edi_landing
+#: model:ir.model,name:l10n_mx_edi_landing.model_stock_move
+msgid "Stock Move"
+msgstr "Movimiento de existencias"
+
+#. module: l10n_mx_edi_landing
+#. odoo-python
+#: code:addons/l10n_mx_edi_landing/models/stock_landed_cost.py:0
+#: model:ir.model.constraint,message:l10n_mx_edi_landing.constraint_stock_landed_cost_l10n_mx_edi_customs_number
+#, python-format
+msgid "The custom number must be unique!"
+msgstr "¡El número de pedimento debe ser único!"

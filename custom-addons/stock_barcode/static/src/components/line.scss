@@ -1,0 +1,129 @@
+$o-barcode-completed-color: #befdcc;
+
+.o_barcode_client_action .o_barcode_lines .o_barcode_line {
+    flex: 0 0 auto;
+    border-width: 1px 0;
+
+    &:first-child {
+        border-top-width: 0;
+    }
+
+    &:last-child {
+        box-shadow: 0 3px 10px $gray-300;
+        margin-bottom: 60vh;
+    }
+
+    &_details {
+        .fa:first-child {
+            opacity: 0.5;
+            margin-right: 5px;
+        }
+    }
+
+    &.o_barcode_line_package {
+        .o_barcode_line_details > * {
+            flex: 1 0 auto;
+        }
+
+        .o_barcode_line_details > .o_barcode_package_name {
+            flex: 0 1 auto;
+            overflow: hidden;
+
+            > span {
+                max-width: 100%;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+        }
+    }
+
+    &.o_faulty {
+        background-color: rgba(map-get($theme-colors, 'danger'), 0.25);
+
+        &.o_selected {
+            box-shadow: inset 0px 0px 0px 3px map-get($theme-colors, 'danger');
+        }
+    }
+
+    &.o_line_completed {
+        background: var(--barcode__line--completed, #befdcc);
+    }
+
+    &.o_line_not_completed:not(.o_faulty) {
+        background: var(--barcode__line--notCompleted, #fcf9f2);
+    }
+
+    &.o_selected {
+        box-shadow: inset 0px 0px 0px 3px $o-enterprise-action-color;
+    }
+
+    .o_barcode_scanner_qty {
+        font-size: 1em;
+        border-color: transparent; // Overwrite default badge color
+        margin-left: -$badge-padding-x; // Compensate badge padding
+
+        &[class*="badge-"] {
+            margin-left: 0; // If a style class is applied, reset compensation margin
+        }
+
+        .qty-done, .inventory_quantity {
+            min-width: 20px;
+            &.o_flash {
+                animation-name: highlighting-flash-primary;
+                animation-duration: 0.5s;
+            }
+        }
+    }
+
+    .o_line_buttons {
+        min-width: 136px;
+        max-width: 40%;
+    }
+
+    .o_line_button {
+        min-width: 60px;
+        height: 60px;
+        padding: 0 8px;
+        border-radius: 8px;
+        line-height: 16px;
+        font-size: 16px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-transform: none;
+
+        &.o_shortcut_displayed {
+            padding-top: 14px;
+        }
+
+        &.btn-secondary:not(:hover) {
+            background-color: transparent;
+            border-color: transparent;
+        }
+
+        &.o_set {
+            border: 4px solid $o-brand-primary;
+            color: $o-brand-primary;
+
+            &.o_difference {
+                color: orange;
+                border-color: orange;
+            }
+        }
+
+        &[disabled] {
+            background-color: gray;
+            border-color: gray;
+        }
+    }
+
+    .o_next_expected {
+        color: #00A09D;
+        opacity: 1 !important;
+    }
+
+    [name=source_location].o_highlight {
+        background-color: $o-barcode-completed-color;
+        & .fa { opacity: 1; }
+    }
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_move_reversal_view_inherit_helpdesk_account" model="ir.ui.view">
+            <field name="name">account.move.reversal.view.inherit.helpdesk.account</field>
+            <field name="model">account.move.reversal</field>
+            <field name="inherit_id" ref="helpdesk_account.view_account_move_reversal_inherit_helpdesk_account"/>
+            <field name="arch" type="xml">
+                <field name="helpdesk_sale_order_id" position="after">
+                    <field name="product_id"  options="{'no_create': True, 'no_create_edit': True}"/>
+                    <field name="lot_id" invisible="tracking in ['none', False]"/>
+                    <field name="tracking" invisible="1"/>
+                    <field name="suitable_product_ids" invisible="1"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

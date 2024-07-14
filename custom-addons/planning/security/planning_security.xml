@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_planning_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="category_id" ref="base.module_category_human_resources_planning"/>
+    </record>
+
+    <record id="group_planning_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="base.module_category_human_resources_planning"/>
+        <field name="implied_ids" eval="[(4, ref('group_planning_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+<data noupdate="1">
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('group_planning_manager'))]"/>
+    </record>
+
+    <record id="planning_rule_internal_user_read" model="ir.rule">
+        <field name="name">Planning: internal user can read their own shifts only and open shifts</field>
+        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="domain_force">[
+            '|',
+                ('user_id', '=', user.id),
+                '|',
+                    ('resource_id', '=', False),
+                    ('request_to_switch', '=', True),
+            ('state', '=', 'published'),
+        ]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+
+    <record id="planning_analysis_report_planning_user_rule" model="ir.rule">
+        <field name="name">Planning analysis report: user can read their own shifts</field>
+        <field name="model_id" ref="planning.model_planning_analysis_report"/>
+        <field name="domain_force">[('user_id', '=', user.id), ('state', '=', 'published')]</field>
+        <field name="groups" eval="[(4, ref('group_planning_user'))]"/>
+    </record>
+
+    <record id="planning_analysis_report_planning_manager_rule" model="ir.rule">
+        <field name="name">Planning analysis report: manager can read all the shifts</field>
+        <field name="model_id" ref="planning.model_planning_analysis_report"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_planning_manager'))]"/>
+    </record>
+
+    <record id="planning_rule_user_is_published" model="ir.rule">
+        <field name="name">Planning: user can only see published shifts</field>
+        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="domain_force">[('state', '=', 'published')]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('group_planning_user'))]"/>
+    </record>
+
+    <record id="planning_rule_manager" model="ir.rule">
+        <field name="name">Planning: manager can create/update/delete all planning entries</field>
+        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="groups" eval="[(4,ref('group_planning_manager'))]"/>
+    </record>
+
+    <record id="planning_slot_rule_multi_company" model="ir.rule">
+        <field name="name">Planning Shift multi-company</field>
+        <field name="model_id" ref="planning.model_planning_slot"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="planning_recurrency_rule_multi_company" model="ir.rule">
+        <field name="name">Planning Recurrence multi-company</field>
+        <field name="model_id" ref="planning.model_planning_recurrency"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="planning_planning_rule_multi_company" model="ir.rule">
+        <field name="name">Planning Planning multi-company</field>
+        <field name="model_id" ref="planning.model_planning_planning"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+</data>
+</odoo>

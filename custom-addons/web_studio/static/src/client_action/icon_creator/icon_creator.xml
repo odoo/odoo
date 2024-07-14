@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.IconCreator">
+    <div class="o_web_studio_icon_creator">
+        <div t-if="props.type === 'base64'" class="o_web_studio_uploaded_image mx-auto"
+            t-attf-style="background-image: url({{props.webIconData}})"
+        />
+        <t t-else="">
+            <h6 t-if="props.editable">Design your Icon</h6>
+            <div class="o_web_studio_icon">
+                <div class="o_app_icon" t-attf-style="background-color: {{props.backgroundColor}};">
+                    <i t-att-class="state.iconClass"
+                        t-attf-style="color: {{props.color}};"
+                        t-ref="app-icon"
+                    />
+                </div>
+            </div>
+            <t t-if="props.editable">
+                <div class="o_web_studio_selectors">
+                    <div class="o_web_studio_selector"
+                        t-attf-style="background-color: {{props.backgroundColor}};"
+                        t-on-click="() => this.onTogglePalette('backgroundColor')"
+                    >
+                        <span class="o_web_studio_selector_pointer" />
+                        <div t-if="show.backgroundColor" class="o_web_studio_palette"
+                            t-on-click.stop=""
+                            t-on-mouseleave="() => show.backgroundColor = false"
+                        >
+                            <div t-foreach="BG_COLORS" t-as="backgroundColor"
+                                t-key="backgroundColor_index"
+                                class="o_web_studio_selector"
+                                t-attf-style="background-color: {{backgroundColor}}"
+                                t-on-click="() => this.onPaletteItemClick('backgroundColor', backgroundColor)"
+                            />
+                        </div>
+                    </div>
+                    <div class="o_web_studio_selector"
+                        t-attf-style="background-color: {{props.color}};"
+                        t-on-click="() => this.onTogglePalette('color')"
+                    >
+                        <span class="o_web_studio_selector_pointer" />
+                        <div t-if="show.color" class="o_web_studio_palette"
+                            t-on-click.stop=""
+                            t-on-mouseleave="() => show.color = false"
+                        >
+                            <div t-foreach="COLORS" t-as="color"
+                                t-key="color_index"
+                                class="o_web_studio_selector"
+                                t-attf-style="background-color: {{color}}"
+                                t-on-click="() => this.onPaletteItemClick('color', color)"
+                            />
+                        </div>
+                    </div>
+                    <div class="o_web_studio_selector" t-on-click="() => this.onTogglePalette('iconClass')">
+                        <i t-att-class="state.iconClass" />
+                        <span class="o_web_studio_selector_pointer" />
+                        <div t-if="show.iconClass" class="o_web_studio_icons_library"
+                            t-on-click.stop=""
+                            t-on-mouseleave="() => show.iconClass = false"
+                        >
+                            <div t-foreach="ICONS" t-as="iconClass"
+                                t-key="iconClass_index"
+                                class="o_web_studio_selector"
+                                t-on-click="() => this.onPaletteItemClick('iconClass', iconClass)"
+                            >
+                                <i t-att-class="iconClass" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix" />
+            </t>
+        </t>
+        <div t-if="props.editable" class="o_web_studio_upload">
+            <a t-if="props.type === 'base64'" href="#" t-on-click.prevent.stop="onDesignIconClick">
+                Design your Icon
+            </a>
+            <span> or </span>
+            <t t-component="FileInput" t-props="fileInputProps" onUpload.bind="onFileUploaded">
+                <a href="#">
+                    <t t-if="props.type === 'base64'">upload one</t>
+                    <t t-else="">upload it</t>
+                </a>
+            </t>
+        </div>
+    </div>
+</t>
+
+</templates>

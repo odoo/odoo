@@ -1,0 +1,139 @@
+.o_referral_kanban {
+    &.o_kanban_renderer {
+        background: none !important;
+    }
+    .o_nocontent_help {
+        .o_view_nocontent_referral_kanban:before {
+            @extend %o-nocontent-init-image;
+            width: 500px;
+            height: 250px;
+            background: transparent url(/hr_referral/static/src/img/points-gift.png) no-repeat bottom;
+            margin-bottom: 2rem;
+        }
+        .o_view_nocontent_referral_job_kanban:before {
+            @extend %o-nocontent-init-image;
+            width: 500px;
+            height: 300px;
+            background: transparent url(/hr_referral/static/src/img/refer-friends.png) no-repeat center;
+            background-size: 400px;
+        }
+        p {
+            color: grey !important;
+            font-size: $font-size-lg !important;
+            font-family: ToonTime, $o-font-family-sans-serif;
+        }
+    }
+}
+
+.o_referral_kanban_background {
+        background: center/cover no-repeat;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        z-index: -1;
+        .hr_referral_bg_city {
+            background: url('/hr_referral/static/src/img/city.svg') center/cover no-repeat;
+            height: 100%;
+        }
+        .hr_referral_bg_grass {
+            background: url('/hr_referral/static/src/img/grass.svg') top center repeat-x, linear-gradient(0deg, #032a39 80%, rgba(255, 255, 255, 0) 96%);
+            width: 100%;
+            height: 40%;
+            bottom: 0;
+            position: absolute;
+        }
+}
+
+// ------- Kanban View Layout -------
+.o_referral_kanban_view .o_kanban_renderer.o_kanban_ungrouped .o_kanban_record{
+    @include media-breakpoint-down(md) {
+        margin: .5rem;
+        flex: 1 1 auto;
+    }
+}
+.o_referral_kanban_view .o_kanban_renderer {
+    position: initial;
+
+    // ---------- Kanban Record, fill image design ----------
+    // Records with images that compensate record's padding
+    // filling all the available space
+    .o_kanban_record_has_image_fill {
+        display: flex;
+
+        .o_kanban_image_fill_top {
+            position: relative;
+            margin: $o-kanban-inside-vgutter $o-kanban-inside-hgutter ;
+            margin-bottom: $o-kanban-inside-hgutter;
+            flex: 1 0 $o-kanban-image-fill-width;
+            min-height: 95px;
+            background: {
+                size: cover;
+                position: center;
+                repeat: no-repeat;
+            };
+
+            &.o_kanban_image_full {
+                background-size: contain;
+            }
+
+            img {
+                display: block;
+                margin: 0 auto;
+                max-width: 100%;
+            }
+        }
+    }
+
+    .o_kanban_referral_top_right{
+        @include o-position-absolute($top: 0, $right: 0);
+        margin-top: 1px;
+        margin-right: 1px;
+        display: flex;
+        align-items: center;
+        padding: $o-kanban-inside-vgutter $o-kanban-inside-hgutter;
+    }
+
+    .o_head_friend {
+        flex-direction: column;
+            img {
+                max-height: 60px;
+                max-width: 60px;
+            }
+    }
+
+    .o_text_title_left {
+        display: flex;
+        justify-content: space-between;
+
+        .text-success {
+            flex-shrink: 0;
+        }
+    }
+
+    .o_button_referral {
+        margin: 0 0 10px 0;
+    }
+
+    .o_to_share {
+        .btn span{
+            font-size: 0.9rem;
+        }
+        .btn .fa{
+            font-size: 3rem;
+            @include media-breakpoint-up(sm) {
+                font-size: 2rem
+            }
+        }
+    }
+}
+
+.o_referral_kanban_view.o_kanban_referral_job .o_kanban_renderer{
+    &.o_kanban_ungrouped {
+        .o_kanban_record {
+            max-width: 450px;
+            @include media-breakpoint-up(sm) {
+                min-width: 450px;
+            }
+        }
+    }
+}

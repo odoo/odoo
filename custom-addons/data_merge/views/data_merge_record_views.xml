@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_data_merge_record_list">
+            <field name="name">Deduplication Record List</field>
+            <field name="model">data_merge.record</field>
+            <field name="arch" type="xml">
+                <tree expand="true" js_class="data_merge_list" decoration-danger="is_deleted" create="0" export_xlsx="0">
+                    <field name="is_deleted" column_invisible="True" />
+                    <field name="res_model_name" column_invisible="True" />
+                    <field name="group_id" column_invisible="True" />
+                    <field name="record_create_date" widget="date" optional="show" />
+                    <field name="record_create_uid" optional="hide" />
+                    <field name="record_write_date" widget="date" optional="hide" />
+                    <field name="record_write_uid" optional="hide" />
+                    <field name="name" />
+                    <field name="field_values" optional="show" />
+                    <field name="differences" optional="hide" />
+                    <field name="used_in" optional="show" />
+                    <field name="res_id" string="ID" optional="show" />
+                    <field name="is_master" widget="boolean_toggle" />
+
+                    <groupby name="group_id">
+                        <field name="active" invisible="1" />
+                        <button type="object" name="merge_records" string="Merge" />
+                        <button type="object" name="discard_records" string="Discard" class="text-danger text-uppercase o_data_merge_discard_btn" invisible="not active"/>
+                    </groupby>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_data_merge_record_search">
+            <field name="name">Deduplication Record Search</field>
+            <field name="model">data_merge.record</field>
+            <field name="arch" type="xml">
+                <search string="Records">
+                    <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                    <field name="model_id" string="Model" />
+                    <filter string="Discarded" name="discarded" domain="[('is_discarded', '=', True), ('active', '=', False)]" context="{'active_test': False}" />
+                    <searchpanel>
+                        <field name="model_id" icon="fa-bars" string="Rule" enable_counters="1"/>
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="data_merge_record_view_search_merge_action">
+            <field name="name">Deduplication Record Search</field>
+            <field name="model">data_merge.record</field>
+            <field name="mode">primary</field>
+            <field name="priority" eval="1000"/>
+            <field name="arch" type="xml">
+                <search string="Records">
+                    <field name="model_id" string="Model" />
+                    <filter string="Discarded" name="discarded" domain="[('is_discarded', '=', True), ('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_data_merge_record">
+            <field name="name">Duplicates</field>
+            <field name="res_model">data_merge.record</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_data_merge_record_search" />
+            <field name="context">{ 'group_by': ['group_id'] }</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                No duplicates found
+              </p>
+              <p>
+              Configure rules to identify duplicate records
+              </p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_data_merge_record_notification">
+            <field name="name">Duplicates</field>
+            <field name="res_model">data_merge.record</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_data_merge_record_search" />
+            <field name="context">{ 'group_by': ['group_id'], 'searchpanel_default_model_id': active_id }</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                No duplicates found
+              </p>
+              <p>
+              Configure rules to identify duplicate records
+              </p>
+            </field>
+        </record>
+    </data>
+</odoo>

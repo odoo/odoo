@@ -1,0 +1,102 @@
+// = Gantt View Variables
+// ============================================================================
+
+// Define the necessary conditions to provide visual feedback on hover,
+// focus, drag, clone and resize.
+@mixin o-gantt-hover() {
+    &:hover,
+    &:focus,
+    &.o_dragged_pill,
+    &.ui-resizable-resize {
+        // Avoid visual feedback if 'o_gantt_renderer' has class 'o_grabbing', 'o_copying', 'o_no_dragging' or 'o_connect'
+        @at-root #{selector-replace(&, ".o_gantt_renderer", ".o_gantt_renderer:not(.o_grabbing):not(.o_copying):not(.o_no_dragging):not(.o_connect)")} {
+            @content;
+        }
+    }
+}
+
+// Generate background and text for each color.
+@mixin o-gantt-hoverable-colors($color) {
+    $color-subdle: mix($color, white, 60%);
+    color: color-contrast($color-subdle);
+    background-color: $color-subdle;
+
+    @include o-gantt-hover() {
+        background-color: $color;
+        color: color-contrast($color);
+    }
+}
+
+// Generate stripes decorations for each color.
+@mixin o-gantt-gradient-decorations($color) {
+    $color-subdle: mix($color, white, 60%);
+    background-image: repeating-linear-gradient(
+        -45deg,
+        $color-subdle 0 10px,
+        lighten($color-subdle, 6%) 10px 20px
+    );
+
+    @include o-gantt-hover() {
+        background-image: repeating-linear-gradient(
+            -45deg,
+            $color 0 10px,
+            lighten($color, 6%) 10px 20px
+        );
+    }
+}
+
+@mixin o-gantt-ribbon-decoration($color) {
+    content: "";
+    width: 20px;
+    height: 16px;
+    @include o-position-absolute(-11px, $left: -13px);
+    box-shadow: 1px 1px 0 white;
+    background: $color;
+    transform: rotate(45deg);
+}
+
+@mixin o-gantt-cell {
+    &.o_gantt_today {
+        background-color: $gantt-highlight-today-bg;
+        border-left-color: $gantt-highlight-today-border;
+        border-top-color: $gantt-highlight-today-border;
+
+        + .o_gantt_header_cell,
+        + .o_gantt_cell {
+            border-left-color: $gantt-highlight-today-border;
+        }
+    }
+}
+
+@mixin o-gantt-zindex($level) {
+    z-index: map-get(
+        (
+            // Grid and grid interactions level
+            grid: 0,
+            grid-interact: 1,
+            // Pills level
+            pill: 10,
+            // Interactions => over pills
+            interact: 20,
+            // Top-most elements
+            top: 30,
+            // No-content helper
+            view-nocontent: 25,
+        ),
+        $level
+    );
+}
+
+$gantt-border-color: $o-gray-300 !default;
+$gantt-pill-height: 31px !default;
+$gantt-highlight-cell-color: rgba(0, 160, 157, 0.3) !default;
+$gantt-highlight-today-border: #dca665 !default;
+$gantt-highlight-today-bg: #fffaeb !default;
+$gantt-highlight-hover-row: rgba($o-brand-primary, 0.1) !default;
+$gantt-row-open-bg: $o-gray-100 !default;
+$gantt-pill-consolidated-height: 24px !default;
+$gantt-unavailability-bg: $o-gray-200 !default;
+$o-connector-creator-bullet-radius: 3px !default;
+$o-connector-creator-size: 8px !default;
+$o-connector-creator-bullet-diameter: 2 * $o-connector-creator-bullet-radius !default;
+$o-connector-wrapper-height: $o-connector-creator-size + $o-connector-creator-bullet-radius !default;

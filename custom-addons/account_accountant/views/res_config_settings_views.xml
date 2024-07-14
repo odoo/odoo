@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account.accountant</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <app name="account" position="attributes">
+                <attribute name="data-string">Accounting</attribute>
+                <attribute name="string">Accounting</attribute>
+                <attribute name="logo">/account_accountant/static/description/icon.png</attribute>
+            </app>
+            <setting id="fiscalyear" position="replace">
+                <setting id="fiscalyear" string="Fiscal Year">
+                    <div class="content-group">
+                        <div class="d-flex mt16 align-items-baseline">
+                            <label for="fiscalyear_last_month" string="Last Day" class="col-lg-3 o_light_label pe-2 pe-lg-0"/>
+                            <div class="col-lg-9">
+                                <field name="fiscalyear_last_month" class="pe-2"/>
+                                <field name="fiscalyear_last_day"/>
+                            </div>
+                        </div>
+                    </div>
+                </setting>
+                <setting groups="account.group_account_manager" help="The invoices up to this date will not be taken into account as accounting entries">
+                    <field name="invoicing_switch_threshold"/>
+                </setting>
+                <setting help="Define fiscal years of more or less than one year">
+                    <field name="group_fiscal_year"/>
+                    <div class="mt16">
+                        <button name="%(account_accountant.actions_account_fiscal_year)d" icon="oi-arrow-right"
+                                type="action" string="Fiscal Years" class="btn-link"
+                                invisible="not group_fiscal_year"/>
+                    </div>
+                </setting>
+            </setting>
+            <setting id="dynamic_report" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </setting>
+            <block id="bank_cash" position="inside">
+                <setting groups="base.group_no_one" company_dependent="1" help="Record cost of goods sold in your journal entries">
+                    <field name="use_anglo_saxon"/>
+                </setting>
+            </block>
+            <xpath expr="//block[@id='account_vendor_bills']" position="inside">
+                <setting string="Predict vendor bill product" help="The system will try to predict the product on vendor bill lines based on the label of the line">
+                    <field name="predict_bill_product"/>
+                </setting>
+            </xpath>
+
+            <setting id="post_bank_transactions_and_payments_setting" position="after">
+                <setting string="Post Deferred entries in:" company_dependent="1">
+                    <div class="content-group">
+                        <div class="row mt8">
+                            <label for="deferred_journal_id" class="col-lg-5 o_light_label" string="Journal"/>
+                            <field name="deferred_journal_id" domain="[('type', '=', 'general'), ('active', '=', True)]"/>
+                        </div>
+                        <div class="row mt8">
+                            <label for="deferred_expense_account_id" class="col-lg-5 o_light_label"/>
+                            <field name="deferred_expense_account_id" domain="[('account_type', '=', 'asset_current'), ('deprecated', '=', False)]"/>
+                        </div>
+                        <div class="row mt8">
+                            <label for="deferred_revenue_account_id" class="col-lg-5 o_light_label"/>
+                            <field name="deferred_revenue_account_id" domain="[('account_type', '=', 'liability_current'), ('deprecated', '=', False)]"/>
+                        </div>
+                        <div class="row mt8">
+                            <label for="generate_deferred_expense_entries_method" class="col-lg-5 o_light_label" string="Generate Expense Entries" />
+                            <field name="generate_deferred_expense_entries_method"/>
+                        </div>
+                        <div class="row mt8">
+                            <label for="generate_deferred_revenue_entries_method" class="col-lg-5 o_light_label" string="Generate Revenue Entries"/>
+                            <field name="generate_deferred_revenue_entries_method"/>
+                        </div>
+                        <div class="row mt8">
+                            <label for="deferred_amount_computation_method" class="col-lg-5 o_light_label" string="Amount Computation" />
+                            <field name="deferred_amount_computation_method"/>
+                        </div>
+                    </div>
+                </setting>
+            </setting>
+
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="l10n_mx_edi_pos.PaymentScreen" t-inherit="point_of_sale.PaymentScreen" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('right-content')]" position="inside">
+            <div t-if="this.areMxFieldsVisible()" class="d-flex flex-column border text-bg-primary bg-opacity-25">
+                <span class="p-2 px-3">
+                    Usage: <t t-out="pos.l10n_mx_edi_usage.find((item) => item.value === this.currentOrder.l10n_mx_edi_usage).name"/>
+                </span>
+                <span class="p-2 px-3">
+                    Invoice to public: <t t-out="this.currentOrder.l10n_mx_edi_cfdi_to_public ? 'Yes': 'No'"/>
+                </span>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

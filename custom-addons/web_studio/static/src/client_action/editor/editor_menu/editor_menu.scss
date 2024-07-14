@@ -1,0 +1,89 @@
+.o_web_studio_menu {
+    background-color: $o-web-studio-bg-medium;
+    text-align: center;
+    min-height: $o-web-studio-menu-height;
+    border-bottom: $o-web-studio-menu-item-border-width solid $o-web-studio-bg-dark;
+
+    .o_web_studio_breadcrumb {
+        display: inline-flex;
+        flex: 0 1 $o-web-studio-sidebar-width;
+
+        > ol {
+            background-color: inherit;
+            margin-left: 12px;
+
+            > li {
+                font-size: 0.9em;
+                text-transform: uppercase;
+                line-height: 1;
+                font-weight: bold;
+                color: $o-web-studio-text-inactive;
+
+                &.active:not(:first-child) {
+                    color: $o-web-studio-text-light;
+                }
+
+                &.o_back_button:hover {
+                    cursor: pointer;
+                    color: white;
+                }
+
+                & + li:before {
+                    color: $o-web-studio-text-inactive;
+                    font-weight: normal;
+                    content: "\003E";
+                }
+            }
+        }
+    }
+
+    .o_web_studio_menu_undo_redo {
+        button {
+            font-size: 0.8rem;
+            color: gray;
+            &.o_web_studio_active {
+                color: $o-web-studio-text-inactive;
+
+                &:hover {
+                    cursor: pointer;
+                    color: $o-web-studio-text-light;
+                }
+            }
+        }
+
+        div {
+            height: 1.2rem;
+            border: 1px solid gray;
+        }
+
+    }
+
+    .o_web_studio_snackbar {
+        align-self: center;
+        color: $o-web-studio-text-inactive;
+    }
+
+    .o_menu_sections {
+        a {
+            font-size: 0.9rem;
+            color: $o-web-studio-text-inactive; 
+        }
+
+        li:hover {
+            background-color: darken($o-web-studio-bg-medium, 2%);
+            box-shadow: 0px 3px lighten($o-brand-primary, 10%);
+            a {
+                color: $o-web-studio-text-light;
+            }
+        }
+    }
+
+    .o_web_studio_views_icons {
+        a {
+            color: $o-web-studio-text-inactive;
+            &:hover {
+                color: $o-web-studio-text-light;
+            }
+        }
+    }
+}

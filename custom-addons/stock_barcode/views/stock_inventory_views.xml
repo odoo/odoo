@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="stock_quant_barcode" model="ir.ui.view">
+        <field name="name">stock.quant.barcode</field>
+        <field name="model">stock.quant</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form class="o_barcode_line_form flex-column">
+                <div class="row mt-2 mb-2">
+                    <field name="product_uom_id" invisible="1"/>
+                    <field name="location_id" invisible="1"/>
+                    <div class="col-8 d-flex align-items-baseline">
+                        <i class="fa fa-fw fa-lg fa-tags me-3" title="Product"/>
+                        <div class="flex-column lh-1">
+                            <div>
+                                <field name="product_reference_code" invisible="not id or not product_reference_code"/>
+                            </div>
+                            <div>
+                                <field name="product_id" placeholder="Product"
+                                    context="{'default_detailed_type': 'product'}"
+                                    domain="[('type', 'in', ['product'])]"
+                                    required="1"
+                                    readonly="id"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <field name="image_1920" class="oe_avatar" widget="image_preview" invisible="not image_1920"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 my-2 d-flex align-items-baseline">
+                        <i class="fa fa-fw fa-lg fa-cube me-3" title="Counted Quantity"/>
+                        <field name="inventory_quantity" class="w-100 w-md-50 text-end" options="{'type': 'number'}" placeholder="Counted Quantity"/>
+                        <field name="quantity" widget="set_reserved_qty_button" field_to_set="inventory_quantity"/>
+                    </div>
+                </div>
+                <div class="row justify-content-center justify-content-md-start">
+                    <div class="col-10 col-md-8 my-2 ms-md-5 align-items-baseline"
+                        invisible="tracking == 'serial'">
+                        <widget name="digipad" quantity_field="inventory_quantity"/>
+                    </div>
+                </div>
+                <div class="row" groups="stock.group_stock_multi_locations">
+                    <div class="col-12 col-md-6 my-2 d-flex align-items-baseline">
+                        <i class="fa fa-fw fa-lg fa-map-marker me-3" title="Location"/>
+                        <field name="location_id" placeholder="Location"
+                            options="{'no_create': True}" force_save="1"
+                            readonly="id"/>
+                    </div>
+                </div>
+                <div class="row" groups="stock.group_production_lot"
+                    invisible="id and not lot_id">
+                    <div class="col-12 col-md-6 my-2 d-flex align-items-baseline" invisible="tracking == 'none' or not product_id">
+                        <i class="fa fa-fw fa-lg fa-barcode me-3" title="Serial/Lot Number"/>
+                        <field name="lot_id"
+                            readonly="id"
+                            context="{'default_company_id': company_id, 'default_product_id': product_id}"
+                            placeholder="Serial/Lot Number"/>
+                    </div>
+                </div>
+                <div class="row" groups="stock.group_tracking_lot"
+                    invisible="id and not package_id">
+                    <div class="col-12 col-md-6 my-2 d-flex align-items-baseline">
+                        <i class="fa fa-fw fa-lg fa-archive me-3" title="Package"/>
+                        <field name="package_id" placeholder="Package"
+                            readonly="id"
+                            domain="[('location_id', '=', location_id)]"/>
+                    </div>
+                </div>
+                <div class="row" groups="stock.group_tracking_owner">
+                    <div class="col-12 col-md-6 my-2 d-flex align-items-baseline">
+                        <i class="fa fa-fw fa-lg fa-user-o me-3" title="Owner"/>
+                        <field name="owner_id" placeholder="Owner" readonly="id"/>
+                    </div>
+                </div>
+                <div class="fixed-bottom">
+                    <div class="o_barcode_control d-flex">
+                        <button string="Discard" class="btn btn-secondary o_discard" special="cancel"/>
+                        <button string="Confirm" class="btn btn-primary o_save" special="save"/>
+                    </div>
+                </div>
+
+                <group>
+                    <field name="id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="tracking" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="inventory_date" invisible="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+</data></odoo>

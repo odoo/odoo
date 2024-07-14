@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="budget_line_analytic_project1" model="crossovered.budget.lines">
+            <field name="crossovered_budget_id" ref="account_budget.crossovered_budget_budgetoptimistic0"/>
+            <field eval="str(datetime.now().year+1)+'-01-01'" name="date_from"/>
+            <field eval="str(datetime.now().year+1)+'-12-31'" name="date_to"/>
+            <field name="planned_amount">2500</field>
+            <field name="analytic_account_id" ref="project.analytic_office_design"/>
+        </record>
+        <record id="budget_line_analytic_project2" model="crossovered.budget.lines">
+            <field name="crossovered_budget_id" ref="account_budget.crossovered_budget_budgetoptimistic0"/>
+            <field eval="str(datetime.now().year+1)+'-01-01'" name="date_from"/>
+            <field eval="str(datetime.now().year+1)+'-12-31'" name="date_to"/>
+            <field name="planned_amount">3500</field>
+            <field name="analytic_account_id" ref="project.analytic_office_design"/>
+        </record>
+        <record id="budget_line_analytic_project3" model="crossovered.budget.lines">
+            <field name="crossovered_budget_id" ref="account_budget.crossovered_budget_budgetoptimistic0"/>
+            <field eval="str(datetime.now().year+1)+'-01-01'" name="date_from"/>
+            <field eval="str(datetime.now().year+1)+'-12-31'" name="date_to"/>
+            <field name="planned_amount">1500</field>
+            <field name="analytic_account_id" ref="project.analytic_research_development"/>
+        </record>
+        <record id="budget_line_analytic_project4" model="crossovered.budget.lines">
+            <field name="crossovered_budget_id" ref="account_budget.crossovered_budget_budgetoptimistic0"/>
+            <field eval="str(datetime.now().year+1)+'-01-01'" name="date_from"/>
+            <field eval="str(datetime.now().year+1)+'-12-31'" name="date_to"/>
+            <field name="planned_amount">2000</field>
+            <field name="analytic_account_id" ref="project.analytic_research_development"/>
+        </record>
+        <record id="budget_line_analytic_project5" model="crossovered.budget.lines">
+            <field name="crossovered_budget_id" ref="account_budget.crossovered_budget_budgetoptimistic0"/>
+            <field eval="str(datetime.now().year+1)+'-01-01'" name="date_from"/>
+            <field eval="str(datetime.now().year+1)+'-12-31'" name="date_to"/>
+            <field name="planned_amount">6000</field>
+            <field name="analytic_account_id" ref="project.analytic_renovations"/>
+        </record>
+        <record id="budget_line_analytic_project6" model="crossovered.budget.lines">
+            <field name="crossovered_budget_id" ref="account_budget.crossovered_budget_budgetoptimistic0"/>
+            <field eval="str(datetime.now().year+1)+'-01-01'" name="date_from"/>
+            <field eval="str(datetime.now().year+1)+'-12-31'" name="date_to"/>
+            <field name="planned_amount">500</field>
+            <field name="analytic_account_id" ref="project.analytic_renovations"/>
+        </record>
+    </data>
+</odoo>

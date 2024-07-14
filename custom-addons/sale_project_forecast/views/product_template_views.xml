@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_form_view_invoice_policy_inherit_sale_project_forecast" model="ir.ui.view">
+        <field name="name">product.template.inherit.sale.project.forecast.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="sale_planning.product_template_form_view_invoice_policy_inherit_sale_planning"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='service_policy_div']" position="attributes">
+                <attribute name="invisible">type != 'service' or service_policy in ['delivered_manual', 'delivered_milestones']</attribute>
+            </xpath>
+            <xpath expr="//label[@for='planning_enabled']" position="attributes">
+                <attribute name="invisible">type != 'service' or service_policy in ['delivered_manual', 'delivered_milestones']</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

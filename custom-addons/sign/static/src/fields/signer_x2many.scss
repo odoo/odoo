@@ -1,0 +1,14 @@
+.o_field_signer_x2many {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px 16px;
+
+    .o_signer_one2many_mail_sent_order input {
+        width: 1.5rem;
+        text-align: center;
+    }
+
+    @include media-breakpoint-up(sm) {
+        grid-template-columns: fit-content(150px) 1fr;
+    }
+}

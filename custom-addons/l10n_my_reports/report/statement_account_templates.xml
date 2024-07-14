@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_statement_account_document">
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="o.with_context(lang=o.env.lang)"/>
+
+            <div class="page">
+                <div class="oe_structure"/>
+
+                <div class="mt-4 text-center">
+                    <h5>Statement of Account</h5>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-6 bm-2">
+                        <strong>Customer:</strong>
+                        <span t-field="o.name" />
+                    </div>
+                    <div class="col-6 bm-2">
+                        <strong>Statement Date:</strong>
+                        <span t-esc="date_to" class="m-0 ps-2" t-options='{"widget": "date"}'/>
+                    </div>
+                </div>
+                <div class="row mb32">
+                    <div class="col-6 bm-2">
+                        <strong>Address:</strong>
+                        <span class="d-inline-block" t-esc="o" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True, "separator": ", "}'/>
+                    </div>
+                </div>
+
+                <t t-set="months_overdue_dict" t-value="{}"/>
+                <table class="table table-sm table-bordered o_main_table mt-4 border-dark">
+                    <thead>
+                        <tr>
+                            <th class="text-start"><span>Date</span></th>
+                            <th class="text-start"><span>Ref</span></th>
+                            <th class="text-start"><span>Due Date</span></th>
+                            <th class="text-start"><span>Balance</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="o.unreconciled_aml_ids.filtered_domain(domain)" t-as="line">
+                            <t t-set="month_diff"
+                                t-value="max([min([(date_to.year - line.date_maturity.year) * 12 + date_to.month - line.date_maturity.month, 11]), 0]) if line.date_maturity else -1" />
+                            <t t-if="line.date_maturity"
+                                t-esc="months_overdue_dict.update({month_diff: months_overdue_dict.get(month_diff, 0) + line.amount_residual_currency})" />
+                            <tr>
+                                <td><span t-field="line.invoice_date" /></td>
+                                <td><span t-field="line.move_name" /></td>
+                                <td><span t-field="line.date_maturity" /></td>
+                                <td><span t-field="line.amount_residual_currency" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+                <div class="text-end">
+                    <strong>Total:</strong>
+                    <span t-field="o.total_due" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                </div>
+                <div class="text-end">
+                    <strong>Total Overdue:</strong>
+                    <span t-field="o.total_overdue" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                </div>
+
+                <table class="table table-sm table-bordered mt-5 border-dark border">
+                    <tr class="fw-bold">
+                        <td class="text-start"><span>Current</span></td>
+                        <td class="text-start"><span>1 Month</span></td>
+                        <td class="text-start"><span>2 Months</span></td>
+                        <td class="text-start"><span>3 Months</span></td>
+                        <td class="text-start"><span>4 Months</span></td>
+                        <td class="text-start"><span>5 Months</span></td>
+                    </tr>
+                    <tr>
+                        <t t-foreach="range(0, 6)" t-as="month_overdue">
+                            <td class="text-start"><span t-esc="months_overdue_dict.get(month_overdue, 0)" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                        </t>
+                    </tr>
+                    <tr class="fw-bold">
+                        <td class="text-start"><span>6 Months</span></td>
+                        <td class="text-start"><span>7 Months</span></td>
+                        <td class="text-start"><span>8 Months</span></td>
+                        <td class="text-start"><span>9 Months</span></td>
+                        <td class="text-start"><span>10 Months</span></td>
+                        <td class="text-start"><span>11 &amp; Over</span></td>
+                    </tr>
+                    <tr>
+                        <t t-foreach="range(6, 12)" t-as="month_overdue">
+                            <td class="text-start"><span t-esc="months_overdue_dict.get(month_overdue, 0)" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                        </t>
+                    </tr>
+                </table>
+
+                <div class="row mt-5">
+                    <div class="col-6 p-2">
+                        <span t-field="env.company.l10n_my_description" />
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_statement_account">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="l10n_my_reports.report_statement_account_document" t-lang="o.env.lang"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>

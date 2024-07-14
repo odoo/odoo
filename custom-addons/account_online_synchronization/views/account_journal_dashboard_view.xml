@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_journal_dashboard_inherit_online_sync" model="ir.ui.view">
+            <field name="name">account.journal.dashboard.inherit.online.sync</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+            <field name="arch" type="xml">
+                <field name="kanban_dashboard" position="after">
+                    <field name="expiring_synchronization_date"/>
+                    <field name="expiring_synchronization_due_day"/>
+                    <field name="next_link_synchronization"/>
+                    <field name="account_online_account_id"/>
+                    <field name="account_online_link_state"/>
+                    <field name="online_sync_fetching_status"/>
+                </field>
+
+                <xpath expr="//div[@name='bank_journal_transactions']" position="attributes">
+                    <attribute name="invisible">account_online_account_id</attribute>
+                </xpath>
+
+                <xpath expr='//div[@name="bank_journal_cta"]' position='inside'>
+                    <t t-if="dashboard.bank_statements_source === 'online_sync'">
+                        <t t-if="record.account_online_link_state.raw_value === 'connected' and record.account_online_account_id">
+                            <widget name="refresh_spin_widget" groups="account.group_account_manager"/>
+                            <span invisible="not expiring_synchronization_date" groups="account.group_account_manager">
+                                <widget name="connected_until_widget"/>
+                            </span>
+                        </t>
+                        <t t-elif="record.account_online_link_state.raw_value == 'error' || (record.expiring_synchronization_date.raw_value &amp;&amp; record.expiring_synchronization_due_day.value &lt;= 0)">
+                            <button groups="account.group_account_user" type="object" name="manual_sync" class="btn btn-danger">Reconnect Bank</button>
+                        </t>
+                        <t t-elif="record.account_online_link_state.raw_value == 'disconnected'">
+                            <button groups="account.group_account_user" type="object" name="action_reconnect_online_account" class="btn btn-danger">Reconnect Bank</button>
+                        </t>
+                    </t>
+                </xpath>
+
+                <xpath expr='//button[@name="action_configure_bank_journal"]' position='replace'>
+                    <button groups="account.group_account_manager" invisible="account_online_account_id"
+                            type="object" name="action_configure_bank_journal" class="btn btn-primary me-1">Connect Bank</button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

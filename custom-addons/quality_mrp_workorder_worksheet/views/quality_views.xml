@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="quality_check_view_form_tablet_inherit_quality_control_worksheet" model="ir.ui.view">
+        <field name="name">quality.check.view.form.inherit.quality.worksheet.tablet</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="mrp_workorder.quality_check_view_form_tablet"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='do_measure']" position="after">
+                <div invisible="test_type != 'worksheet'">
+                    <button name="action_fill_sheet" type="object" class="btn-primary" icon="fa-pencil" string="Fill in Worksheet"/>
+                </div>
+                <button name="action_worksheet_check" type="object" class="btn-primary" string="Validate" invisible="test_type != 'worksheet'" barcode_trigger="next"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

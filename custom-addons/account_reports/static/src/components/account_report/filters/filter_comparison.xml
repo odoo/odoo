@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportFilterComparison">
+        <Dropdown togglerClass="'btn btn-secondary'">
+            <t t-set-slot="toggler">
+                <i class="fa fa-bar-chart me-1"/>Comparison
+
+                <t t-if="controller.options.comparison.filter === 'custom'">
+                    <t t-if="controller.options.date.mode === 'range'">
+                        <t t-esc="`: ${ localeDateFrom('comparison') } - ${ localeDateTo('comparison') }`"/>
+                    </t>
+                    <t t-if="controller.options.date.mode === 'single'">
+                        <t t-esc="`: ${ localeDateTo('comparison') }`"/>
+                    </t>
+                </t>
+                <t t-else="">
+                    <t t-if="controller.options.comparison.string">
+                        <t t-esc="`: ${ controller.options.comparison.string }`"/>
+                    </t>
+                </t>
+            </t>
+
+            <DropdownItem
+                class="{ 'selected': (controller.options.comparison.filter == 'no_comparison') }"
+                onSelected="() => this.updateFilter('comparison.filter', 'no_comparison')"
+            >
+                No Comparison
+            </DropdownItem>
+
+            <div class="dropdown-divider"/>
+
+            <div
+                class="dropdown-item period"
+                t-att-class="(controller.options.comparison.filter == 'previous_period') ? 'selected' : ''"
+            >
+                <label class="d-flex align-items-center">
+                    Previous Period
+                </label>
+
+                <div> <!-- This div is needed for the 'justify-content_between' on the parent -->
+                    <input
+                        min="1"
+                        type="number"
+                        t-att-value="controller.options.comparison.number_period"
+                        t-on-change="(ev) => this.setNumberPeriods(ev)"
+                    />
+
+                    <button
+                        class="btn btn-sm btn-primary"
+                        t-on-click="() => this.updateFilter('comparison.filter', 'previous_period')"
+                    >
+                        Apply
+                    </button>
+                </div>
+            </div>
+
+            <div class="dropdown-divider"/>
+
+            <div
+                name="filter_comparison_same_period_last_year"
+                class="dropdown-item period"
+                t-att-class="(controller.options.comparison.filter == 'same_last_year') ? 'selected' : ''"
+            >
+                <label class="d-flex align-items-center">
+                    Same Period Last Year
+                </label>
+
+                <div> <!-- This div is needed for the 'justify-content_between' on the parent -->
+                    <input
+                        min="1"
+                        type="number"
+                        t-att-value="controller.options.comparison.number_period"
+                        t-on-change="(ev) => this.setNumberPeriods(ev)"
+                    />
+
+                    <button
+                        class="btn btn-sm btn-primary"
+                        t-on-click="() => this.updateFilter('comparison.filter', 'same_last_year')"
+                    >
+                        Apply
+                    </button>
+                </div>
+            </div>
+
+            <div class="dropdown-divider"/>
+
+            <t t-if="controller.options.date.mode === 'range'">
+                <div
+                    name="filter_comparison_custom"
+                    class="dropdown-item date"
+                    t-att-class="(controller.options.comparison.filter == 'custom') ? 'selected' : ''"
+                >
+                    <label class="d-flex align-items-center">
+                        From
+                    </label>
+                    <DateTimeInput
+                        type="'date'"
+                        value="dateFrom('comparison')"
+                        onChange="(dateFrom) => this.setDateFrom('comparison', dateFrom)"
+                    />
+
+                    <label class="d-flex align-items-center">
+                        to
+                    </label>
+                    <DateTimeInput
+                        type="'date'"
+                        value="dateTo('comparison')"
+                        onChange="(dateTo) => this.setDateTo('comparison', dateTo)"
+                    />
+
+                    <button
+                        class="btn btn-sm btn-primary"
+                        t-on-click="() => this.updateFilter('comparison.filter', 'custom')"
+                    >
+                        Apply
+                    </button>
+                </div>
+            </t>
+
+            <t t-if="controller.options.date.mode === 'single'">
+                <div
+                    class="dropdown-item date"
+                    t-att-class="(controller.options.comparison.filter == 'custom') ? 'selected' : ''"
+                >
+                    <label class="d-flex align-items-center">
+                        Date
+                    </label>
+
+                    <div> <!-- This div is needed for the 'justify-content_between' on the parent -->
+                        <DateTimeInput
+                            type="'date'"
+                            value="dateTo('comparison')"
+                            onChange="(dateTo) => this.setDateTo('comparison', dateTo)"
+                        />
+
+                        <button
+                            class="btn btn-sm btn-primary"
+                            t-on-click="() => this.updateFilter('comparison.filter', 'custom')"
+                        >
+                            Apply
+                        </button>
+                    </div>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

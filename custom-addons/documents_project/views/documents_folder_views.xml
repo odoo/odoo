@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="folder_view_form_inherit" model="ir.ui.view">
+        <field name="name">folder.view.form.inherit</field>
+        <field name="model">documents.folder</field>
+        <field name="inherit_id" ref="documents.folder_view_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <field name="parent_folder_id" position="attributes">
+                <attribute name="context">{'project_documents_template_folder': context.get('project_documents_template_folder')}</attribute>
+                <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

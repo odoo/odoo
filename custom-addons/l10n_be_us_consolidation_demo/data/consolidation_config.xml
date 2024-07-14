@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--CONSOLIDATION CHART-->
+        <record id="test_chart" model="consolidation.chart">
+            <field name="name">Test chart</field>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="company_ids" eval="[(6,0, [ref('base.main_company'), ref('l10n_be.demo_company_be')])]"/>
+        </record>
+        <!--ANALYSIS PERIODs-->
+        <record id="first_period" model="consolidation.period">
+            <field name="chart_id" ref="test_chart"/>
+            <field name="date_analysis_begin" eval="time.strftime('%Y-01-01')"/>
+            <field name="date_analysis_end" eval="time.strftime('%Y-12-31')"/>
+        </record>
+        <record id="second_period" model="consolidation.period">
+            <field name="chart_id" ref="test_chart"/>
+            <field name="date_analysis_begin" eval="(DateTime.today() + relativedelta(days=30)).strftime('%Y-%m-%d')"/>
+            <field name="date_analysis_end" eval="(DateTime.today() + relativedelta(days=90)).strftime('%Y-%m-%d')"/>
+        </record>
+        <!--COMPANY PERIODs-->
+        <record id="first_period_us_company" model="consolidation.company_period">
+            <field name="period_id" ref="first_period"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="date_company_begin" eval="time.strftime('%Y-01-01')"/>
+            <field name="date_company_end" eval="time.strftime('%Y-12-31')"/>
+            <field name="currency_rate_avg" eval="1.25"/>
+            <field name="currency_rate_end" eval="1.55"/>
+            <field name="rate_control">100</field>
+            <field name="rate_ownership">100</field>
+            <field name="rate_consolidation">85</field>
+            <field name="consolidation_method">proportional</field>
+        </record>
+        <record id="second_period_us_company" model="consolidation.company_period">
+            <field name="period_id" ref="second_period"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="date_company_begin" eval="time.strftime('%Y-%m-07')"/>
+            <field name="date_company_end" eval="(DateTime.today() + relativedelta(days=90)).strftime('%Y-%m-%d')"/>
+            <field name="currency_rate_avg" eval="1.2"/>
+            <field name="currency_rate_end" eval="2.00"/>
+            <field name="rate_control">100</field>
+            <field name="rate_ownership">100</field>
+            <field name="rate_consolidation">85</field>
+            <field name="consolidation_method">proportional</field>
+        </record>
+        <record id="first_period_my_company" model="consolidation.company_period">
+            <field name="period_id" ref="first_period"/>
+            <field name="company_id" ref="l10n_be.demo_company_be"/>
+            <field name="date_company_begin" eval="time.strftime('%Y-01-01')"/>
+            <field name="date_company_end" eval="time.strftime('%Y-12-31')"/>
+            <field name="currency_rate_avg" eval="1.0"/>
+            <field name="currency_rate_end" eval="1.0"/>
+            <field name="rate_control">100</field>
+            <field name="rate_ownership">100</field>
+            <field name="rate_consolidation">100</field>
+            <field name="consolidation_method">none</field>
+        </record>
+        <record id="second_period_my_company" model="consolidation.company_period">
+            <field name="period_id" ref="second_period"/>
+            <field name="company_id" ref="l10n_be.demo_company_be"/>
+            <field name="date_company_begin" eval="time.strftime('%Y-%m-07')"/>
+            <field name="date_company_end" eval="(DateTime.today() + relativedelta(days=90)).strftime('%Y-%m-%d')"/>
+            <field name="currency_rate_avg" eval="1.0"/>
+            <field name="currency_rate_end" eval="1.0"/>
+            <field name="rate_control">100</field>
+            <field name="rate_ownership">100</field>
+            <field name="rate_consolidation">100</field>
+            <field name="consolidation_method">none</field>
+        </record>
+        <!--
+            Balance sheet
+                Assets
+                    Intangible asset
+                    Investment in Associates
+                    Property, plan and equipment
+                    Cash and cash equivalents
+                    Trade and other receivables - current
+                    Liaison Account
+                Equity
+                    Share capital
+                    Share premium
+                    Reserves
+                    Retained Earnings
+                Liabilities
+                    Financial debt - long term
+                    Financial debt - short term
+                    Social benefit payable
+                    Deffered revenue
+                    Trade and other payables - current
+                    Other tax liability - current
+            Profit and loss
+                Expense
+                    Cost of sales
+                    Compensation
+                    Depreciation & amortization
+                    General and administrative expenses
+                    Finance costs
+                    Income tax
+                    Other operating expense
+                Income
+                    Revenue
+                    Finance income
+                    Other operating income
+                    Liaison Account
+                Result allocation
+                    Reserves transfer
+        -->
+        <!-- SECTIONS (GROUPS) -->
+        <record id="balance_sheet_section" model="consolidation.group">
+            <field name="name">Balance sheet</field>
+            <field name="sequence" eval="1"/>
+            <field name="show_on_dashboard" eval="False"/>
+            <field name="chart_id" ref="test_chart"/>
+        </record>
+        <record id="assets_section" model="consolidation.group">
+            <field name="name">Assets</field>
+            <field name="sequence" eval="10"/>
+            <field name="show_on_dashboard" eval="False"/>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="parent_id" ref="balance_sheet_section"/>
+        </record>
+        <record id="equity_section" model="consolidation.group">
+            <field name="name">Equity</field>
+            <field name="sequence" eval="20"/>
+            <field name="show_on_dashboard" eval="False"/>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="parent_id" ref="balance_sheet_section"/>
+        </record>
+        <record id="liabilities_section" model="consolidation.group">
+            <field name="name">Liabilities</field>
+            <field name="sequence" eval="30"/>
+            <field name="show_on_dashboard" eval="False"/>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="parent_id" ref="balance_sheet_section"/>
+        </record>
+        <record id="profit_and_loss_section" model="consolidation.group">
+            <field name="name">Profit and loss</field>
+            <field name="sequence" eval="2"/>
+            <field name="show_on_dashboard" eval="False"/>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="invert_sign" eval="True"/>
+        </record>
+        <record id="expense_section" model="consolidation.group">
+            <field name="name">Expense</field>
+            <field name="sequence" eval="10"/>
+            <field name="show_on_dashboard" eval="True"/>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="parent_id" ref="profit_and_loss_section"/>
+        </record>
+        <record id="income_section" model="consolidation.group">
+            <field name="name">Income</field>
+            <field name="sequence" eval="20"/>
+            <field name="show_on_dashboard" eval="True"/>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="parent_id" ref="profit_and_loss_section"/>
+        </record>
+        <record id="result_allocation_section" model="consolidation.group">
+            <field name="name">Result allocation</field>
+            <field name="sequence" eval="30"/>
+            <field name="show_on_dashboard" eval="False"/>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="parent_id" ref="profit_and_loss_section"/>
+        </record>
+        <!-- CONSOLIDATION ACCOUNTS -->
+        <!-- ASSETS -->
+        <record id="intangible_asset_account" model="consolidation.account">
+            <field name="name">Intangible asset</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="assets_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '|', '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                         '|', ('code', '=like', '20%'), ('code', '=like', '21%'),
+                        '&amp;', ('company_id', '=', ref('base.main_company')),
+                        ('code', '=like', '10000%')
+                   ]).ids)]"/>
+        </record>
+        <record id="investment_in_associates_account" model="consolidation.account">
+            <field name="name">Investment in associates</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="assets_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                            ('company_id', '=', ref('l10n_be.demo_company_be')),
+                            ('code', '=like', '28%')]).ids)]"/>
+        </record>
+        <record id="property_plan_equipment_account" model="consolidation.account">
+            <field name="name">Property, plan and equipment</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="assets_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '|', '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                         '|', ('code', '=like', '24%'),
+                            '|', ('code', '=like', '25%'),
+                                '|', ('code', '=like', '26%'), ('code', '=like', '27%'),
+                        '&amp;', ('company_id', '=', ref('base.main_company')),
+                        '|', ('code', '=like', '151%'),
+                            '|', ('code', '=like', '152%'),
+                                '|', ('code', '=like', '153%'), ('code', '=like', '154%')
+                   ]).ids)]"/>
+        </record>
+        <record id="cash_and_equivalent_account" model="consolidation.account">
+            <field name="name">Cash and cash equivalents</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="assets_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '|', '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                         '|', ('code', '=like', '55%'),
+                            '|', ('code', '=like', '56%'),
+                                '|', ('code', '=like', '57%'), ('code', '=like', '58%'),
+                        '&amp;', ('company_id', '=', ref('base.main_company')),
+                                ('code', '=like', '1030%'),
+                   ]).ids)]"/>
+        </record>
+        <record id="trade_and_other_receivables_account" model="consolidation.account">
+            <field name="name">Trade and other receivables - current</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="assets_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '|', '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                         '|', ('code', '=like', '40%'),
+                            '|', ('code', '=like', '41%'),
+                                ('code', '=like', '49%'),
+                        '&amp;', ('company_id', '=', ref('base.main_company')),
+                                ('code', '=like', '12%')
+                   ]).ids)]"/>
+        </record>
+        <!-- EQUITY -->
+        <record id="share_capital_account" model="consolidation.account">
+            <field name="name">Share capital</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="equity_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '|', '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                            '|', ('code', '=like', '10%'), ('code', '=like', '15%'),
+                        '&amp;', ('company_id', '=', ref('base.main_company')),
+                                ('code', '=like', '301%')
+                   ]).ids)]"/>
+        </record>
+        <record id="share_premium_account" model="consolidation.account">
+            <field name="name">Share premium</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="equity_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                        ('company_id', '=', ref('l10n_be.demo_company_be')),
+                        ('code', '=like', '11%')
+                   ]).ids)]"/>
+        </record>
+        <record id="reserves_account" model="consolidation.account">
+            <field name="name">Reserves</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="equity_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '|', '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                            ('code', '=like', '13%'),
+                        '&amp;', ('company_id', '=', ref('base.main_company')),
+                                ('code', '=like', '28999%'),
+                   ]).ids)]"/>
+        </record>
+        <record id="retained_earnings_account" model="consolidation.account">
+            <field name="name">Retained earnings</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="equity_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '|', '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                            ('code', '=like', '14%'),
+                        '&amp;', ('company_id', '=', ref('base.main_company')),
+                                ('code', '=like', '350%'),
+                   ]).ids)]"/>
+        </record>
+        <!-- LIABILITIES -->
+        <record id="financial_debt_long_term_account" model="consolidation.account">
+            <field name="name">Financial debt - long term</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="liabilities_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                        ('company_id', '=', ref('l10n_be.demo_company_be')),
+                        ('code', '=like', '17%')
+                   ]).ids)]"/>
+        </record>
+        <record id="financial_debt_short_term_account" model="consolidation.account">
+            <field name="name">Financial debt - short term</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="liabilities_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                             '|', ('code', '=like', '42%'),
+                                 ('code', '=like', '43%')
+                   ]).ids)]"/>
+        </record>
+        <record id="social_benefit_payable_account" model="consolidation.account">
+            <field name="name">Social benefit payable</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="liabilities_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '|', '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                         '|', ('code', '=like', '453%'),
+                             '|', ('code', '=like', '454%'),
+                                '|', ('code', '=like', '455%'),
+                                    '|', ('code', '=like', '456%'), ('code', '=like', '459%'),
+                        '&amp;', ('company_id', '=', ref('base.main_company')),
+                                '|', ('code', '=like', '2320%'), ('code', '=like', '2330%')
+                   ]).ids)]"/>
+        </record>
+        <record id="deferred_revenue_account" model="consolidation.account">
+            <field name="name">Deferred revenue</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="liabilities_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '|', '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                            ('code', '=like', '49%'),
+                        '&amp;', ('company_id', '=', ref('base.main_company')),
+                                '|', ('code', '=like', '2110%'),
+                                    '|', ('code', '=like', '2115%'), ('code', '=like', '2120%')
+                   ]).ids)]"/>
+        </record>
+        <record id="trade_other_payable_account" model="consolidation.account">
+            <field name="name">Trade and other payables - current</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="liabilities_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '|', '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                        '|', ('code', '=like', '44%'),
+                            '|', ('code', '=like', '46%'),
+                                '|', ('code', '=like', '48%'), ('code', '=like', '49%'),
+                        '&amp;', ('company_id', '=', ref('base.main_company')),
+                                '|', ('code', '=like', '20%'), ('code', '=like', '22%')
+                   ]).ids)]"/>
+        </record>
+        <record id="other_tax_liability_account" model="consolidation.account">
+            <field name="name">Other tax liability - current</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="liabilities_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                        ('company_id', '=', ref('l10n_be.demo_company_be')),
+                        ('code', '=like', '451%')
+                   ]).ids)]"/>
+        </record>
+        <!-- EXPENSE -->
+        <record id="cost_of_sales_account" model="consolidation.account">
+            <field name="name">Cost of sales</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="expense_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '|', '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                         ('code', '=like', '60%'),
+                        '&amp;', ('company_id', '=', ref('base.main_company')),
+                                '|', ('code', '=like', '501%'),
+                                '|', ('code', '=like', '503%'), ('code', '=like', '506%')
+                   ]).ids)]"/>
+        </record>
+        <record id="compensation_account" model="consolidation.account">
+            <field name="name">Compensation</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="expense_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '|', '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                        '|', ('code', '=like', '61%'),
+                            '|', ('code', '=like', '62%'), ('code', '=like', '74%'),
+                        '&amp;', ('company_id', '=', ref('base.main_company')),
+                                '|', ('code', '=like', '60%'), ('code', '=like', '61%')
+                   ]).ids)]"/>
+        </record>
+        <record id="depreciation_amortization_account" model="consolidation.account">
+            <field name="name">Depreciation &amp; amortization</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="expense_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '|', '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                        ('code', '=like', '63%'),
+                        '&amp;', ('company_id', '=', ref('base.main_company')),
+                        ('code', '=like', '68%')
+                   ]).ids)]"/>
+        </record>
+        <record id="general_administrative_expenses_account" model="consolidation.account">
+            <field name="name">General and administrative expenses</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="expense_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '|', '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                        ('code', '=like', '61%'),
+                        '&amp;', ('company_id', '=', ref('base.main_company')),
+                                '|', ('code', '=like', '62%'),
+                                    '|', ('code', '=like', '63%'),
+                                        '|', ('code', '=like', '64%'),
+                                            '|', ('code', '=like', '65%'),
+                                                '|', ('code', '=like', '66%'),
+                                                    '|', ('code', '=like', '67%'), ('code', '=like', '69%')
+                   ]).ids)]"/>
+        </record>
+        <record id="finance_costs_account" model="consolidation.account">
+            <field name="name">Finance costs</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="expense_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                        '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                            '|', ('code', '=like', '654%'),
+                                '|', ('code', '=like', '655%'), ('code', '=like', '656%')
+                   ]).ids)]"/>
+        </record>
+        <record id="income_tax_account" model="consolidation.account">
+            <field name="name">Income tax</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="expense_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '|', '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                        '|', ('code', '=like', '67%'), ('code', '=like', '77%'),
+                        '&amp;', ('company_id', '=', ref('base.main_company')),
+                                ('code', '=like', '80%')
+                   ]).ids)]"/>
+        </record>
+        <record id="other_operating_expense_account" model="consolidation.account">
+            <field name="name">Other operating expense</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="expense_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                    '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                         '|', ('code', '=like', '650%'),
+                            '|', ('code', '=like', '651%'),
+                                '|', ('code', '=like', '663%'),
+                                    '|', ('code', '=like', '664%'), ('code', '=like', '668%')
+                   ]).ids)]"/>
+        </record>
+        <!-- INCOME -->
+        <record id="revenue_account" model="consolidation.account">
+            <field name="name">Revenue</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="income_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '|', '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                        '|', ('code', '=like', '70%'), ('code', '=like', '72%'),
+                        '&amp;', ('company_id', '=', ref('base.main_company')),
+                                '|', ('code', '=like', '40%'),
+                                    '|', ('code', '=like', '41%'), ('code', '=like', '42%')
+                   ]).ids)]"/>
+        </record>
+        <record id="finance_income_account" model="consolidation.account">
+            <field name="name">Finance income</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="income_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                       ('company_id', '=', ref('l10n_be.demo_company_be')),
+                       ('code', '=like', '75%')
+                   ]).ids)]"/>
+        </record>
+        <record id="other_operating_income_account" model="consolidation.account">
+            <field name="name">Other operating income</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="income_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                        '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                        '|', ('code', '=like', '74%'), ('code', '=like', '76%')
+                   ]).ids)]"/>
+        </record>
+        <!-- RESULT ALLOCATION -->
+        <record id="reserves_transfer_account" model="consolidation.account">
+            <field name="name">Reserves transfer</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="result_allocation_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, obj().search([
+                   '|', '&amp;', ('company_id', '=', ref('l10n_be.demo_company_be')),
+                        '|', ('code', '=like', '690%'),
+                            '|', ('code', '=like', '692%'),
+                                '|', ('code', '=like', '693%'), ('code', '=like', '791%'),
+                        '&amp;', ('company_id', '=', ref('base.main_company')),
+                                ('code', '=like', '793%')
+                   ]).ids)]"/>
+        </record>
+    </data>
+</odoo>

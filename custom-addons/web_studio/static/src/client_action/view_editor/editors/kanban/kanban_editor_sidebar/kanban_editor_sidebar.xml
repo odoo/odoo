@@ -1,0 +1,47 @@
+<templates>
+
+    <t t-name="web_studio.ViewEditor.KanbanEditorSidebar">
+        <InteractiveEditorSidebar>
+            <t t-set-slot="new">
+                <ExistingFields resModel="env.viewEditorModel.resModel" fields="env.viewEditorModel.fields" fieldsInArch="kanbanFieldsInArch" folded="false"/>
+            </t>
+            <t t-set-slot="view" isDefault="true">
+                <Property
+                    name="'create'"
+                    type="'boolean'"
+                    value="archInfo.activeActions.create === true"
+                    onChange.bind="editAttribute"
+                >
+                    Can Create
+                </Property>
+                <Property
+                    name="'quick_create'"
+                    type="'boolean'"
+                    value="archInfo.activeActions.quickCreate === true"
+                    onChange.bind="editAttribute"
+                >
+                    Quick Create
+                </Property>
+
+                <t t-call="web_studio.ViewEditor.ShowInvisibleToggler" />
+
+                <Property
+                    name="'default_group_by'"
+                    type="'selection'"
+                    value="archInfo.defaultGroupBy or null"
+                    childProps="defaultGroupBy"
+                    onChange.bind="editDefaultGroupBy"
+                >
+                    Default Group By
+                </Property>
+
+                <SidebarViewToolbox onMore="props.openViewInForm" canEditXml="!env.viewEditorModel.isEditingSubview" openDefaultValues="props.openDefaultValues" />
+            </t>
+
+            <t t-set-slot="properties">
+                <Properties propertiesComponents="propertiesComponents"/>
+            </t>
+        </InteractiveEditorSidebar>
+    </t>
+
+</templates>

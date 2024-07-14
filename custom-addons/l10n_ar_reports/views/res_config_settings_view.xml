@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="res_config_settings_view_form">
+        <field name="name">res.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_ar.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <div id="argentina_localization_section" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </div>
+
+            <xpath expr="//block[@id='argentina_localization']" position="inside">
+                <setting company_dependent="1" help="Used when generating the VAT Book Voucher TXT files." invisible="country_code != 'AR'">
+                    <field name="l10n_ar_computable_tax_credit" class="o_light_label" widget="radio"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

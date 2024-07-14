@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="regular_consumable_product" model="product.product">
+        <field name="name">Regular Consumable Product</field>
+        <field name="type">consu</field>
+        <field name="taxes_id" eval="False"/>
+        <field name="l10n_br_ncm_code_id" ref="l10n_br_avatax.49011000"/>
+        <field name="l10n_br_source_origin">0</field>
+        <field name="l10n_br_sped_type">FOR PRODUCT</field>
+        <field name="l10n_br_use_type">resale</field>
+    </record>
+
+    <record id="added_taxes_consumable_product" model="product.product">
+        <field name="name">Added Taxes Consumable Product</field>
+        <field name="type">consu</field>
+        <field name="taxes_id" eval="False"/>
+        <field name="l10n_br_ncm_code_id" ref="l10n_br_avatax.61091000"/>
+        <field name="l10n_br_cest_code">28.059.00</field>
+        <field name="l10n_br_source_origin">0</field>
+        <field name="l10n_br_sped_type">FOR PRODUCT</field>
+        <field name="l10n_br_use_type">resale</field>
+    </record>
+
+    <record id="subtracted_consumable_product" model="product.product">
+        <field name="name">Subtracted Consumable Product</field>
+        <field name="type">consu</field>
+        <field name="taxes_id" eval="False"/>
+        <field name="l10n_br_ncm_code_id" ref="l10n_br_avatax.73211100"/>
+        <field name="l10n_br_cest_code">21.001.00</field>
+        <field name="l10n_br_source_origin">0</field>
+        <field name="l10n_br_sped_type">FOR PRODUCT</field>
+        <field name="l10n_br_use_type">resale</field>
+    </record>
+</odoo>

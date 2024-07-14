@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="res_users_form_view" model="ir.ui.view">
+            <field name="name">res.users.form.view</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//h2//field[@name='login']" position="after">
+                    <label for="insz_or_bis_number" string="INSZ Number"/>
+                    <h2>
+                        <field name="insz_or_bis_number"/>
+                    </h2>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_users_view_form_profile" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='email']" position="after">
+                    <field name="insz_or_bis_number"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

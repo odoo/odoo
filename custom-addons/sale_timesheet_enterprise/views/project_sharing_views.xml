@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_sharing_inherit_project_task_view_form" model="ir.ui.view">
+        <field name="name">project.sharing.inherit.project.task.view.form</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="sale_timesheet.project_sharing_inherit_project_task_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='child_ids']/tree/field[@name='effective_hours']" position="attributes">
+                <attribute name="name">portal_effective_hours</attribute>
+                <attribute name="string">Hours Spent</attribute>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/tree/field[@name='remaining_hours']" position="attributes">
+                <attribute name="name">portal_remaining_hours</attribute>
+                <attribute name="string">Remaining Hours</attribute>
+                <attribute name="decoration-danger">portal_progress &gt;= 100</attribute>
+                <attribute name="decoration-warning">portal_progress &lt;= 100</attribute>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/tree/field[@name='progress']" position="attributes">
+                <attribute name="name">portal_progress</attribute>
+                <attribute name="string">Progress</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('text-nowrap')]//field[@name='progress']" position="attributes">
+                <attribute name="name">portal_progress</attribute>
+                <attribute name="string">Progress</attribute>
+            </xpath>
+            <xpath expr="//label[@for='effective_hours']" position="attributes">
+                <attribute name="for">portal_effective_hours</attribute>
+            </xpath>
+            <xpath expr="//label[@for='effective_hours']" position="attributes">
+                <attribute name="for">portal_effective_hours</attribute>
+            </xpath>
+            <xpath expr="//page[@id='timesheets_tab']//field[@name='effective_hours']" position="attributes">
+                <attribute name="name">portal_effective_hours</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_subtask_timesheet']" position="attributes">
+                <attribute name="invisible">portal_subtask_effective_hours == 0.0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='subtask_effective_hours']" position="attributes">
+                <attribute name="name">portal_subtask_effective_hours</attribute>
+                <attribute name="invisible">portal_subtask_effective_hours == 0.0</attribute>
+            </xpath>
+            <xpath expr="//span[@id='total_hours_spent_label']" position="attributes">
+                <attribute name="invisible">portal_subtask_effective_hours == 0.0</attribute>
+            </xpath>
+            <xpath expr="//label[@for='total_hours_spent']" position="attributes">
+                <attribute name="for">portal_total_hours_spent</attribute>
+            </xpath>
+            <xpath expr="//label[@for='total_hours_spent']" position="attributes">
+                <attribute name="for">portal_total_hours_spent</attribute>
+            </xpath>
+            <xpath expr="//field[@name='total_hours_spent']" position="attributes">
+                <attribute name="name">portal_total_hours_spent</attribute>
+                <attribute name="invisible">portal_subtask_effective_hours == 0.0</attribute>
+            </xpath>
+            <xpath expr="//label[@for='remaining_hours']" position="attributes">
+                <attribute name="for">portal_remaining_hours</attribute>
+                <attribute name="invisible">not allocated_hours or encode_uom_in_days or portal_remaining_hours &lt; 0</attribute>
+            </xpath>
+            <xpath expr="//label[@for='remaining_hours']" position="attributes">
+                <attribute name="for">portal_remaining_hours</attribute>
+                <attribute name="invisible">not allocated_hours or not encode_uom_in_days or portal_remaining_hours &lt; 0</attribute>
+            </xpath>
+            <xpath expr="//label[@for='remaining_hours']" position="attributes">
+                <attribute name="for">portal_remaining_hours</attribute>
+                <attribute name="invisible">not allocated_hours or encode_uom_in_days or portal_remaining_hours &gt;= 0</attribute>
+            </xpath>
+            <xpath expr="//label[@for='remaining_hours']" position="attributes">
+                <attribute name="for">portal_remaining_hours</attribute>
+                <attribute name="invisible">not allocated_hours or not encode_uom_in_days or portal_remaining_hours &gt;= 0</attribute>
+            </xpath>
+            <xpath expr="//page[@id='timesheets_tab']//field[@name='remaining_hours']" position="attributes">
+                <attribute name="name">portal_remaining_hours</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_sharing_kanban_inherit_project_task_view_kanban" model="ir.ui.view">
+        <field name="name">sale_timesheet_enterprise.project.sharing.project.task.kanban.inherited</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="hr_timesheet.project_sharing_kanban_inherit_project_task_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="/kanban/field[@name='progress']" position="attributes">
+                <attribute name="name">portal_progress</attribute>
+            </xpath>
+            <xpath expr="/kanban/field[@name='remaining_hours']" position="attributes">
+                <attribute name="name">portal_remaining_hours</attribute>
+            </xpath>
+            <xpath expr="//t[@t-set='badge' and @t-if='record.progress.raw_value &gt;= 80 and record.progress.raw_value &lt;= 100']" position="attributes">
+                <attribute name="t-if">record.portal_progress.raw_value &gt;= 80 and record.portal_progress.raw_value &lt;= 100</attribute>
+            </xpath>
+            <xpath expr="//t[@t-set='badge' and @t-if='record.remaining_hours.raw_value &lt; 0']" position="attributes">
+                <attribute name="t-if">record.portal_remaining_hours.raw_value &lt; 0</attribute>
+            </xpath>
+            <xpath expr="//t[@name='allocated_hours']//field[@name='remaining_hours']" position="attributes">
+                <attribute name="name">portal_remaining_hours</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_sharing_inherit_project_task_view_tree" model="ir.ui.view">
+        <field name="name">sale_timesheet_enterprise.project.task.view.tree.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='effective_hours']" position="attributes">
+                <attribute name="name">portal_effective_hours</attribute>
+                <attribute name="string">Hours Spent</attribute>
+            </xpath>
+            <xpath expr="//field[@name='remaining_hours']" position="attributes">
+                <attribute name="name">portal_remaining_hours</attribute>
+                <attribute name="string">Remaining Hours</attribute>
+                <attribute name="decoration-danger">portal_progress &gt;= 100</attribute>
+                <attribute name="decoration-warning">portal_progress &gt;= 80 and portal_progress &lt;= 100</attribute>
+            </xpath>
+            <xpath expr="//field[@name='subtask_effective_hours']" position="attributes">
+                <attribute name="name">portal_subtask_effective_hours</attribute>
+                <attribute name="string">Hours Spent on Sub-Tasks</attribute>
+            </xpath>
+            <xpath expr="//field[@name='total_hours_spent']" position="attributes">
+                <attribute name="name">portal_total_hours_spent</attribute>
+                <attribute name="string">Total Hours</attribute>
+            </xpath>
+            <xpath expr="//field[@name='progress']" position="attributes">
+                <attribute name="name">portal_progress</attribute>
+                <attribute name="string">Progress</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

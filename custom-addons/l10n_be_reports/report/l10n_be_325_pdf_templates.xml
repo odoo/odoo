@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="report_325_pdf">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <t t-foreach="docs" t-as="form_325">
+                        <div class="page">
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="row">
+                                        <div class="col text-center">
+                                            <div>
+                                                <h6>Federal Public Service</h6>
+                                            </div>
+                                            <div>
+                                                <h6>FINANCES</h6>
+                                            </div>
+                                            <hr style="border: solid 2px black; width: 100px"/>
+                                            <div>
+                                                <h5>GENERAL TAX ADMINISTRATION</h5>
+                                            </div>
+                                            <hr style="border: solid 2px black; width: 100px"/>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-5">
+                                        <div class="col text-center">
+                                            <div>
+                                                <h4>SUMMARY STATEMENT YEAR <span t-out="form_325.reference_year"/></h4>
+                                            </div>
+                                            <div>
+                                                <h4>established by : <t t-out="form_325.sender_name"/></h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <table class="border border-dark w-100">
+                                        <thead>
+                                            <tr class="border border-dark">
+                                                <th class="text-center">
+                                                    <h5>
+                                                        RECEPTION DATE
+                                                        <br/>
+                                                        (For administration use only)
+                                                    </h5>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="border border-dark">
+                                                <td style="height: 120px"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row mt-5 border border-dark">
+                                <div class="col">
+                                    <div class="row border border-dark">
+                                        <div class="col-7 border-end border-dark">
+                                            <div class="row">
+                                                <div class="col-4 fw-bold">
+                                                    1. NN ou NE:
+                                                </div>
+                                                <div class="col-8">
+                                                     <t t-if="form_325.debtor_is_natural_person">
+                                                        <t t-out="form_325.debtor_citizen_identification"/>
+                                                     </t>
+                                                    <t t-else="">
+                                                        <t t-out="form_325.debtor_bce_number"/>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    2. Phone number:
+                                                </div>
+                                                <div class="col-6">
+                                                     <t t-out="form_325.debtor_phone_number"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row border border-dark">
+                                        <div class="col-12">
+                                            <div class="fw-bold">
+                                                3. Identity of the debtor of the income
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    Lastname, Firstname (natural persons)
+                                                </div>
+                                                <div class="col-7">
+                                                    <t t-if="form_325.debtor_is_natural_person">
+                                                        <t t-out="form_325.debtor_name"/>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    Company name or exact name (companies and other institutions)
+                                                </div>
+                                                <div class="col-7">
+                                                    <t t-if="not form_325.debtor_is_natural_person">
+                                                        <t t-out="form_325.debtor_name"/>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row border border-dark">
+                                        <div class="col">
+                                            <div class="fw-bold">
+                                                4. Domicile (natural persons), registered office or main administrative
+                                                office (companies and other institutions)
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    Street and n°
+                                                </div>
+                                                <div class="col-8">
+                                                    <t t-out="form_325.debtor_address"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    Postal code and city
+                                                </div>
+                                                <div class="col-9">
+                                                    <t t-out="form_325.debtor_zip"/> <t t-out="form_325.debtor_city"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row border border-dark">
+                                        <div class="col">
+                                            <div class="fw-bold">
+                                                5. Administrative or operating headquarters (companies and other
+                                                institutions)
+                                                or operating headquarters (natural persons who have more than one such
+                                                headquarters) when it is a statement specific to that administrative or
+                                                operating headquarters:
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    Street and n°
+                                                </div>
+                                                <div class="col-8">
+                                                    <t t-out="form_325.debtor_address"/>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    Postal code and city
+                                                </div>
+                                                <div class="col-9">
+                                                    <t t-out="form_325.debtor_zip"/> <t t-out="form_325.debtor_city"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="page" style="page-break-before: always;">
+                            <div class="row">
+                                <div class="col-12">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="3" class="text-center">
+                                                    SUMMARY TABLE OF RECORDS AND PAYROLL DEDUCTIONS (1)
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th class="align-middle text-center" style="width: 20%">
+                                                    DESIGNATION OF THE FORMS
+                                                </th>
+                                                <th class="align-middle text-center" style="width: 40%">
+                                                    NUMBER OF FORMS
+                                                </th>
+                                                <th class="align-middle text-center" style="width: 40%">
+                                                    <div>
+                                                        PAYROLL DEDUCTIONS
+                                                    </div>
+                                                    <hr class="w-100"/>
+                                                    <div>
+                                                        TOTAL AMOUNT
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center">281.10</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">281.11</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">281.12</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">281.13</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">281.14</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">281.15</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">281.16</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">281.17</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">281.18</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">281.20</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">281.30</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold text-center">TOTALS</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-8">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" style="width: 30%">
+                                                    FORMS 325.50
+                                                </th>
+                                                <th class="text-center" style="width: 70%">
+                                                    AMOUNT TOTAL
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center">
+                                                    N° 1
+                                                </td>
+                                                <td class="text-center">
+                                                    <t t-out="form_325.form_281_50_total_amount" t-options="{'widget': 'float', 'precision': 2}"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">
+                                                    N° 2
+                                                </td>
+                                                <td class="text-center">
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">
+                                                    N° 3
+                                                </td>
+                                                <td class="text-center">
+
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-4">
+                                    <div class="text-center pt-5">
+                                        CERTIFIED AS ACCURATE
+                                    </div>
+                                    <div class="text-center mt-5">
+                                        <t t-out="form_325.user_id.name"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <t t-foreach="data['forms_325_50']" t-as="forms_325_50">
+                           <t t-call="l10n_be_reports.report_325_50_divider_pdf"/>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_325_50_divider_pdf">
+            <div class="page" style="page-break-before: always;">
+                <div class="row">
+                    <t t-set="divider_index" t-value="forms_325_50_index + 1"/>
+                    <div class="col-3 offset-9">
+                        Divider N° <t t-out="divider_index"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">
+                                    Form 281.50 N°
+                                </th>
+                                <th class="text-center">
+                                    Lastname, Firstname (or denomination) of beneficiaries
+                                    <br/>
+                                    Street, n°, eventually box
+                                    <br/>
+                                    Zip code and city
+                                </th>
+                                <th class="text-center">
+                                    Total mentionned in box 3 e of the form 281.50
+                                </th>
+                                <th class="text-center">
+                                    Comments
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <!-- FIRST ROW -> Carry over from previous total to previous divider -->
+                                <td colspan="2">
+                                    Carry over from the previous divider
+                                </td>
+                                <td class="text-center">
+                                    <t t-if="forms_325_50['form_325_50_old_sum'] != 0">
+                                        <t t-out="forms_325_50['form_325_50_old_sum']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </t>
+                                </td>
+                                <td>
+                                    To be completed only if this divider is not the first or the only one
+                                </td>
+                            </tr>
+                            <t t-foreach="forms_325_50['forms_325_50_values']" t-as="form">
+                                <tr>
+                                    <td><t t-out="form.official_id"/></td>
+                                    <td>
+                                        <t t-out="form.partner_name"/>
+                                        <br/>
+                                        <t t-out="form.partner_address"/>
+                                        <br/>
+                                        <t t-out="form.partner_city"/>
+                                        <t t-out="form.partner_zip"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <t t-out="form.total_remuneration" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td>
+                                    NN or NE: <t t-out="form_325.debtor_bce_number"/>
+                                </td>
+                                <td>
+                                    Total amount or to be transferred to the next divider:
+                                </td>
+                                <td class="text-center">
+                                    <t t-out="forms_325_50['form_325_50_sum']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

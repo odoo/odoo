@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_cl_edi_pos.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//h1[hasclass('tracking-number')]" position="before">
+            <div t-if="props.data.company.cl_vat" class="chili-ticket-info fw-bolder border border-dark d-flex flex-column align-items-center ">
+                <span>RUT: <t t-out="props.data.company.cl_vat"/>
+                </span>
+                <t t-out="props.data.l10n_latam_document_type"/>
+                <span>Nº: <t t-out="props.data.l10n_latam_document_number"/>
+                </span>
+            </div>
+            <div t-if="props.data.company.cl_vat" class="chili-regional-office text-center fw-bolder" t-out="props.data.l10n_cl_sii_regional_office"/>
+            <div t-if="props.data.company.cl_vat" class="text-center fw-bolder pb-2" t-esc="props.data.date" />
+            <br/>
+        </xpath>
+    </t>
+</templates>

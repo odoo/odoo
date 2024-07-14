@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="timesheet_grid.TimesheetTimerKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="before">
+            <div t-if="timesheetTimerRendererHook.showTimer" class="pinned_header position-sticky start-0 z-index-1 d-md-flex justify-content-end align-items-center bg-view border-bottom">
+                <div class="flex-grow-1" t-key="timesheetTimerRendererHook.timerState.timesheetId">
+                    <TimesheetTimerHeader
+                        timesheet="timesheetTimerRendererHook.timesheet"
+                        addTimeMode="timesheetTimerRendererHook.timerState.addTimeMode"
+                        stepTimer="timesheetTimerRendererHook.timerState.stepTimer"
+                        timerRunning="timesheetTimerRendererHook.timerState.timerRunning"
+                        headerReadonly="timesheetTimerRendererHook.timerState.headerReadonly"
+                        fields="timesheetTimerRendererHook.fields"
+                        onTimerStarted="() => this.timesheetTimerRendererHook._onTimerStarted()"
+                        onTimerStopped="() => this.timesheetTimerRendererHook._onTimerStopped()"
+                        onTimerUnlinked="() => this.timesheetTimerRendererHook._onTimerUnlinked()"
+                    />
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

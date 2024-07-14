@@ -1,0 +1,266 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_recruitment_sign
+# 
+# Translators:
+# Mads Søndergaard, 2023
+# Mads Søndergaard, 2023
+# Sanne Kristensen <sanne@vkdata.dk>, 2023
+# Martin Trigaux, 2023
+# lhmflexerp <lhm@flexerp.dk>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2023\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_applicant__sign_request_count
+msgid "# Signatures"
+msgstr "# Underskrifter"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid "%s and %s are the signatories."
+msgstr "%s og %s er underskriverne."
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_applicant_sign_view_form
+msgid "<span class=\"o_stat_text\">Signature Requests</span>"
+msgstr "<span class=\"o_stat_text\">Underskriftsanmodninger</span>"
+
+#. module: hr_recruitment_sign
+#: model:ir.model,name:hr_recruitment_sign.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__applicant_id
+msgid "Applicant"
+msgstr "Ansøger"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__applicant_role_id
+msgid "Applicant Role"
+msgstr "Ansøger rolle"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__partner_name
+msgid "Applicant's Name"
+msgstr "Ansøgers navn"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,help:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__applicant_role_id
+msgid ""
+"Applicant's role on the templates to sign. The same role must be present in "
+"all the templates"
+msgstr ""
+"Ansøgers rolle på skabelonen, der skal underskrives. Den samme rolle skal "
+"være angivet på alle skabeloner"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Attach a file"
+msgstr "Vedhæft fil"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__attachment_ids
+msgid "Attachment"
+msgstr "Vedhæftning"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__partner_id
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__cc_partner_ids
+msgid "Copy to"
+msgstr "Kopiér til"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__create_uid
+msgid "Created by"
+msgstr "Oprettet af"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__create_date
+msgid "Created on"
+msgstr "Oprettet den"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Discard"
+msgstr "Kassér"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__display_name
+msgid "Display Name"
+msgstr "Vis navn"
+
+#. module: hr_recruitment_sign
+#: model:ir.actions.act_window,name:hr_recruitment_sign.sign_recruitment_wizard_action
+msgid "Document Signature"
+msgstr "Dokument underskrift"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__sign_template_ids
+msgid "Documents to sign"
+msgstr "Dokumenter der skal underskrives"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,help:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__sign_template_ids
+msgid ""
+"Documents to sign. Only documents with 1 or 2 different responsible are selectable.\n"
+"        Documents with 1 responsible will only have to be signed by the applicant while documents with 2 different responsible will have to be signed by both the applicant and the responsible.\n"
+"        "
+msgstr ""
+"Dokumenter der skal underskrives. Kun dokumenter med 1 eller 2 forskellige ansvarlige kan vælges.\n"
+"        Dokumenter med 1 ansvarlig skal kun underskrives af ansøgeren, hvorimod dokumenter med 2 forskellige ansvarlige skal underskrives af både ansøgeren og den ansvarlige.\n"
+"        "
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__has_both_template
+msgid "Has Both Template"
+msgstr "Har begge skabelon"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Sidst opdateret af"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__write_date
+msgid "Last Updated on"
+msgstr "Sidst opdateret den"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Mail Options"
+msgstr "Mailmuligheder"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__message
+msgid "Message"
+msgstr "Besked"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid ""
+"No appropriate template could be found, please make sure you configured them"
+" properly."
+msgstr ""
+"Ingen passende skabelon kunne findes, venligst sørg for at de er "
+"konfigureret ordentligt."
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "No template available"
+msgstr "Ingen skabelon tilgængelig"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid "Only %s has to sign."
+msgstr "Kun %s skal underskrive."
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Optional Message..."
+msgstr "Valgfri besked..."
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__possible_template_ids
+msgid "Possible Template"
+msgstr "Mulig skabelon"
+
+#. module: hr_recruitment_sign
+#: model:ir.actions.server,name:hr_recruitment_sign.action_request_signature
+msgid "Request Signature"
+msgstr "Anmod om underskrift"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__responsible_id
+msgid "Responsible"
+msgstr "Ansvarlig"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Send"
+msgstr "Send"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Sign Request Options"
+msgstr "Muligheder for underskriftanmodninger"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__sign_template_responsible_ids
+msgid "Sign Template Responsible"
+msgstr "Underskriv Skabelon Ansvarlig"
+
+#. module: hr_recruitment_sign
+#: model:ir.model,name:hr_recruitment_sign.model_hr_recruitment_sign_document_wizard
+msgid "Sign document in recruitment"
+msgstr "Underskriv dokument i ansættelse"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Signature Request"
+msgstr "Anmodning om underskrift"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid "Signature Request - %s"
+msgstr "Underskrifts anmodning - %s"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/models/hr_applicant.py:0
+#, python-format
+msgid "Signature Requests"
+msgstr "Anmodninger om underskrifter"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__subject
+msgid "Subject"
+msgstr "Emne"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__template_warning
+msgid "Template Warning"
+msgstr "Skabelon advarsel"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Write email or search contact..."
+msgstr "Skriv email eller søg efter kontakt..."
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/models/hr_applicant.py:0
+#, python-format
+msgid "You must define a Contact Name for this applicant."
+msgstr "Du skal definere et kontaktnavn for denne ansøger."
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.message_signature_request
+msgid "requested a new signature on the following documents:"
+msgstr "anmod om en ny underskrift på følgende dokumenter:"

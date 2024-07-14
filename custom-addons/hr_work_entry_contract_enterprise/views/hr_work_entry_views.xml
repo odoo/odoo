@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_work_entry_action_view_gantt" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">gantt</field>
+        <field name="act_window_id" ref="hr_work_entry.hr_work_entry_action"/>
+    </record>
+
+    <record id="hr_work_entry_action_conflict_view_gantt" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">gantt</field>
+        <field name="act_window_id" ref="hr_work_entry.hr_work_entry_action_conflict"/>
+    </record>
+
+    <record id="hr_work_entry_gantt" model="ir.ui.view">
+        <field name="name">hr.work.entry.gantt</field>
+        <field name="model">hr.work.entry</field>
+        <field name="arch" type="xml">
+            <gantt js_class="work_entries_gantt"
+                   string="Work Entries"
+                   date_start="date_start"
+                   date_stop="date_stop"
+                   color="color"
+                   default_group_by='employee_id'
+                   decoration-secondary="state == 'validated'"
+                   decoration-warning="state == 'conflict'"
+                   scales="day,week,month"
+                   precision="{'day': 'hour:quarter', 'week': 'day:half', 'month': 'day:half'}"
+                   plan="0"
+                   sample="1">
+                <templates>
+                    <div t-name="gantt-popover">
+                        <t t-out="date_start.toFormat('f ')"/>
+                        <i class="fa fa-long-arrow-right" title="Arrow"/>
+                        <t t-out="date_stop.toFormat(' f')"/>
+                    </div>
+                </templates>
+                <field name="color"/>
+                <field name="state"/>
+                <field name="employee_id"/>
+                <field name="name"/>
+            </gantt>
+        </field>
+    </record>
+
+</odoo>

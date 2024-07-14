@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.SalesReportFilterCode">
+        <Dropdown togglerClass="'btn btn-secondary'">
+            <t t-set-slot="toggler">
+                <i class="fa fa-filter me-1"/> Codes: <t t-esc="selectedEcTaxName"/>
+            </t>
+
+            <t t-foreach="controller.options.ec_tax_filter_selection" t-as="ecTax" t-key="ecTax_index">
+                <DropdownItem
+                    class="{ 'selected': ecTax.selected }"
+                    onSelected="() => this.toggleFilter('ec_tax_filter_selection.' + ecTax_index + '.selected')"
+                >
+                    <t t-esc="ecTax.name"/>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

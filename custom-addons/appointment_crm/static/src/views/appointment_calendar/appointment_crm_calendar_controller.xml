@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="appointment_crm.AppointmentCrmCalendarController" t-inherit="calendar.AttendeeCalendarController" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if='appointmentState.lastAppointment.url']" position="after">
+            <p t-elif="getOpportunityName()" class="user-select-none text-wrap mb-1">
+                Click in your calendar to pick meeting time proposals for <b t-esc="getOpportunityName()"/>
+            </p>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_inherit_documents_project_sale" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.documents.project.sale</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="sale.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="product_tooltip" position="before">
+                <field name="documents_allowed_company_id" invisible="1"/>
+                <field name="project_template_use_documents" invisible="1"/>
+                <div class="o_td_label d-inline-flex" invisible="service_tracking not in ('task_in_project', 'project_only') or (project_template_id and not project_template_use_documents)">
+                    <label for='template_folder_id'/>
+                    <span class='fa fa-lg fa-building-o fa-fw' title="Values set here are company-specific." groups="base.group_multi_company"/>
+                </div>
+                <field name="template_folder_id"
+                    invisible="service_tracking not in ('task_in_project', 'project_only') or (project_template_id and not project_template_use_documents)"
+                    context="{'documents_project': True, 'default_company_id': company_id}" nolabel="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

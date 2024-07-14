@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_intrastat.IntrastatReportFilterPartner">
+        <Dropdown togglerClass="'btn btn-secondary'">
+            <t t-set-slot="toggler">
+                <span class="fa fa-filter me-1"/> Partners: <t t-esc="(controller.options.intrastat_with_vat) ? 'With VAT numbers' : 'All'"/>
+            </t>
+
+            <DropdownItem
+                class="{ 'selected': controller.options.intrastat_with_vat }"
+                onSelected="() => this.toggleFilter('intrastat_with_vat')"
+            >
+                Only with VAT numbers
+            </DropdownItem>
+        </Dropdown>
+    </t>
+</templates>

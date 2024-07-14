@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="spreadsheet_edition.DateFilterEditorFieldMatching" t-inherit="spreadsheet_edition.FilterEditorFieldMatching">
+        <xpath expr="//ModelFieldSelector" position="before">
+            <span class="text-muted">Date field</span>
+        </xpath>
+        <xpath expr="//div[@name='field-match']" position="after">
+            <FilterFieldOffset
+                active="!!props.fieldMatchings[object_index].fieldMatch.chain"
+                onOffsetSelected="(value) => props.onOffsetSelected(object_index, value)"
+                selectedOffset="object.fieldMatch and object.fieldMatch.offset || 0"
+            />
+        </xpath>
+    </t>
+
+    <div t-name="spreadsheet_edition.DateFilterEditorSidePanel" class="o_spreadsheet_filter_editor_side_panel">
+        <div class="o_side_panel_section">
+            <FilterEditorLabel
+                inputClass="missingLabel ? 'o_field_invalid' : ''"
+                label="genericState.label"
+                setLabel.bind="this.setLabel"
+                placeholder="placeholder"
+            />
+        </div>
+        <div class="o_side_panel_section">
+            <div class="o_side_panel_title">Time range</div>
+            <select
+                t-model="dateState.type"
+                t-on-change="onDateOptionChange"
+                class="o_input">
+                <t t-foreach="dateRangeTypes" t-as="range" t-key="range.type">
+                    <option t-att-selected="isDateTypeSelected(range.type) ? 1 : 0" t-att-value="range.type">
+                        <t t-esc="range.description" />
+                    </option>
+                </t>
+            </select>
+        </div>
+        <div class="o_side_panel_section"
+             t-if="dateState.type !== 'from_to'">
+            <div class="o_side_panel_title">Default value</div>
+            <div t-if="dateState.type !== 'relative'" class="d-flex align-items-center mt-2">
+                <input
+                    type="checkbox"
+                    class="me-2"
+                    id="date_automatic_filter"
+                    t-att-checked="dateState.defaultValue"
+                    t-on-change="toggleDateDefaultValue"
+                />
+                <label for="date_automatic_filter"> Automatically filter on the current period </label>
+            </div>
+            <select
+                t-else="1"
+                t-model="dateState.defaultValue"
+                class="o_input o_relative_date_selection">
+                <option value="" />
+                <t t-foreach="relativeDateRangesTypes" t-as="range" t-key="range.type">
+                    <option t-att-selected="range.type === dateState.defaultValue ? 1 : 0" t-att-value="range.type">
+                        <t t-esc="range.description" />
+                    </option>
+                </t>
+            </select>
+            <div class="pt-3" t-if="dateState.defaultValue and dateState.type !== 'relative'">
+                <select t-model="dateState.defaultValue" class="o_input">
+                    <option value="this_month">Month</option>
+                    <option value="this_quarter">Quarter</option>
+                    <option value="this_year">Year</option>
+                </select>
+            </div>
+        </div>
+
+        <t t-if="shouldDisplayFieldMatching()">
+            <div class="o_side_panel_section">
+                <SidePanelCollapsible collapsedAtInit="!isNewFilter">
+                    <t t-set-slot="title">Field matching</t>
+                    <t t-set-slot="content">
+                        <DateFilterEditorFieldMatching
+                            fieldMatchings="fieldMatchings"
+                            wrongFieldMatchings="wrongFieldMatchings"
+                            selectField.bind="onSelectedField"
+                            filterModelFieldSelectorField.bind="filterModelFieldSelectorField"
+                            onOffsetSelected.bind="onOffsetSelected"
+                        />
+                    </t>
+                </SidePanelCollapsible>
+            </div>
+        </t>
+        <div class="o_side_panel_section o-sidePanelButtons">
+            <t t-call="spreadsheet_edition.FilterEditorButtons">
+                <t t-set="onDelete" t-value="this.props.id and onDelete.bind(this)" />
+                <t t-set="onSave" t-value="onSave.bind(this)" />
+                <t t-set="onCancel" t-value="onCancel.bind(this)" />
+            </t>
+        </div>
+    </div>
+</templates>

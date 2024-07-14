@@ -1,0 +1,438 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_sepa
+# 
+# Translators:
+# Wil Odoo, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid "A bank account is not defined."
+msgstr "Банківський рахунок не визначено."
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_payment_register.py:0
+#, python-format
+msgid "A bank account must be set on the following documents: "
+msgstr ""
+"Банківський рахунок повинен бути встановлений на наступних документах: "
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03_austrian_004
+msgid "Austrian"
+msgstr "Австрійський"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"Bank account %s 's bank does not have any BIC number associated. Please "
+"define one."
+msgstr "Банк рахунку %s не має призначеного номера BIC. Визначте його."
+
+#. module: account_sepa
+#: model_terms:ir.ui.view,arch_db:account_sepa.view_batch_payment_form_inherit
+msgid "Batch Booking"
+msgstr "Групове бронювання"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_batch_payment
+msgid "Batch Payment"
+msgstr "Груповий платіж"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_res_company
+msgid "Companies"
+msgstr "Компанії"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_res_config_settings
+msgid "Config Settings"
+msgstr "Налаштування"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_res_partner
+msgid "Contact"
+msgstr "Контакт"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_company__sepa_orgid_issr
+msgid ""
+"Entity that assigns the identification (eg. KBE-BCO or Finanzamt Muenchen "
+"IV)."
+msgstr ""
+"Суб'єкт, який призначає ідентифікацію (наприклад, KBE-BCO або Finanzamt "
+"Muenchen IV)."
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03
+msgid "Generic"
+msgstr "Загальний"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03_de
+msgid "German"
+msgstr "Німецький"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_journal__has_sepa_ct_payment_method
+msgid "Has Sepa Ct Payment Method"
+msgstr "Має спосіб оплати Sepa Ct"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_res_company__sepa_orgid_id
+#: model:ir.model.fields,field_description:account_sepa.field_res_config_settings__sepa_orgid_id
+msgid "Identification"
+msgstr "Ідентифікація"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_company__sepa_orgid_id
+#: model:ir.model.fields,help:account_sepa.field_res_config_settings__sepa_orgid_id
+msgid "Identification assigned by an institution (eg. VAT number)."
+msgstr "Ідентифікація, призначена установою (наприклад, номер ПДВ)."
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_res_company__sepa_orgid_issr
+#: model:ir.model.fields,field_description:account_sepa.field_res_config_settings__sepa_orgid_issr
+msgid "Issuer"
+msgstr "Емітент"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_journal
+msgid "Journal"
+msgstr "Журнал"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_res_company__account_sepa_lei
+#: model:ir.model.fields,field_description:account_sepa.field_res_partner__account_sepa_lei
+#: model:ir.model.fields,field_description:account_sepa.field_res_users__account_sepa_lei
+msgid "LEI"
+msgstr "LEI"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_company__account_sepa_lei
+#: model:ir.model.fields,help:account_sepa.field_res_partner__account_sepa_lei
+#: model:ir.model.fields,help:account_sepa.field_res_users__account_sepa_lei
+msgid "Legal Entity Identifier"
+msgstr "Ідентифікатор юридичної особи"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid "Maximum amount is %s for payments in Euros, %s for other currencies."
+msgstr "Максимальна сума для платежів у євро - %s, %s - для інших валют."
+
+#. module: account_sepa
+#: model_terms:ir.ui.view,arch_db:account_sepa.res_partner_sepa_inherit_form
+msgid "Miscellaneous"
+msgstr "Інші"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_config_settings__sepa_initiating_party_name
+msgid ""
+"Name of the Creditor Reference Party. Usage Rule: Limited to 70 characters "
+"in length."
+msgstr ""
+"Назва Довідкової Сторони Кредитора. Правило використання: обмежено довжиною "
+"у 70 символів."
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_09
+msgid "New generic version (09)"
+msgstr "Нова версія generic (09)"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid "Partner %s has no country code defined."
+msgstr "У партнера %s не визначено коду країни."
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid "Partner %s has not bank account defined."
+msgstr "У партнера %s не визначено банківського рахунку."
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Способи оплати"
+
+#. module: account_sepa
+#: model_terms:ir.ui.view,arch_db:account_sepa.account_journal_dashboard_kanban_view_inherited
+msgid "Payment to send via SEPA"
+msgstr "Платіж на відправлення через SEPA"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_payment
+msgid "Payments"
+msgstr "Платежі"
+
+#. module: account_sepa
+#: model_terms:ir.ui.view,arch_db:account_sepa.account_journal_dashboard_kanban_view_inherited
+msgid "Payments to send via SEPA"
+msgstr "Платежі для відправлення через SEPA"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"Please first set a SEPA identification number in the accounting settings."
+msgstr ""
+"Встановіть спершу ідентифікаційний номер SEPA у налаштуваннях бухобліку."
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_payment_register
+msgid "Register Payment"
+msgstr "Зареєструвати платіж"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_account_batch_payment__sct_batch_booking
+msgid "Request batch booking from the bank for the related bank statements."
+msgstr ""
+"Надсилайте запит на групове бронювання з банку для об'єднання банківських "
+"виписок."
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_batch_payment__sct_batch_booking
+msgid "SCT Batch Booking"
+msgstr "Групове резервування SCT"
+
+#. module: account_sepa
+#: model:account.payment.method,name:account_sepa.account_payment_method_sepa_ct
+msgid "SEPA Credit Transfer"
+msgstr "Кредитні перекази SEPA"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal_dashboard.py:0
+#, python-format
+msgid "SEPA Credit Transfers to Send"
+msgstr "Кредитні перекази SEPA для відправлення"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_journal__sepa_pain_version
+#: model:ir.model.fields,field_description:account_sepa.field_account_payment__sepa_pain_version
+#: model_terms:ir.ui.view,arch_db:account_sepa.view_account_journal_form
+msgid "SEPA Pain Version"
+msgstr "Проблемна версія SEPA"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_account_journal__sepa_pain_version
+#: model:ir.model.fields,help:account_sepa.field_account_payment__sepa_pain_version
+msgid ""
+"SEPA may be a generic format, some countries differ from the SEPA "
+"recommendations made by the EPC (European Payment Council) and thus the XML "
+"created need some tweaking."
+msgstr ""
+"SEPA може бути загальним форматом, деякі країни відрізняються від "
+"рекомендацій SEPA, зроблених EPC (Європейська платіжна рада), тому створений"
+" XML потребує певних налаштувань."
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_batch_payment__sct_generic
+msgid "Sct Generic"
+msgstr "Загальний Sct"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid "Some payments are above the maximum amount allowed."
+msgstr "Деякі платежі перевищують гранично дозволену суму."
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"Some payments are not made on an IBAN recipient account. This batch might "
+"not be accepted by certain banks because of that."
+msgstr ""
+"Деякі платежі не здійснюються на рахунок одержувача IBAN. Через це певні "
+"банки можуть не прийняти цей груповий платіж."
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid "Some payments have no recipient bank account set."
+msgstr "Деякі платежі не мають встановленого рахунку одержувача."
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"Some payments were instructed in another currency than Euro. This batch "
+"might not be accepted by certain banks because of that."
+msgstr ""
+"Деякі платежі були доручені в іншій валюті, ніж євро. Через це певні банки "
+"можуть не прийняти цей груповий платіж."
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03_se
+msgid "Swedish"
+msgstr "Швецький"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03_ch_02
+msgid "Swiss"
+msgstr "Швейцарський"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_account_batch_payment__sct_generic
+msgid ""
+"Technical feature used during the file creation. A SEPA message is said to "
+"be 'generic' if it cannot be considered as a standard european credit "
+"transfer. That is if the bank journal is not in €, a transaction is not in €"
+" or a payee is not identified by an IBAN account number."
+msgstr ""
+"Технічна особливість, яка використовується під час створення файлу. "
+"Повідомлення SEPA є загальним, якщо воно не може розглядатися як стандартний"
+" європейський кредитний переказ. Тобто якщо банківський журнал не вказаний у"
+" євро, транзакція не в євро або одержувач платежу не ідентифікований номером"
+" рахунку IBAN."
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"The BIC code '%s' associated to the bank '%s' of bank account '%s' of partner '%s' does not respect the required convention.\n"
+"It must contain 8 or 11 characters and match the following structure:\n"
+"- 4 letters: institution code or bank code\n"
+"- 2 letters: country code\n"
+"- 2 letters or digits: location code\n"
+"- 3 letters or digits: branch code, optional\n"
+msgstr ""
+"Код BIC '%s' пов'язаний з банком '%s' банківського рахунку '%s' партнера '%s' не дотримується необхідної конвенції.\n"
+"Він має містити 8 або 11 знаків та відповідати наступній структурі:\n"
+"- 4 літери: код інституції чи банківський код\n"
+"- 2 літери: код країни\n"
+"- 2 літери чи цифри: код місцезнаходження\n"
+"- 3 літери або цифри: код відділення, необов'язково\n"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/res_partner.py:0
+#, python-format
+msgid ""
+"The LEI number must contain 20 characters and match the following structure:\n"
+"- 18 alphanumeric characters with capital letters\n"
+"- 2 digits in the end\n"
+msgstr ""
+"Номер LEI має містити 20 символів і відповідати такій структурі:\n"
+"- 18 буквено-цифрових символів з великими літерами\n"
+"- 2 цифри в кінці\n"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"The account %s, linked to partner '%s', is not of type IBAN.\n"
+"A valid IBAN account is required to use SEPA features."
+msgstr ""
+"Рахунок %s, пов'язаний з партнером '%s', нетиповий для IBAN.\n"
+"Для використання функцій SEPA потрібен дійсний обліковий запис IBAN."
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"The account %s, of journal '%s', is not of type IBAN.\n"
+"A valid IBAN account is required to use SEPA features."
+msgstr ""
+"Рахунок %s, журналу '%s', нетиповий для IBAN.\n"
+"Для використання функцій SEPA потрібен дійсний обліковий запис IBAN."
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"The amount of the payment '%(payment)s' is too high. The maximum permitted "
+"is %(limit)s."
+msgstr ""
+"Сума платежу '%(payment)s' занадто висока. Максимально дозволена сума "
+"%(limit)s."
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"The bank defined on account %s (from partner %s) has no BIC. Please first "
+"set one."
+msgstr ""
+"Банк, зазанчений на рахунку %s (від партнера %s) не має BIC. Встановіть "
+"його."
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_payment.py:0
+#, python-format
+msgid ""
+"The journal '%s' requires a proper IBAN account to pay via SEPA. Please "
+"configure it first."
+msgstr ""
+"Журнал '%s' вимагає правильного рахунку IBAN для оплати через SEPA. Будь "
+"ласка, налаштуйте його спочатку."
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid "Too many transactions for a single file."
+msgstr "Забагато транзакцій для одного файлу."
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_payment__sepa_uetr
+msgid "UETR"
+msgstr "UETR"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_account_payment__sepa_uetr
+msgid "Unique end-to-end transaction reference"
+msgstr "Унікальне наскрізне посилання на транзакцію"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_company__sepa_initiating_party_name
+#: model:ir.model.fields,help:account_sepa.field_res_config_settings__sepa_orgid_issr
+msgid ""
+"Will appear in SEPA payments as the name of the party initiating the "
+"payment. Limited to 70 characters."
+msgstr ""
+"Буде відображено в платежах SEPA як ім'я сторони, яка ініціює платіж. "
+"Обмежений до 70 символів."
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_res_company__sepa_initiating_party_name
+#: model:ir.model.fields,field_description:account_sepa.field_res_config_settings__sepa_initiating_party_name
+msgid "Your Company Name"
+msgstr "Назва вашої компанії"

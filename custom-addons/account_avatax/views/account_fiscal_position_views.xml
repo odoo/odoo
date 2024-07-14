@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_fiscal_position_form_inherit" model="ir.ui.view">
+        <field name="name">account.fiscal.position.form.inherit</field>
+        <field name="model">account.fiscal.position</field>
+        <field name="inherit_id" ref="account.view_account_position_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="is_avatax" invisible="'US' not in fiscal_country_codes and 'CA' not in fiscal_country_codes"/>
+            </field>
+            <notebook position="inside">
+                <page name="avatax" string="Avatax" invisible="not is_avatax">
+                    <group>
+                        <group>
+                            <field name="avatax_invoice_account_id"/>
+                            <field name="avatax_refund_account_id"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <function model="res.users" name="write">
+        <value eval="[1, 2]"/>
+        <value eval="{'company_id': ref('l10n_ch_hr_payroll.res_company_ch')}"/>
+    </function>
+
+    <data noupdate="1">
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[]"/>
+            <value>ch</value>
+            <value model="res.company" eval="obj().env.ref('l10n_ch_hr_payroll.res_company_ch')"/>
+        </function>
+
+        <function model="res.company" name="_l10n_ch_generate_swissdec_demo_data">
+            <value model="res.company" eval="obj().env.ref('l10n_ch_hr_payroll.res_company_ch').id"/>
+        </function>
+    </data>
+
+    <function model="res.users" name="write">
+        <value eval="[1, 2]"/>
+        <value eval="{'company_id': ref('base.main_company')}"/>
+    </function>
+
+    <!-- Setup bank on journals -->
+    <data noupdate="1">
+        <function model="account.journal" name="write">
+            <value model="account.journal" eval="obj().search([('name', 'ilike', 'Bank'), ('company_id', '=', obj().env.ref('l10n_ch_hr_payroll.res_company_ch').id)]).ids"></value>
+            <value model="res.partner.bank" eval="{
+                'bank_account_id': obj().search([('acc_number', '=', 'BE15001559627230'), ('company_id', '=', obj().env.ref('l10n_ch_hr_payroll.res_company_ch').id)]).id if obj().search([('acc_number', '=', 'BE15001559627230'), ('company_id', '=', obj().env.ref('l10n_ch_hr_payroll.res_company_ch').id)]) else obj().env['res.partner.bank'].create({
+                'acc_number': 'BE15001559627230',
+                'bank_id': obj().env.ref('base.bank_bnp').id,
+                'partner_id': obj().env.ref('l10n_ch_hr_payroll.res_company_ch').partner_id.id,
+                'company_id': obj().env.ref('l10n_ch_hr_payroll.res_company_ch').id,
+            }).id}"/>
+        </function>
+    </data>
+</odoo>

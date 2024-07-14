@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_disallowed_expenses_fleet.warning_missing_disallowed_category">
+        It looks like Journal Items concerning vehicles are missing. Please check if
+        <a t-on-click="(ev) => controller.reportAction(ev, 'action_open_accounts', warningParams)">these accounts</a>
+        need a Disallowed Expense Category.
+    </t>
+</templates>

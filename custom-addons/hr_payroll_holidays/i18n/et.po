@@ -1,0 +1,274 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_payroll_holidays
+# 
+# Translators:
+# Martin Trigaux, 2023
+# Triine Aavik <triine@avalah.ee>, 2023
+# Piia Paurson <piia@avalah.ee>, 2023
+# Eneli Õigus <enelioigus@gmail.com>, 2023
+# Martin Aavastik <martin@avalah.ee>, 2023
+# JanaAvalah, 2023
+# Algo Kärp <algokarp@gmail.com>, 2023
+# Anna, 2023
+# Birgit Vijar, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Birgit Vijar, 2024\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.actions.act_window,help:hr_payroll_holidays.hr_leave_work_entry_action
+msgid ""
+"A great way to keep track on employee’s PTOs, sick days, and approval "
+"status."
+msgstr ""
+"Hea võimalus jälgimaks töötajate tasustatud puudumisi, haiguspäevi ja "
+"kinnitamise staatust."
+
+#. module: hr_payroll_holidays
+#: model:ir.model,name:hr_payroll_holidays.model_mail_activity
+msgid "Activity"
+msgstr "Tegevus"
+
+#. module: hr_payroll_holidays
+#: model:ir.model,name:hr_payroll_holidays.model_res_company
+msgid "Companies"
+msgstr "Ettevõtted"
+
+#. module: hr_payroll_holidays
+#: model:ir.model.fields.selection,name:hr_payroll_holidays.selection__hr_leave__payslip_state__done
+msgid "Computed in current payslip"
+msgstr "Arvutatud jooksval palgalehel"
+
+#. module: hr_payroll_holidays
+#: model:ir.model,name:hr_payroll_holidays.model_res_config_settings
+msgid "Config Settings"
+msgstr "Seadistused"
+
+#. module: hr_payroll_holidays
+#: model:ir.actions.server,name:hr_payroll_holidays.ir_actions_server_report_to_next_month
+msgid "Defer to Next Month"
+msgstr "Lükka edasi järgmisele kuule"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.res_config_settings_view_form
+msgid "Deferred Time Off"
+msgstr "Edasilükatud puudumised"
+
+#. module: hr_payroll_holidays
+#: model:ir.model.fields,field_description:hr_payroll_holidays.field_res_company__deferred_time_off_manager
+#: model:ir.model.fields,field_description:hr_payroll_holidays.field_res_config_settings__deferred_time_off_manager
+msgid "Deferred Time Off Manager"
+msgstr "Edasilükatud puudumiste kinnitaja"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.hr_leave_view_search
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.view_hr_leave_allocation_inherit_filter
+msgid "Employee Code"
+msgstr "Töötaja kood"
+
+#. module: hr_payroll_holidays
+#: model:ir.model,name:hr_payroll_holidays.model_hr_contract
+msgid "Employee Contract"
+msgstr "Tööleping"
+
+#. module: hr_payroll_holidays
+#: model:mail.activity.type,name:hr_payroll_holidays.mail_activity_data_hr_leave_to_defer
+msgid "Leave to Defer"
+msgstr "Jäta edasilükkamiseks"
+
+#. module: hr_payroll_holidays
+#: model:ir.actions.server,name:hr_payroll_holidays.ir_actions_server_mark_as_reported
+msgid "Mark as deferred"
+msgstr "Märgi edasilükatuks"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.actions.act_window,help:hr_payroll_holidays.hr_leave_work_entry_action
+msgid "Meet the time off dashboard."
+msgstr "Tutvuge puudumiste töölauaga."
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"Not enough attendance work entries to report the time off %s. Please make "
+"the operation manually"
+msgstr ""
+"Puudumise %s esitamiseks pole piisavalt piisavalt päevi välja teenitud. "
+"Tehke toiming käsitsi"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Only an employee time off to defer can be reported to next month"
+msgstr "Only an employee time off to defer can be reported to next month"
+
+#. module: hr_payroll_holidays
+#: model:ir.model,name:hr_payroll_holidays.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Palgaleht"
+
+#. module: hr_payroll_holidays
+#: model:ir.model.fields,field_description:hr_payroll_holidays.field_hr_leave__payslip_state
+msgid "Payslip State"
+msgstr "Palgalehe staatus"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Please create manually the work entry for %s"
+msgstr "Loo tööaeg manuaalselt %s"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.res_config_settings_view_form
+msgid "Postpone time off after payslip validation"
+msgstr "Lükake puudumine pärast palgalehe kinnitamist edasi"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.hr_leave_view_form_inherit
+msgid "Report to Next Month"
+msgstr "Kajasta järgmises kuus"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.res_config_settings_view_form
+msgid "Responsible"
+msgstr "Vastutaja"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"The next month work entries are not generated yet or are validated already "
+"for time off %s"
+msgstr ""
+"Järgmise kuu töökirjeid pole veel loodud või need on juba %s puudumisteks "
+"kinnitatud"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"The selected period is covered by a validated payslip. You can't create a "
+"time off for that period."
+msgstr ""
+"Valitud perioodi katab kinnitatud palgaleht. Selle perioodi jaoks ei saa te "
+"puudumise avaldust teha."
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"The time off %s can not be reported because it is defined over more than 2 "
+"months"
+msgstr "Puudumist %s ei saa esitada kuna see on pikem kui 2 kuud"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid "There is no work entries linked to this time off to report"
+msgstr "Selle puudumisega ei ole seotud ühtegi töökirjet, millest teatada"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_payslip.py:0
+#, python-format
+msgid ""
+"There is some remaining time off to defer for these employees: \n"
+"\n"
+" %s"
+msgstr ""
+"Nendel töötajatel on jäänud alles kasutamata puhkepäevi:\n"
+"\n"
+"  %s"
+
+#. module: hr_payroll_holidays
+#: model:ir.actions.act_window,name:hr_payroll_holidays.hr_leave_work_entry_action
+#: model:ir.model,name:hr_payroll_holidays.model_hr_leave
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.res_config_settings_view_form
+msgid "Time Off"
+msgstr "Puudumised"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_payslip.py:0
+#, python-format
+msgid "Time Off To Defer"
+msgstr "Aeg edasi lükata"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_payslip.py:0
+#, python-format
+msgid "Time Off Without Joined Document"
+msgstr "Puudumised ilma seotud dokumendita"
+
+#. module: hr_payroll_holidays
+#: model:ir.actions.act_window,name:hr_payroll_holidays.hr_leave_action_open_to_defer
+msgid "Time Off to Defer"
+msgstr "Puudumine edasi lükkamiseks"
+
+#. module: hr_payroll_holidays
+#: model:ir.ui.menu,name:hr_payroll_holidays.menu_work_entry_leave_to_approve
+msgid "Time Off to Report"
+msgstr "Puudumised raportisse"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.hr_leave_view_search
+msgid "To Defer"
+msgstr "Edasi lükata"
+
+#. module: hr_payroll_holidays
+#: model:ir.model.fields.selection,name:hr_payroll_holidays.selection__hr_leave__payslip_state__normal
+msgid "To compute in next payslip"
+msgstr "Arvutamiseks järgmisel palgalehel"
+
+#. module: hr_payroll_holidays
+#: model:ir.model.fields.selection,name:hr_payroll_holidays.selection__hr_leave__payslip_state__blocked
+msgid "To defer to next payslip"
+msgstr "Järgmisele palgalehele edasilükkamiseks"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Validated Time Off to Defer"
+msgstr "Kinnitatud puudumised edasilükkamiseks"
+
+#. module: hr_payroll_holidays
+#. odoo-javascript
+#: code:addons/hr_payroll_holidays/static/src/xml/templates.xml:0
+#, python-format
+msgid "You have some"
+msgstr "Teil on mõned"
+
+#. module: hr_payroll_holidays
+#. odoo-javascript
+#: code:addons/hr_payroll_holidays/static/src/xml/templates.xml:0
+#, python-format
+msgid "time off"
+msgstr "Puudumised"
+
+#. module: hr_payroll_holidays
+#. odoo-javascript
+#: code:addons/hr_payroll_holidays/static/src/xml/templates.xml:0
+#, python-format
+msgid "to defer to the next month."
+msgstr "Edasi lükata järgmisse kuusse."

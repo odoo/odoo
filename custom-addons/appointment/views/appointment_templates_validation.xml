@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="appointment_validated" name="Website Appointment: Appointment Confirmed">
+        <t t-if="request.env.user._is_public()" t-set="no_breadcrumbs" t-value="True"/>
+        <t t-call="portal.portal_layout">
+            <t t-set="appointment_type" t-value="event.appointment_type_id"/>
+            <t t-set="staff_user" t-value="event.user_id"/>
+            <t t-set="resources" t-value="event.appointment_resource_ids"/>
+            <t t-set="based_on_users" t-value="appointment_type.schedule_based_on == 'users'"/>
+            <div id="wrap" class="o_appointment d-flex bg-o-color-4 p-4 mt-3 border rounded">
+                <div class="oe_structure"/>
+                <div class="oe_structure container">
+                    <div class="alert alert-success d-flex align-items-center justify-content-between" t-if="state == 'new'" role="status">
+                        <span t-if="attendee_status == 'accepted'">Your appointment has successfully been booked!</span>
+                        <span t-else="">Your appointment has been reserved! We will come back to you to confirm it.</span>
+                        <a class="alert-link"
+                            groups="appointment.group_appointment_manager"
+                            t-attf-href="/web#id=#{event.appointment_type_id.id}&amp;view_type=form&amp;model=appointment.type&amp;action=appointment.appointment_type_action">
+                            Back to edit mode
+                        </a>
+                    </div>
+                    <div class="alert alert-danger pb16" t-if="state == 'no-cancel'" role="alert">
+                        <p class="mb-0">
+                            <strong>Your appointment is in less than <t t-out="appointment_type.min_cancellation_hours"/> hours from now!</strong>
+                            It's too late to cancel online, please contact the attendees another way if you really can't make it.
+                        </p>
+                    </div>
+                    <h4 class="py-3">
+                        <span t-out="event.name"/>
+                    </h4>
+                    <div class="oe_structure"/>
+                    <div class="o_appointment_validation_details row justify-content-between">
+                        <div t-attf-class="col-12 o_not_editable {{'col-md-8 pe-md-4 pe-lg-5' if (staff_user and based_on_users) or (len(resources) == 1 and appointment_type.assign_method != 'time_auto_assign') else ''}}">
+                            <div class="row mb-4">
+                                <div class="col-3">
+                                    <label class="text-muted">Date &amp; time</label>
+                                </div>
+                                <div class="col-9 col-lg-6">
+                                    <strong t-out="datetime_start"/><span class="text-muted"> (<t t-out="request.session.timezone"/>)</span>
+                                </div>
+                            </div>
+                            <div class="row mb-4">
+                                <div class="col-3">
+                                    <label class="text-muted">Duration</label>
+                                </div>
+                                <div class="col-9 col-lg-6">
+                                    <t t-out="event.duration" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/>
+                                </div>
+                            </div>
+                            <div t-if="based_on_users or appointment_type.location_id or event.location" class="row mb-4">
+                                <div class="col-3">
+                                    <label class="text-muted">Location</label>
+                                </div>
+                                <div class="col-9 col-lg-6">
+                                    <span t-if="appointment_type.location_id">
+                                        <div t-att-class="str(appointment_type.location_id.contact_address).strip() and 'fw-bold' or ''"
+                                             t-field="appointment_type.location_id" t-options="{'widget': 'contact', 'fields': ['name']}"/>
+                                        <div t-field="appointment_type.location_id" t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': true}"/>
+                                    </span>
+                                    <t t-elif="event.location" t-out="event.location"/>
+                                    <t t-elif="based_on_users" ><span>Online</span></t>
+                                </div>
+                            </div>
+                            <div t-if="event.videocall_location" class="row mb-4">
+                                <div class="col-3">
+                                    <label class="text-muted">How to join</label>
+                                </div>
+                                <div class="col-9 text-break">
+                                    <label class="text-muted">
+                                        <t t-if="event.get_base_url() in event.videocall_location"> Join with Odoo Discuss</t>
+                                        <t t-else=""> Join at</t>
+                                    </label><br/>
+                                    <a t-att-href="event.videocall_location" target="_blank" t-out="event.videocall_location"/>
+                                </div>
+                            </div>
+                            <div t-elif="event.videocall_redirection" class="row mb-4">
+                                <div class="col-3">
+                                    <label class="text-muted">How to join</label>
+                                </div>
+                                <div class="col-9 text-break">
+                                    <label class="text-muted">
+                                        <t t-if="event.videocall_source == 'discuss'"> Join with Odoo Discuss</t>
+                                        <t t-else=""> Join at</t>
+                                    </label><br/>
+                                    <a t-att-href="event.videocall_redirection" target="_blank" t-out="event.videocall_redirection"/>
+                                </div>
+                            </div>
+                            <div t-if="event.resource_total_capacity_reserved > 1" class="row mb-4">
+                                <div class="col-3">
+                                    <label class="text-muted">For</label>
+                                </div>
+                                <div class="col-9 col-lg-6">
+                                    <t t-out="event.resource_total_capacity_reserved"/> people
+                                </div>
+                            </div>
+                            <div t-if="based_on_users or appointment_type.allow_guests" class="row mb-4">
+                                <div class="col-3">
+                                    <label class="text-muted">Attendees</label>
+                                </div>
+                                <div class="col-9">
+                                    <div class="list-group">
+                                        <div t-foreach="event.attendee_ids" t-as="attendee" class="list-group-item">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <span t-out="attendee.common_name"/>
+                                                <span t-if="attendee.state == 'accepted'" class="fa fa-check text-success" title="Confirmed" role="img" aria-label="Confirmed"/>
+                                                <span t-if="attendee.state == 'declined'" class="fa fa-times text-danger" title="Declined" role="img" aria-label="Declined"/>
+                                                <span t-if="attendee.state == 'needsAction'" class="fa fa-fw fa-question-circle text-warning" title="Uncertain" role="img" aria-label="Uncertain"/>
+                                            </div>
+                                            <small class="text-muted" t-out="attendee.email"></small>
+                                        </div>
+                                    </div>
+                                    <form t-if="appointment_type.allow_guests">
+                                        <input type="hidden" id="access_token" t-att-value="event.access_token"/>
+                                        <button type="button" class="o_appointment_guest_addition_open btn btn-link"><i class="fa fa-plus me-1"/>Add Guests</button>
+                                        <textarea type="email" class="s_website_form_input form-control d-none mt-2" id="o_appointment_input_guest_emails" name="attendee_email" placeholder="e.g. john.doe@email.com&#13;&#10;e.g. jane.doe@example.com&#13;&#10;..." rows="5"/>
+                                        <div class="o_appointment_validation_error alert alert-danger d-none my-2">
+                                            <i class="fa fa-warning me-1"/>
+                                            <span class="o_appointment_error_text"></span>
+                                        </div>
+                                        <div class="d-md-flex">
+                                            <button type="button" class="o_appointment_guest_add btn btn-primary mt-2 me-2 d-none">Add Guests</button>
+                                            <button type="button" class="o_appointment_guest_discard btn btn-link mt-2 d-none">Discard</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div t-elif="not based_on_users and appointment_type.assign_method != 'time_auto_assign'" class="row mb-4">
+                                <div class="col-3">
+                                    <label class="text-muted">Resources</label>
+                                </div>
+                                <div class="col-9 col-lg-6">
+                                    <div t-foreach="event.appointment_resource_ids" t-as="resource">
+                                        <t t-out="resource.name"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div t-if="not is_html_empty(event.description)" class="row mb-4">
+                                <div class="col-3">
+                                    <label class="text-muted">Details</label>
+                                </div>
+                                <div class="col-9">
+                                    <div t-field="event.description"/>
+                                </div>
+                            </div>
+                            <div t-if="appointment_type.message_confirmation" class="mt-4">
+                                <h5>Message from the Organizer</h5>
+                                <t t-out="appointment_type.message_confirmation"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <t t-call="appointment.appointment_validated_card"/>
+                        </div>
+                    </div>
+                    <div class="o_appointment_validation_bottom_btns d-flex flex-column flex-lg-row justify-content-between mt-3 pt-3 pb-5 border-top">
+                        <div class="d-flex flex-column flex-lg-row">
+                            <a role="button" class="o_outlook_calendar btn btn-block w-100 w-lg-auto mb-2 mb-lg-0" t-attf-href="/calendar/ics/#{event.access_token}.ics">
+                                <img src="/appointment/static/src/img/outlook-calendar.svg" alt="Outlook"/>
+                                Add to iCal/Outlook
+                            </a>
+                            <a role="button" class="o_google_calendar btn btn-block w-100 w-lg-auto ms-lg-3" t-att-href="google_url">
+                                <img src="/appointment/static/src/img/google-calendar.svg" alt="Google Agenda"/>
+                                Add to Google Agenda
+                            </a>
+                        </div>
+                        <div class="d-flex flex-column-reverse flex-lg-row mt-2 mt-lg-0 mb-lg-0" t-if="event.appointment_booker_id.id == partner_id or not appointment_type.allow_guests">
+                            <a t-if="appointment_type" role="button" class="o_appointment_validation_cancel_btn btn btn-danger btn-block w-100 w-lg-auto ms-lg-3"
+                                t-attf-href="/calendar/#{event.access_token}/cancel?partner_id=#{partner_id}&amp;#{keep_query('*')}">
+                                Cancel/Reschedule
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+    <template id="appointment_validated_card" name="Appointment Validated: User / Resource Card">
+        <div t-if="staff_user and based_on_users">
+            <article class="card o_appointment_user_short_card card" itemscope="itemscope" itemtype="http://schema.org/Employee">
+                <header t-if="appointment_type.avatars_display == 'show'" class="bg-secondary rounded-top o_appointment_avatar_container ratio ratio-4x3">
+                    <div t-attf-style="background-image: url('/appointment/#{appointment_type.id}/avatar?user_id=#{staff_user.id}');"
+                            class="o_appointment_avatar_background"/>
+                </header>
+                <main class="card-body">
+                    <h5 t-out="staff_user.name"/>
+                    <div class="o_appointment_card_user_fct mb-2 text-muted">
+                        <div t-field="staff_user.partner_id.function" placeholder="Add a function here..."/>
+                    </div>
+                    <div class="list-group-flush">
+                        <div t-if="staff_user.email" class="list-group-item d-flex align-items-center">
+                            <i class="fa fa-envelope fa-fw me-2 text-muted"/>
+                            <span class="text-truncate"><t t-out="staff_user.email"/></span>
+                        </div>
+                        <div t-if="staff_user.partner_id.phone" class="list-group-item d-flex align-items-center">
+                            <i class="fa fa-phone fa-fw me-2 text-muted"/>
+                            <t t-out="staff_user.partner_id.phone"/>
+                        </div>
+                    </div>
+                </main>
+            </article>
+        </div>
+        <div t-elif="len(resources) == 1 and appointment_type.assign_method != 'time_auto_assign'">
+            <t t-set="resource" t-value="resources[0]"/>
+            <article class="card o_appointment_user_short_card card" itemscope="itemscope">
+                <header t-if="appointment_type.avatars_display == 'show'" class="bg-secondary rounded-top o_appointment_avatar_container ratio ratio-4x3">
+                    <div t-attf-style="background-image: url('/appointment/#{appointment_type.id}/resource_avatar?resource_id=#{resource.id}');"
+                            class="o_appointment_avatar_background"/>
+                </header>
+                <main class="card-body">
+                    <h5 class="mb-0" t-out="resource.name"/>
+                    <div t-if="resource.description" class="o_wappointment_card_user_dsc mb-2 text-muted">
+                        <div t-field="resource.description" placeholder="Add a resource description here..."/>
+                    </div>
+                </main>
+            </article>
+        </div>
+    </template>
+</odoo>

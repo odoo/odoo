@@ -1,0 +1,365 @@
+#hr_contract_salary {
+
+/*
+   Layout
+   ========================================================================== */
+
+    #hr_cs_form {
+
+        font-family: $o-font-family-sans-serif;
+        font-size: 13px;
+
+        section {
+            padding-bottom: 45px;
+        }
+
+        h1 {
+            margin: 45px 0 30px 0;
+            font-weight: 400;
+        }
+
+        h2 {
+            margin: 20px 0 15px 0;
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        a {
+            color: $o-brand-primary;
+        }
+
+        input:focus::-webkit-input-placeholder { color:transparent; }
+        input:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
+        input:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
+
+        .form-text {
+            display: inline-block;
+            margin: 0.25rem 0;
+            font-weight: 400;
+        }
+
+        #hr_cs_configurator,
+        #hr_cs_sidebar {
+            .row {
+                .col-form-label {
+                    font-weight: 500;
+                }
+            }
+            .col-form-label {
+                color: $o-brand-odoo;
+            }
+        }
+
+        #hr_cs_configurator,
+        #hr_cs_sidebar,
+        #hr_cs_modal {
+            .form-control[disabled] {
+                height: auto;
+                padding: 0;
+                border: 0;
+                margin-bottom: 0;
+                background-color: transparent;
+                color: #000;
+                box-shadow: none;
+                cursor: default;
+                text-align: right;
+            }
+            .input-group .form-control[disabled] + .input-group-text, .o_left {
+                border: none;
+                background-color: transparent;
+            }
+
+            .folded_content > span:empty {
+                display: none;
+            }
+        }
+
+        #hr_cs_sidebar {
+            align-self: flex-start;
+            @include o-position-sticky($top: 60px);
+            .row {
+                padding: 5px 0;
+                &:last-child {
+                    border-bottom: 1px solid map-get($grays, '200');
+                }
+                .form-control[disabled].o_outdated {
+                    color: map-get($theme-colors, 'danger');
+                    text-decoration: line-through;
+                }
+                .col-form-label {
+                    margin-bottom: 0;
+                }
+            }
+            a {
+                cursor: pointer;
+            }
+        }
+
+        #hr_cs_personal_information {
+            background-color: map-get($grays, '200');
+            h2 {
+                padding-bottom: 10px;
+                border-bottom: 1px solid lighten(map-get($grays, '600'), 40%);
+            }
+
+            .form-control {
+                &:hover,
+                &:focus {
+                    border-color: $o-brand-primary;
+                    box-shadow: none;
+                }
+            }
+            .col-form-label {
+                color: #000;
+            }
+            input.bg-danger {
+                background-color: white !important;
+                border-color: red !important;
+                color: #495057 !important;
+            }
+            a.select2-choice.bg-danger {
+                background-color: white !important;
+                border-color: red !important;
+                color: #495057 !important;
+            }
+            .o_contract_radio.invalid_radio {
+                border: 1px solid red;
+                border-radius: $border-radius;
+            }
+        }
+
+        .hr_cs_btn_submit {
+            display: block;
+            width: 100%;
+            margin-top: 30px;
+            margin-bottom: 30px;
+
+            a {
+                color: #fff;
+            }
+        }
+
+        #hr_cs_modal {
+            .modal-body :first-child {
+                border-top: 0 !important;
+            }
+            .col-form-label {
+                margin-bottom: 0;
+            }
+            .close {
+                opacity: 1;
+                background-color: white;
+                border-color: white;
+            }
+        }
+
+
+    /*
+       Radios Buttons & Check Boxes
+       ========================================================================== */
+
+        .hr_cs_control {
+            position: relative;
+            display: inline-block;
+            margin-right: 30px;
+            padding-left: 30px;
+            cursor: pointer;
+            font-weight: 400;
+            input {
+                position: absolute;
+                z-index: -1;
+                opacity: 0;
+            }
+            &:focus-within {
+                .hr_cs_control_indicator {
+                    border: 1px solid $o-brand-primary;
+                }
+            }
+        }
+
+        .hr_cs_control_indicator {
+            @include o-position-absolute($top: 0, $left: 0);
+            width: 20px;
+            height: 20px;
+            background-color: map-get($grays, '200');
+            border: 1px solid lighten(map-get($grays, '600'), 20%);
+            &.hr_cs_control_indicator_white {
+                background-color: #fff;
+            }
+        }
+
+        /* Hover and focus states */
+        .hr_cs_control:hover input ~ .hr_cs_control_indicator {
+            background-color: lighten(map-get($grays, '600'), 20%);
+            border-color: lighten(map-get($grays, '600'), 20%);
+            &:after {
+                display: block;
+            }
+        }
+
+        /* Checked state */
+        .hr_cs_control input:checked ~ .hr_cs_control_indicator {
+            background-color:  $o-brand-primary;
+            border-color:  $o-brand-primary;
+            &.hr_cs_control_no {
+                background-color: #E46F78;
+                border-color: #E46F78;
+            }
+        }
+
+        /* Check mark */
+        .hr_cs_control_indicator:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        /* Show check mark */
+        .hr_cs_control input:checked ~ .hr_cs_control_indicator:after {
+            display: block;
+        }
+
+        /* Checkbox tick */
+        .hr_cs_control_checkbox .hr_cs_control_indicator:after {
+            top: 2px;
+            left: 6px;
+            width: 6px;
+            height: 12px;
+            transform: rotate(45deg);
+            border: solid #fff;
+            border-width: 0 2px 2px 0;
+        }
+
+        /* Radio button inner circle */
+        .hr_cs_control_radio .hr_cs_control_indicator {
+            border-radius: 50%;
+            &:after {
+                top: 5px;
+                left: 5px;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background-color: #fff;
+            }
+        }
+
+
+    /*
+       Ranges
+       ========================================================================== */
+
+        @mixin track {
+            height: 5px;
+            background-color: map-get($grays, '200');
+            cursor: pointer;
+        }
+
+        @mixin thumb {
+            width: 18px;
+            height: 18px;
+            border: 0;
+            margin-top: -7px;
+            background-color: $o-brand-primary;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        @mixin progress {
+            height: 5px;
+            background: $o-brand-primary;
+        }
+
+        .hr_cs_control_range {
+            width: 82%;
+            display: inline-block;
+            vertical-align: middle;
+            -webkit-appearance: none;
+            &:focus {
+                outline: none;
+            }
+            /* Track */
+            &::-webkit-slider-runnable-track { @include track; }
+            &::-moz-range-track { @include track; }
+            &::-ms-track { @include track; }
+            /* Thumb */
+            &::-webkit-slider-thumb { @include thumb; -webkit-appearance: none; }
+            &::-moz-range-thumb { @include thumb; }
+            &::-ms-thumb { @include thumb; }
+            /* Progress */
+            &::-moz-range-progress { @include progress; }
+            &::-ms-fill-lower { @include progress; }
+        }
+
+
+    /*
+       Selects
+       ========================================================================== */
+
+        .select2-container {
+            border: 0;
+            box-shadow: none;
+            .select2-choice {
+                background-color: #fff;
+                color: $body-color;
+                background-image: none;
+                height: 34px;
+                line-height: 34px;
+                border: $input-border-width solid $input-border-color;
+                border-radius: 4px;
+                .select2-arrow {
+                    width: auto;
+                    padding: 0 8px 0 10px;
+                    border-left: 0;
+                    background-color: #fff;
+                    background-image: none;
+                    font-size: .9em;
+                    border-radius: 0;
+                    b {
+                        margin: 4px 10px;
+                    }
+                }
+            }
+            &.select2-container-active {
+                .select2-choice {
+                    @include border-bottom-radius(0);
+                    border-color: $o-brand-primary;
+                    box-shadow: none;
+                }
+            }
+            &:hover,
+            &:focus {
+                box-shadow: none;
+                .select2-choice {
+                    border-color: $o-brand-primary;
+                }
+            }
+            &.form-control-primary {
+                .select2-choice {
+                    border-color: $o-brand-primary;
+                    .select2-arrow {
+                        background-color: $o-brand-primary;
+                        color: #fff;
+                    }
+                }
+            }
+        }
+    }
+
+    .select2-drop {
+        margin-top: 0;
+        box-shadow: none;
+    }
+
+    .select2-drop-active {
+        border-color: $o-brand-primary;
+    }
+
+    .select2-results .select2-highlighted {
+        background-color: map-get($grays, '200');
+        color: $body-color;
+    }
+}
+
+.hr_cs_brand_optional {
+    color: $o-brand-primary;
+}

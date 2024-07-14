@@ -1,0 +1,2175 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_appraisal
+# 
+# Translators:
+# Wil Odoo, 2023
+# Sarah Park, 2023
+# Daye Jeong, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Daye Jeong, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "%(user)s decided, as %(role)s, to publish the employee's feedback"
+msgstr "%(user)s가 %(role)s로서 직원의 피드백을 게시하기로 결정했습니다"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "%s's Goals"
+msgstr "%s의 목표"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "1 Meeting"
+msgstr "1 회의"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_goal__progression__100
+msgid "100%"
+msgstr "100%"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_goal__progression__025
+msgid "25%"
+msgstr "25%"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__module_hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "360 Feedback"
+msgstr "360도 피드백"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_goal__progression__050
+msgid "50%"
+msgstr "50%"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_goal__progression__075
+msgid "75%"
+msgstr "75%"
+
+#. module: hr_appraisal
+#: model:mail.template,body_html:hr_appraisal.mail_template_appraisal_confirm
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        An appraisal of <t t-out=\"ctx.get('employee_to_name', 'employee')\">employee</t> has been confirmed.\n"
+"                        <br><br>\n"
+"                        Please schedule an appraisal date together.\n"
+"                        <br><br>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    View Appraisal\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        <t t-out=\"ctx.get('employee_to_name', 'employee')\">employee</t>님의 업무 평가가 확정되었습니다. \n"
+"                        <br><br>\n"
+"                        평가를 시행할 날짜를 정해주세요.\n"
+"                        <br><br>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    업무 평가 보기\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+
+#. module: hr_appraisal
+#: model:mail.template,body_html:hr_appraisal.mail_template_appraisal_request_from_employee
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Dear <t t-out=\"ctx.get('employee_to_name', 'employee')\">employee</t>,\n"
+"                        <br>\n"
+"                        <t t-out=\"ctx.get('author_name', '')\">Addison Olson</t> (<t t-out=\"ctx.get('author_mail', '')\">addison.olson28@example.com</t>) wishes an appraisal.\n"
+"                        <t t-if=\"ctx.get('user_body')\">\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; background-color: #F1F1F1;\">\n"
+"                                <t t-out=\"ctx.get('user_body')\">Annual appraisal.</t>\n"
+"                            </div>\n"
+"                        </t>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\" margin: auto; background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    View Appraisal\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        안녕하세요, <t t-out=\"ctx.get('employee_to_name', 'employee')\">employee</t>님.\n"
+"                        <br>\n"
+"                        <t t-out=\"ctx.get('author_name', '')\">Addison Olson</t> (<t t-out=\"ctx.get('author_mail', '')\">addison.olson28@example.com</t>)님이 귀하의 업무 평가를 시행하고자 합니다.\n"
+"                        <t t-if=\"ctx.get('user_body')\">\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; background-color: #F1F1F1;\">\n"
+"                                <t t-out=\"ctx.get('user_body')\">연말 평가</t>\n"
+"                            </div>\n"
+"                        </t>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\" margin: auto; background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    업무 평가 보기\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+
+#. module: hr_appraisal
+#: model:mail.template,body_html:hr_appraisal.mail_template_appraisal_request
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Dear <t t-out=\"ctx.get('employee_to_name', 'employee')\">employee</t>,\n"
+"                        <br>\n"
+"                        An appraisal has been requested by <t t-out=\"ctx.get('author_name', '')\">Addison Olson</t>\n"
+"                        <br>\n"
+"                        (<t t-out=\"ctx.get('author_mail', '')\">addison.olson28@example.com</t>).\n"
+"                        <t t-if=\"ctx.get('user_body')\">\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; background-color: #F1F1F1;\">\n"
+"                                <t t-out=\"ctx.get('user_body')\">Annual appraisal.</t>\n"
+"                            </div>\n"
+"                        </t>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\" margin: auto; background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    View Appraisal\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                        <br>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        안녕하세요, <t t-out=\"ctx.get('employee_to_name', 'employee')\">employee</t>님.\n"
+"                        <br>\n"
+"                        <t t-out=\"ctx.get('author_name', '')\">Addison Olson</t>님께서 귀하의 업무 평가를 요청하셨습니다.\n"
+"                        <br>\n"
+"                        (<t t-out=\"ctx.get('author_mail', '')\">addison.olson28@example.com</t>).\n"
+"                        <t t-if=\"ctx.get('user_body')\">\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; background-color: #F1F1F1;\">\n"
+"                                <t t-out=\"ctx.get('user_body')\">연말 평가</t>\n"
+"                            </div>\n"
+"                        </t>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\" margin: auto; background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    업무 평가 보기\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                        <br>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>\n"
+"                Describe something that made you proud, a piece of work positive for\n"
+"                the company.\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                지난 기간 동안 이뤄낸 성과, 회사에 긍정적인 영향을 주었던 업무에 대해\n"
+"                작성해 주세요.\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>\n"
+"                Did you face new difficulties? Did you confront yourself to new\n"
+"                obstacles?\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                직무 수행 중 어려웠던 점, 불편했던 사항에 대해 \n"
+"                기술해 주세요.\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>\n"
+"                Every job has strong points, what are, in your opinion, the tasks that\n"
+"                you enjoy the most/the least?\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                모든 업무에는 장단점이 있습니다. 본인이 생각하기에 가장 즐거웠던 업무와\n"
+"                가장 힘들었던 업무에 대해 작성해 주세요.\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<em>\n"
+"                From a manager point of view, how could you help the employee to\n"
+"                overcome their weaknesses?\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                관리자의 관점에서, 직원이 가진 약점을 극복하기 위해\n"
+"                도울 수 있는 방안은 무엇입니까?\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>\n"
+"                How can the company help you with your need and objectives in order\n"
+"                for you to reach your goals and look for the best collaboration.\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"               본인의 업무 목표를 달성하고 협업을 성공적으로 해내기 위해\n"
+"                회사가 도울 수 있는 방안은 무엇입니까?\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<em>\n"
+"                How do you see the employee in the future, do your vision follow the\n"
+"                employee's desire?\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                해당 직원의 발전 가능성에 대해 어떻게 생각하십니까?\n"
+"                회사의 비전과 직원의 업무 욕구가 동일합니까?\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<em>\n"
+"                Some achievements comforting you in their strengths to face job's\n"
+"                issues.\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                직무 중 발생할 수 있는 문제에 직면했을 때 이를 극복했던 성공 사례에 관해\n"
+"               기술해 주세요.\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Autonomy</em>"
+msgstr "<em>자기 주도성</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>Culture/Behavior:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-1\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+msgstr ""
+"<em>기업 문화/행동 방식:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-1\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Do you need rapid answer to the current situation?</em>"
+msgstr "<em>현재 상황에 대한 신속한 대응이 필요합니까?</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "<em>Give an example of long-term objective (&gt; 6 months)</em>"
+msgstr "<em>장기 목표에 대한 구체적인 예시를 기술하세요. (6개월 이상)</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "<em>Give an example of short-term objective (&lt; 6 months)</em>"
+msgstr "<em>단기 목표에 대한 구체적인 예시를 기술하세요. (6개월 이하)</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>Internal Communication:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-2\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+msgstr ""
+"<em>내부 커뮤니케이션:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-2\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>Job's content:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-3\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+msgstr ""
+"<em>업무 내용:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-3\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Pro-activity</em>"
+msgstr "<em>진취성</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>Remuneration:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-5\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+msgstr ""
+"<em>급여:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-5\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Stress Resistance</em>"
+msgstr "<em>스트레스 대처 능력</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Teamwork</em>"
+msgstr "<em>협업 능력</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Time Management</em>"
+msgstr "<em>시간 관리 능력</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>Work organization:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-4\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+msgstr ""
+"<em>업무 조직:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-4\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_employee_base.py:0
+#, python-format
+msgid ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                            Schedule an appraisal\n"
+"                        </p><p>\n"
+"                            Plan appraisals with your colleagues, collect and discuss feedback.\n"
+"                        </p>"
+msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                            업무 평가 일정 예약\n"
+"                        </p><p>\n"
+"                            동료들로부터 직무 능력과 관련된 피드백을 수집하고 토론하세요.\n"
+"                        </p>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_kanban
+msgid "<span class=\"bg-info\">Ready</span>"
+msgstr "<span class=\"bg-info\">준비</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_kanban
+msgid "<span class=\"bg-success\">Done</span>"
+msgstr "<span class=\"bg-success\">완료</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_users_view_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                            Last Appraisal\n"
+"                        </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            최근 업무 평가\n"
+"                        </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "<span class=\"o_stat_text\">Appraisals</span>"
+msgstr "<span class=\"o_stat_text\">업무 평가</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "<span class=\"o_stat_text\">Goals</span>"
+msgstr "<span class=\"o_stat_text\">목표 설정</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_kanban
+msgid "<span class=\"text-bg-danger\">Canceled</span>"
+msgstr ""
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_kanban
+msgid "<span class=\"text-bg-success\">Done</span>"
+msgstr "<span class=\"text-bg-success\">완료</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid ""
+"<span class=\"text-end\" invisible=\"employee_feedback_published\">Not Visible to Manager</span>\n"
+"                                            <span class=\"text-end\" invisible=\"not employee_feedback_published or state == 'new'\">Visible to Manager</span>\n"
+"                                            <span class=\"text-end\" invisible=\"not employee_feedback_published or state != 'new'\">Visible &amp; Editable by Manager</span>"
+msgstr ""
+"<span class=\"text-end\" invisible=\"employee_feedback_published\">관리자에게 표시되지 않음</span>\n"
+"                                            <span class=\"text-end\" invisible=\"not employee_feedback_published or state == 'new'\">관리자에게 표시</span>\n"
+"                                            <span class=\"text-end\" invisible=\"not employee_feedback_published or state != 'new'\">관리자가 확인 및 편집 가능</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid ""
+"<span class=\"text-end\" invisible=\"manager_feedback_published or not can_see_manager_publish\">Not Visible to Employee</span>\n"
+"                                            <span class=\"text-end\" invisible=\"not manager_feedback_published or not can_see_manager_publish\">Visible to Employee</span>"
+msgstr ""
+"<span class=\"text-end\" invisible=\"manager_feedback_published or not can_see_manager_publish\">직원에게 표시하지 않음</span>\n"
+"                                            <span class=\"text-end\" invisible=\"not manager_feedback_published or not can_see_manager_publish\">직원에게 표시함</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Evaluation\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                평가\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Feedback\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                피드백\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Improvements\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                개선사항\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                My feelings\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                나의 생각\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                My future\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                나의 계획\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                My work\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                나의 업무\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_kanban
+msgid "<strong><span>Meeting: </span></strong>"
+msgstr "<strong><span>회의: </span></strong>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_report_view_gantt
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_view_gantt
+msgid "<strong>Date — </strong>"
+msgstr "<strong>날짜 — </strong>"
+
+#. module: hr_appraisal
+#: model:ir.model.constraint,message:hr_appraisal.constraint_hr_appraisal_goal_tag_name_uniq
+msgid "A tag with the same name already exists."
+msgstr "같은 이름의 태그가 이미 존재합니다."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_needaction
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_needaction
+msgid "Action Needed"
+msgstr "조치 필요"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__active
+msgid "Active"
+msgstr "활성화"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_ids
+msgid "Activities"
+msgstr "활동"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_exception_decoration
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "활동 예외 장식"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_state
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_state
+msgid "Activity State"
+msgstr "활동 상태"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_type_icon
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "활동 유형 아이콘"
+
+#. module: hr_appraisal
+#: model_terms:ir.actions.act_window,help:hr_appraisal.hr_appraisal_goal_tag_action
+msgid "Add a new tag"
+msgstr "새 태그 추가"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.request_appraisal_view_form
+msgid "Add existing contacts..."
+msgstr "기존 연락처 추가하기..."
+
+#. module: hr_appraisal
+#: model:res.groups,name:hr_appraisal.group_hr_appraisal_manager
+msgid "Administrator"
+msgstr "관리자"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.hr_appraisal_action
+#: model:ir.actions.act_window,name:hr_appraisal.open_view_hr_appraisal_tree2
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__appraisal_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__appraisal_id
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_view_activity
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_tree
+msgid "Appraisal"
+msgstr "업무 평가 관리"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.action_appraisal_report_all
+#: model:ir.ui.menu,name:hr_appraisal.menu_appraisal_analysis_report
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_report_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_report_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_graph
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_pivot
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Appraisal Analysis"
+msgstr "업무 평가 분석"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_appraisal_note
+msgid "Appraisal Assessment Note"
+msgstr "업무 평가 참고 사항"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__appraisal_confirm_mail_template
+msgid "Appraisal Confirm Mail Template"
+msgstr "업무 평가 확인 메일 양식"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_appraisal_count
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__appraisal_count
+msgid "Appraisal Count"
+msgstr "업무 평가 수"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__date_close
+msgid "Appraisal Date"
+msgstr "업무 평가일"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__employee_id
+msgid "Appraisal Employee"
+msgstr "직원 업무 평가"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__appraisal_employee_feedback_template
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__appraisal_employee_feedback_template
+msgid "Appraisal Employee Feedback Template"
+msgstr "평가 직원 피드백 양식"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal Form to Fill"
+msgstr "업무 평가 양식 작성"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_appraisal_goal
+msgid "Appraisal Goal"
+msgstr "업무 평가 목표"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_appraisal_goal_tag
+msgid "Appraisal Goal Tags"
+msgstr "업무 평가 목표 태그"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__appraisal_manager_feedback_template
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__appraisal_manager_feedback_template
+msgid "Appraisal Manager Feedback Template"
+msgstr "업무 평가 관리자 피드백 템플릿"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal Officer"
+msgstr "업무 평가 담당자"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__appraisal_plan_posted
+msgid "Appraisal Plan Posted"
+msgstr "업무 평가 계획 게시됨"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_department__appraisal_properties_definition
+msgid "Appraisal Properties"
+msgstr "업무 평가 속성"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal Request"
+msgstr "업무 평가 요청"
+
+#. module: hr_appraisal
+#: model:mail.template,subject:hr_appraisal.mail_template_appraisal_request
+msgid "Appraisal Requested"
+msgstr "업무 평가 요청됨"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_report__state__pending
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Appraisal Sent"
+msgstr "업무 평가 전송"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_appraisal_report
+msgid "Appraisal Statistics"
+msgstr "업무 평가 통계"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_department_view_form
+msgid "Appraisal Templates"
+msgstr "업무 평가 양식"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal for %s to fill"
+msgstr "%s에 대한 업무 평가 작성"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal of %s"
+msgstr "%s의 업무 평가"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal to fill"
+msgstr "업무 평가 작성"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.hr_appraisal_action_from_department
+msgid "Appraisal to start"
+msgstr "시작에 대한 업무 평가"
+
+#. module: hr_appraisal
+#: model:ir.actions.server,name:hr_appraisal.ir_cron_scheduler_appraisal_ir_actions_server
+msgid "Appraisal: Run employee appraisal"
+msgstr "업무 평가 : 직원 업무 평가 실행"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.open_view_hr_appraisal_tree
+#: model:ir.ui.menu,name:hr_appraisal.menu_hr_appraisal_root
+#: model:ir.ui.menu,name:hr_appraisal.menu_open_view_hr_appraisal_tree
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_departure_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Appraisals"
+msgstr "업무 평가"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Appraisals Plans"
+msgstr "업무 평가 계획"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_department__appraisals_to_process_count
+msgid "Appraisals to Process"
+msgstr "과정에 대한 업무 평가"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Archived"
+msgstr "보관됨"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Ask to fill a survey to other employees"
+msgstr "다른 직원들에게 업무 평가와 관련된 설문조사 작성을 요청합니다."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__assessment_note_ids
+msgid "Assessment Note"
+msgstr "평가 관련 참고 사항"
+
+#. module: hr_appraisal
+#: model_terms:ir.actions.act_window,help:hr_appraisal.action_hr_appraisal_goal
+msgid ""
+"Assign Goals to motivate your Employees and keep track of their objectives "
+"between Appraisals."
+msgstr "목표를 설정하여 직원에게 동기를 부여하고 이를 추적하여 업무 평가에 반영합니다."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_attachment_count
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_attachment_count
+msgid "Attachment Count"
+msgstr "첨부 파일 수"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__author_id
+msgid "Author"
+msgstr "작성자"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__appraisal_plan
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__appraisal_plan
+msgid "Automatically Generate Appraisals"
+msgstr "자동으로 업무 평가가 생성되는 기간을 설정합니다."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Automatically generate appraisals"
+msgstr "자동으로 업무 평가가 생성되는 기간을 설정합니다."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__avatar_1920
+msgid "Avatar"
+msgstr "아바타"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__avatar_128
+msgid "Avatar 128"
+msgstr "아바타 128"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "기본 직원"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__body_has_template_value
+msgid "Body content is the same as the template"
+msgstr "본문 내용은 서식과 동일합니다"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_calendar_event
+msgid "Calendar Event"
+msgstr "행사 일정표"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__can_edit_body
+msgid "Can Edit Body"
+msgstr "본문 편집 가능"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__can_see_employee_publish
+msgid "Can See Employee Publish"
+msgstr "직원 게시 확인 가능"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__can_see_manager_publish
+msgid "Can See Manager Publish"
+msgstr "관리자 게시 확인 가능"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.request_appraisal_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Cancel"
+msgstr "취소"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_departure_wizard__cancel_appraisal
+msgid "Cancel Future Appraisals"
+msgstr "향후 업무 평가 취소"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_departure_wizard__cancel_appraisal
+msgid "Cancel all appraisal after contract end date."
+msgstr "계약 종료일 이후 모든 평가를 취소합니다."
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal__state__cancel
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_report__state__cancel
+msgid "Cancelled"
+msgstr "취소됨"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__color
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__color
+msgid "Color"
+msgstr "색상"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_res_company
+msgid "Companies"
+msgstr "회사"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__company_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__company_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__company_id
+msgid "Company"
+msgstr "회사"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.request_appraisal_view_form
+msgid "Compose Email"
+msgstr "이메일 작성"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_res_config_settings
+msgid "Config Settings"
+msgstr "환경설정"
+
+#. module: hr_appraisal
+#: model:ir.ui.menu,name:hr_appraisal.menu_hr_appraisal_configuration
+msgid "Configuration"
+msgstr "설정"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Configure General Feedback Template"
+msgstr "일반 피드백 양식을 설정합니다."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Confirm"
+msgstr "확인"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal__state__pending
+msgid "Confirmed"
+msgstr "확인됨"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__body
+msgid "Contents"
+msgstr "콘텐츠"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__create_date
+msgid "Create Date"
+msgstr "작성일자"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__duration_first_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__duration_first_appraisal
+msgid "Create a first Appraisal after"
+msgstr "첫 번째 업무평가를 작성한 후"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__duration_next_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__duration_next_appraisal
+msgid "Create a second Appraisal after"
+msgstr "두 번째 업무평가를 작성한 후"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__duration_after_recruitment
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__duration_after_recruitment
+msgid "Create an Appraisal after recruitment"
+msgstr "채용 후 업무 평가 작성하기"
+
+#. module: hr_appraisal
+#: model_terms:ir.actions.act_window,help:hr_appraisal.action_hr_appraisal_goal
+msgid "Create new goals"
+msgstr "새로운 목표 설정"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__create_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__create_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__create_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__create_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__create_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__create_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__create_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__create_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Creation Date"
+msgstr "작성일자"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_department__custom_appraisal_templates
+msgid "Custom Appraisal Templates"
+msgstr "사용자 지정 업무 평가 양식"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Date"
+msgstr "날짜"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__date_close
+msgid ""
+"Date of the appraisal, automatically updated when the appraisal is Done or "
+"Cancelled."
+msgstr "업무평가가 완료 또는 취소되면 자동으로 업데이트될 업무평가 날짜입니다."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__deadline
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__deadline
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_search
+msgid "Deadline"
+msgstr "마감 시한"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_view_activity
+msgid "Deadline:"
+msgstr "마감일 :"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal_goal.py:0
+#, python-format
+msgid "Deadline: %s"
+msgstr "마감일: %s"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_kanban
+msgid "Delete"
+msgstr "삭제"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_department
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__department_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__department_id
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Department"
+msgstr "부서"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr "퇴사 마법사"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__description
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_form
+msgid "Description"
+msgstr "설명"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__display_name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__display_name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__display_name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__display_name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__display_name
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal__state__done
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_report__state__done
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Done"
+msgstr "완료"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_employee
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__employee_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_department_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Employee"
+msgstr "임직원"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_appraisal
+msgid "Employee Appraisal"
+msgstr "직원 업무 평가"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_autocomplete_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__employee_autocomplete_ids
+msgid "Employee Autocomplete"
+msgstr "직원 자동 완성"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_feedback
+msgid "Employee Feedback"
+msgstr "직원 피드백"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_feedback_published
+msgid "Employee Feedback Published"
+msgstr "직원 피드백 게시됨"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_feedback_template
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_department__employee_feedback_template
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Employee Feedback Template"
+msgstr "직원 피드백 양식"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__name
+msgid "Employee Name"
+msgstr "직원 이름"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_user_id
+msgid "Employee User"
+msgstr "직원 사용자"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Employee's Feedback"
+msgstr "피드백 양식"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.action_hr_appraisal_note
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__assessment_note_ids
+#: model:ir.ui.menu,name:hr_appraisal.menu_hr_appraisal_note
+msgid "Evaluation Scale"
+msgstr "평가 척도"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/res_company.py:0
+#, python-format
+msgid "Exceeds expectations"
+msgstr "기대 이상"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Extended Filters..."
+msgstr "확장 필터..."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Feedback Templates"
+msgstr "피드백 양식"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Fill appraisal for %s"
+msgstr "%s에 대한 업무 평가 작성"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__date_final_interview
+msgid "Final Interview"
+msgstr "최종 면담"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Final Interview Date"
+msgstr "최종 면담일"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__assessment_note
+msgid "Final Rating"
+msgstr "최종 평점"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_follower_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_follower_ids
+msgid "Followers"
+msgstr "팔로워"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_partner_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "팔로워 (협력사)"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__activity_type_icon
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "멋진 아이콘 폰트 예: fa-tasks"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Future Activities"
+msgstr "향후 활동"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"Give one positive achievement that convinced you of the employee's\n"
+"            value."
+msgstr ""
+"해당 직원의 업무 능력을 인정하게 된 바람직한 성과 한 가지를 제시해\n"
+"           주세요."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_form
+msgid "Goal"
+msgstr "목표"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.hr_appraisal_goal_tag_action
+msgid "Goal Tags"
+msgstr "목표 태그"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.action_hr_appraisal_goal
+#: model:ir.ui.menu,name:hr_appraisal.menu_hr_appraisal_goal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_graph
+msgid "Goals"
+msgstr "목표 설정"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Group By"
+msgstr "그룹별"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Group by..."
+msgstr "그룹별..."
+
+#. module: hr_appraisal
+#: model:mail.template,name:hr_appraisal.mail_template_appraisal_confirm
+msgid "HR: Appraisal Confirmation"
+msgstr "인사: 업무 평가 확인"
+
+#. module: hr_appraisal
+#: model:mail.template,name:hr_appraisal.mail_template_appraisal_request_from_employee
+msgid "HR: Employee Appraisal Request"
+msgstr "인사: 직원 업무 평가 요청"
+
+#. module: hr_appraisal
+#: model:mail.template,name:hr_appraisal.mail_template_appraisal_request
+msgid "HR: Manager appraisal request"
+msgstr "인사: 관리자 업무 평가 요청"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__has_message
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__has_message
+msgid "Has Message"
+msgstr "메시지가 있습니다"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "How could the employee improve?"
+msgstr "해당 직원이 개선해야 할 사항은 무엇입니까?"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "How do I feel about my own..."
+msgstr "본인에 대한 만족도"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "How do I feel about the company..."
+msgstr "회사에 대한 만족도"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__id
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_exception_icon
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_exception_icon
+msgid "Icon"
+msgstr "아이콘"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__activity_exception_icon
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "예외 활동을 표시하기 위한 아이콘"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__message_needaction
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "만약 선택하였으면, 신규 메시지에 주의를 기울여야 합니다."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__message_has_error
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__message_has_sms_error
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__message_has_error
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합니다."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__image_1920
+msgid "Image"
+msgstr "이미지"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__image_128
+msgid "Image 128"
+msgstr "128 이미지"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "In progress Evaluations"
+msgstr "평가 진행 중"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__final_interview
+msgid "Interview"
+msgstr "면담"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__is_mail_template_editor
+msgid "Is Editor"
+msgstr "편집자입니다 "
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_is_follower
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_is_follower
+msgid "Is Follower"
+msgstr "팔로워임"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__is_manager
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__is_manager
+msgid "Is Manager"
+msgstr "관리자"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__lang
+msgid "Language"
+msgstr "사용 언어"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__last_appraisal_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__last_appraisal_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_base__last_appraisal_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_public__last_appraisal_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_users__last_appraisal_id
+msgid "Last Appraisal"
+msgstr "최근 업무 평가"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__last_appraisal_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__last_appraisal_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_users__last_appraisal_date
+msgid "Last Appraisal Date"
+msgstr "최근 업무 평가일"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Last Meeting"
+msgstr "최근 회의"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__write_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__write_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__write_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__write_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__write_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__write_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__write_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__write_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_search
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Late"
+msgstr "지연"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Late Activities"
+msgstr "지연된 활동"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"Long term (&gt; 6 months) career discussion, where does the employee\n"
+"            wants to go, how to help them reach this path?"
+msgstr ""
+"장기적인 (6개월 이상) 커리어 발달 기회에 대하여, 직원이 이루고자 하는\n"
+"            목표는 무엇이며, 어떻게 도와줄 수 있습니까?"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__template_id
+msgid "Mail Template"
+msgstr "메일 서식"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__manager_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__manager_id
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_department_view_form
+#, python-format
+msgid "Manager"
+msgstr "관리자"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Manager Assessment will show here"
+msgstr "피드백이 게시된 후 관리자 업무평가는"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__manager_feedback
+msgid "Manager Feedback"
+msgstr "관리자 피드백"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__manager_feedback_published
+msgid "Manager Feedback Published"
+msgstr "관리자 피드백 게시됨"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__manager_feedback_template
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_department__manager_feedback_template
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Manager Feedback Template"
+msgstr "관리자 피드백 양식"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__manager_user_ids
+msgid "Manager Users"
+msgstr "관리자 사용자"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Manager's Feedback"
+msgstr "관리자 피드백"
+
+#. module: hr_appraisal
+#: model:ir.actions.server,name:hr_appraisal.action_mark_as_done
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Mark as Done"
+msgstr "완료"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__meeting_count_display
+msgid "Meeting Count"
+msgstr "회의 수"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__meeting_ids
+msgid "Meetings"
+msgstr "회의"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/res_company.py:0
+#, python-format
+msgid "Meets expectations"
+msgstr "기대 충족"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_has_error
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_has_error
+msgid "Message Delivery error"
+msgstr "메시지 전송 오류"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_ids
+msgid "Messages"
+msgstr "메시지"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__my_activity_date_deadline
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "내 활동 마감일"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.hr_appraisal_action_my
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "My Appraisals"
+msgstr "내 업무 평가"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_search
+msgid "My Goals"
+msgstr "내 목표"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__name
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_tree
+msgid "Name"
+msgstr "이름"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/res_company.py:0
+#, python-format
+msgid "Needs improvement"
+msgstr "개선 필요"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "다음 활동 캘린더 행사"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_date_deadline
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "다음 활동 마감일"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_summary
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_summary
+msgid "Next Activity Summary"
+msgstr "다음 활동 요약"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_type_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_type_id
+msgid "Next Activity Type"
+msgstr "다음 활동 유형"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_view_search
+msgid "Next Appraisal"
+msgstr "다음 업무 평가"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__next_appraisal_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_public__next_appraisal_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_users__next_appraisal_date
+msgid "Next Appraisal Date"
+msgstr "다음 업무 평가일"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Next Meeting"
+msgstr "다음 회의"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "No Meeting"
+msgstr "회의 없음"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Note"
+msgstr "노트"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_needaction_counter
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_needaction_counter
+msgid "Number of Actions"
+msgstr "작업 수"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_has_error_counter
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_has_error_counter
+msgid "Number of errors"
+msgstr "오류 횟수"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__message_needaction_counter
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "조치가 필요한 메시지 수"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__message_has_error_counter
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "전송 오류가 발생한 메시지 수입니다."
+
+#. module: hr_appraisal
+#: model:res.groups,name:hr_appraisal.group_hr_appraisal_user
+msgid "Officer: Access all appraisals"
+msgstr "담당자: 모든 평가에 접근 권한"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_view_form
+msgid "Ongoing"
+msgstr "진행중"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__ongoing_appraisal_count
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_public__ongoing_appraisal_count
+msgid "Ongoing Appraisal Count"
+msgstr "진행 중인 업무 평가 수"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal_goal.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "지원되지 않는 작업"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_request_appraisal__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"이메일 전송 시 번역할 언어 (ISO code)를 선택할 수 있습니다. 설정하지 않을 경우, 영어가 기본 언어로 사용됩니다. 적절한 "
+"언어를 선택할 수 있도록 다음과 같은 예시용 메시지를 사용합니다. {{ object.partner_id.lang }}."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__parent_user_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_base__parent_user_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_public__parent_user_id
+msgid "Parent User"
+msgstr "상위 사용자"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_search
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "People I Manage"
+msgstr "관리하는 직원"
+
+#. module: hr_appraisal
+#: model_terms:ir.actions.act_window,help:hr_appraisal.open_view_hr_appraisal_tree
+msgid "Plan appraisals with your colleagues, collect and discuss feedback."
+msgstr "동료들의 피드백을 수집하고 토론하기 위한 업무 평가를 계획해 보세요."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Previous Appraisals"
+msgstr "이전 업무 평가"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__note
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Private Note"
+msgstr "비공개 메모"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Private note (only accessible to people set as managers)"
+msgstr "비공개 메모 (관리자로 설정된 사람만 액세스 가능)"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__progression
+msgid "Progress"
+msgstr "진행률"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__appraisal_properties
+msgid "Properties"
+msgstr "속성"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_employee_public
+msgid "Public Employee"
+msgstr "일반 직원"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__rating_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__rating_ids
+msgid "Ratings"
+msgstr "평가"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__recipient_ids
+msgid "Recipients"
+msgstr "수신인"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__related_partner_id
+msgid "Related Partner"
+msgstr "관련된 협력사"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__employee_user_id
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__manager_user_id
+#: model:ir.model.fields,help:hr_appraisal.field_hr_employee__parent_user_id
+#: model:ir.model.fields,help:hr_appraisal.field_hr_employee_base__parent_user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "리소스에 대한 접근 권한 관리자입니다."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__render_model
+msgid "Rendering Model"
+msgstr "렌더링 모델"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Reopen"
+msgstr "다시 열기"
+
+#. module: hr_appraisal
+#: model:ir.ui.menu,name:hr_appraisal.menu_hr_appraisal_report
+msgid "Reporting"
+msgstr "보고"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_users_view_form
+msgid "Request Appraisal"
+msgstr "업무 평가 요청"
+
+#. module: hr_appraisal
+#: model:ir.actions.server,name:hr_appraisal.action_create_multi_appraisals
+msgid "Request Appraisals"
+msgstr "업무 평가 요청"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_request_appraisal
+msgid "Request an Appraisal"
+msgstr "업무 평가 요청"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_user_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_user_id
+msgid "Responsible User"
+msgstr "담당 사용자"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_has_sms_error
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS 전송 오류"
+
+#. module: hr_appraisal
+#: model_terms:ir.actions.act_window,help:hr_appraisal.open_view_hr_appraisal_tree
+msgid "Schedule an appraisal"
+msgstr "업무 평가 일정 예약"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Search Appraisal"
+msgstr "업무 평가 검색"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Self Assessment will show here"
+msgstr "자기 평가는 여기에 표시됩니다"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.request_appraisal_view_form
+msgid "Send"
+msgstr "보내기"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Send by email"
+msgstr "이메일로 전송"
+
+#. module: hr_appraisal
+#: model:mail.template,description:hr_appraisal.mail_template_appraisal_confirm
+msgid ""
+"Sent automatically to both employee and manager when appraisal is confirmed"
+msgstr "업무 평가가 확인되면 직원과 관리자 모두에게 자동으로 전송됩니다"
+
+#. module: hr_appraisal
+#: model:mail.template,description:hr_appraisal.mail_template_appraisal_request_from_employee
+msgid ""
+"Sent manually to the employee by the manager who wants to do an appraisal"
+msgstr "업무평가를 원하는 관리자가 직원에게 직접 전송합니다"
+
+#. module: hr_appraisal
+#: model:mail.template,description:hr_appraisal.mail_template_appraisal_request
+msgid "Sent manually to the manager by the employee who wants an appraisal"
+msgstr "업무평가를 원하는 직원이 관리자에게 직접 전송합니다"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__sequence
+msgid "Sequence"
+msgstr "순서"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.hr_appraisal_config_settings_action
+#: model:ir.ui.menu,name:hr_appraisal.hr_appraisal_menu_configuration
+msgid "Settings"
+msgstr "설정"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "Short term (6-months) actions / decisions / objectives"
+msgstr "단기 (6개월) 조치 / 결정 / 목표"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__show_employee_feedback_full
+msgid "Show Employee Feedback Full"
+msgstr "직원 피드백 전체 보기"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__show_manager_feedback_full
+msgid "Show Manager Feedback Full"
+msgstr "관리자 피드백 전체 보기"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Show all records which has next action date is before today"
+msgstr "다음 행동 날짜가 오늘 이전 인 모든 기록보기"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__state
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__state
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Status"
+msgstr "상태"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__activity_state
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"활동 기준 상태\n"
+"기한 초과: 기한이 이미 지났습니다.\n"
+"오늘: 활동 날짜가 오늘입니다.\n"
+"예정: 향후 계획된 활동입니다."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/res_company.py:0
+#, python-format
+msgid "Strongly Exceed Expectations"
+msgstr "기대치를 크게 상회함"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__subject
+msgid "Subject"
+msgstr "제목"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.request_appraisal_view_form
+msgid "Subject..."
+msgstr "제목..."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Such grouping is not allowed."
+msgstr "이러한 그룹화는 허용되지 않습니다."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__tag_ids
+#: model:ir.ui.menu,name:hr_appraisal.menu_config_goal_tags
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_tag_view_tree
+msgid "Tags"
+msgstr "태그"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid ""
+"Thanks to your Appraisal Plan, without any new manual Appraisal, the new "
+"Appraisal will be automatically created on %s."
+msgstr "업무 평가 계획을 사용하면, 매번 수동으로 업무 평가를 작성하지 않아도 %s에 새 업무 평가가 자동으로 생성됩니다."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "The appraisal's status has been set to Done by %s"
+msgstr "%s가 업무 평가를 완료로 설정했습니다."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__note
+msgid "The content of this note is not visible by the Employee."
+msgstr "이 메모의 내용은 직원에게 표시되지 않습니다."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__last_appraisal_date
+#: model:ir.model.fields,help:hr_appraisal.field_hr_employee__last_appraisal_date
+#: model:ir.model.fields,help:hr_appraisal.field_res_users__last_appraisal_date
+msgid "The date of the last appraisal"
+msgstr "최근 업무 평가 날짜"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_employee__next_appraisal_date
+#: model:ir.model.fields,help:hr_appraisal.field_res_users__next_appraisal_date
+msgid ""
+"The date of the next appraisal is computed by the appraisal plan's dates "
+"(first appraisal + periodicity)."
+msgstr "다음 평가 날짜는 평가 계획의 날짜(첫 번째 평가 + 주기성)로 계산됩니다."
+
+#. module: hr_appraisal
+#: model:ir.model.constraint,message:hr_appraisal.constraint_res_company_positif_number_months
+msgid "The duration time must be bigger or equal to 1 month."
+msgstr "기간은 1개월 이상이어야 합니다."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid ""
+"The employee %s arrived %s months ago. The appraisal is created and you can "
+"fill it here."
+msgstr "직원 %s이 %s개월 전에 입사했습니다. 업무 평가가 생성되었으며 여기에서 내용을 입력하실 수 있습니다."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "The employee feedback cannot be changed by managers."
+msgstr "관리자는 직원 피드백을 수정할 수 없습니다."
+
+#. module: hr_appraisal
+#. odoo-javascript
+#: code:addons/hr_appraisal/static/src/fields/boolean_confirm.js:0
+#, python-format
+msgid ""
+"The employee's feedback will be published without their consent. Do you "
+"really want to publish it? This action will be logged in the chatter."
+msgstr "직원의 피드백이 직원의 동의 없이 게시됩니다. 정말로 게시하시겠습니까? 이 작업은 대화창에 기록됩니다."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid ""
+"The last appraisal of %s was %s months ago. The appraisal is created and you"
+" can fill it here."
+msgstr ""
+"%s에 대한 마지막 업무 평가는 %s개월 전이었습니다. 새로운 업무 평가서가 생성되었으며, 여기에서 내용을 입력하실 수 있습니다."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "The manager feedback cannot be changed by an employee."
+msgstr "직원은 관리자 피드백을 수정할 수 없습니다."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__assessment_note
+msgid "This field is not visible to the Employee."
+msgstr "이 필드는 직원에게는 표시되지 않습니다."
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal__state__new
+msgid "To Confirm"
+msgstr "기안 작성"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "To Do"
+msgstr "To Do"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_report__state__new
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "To Start"
+msgstr "시작 대기"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Today Activities"
+msgstr "오늘 활동"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__activity_exception_decoration
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "레코드에 있는 예외 활동의 유형입니다."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__uncomplete_goals_count
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__uncomplete_goals_count
+msgid "Uncomplete Goals Count"
+msgstr "완료되지 않은 목표 수"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Unpublished"
+msgstr "게시 안 함"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_view_search
+msgid "Upcoming Appraisals"
+msgstr "예정된 업무 평가"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_res_users
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__manager_user_id
+msgid "User"
+msgstr "사용자"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__user_body
+msgid "User Contents"
+msgstr "사용자 콘텐츠"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__waiting_feedback
+msgid "Waiting Feedback from Employee/Managers"
+msgstr "직원/관리자의 피드백을 기다리는 중"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__website_message_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__website_message_ids
+msgid "Website Messages"
+msgstr "웹사이트 메시지"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__website_message_ids
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__website_message_ids
+msgid "Website communication history"
+msgstr "웹사이트 대화 기록"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "What are my best achievement(s) since my last appraisal?"
+msgstr "최근 평가 이후 내가 이룬 최고의 실적은 무엇입니까?"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"What are my short and long-term goals with the company, and for my\n"
+"            career?"
+msgstr ""
+"회사의 발전과 본인 스스로의 개발을 위해 설정한 장단기 목표에 대해\n"
+"            기술해 주세요."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"What has been the most challenging aspect of my work this past year and\n"
+"            why?"
+msgstr ""
+"지난 한 해 동안의 업무 중 가장 어려웠던 부분과 그 이유는 무엇입니까?\n"
+"            "
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "What would I need to improve my work?"
+msgstr "본인의 업무와 관련하여 개선이 필요한 부분은 무엇입니까?"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid ""
+"When the Appraisals plan is saved, it will overwrite all empty Next "
+"Appraisal Dates for every employee."
+msgstr "업무 평가 계획이 저장되면 비어 있는 모든 직원의 다음 업무 평가 날짜는 덮어쓰기됩니다."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "Which parts of my job do I most / least enjoy?"
+msgstr "본인이 맡은 업무 중 가장 좋아하는 부분과 좋아하지 않는 부분은 무엇입니까?"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid ""
+"You arrived %s months ago. Your appraisal is created and you can fill it "
+"here."
+msgstr "처음 입사한지 %s개월이 지났습니다. 귀하에 대한 업무 평가가 생성되었으며 여기에서 내용을 입력하실 수 있습니다."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "You cannot delete appraisal which is not in draft or canceled state"
+msgstr "미결 또는 취소 상태가 아닌 업무 평가는 삭제할 수 없습니다."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_employee.py:0
+#, python-format
+msgid "You cannot set 'Next Appraisal Date' in the past."
+msgstr "'다음 업무 평가일'은 과거로 설정할 수 없습니다."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Your Appraisal has been completed"
+msgstr "업무 평가가 완료되었습니다."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid ""
+"Your last appraisal was %s months ago. Your appraisal is created and you can"
+" fill it here."
+msgstr "마지막 업무 평가가 %s개월 전에 작성되었습니다. 새로운 업무 평가서가 생성되었으며, 여기에서 내용을 입력하실 수 있습니다."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "e.g. John Doe"
+msgstr "예: 홍길동"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_form
+msgid "e.g. Present yourself to your new team"
+msgstr "예: 성과 향상을 위해 새로운 기술을 습득합니다."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "months after recruitment, then after"
+msgstr "개월 후 (채용일 기준)"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "months, then every"
+msgstr "개월 후, 그리고 매"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "months."
+msgstr "개월 마다."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_kanban
+msgid "oe_kanban_text_red"
+msgstr "oe_kanban_text_red"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "once published"
+msgstr "여기에 표시됩니다."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_view_activity
+msgid "text-danger"
+msgstr "text-danger"
+
+#. module: hr_appraisal
+#: model:mail.template,subject:hr_appraisal.mail_template_appraisal_request_from_employee
+msgid ""
+"{{ hasattr(object, 'name') and object.name or '' }} requests an Appraisal"
+msgstr "{{ hasattr(object, 'name') and object.name or '' }} 업무평가 요청하기"
+
+#. module: hr_appraisal
+#: model:mail.template,subject:hr_appraisal.mail_template_appraisal_confirm
+msgid "{{ object.employee_id.name }}: Appraisal Confirmed"
+msgstr "{{ object.employee_id.name }}: 업무평가 확인"

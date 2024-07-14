@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_move_line_product_selector_inherit" model="ir.ui.view">
+        <field name="name">stock.product.selector.inherit</field>
+        <field name="model">stock.move.line</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="stock_barcode.stock_move_line_product_selector"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='picking_id']" position="replace">
+                <div class="row" groups="stock.group_production_lot">
+                    <div class="col-12 col-md-6 my-2 d-flex align-items-baseline">
+                        <i class="fa fa-fw fa-lg fa-truck me-3" title="Transfer"/>
+                        <field name="picking_id" placeholder="Transfer"
+                            required="1" options="{'no_create_edit': True}"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

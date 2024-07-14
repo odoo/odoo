@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.ExpectedDateDialog">
+        <Dialog title="props.title" size="'sm'">
+            <form>
+                <DateTimeInput value="props.default_date" type="'date'" onChange="(date) => this.onDateTimeChanged(date)"/>
+            </form>
+
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="_save">
+                    Save
+                </button>
+                <button class="btn btn-secondary" t-on-click="_cancel">
+                    Cancel
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

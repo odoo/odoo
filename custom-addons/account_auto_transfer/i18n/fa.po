@@ -1,0 +1,479 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_auto_transfer
+# 
+# Translators:
+# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023
+# Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2023
+# Hamid Darabi, 2023
+# F Hariri <fhari1234@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Hamed Mohammadi <hamed@dehongi.com>, 2023
+# Hanna Kheradroosta, 2023
+# mohssen <mohssen.mohebbi@gmail.com>, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
+"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "<span> to </span>"
+msgstr "<span> به </span>"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "قالب جدول حساب"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_transfer_model
+msgid "Account Transfer Model"
+msgstr "مدل انتقال حساب"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_transfer_model_line
+msgid "Account Transfer Model Line"
+msgstr "سطر مدل انتقال حساب"
+
+#. module: account_auto_transfer
+#: model:ir.actions.server,name:account_auto_transfer.ir_cron_auto_transfer_ir_actions_server
+msgid "Account automatic transfers: Perform transfers"
+msgstr "انتقال خودکار حساب: انجام انتقال"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Activate"
+msgstr "فعال"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,help:account_auto_transfer.field_account_transfer_model_line__analytic_account_ids
+msgid ""
+"Adds a condition to only transfer the sum of the lines from the origin "
+"accounts that match these analytic accounts to the destination account"
+msgstr ""
+"شرطی را اضافه می کند تا فقط مجموع سطرها را از حساب های مبدا که با این حساب "
+"های تحلیلی مطابقت دارند به حساب مقصد منتقل کند"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,help:account_auto_transfer.field_account_transfer_model_line__partner_ids
+msgid ""
+"Adds a condition to only transfer the sum of the lines from the origin "
+"accounts that match these partners to the destination account"
+msgstr ""
+"شرطی را اضافه می کند تا فقط مجموع سطرها را از حساب های مبدا که با این شرکا "
+"مطابقت دارد به حساب مقصد منتقل کند"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__analytic_account_ids
+msgid "Analytic Filter"
+msgstr "فیلتر تحلیلی"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Automated Transfer"
+msgstr "انتقال خودکار"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (%s%% from account %s)"
+msgstr "انتقال خودکار (%s%% from account %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (-%s%%)"
+msgstr "انتقال خودکار (-%s%%)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid ""
+"Automatic Transfer (entries with analytic account(s): %s and partner(s): %s)"
+msgstr "انتقال خودکار (سندها با حساب(های) تحلیلی: %s و شریک(ها): %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (entries with analytic account(s): %s)"
+msgstr "انتقال خودکار (سند با حساب(های) تحلیلی: %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (entries with partner(s): %s)"
+msgstr "انتقال خودکار (سند با شریک: %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid ""
+"Automatic Transfer (from account %s with analytic account(s): %s and "
+"partner(s): %s)"
+msgstr "انتقال خودکار (از حساب %s با حساب(های) تحلیلی: %s و شریک(ها): %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (from account %s with analytic account(s): %s)"
+msgstr "انتقال خودکار (از حساب %s با حساب(های) تحلیلی: %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (from account %s with partner(s): %s)"
+msgstr "انتقال خودکار (از حساب %s با شریک: %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (to account %s)"
+msgstr "انتقال خودکار (به حساب %s)"
+
+#. module: account_auto_transfer
+#: model:ir.actions.act_window,name:account_auto_transfer.transfer_model_action
+#: model:ir.ui.menu,name:account_auto_transfer.menu_auto_transfer
+msgid "Automatic Transfers"
+msgstr "انتقالات خودکار"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__company_id
+msgid "Company"
+msgstr "شرکت"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,help:account_auto_transfer.field_account_transfer_model__company_id
+msgid "Company related to this journal"
+msgstr "شرکت مربوط به این روزنامه"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Compute Transfer"
+msgstr "محاسبه انتقال"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__create_uid
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__create_uid
+msgid "Created by"
+msgstr "ایجاد شده توسط"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__create_date
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__create_date
+msgid "Created on"
+msgstr "ایجادشده در"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Description"
+msgstr "توصیف"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__account_id
+msgid "Destination Account"
+msgstr "حساب مقصد"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__line_ids
+msgid "Destination Accounts"
+msgstr "حساب های مقصد"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__journal_id
+msgid "Destination Journal"
+msgstr "روزنامه مقصد"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Disable"
+msgstr "غیر فعال کردن"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__state__disabled
+msgid "Disabled"
+msgstr "غیر فعال شده"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__display_name
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__display_name
+msgid "Display Name"
+msgstr "نام نمایش داده شده"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__frequency
+msgid "Frequency"
+msgstr "فرکانس"
+
+#. module: account_auto_transfer
+#: model:ir.actions.act_window,name:account_auto_transfer.generated_transfers_action
+msgid "Generated Entries"
+msgstr "ورودی های تولید شده"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__move_ids
+msgid "Generated Moves"
+msgstr "انتقالات تولید شده"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__id
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__id
+msgid "ID"
+msgstr "شناسه"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/demo/account_demo.py:0
+#, python-format
+msgid "IFRS Automatic Transfers"
+msgstr "انتقالات خودکار IFRS "
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Journal"
+msgstr "روزنامه"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_move
+msgid "Journal Entry"
+msgstr "سند دفترروزنامه‌"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_move_line
+msgid "Journal Item"
+msgstr "آیتم دفترروزنامه"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__write_uid
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__write_uid
+msgid "Last Updated by"
+msgstr "آخرین بروز رسانی توسط"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__write_date
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__write_date
+msgid "Last Updated on"
+msgstr "آخرین بروز رسانی در"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__frequency__month
+msgid "Monthly"
+msgstr "ماهانه"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/demo/account_demo.py:0
+#, python-format
+msgid "Monthly IFRS rent expense transfer"
+msgstr "انتقال هزینه‌ی اجاره‌ی ماهانه‌ی IFRS"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__move_ids_count
+msgid "Move Ids Count"
+msgstr "تعداد شناسه‌های انتقال"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Move Model"
+msgstr "مدل انتقال"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_tree
+msgid "Move Models"
+msgstr "مدلهای انتقال"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__name
+msgid "Name"
+msgstr "نام"
+
+#. module: account_auto_transfer
+#: model:ir.model.constraint,message:account_auto_transfer.constraint_account_transfer_model_line_unique_account_by_transfer_model
+msgid "Only one account occurrence by transfer model"
+msgstr "فقط یک حساب بر اساس مدل انتقال وجود دارد"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__account_ids
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Origin Accounts"
+msgstr "حساب های مبدأ"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_bank_statement_line__transfer_model_id
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_move__transfer_model_id
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_payment__transfer_model_id
+msgid "Originating Model"
+msgstr "مدل مبدا"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__partner_ids
+msgid "Partner Filter"
+msgstr "فیلتر والد"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__percent
+msgid "Percent"
+msgstr "درصد"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Percent (%)"
+msgstr "درصد (%)"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__percent_is_readonly
+msgid "Percent Is Readonly"
+msgstr "درصد فقط خواندنی است"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,help:account_auto_transfer.field_account_transfer_model_line__percent
+msgid ""
+"Percentage of the sum of lines from the origin accounts will be transferred "
+"to the destination account"
+msgstr "درصدی از مجموع سطرها از حساب های مبدا به حساب مقصد منتقل می شود"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Period"
+msgstr "دوره"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__frequency__quarter
+msgid "Quarterly"
+msgstr "فصلی"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__state__in_progress
+msgid "Running"
+msgstr "در حال اجرا"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__sequence
+msgid "Sequence"
+msgstr "دنباله"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__date_start
+msgid "Start Date"
+msgstr "تاریخ آغاز"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__state
+msgid "State"
+msgstr "استان"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__date_stop
+msgid "Stop Date"
+msgstr "تاریخ پایان"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "The analytic filter %s is duplicated"
+msgstr "فیلتر تحلیلی %s تکراری است"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid ""
+"The partner filter %s in combination with the analytic filter %s is "
+"duplicated"
+msgstr "فیلتر شریک %s در ترکیب با فیلتر تحلیلی %s تکراری است"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "The partner filter %s is duplicated"
+msgstr "فیلتر شریک %s تکراری است"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "The total percentage (%s) should be less or equal to 100!"
+msgstr "درصد کل (%s) باید کمتر یا مساوی 100 باشد!"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__total_percent
+msgid "Total Percent"
+msgstr "درصد کل"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__transfer_model_id
+msgid "Transfer Model"
+msgstr "مدل انتقال"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Transfers"
+msgstr "انتقالات"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__frequency__year
+msgid "Yearly"
+msgstr "سالیانه"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/demo/account_demo.py:0
+#, python-format
+msgid "Yearly liabilites auto transfers"
+msgstr "انتقال خودکار بدهی‌های سالانه"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid ""
+"You cannot delete an automatic transfer that has draft moves attached "
+"('%s'). Please delete them before deleting this transfer."
+msgstr ""
+"شما نمی‌توانید یک انتقال خودکار که دارای اسناد پیشنویس ضمیمه شده است (%s) را"
+" حذف کنید. لطفاً پیش از حذف این انتقال آنها را حذف کنید."
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid ""
+"You cannot delete an automatic transfer that has posted moves attached "
+"('%s')."
+msgstr ""
+"شما نمی‌توانید یک انتقال خودکار که اسناد ثبت شده ضمیمه‌ی آن هستند را حذف "
+"کنید (%s)."
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/account_move_line.py:0
+#, python-format
+msgid "You cannot set Tax on Automatic Transfer's entries."
+msgstr "شما نمی‌توانید برای اسناد انتقال خودکار، مالیات تعیین کنید."
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "e.g. Monthly Expense Transfer"
+msgstr "به عنوان مثال، انتقال هزینه ماهانه"

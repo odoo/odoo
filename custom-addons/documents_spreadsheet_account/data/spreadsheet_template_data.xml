@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="spreadsheet_template_monthly_budget" model="spreadsheet.template">
+        <field name="name">Budget Report (Monthly)</field>
+        <field name="sequence">20</field>
+        <field name="spreadsheet_binary_data" type="base64" file="documents_spreadsheet_account/data/files/monthly_budget_spreadsheet_template.json"/>
+        <field name="thumbnail" type="base64" file="documents_spreadsheet_account/data/files/monthly_budget_spreadsheet_template.png"/>
+    </record>
+
+    <record id="spreadsheet_template_quarterly_budget" model="spreadsheet.template">
+        <field name="name">Budget Report (Quarterly)</field>
+        <field name="sequence">10</field>
+        <field name="spreadsheet_binary_data" type="base64" file="documents_spreadsheet_account/data/files/quarterly_budget_spreadsheet_template.json"/>
+        <field name="thumbnail" type="base64" file="documents_spreadsheet_account/data/files/quarterly_budget_spreadsheet_template.png"/>
+    </record>
+
+    <record id="spreadsheet_template_sales_commission" model="spreadsheet.template">
+        <field name="name">Sales Commission</field>
+        <field name="sequence">100</field>
+        <field name="spreadsheet_binary_data" type="base64" file="documents_spreadsheet_account/data/files/sales_commission_report_template.json"/>
+        <field name="thumbnail" type="base64" file="documents_spreadsheet_account/data/files/sales_commission_report_template.png"/>
+    </record>
+
+</odoo>

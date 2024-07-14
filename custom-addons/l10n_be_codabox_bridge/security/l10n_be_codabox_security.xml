@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_access_connection_settings" model="res.groups">
+        <field name="name">Allow to show and modify the CodaBox Connection Settings</field>
+        <field name="category_id" ref="base.module_category_accounting"/>
+        <field name="users" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+    </record>
+</odoo>

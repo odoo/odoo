@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sources
+        https://www.ato.gov.au/
+        https://oac.chris21.com/OAC_ichrisp/Help/ichrisUG/646250.htm
+    -->
+    <!-- Schedule 3 - Tax table for actors, variety artists and other entertainers  -->
+    <record id="l10n_au_withholding_actors_structure_3" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_withholding"/>
+        <field name="name">PAYG Withholding</field>
+        <field name="code">WITHHOLD</field>
+        <field name="sequence">100</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+coefficients = payslip._rule_parameter("l10n_au_withholding_coefficients")["actor"]
+result = -payslip._l10n_au_compute_withholding_amount(categories['GROSS'] * contract.l10n_au_performances_per_week, "weekly", coefficients)
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_actor"/>
+    </record>
+
+    <record id="l10n_au_allowance_withholding_structure_3" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_withholding"/>
+        <field name="name">Withholding for allowances</field>
+        <field name="code">WITHHOLD.ALW</field>
+        <field name="sequence">103</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = payslip.l10n_au_allowance_withholding</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = -payslip.l10n_au_allowance_withholding</field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_actor"/>
+        <field name="appears_on_payroll_report">False</field>
+    </record>
+
+    <record id="l10n_au_withholding_net_structure_3" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_net_withholding"/>
+        <field name="name">Total Withholding Amount</field>
+        <field name="code">WITHHOLD.TOTAL</field>
+        <field name="sequence">160</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['WITHHOLD'] + min(-categories['WITHHOLD'], categories["WITHHOLD.OFFSET"])
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_actor"/>
+    </record>
+
+    <record id="l10n_au_child_support_structure_3" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_child_support"/>
+        <field name="name">Child Support</field>
+        <field name="code">CHILD.SUPPORT</field>
+        <field name="sequence">190</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = employee.l10n_au_child_support_deduction or employee.l10n_au_child_support_garnishee</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+net_salary = categories['BASIC'] + categories['ALW'] + categories['DED']
+result = -payslip._l10n_au_compute_child_support(net_salary)
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_actor"/>
+    </record>
+
+    <!-- Allowances not in Gross -->
+    <record id="l10n_au_allowance_structure_3" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Allowance</field>
+        <field name="sequence">199</field>
+        <field name="code">ALW</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = payslip.input_line_ids.filtered(lambda x: x.input_type_id.l10n_au_is_allowance)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+allowances = payslip.input_line_ids.filtered(lambda x: x.input_type_id.l10n_au_is_allowance)
+result = sum(allowances.mapped('amount'))
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_actor"/>
+    </record>
+
+    <record id="l10n_au_super_contribution_structure_3" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_super_contribution"/>
+        <field name="name">Super Guarantee</field>
+        <field name="code">SUPER</field>
+        <field name="sequence">300</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip._rule_parameter("l10n_au_withholding_super")
+result = categories['GROSS'] * rate/100 + contract.l10n_au_salary_sacrifice_superannuation
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_actor"/>
+    </record>
+</odoo>

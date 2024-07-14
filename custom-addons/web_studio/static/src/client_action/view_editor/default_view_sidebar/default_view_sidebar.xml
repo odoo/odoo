@@ -1,0 +1,11 @@
+<templates>
+
+    <t t-name="web_studio.ViewEditor.DefaultViewSidebar">
+        <InteractiveEditorSidebar>
+            <t t-set-slot="view">
+                <SidebarViewToolbox onMore="props.openViewInForm" canEditXml="!viewEditorModel.isEditingSubview" openDefaultValues="props.openDefaultValues" />
+            </t>
+        </InteractiveEditorSidebar>
+    </t>
+
+</templates>

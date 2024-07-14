@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_move_form_invoice_and_withhold_view" model="ir.ui.view">
+            <field name="name">account.move.form.invoice.and.withhold.view</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="l10n_latam_invoice_document.view_move_form"/>
+            <field name="arch" type="xml">
+                <button name="action_reverse" position="after">
+                    <button name="l10n_ec_add_withhold" string="Add Withhold" type="object"
+                        groups="account.group_account_invoice"
+                        invisible="not l10n_ec_show_add_withhold or state != 'posted'"/>
+                    <button name="l10n_ec_action_send_withhold"
+                        type="object"
+                        string="Send By Email"
+                        invisible="l10n_ec_withhold_type != 'in_withhold'"
+                        groups="base.group_user"/>
+                </button>
+                <div class="oe_button_box" position="inside">
+                    <button type="object" class="oe_stat_button" name="l10n_ec_action_view_withholds" icon="fa-list-alt"
+                        invisible="l10n_ec_withhold_count == 0">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="l10n_ec_withhold_count"/>
+                            </span>
+                            <span class="o_stat_text">Withholds</span>
+                        </div>
+                    </button>
+                    <button type="object" class="oe_stat_button" name="l10n_ec_action_view_invoices" icon="fa-list-alt"
+                        invisible="l10n_ec_withhold_origin_invoice_count == 0">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="l10n_ec_withhold_origin_invoice_count"/>
+                            </span>
+                            <span class="o_stat_text">Invoices</span>
+                        </div>
+                    </button>
+                </div>
+                <xpath expr="//field[@name='l10n_latam_document_number']" position="after">
+                    <!-- The payment method should appear in sale invoices, debit notes and purchase liquidations -->
+                    <field name="l10n_ec_sri_payment_id"
+                        options="{'no_create': True, 'no_open': True}"
+                        invisible="country_code != 'EC' or move_type not in ('in_invoice', 'out_invoice')"
+                        readonly="not l10n_ec_show_add_withhold"/>
+                    <field name="l10n_show_ec_authorization" invisible="1"/>
+                    <field name="l10n_edit_ec_authorization" invisible="1"/>
+                    <field name="l10n_ec_authorization_number"
+                        invisible="not l10n_show_ec_authorization"
+                        readonly="not l10n_edit_ec_authorization"
+                        placeholder="Fill in an Authorization Number of 49 or 10 digits"
+                        class="text-break"/>
+                </xpath>
+                <xpath expr="//field[@name='invoice_date']" position="after">
+                    <field name="l10n_ec_withhold_date" string="Withhold Date" options="{'warn_future': true}"
+                        invisible="l10n_ec_withhold_type not in ['out_withhold', 'in_withhold']"
+                        readonly="state != 'draft'"
+                        required="l10n_ec_withhold_type in ['out_withhold', 'in_withhold']"/>
+                </xpath>
+                <xpath expr="//field[@name='ref']" position="before">
+                    <field name="partner_id" widget="res_partner_many2one"
+                        context="{'show_address': 1, 'default_is_company': True, 'show_vat': True}"
+                        options='{"no_quick_create": True}'
+                        invisible="l10n_ec_withhold_type not in ('out_withhold', 'in_withhold')"
+                        readonly="state != 'draft'"/>
+                </xpath>
+                <xpath expr="//page[@id='aml_tab']" position="before">
+                    <page id="withhold_tab" string="Withhold Lines" name="withhold_lines" invisible="l10n_ec_withhold_type not in ['out_withhold', 'in_withhold']">
+                        <field name="l10n_ec_withhold_line_ids" mode="tree,kanban">
+                            <tree editable="bottom">
+                                <field name="l10n_ec_code_taxsupport"  column_invisible="parent.l10n_ec_withhold_type == 'out_withhold'" />
+                                <field name="tax_ids" string="Tax" widget="many2many_tags"/>
+                                <field name="l10n_ec_withhold_invoice_id"/>
+                                <field name="balance" string="Base Amount"/>
+                                <field name="l10n_ec_withhold_tax_amount"/>
+                            </tree>
+                        </field>
+                        <group class="oe_subtotal_footer">
+                            <field name="l10n_ec_withhold_subtotals" widget="account-tax-totals-field-for-withhold" nolabel="1" colspan="2"/>
+                        </group>
+                        <field name="narration" placeholder="Add an internal note..." nolabel="1" height="50"/>
+                    </page>
+                </xpath>
+                <xpath expr="//field[@name='reversed_entry_id']" position="after">
+                    <field name="invoice_origin" invisible="l10n_ec_withhold_type not in ['out_withhold', 'in_withhold']"/>
+                    <field name="l10n_ec_authorization_date" invisible="not l10n_ec_authorization_date"/>
+                    <field name="l10n_latam_internal_type" invisible="1"/>
+                    <field name="l10n_ec_withhold_count" invisible="1"/>
+                    <field name="l10n_ec_withhold_type" invisible="1"/>
+                    <field name="l10n_ec_show_add_withhold" invisible="1"/>
+                    <field name="l10n_ec_withhold_type" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_move_tree" model="ir.ui.view">
+            <field name="name">Add withhold date to move general tree</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_tree"/>
+            <field name="arch" type="xml">
+                <field name="date" position="after">
+                    <field name="l10n_ec_withhold_date" optional="hide" readonly="state != 'draft'"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_invoice_tree" model="ir.ui.view">
+            <field name="name">Add withhold date to invoice tree</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="l10n_ec_withhold_date" optional="hide" readonly="state != 'draft'"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_receive_withhold" model="ir.actions.server">
+            <field name="name">Create Withholds</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.l10n_ec_add_withhold()
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="helpdesk_ticket_create_timesheet_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.create.timesheet.wizard.form</field>
+        <field name="model">helpdesk.ticket.create.timesheet</field>
+        <field name="arch" type="xml">
+            <form string="Save time">
+                <group>
+                    <field name="ticket_id" invisible="True"/>
+                    <field name="time_spent" string="Hours Spent" class="oe_inline" widget="float_time" required="True"/>
+                </group>
+                <field name="description" widget="text" required="False" placeholder="Describe your activity..."/>
+                <footer>
+                    <button string="Save" type="object" name="action_generate_timesheet" class="btn btn-primary" data-hotkey="q"/>
+                    <button string="Delete" type="object" name="action_delete_timesheet" class="btn btn-secondary" data-hotkey="w"/>
+                    <button string="Discard" special="cancel" data-hotkey="x" type="object" class="btn btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

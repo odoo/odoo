@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+  <template id="message_signature_link">
+      <p>A document has been signed and a copy attached to this order:
+        <t t-foreach="request" t-as="o">
+            <a href="#" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id"> <t t-esc="o.reference"/></a><span t-if="request.ids[-1:] != o.ids">, </span>
+        </t>
+      </p>
+  </template>
+
+</odoo>

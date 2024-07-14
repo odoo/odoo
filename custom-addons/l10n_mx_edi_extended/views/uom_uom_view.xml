@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record id="view_product_uom_form_inh_l10n_mx" model="ir.ui.view">
+            <field name="name">view.uom.uom.form.inh.l10n.mx</field>
+            <field name="model">uom.uom</field>
+            <field name="inherit_id" ref="product_unspsc.view_product_uom_form_unspsc"/>
+            <field name="arch" type="xml">
+                <field name="unspsc_code_id" position="after">
+                    <field name="l10n_mx_edi_code_aduana" invisible="'MX' not in fiscal_country_codes"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

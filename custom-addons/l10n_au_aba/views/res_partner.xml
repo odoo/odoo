@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_tree" model="ir.ui.view">
+        <field name="name">res.partner.tree</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <tree string="Contacts" delete="0" create="0">
+                <field name="display_name" string="Name"/>
+                <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                <field name="parent_id" readonly="1"/>
+                <button name="action_show_details" type="object" string="View"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>

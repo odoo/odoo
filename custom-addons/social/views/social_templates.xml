@@ -1,0 +1,24 @@
+<odoo>
+    <template id="social_http_error_view" name="Social HTTP Error Template">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
+            <t t-set="head">
+                <t t-call-assets="web.assets_frontend" t-js="false"/>
+            </t>
+            <div class="row h-75">
+                <div class="alert alert-danger m-auto col-10 col-lg-4 w-auto" role="alert">
+                    <h4 class="alert-heading"><b>An error occurred while trying to link your account</b></h4>
+                    <t t-out="error_message" />
+                    <t t-if="documentation_data and documentation_data['documentation_link']">
+                        <a t-att-href="documentation_data['documentation_link']" target="_blank">
+                            <t t-out="documentation_data['documentation_link_label']"/> <i t-att-class="documentation_data['documentation_link_icon_class']"/>
+                        </a>
+                    </t>
+                    <hr/>
+                    <a href="/web#action=social.action_social_stream_post"><i class="oi oi-arrow-left"/> Go back to Odoo</a>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

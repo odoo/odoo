@@ -1,0 +1,1662 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_referral
+# 
+# Translators:
+# Wil Odoo, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-03-05 15:02+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid ""
+" You've gained {gained} points with this progress.{new_line}It makes you a "
+"new total of {total} points. Visit {link1}this link{link2} to pick a gift!"
+msgstr ""
+"この進歩によって、ポイントを獲得 {gained} しました。{new_line}これにより、合計ポイントは新たに {total} "
+"ポイントとなります。{link1}このリンク{link2} をクリックしてプレゼントを選びましょう！"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_recruitment_report__referral_hired
+msgid "# Hired by Referral"
+msgstr "# 紹介による採用"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_applicant_employee_referral_kanban
+msgid "<b>Responsible: </b>"
+msgstr "<b>責任者: </b>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_applicant_employee_referral_kanban
+msgid "<i class=\"fa fa-check me-2\" title=\"Hired\"/>"
+msgstr "<i class=\"fa fa-check me-2\" title=\"Hired\"/>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_applicant_employee_referral_kanban
+msgid "<i class=\"fa fa-square-o\" title=\"Open\"/>"
+msgstr "<i class=\"fa fa-square-o\" title=\"Open\"/>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_applicant_employee_referral_kanban
+msgid "<i class=\"text-danger fa fa-times\" title=\"Closed\"/>"
+msgstr "<i class=\"text-danger fa fa-times\" title=\"Closed\"/>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_applicant_employee_referral_kanban
+msgid "<i class=\"text-success fa fa-check\" title=\"Done\"/>"
+msgstr "<i class=\"text-success fa fa-check\" title=\"Done\"/>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_level_form
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_form
+msgid "<span class=\"ml8\">Points</span>"
+msgstr "<span class=\"ml8\">ポイント</span>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                                    Awarded\n"
+"                                </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    アワード獲得\n"
+"                                </span>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_kanban
+msgid ""
+"<span title=\"Buy\"><i class=\"fa fa-shopping-basket me-3\" role=\"img\" "
+"aria-label=\"Buy\"/>Buy</span>"
+msgstr ""
+"<span title=\"Buy\"><i class=\"fa fa-shopping-basket me-3\" role=\"img\" "
+"aria-label=\"Buy\"/>購入</span>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "<span title=\"More info\">More info</span>"
+msgstr "<span title=\"More info\">詳細情報</span>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid ""
+"<span title=\"My Link to Share\"><i class=\"fa fa-lg fa-link\" role=\"img\" "
+"aria-label=\"My Link to Share\"/></span>"
+msgstr ""
+"<span title=\"My Link to Share\"><i class=\"fa fa-lg fa-link\" role=\"img\" "
+"aria-label=\"My Link to Share\"/></span>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "<span title=\"Send by Mail\">Refer Friend</span>"
+msgstr "<span title=\"Send by Mail\">友人に紹介</span>"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/wizard/hr_referral_alert_mail_wizard.py:0
+#, python-format
+msgid ""
+"A new alert has been added to the Referrals app! Check your <a "
+"href=%(url)s>dashboard</a> now!"
+msgstr "紹介アプリに新たに通知が追加されました！ <a href=%(url)s>ダッシュボード</a>を今すぐ確認しましょう！"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_needaction
+msgid "Action Needed"
+msgstr "要アクション"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__active
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__active
+msgid "Active"
+msgstr "有効化"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_ids
+msgid "Activities"
+msgstr "活動"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "例外活動文字装飾"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_state
+msgid "Activity State"
+msgstr "活動状態"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "活動種別アイコン"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__name
+msgid "Alert"
+msgstr "警告"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_alert
+msgid "Alert in Referral App"
+msgstr "紹介アプリ通知"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.action_hr_referral_alert_configuration
+#: model:ir.ui.menu,name:hr_referral.menu_hr_referral_alert_configuration
+msgid "Alerts"
+msgstr "アラート"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_referral_alert_configuration
+msgid ""
+"Alerts will be displayed on the first screen to give information or "
+"redirects the employees"
+msgstr "通知は最初の画面に表示され、従業員に情報を提供したり、リダイレクトしたりします。"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_recruitment_stage__points
+msgid ""
+"Amount of points that the referent will receive when the applicant will "
+"reach this stage"
+msgstr "応募者がこの段階に到達した際に、紹介者が受け取るポイント数"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__applicant_id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__applicant_id
+msgid "Applicant"
+msgstr "応募者"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid "Applicant must have a company."
+msgstr "応募者には会社が必要です"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__applicant_name
+msgid "Applicant's Name"
+msgstr "応募者の氏名"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_alert_view_search
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_alert_form
+msgid "Archived"
+msgstr "アーカイブ済"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_attachment_count
+msgid "Attachment Count"
+msgstr "添付数"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_applicant_employee_referral_kanban
+msgid "Avatar"
+msgstr "アバター"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_referral_reward.py:0
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__awarded_employees
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_backend_kanban
+#, python-format
+msgid "Awarded Employees"
+msgstr "受賞社員"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_friend__position__back
+msgid "Back"
+msgstr "戻る"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.res_config_settings_view__form
+msgid "Background"
+msgstr "背景"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.res_config_settings_view__form
+msgid "Background Image"
+msgstr "背景画像"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__body
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__body_html
+msgid "Body"
+msgstr "表示文"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_job__utm_campaign_id
+msgid "Campaign"
+msgstr "キャンペーン"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_alert_mail_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_send_mail_view_form
+msgid "Cancel"
+msgstr "取消"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__channel
+msgid "Channel"
+msgstr "チャネル"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Choose an avatar for your new friend!"
+msgstr "新しい友人のアバターを選択してください！"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Click to level up!"
+msgstr "クリックしてレベルアップしてください！"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_link_to_share_view_form
+msgid "Close"
+msgstr "閉じる"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_res_company
+msgid "Companies"
+msgstr "会社"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__company_id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__company_id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__company_id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__company_id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__company_id
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_search
+msgid "Company"
+msgstr "会社"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_res_config_settings
+msgid "Config Settings"
+msgstr "コンフィグ設定"
+
+#. module: hr_referral
+#: model:ir.ui.menu,name:hr_referral.menu_hr_referral_configuration
+msgid "Configuration"
+msgstr "設定"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__cost
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_form
+msgid "Cost"
+msgstr "原価"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_referral_friend_configuration
+msgid "Create a new friend"
+msgstr "新しい友達を作成"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_referral_level_configuration
+msgid "Create a new level"
+msgstr "新しいレベルを作成"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_referral_alert_configuration
+msgid "Create new alerts"
+msgstr "新しいアラートを作成"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_referral_points
+msgid "Create new reward points"
+msgstr "新しいリワードポイントを作成"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__create_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__create_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__create_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__create_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__create_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__create_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__create_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__create_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__create_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__create_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__create_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__create_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__create_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__create_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__create_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__create_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.js:0
+#: code:addons/hr_referral/static/src/views/dashboard.js:0
+#: code:addons/hr_referral/static/src/views/dashboard.js:0
+#: model:ir.actions.client,name:hr_referral.action_hr_referral_welcome_screen
+#: model:ir.ui.menu,name:hr_referral.menu_hr_applicant_employee_referral_dashboard
+#, python-format
+msgid "Dashboard"
+msgstr "ダッシュボード"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__image
+msgid "Dashboard Image"
+msgstr "ダッシュボードイメージ"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_search
+msgid "Date"
+msgstr "日付"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__date_from
+msgid "Date From"
+msgstr "開始日"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__date_to
+msgid "Date To"
+msgstr "終了日"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_friend__position
+msgid ""
+"Define the position of the friend. If it's a small friend like a dog, you "
+"must select Front, it will be placed in the front of the dashboard, above "
+"superhero."
+msgstr "友人の位置を定義します。犬のような小さな友人の場合、'前'を選択してください。ダッシュボードのスーパーヒーローの上の前面に表示されます。"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__department_id
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_search
+msgid "Department"
+msgstr "部門"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__description
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_form
+msgid "Description"
+msgstr "説明"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_job__direct_clicks
+msgid "Direct Clicks"
+msgstr "直接クリック"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/report/hr_referral_report.py:0
+#, python-format
+msgid "Direct Referral"
+msgstr "直接紹介"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__dismissed_user_ids
+msgid "Dismissed User"
+msgstr "却下されたユーザ"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/wizard/hr_referral_send_mail.py:0
+#, python-format
+msgid "Do not have access"
+msgstr "アクセス権がありません"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_kanban
+msgid ""
+"Do you want to confirm this reward? After confirmation an HR will contact "
+"you."
+msgstr "このリワードを確定しますか？確認後、人事から連絡があります。"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__earned_points
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__earned_points
+msgid "Earned Points"
+msgstr "獲得ポイント"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__email_to
+msgid "Email"
+msgstr "メール"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Email a friend"
+msgstr "友人にメール"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_points__applicant_subject
+msgid "Email subject for applications sent via email"
+msgstr "Eメールで応募の場合の件名"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_search
+msgid "Employee"
+msgstr "従業員"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__employee_referral_hired
+msgid "Employee Referral Hired"
+msgstr "採用された従業員紹介"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__employee_referral_refused
+msgid "Employee Referral Refused"
+msgstr "却下された従業員紹介"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_report
+msgid "Employee Referral Report"
+msgstr "従業員紹介レポート"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_form
+msgid "Employees"
+msgstr "従業員"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_graph
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_pivot
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_report_view_form
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_report_view_tree
+msgid "Employees Analysis"
+msgstr "従業員分析"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.employee_referral_report_action
+msgid "Employees Referral Analysis"
+msgstr "従業員の紹介分析"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_alert__url
+msgid ""
+"External links must start with 'http://www.'. For an internal url, you don't"
+" need to put domain name, you can just insert the path."
+msgstr "外部リンクは 'http://www.'で始まる必要があります。内部URLの場合、ドメイン名を入れる必要はなく、パスを入れて下さい。"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_link_to_share__channel__facebook
+msgid "Facebook"
+msgstr "Facebook"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_job__facebook_clicks
+msgid "Facebook Clicks"
+msgstr "Facebookクリック"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_follower_ids
+msgid "Followers"
+msgstr "フォロワー"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "フォロワー (取引先)"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesomeのアイコン 例. fa-tasks"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_onboarding_tree
+msgid "Force Onboarding"
+msgstr "強制オンボーディング"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__friend_id
+msgid "Friend"
+msgstr "友人"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__name
+msgid "Friend Name"
+msgstr "友人の名前"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.action_hr_referral_friend_configuration
+#: model:ir.ui.menu,name:hr_referral.menu_hr_referral_friend_configuration
+msgid "Friends"
+msgstr "友人"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_friend
+msgid "Friends for Referrals"
+msgstr "友人紹介"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_friend__position__front
+msgid "Front"
+msgstr "前"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Gather your team"
+msgstr "チームを集める"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Gather your team!"
+msgstr "チームを集めましょう！"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__gift_manager_id
+msgid "Gift Responsible"
+msgstr "ギフト責任者"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_points_filter
+msgid "Gifts"
+msgstr "贈答品"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_alert__onclick__all_jobs
+msgid "Go to All Jobs"
+msgstr "全ての求人へ移動"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_points_filter
+msgid "Group By"
+msgstr "グループ化"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_alert_view_search
+msgid "HR Referral Alert Search"
+msgstr "人事紹介通知検索"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__has_message
+msgid "Has Message"
+msgstr "メッセージあり"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_recruitment_report__has_referrer
+msgid "Has Referrer"
+msgstr "紹介者あり"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/wizard/hr_referral_send_mail.py:0
+#, python-format
+msgid ""
+"Hello,<br><br>There are some amazing job offers in my company! Have a look, "
+"they  can be interesting for you<br><a href=\"%s\">See Job Offers</a>"
+msgstr ""
+"お世話になります。<br><br>お勧めの採用情報が弊社にいくつかあります。もし、ご興味を持たれましたら、ご参照ください。<br><a "
+"href=\"%s\">採用情報を参照</a>"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/wizard/hr_referral_send_mail.py:0
+#, python-format
+msgid ""
+"Hello,<br><br>There is an amazing job offer for %s in my company! It will be"
+" a fit for you<br><a href=\"%s\">See Job Offer</a>"
+msgstr ""
+"お世話になります。<br><br> 弊社に%s にお勧めの採用情報があります。あなたに適任の仕事です。<br><a "
+"href=\"%s\">採用情報を参照</a>"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_applicant__referral_state__hired
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_report__referral_state__hired
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_filter
+msgid "Hired"
+msgstr "採用"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_res_users__hr_referral_level_id
+msgid "Hr Referral Level"
+msgstr "人事紹介レベル"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_res_users__hr_referral_onboarding_page
+msgid "Hr Referral Onboarding Page"
+msgstr "人事紹介オンボーディングページ"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_exception_icon
+msgid "Icon"
+msgstr "アイコン"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "例外活動を示すアイコン"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "チェックした場合は、新しいメッセージに注意が必要です。"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__message_has_error
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "チェックした場合は、一部のメッセージに配信エラーが発生されました。"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__image_head
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__image
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__image
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__image
+msgid "Image"
+msgstr "画像"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_applicant__referral_state__progress
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_report__referral_state__progress
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_filter
+msgid "In Progress"
+msgstr "進行中"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__is_accessible_to_current_user
+msgid "Is Accessible To Current User"
+msgstr "現在のユーザにアクセス可能"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_is_follower
+msgid "Is Follower"
+msgstr "フォロー中　"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__job_id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__job_id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__job_id
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_search
+msgid "Job"
+msgstr "職務"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_job
+msgid "Job Position"
+msgstr "職位"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.action_hr_job_employee_referral
+msgid "Job Positions"
+msgstr "職位"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Job Referral Program"
+msgstr "職務紹介"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_job__job_open_date
+msgid "Job Start Recruitment Date"
+msgstr "採用開始日"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__write_date
+msgid "Last Update Date"
+msgstr "最終更新日"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__write_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__write_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__write_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__write_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__write_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__write_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__write_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__write_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__write_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__write_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__write_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__write_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__write_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__write_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__write_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__write_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__last_valuable_stage_id
+msgid "Last Valuable Stage"
+msgstr "最終有効ステージ"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_referral_reward_configuration
+msgid "Let's create Super Rewards to thank your employees."
+msgstr "従業員に感謝するため最高のリワードを作成しましょう。"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_referral_reward
+msgid "Let's create super Rewards to thank<br>your employees."
+msgstr "従業員に感謝<br>するため最高のリワードを作成しましょう。"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_applicant_employee_referral
+msgid "Let's share a job position."
+msgstr "職位を共有しましょう。"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Level"
+msgstr "レベル"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__name
+msgid "Level Name"
+msgstr "レベル名"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_level
+msgid "Level for referrals"
+msgstr "紹介用のレベル"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.action_hr_referral_level_configuration
+#: model:ir.ui.menu,name:hr_referral.menu_hr_referral_level_configuration
+msgid "Levels"
+msgstr "レベル"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_link_to_share__channel__direct
+msgid "Link"
+msgstr "リンク"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.hr_referral_link_to_share_action
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_link_to_share_view_form
+msgid "Link to Share"
+msgstr "共有リンク"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_link_to_share__channel__linkedin
+msgid "Linkedin"
+msgstr "Linkedin"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_job__linkedin_clicks
+msgid "Linkedin Clicks"
+msgstr "Linkedinクリック"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__max_points
+#: model:ir.model.fields,field_description:hr_referral.field_hr_job__max_points
+msgid "Max Points"
+msgstr "最大ポイント"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__medium_id
+msgid "Medium"
+msgstr "中"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_has_error
+msgid "Message Delivery error"
+msgstr "メッセージ配信エラー"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_ids
+msgid "Messages"
+msgstr "メッセージ"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "活動期限"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.action_hr_applicant_employee_referral
+msgid "My Referral"
+msgstr "自分の紹介"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/wizard/hr_referral_alert_mail_wizard.py:0
+#, python-format
+msgid "New Alert In Referrals App"
+msgstr "紹介アプリ新規通知"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_referral_reward.py:0
+#, python-format
+msgid "New gift awarded for %s"
+msgstr "%s用新規ギフト"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Next"
+msgstr "次へ"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "次の活動カレンダーイベント"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "次の活動期限"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_summary
+msgid "Next Activity Summary"
+msgstr "次の活動概要"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_type_id
+msgid "Next Activity Type"
+msgstr "次の活動タイプ"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.employee_referral_report_action
+msgid "No data to display"
+msgstr "表示するデータがありません"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_job_employee_referral
+msgid "No job positions are available to share."
+msgstr "共有できる職位はありません。"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_alert__onclick__no
+msgid "Not Clickable"
+msgstr "クリック不可"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_applicant__referral_state__closed
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_report__referral_state__closed
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_filter
+msgid "Not Hired"
+msgstr "不採用"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_needaction_counter
+msgid "Number of Actions"
+msgstr "アクション数"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_has_error_counter
+msgid "Number of errors"
+msgstr "エラー数"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "アクションを必要とするメッセージの数"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "配信エラーが発生されたメッセージ数"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__onclick
+msgid "On Click"
+msgstr "クリック時"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.action_hr_referral_onboarding_configuration
+#: model:ir.ui.menu,name:hr_referral.menu_hr_referral_onboarding_configuration
+msgid "Onboarding"
+msgstr "オンボーディング"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Ongoing"
+msgstr "処理中"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "Open Position"
+msgstr "募集職種"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "Open Positions"
+msgstr "募集職種"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_kanban
+msgid "Point icon"
+msgstr "ポイントアイコン"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.action_hr_referral_points
+#: model:ir.model.fields,field_description:hr_referral.field_hr_recruitment_stage__points
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__points
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__points
+#: model:ir.ui.menu,name:hr_referral.menu_hr_points_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_applicant_employee_referral_kanban
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_points_filter
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_backend_kanban
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_kanban
+msgid "Points"
+msgstr "ポイント"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__points_not_hired
+msgid "Points Given For Not Hired"
+msgstr "不採用のために与えられたポイント"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__points_missing
+msgid "Points Missing"
+msgstr "不足しているポイント"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Points Received"
+msgstr "ポイントを受取りました"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "Points icon"
+msgstr "ポイントアイコン"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_points
+msgid "Points line for referrals"
+msgstr "紹介用のポイント明細"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_kanban
+msgid "Points to buy this"
+msgstr "ポイント必要です"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Points to spend"
+msgstr "使用するポイント"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__position
+msgid "Position"
+msgstr "ポジション"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_kanban
+msgid "Product"
+msgstr "プロダクト"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__name
+msgid "Product Name"
+msgstr "プロダクト名"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_applicant_employee_referral
+msgid "Ready to receive points?"
+msgstr "ポイントを受取る準備はできましたか？"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_recruitment_report
+msgid "Recruitment Analysis Report"
+msgstr "採用分析レポート"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_recruitment_stage
+msgid "Recruitment Stages"
+msgstr "採用ステージ"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_report_view_form
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_report_view_tree
+msgid "Referer"
+msgstr "リファラ"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_points_filter
+msgid "Referral"
+msgstr "紹介"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_alert_mail_wizard
+msgid "Referral Alert Mail Wizard"
+msgstr "紹介通知メールウィザード"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_res_company__hr_referral_background
+#: model:ir.model.fields,field_description:hr_referral.field_res_config_settings__hr_referral_background
+msgid "Referral Background"
+msgstr "紹介の背景"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_link_to_share
+msgid "Referral Link To Share"
+msgstr "共有する紹介リンク"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_res_users__referral_point_ids
+msgid "Referral Point"
+msgstr "紹介ポイント"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__referral_points_ids
+msgid "Referral Points"
+msgstr "紹介ポイント"
+
+#. module: hr_referral
+#: model:res.groups,name:hr_referral.group_hr_referral_reward_responsible_user
+msgid "Referral Reward Responsible User"
+msgstr "紹介リワード責任者ユーザ"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_send_mail
+msgid "Referral Send Mail"
+msgstr "紹介メール送信"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__referral_state
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__referral_state
+msgid "Referral State"
+msgstr "紹介ステータス"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/wizard/hr_referral_link_to_share.py:0
+#, python-format
+msgid "Referral: %(job_url)s"
+msgstr "紹介: %(job_url)s"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid "Referral: %s"
+msgstr "紹介: %s"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid "Referral: %s (%s)"
+msgstr "紹介: %s (%s)"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#: model:ir.ui.menu,name:hr_referral.menu_hr_referral_root
+#: model_terms:ir.ui.view,arch_db:hr_referral.res_config_settings_view__form
+#, python-format
+msgid "Referrals"
+msgstr "紹介"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_applicant_view_search_bis_inherit_referral
+msgid "Referred By"
+msgstr "紹介者"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__ref_user_id
+msgid "Referred By User"
+msgstr "紹介ユーザ"
+
+#. module: hr_referral
+#: model:ir.ui.menu,name:hr_referral.menu_report_employee_referral_all
+msgid "Reporting"
+msgstr "レポーティング"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_level_form
+msgid "Requirements"
+msgstr "必要事項"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_user_id
+msgid "Responsible User"
+msgstr "担当ユーザ"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Restart Onboarding"
+msgstr "オンボーディングを再開"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.res_config_settings_view__form
+msgid "Restore Default"
+msgstr "デフォルトに戻す"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__hr_referral_reward_id
+#, python-format
+msgid "Reward"
+msgstr "報奨"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_reward
+msgid "Reward for Referrals"
+msgstr "紹介用リワード"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#: model:ir.actions.act_window,name:hr_referral.action_hr_referral_reward
+#: model:ir.actions.act_window,name:hr_referral.action_hr_referral_reward_configuration
+#: model:ir.ui.menu,name:hr_referral.menu_hr_referral_reward_configuration
+#, python-format
+msgid "Rewards"
+msgstr "リワード"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS配信エラー"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_points_filter
+msgid "Search Points / Gifts"
+msgstr "ポイント/ギフト検索"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_filter
+msgid "Search Referral"
+msgstr "紹介検索"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_alert_mail_wizard_view_form
+msgid "Send"
+msgstr "送信"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.hr_referral_send_mail_action
+msgid "Send Job Offer by Mail"
+msgstr "採用情報をメールで送付"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_send_mail_view_form
+msgid "Send Job by Mail"
+msgstr "仕事を郵送"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.hr_referral_alert_mail_wizard_action
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_send_mail_view_form
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_alert_form
+msgid "Send Mail"
+msgstr "Eメールを送信"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__sequence
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__sequence
+msgid "Sequence"
+msgstr "シーケンス"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__sequence_stage
+msgid "Sequence of stage"
+msgstr "ステージの順番"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.action_hr_referral_configuration
+#: model:ir.ui.menu,name:hr_referral.hr_referral_menu_configuration
+msgid "Settings"
+msgstr "管理設定"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Share"
+msgstr "共有"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "Share Now"
+msgstr "いますぐ共有"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "Share on {{ source.name }}"
+msgstr "{{ source.name }}で共有"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "Share on {{source.name}}"
+msgstr "{{source.name}}で共有"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__shared_item_infos
+msgid "Shared Item Infos"
+msgstr "共有項目情報"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_recruitment_stage__use_in_referral
+msgid "Show in Referrals"
+msgstr "紹介で表示"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Skip"
+msgstr "スキップ"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Skip and Start"
+msgstr "スキップして開始"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid "Sorry, your referral %s has been refused in the recruitment process."
+msgstr "あなたの紹介%sは採用プロセス中に却下されました。"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_res_users__utm_source_id
+msgid "Source"
+msgstr "情報源"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_alert__onclick__url
+msgid "Specify URL"
+msgstr "URLを指定"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__stage_id
+msgid "Stage"
+msgstr "ステージ"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Start"
+msgstr "開始"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Start Now"
+msgstr "今すぐ開始"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"活動に基づいての状態\n"
+"延滞: 期限は既に過ぎました\n"
+"当日: 活動日は本日です\n"
+"予定: 将来の活動。"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__subject
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__subject
+msgid "Subject"
+msgstr "件名"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__applicant_subject
+msgid "Subject / Application"
+msgstr "件名 / 応募"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Successful"
+msgstr "成功"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__text
+msgid "Text"
+msgstr "テキスト"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_friend__image
+msgid ""
+"This field holds the image used as image for the friend on the dashboard, "
+"limited to 1024x1024px."
+msgstr "このフィールドは、ダッシュボードの友人の画像として使用される画像を保持しています。最大1024x1024px.サイズです。"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_friend__image_head
+msgid ""
+"This field holds the image used as image for the head's friend when the user"
+" must choose a new friend, limited to 1024x1024px."
+msgstr ""
+"このフィールドは、ユーザが新しい友人を選ばなければならない時に、友人の画像として使用される画像を保持しています。最大1024x1024px.サイズです。"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__image
+msgid ""
+"This field holds the image used as image for the product, limited to "
+"1024x1024px."
+msgstr "このフィールドは、このプロダクトのイメージとして使用するイメージを保持しています。最大1024x1024pxサイズです。"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_link_to_share_view_form
+msgid ""
+"This link contains a tracker so that people clicking on it will account to a"
+" referral for you, even if they apply on a position after a few days."
+msgstr "このリンクにはトラッカーが含まれており、クリックした人が数日後にそのポジションに応募したとしても、あなたの紹介となります。"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_recruitment_stage__use_in_referral
+msgid ""
+"This option is used in app 'Referrals'. If checked, the stage is displayed "
+"in 'Referrals Dashboard' and points are given to the employee."
+msgstr ""
+"このオプションは'紹介'アプリで使用されます。チェックを付けると、このステージが'紹介ダッシュボード'に表示され、従業員にポイントが付与されます。"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.employee_referral_report_action
+msgid "This reports allow you to follow the referrals and their evolution."
+msgstr "このレポートによって、紹介者とその推移を追うことができます。"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_onboarding_tree
+msgid ""
+"This will make the onboarding visible to all employees who have already seen"
+" it. Do you want to continue?"
+msgstr "これにより、既にオンボーディングを見た全ての従業員がオンボーディングを見ることができるようになります。続けますか？"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "To Spend"
+msgstr "利用可"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Total"
+msgstr "合計"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_link_to_share__channel__twitter
+msgid "Twitter"
+msgstr "Twitter"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_job__twitter_clicks
+msgid "Twitter Clicks"
+msgstr "Twitterクリック"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "記録上の例外活動の種類。"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__url
+msgid "URL"
+msgstr "URL"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_utm_campaign
+msgid "UTM Campaign"
+msgstr "UTMキャンペーン"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_utm_source
+msgid "UTM Source"
+msgstr "UTMソース"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid ""
+"Unsupported search on field is_accessible_to_current_user: %s operator & %s "
+"value. Only = and != operator and boolean values are supported."
+msgstr ""
+"フィールドis_accessible_to_current_userでの検索はサポートされていません: %s演算子  & %s値。 = および != "
+"演算子およびブーリアン値のみサポートされています。"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__url
+msgid "Url"
+msgstr "URL"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_res_users
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__user_ids
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__ref_user_id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__ref_user_id
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_points_filter
+msgid "User"
+msgstr "ユーザ"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__gift_manager_id
+msgid "User responsible of this gift."
+msgstr "このギフトの責任者ユーザ"
+
+#. module: hr_referral
+#: model:res.groups,name:hr_referral.group_hr_recruitment_referral_user
+msgid "User: Referral only"
+msgstr "ユーザ: 紹介のみ"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "View Jobs"
+msgstr "求人を見る"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_job.py:0
+#, python-format
+msgid "Visit Webpage"
+msgstr "ウェブページ訪問"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__website_message_ids
+msgid "Website Messages"
+msgstr "ウェブサイトメッセージ"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__website_message_ids
+msgid "Website communication history"
+msgstr "ウェブサイト通信履歴"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_onboarding
+msgid "Welcome Onboarding in Referral App"
+msgstr "紹介アプリのオンボーディングへようこそ"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid "You are not allowed to access applicant records."
+msgstr "応募者の記録にアクセスする権限がありません。"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid ""
+"You are not allowed to access this application record because you're not one"
+" of the interviewers of this application. If you think that's an error, "
+"please contact your administrator."
+msgstr "この応募の面接者ではないため、この応募記録にアクセスすることはできません。エラーと思われる場合は、管理者にご連絡下さい。"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/utm_campaign.py:0
+#, python-format
+msgid ""
+"You cannot delete these UTM Campaigns as they are linked to the following jobs in Referral:\n"
+"%(job_names)s"
+msgstr ""
+"これらのUTMキャンペーンは、紹介アプリの以下の仕事にリンクしているため、削除することができません: \n"
+"%(job_names)s"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/utm_source.py:0
+#, python-format
+msgid ""
+"You cannot delete these UTM Sources as they are linked to the following users in Referral:\n"
+"%(employee_names)s"
+msgstr ""
+"これらのUTMソースは、紹介アプリの以下のユーザにリンクしているため、削除することができません: \n"
+"%(employee_names)s"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_referral_reward.py:0
+#, python-format
+msgid ""
+"You do not have enough points in this company to buy this product. In this "
+"company, you have %s points."
+msgstr "このプロダクトを購入するにはこの会社で十分なポイントがありません。この会社であなたが持っているのは、%sポイントです。"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_applicant_employee_referral_kanban
+msgid "You earned"
+msgstr "獲得"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_kanban
+msgid "You need another"
+msgstr "これを購入するためには、あと"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid "Your referrer got a step further!"
+msgstr "あなたの紹介が1ステップ進みました！"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid "Your referrer is hired!"
+msgstr "あなたの紹介者が採用されました！"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "click(s)"
+msgstr "クリック"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "has been hired!"
+msgstr "が雇用されました！"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_alert_form
+msgid "https://www.google.com"
+msgstr "https://www.google.com"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "reward"
+msgstr "リワード"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "share"
+msgstr "共有"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__url
+msgid "url"
+msgstr "url"

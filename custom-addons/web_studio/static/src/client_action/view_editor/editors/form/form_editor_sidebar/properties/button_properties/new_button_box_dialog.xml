@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.NewButtonBoxDialog">
+    <Dialog size="'sm'" title="title" contentClass="'o_web_studio_new_button_dialog'">
+        <div>
+            <label>Label</label>
+            <input class="o_input" name="string" type="text" placeholder="My Button" t-on-change="(ev) => this.text = ev.target.value"/>
+        </div>
+        <div>
+            <label>Icon</label>
+            <div class="d-flex flex-wrap">
+                <t t-foreach="icons" t-as="icon" t-key="icon_index">
+                    <t t-set="icon" t-value="icon.replace('fa ', '')"/>
+                    <div t-attf-class="o_web_studio_icon_selector {{ this.state.icon === icon ? 'bg-primary text-white' : ''}}" t-on-click="() => this.state.icon = icon"><i t-attf-class="fa fa-fw {{icon}} m-2"/></div>
+                </t>
+            </div>
+        </div>
+        <div>
+            <label>Select a related field</label>
+            <Many2XAutocomplete
+                value="this.state.field?.display_name"
+                resModel="'ir.model.fields'"
+                fieldString="'Field'"
+                update.bind="update"
+                activeActions="{}"
+                getDomain.bind="getDomain"
+                isToMany="false"
+            />
+        </div>
+        <t t-set-slot="footer">
+            <button t-attf-class="btn btn-primary" t-on-click.stop="onConfirm">Confirm</button>
+            <button class="btn btn-secondary" t-on-click.stop="props.close">Cancel</button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>

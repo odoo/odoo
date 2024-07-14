@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="spreadsheet_edition.TextFilterEditorSidePanel" class="o_spreadsheet_filter_editor_side_panel">
+        <div class="o_side_panel_section">
+            <FilterEditorLabel
+                inputClass="missingLabel ? 'o_field_invalid' : ''"
+                label="genericState.label"
+                setLabel.bind="this.setLabel"
+                placeholder="placeholder"
+            />
+        </div>
+        <div class="o_side_panel_section">
+            <label class="o-checkbox">
+                <input type="checkbox" class="o_input restrict_to_range" t-model="textState.restrictValuesToRange"/>
+                Restrict values to a range
+            </label>
+            <SelectionInput
+                t-if="textState.restrictValuesToRange"
+                ranges="() => this.rangesForSelectionInput"
+                hasSingleRange="true"
+                required="true"
+                onSelectionChanged.bind="this.onRangeChanged"
+                onSelectionConfirmed.bind="this.onRangeConfirmed"
+            />
+        </div>
+        <div class="o_side_panel_section">
+            <div class="o_side_panel_title">Default value</div>
+            <TextFilterValue
+                value="textState.defaultValue"
+                options="textOptionsFromRange"
+                onValueChanged="(value) => (this.textState.defaultValue = value)"
+            />
+        </div>
+        <t t-if="shouldDisplayFieldMatching()">
+            <div class="o_side_panel_section">
+                <SidePanelCollapsible collapsedAtInit="!isNewFilter">
+                    <t t-set-slot="title">Field matching</t>
+                    <t t-set-slot="content">
+                        <FilterEditorFieldMatching
+                            fieldMatchings="fieldMatchings"
+                            wrongFieldMatchings="wrongFieldMatchings"
+                            selectField.bind="onSelectedField"
+                            filterModelFieldSelectorField.bind="filterModelFieldSelectorField"
+                        />
+                    </t>
+                </SidePanelCollapsible>
+            </div>
+        </t>
+        <div class="o_side_panel_section o-sidePanelButtons">
+            <t t-call="spreadsheet_edition.FilterEditorButtons">
+                <t t-set="onDelete" t-value="this.props.id and onDelete.bind(this)" />
+                <t t-set="onSave" t-value="onSave.bind(this)" />
+                <t t-set="onCancel" t-value="onCancel.bind(this)" />
+            </t>
+        </div>
+    </div>
+</templates>

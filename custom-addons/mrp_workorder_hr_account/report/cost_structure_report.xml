@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="mrp_cost_structure_inherit_hr" inherit_id="mrp_account_enterprise.mrp_cost_structure">
+        <xpath expr="//t[@name='operations']//tbody" position="after">
+            <t t-if="line['operations']" name="operations">
+                <h3 class="o_mrp_header o_mrp_table_header">Cost of Operations</h3>
+                <table class="table table-sm o_mrp_report_table">
+                    <thead>
+                        <tr class="o_mrp_report_header">
+                            <th class="o_mrp_report_line_header"><span>Operator</span></th>
+                            <th class="o_mrp_report_line_header"><span>Operation</span></th>
+                            <th class="text-end o_mrp_report_line_header"><span>Working Time</span></th>
+                            <th class="text-end o_mrp_report_line_header"><span>Cost/hour</span></th>
+                            <th class="text-end o_mrp_report_line_header"><span>Total Cost</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="line['operations']" t-as="row" class="text-muted">
+                            <td>
+                                <span t-esc="row[0]"/>
+                            </td>
+                            <td>
+                                <span t-if="row[1]" class="o_mrp_reports_web_action" t-att-res-id="row[1]" res-model="mrp.routing.workcenter" view-type="form" t-esc="row[2]"/>
+                                <span t-else="" t-esc="row[2]"/>
+                            </td>
+                            <td class="text-end">
+                                <span> <t t-esc="row[3]" t-options='{"widget": "float", "precision": 4}'/> hours</span>
+                            </td>
+                            <td class="text-end">
+                                <span t-esc="row[4]" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            </td>
+                            <td class="text-end">
+                                <span t-esc="row[3] * row[4]" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="text-end">
+                                <strong>Total Cost of Operations</strong>
+                            </td>
+                            <td class="text-end">
+                                <strong t-esc="line['total_cost_operations']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            </td>
+                        </tr>
+                        <tr t-if="not line['qty_by_byproduct_w_costshare'] and line['mo_qty'] &gt; 1">
+                            <td colspan="4" class="text-end">
+                                <strong>Cost of Operations per unit (in <t t-esc="line['product'].uom_id.name"/>)</strong>
+                            </td>
+                            <td class="text-end">
+                                <span t-esc="line['total_cost_operations'] / line['mo_qty']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+
+                    <!-- Cost of Scraps table -->
+                    <t t-if="line['scraps']">
+                        <h3 class="o_mrp_header o_mrp_table_header">Cost of Scraps</h3>
+                        <table class="table table-sm o_mrp_report_table">
+                            <thead>
+                                <tr class="o_mrp_report_header">
+                                    <th class="o_mrp_report_line_header"><span>Scraps</span></th>
+                                    <th class="text-end o_mrp_report_line_header"><span>Quantity</span></th>
+                                    <th class="text-end o_mrp_report_line_header"><span>Unit Cost</span></th>
+                                    <th class="text-end o_mrp_report_line_header"><span>Total Cost</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="line['scraps']" t-as="scrap"
+                                class="text-success">
+                                    <td>
+                                        <span class="o_mrp_reports_web_action" t-att-res-id="scrap.id" res-model="stock.move" view-type="form" t-esc="scrap.product_id.display_name"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span><t t-esc="scrap.product_qty"/> <t t-esc="scrap.product_id.uom_id.name"/></span>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="scrap.stock_valuation_layer_ids.unit_cost" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="scrap.stock_valuation_layer_ids.value" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+
+                                    <t t-set="tot_scrap_cost" t-value="tot_scrap_cost + scrap.stock_valuation_layer_ids.value"/>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="text-end">
+                                        <strong>Total Cost of Scraps</strong>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="tot_scrap_cost" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+
+                    <!-- Cost table -->
+                    <div class="row">
+                        <div class="col-6 offset-6">
+                            <table class="table table-sm o_mrp_report_table">
+                                <tr t-if="line['mo_qty'] + len(line['qty_by_byproduct_w_costshare']) &gt; 1">
+                                    <td class="text-end">
+                                        <strong>Total Production Cost</strong>
+                                    </td>
+                                    <td class="text-end">
+                                        <strong t-esc="line['total_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                </tr>
+                                <tr t-if="not line['qty_by_byproduct_w_costshare']">
+                                    <td class="text-end">
+                                        <strong>Total Cost per unit (in <t t-esc="line['product'].uom_id.name"/>)</strong>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="line['total_cost'] / line['mo_qty']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <t t-if="line['qty_by_byproduct_w_costshare']">
+                        <h3 class="o_mrp_header o_mrp_table_header">Cost Breakdown of Products</h3>
+                        <table class="table table-sm o_mrp_report_table">
+                            <thead>
+                                <tr class="o_mrp_report_header">
+                                    <th class="o_mrp_report_line_header"><span>Product</span></th>
+                                    <th class="text-end o_mrp_report_line_header"><span>Avg Cost of Components Per Unit</span></th>
+                                    <th t-if="line['operations']" class="text-end o_mrp_report_line_header"><span>Avg Cost of Operations Per Unit</span></th>
+                                    <th class="text-end o_mrp_report_line_header"><span>Avg Total Cost Per Unit</span></th>
+                                    <th class="o_mrp_report_line_header text-end" groups="uom.group_uom"><span>Unit of Measure</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-muted">
+                                    <td>
+                                        <span t-esc="line['product'].name"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="line['component_cost_by_product'][line['product']] / line['mo_qty']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                    <td t-if="line['operations']" class="text-end">
+                                        <span t-esc="line['operation_cost_by_product'][line['product']] / line['mo_qty']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="line['total_cost_by_product'][line['product']] / line['mo_qty']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                    <td groups="uom.group_uom" class="text-end">
+                                        <span t-esc="line['product'].uom_id.name"/>
+                                    </td>
+                                </tr>
+                                <tr t-foreach="line['qty_by_byproduct_w_costshare'].items()" t-as="byproduct" class="text-muted">
+                                    <td>
+                                        <span t-esc="byproduct[0].name"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="line['component_cost_by_product'][byproduct[0]] / byproduct[1]" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                    <td t-if="line['operations']" class="text-end">
+                                        <span t-esc="line['operation_cost_by_product'][byproduct[0]] / byproduct[1]" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="line['total_cost_by_product'][byproduct[0]] / byproduct[1]" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                    <td groups="uom.group_uom" class="text-end">
+                                        <span t-esc="byproduct[0].uom_id.name"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                </t>
+            </div>
+        </t>
+    </template>
+    <template id="product_template_cost_structure" inherit_id="mrp_account_enterprise.mrp_cost_structure" primary="True"/>
+</odoo>

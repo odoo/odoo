@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- /toc template -->
+    <t t-name="knowledge.TableOfContentBehavior">
+        <i t-if="this.state.toc.length === 0">
+            Add headings in this Article to create a Table of Content
+        </i>
+        <div t-else="" class="o_knowledge_toc_content">
+            <t t-foreach="this.state.toc" t-as="heading" t-key="heading_index">
+                <!-- Use 'data-oe-nodeid' as we need something that is not removed during sanitizing -->
+                <a href="#" contenteditable="false"
+                    t-out="heading.name" t-att-data-oe-nodeid="heading.index" t-on-click="_onTocLinkClick"
+                    t-attf-class="oe_unremovable o_no_link_popover d-block o_knowledge_toc_link #{'o_knowledge_toc_link_depth_' + heading.depth}"/>
+            </t>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,115 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* maintenance_worksheet
+# 
+# Translators:
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Wil Odoo, 2023
+# Marianna Ciofani, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: maintenance_worksheet
+#: model:ir.actions.report,print_report_name:maintenance_worksheet.maintenance_request_report
+msgid ""
+"'Maintenance Request Worksheet - %s - %s' % (object.name, "
+"object.user_id.name)"
+msgstr ""
+"'Foglio di lavoro richiesta manutenzione - %s - %s' % (object.name, "
+"object.user_id.name)"
+
+#. module: maintenance_worksheet
+#: model_terms:ir.ui.view,arch_db:maintenance_worksheet.maintenance_request_view_form_inherit_worksheet
+msgid "<span class=\"o_stat_text\">Worksheet</span>"
+msgstr "<span class=\"o_stat_text\">Foglio di lavoro</span>"
+
+#. module: maintenance_worksheet
+#: model_terms:ir.ui.view,arch_db:maintenance_worksheet.maintenance_request_view_form_inherit_worksheet
+msgid ""
+"<span class=\"o_stat_text\">Worksheet</span>\n"
+"                            <span class=\"o_stat_text\">Complete</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Foglio di lavoro</span>\n"
+"                            <span class=\"o_stat_text\">Completo</span>"
+
+#. module: maintenance_worksheet
+#: model:ir.model.fields,help:maintenance_worksheet.field_maintenance_request__worksheet_template_id
+msgid ""
+"Create templates for each type of request you have and customize their "
+"content with your own custom fields."
+msgstr ""
+"Crea modelli per ogni tipo di richiesta che hai e personalizzane il "
+"contenuto con campi ad hoc."
+
+#. module: maintenance_worksheet
+#: model_terms:ir.actions.act_window,help:maintenance_worksheet.maintenance_worksheet_action_settings
+msgid "Customize worksheet templates for each type of request.<br>"
+msgstr ""
+"Personalizza i modelli di fogli di lavoro per ogni tipo di richiesta.<br>"
+
+#. module: maintenance_worksheet
+#: model:ir.model,name:maintenance_worksheet.model_maintenance_request
+msgid "Maintenance Request"
+msgstr "Richiesta di manutenzione"
+
+#. module: maintenance_worksheet
+#: model:ir.model,name:maintenance_worksheet.model_report_maintenance_worksheet_maintenance_worksheet
+msgid "Maintenance Request Worksheet Custom Report"
+msgstr "Resoconto personalizzato foglio di lavoro richiesta di manutenzione"
+
+#. module: maintenance_worksheet
+#: model_terms:ir.ui.view,arch_db:maintenance_worksheet.worksheet_page
+msgid "Maintenance Request:"
+msgstr "Richiesta di manutenzione:"
+
+#. module: maintenance_worksheet
+#: model_terms:ir.actions.act_window,help:maintenance_worksheet.maintenance_worksheet_action_settings
+msgid "No worksheet templates found. Let's create one!"
+msgstr "Nessun modello di foglio di lavoro trovato. Creane uno!"
+
+#. module: maintenance_worksheet
+#. odoo-python
+#: code:addons/maintenance_worksheet/models/maintenance_request.py:0
+#, python-format
+msgid "Please select a Worksheet Template."
+msgstr "Seleziona un modello del fogli di lavoro."
+
+#. module: maintenance_worksheet
+#: model_terms:ir.ui.view,arch_db:maintenance_worksheet.worksheet_page
+msgid "Worksheet"
+msgstr "Foglio di lavoro"
+
+#. module: maintenance_worksheet
+#: model:ir.model.fields,field_description:maintenance_worksheet.field_maintenance_request__worksheet_count
+msgid "Worksheet Count"
+msgstr "Numero fogli di lavoro"
+
+#. module: maintenance_worksheet
+#: model:ir.actions.report,name:maintenance_worksheet.maintenance_request_report
+msgid "Worksheet Report"
+msgstr "Rapportino di lavoro"
+
+#. module: maintenance_worksheet
+#: model:ir.model,name:maintenance_worksheet.model_worksheet_template
+#: model:ir.model.fields,field_description:maintenance_worksheet.field_maintenance_request__worksheet_template_id
+msgid "Worksheet Template"
+msgstr "Modello foglio di lavoro"
+
+#. module: maintenance_worksheet
+#: model:ir.actions.act_window,name:maintenance_worksheet.action_maintenance_worksheets
+#: model:ir.actions.act_window,name:maintenance_worksheet.maintenance_worksheet_action_settings
+#: model:ir.ui.menu,name:maintenance_worksheet.menu_maintenance_configuration_worksheet_templates
+msgid "Worksheet Templates"
+msgstr "Modelli foglio di lavoro"

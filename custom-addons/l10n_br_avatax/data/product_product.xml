@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="freight_transport_product" model="product.product">
+        <field name="name">Freight</field>
+        <field name="type">service</field>
+        <field name="l10n_br_transport_cost_type">freight</field>
+        <field name="taxes_id" eval="False"/>
+    </record>
+
+    <record id="insurance_transport_product" model="product.product">
+        <field name="name">Insurance</field>
+        <field name="type">service</field>
+        <field name="l10n_br_transport_cost_type">insurance</field>
+        <field name="taxes_id" eval="False"/>
+    </record>
+
+    <record id="other_cost_transport_product" model="product.product">
+        <field name="name">Other Costs</field>
+        <field name="type">service</field>
+        <field name="l10n_br_transport_cost_type">other</field>
+        <field name="taxes_id" eval="False"/>
+    </record>
+</odoo>

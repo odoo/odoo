@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- override of the template to align the address to the right -->
+        <template id="contact_right" inherit_id="base.contact">
+            <xpath expr="//div[hasclass('gap-2')]" position="attributes">
+                <attribute name="class"></attribute>
+                <attribute name="t-attf-class">gap-2 {{ 'text-end' if options.get('align_right') else '' }}</attribute>
+            </xpath>
+        </template>
+
+        <template id="customer_statements">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="p">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <!-- Header -->
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="row">
+                                        <h2>CUSTOMER STATEMENTS</h2>
+                                    </div>
+                                    <div class="row text-muted">
+                                        <span t-out="from_date" name="from_date"/> TO <span t-out="to_date" name="to_date"/>
+                                    </div>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <address class="mb-0" t-field="p.self" t-options='{"widget": "contact", "fields": ["address", "name", "vat"], "no_marker": True, "align_right": True}'/>
+                                </div>
+                            </div>
+                            <!-- Table -->
+                            <t t-set="partner_lines" t-value="lines[str(p.id)]"/>
+                            <div class="row mt-5">
+                                <table class="table table-borderless text-nowrap">
+                                    <thead class="border border-dark-subtle">
+                                        <tr>
+                                            <th class="text-start border-start border-end border-dark-subtle" scope="col">Date</th>
+                                            <th class="text-start border-start border-end border-dark-subtle" scope="col">Activity</th>
+                                            <th class="text-start border-start border-end border-dark-subtle" scope="col">Due Date</th>
+                                            <th class="text-end border-start border-end border-dark-subtle" scope="col">Amount</th>
+                                            <th class="text-end border-start border-end border-dark-subtle" scope="col">Balance <span t-out="company.currency_id.name"/></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="border-bottom border-dark-subtle">
+                                        <tr t-foreach="partner_lines" t-as="line" t-att-class="'border-start border-end border-dark-subtle ' + ('border-bottom' if line_index == 0 else '')">
+                                            <td class="border-start border-end border-dark-subtle align-middle">
+                                                <span t-out="line['date']"/>
+                                            </td>
+                                            <td class="border-start border-end border-dark-subtle text-wrap">
+                                                <t t-if="line['move_type']">
+                                                    <small t-out="line['move_type']" class="text-muted"/><br/>
+                                                </t>
+                                                <span t-out="line['activity']"/>
+                                                <t t-if="line['reference']">
+                                                    <br/><small t-out="line['reference']" class="text-muted"/>
+                                                </t>
+                                            </td>
+                                            <td class="border-start border-end border-dark-subtle align-middle">
+                                                <span t-out="line['due_date']"/>
+                                            </td>
+                                            <td class="text-end border-start border-end border-dark-subtle align-middle">
+                                                <span t-out="line['amount']"/>
+                                            </td>
+                                            <td class="text-end border-start border-end border-dark-subtle align-middle">
+                                                <span t-out="line['balance']"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td class="border-top border-dark-subtle" colspan="5"/>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <t t-set="balance_due" t-value="balances_due[str(p.id)]"/>
+                            <div class="row">
+                                <div class="col text-end fs-1">
+                                    <label for="balance_due">BALANCE DUE: </label>
+                                    <span t-out="balance_due" name="balance_due" class="fw-bold"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- report action -->
+        <record id="l10n_account_customer_statements.action_customer_statements_report" model="ir.actions.report">
+            <field name="name">Customer Statements</field>
+            <field name="model">res.partner</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_account_customer_statements.customer_statements</field>
+            <field name="report_file">l10n_account_customer_statements.customer_statements</field>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Action on customer form -->
+        <record id="partner_action_print_customer_statements" model="ir.actions.server">
+            <field name="name">Print Customer Statements</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="binding_model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.action_print_customer_statements()
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_helpdesk_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="category_id" ref="base.module_category_services_helpdesk"/>
+    </record>
+
+    <record id="group_helpdesk_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="base.module_category_services_helpdesk"/>
+        <field name="implied_ids" eval="[(4, ref('group_helpdesk_user')),
+            (4, ref('mail.group_mail_template_editor'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <record id="group_use_sla" model="res.groups">
+        <field name="name">Show SLA Policies</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_use_rating" model="res.groups">
+        <field name="name">Show Customer Ratings</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_auto_assignment" model="res.groups">
+        <field name="name">Auto Assigment</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4, ref('helpdesk.group_helpdesk_manager'))]"/>
+    </record>
+
+    <data noupdate="1">
+        <!-- Manager gets all team access rights -->
+        <record id="helpdesk_manager_rule" model="ir.rule">
+            <field name="name">Helpdesk Administrator</field>
+            <field name="model_id" ref="model_helpdesk_team"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_helpdesk_manager'))]"/>
+        </record>
+        <record id="helpdesk_ticket_manager_rule" model="ir.rule">
+            <field name="name">Helpdesk Ticket Administrator</field>
+            <field name="model_id" ref="model_helpdesk_ticket"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_helpdesk_manager'))]"/>
+        </record>
+        <!-- user only gets to read his own teams (or open teams) -->
+        <record id="helpdesk_user_rule" model="ir.rule">
+            <field name="name">Helpdesk User</field>
+            <field name="model_id" ref="model_helpdesk_team"/>
+            <field name="domain_force">['|',
+                                            ('privacy_visibility', '!=', 'invited_internal'),
+                                            ('message_partner_ids', 'in', [user.partner_id.id])
+                                        ]</field>
+            <field name="groups" eval="[(4, ref('group_helpdesk_user'))]"/>
+        </record>
+        <record id="helpdesk_ticket_user_rule" model="ir.rule">
+            <field name="name">Helpdesk Ticket User</field>
+            <field name="model_id" ref="model_helpdesk_ticket"/>
+            <field name="domain_force">['|',
+                                        '|',
+                                            ('team_id.privacy_visibility', '!=', 'invited_internal'),
+                                            ('team_id.message_partner_ids', 'in', [user.partner_id.id]),
+                                            ('message_partner_ids', 'in', [user.partner_id.id]),
+                                        ]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+        <!-- Split by company on tickets, teams and SLAs -->
+        <record id="helpdesk_ticket_company_rule" model="ir.rule">
+            <field name="name">Ticket: multi-company</field>
+            <field name="model_id" ref="model_helpdesk_ticket"/>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
+        <record id="helpdesk_team_company_rule" model="ir.rule">
+            <field name="name">Team: multi-company</field>
+            <field name="model_id" ref="model_helpdesk_team"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="helpdesk_sla_company_rule" model="ir.rule">
+            <field name="name">SLA: multi-company</field>
+            <field name="model_id" ref="model_helpdesk_sla"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="helpdesk_portal_ticket_rule" model="ir.rule">
+            <field name="name">Tickets: portal users: following</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+            <field name="domain_force">[
+                ('team_privacy_visibility', '=', 'portal'),
+                '|',
+                    ('message_partner_ids', 'in', [user.partner_id.id]),
+                    ('team_id.message_partner_ids', 'in', [user.partner_id.id])
+            ]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        </record>
+
+        <record id="helpdesk_sla_report_analysis_rule_manager" model="ir.rule">
+            <field name="name">Helpdesk SLA Report: multi-company</field>
+            <field name="model_id" ref="model_helpdesk_sla_report_analysis"/>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
+
+        <record id="helpdesk_sla_report_analysis_rule_user" model="ir.rule">
+            <field name="name">Helpdesk SLA Report: Helpdesk Ticket User</field>
+            <field name="model_id" ref="model_helpdesk_sla_report_analysis"/>
+            <field name="domain_force">[
+                '|',
+                    ('team_id.privacy_visibility', '!=', 'invited_internal'),
+                    '|',
+                        ('team_id.message_partner_ids', 'in', [user.partner_id.id]),
+                        ('ticket_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ]</field>
+            <field name="groups" eval="[(4, ref('group_helpdesk_user'))]"/>
+        </record>
+
+        <record id="helpdesk_ticket_report_analysis_rule_multi_company" model="ir.rule">
+            <field name="name">Helpdesk Ticket Report: multi-company</field>
+            <field name="model_id" ref="model_helpdesk_ticket_report_analysis"/>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
+
+         <record id="helpdesk_ticket_report_analysis_rule_user" model="ir.rule">
+            <field name="name">Helpdesk Ticket Report: Helpdesk Ticket User</field>
+            <field name="model_id" ref="model_helpdesk_ticket_report_analysis"/>
+            <field name="domain_force">[
+                '|',
+                    ('team_id.privacy_visibility', '!=', 'invited_internal'),
+                    '|',
+                        ('team_id.message_partner_ids', 'in', [user.partner_id.id]),
+                        ('ticket_id.message_partner_ids', 'in', [user.partner_id.id]),
+            ]</field>
+            <field name="groups" eval="[(4, ref('group_helpdesk_user'))]"/>
+        </record>
+
+        <record id="helpdesk_ticket_report_analysis_rule_manager" model="ir.rule">
+            <field name="name">Helpdesk Ticket Report: Helpdesk Ticket Administrator</field>
+            <field name="model_id" ref="model_helpdesk_ticket_report_analysis"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('group_helpdesk_manager'))]"/>
+        </record>
+
+    </data>
+</odoo>

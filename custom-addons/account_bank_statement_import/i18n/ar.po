@@ -1,0 +1,203 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_bank_statement_import
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "%d transactions had already been imported and were ignored."
+msgstr "تم استيراد %d معاملات بالفعل وتجاهلها. "
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "1 transaction had already been imported and was ignored."
+msgstr "تم تجاهل 1 معاملة سبق استيرادها بالفعل."
+
+#. module: account_bank_statement_import
+#: model:ir.model.constraint,message:account_bank_statement_import.constraint_account_bank_statement_line_unique_import_id
+msgid "A bank account transactions can be imported only once!"
+msgstr "يمكن استيراد معاملات الحساب البنكي مرة واحدة فقط! "
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "بند كشف الحساب البنكي"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_setup_bank_manual_config
+msgid "Bank setup manual config"
+msgstr "التهيئة اليدوية لإعدادات البنك "
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot find in which journal import this statement. Please manually select a"
+" journal."
+msgstr ""
+"لقد تعذر إيجاد دفتر اليومية الذي يتم توريد كشف الحساب المحدد إليه. الرجاء "
+"اختيار دفتر اليومية يدوياً. "
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid ""
+"Could not make sense of the given file.\n"
+"Did you install the module to support this type of file?"
+msgstr ""
+" تعذر فهم طبيعة الملف المحدد.\n"
+"هل قمت بتثبيت التطبيق المناسب لدعم هذا النوع من الملفات؟ "
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "Go to Apps"
+msgstr "الذهاب إلى التطبيقات "
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid ""
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
+"إذا كان يتضمن معاملات لأكثر من حساب واحد، يجب أن يتم استيراده في كل منها. "
+
+#. module: account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
+msgid "Import File"
+msgstr "استيراد ملف"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__unique_import_id
+msgid "Import ID"
+msgstr "معرف الاستيراد"
+
+#. module: account_bank_statement_import
+#. odoo-javascript
+#: code:addons/account_bank_statement_import/static/src/account_bank_statement_import_model.js:0
+#, python-format
+msgid "Import Template for Bank Statements"
+msgstr "استيراد قالب لكشوفات الحسابات البنكية "
+
+#. module: account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
+msgid "Import Transactions"
+msgstr "استيراد المعاملات "
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_journal
+msgid "Journal"
+msgstr "دفتر اليومية"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "Manual (or import %(import_formats)s)"
+msgstr "يدوي (أو استيراد %(import_formats)s) "
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "No attachment was provided"
+msgstr "لم يتم توفير مرفق"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "No currency found matching '%s'."
+msgstr "لم يمكن العثور على أي عملة تطابق '%s'."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid ""
+"The account of this statement (%s) is not the same as the journal (%s)."
+msgstr "الحساب في كشف الحساب البنكي (%s) مختلف عن حساب دفتر اليومية (%s)."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid ""
+"The currency of the bank statement (%s) is not the same as the currency of "
+"the journal (%s)."
+msgstr ""
+"العملة في كشف الحساب البنكي (%s) مختلفة عن العملة في دفتر اليومية (%s)."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "The following files could not be imported:\n"
+msgstr "تعذر استيراد الملفات التالية: \n"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "This file doesn't contain any statement for account %s."
+msgstr "لا يحتوي هذا الملف على أي كشف للحساب %s. "
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "This file doesn't contain any transaction for account %s."
+msgstr "لا يحتوي هذا الملف على أي معاملة للحساب %s. "
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "View successfully imported statements"
+msgstr "عرض كشوفات الحساب البنكية التي تم استيرادها بنجاح "
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "You already have imported that file."
+msgstr "لقد قمت باستيراد هذا الملف بالفعل."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "You have to set a Default Account for the journal: %s"
+msgstr "عليك تعيين حساب افتراضي لليومية: %s"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "You uploaded an invalid or empty file."
+msgstr "لقد قمت برفع ملف فارغ أو غير صالح. "

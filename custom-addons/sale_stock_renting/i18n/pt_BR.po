@@ -1,0 +1,392 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_stock_renting
+# 
+# Translators:
+# Maitê Dietze, 2024
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:12+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/product_product.py:0
+#, python-format
+msgid "%(product)s (%(qty)s item)"
+msgstr "%(product)s (%(qty)s item)"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/product_product.py:0
+#, python-format
+msgid "%(product)s (%(qty)s items)"
+msgstr "%(product)s (%(qty)s itens)"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.rental_order_wizard_view_form
+msgid ""
+"<i class=\"fa fa-warning\"/>\n"
+"                        <span>\n"
+"                            Some products don't have the requested qty available for pickup\n"
+"                        </span>"
+msgstr ""
+"<i class=\"fa fa-warning\"/>\n"
+"                        <span>\n"
+"                         Alguns produtos não têm a quantidade solicitada disponível para retirada\n"
+"                        </span>"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.res_config_settings_inherit_view_form
+msgid "Activate to use stock deliveries and receipts for rental orders"
+msgstr "Ative para usar entregas e recibos de estoque para pedidos de locação"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,help:sale_stock_renting.field_res_company__padding_time
+#: model:ir.model.fields,help:sale_stock_renting.field_res_config_settings__padding_time
+msgid ""
+"Amount of time (in hours) during which a product is considered unavailable "
+"prior to renting (preparation time)."
+msgstr ""
+"Quantidade de tempo (em horas) durante o qual um produto é considerado "
+"indisponível antes da locação (tempo de preparação)."
+
+#. module: sale_stock_renting
+#. odoo-javascript
+#: code:addons/sale_stock_renting/static/src/widgets/qty_at_date_widget.xml:0
+#, python-format
+msgid "Availability"
+msgstr "Disponibilidade"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__qty_available
+msgid "Available"
+msgstr "Disponível"
+
+#. module: sale_stock_renting
+#. odoo-javascript
+#: code:addons/sale_stock_renting/static/src/widgets/qty_at_date_widget.xml:0
+#, python-format
+msgid "Available for Rent"
+msgstr "Disponível para locação"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configurações"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.res_config_settings_inherit_view_form
+msgid "Default Padding Time"
+msgstr "Margem de tempo padrão"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,help:sale_stock_renting.field_rental_order_wizard_line__tracking
+#: model:ir.model.fields,help:sale_stock_renting.field_sale_order_line__tracking
+msgid "Ensure the traceability of a storable product in your warehouse."
+msgstr ""
+"Certifique-se da rastreabilidade de um produto estocável em seu armazém."
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard__has_lines_missing_stock
+msgid "Has lines whose products have insufficient stock"
+msgstr "Tem linhas cujos produtos têm estoque insuficiente"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard__has_tracked_lines
+msgid "Has lines with tracked products"
+msgstr "Tem linhas de produtos rastreados"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_res_company__rental_loc_id
+msgid "In rent"
+msgstr "Em locação"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_rental_schedule__is_available
+msgid "Is Available"
+msgstr "Está disponível"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__is_product_storable
+msgid "Is Product Storable"
+msgstr "O produto pode ser armazenado?"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_account_move
+msgid "Journal Entry"
+msgstr "Lançamento de diário"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_stock_lot
+msgid "Lot/Serial"
+msgstr "Lote/série"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.res_config_settings_inherit_view_form
+msgid "Minimum amount of time between two rentals"
+msgstr "Período mínimo de tempo entre duas locações"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/sale_order_line.py:0
+#, python-format
+msgid "No valid quant has been found in location %s for serial number %s!"
+msgstr ""
+"Nenhuma quantidade válida foi encontrada no local %s para o número de série "
+"%s."
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.rental_schedule_view_gantt_inherit_stock
+msgid "Other rental(s) in conflict."
+msgstr "Outras locações em conflito."
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_res_config_settings__padding_time
+msgid "Padding"
+msgstr "Margem de segurança"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_res_company__padding_time
+msgid "Padding Time"
+msgstr "Tempo de margem"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_rental_order_wizard
+msgid "Pick-up/Return products"
+msgstr "Retirada/devolução de produtos"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__pickeable_lot_ids
+msgid "Pickeable Lot"
+msgstr "Lote de retirada"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__pickedup_lot_ids
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_order_line__pickedup_lot_ids
+msgid "Pickedup Lot"
+msgstr "Lote retirado"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/wizard/rental_processing.py:0
+#, python-format
+msgid "Please specify the serial numbers picked up for the tracked products."
+msgstr ""
+"Especifique os números de série coletados para os produtos rastreados."
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/wizard/rental_processing.py:0
+#, python-format
+msgid "Please specify the serial numbers returned for the tracked products."
+msgstr ""
+"Especifique os números de série devolvidos para os produtos rastreados."
+
+#. module: sale_stock_renting
+#: model:product.template,name:sale_stock_renting.rental_stock_product_1_product_template
+msgid "Printer"
+msgstr "Impressora"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_product_template
+msgid "Product"
+msgstr "Produto"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_product_product
+msgid "Product Variant"
+msgstr "Variante do produto"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_sale_rental_report
+msgid "Rental Analysis Report"
+msgstr "Relatório de análise de locações"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_sale_rental_schedule
+msgid "Rental Schedule"
+msgstr "Cronograma de locação"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.res_config_settings_inherit_view_form
+msgid "Rental Transfers"
+msgstr "Transferências de locação"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/sale_order_line.py:0
+#: code:addons/sale_stock_renting/models/sale_order_line.py:0
+#, python-format
+msgid "Rental move:"
+msgstr "Mudança de locação:"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_res_config_settings__group_rental_stock_picking
+msgid "Rental pickings"
+msgstr "Separações para locação"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_rental_order_wizard_line
+msgid "RentalOrderLine transient representation"
+msgstr "Representação transitória de RentalOrderLine"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_order_line__reserved_lot_ids
+msgid "Reserved Lot"
+msgstr "Lote reservado"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Separação de devolução"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__returnable_lot_ids
+msgid "Returnable Lot"
+msgstr "Lote retornável"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__returned_lot_ids
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_order_line__returned_lot_ids
+msgid "Returned Lot"
+msgstr "Lote retornado"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_sale_order
+msgid "Sales Order"
+msgstr "Pedido de venda"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Linha do pedido de venda"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_product_product__preparation_time
+#: model:ir.model.fields,field_description:sale_stock_renting.field_product_template__preparation_time
+msgid "Security Time"
+msgstr "Tempo de segurança"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_rental_report__lot_id
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_rental_schedule__lot_id
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.rental_report_search_view_inherit_lots
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.rental_schedule_view_search_inherit_lots
+msgid "Serial Number"
+msgstr "Número de série"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.rental_order_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.report_rental_order_document
+msgid "Serial Numbers"
+msgstr "Números de série"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_stock_move
+msgid "Stock Move"
+msgstr "Movimentação de estoque"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_stock_rule
+msgid "Stock Rule"
+msgstr "Regra de estoque"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,help:sale_stock_renting.field_product_product__preparation_time
+#: model:ir.model.fields,help:sale_stock_renting.field_product_template__preparation_time
+msgid "Temporarily make this product unavailable before pickup."
+msgstr "Tornar esse produto temporariamente indisponível antes da retirada."
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,help:sale_stock_renting.field_res_company__rental_loc_id
+msgid ""
+"This technical location serves as stock for products currently in rentalThis"
+" location is internal because products in rentalare still considered as "
+"company assets."
+msgstr ""
+"Essa localização técnica serve como estoque para produtos atualmente em "
+"locação. Essa localização é interna porque os produtos em locação ainda são "
+"considerados ativos da empresa."
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__tracking
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_order_line__tracking
+msgid "Tracking"
+msgstr "Rastreamento"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/product_template.py:0
+#, python-format
+msgid ""
+"Tracking by lots isn't supported for rental products.\n"
+"You should rather change the tracking mode to unique serial numbers."
+msgstr ""
+"O rastreamento por lotes não é compatível com produtos de locação.\n"
+"Você deve alterar o modo de rastreamento para números de série exclusivos."
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_order_line__unavailable_lot_ids
+msgid "Unavailable Lot"
+msgstr "Lote indisponível"
+
+#. module: sale_stock_renting
+#: model:res.groups,name:sale_stock_renting.group_rental_stock_picking
+msgid "Use pickings for rental orders"
+msgstr "Usar separações para pedidos de locação"
+
+#. module: sale_stock_renting
+#. odoo-javascript
+#: code:addons/sale_stock_renting/static/src/widgets/qty_at_date_widget.xml:0
+#, python-format
+msgid "View Rentals"
+msgstr "Exibir locações"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_stock_warehouse
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_rental_schedule__warehouse_id
+msgid "Warehouse"
+msgstr "Armazém"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/sale_order_line.py:0
+#, python-format
+msgid "You cannot change the product of lines linked to stock moves."
+msgstr ""
+"Não é possível modificar o produto de linhas vinculadas a movimentações de "
+"estoque."
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.res_config_settings_inherit_view_form
+msgid "hours"
+msgstr "horas"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.product_template_inherit_view_form_stock_rental
+msgid "hours before orders"
+msgstr "horas antes dos pedidos"
+
+#. module: sale_stock_renting
+#. odoo-javascript
+#: code:addons/sale_stock_renting/static/src/widgets/qty_at_date_widget.xml:0
+#, python-format
+msgid "to"
+msgstr "até"

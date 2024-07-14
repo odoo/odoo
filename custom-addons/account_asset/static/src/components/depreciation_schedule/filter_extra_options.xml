@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_asset.DepreciationScheduleFilterExtraOptions" t-inherit="account_reports.AccountReportFilterExtraOptions">
+        <xpath expr="//Dropdown" position="inside">
+            <DropdownItem
+                class="{ 'selected': controller.options.assets_groupby_account }"
+                onSelected="() => this.toggleFilter('assets_groupby_account')"
+            >
+                Group By Account
+            </DropdownItem>
+        </xpath>
+    </t>
+</templates>

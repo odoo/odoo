@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">res.users.form.sign.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="priority">140</field>
+        <field name="arch" type="xml">
+            <group name="messaging" position="after">
+                <group string="Digital Signatures" name="sign" groups="base.group_system">
+                    <field name="sign_signature" widget="signature" options="{'full_name': 'display_name', 'size': ['',200]}"/>
+                    <field name="sign_initials" widget="signature" options="{'size': [200,'']}"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

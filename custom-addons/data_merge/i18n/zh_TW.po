@@ -1,0 +1,752 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* data_merge
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (副本)"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_group.py:0
+#, python-format
+msgid "%s - Similarity: %s%%"
+msgstr "%s - 相似度 %s%%"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid "%s records have been merged"
+msgstr "已合併 %s 項記錄"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid ""
+"' deduplication rule.<br/>\n"
+"You can merge them"
+msgstr ""
+"」消除重複規則。<br/>\n"
+"你可以合併它們"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "<span class=\"me-1\">Every</span>"
+msgstr "<span class=\"me-1\">每</span>"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "<span class=\"oe_inline\">%</span>"
+msgstr "<span class=\"oe_inline\">%</span>"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "<span invisible=\"not custom_merge_method\">Model specific</span>"
+msgstr "<span invisible=\"not custom_merge_method\">依模型不同</span>"
+
+#. module: data_merge
+#: model:ir.model.constraint,message:data_merge.constraint_data_merge_rule_uniq_model_id_field_id
+msgid "A field can only appear once!"
+msgstr "欄位只能出現一次!"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__active
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__active
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__active
+msgid "Active"
+msgstr "啟用"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__removal_mode__archive
+msgid "Archive"
+msgstr "封存"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_model_view_search
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Archived"
+msgstr "已封存"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid ""
+"Are you sure that you want to merge the selected records in their respective"
+" group?"
+msgstr "確定合併其各自組別中的選定記錄?"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid "Are you sure that you want to merge these records?"
+msgstr "確定合併這些記錄？"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__merge_mode__automatic
+msgid "Automatic"
+msgstr "自動的"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_ir_model__is_merge_enabled
+#: model_terms:ir.ui.view,arch_db:data_merge.ir_model_view_search
+msgid "Can Be Merged"
+msgstr "可作合併"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_rule.py:0
+#, python-format
+msgid "Case/Accent Insensitive Match"
+msgstr "忽略大小寫/變音符號而相符"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__company_id
+msgid "Company"
+msgstr "公司"
+
+#. module: data_merge
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record_notification
+msgid "Configure rules to identify duplicate records"
+msgstr "配置規則以標示重複記錄"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_res_partner
+msgid "Contact"
+msgstr "聯絡人"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_ir_model__ref_merge_ir_act_server_id
+msgid ""
+"Contextual menu action that redirects to the deduplicate view of data_merge."
+msgstr "環境選單操作，會重新導向至 data_merge 的消除重複檢視畫面。"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_create_uid
+msgid "Created By"
+msgstr "建立人"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_create_date
+msgid "Created On"
+msgstr "建立於"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__create_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__create_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__create_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__create_uid
+msgid "Created by"
+msgstr "建立人員"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__create_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__create_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__create_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__create_date
+msgid "Created on"
+msgstr "建立於"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__mix_by_company
+msgid "Cross-Company"
+msgstr "跨公司"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__custom_merge_method
+msgid "Custom Merge Method"
+msgstr "自訂合併方法"
+
+#. module: data_merge
+#: model:ir.actions.server,name:data_merge.ir_cron_cleanup_ir_actions_server
+msgid "Data Merge: Cleanup Records"
+msgstr "數據合併：清理記錄"
+
+#. module: data_merge
+#: model:ir.actions.server,name:data_merge.ir_cron_find_duplicates_ir_actions_server
+msgid "Data Merge: Find Duplicate Records"
+msgstr "數據合併：查找重複記錄"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__notify_frequency_period__days
+msgid "Days"
+msgstr "天內"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+#, python-format
+msgid "Deduplicate"
+msgstr "消除重複"
+
+#. module: data_merge
+#: model:ir.ui.menu,name:data_merge.menu_data_merge_config_rules_deduplication
+#: model:ir.ui.menu,name:data_merge.menu_data_merge_group
+msgid "Deduplication"
+msgstr "消除重複"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_group
+msgid "Deduplication Group"
+msgstr "消除重複組別"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_model
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__model_id
+msgid "Deduplication Model"
+msgstr "消除重複模型"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_record
+msgid "Deduplication Record"
+msgstr "消除重複記錄"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_rule
+msgid "Deduplication Rule"
+msgstr "消除重複規則"
+
+#. module: data_merge
+#: model:ir.actions.act_window,name:data_merge.action_data_merge_config
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__rule_ids
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "Deduplication Rules"
+msgstr "消除重複規則"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "Deduplication is forbidden on the model: %s"
+msgstr "此模型禁止消除重複：%s"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__removal_mode__delete
+msgid "Delete"
+msgstr "刪除"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__differences
+msgid "Differences"
+msgstr "差異"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_record__differences
+msgid "Differences with the master record"
+msgstr "與主記錄差異"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.ir_model_view_form
+msgid "Disable Merge"
+msgstr "禁用合併"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_list
+msgid "Discard"
+msgstr "捨棄"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Discarded"
+msgstr "已取消"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__display_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__display_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__display_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__divergent_fields
+msgid "Divergent Fields"
+msgstr "發散欄位"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__domain
+msgid "Domain"
+msgstr "篩選範圍"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__removal_mode
+msgid "Duplicate Removal"
+msgstr "移除重複資料"
+
+#. module: data_merge
+#: model:ir.actions.act_window,name:data_merge.action_data_merge_record
+#: model:ir.actions.act_window,name:data_merge.action_data_merge_record_notification
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "Duplicates"
+msgstr "副本"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "Duplicates to Merge"
+msgstr "待合併重複資料"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__create_threshold
+msgid ""
+"Duplicates with a similarity below this threshold will not be suggested"
+msgstr "不會建議具有低於此閾值相似性的重複項"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.ir_model_view_form
+msgid "Enable Merge"
+msgstr "啟用合併"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_rule.py:0
+#, python-format
+msgid "Exact Match"
+msgstr "完全符合"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__field_values
+msgid "Field Values"
+msgstr "欄位值"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_ir_model__hide_merge_action
+msgid "Hide merge action button"
+msgstr "隱藏合併動作按鈕"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid "I've identified"
+msgstr "我已識別出"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__id
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_list
+msgid "ID"
+msgstr "識別號"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_ir_model__is_merge_enabled
+msgid ""
+"If True, the generic data merge tool is available in the contextual menu of "
+"this model."
+msgstr "如果是 \"真\", 通用數據合併工具在這個模型的上下文菜單中可用。"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__is_contextual_merge_action
+msgid ""
+"If True, this record is used for contextual menu action \"Merge\" on the "
+"target model."
+msgstr "如果是 \"真\", 這個記錄將用於目標模型上的上下文菜單動作 \"合併\"。"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_ir_model__hide_merge_action
+msgid ""
+"If the model already has a custom merge method, the class attribute `_merge_disabled` is set to true on\n"
+"             that model and the generic data merge action should not be available on that model."
+msgstr ""
+"如果模型已經有一個自定義的合併方法，類屬性`_merge_disabled`在該模型上被設置為 \"true\",通用數據合併動作在該模型上不可用。\n"
+"             該模型上, 通用數據合併動作不應該在該模型上可用。"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__is_deleted
+msgid "Is Deleted"
+msgstr "是已刪除"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__is_discarded
+msgid "Is Discarded"
+msgstr "已取消"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__is_master
+msgid "Is Master"
+msgstr "是主記錄"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__last_notification
+msgid "Last Notification"
+msgstr "上次通知"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__write_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__write_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__write_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__write_uid
+msgid "Last Updated by"
+msgstr "最後更新者"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__write_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__write_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__write_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__write_date
+msgid "Last Updated on"
+msgstr "最後更新於"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_record__used_in
+msgid "List of other models referencing this record"
+msgstr "引用此記錄的其他模型清單"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__notify_user_ids
+msgid "List of users to notify when there are new records to merge"
+msgstr "有新記錄要合併時要通知的用戶名單"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__merge_mode__manual
+msgid "Manual"
+msgstr "手動"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "Manual Selection - %s"
+msgstr "手動選擇- %s"
+
+#. module: data_merge
+#. odoo-javascript
+#. odoo-python
+#: code:addons/data_merge/models/ir_model.py:0
+#: code:addons/data_merge/static/src/views/data_merge_list_view.xml:0
+#: model:ir.actions.server,name:data_merge.merge_action_crm_lost_reason
+#: model:ir.actions.server,name:data_merge.merge_action_crm_tag
+#: model:ir.actions.server,name:data_merge.merge_action_helpdesk_tag
+#: model:ir.actions.server,name:data_merge.merge_action_helpdesk_ticket
+#: model:ir.actions.server,name:data_merge.merge_action_project_tags
+#: model:ir.actions.server,name:data_merge.merge_action_project_task
+#: model:ir.actions.server,name:data_merge.merge_action_res_country
+#: model:ir.actions.server,name:data_merge.merge_action_res_country_state
+#: model:ir.actions.server,name:data_merge.merge_action_res_partner_category
+#: model:ir.actions.server,name:data_merge.merge_action_res_partner_industry
+#: model:ir.actions.server,name:data_merge.merge_action_res_partner_title
+#: model:ir.actions.server,name:data_merge.merge_action_utm_campaign
+#: model:ir.actions.server,name:data_merge.merge_action_utm_medium
+#: model:ir.actions.server,name:data_merge.merge_action_utm_source
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_list
+#, python-format
+msgid "Merge"
+msgstr "合併"
+
+#. module: data_merge
+#: model:ir.ui.menu,name:data_merge.ir_model_menu_merge_action_manager
+msgid "Merge Action Manager"
+msgstr "合併動作管理工具"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__match_mode
+msgid "Merge If"
+msgstr "合併，若"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__merge_mode
+msgid "Merge Mode"
+msgstr "合併模式"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_ir_model__ref_merge_ir_act_server_id
+msgid "Merge Server Action"
+msgstr "合併伺服器動作"
+
+#. module: data_merge
+#: model:ir.actions.act_window,name:data_merge.ir_model_action_merge
+msgid "Merge action Manager"
+msgstr "合併動作管理工具"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__is_contextual_merge_action
+msgid "Merge action attached"
+msgstr "附帶的合併動作"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "Missing required PostgreSQL extension: unaccent"
+msgstr "缺少所需的PostgreSQL擴充功能: unaccent"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__res_model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__res_model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__res_model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__res_model_id
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Model"
+msgstr "資料集"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__res_model_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__res_model_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__res_model_name
+msgid "Model Name"
+msgstr "模型名稱"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_ir_model
+msgid "Models"
+msgstr "型號"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__notify_frequency_period__months
+msgid "Months"
+msgstr "月"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__name
+msgid "Name"
+msgstr "名稱"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record_notification
+#, python-format
+msgid "No duplicates found"
+msgstr "找不到重複項"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__notify_frequency
+msgid "Notify"
+msgstr "通知"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__notify_frequency_period
+msgid "Notify Frequency Period"
+msgstr "通知頻率期間"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__notify_user_ids
+msgid "Notify Users"
+msgstr "通知用戶"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "Query Failed."
+msgstr "查詢失敗。"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__record_ids
+msgid "Record"
+msgstr "記錄"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__group_id
+msgid "Record Group"
+msgstr "記錄組別"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__res_id
+msgid "Record ID"
+msgstr "記錄 ID"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Records"
+msgstr "記錄"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__records_to_merge_count
+msgid "Records To Merge Count"
+msgstr "待合併記錄數目"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__domain
+msgid "Records eligible for the deduplication process"
+msgstr "記錄符合消除重複的條件"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "Records must be of the same model"
+msgstr "記錄須為同一模型"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__merge_threshold
+msgid ""
+"Records with a similarity percentage above this threshold will be "
+"automatically merged"
+msgstr "高於此閾值的相似度百分比, 記錄將自動合併"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Rule"
+msgstr "規則"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "Select a model to configure deduplication rules"
+msgstr "選擇模型以配置消除重複規則"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__sequence
+msgid "Sequence"
+msgstr "序列號"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__similarity
+msgid "Similarity %"
+msgstr "相似度 %"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__merge_threshold
+msgid "Similarity Threshold"
+msgstr "相似度門檻值"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_group__similarity
+msgid ""
+"Similarity coefficient based on the amount of text fields exactly in common."
+msgstr "相似度系數是基於完全相同文字欄位的數量。"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__rule_ids
+msgid "Suggest to merge records matching at least one of these rules"
+msgstr "建議合併至少符合以下規則之一的記錄"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__create_threshold
+msgid "Suggestion Threshold"
+msgstr "建議門檻值"
+
+#. module: data_merge
+#: model:ir.model.constraint,message:data_merge.constraint_data_merge_model_check_notif_freq
+msgid "The notification frequency should be greater than 0"
+msgstr "通知頻率應大於 0"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "The referenced record does not exist"
+msgstr "引用的記錄不存在"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid "The selected records have been merged"
+msgstr "選取的記錄已被合併"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "The target model does not exists."
+msgstr "目標模型不存在。"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "There is not referenced record"
+msgstr "沒有引用的記錄"
+
+#. module: data_merge
+#: model:ir.model.constraint,message:data_merge.constraint_data_merge_model_uniq_name
+msgid "This name is already taken"
+msgstr "此名稱已用"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__field_id
+msgid "Unique ID Field"
+msgstr "唯一識別碼欄位"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.xml:0
+#, python-format
+msgid "Unselect"
+msgstr "取消選擇"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_write_uid
+msgid "Updated By"
+msgstr "更新者:"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_write_date
+msgid "Updated On"
+msgstr "更新於"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__used_in
+msgid "Used In"
+msgstr "用於"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__notify_frequency_period__weeks
+msgid "Weeks"
+msgstr "星期"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__mix_by_company
+msgid "When enabled, duplicates across different companies will be suggested"
+msgstr "啟用後, 將建議不同公司的重複項"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "You must select at least two %s in order to merge them."
+msgstr "必須最少選擇兩個%s才可合併它們。"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid "duplicate records with the '"
+msgstr "重複記錄與 \""
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid "here"
+msgstr "這裡"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_merged
+msgid "merged into"
+msgstr "已合併為"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_main
+msgid "merged into this one"
+msgstr "已合併至這一個"

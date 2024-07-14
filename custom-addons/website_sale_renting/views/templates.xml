@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="rental_products_price" inherit_id="website_sale.product_price" name="Rental Product Price">
+        <xpath expr="//div[@itemprop='offers']" position="attributes">
+            <attribute name="t-attf-class" separator=" " add="{{'o_hidden' if combination_info.get('is_rental') else ''}}"/>
+        </xpath>
+        <xpath expr="//span[hasclass('oe_price')]" position="after">
+            <t t-if="combination_info.get('is_rental')">
+                <input type="hidden" name="is_rental" t-att-value="combination_info['is_rental']"/>
+                <span class="oe_price o_renting_price" style="white-space: nowrap;"
+                      t-esc="combination_info['current_rental_price_per_unit']"
+                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+            </t>
+        </xpath>
+        <xpath expr="//h3[hasclass('css_editable_mode_hidden')]/del" position="after">
+            <t t-if="combination_info.get('is_rental')">
+                <span>per</span>
+                <span itemprop="rental_duration" t-if="combination_info['rental_duration'] > 1"
+                      t-esc="combination_info['rental_duration']"/>
+                <span itemprop="rental_unit" t-esc="combination_info['rental_unit']"/>
+            </t>
+        </xpath>
+        <xpath expr="//span[hasclass('oe_price')]" position="attributes">
+            <attribute name="t-if">not combination_info.get('is_rental')</attribute>
+        </xpath>
+        <xpath expr="//span[@itemprop='listPrice']" position="attributes">
+            <attribute name="t-if">not combination_info.get('is_rental')</attribute>
+        </xpath>
+        <xpath expr="//h3[hasclass('css_non_editable_mode_hidden')]" position="attributes">
+            <attribute name="t-if">not combination_info.get('is_rental')</attribute>
+        </xpath>
+    </template>
+
+    <template id="rental_product" inherit_id="website_sale.product" name="Select pickup Date and Return Date">
+        <xpath expr="//div[hasclass('js_main_product')]//t[@t-placeholder='select']" position="after">
+            <div t-if="combination_info.get('is_rental') and (not website.prevent_zero_price_sale or combination_info['current_rental_price'])" class="o_not_editable">
+                <div t-nocache="The default start and end dates must be up-to-date."
+                     class="mb-3 align-middle input-group-lg o_website_sale_daterange_picker variant_attribute">
+                    <t t-set="wso" t-value="website.sale_get_order()"/>
+                    <t t-set="combination_info" t-value="product.with_context(start_date=start_date, end_date=end_date)._get_combination_info(combination, add_qty=add_qty or 1)"/>
+                    <input type="hidden" name="default_start_date" t-att-value="wso.rental_start_date or combination_info['default_start_date']"/>
+                    <input type="hidden" name="default_end_date" t-att-value="wso.rental_return_date or combination_info['default_end_date']"/>
+                    <input type="hidden" name="rental_duration_unit" t-att-value="combination_info['rental_duration_unit']"/>
+                    <strong class="attribute_name">Rental Period</strong>
+                    <div class="oe_unremovable w-100">
+                        <div class="s_website_form_datetime input-group date col-md-8 ps-0 o_daterange_picker"
+                             id="rentingDates"
+                             title="The period must be the same for all products of your cart.&#10;You must change the period on your cart or create different orders if you want different periods.">
+                            <input type="text" name="renting_start_date" t-att-value="wso.rental_start_date or combination_info['default_start_date']" class="form-control" t-att-disabled="wso.has_rented_products and wso.order_line.filtered('is_rental').product_id != product"/>
+                            <input type="text" name="renting_end_date" t-att-value="wso.rental_return_date or combination_info['default_end_date']" class="form-control" t-att-disabled="wso.has_rented_products and wso.order_line.filtered('is_rental').product_id != product"/>
+                            <div class="input-group-text">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="h4 o_renting_details my-2 col-md-8 ps-0 d-flex justify-content-between">
+                    <div>
+                        <strong>
+                            <span class="o_renting_duration" t-esc="combination_info['current_rental_duration']"/>
+                            <span class="o_renting_unit" t-esc="combination_info['current_rental_unit']"/>
+                        </strong>
+                    </div>
+                    <div>
+                        Total
+                        <strong>
+                            <span class="oe_price o_renting_total_price" style="white-space: nowrap;"
+                                  t-esc="combination_info['current_rental_price']"
+                                  t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                        </strong>
+                    </div>
+                </div>
+                <div class="o_renting_warning d-none my-2">
+                    <span class="text-warning">
+                        <i class="fa fa-warning"/>
+                        <span name="renting_warning_message"/>
+                    </span>
+                </div>
+            </div>
+        </xpath>
+        <div id="product_documents" position="before">
+            <t t-if="combination_info.get('is_rental') and (not website.prevent_zero_price_sale or combination_info['current_rental_price'])">
+                <u class="h5">Pricing</u>
+                <table class="o_not_editable table w-50 {{'' if combination_info['pricing_table'] else 'd-none'}}" id="oe_wsale_rental_pricing_table">
+                    <tbody>
+                        <t t-foreach="combination_info['pricing_table']" t-as="pricing_info">
+                            <tr>
+                                <td class="w-50" t-esc="pricing_info[0]"/>
+                                <td class="w-50 text-muted" t-esc="pricing_info[1]"/>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </t>
+        </div>
+    </template>
+
+    <template id="variants" inherit_id="website_sale.variants">
+        <xpath expr="//option/t[@t-call='website_sale.badge_extra_price']" position="attributes">
+            <attribute name="t-if">not product.rent_ok</attribute>
+        </xpath>
+        <xpath expr="//label/div/div[hasclass('radio_input_value')]/t[@t-call='website_sale.badge_extra_price']"
+               position="attributes">
+            <attribute name="t-if">not product.rent_ok</attribute>
+        </xpath>
+        <xpath expr="//label[hasclass('o_variant_pills_input_value')]/t[@t-call='website_sale.badge_extra_price']"
+               position="attributes">
+            <attribute name="t-if">not product.rent_ok</attribute>
+        </xpath>
+    </template>
+
+    <template id="products_item" inherit_id="website_sale.products_item">
+        <xpath expr="//div[hasclass('product_price')]/*[1]" position="before">
+            <span t-if="product.rent_ok and template_price_vals['rental_duration']
+                and (not website.prevent_zero_price_sale or template_price_vals['price_reduce'])" class="h6">from</span>
+        </xpath>
+        <xpath expr="//span[@itemprop='priceCurrency']" position="after">
+            <span t-if="product.rent_ok and template_price_vals['rental_duration']
+                and (not website.prevent_zero_price_sale or template_price_vals['price_reduce'])" class="h6">
+                <span>per</span>
+                <span t-if="template_price_vals['rental_duration'] > 1" t-esc="template_price_vals['rental_duration']"/>
+                <span t-esc="template_price_vals['rental_unit']"/>
+            </span>
+        </xpath>
+    </template>
+
+    <template id="rental_search_result_price">
+        <small>from</small>
+        <t t-esc="price"
+           t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+        <small>per</small>
+        <small t-if="duration > 1" t-esc="duration"/>
+        <small t-esc="unit"/>
+    </template>
+
+    <template id="cart_lines" inherit_id="website_sale.cart_lines">
+        <xpath expr="//t[@t-call='website_sale.cart_line_description_following_lines']" position="before">
+            <div t-if="line.is_rental" t-esc="line._get_rental_pricing_description()" class="text-muted d-md-block small"/>
+        </xpath>
+    </template>
+
+    <template id="cart_summary" inherit_id="website_sale.checkout_layout">
+        <td name="website_sale_cart_summary_product_name" position="inside">
+            <div t-if="line.is_rental"
+                 t-esc="line._get_rental_pricing_description()"
+                 class="d-md-block small text-muted"/>
+        </td>
+        <xpath expr="//div[@id='o_wsale_total_accordion_item']/t[@t-call='website_sale.total']" position="before">
+            <div t-if="website_sale_order and website_sale_order.has_rented_products" class="pt-3 border-top mb-3">
+                <h6 class="attribute_name">Rental Period</h6>
+                <div class="oe_unremovable d-flex gap-1 align-items-center w-100 text-muted">
+                    <span t-field="website_sale_order.rental_start_date"
+                          widget="datetime"
+                          class="o_not_editable"/>
+                    <i class="oi oi-arrow-right"/>
+                    <span t-field="website_sale_order.rental_return_date"
+                          widget="datetime"
+                          class="o_not_editable"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="cart" inherit_id="website_sale.cart">
+        <xpath expr="//t[@t-call='website_sale.cart_lines']" position="before">
+            <div t-if="website_sale_order.has_rented_products" class="o_website_sale_daterange_picker mb-4 pb-3 border-bottom" id="cart_rental_period">
+                <h5>Rental period</h5>
+                <h6 class="text-muted small">Applies to all rented items</h6>
+                <input type="hidden" name="default_start_date" t-att-value="website_sale_order.rental_start_date"/>
+                <input type="hidden" name="default_end_date" t-att-value="website_sale_order.rental_return_date"/>
+                <input type="hidden" name="rental_duration_unit" t-attf-value="{{'hour' if website_sale_order._is_renting_possible_in_hours() else 'day'}}"/>
+                <div class="oe_unremovable w-100">
+                    <div class="s_website_form_datetime input-group date col-md-8 ps-0 o_daterange_picker"
+                            data-target-input="nearest"
+                            id="rentingDates">
+                        <input type="text" name="renting_start_date" class="form-control"/>
+                        <input type="text" name="renting_end_date" class="form-control"/>
+                        <div class="input-group-text">
+                            <i class="fa fa-calendar"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_renting_warning alert alert-warning d-none my-2" role="alert">
+                    <span class="small">
+                        <i class="fa fa-warning"/>
+                        <span name="renting_warning_message"/>
+                    </span>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="base_unit_price" inherit_id="website_sale.base_unit_price">
+        <xpath expr="//t" position="attributes">
+            <attribute name="t-if">not product.rent_ok</attribute>
+        </xpath>
+    </template>
+
+    <template id="suggested_products_list" inherit_id="website_sale.suggested_products_list">
+        <xpath expr="//div[@name='website_sale_suggested_product_price']/t[@t-set='combination_info']" position="after">
+            <span t-if="combination_info.get('is_rental') and combination_info['rental_duration']" class="h6">from</span>
+        </xpath>
+        <xpath expr="//div[@name='website_sale_suggested_product_price']/del" position="attributes">
+            <attribute name="t-if">not product.rent_ok</attribute>
+        </xpath>
+        <xpath expr="//div[@name='website_sale_suggested_product_price']//span" position="after">
+            <span t-if="combination_info.get('is_rental') and combination_info['rental_duration']" class="h6">
+                <span>per</span>
+                <span t-if="combination_info['rental_duration'] > 1" t-esc="combination_info['rental_duration']"/>
+                <span t-esc="combination_info['rental_unit']"/>
+            </span>
+        </xpath>
+    </template>
+
+    <template id="website_sale_renting.shop_rental_datepicker_opt" active="False"/>
+
+    <template id="website_sale_renting.datepicker">
+        <div class="o_website_sale_daterange_picker col-auto flex-grow-1 o_not_editable o_website_sale_shop_daterange_picker">
+            <input type="hidden" name="rental_duration_unit" value="hour"/>
+            <t t-set="wso" t-value="website.sale_get_order()"/>
+            <input type="hidden" name="default_start_date" t-if="wso and wso.has_rented_products" t-att-value="wso.rental_start_date"/>
+            <input type="hidden" name="default_end_date" t-if="wso and wso.has_rented_products" t-att-value="wso.rental_return_date"/>
+            <div class="s_website_form_datetime input-group date col-md-8 ps-0 o_daterange_picker"
+                 title="The period must be the same for all products of your cart.&#10;You must change the period on your cart or create different orders if you want different periods.">
+                <input type="text" name="renting_start_date" class="form-control" t-att-disabled="wso and wso.has_rented_products"/>
+                <input type="text" name="renting_end_date" class="form-control" t-att-disabled="wso and wso.has_rented_products"/>
+                <button class="input-group-text fa fa-calendar alert-info"/>
+                <button t-if="request.params.get('start_date') and request.params.get('end_date')" class="input-group-text fa fa-times alert-danger clear-daterange"/>
+            </div>
+            <div class="o_renting_warning d-none">
+                <span class="text-warning">
+                    <i class="fa fa-warning"/>
+                    <span name="renting_warning_message"/>
+                </span>
+            </div>
+        </div>
+    </template>
+
+    <template id="website_sale_renting.o_wsale_offcanvas" name="Datepicker" inherit_id="website_sale.o_wsale_offcanvas">
+        <xpath expr="//div[@id='o_wsale_offcanvas_content']//div[1]" position="before">
+            <t t-if="is_view_active('website_sale_renting.shop_rental_datepicker_opt')">
+                <div class="accordion-item">
+                    <h2 id="o_wsale_offcanvas_orderby_header" class="accordion-header mb-0">
+                        <button class="o_wsale_offcanvas_title accordion-button border-top rounded-0 collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#o_wsale_offcanvas_rental_datepicker"
+                                aria-expanded="false"
+                                aria-controls="o_wsale_offcanvas_rental_datepicker">
+                            <b>Rental Period</b>
+                        </button>
+                    </h2>
+                    <div id="o_wsale_offcanvas_rental_datepicker"
+                         class="accordion-collapse collapse"
+                         aria-labelledby="o_wsale_offcanvas_orderby_header">
+                        <div class="accordion-body pt-0">
+                            <t t-call="website_sale_renting.datepicker"/>
+                        </div>
+                    </div>
+
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="website_sale_renting.products" name="Datepicker" inherit_id="website_sale.products">
+        <!-- Allow rental datepicker by itself in left side bar-->
+        <xpath expr="//t[@t-set='hasLeftColumn']" position="after">
+            <t t-set="hasLeftColumn" t-value="hasLeftColumn or is_view_active('website_sale_renting.shop_rental_datepicker_opt')"/>
+        </xpath>
+        <!-- Add rental datepicker to left bar -->
+        <xpath expr="//aside[@id='products_grid_before']//div//div[1]" position="before">
+            <t t-if="is_view_active('website_sale_renting.shop_rental_datepicker_opt')">
+                <div class="accordion-item nav-item mb-1 border-0">
+                    <h6 class="mb-3">
+                        <b>Rental Period</b>
+                    </h6>
+                    <t t-call="website_sale_renting.datepicker"/>
+                </div>
+            </t>
+        </xpath>
+        <!-- Allow rental datepicker by itself in offcanvas -->
+        <xpath expr="//button[@data-bs-target='#o_wsale_offcanvas']" position="attributes">
+            <attribute name="t-if" add=" or is_view_active('website_sale_renting.shop_rental_datepicker_opt')" separator=" "/>
+        </xpath>
+    </template>
+</odoo>

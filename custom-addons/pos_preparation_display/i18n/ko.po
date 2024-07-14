@@ -1,0 +1,509 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_preparation_display
+# 
+# Translators:
+# JH CHOI <hwangtog@gmail.com>, 2023
+# Wil Odoo, 2023
+# Daye Jeong, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Daye Jeong, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "<span>Average time</span>"
+msgstr "<span>평균 시간</span>"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "<span>In progress</span>"
+msgstr "<span>진행 중</span>"
+
+#. module: pos_preparation_display
+#. odoo-python
+#: code:addons/pos_preparation_display/models/preparation_display.py:0
+#, python-format
+msgid "A preparation display must have a minimum of one step."
+msgstr "준비 화면에는 최소한 하나의 단계가 있어야 합니다."
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__access_token
+msgid "Access Token"
+msgstr "사용 권한 토큰"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__alert_timer
+msgid "Alert timer (min)"
+msgstr "경고 타이머 (분)"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/stages/stages.xml:0
+#, python-format
+msgid "All"
+msgstr "전체"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+msgid "All PoS"
+msgstr "전체 POS"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+msgid "All categories"
+msgstr "전체 카테고리"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_order__order_stage_ids
+msgid "All the stage ids in which the order is placed"
+msgstr "주문이 접수되는 전체 단계 ID"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_reset_wizard
+msgid ""
+"Archive all preparation display's orders for a fresh start. This will not "
+"affect the PoS order history."
+msgstr "다시 시작하기 위해 준비 화면의 주문 전체를 보관 처리합니다. POS의 주문 내역에는 영향이 없습니다. "
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_display__average_time
+msgid "Average time of all order that not in a done stage."
+msgstr "완료 단계에 있지 않은 전체 주문의 평균 시간입니다."
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_reset_wizard
+msgid "Check products"
+msgstr "품목 확인"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Clear All Filters"
+msgstr "모든 필터 제거"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Close"
+msgstr "닫기"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__color
+msgid "Color"
+msgstr "색상"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__company_id
+msgid "Company"
+msgstr "회사"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "Configure"
+msgstr "설정"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/order/order.xml:0
+#, python-format
+msgid "Delete"
+msgstr "삭제"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Delete All"
+msgstr "전체 삭제"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_order__displayed
+msgid ""
+"Determines whether the order should be displayed on the preparation screen"
+msgstr "주문을 준비 화면에 표시할지 여부를 결정합니다."
+
+#. module: pos_preparation_display
+#: model_terms:ir.actions.act_window,help:pos_preparation_display.action_preparation_display
+msgid ""
+"Different products and categories are sent to different tablets and screens."
+msgstr "서로 다른 품목 및 카테고리가 다른 태블릿과 화면으로 전송됩니다."
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_reset_wizard
+msgid "Discard"
+msgstr "취소"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Explore demo data"
+msgstr "데모 데이터 살펴보기"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/override/point_of_sale/pos_store.js:0
+#, python-format
+msgid "Failed in sending the changes to preparation display"
+msgstr "변경 사항을 준비 화면으로 전송하지 못했습니다."
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Filters"
+msgstr "필터"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_order__pos_order_id
+msgid "ID of the original PoS order"
+msgstr "원래 POS 주문의 ID"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__internal_note
+msgid "Internal Note"
+msgstr "내부 노트"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_orderline__internal_note
+msgid "Internal notes written at the time of the order"
+msgstr "주문 시 기록한 내부 메모"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__contains_bar_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_search
+msgid "Is a Bar/Restaurant"
+msgstr "바/레스토랑 유무"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__done
+msgid "Is the order done"
+msgstr "주문 완료 여부"
+
+#. module: pos_preparation_display
+#: model:ir.actions.server,name:pos_preparation_display.action_pos_preparation_display_kitchen_display
+#: model:ir.ui.menu,name:pos_preparation_display.menu_point_kitchen_display_root
+msgid "Kitchen Display"
+msgstr "주방 디스플레이"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Loading..."
+msgstr "불러오는 중..."
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__name
+msgid "Name"
+msgstr "이름"
+
+#. module: pos_preparation_display
+#: model_terms:ir.actions.act_window,help:pos_preparation_display.action_preparation_display
+msgid "Need a touchscreen interface to manage order ?"
+msgstr "주문 관리를 위한 터치스크린 인터페이스가 필요하신가요?"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "No data available."
+msgstr "사용가능한 데이타가 없습니다."
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+msgid "Offer"
+msgstr "제안"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "Open Preparation Display"
+msgstr "준비 화면 열기"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__order_id
+msgid "Order"
+msgstr "주문"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__preparation_display_order_line_ids
+msgid "Order Lines"
+msgstr "주문 명세"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__order_stage_ids
+msgid "Order Stage"
+msgstr "주문 단계"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__average_time
+msgid "Order average time"
+msgstr "주문 평균 시간"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__order_count
+msgid "Order count"
+msgstr "주문 수"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__displayed
+msgid "Order is displayed"
+msgstr "주문이 표시됩니다"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__pos_config_ids
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__pos_config_id
+msgid "Point of Sale"
+msgstr "POS"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "점포판매시스템 주문"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_session
+msgid "Point of Sale Session"
+msgstr "점포판매시스템 기간"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_orderline
+msgid "Point of Sale preparation order line"
+msgstr "POS 준비 주문 내역"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_stage
+msgid "Point of Sale preparation stage"
+msgstr "POS 준비 단계"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__pos_order_id
+msgid "Pos Order"
+msgstr "Pos 주문"
+
+#. module: pos_preparation_display
+#: model:ir.actions.act_url,name:pos_preparation_display.action_pos_preparation_display_bar_restaurant_filter_link
+#: model:ir.actions.act_window,name:pos_preparation_display.action_preparation_display
+#: model:ir.actions.act_window,name:pos_preparation_display.action_preparation_display_bar_restaurant_filter
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__preparation_display_id
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_search
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_tree
+msgid "Preparation Display"
+msgstr "준비 표시"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__preparation_display_order_id
+msgid "Preparation Display Order"
+msgstr "준비 화면 주문"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__preparation_display_id
+msgid "Preparation display"
+msgstr "준비 화면"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_order
+msgid "Preparation orders"
+msgstr "준비 주문"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__product_id
+msgid "Product ID"
+msgstr "품목 아이디"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__category_ids
+msgid "Product categories"
+msgstr "품목 카테고리"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_display__category_ids
+msgid "Product categories that will be displayed on this screen."
+msgstr "이 화면에 표시될 품목 카테고리입니다."
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__product_cancelled
+msgid "Quantity of cancelled product"
+msgstr "취소된 품목 수량"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__product_quantity
+msgid "Quantity of ordered product"
+msgstr "주문한 품목 수량"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Recall"
+msgstr "리콜"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/order/order.xml:0
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_reset_wizard
+#, python-format
+msgid "Reset"
+msgstr "초기화"
+
+#. module: pos_preparation_display
+#. odoo-python
+#: code:addons/pos_preparation_display/models/preparation_display.py:0
+#, python-format
+msgid "Reset Preparation Display"
+msgstr "준비 화면 초기화"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_reset_wizard
+msgid "Reset all current order in a preparation display"
+msgstr "준비 화면에서 현재 주문 전체를 초기화"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "Reset all orders"
+msgstr "전체 주문 초기화"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__attribute_value_ids
+msgid "Selected Attributes"
+msgstr "선택 속성"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/override/point_of_sale/pos_store.js:0
+#, python-format
+msgid "Send failed"
+msgstr "보내기 실패"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__sequence
+msgid "Sequence"
+msgstr "순서"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__stage_id
+msgid "Stage"
+msgstr "단계"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_order_stage
+msgid "Stage of orders by preparation display"
+msgstr "준비 화면별 주문 단계"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__stage_ids
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+msgid "Stages"
+msgstr "단계"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__todo
+msgid "Status of the orderline"
+msgstr "주문 내역 상태"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_orderline__todo
+msgid "The status of a command line, todo or not"
+msgstr "명령줄 상태, 실행 여부"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_stage__alert_timer
+msgid "Timer after which the order will be highlighted"
+msgstr "주문이 강조 표시된 후 타이머"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "or simply wait for orders to be sent for preparation."
+msgstr "또는 주문이 전송될 때까지 기다리세요."
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/order/order.xml:0
+#, python-format
+msgid "products"
+msgstr "제품"

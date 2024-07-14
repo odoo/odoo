@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<!-- NOTEBOOK -->
+  <t t-name="web_studio.Notebook.Hook" t-inherit="web.Notebook">
+    <xpath expr="//li[@t-foreach='navItems']" position="attributes" >
+      <attribute name="t-att-class">{o_web_studio_show_invisible: !navItem[1].studioIsVisible, "o-web-studio-editor--element-clickable": true}</attribute>
+      <attribute name="t-on-click">(ev) => env.config.onNodeClicked(navItem[1].studioXpath)</attribute>
+      <attribute name="t-att-data-studio-xpath">navItem[1].studioXpath</attribute>
+    </xpath>
+    <xpath expr="//li[@t-foreach='navItems']" position="after" >
+      <li class="nav-item" t-on-click.prevent="onNewPageClicked">
+        <a href="#" class="nav-link" >
+          <i class="fa fa-plus-square" />
+        </a>
+      </li>
+    </xpath>
+    <xpath expr="//div[contains(@class,'tab-pane')]/t[2]" position="after">
+      <t t-set="studioHookProps" t-value="props.slots[state.currentPage].studioHookProps" />
+      <StudioHook t-if="studioHookProps" t-props="studioHookProps" />
+    </xpath>
+  </t>
+
+  <t t-name="web_studio.FormViewAddButtonAction" t-inherit="web.StatusBarButtons">
+    <xpath expr="//div/t[3]" position="after">
+      <div class="mt-2 mb-2">
+        <AddButtonAction/>
+      </div>
+    </xpath>
+  </t>
+
+  <t t-name="web_studio.StatusBarFieldHook">
+    <div class="o_web_studio_statusbar_hook" t-on-click="onClick">
+      Add a pipeline status bar
+    </div>
+  </t>
+
+  <t t-name="web_studio.FormLabel" t-inherit="web.FormLabel">
+    <xpath expr="./label" position="attributes" >
+      <attribute name="t-ref">rootRef</attribute>
+    </xpath>
+  </t>
+
+  <t t-name="web_studio.AvatarHook">
+    <div t-att-class="props.class" t-on-click="onClick">
+      Add Picture
+    </div>
+  </t>
+
+  <t t-name="web_studio.ButtonHook">
+      <button class="btn oe_stat_button btn-outline-secondary flex-grow-1 flex-lg-grow-0 o_web_studio_button_hook" t-on-click.stop="onClick" data-tooltip="Add a button"/>
+  </t>
+
+</templates>

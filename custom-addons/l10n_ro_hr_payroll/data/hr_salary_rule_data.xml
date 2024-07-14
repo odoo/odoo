@@ -1,0 +1,106 @@
+<?xml version="1.0" ?>
+<odoo>
+    <!-- Sources : https://bpion.com/doing-business-in-romania-payroll-and-hr/ -->
+    <record id="l10n_ro_employee_salary_cas" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ro_hr_payroll.l10n_ro_cas_category"/>
+        <field name="name">Security Contributions (CAS)</field>
+        <field name="code">CAS</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = -25
+result = categories['GROSS']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_ro_hr_payroll.hr_payroll_structure_ro_employee_salary"/>
+    </record>
+
+    <record id="l10n_ro_employee_salary_cass" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ro_hr_payroll.l10n_ro_cass_category"/>
+        <field name="name">Social Health Insurance (CASS)</field>
+        <field name="code">CASS</field>
+        <field name="sequence">120</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = -10
+result = categories['GROSS']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_ro_hr_payroll.hr_payroll_structure_ro_employee_salary"/>
+    </record>
+
+    <record id="l10n_ro_employee_salary_income_tax" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ro_hr_payroll.l10n_ro_income_tax_category"/>
+        <field name="name">Income Tax</field>
+        <field name="code">INCOMETAX</field>
+        <field name="sequence">130</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = -10
+result = categories['GROSS']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_ro_hr_payroll.hr_payroll_structure_ro_employee_salary"/>
+    </record>
+
+    <record id="l10n_ro_employee_salary_cam" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ro_hr_payroll.l10n_ro_cam_category"/>
+        <field name="name">Work Insurance (CAM)</field>
+        <field name="code">CAM</field>
+        <field name="sequence">140</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = 2.25
+result = categories['GROSS']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_ro_hr_payroll.hr_payroll_structure_ro_employee_salary"/>
+    </record>
+
+    <record id="l10n_ro_employee_salary_unemployed_disabled" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ro_hr_payroll.l10n_ro_unemployed_disabled_category"/>
+        <field name="name">Unemployed Disabled People Contributions</field>
+        <field name="code">UNEMPDISABLED</field>
+        <field name="sequence">145</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+number_of_employees = len(contract.employee_id._get_all_contracts(payslip.date_from, payslip.date_to, ['open', 'close']))
+result_rate = 4 if number_of_employees &gt; 50 else 0
+result = categories['GROSS']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_ro_hr_payroll.hr_payroll_structure_ro_employee_salary"/>
+    </record>
+
+    <record id="l10n_ro_employee_salary_pension" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ro_hr_payroll.l10n_ro_pension_category"/>
+        <field name="name">Pension Contributions</field>
+        <field name="code">PENSION</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if contract.l10n_ro_work_type == "2":
+    result_rate = 4
+elif contract.l10n_ro_work_type == "3":
+    result_rate = 8
+else:
+    result_rate = 0
+result = categories['GROSS']
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_ro_hr_payroll.hr_payroll_structure_ro_employee_salary"/>
+    </record>
+
+</odoo>

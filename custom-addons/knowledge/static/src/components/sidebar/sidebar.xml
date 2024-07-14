@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="knowledge.Sidebar">
+        <aside class="o_knowledge_sidebar d-flex flex-shrink-0 d-print-none bg-view"
+            t-attf-style="--knowledge-article-sidebar-size: #{state.sidebarSize}px">
+            <div class="d-flex flex-column flex-grow-1 min-w-0">
+                <!-- Search bar -->
+                <div class="d-flex align-items-center gap-2 px-md-3 px-3 ps-2 py-3">
+                    <a role="button" t-on-click="() => env.toggleAsideMobile()" class="o_knowledge_burger_icon d-md-none btn btn-light px-2 py-1">
+                        <i class="fa fa-lg fa-bars" title="Toggle aside menu"/>
+                    </a>
+                    <a t-if="!isInternalUser" class="fa fs-3 fa-home d-inline-block me-2" href="/my"
+                        title="Home"/>
+                    <div id="knowledge_search_bar" data-hotkey="f"
+                         class="d-flex align-items-center border bg-light rounded cursor-pointer flex-grow-1" 
+                         t-on-click="onSearchBarClick">
+                        <div class="flex-grow-1 px-2 py-1">Search an article...</div>
+                        <i class="oi oi-search pe-2" title="search"/>
+                    </div>
+                </div>
+                <!-- File explorer -->
+                <div t-if="state.loading" class="p-5 text-center">
+                    <i class="fa fa-circle-o-notch fa-2x fa-spin" title="loader" role="img"/>
+                </div>
+                <t t-else="" t-call="knowledge.ArticlesTree"/>
+            </div>
+            <span class="o_knowledge_article_form_resizer d-none d-md-flex opacity-75 opacity-100-hover"
+                  t-on-pointerdown="resize">
+                  <span class="bg-300 pe-1 ms-1"/>
+            </span>
+        </aside>
+    </t>
+
+    <t t-name="knowledge.ArticlesTree">
+        <div t-attf-class="o_knowledge_tree flex-fill position-relative o_scroll_view d-flex flex-column px-3 #{state.dragging ? 'o_dragging' : ''}">
+            <div t-ref="favoriteTree" t-if="state.favoriteIds.length" class="o_favorite_container">
+                <KnowledgeSidebarFavoriteSection rootIds="state.favoriteIds" unfoldedIds="unfoldedFavoritesIds" record="props.record"/>
+            </div>
+            <div t-ref="mainTree" class="d-flex flex-column flex-fill">
+                <KnowledgeSidebarWorkspaceSection rootIds="state.workspaceIds" unfoldedIds="unfoldedArticlesIds" record="props.record"/>
+                <KnowledgeSidebarSharedSection rootIds="state.sharedIds" unfoldedIds="unfoldedArticlesIds" record="props.record"/>
+                <KnowledgeSidebarPrivateSection rootIds="state.privateIds" unfoldedIds="unfoldedArticlesIds" record="props.record"/>
+                <!-- Trash is a "o_section" so that one can drop articles in the trash -->
+                <div t-if="isInternalUser" class="o_section o_knowledge_sidebar_trash w-100 py-2 position-sticky bg-view mt-auto">
+                    <a t-if="!state.dragging" href="#" role="button" t-on-click="browseTemplates"
+                        class="o_knowledge_load_template_btn btn btn-light d-block fw-normal text-black text-start text-truncate">
+                        <i class="fa fa-fw fs-6 fa-image me-1"/>
+                        <span>Browse Templates</span>
+                    </a>
+                    <div role="button" class="btn btn-light d-block fw-normal text-black text-start text-truncate"
+                        t-on-click="() => actionService.doAction('knowledge.knowledge_article_action_trashed')">
+                        <i class="fa fa-fw fa-trash me-1"/>
+                        <span class="flex-grow-1">
+                            <t t-if="state.dragging">Drop here to delete this article</t>
+                            <t t-else="">Open the Trash</t>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

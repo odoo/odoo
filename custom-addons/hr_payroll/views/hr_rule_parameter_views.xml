@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_rule_parameter_view_form" model="ir.ui.view">
+        <field name="name">hr.rule.parameter.form</field>
+        <field name="model">hr.rule.parameter</field>
+        <field name="arch" type="xml">
+            <form string="Salary Rule Parameter">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                    </group>
+                    <div string="Versions"  class="o_salary_rule_container position-relative" invisible="id">
+                        <group class="pe-none user-select-none mt-4 opacity-25 lh-1">
+                            <div>
+                                <span>Versions</span>
+                                <field name="parameter_version_ids"
+                                        colspan="2" nolabel="1" invisible="id">
+                                    <tree>
+                                        <field name="date_from"/>
+                                        <field name="parameter_value"/>
+                                    </tree>
+                                </field>
+                            </div>
+                        </group>
+                        <span class="bg-white opacity-75 w-100 h-100 o_salary_rule_overlay position-absolute top-0 end-0 w-100 h-100 text-center d-flex justify-content-center flex-column fs-3">
+                            Save your Salary Rule in order to add Parameter Values.
+                        </span>
+                    </div>
+                    <group string="Versions" invisible="not id">
+                        <field name="parameter_version_ids" nolabel="1" colspan="2"
+                                context="{'default_rule_parameter_id': id}">
+                            <tree editable="bottom">
+                                <field name="date_from"/>
+                                <field name="parameter_value"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" type="html"
+                                options="{'collaborative': true, 'resizable': false}"
+                                placeholder="Note a description of your parameter, when it's used, how is it computed, what's the source, ..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_rule_parameter_view_tree" model="ir.ui.view">
+        <field name="name">hr.rule.parameter.tree</field>
+        <field name="model">hr.rule.parameter</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="code"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_rule_parameter_view_search" model="ir.ui.view">
+        <field name="name">hr.rule.parameter.search</field>
+        <field name="model">hr.rule.parameter</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_rule_parameter_action" model="ir.actions.act_window">
+        <field name="name">Salary Rule Parameters</field>
+        <field name="res_model">hr.rule.parameter</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new salary rule parameter
+            </p>
+        </field>
+    </record>
+</odoo>

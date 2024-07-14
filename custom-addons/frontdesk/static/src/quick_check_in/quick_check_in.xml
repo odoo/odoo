@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="frontdesk.QuickCheckIn">
+        <div class="position-relative position-lg-absolute top-0 bottom-0 w-100 h-100 p-3 p-md-4 overflow-auto" t-att-class="props.theme === 'light' ? 'border bg-100' : 'bg-800'">
+            <h3 class="mb-0">Quick Check In</h3>
+            <div class="mt-2 text-muted">Are you one of these people?</div>
+            <div class="d-flex flex-column gap-2 mt-4">
+                <t t-foreach="props.plannedVisitors" t-as="visitor" t-key="visitor.id">
+                    <div class="btn btn-secondary" t-on-click="() => this._onClick(visitor)" role="button">
+                        <div class="visitor-card-body d-flex justify-content-between align-items-center gap-3">
+                            <div class="text-start text-break">
+                                <div t-out="visitor.name"/>
+                                <div class="small opacity-75" t-if="visitor.company" t-out="visitor.company"/>
+                            </div>
+                            <i class="oi oi-arrow-right"/>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

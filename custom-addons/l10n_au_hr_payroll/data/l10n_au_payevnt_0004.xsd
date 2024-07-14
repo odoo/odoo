@@ -1,0 +1,751 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://www.sbr.gov.au/ato/payevnt" elementFormDefault="qualified" targetNamespace="http://www.sbr.gov.au/ato/payevnt" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="PAYEVNT" type="tns:PAYEVNT" />
+	<xs:complexType name="PAYEVNT">
+		<xs:annotation>
+			<xs:documentation>This schema was generated from a template.</xs:documentation>
+			<xs:documentation>Manual changes to this file will be overwritten if the schema is regenerated.</xs:documentation>
+			<xs:documentation>Generated on 2021-04-14T14:05:58, by ESR Version 2.4.42.0 using ESR Database SWS_EA_ESR_Cloud_Prod</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="Rp" type="tns:Rp">
+				<xs:annotation>
+					<xs:documentation>Reporting Party</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="Int" type="tns:Int">
+				<xs:annotation>
+					<xs:documentation>Intermediary</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="OrganisationName">
+		<xs:annotation>
+			<xs:documentation>Payer Name</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="DetailsOrganisationalNameT">
+				<xs:annotation>
+					<xs:documentation>Payer Organisation Name</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT5</xs:documentation>
+					<xs:documentation>Report Guidance: For an ABN, use the legal name of the Payer as per Australian Business Register.  For a WPN, use the Payer name registered with the ATO.</xs:documentation>
+					<xs:documentation>Business Definition: The full name by which an organisation is known.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+						<xs:maxLength value="200" />
+						<xs:pattern value="([0-9a-zA-Z \.,\?!\(\)\{\}:;'\|\-_=\\/@#$%\*=&amp;&quot;])*" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="PersonUnstructuredNameFullNameT">
+				<xs:annotation>
+					<xs:documentation>Payer Contact Name</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT6</xs:documentation>
+					<xs:documentation>Report Guidance: Name of the person who will be contacted regarding the STP report. All questions regarding the payroll will be directed to this contact.</xs:documentation>
+					<xs:documentation>Business Definition: The name of a person represented in a free format text. It may contain a complete name (first, family and other given names) or parts of it. This representation of a person's name is commonly used where the name is not used for proof of identity matching, hence it is not required to be strongly validated. Examples of its use are: The name of the person who is used as a contact on behalf of an Organisation or the name of the recipient of a correspondence.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="200" />
+						<xs:pattern value="([0-9a-zA-Z \.,\?\(\)\{\}:;'\|\-_=\\/@#$%\*=&amp;&quot;])*" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ElectronicContact">
+		<xs:annotation>
+			<xs:documentation>Payer Electronic Contact</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="ElectronicMailAddressT">
+				<xs:annotation>
+					<xs:documentation>Payer E-mail Address</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT15</xs:documentation>
+					<xs:documentation>Report Guidance: E-mail for the nominated contact person. This will be used for certain processing enquiries and general correspondence. 
+The E-mail Address must begin with a non-whitespace character, then be followed by any number of non-whitespace characters, an @ symbol, 1 or more non-whitespace characters, a period and a further 1 or more non-whitespace characters. Valid characters are one of the following: A to Z a to z 0 to 9 ! @ $ % &amp; * ( ) - _ = [ ] ; : ' "" , . ? / or a space character.</xs:documentation>
+					<xs:documentation>Business Definition: Denotes the address of an electronic mail service.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+						<xs:maxLength value="200" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="TelephoneMinimalN">
+				<xs:annotation>
+					<xs:documentation>Payer Business Hours Phone Number</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT16</xs:documentation>
+					<xs:documentation>Report Guidance: The telephone number for the nominated contact person for the payer. It will be used to call the contact during business hours regarding any issues to do with the STP report. Include area code. If outside Australia, include country code. 1800, 13 numbers and mobile numbers are allowed.</xs:documentation>
+					<xs:documentation>Business Definition: The number that is associated to a unique provision of telephone service.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+						<xs:maxLength value="16" />
+						<xs:pattern value="([0-9a-zA-Z ])*" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AddressDetailsPostal">
+		<xs:annotation>
+			<xs:documentation>Payer Postal Address</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="1" name="PostcodeT" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payer Postcode</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT12</xs:documentation>
+					<xs:documentation>Report Guidance: This is the postcode of the payer's registered ABN address or principal place of business. If country is Australia, postcode must be supplied. For a country other than Australia, do not supply postcode.</xs:documentation>
+					<xs:documentation>Business Definition: The Australian descriptor for a postal delivery area, aligned with locality, suburb or place</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[0-9]{4}" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="CountryC" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payer Country Code</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT14</xs:documentation>
+					<xs:documentation>Report Guidance: The country code for the Payer’s registered ABN address or principal place of business. Must be supplied for countries other than Australia. It does not need to, but may, be supplied if country is Australia.</xs:documentation>
+					<xs:documentation>Business Definition: This represents the Country Code as prescribed by AS4590 and inherited from ISO 3166</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="ad" />
+						<xs:enumeration value="ae" />
+						<xs:enumeration value="af" />
+						<xs:enumeration value="ag" />
+						<xs:enumeration value="ai" />
+						<xs:enumeration value="al" />
+						<xs:enumeration value="am" />
+						<xs:enumeration value="ao" />
+						<xs:enumeration value="aq" />
+						<xs:enumeration value="ar" />
+						<xs:enumeration value="as" />
+						<xs:enumeration value="at" />
+						<xs:enumeration value="au" />
+						<xs:enumeration value="aw" />
+						<xs:enumeration value="ax" />
+						<xs:enumeration value="az" />
+						<xs:enumeration value="ba" />
+						<xs:enumeration value="bb" />
+						<xs:enumeration value="bd" />
+						<xs:enumeration value="be" />
+						<xs:enumeration value="bf" />
+						<xs:enumeration value="bg" />
+						<xs:enumeration value="bh" />
+						<xs:enumeration value="bi" />
+						<xs:enumeration value="bj" />
+						<xs:enumeration value="bl" />
+						<xs:enumeration value="bm" />
+						<xs:enumeration value="bn" />
+						<xs:enumeration value="bo" />
+						<xs:enumeration value="bq" />
+						<xs:enumeration value="br" />
+						<xs:enumeration value="bs" />
+						<xs:enumeration value="bt" />
+						<xs:enumeration value="bv" />
+						<xs:enumeration value="bw" />
+						<xs:enumeration value="by" />
+						<xs:enumeration value="bz" />
+						<xs:enumeration value="ca" />
+						<xs:enumeration value="cc" />
+						<xs:enumeration value="cd" />
+						<xs:enumeration value="cf" />
+						<xs:enumeration value="cg" />
+						<xs:enumeration value="ch" />
+						<xs:enumeration value="ci" />
+						<xs:enumeration value="ck" />
+						<xs:enumeration value="cl" />
+						<xs:enumeration value="cm" />
+						<xs:enumeration value="cn" />
+						<xs:enumeration value="co" />
+						<xs:enumeration value="cr" />
+						<xs:enumeration value="cu" />
+						<xs:enumeration value="cv" />
+						<xs:enumeration value="cw" />
+						<xs:enumeration value="cx" />
+						<xs:enumeration value="cy" />
+						<xs:enumeration value="cz" />
+						<xs:enumeration value="de" />
+						<xs:enumeration value="dj" />
+						<xs:enumeration value="dk" />
+						<xs:enumeration value="dm" />
+						<xs:enumeration value="do" />
+						<xs:enumeration value="dz" />
+						<xs:enumeration value="ec" />
+						<xs:enumeration value="ee" />
+						<xs:enumeration value="eg" />
+						<xs:enumeration value="eh" />
+						<xs:enumeration value="er" />
+						<xs:enumeration value="es" />
+						<xs:enumeration value="et" />
+						<xs:enumeration value="fi" />
+						<xs:enumeration value="fj" />
+						<xs:enumeration value="fk" />
+						<xs:enumeration value="fm" />
+						<xs:enumeration value="fo" />
+						<xs:enumeration value="fr" />
+						<xs:enumeration value="ga" />
+						<xs:enumeration value="gb" />
+						<xs:enumeration value="gd" />
+						<xs:enumeration value="ge" />
+						<xs:enumeration value="gf" />
+						<xs:enumeration value="gg" />
+						<xs:enumeration value="gh" />
+						<xs:enumeration value="gi" />
+						<xs:enumeration value="gl" />
+						<xs:enumeration value="gm" />
+						<xs:enumeration value="gn" />
+						<xs:enumeration value="gp" />
+						<xs:enumeration value="gq" />
+						<xs:enumeration value="gr" />
+						<xs:enumeration value="gs" />
+						<xs:enumeration value="gt" />
+						<xs:enumeration value="gu" />
+						<xs:enumeration value="gw" />
+						<xs:enumeration value="gy" />
+						<xs:enumeration value="hk" />
+						<xs:enumeration value="hm" />
+						<xs:enumeration value="hn" />
+						<xs:enumeration value="hr" />
+						<xs:enumeration value="ht" />
+						<xs:enumeration value="hu" />
+						<xs:enumeration value="id" />
+						<xs:enumeration value="ie" />
+						<xs:enumeration value="il" />
+						<xs:enumeration value="im" />
+						<xs:enumeration value="in" />
+						<xs:enumeration value="io" />
+						<xs:enumeration value="iq" />
+						<xs:enumeration value="ir" />
+						<xs:enumeration value="is" />
+						<xs:enumeration value="it" />
+						<xs:enumeration value="je" />
+						<xs:enumeration value="jm" />
+						<xs:enumeration value="jo" />
+						<xs:enumeration value="jp" />
+						<xs:enumeration value="ke" />
+						<xs:enumeration value="kg" />
+						<xs:enumeration value="kh" />
+						<xs:enumeration value="ki" />
+						<xs:enumeration value="km" />
+						<xs:enumeration value="kn" />
+						<xs:enumeration value="kp" />
+						<xs:enumeration value="kr" />
+						<xs:enumeration value="kw" />
+						<xs:enumeration value="ky" />
+						<xs:enumeration value="kz" />
+						<xs:enumeration value="la" />
+						<xs:enumeration value="lb" />
+						<xs:enumeration value="lc" />
+						<xs:enumeration value="li" />
+						<xs:enumeration value="lk" />
+						<xs:enumeration value="lr" />
+						<xs:enumeration value="ls" />
+						<xs:enumeration value="lt" />
+						<xs:enumeration value="lu" />
+						<xs:enumeration value="lv" />
+						<xs:enumeration value="ly" />
+						<xs:enumeration value="ma" />
+						<xs:enumeration value="mc" />
+						<xs:enumeration value="md" />
+						<xs:enumeration value="me" />
+						<xs:enumeration value="mf" />
+						<xs:enumeration value="mg" />
+						<xs:enumeration value="mh" />
+						<xs:enumeration value="mk" />
+						<xs:enumeration value="ml" />
+						<xs:enumeration value="mm" />
+						<xs:enumeration value="mn" />
+						<xs:enumeration value="mo" />
+						<xs:enumeration value="mp" />
+						<xs:enumeration value="mq" />
+						<xs:enumeration value="mr" />
+						<xs:enumeration value="ms" />
+						<xs:enumeration value="mt" />
+						<xs:enumeration value="mu" />
+						<xs:enumeration value="mv" />
+						<xs:enumeration value="mw" />
+						<xs:enumeration value="mx" />
+						<xs:enumeration value="my" />
+						<xs:enumeration value="mz" />
+						<xs:enumeration value="na" />
+						<xs:enumeration value="nc" />
+						<xs:enumeration value="ne" />
+						<xs:enumeration value="nf" />
+						<xs:enumeration value="ng" />
+						<xs:enumeration value="ni" />
+						<xs:enumeration value="nl" />
+						<xs:enumeration value="no" />
+						<xs:enumeration value="np" />
+						<xs:enumeration value="nr" />
+						<xs:enumeration value="nu" />
+						<xs:enumeration value="nz" />
+						<xs:enumeration value="om" />
+						<xs:enumeration value="pa" />
+						<xs:enumeration value="pe" />
+						<xs:enumeration value="pf" />
+						<xs:enumeration value="pg" />
+						<xs:enumeration value="ph" />
+						<xs:enumeration value="pk" />
+						<xs:enumeration value="pl" />
+						<xs:enumeration value="pm" />
+						<xs:enumeration value="pn" />
+						<xs:enumeration value="pr" />
+						<xs:enumeration value="ps" />
+						<xs:enumeration value="pt" />
+						<xs:enumeration value="pw" />
+						<xs:enumeration value="py" />
+						<xs:enumeration value="qa" />
+						<xs:enumeration value="re" />
+						<xs:enumeration value="ro" />
+						<xs:enumeration value="rs" />
+						<xs:enumeration value="ru" />
+						<xs:enumeration value="rw" />
+						<xs:enumeration value="sa" />
+						<xs:enumeration value="sb" />
+						<xs:enumeration value="sc" />
+						<xs:enumeration value="sd" />
+						<xs:enumeration value="se" />
+						<xs:enumeration value="sg" />
+						<xs:enumeration value="sh" />
+						<xs:enumeration value="si" />
+						<xs:enumeration value="sj" />
+						<xs:enumeration value="sk" />
+						<xs:enumeration value="sl" />
+						<xs:enumeration value="sm" />
+						<xs:enumeration value="sn" />
+						<xs:enumeration value="so" />
+						<xs:enumeration value="sr" />
+						<xs:enumeration value="ss" />
+						<xs:enumeration value="st" />
+						<xs:enumeration value="sv" />
+						<xs:enumeration value="sx" />
+						<xs:enumeration value="sy" />
+						<xs:enumeration value="sz" />
+						<xs:enumeration value="tc" />
+						<xs:enumeration value="td" />
+						<xs:enumeration value="tf" />
+						<xs:enumeration value="tg" />
+						<xs:enumeration value="th" />
+						<xs:enumeration value="tj" />
+						<xs:enumeration value="tk" />
+						<xs:enumeration value="tl" />
+						<xs:enumeration value="tm" />
+						<xs:enumeration value="tn" />
+						<xs:enumeration value="to" />
+						<xs:enumeration value="tr" />
+						<xs:enumeration value="tt" />
+						<xs:enumeration value="tv" />
+						<xs:enumeration value="tw" />
+						<xs:enumeration value="tz" />
+						<xs:enumeration value="ua" />
+						<xs:enumeration value="ug" />
+						<xs:enumeration value="um" />
+						<xs:enumeration value="us" />
+						<xs:enumeration value="uy" />
+						<xs:enumeration value="uz" />
+						<xs:enumeration value="va" />
+						<xs:enumeration value="vc" />
+						<xs:enumeration value="ve" />
+						<xs:enumeration value="vg" />
+						<xs:enumeration value="vi" />
+						<xs:enumeration value="vn" />
+						<xs:enumeration value="vu" />
+						<xs:enumeration value="wf" />
+						<xs:enumeration value="ws" />
+						<xs:enumeration value="ye" />
+						<xs:enumeration value="yt" />
+						<xs:enumeration value="za" />
+						<xs:enumeration value="zm" />
+						<xs:enumeration value="zw" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="IncomeTaxAndRemuneration">
+		<xs:annotation>
+			<xs:documentation>Payer Period Totals</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="PayAsYouGoWithholdingTaxWithheldA">
+				<xs:annotation>
+					<xs:documentation>Payer Total PAYGW Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT20</xs:documentation>
+					<xs:documentation>Report Guidance: This is reported as the payer's PAYGW obligation for the payroll period ending in the pay date. The payer Total PAYGW amount includes the total value for the payroll period being reported and represents the difference between the last reported YTD for the payees and the current report.  
+This element must not be supplied in the Update Event.
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: This is the value, during the relevant period, for the amount withheld under the Pay As You Go (PAYG) arrangement.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="-99999999999.99" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="TotalGrossPaymentsWithholdingA">
+				<xs:annotation>
+					<xs:documentation>Payer Total Gross Payments Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT22</xs:documentation>
+					<xs:documentation>Report Guidance: This is reported as the Payer's Total Gross payments for the payroll period ending in the pay date. It includes the total value for the payroll period being reported and represents the difference between the last reported YTD for the payees and the current report. 
+This element must not be supplied in the Update Event.
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: The total of salary, wages and other payments paid during the reporting period from which an amount must be withheld.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="-99999999999.99" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="ChildSupportGarnisheeA" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Child Support Total Garnishee Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT103</xs:documentation>
+					<xs:documentation>Report Guidance: This is reported as the Child Support Garnishee total amount for the payroll period ending in the pay date. It includes the total value for the payroll period being reported and represents the difference between the last reported YTD for the employees and the current report. 
+This element must not be supplied in the Update Event.
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: This is the total amount an employer has garnished under section 72A of the Child Support (Registration and Collection) Act 1988 from employees’ pay during the reporting period.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="ChildSupportWithholdingA" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Child Support Total Deductions Amount</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT104</xs:documentation>
+					<xs:documentation>Report Guidance: This is reported as the Child Support Deductions total amount for the payroll period ending in the pay date. It includes the total value for the payroll period being reported and represents the difference between the last reported YTD for the employees and the current report. 
+This element must not be supplied in the Update Event.
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: This is the total amount an employer has deducted under section 45 of the Child Support (Registration and Collection) Act 1988 from employees’ pay during the reporting period.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="13" />
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="99999999999.99" />
+						<xs:fractionDigits value="2" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Payroll">
+		<xs:annotation>
+			<xs:documentation>Payroll</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="PaymentRecordTransactionD">
+				<xs:annotation>
+					<xs:documentation>Pay/Update Date</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT69</xs:documentation>
+					<xs:documentation>Report Guidance: For Submit event, this is the date on which the PAYG withholding for the Payroll Submit Event occurred. It is used to determine what PAYGW period the Payer Gross and PAYGW amounts are to be applied.
+For Update Event this is the As At date. It must be any date within the financial year that is being updated.</xs:documentation>
+					<xs:documentation>Business Definition: Date on which a payment has been made by an entity.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:date" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="InteractionRecordCt">
+				<xs:annotation>
+					<xs:documentation>Payee Record Count</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT70</xs:documentation>
+					<xs:documentation>Report Guidance: Defines the number of child or PAYEVNTEMP records associated with this Payer or PAYEVNT record.</xs:documentation>
+					<xs:documentation>Business Definition: The number of records included in an interaction.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:nonNegativeInteger">
+						<xs:maxInclusive value="99999999999" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="MessageTimestampGenerationDt">
+				<xs:annotation>
+					<xs:documentation>Run Date/Time Stamp</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT71</xs:documentation>
+					<xs:documentation>Report Guidance: A critical element used to determine the latest YTD income statement for the payee.  
+The timestamp must be formatted in UTC including the  Z for Zulu time to allow the ATO to convert to a consistent local time.   
+This date is the timestamp of when the YTD amount was calculated to sequence the income statement reports. It must represent the YTD figures of the payee at a point in time so that ATO can correctly sequence those YTD amounts according to the subsequent changes made in your payroll cycles. 
+This date should reflect whenever you generate a new result, including a full file replacement, for the discreet pay result that has updated the YTD amounts of the employees and where you generate a new obligation to report an update to PAYGW. 
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: The generation date and time (ISO 8601 - UTC) of a Business Signal.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:dateTime" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="InteractionTransactionId">
+				<xs:annotation>
+					<xs:documentation>Submission ID</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT84</xs:documentation>
+					<xs:documentation>Report Guidance: This is a critical element used by the ATO to identify the PAYEVNT and the payee income statements updated by that transaction. It is visible in online services for Business to allow payers to discreetly identify their reports.
+It must be unique across your ABN, Branch ID and BMS identifier regardless of whether the transaction is a submit event or update event.
+If requesting a full file replacement, use the submission ID of the initial PAYEVNT submit message being replaced.</xs:documentation>
+					<xs:documentation>Business Definition: This is a unique identifier to identify a transaction.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+						<xs:maxLength value="200" />
+						<xs:pattern value="([0-9a-zA-Z \.,\?\(\)\[\]:;'\-=\\/@$%\*&amp;!&quot;])*" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="AmendmentI">
+				<xs:annotation>
+					<xs:documentation>Full File Replacement Indicator</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT19</xs:documentation>
+					<xs:documentation>Report Guidance: This is used to indicate when this submission is a full file replacement.  
+True indicates the data provided in this transaction replaces data previously reported under the provided submission ID.  It cannot be true for Update events.
+False indicates this is the original submission or an Update event.</xs:documentation>
+					<xs:documentation>Business Definition: Indicator to identify whether the report contains original or amended data.</xs:documentation>
+					<xs:documentation>Business Guidance: A choice of TRUE/FALSE values.
+true = The report contains amended data
+false = The report does not contain amended data</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:boolean" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="IncomeTaxAndRemuneration" type="tns:IncomeTaxAndRemuneration">
+				<xs:annotation>
+					<xs:documentation>Payer Period Totals</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Declaration">
+		<xs:annotation>
+			<xs:documentation>Reporting Party Declaration</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="SignatoryIdentifierT">
+				<xs:annotation>
+					<xs:documentation>Payer Declarer Identifier</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT37</xs:documentation>
+					<xs:documentation>Report Guidance: The name of the individual that made the declaration for the Payer.</xs:documentation>
+					<xs:documentation>Business Definition: Name of the person that is making the declaration on behalf of the business or individual.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+						<xs:maxLength value="200" />
+						<xs:pattern value="[A-Za-z0-9@$%&amp;\*\(\)_\-=;:'&quot;,\.\?/ ]*" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="SignatureD">
+				<xs:annotation>
+					<xs:documentation>Payer Declaration Date</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT38</xs:documentation>
+					<xs:documentation>Report Guidance: This is the date the individual signed and accepted the terms of the declaration on behalf of the Payer.</xs:documentation>
+					<xs:documentation>Business Definition: This is the date on which the declaration is signed by the reporting entity.</xs:documentation>
+					<xs:documentation>Business Guidance: The actual date on which the declaration is signed by the reporting entity, not the date on which the relationship commenced or any 'default' or 'dummy' date.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:date" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="StatementAcceptedI">
+				<xs:annotation>
+					<xs:documentation>Payer Declaration Acceptance Indicator</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT39</xs:documentation>
+					<xs:documentation>Report Guidance: This indicates the Payer's acceptance of the declaration statement.</xs:documentation>
+					<xs:documentation>Business Definition: Indicates that the terms stated in the Declaration Text have been accepted or declined.</xs:documentation>
+					<xs:documentation>Business Guidance: A choice of TRUE/FALSE values.
+true = Indicates that the terms stated in the Declaration Text have been accepted.
+false = Indicates that the terms stated in the Declaration Text have been declined.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:boolean" />
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Rp">
+		<xs:annotation>
+			<xs:documentation>Reporting Party</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="SoftwareInformationBusinessManagementSystemId">
+				<xs:annotation>
+					<xs:documentation>BMS Identifier</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT63</xs:documentation>
+					<xs:documentation>Report Guidance: This is a unique identifier for the payroll instance. It must be a GUID as defined by RFC 4122. It acts as a payroll software serial number for the ABN/Branch/Payroll Id/TFN that isolates the YTD amounts reported. This allows reporting of discrete payee YTD amounts from a Payer who reports the same payee using the same payroll Id in more than one payroll solution for the financial year.
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: This identifies the Business Management System software used by the employer.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+						<xs:maxLength value="200" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="AustralianBusinessNumberId" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payer Australian Business Number</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT2</xs:documentation>
+					<xs:documentation>Report Guidance: Identifies the Payer who has the PAYGW reporting obligations and enables the ATO to record the payroll event against the correct record.  It must be the active ABN as registered on the ABR.  The ABN or WPN of the Payer must be reported.</xs:documentation>
+					<xs:documentation>Business Definition: A unique public identifier issued to all entities registered in the Australian Business Register (ABR), to be used in their dealings with government. Companies registered under the Corporations Law and business entities carrying on an enterprise in Australia are entitled to an ABN.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[0-9]{11}" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="WithholdingPayerNumberId" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payer Withholding Payer Number</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT3</xs:documentation>
+					<xs:documentation>Report Guidance: Identifies the payer who is responsible for the PAYGW reporting obligations and enables the ATO to record the payroll event against the correct record. It must be the WPN issued by the ATO. Either the WPN or ABN of the payer must be reported.</xs:documentation>
+					<xs:documentation>Business Definition: The Withholding Payer Number (WPN) is allocated to clients who have withholding obligations under Pay As You Go (PAYG) withholding but do not have an Australian Business Number (ABN). Its primary purpose is for quotation on payment summaries issued to employees. For example, private individuals not carrying on an enterprise employing a nanny or housekeeper, would be allocated a WPN.</xs:documentation>
+					<xs:documentation>Business Guidance: The Withholder Payer Number reported must belong to the payer named in this record.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[0-9]{11}" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="OrganisationDetailsOrganisationBranchC" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Payer Branch Code</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT4</xs:documentation>
+					<xs:documentation>Report Guidance: This is used to identify the correct branch of an organisation for the PAYGW obligation. An ABN holder can find their current PAYGW Branch code/s for their ABN through ATO Portal or Online Services.  WPN holders can leave this field blank and the ATO will determine the correct value.</xs:documentation>
+					<xs:documentation>Business Definition: The branch number of an organisation. Branch Numbers are issued to organisations that wish to sub-divide their activities in dealing with their tax obligations.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+						<xs:pattern value="[1-9]|[1-9][0-9]|[1-9][0-9][0-9]" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="PreviousSoftwareInformationBusinessManagementSystemId" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Previous BMS Identifier</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT101</xs:documentation>
+					<xs:documentation>Report Guidance: Previous BMS ID can only be supplied as part of an Update event.  
+
+This element has complex business rules and you MUST refer to STP Business Implementation Guide for the appropriate definition and how to source the data in your solution.</xs:documentation>
+					<xs:documentation>Business Definition: This identifies the Business Management System software used by the employer.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+						<xs:maxLength value="200" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="OrganisationName" type="tns:OrganisationName">
+				<xs:annotation>
+					<xs:documentation>Payer Name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="ElectronicContact" type="tns:ElectronicContact">
+				<xs:annotation>
+					<xs:documentation>Payer Electronic Contact</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="AddressDetailsPostal" type="tns:AddressDetailsPostal">
+				<xs:annotation>
+					<xs:documentation>Payer Postal Address</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="Payroll" type="tns:Payroll">
+				<xs:annotation>
+					<xs:documentation>Payroll</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="Declaration" type="tns:Declaration">
+				<xs:annotation>
+					<xs:documentation>Reporting Party Declaration</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Int">
+		<xs:annotation>
+			<xs:documentation>Intermediary</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element minOccurs="1" maxOccurs="1" name="AustralianBusinessNumberId">
+				<xs:annotation>
+					<xs:documentation>Intermediary ABN</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT64</xs:documentation>
+					<xs:documentation>Report Guidance: The ABN of the Registered Agent or Intermediary supplying the data. For a Registered Agent, the ABN supplied must be linked to the RAN supplied.</xs:documentation>
+					<xs:documentation>Business Definition: A unique public identifier issued to all entities registered in the Australian Business Register (ABR), to be used in their dealings with government. Companies registered under the Corporations Law and business entities carrying on an enterprise in Australia are entitled to an ABN.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[0-9]{11}" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" maxOccurs="1" name="TaxAgentNumberId" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Registered Agent Number</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT65</xs:documentation>
+					<xs:documentation>Report Guidance: This is the Registered Agent Number issued by TPB that is associated with Intermediary ABN.</xs:documentation>
+					<xs:documentation>Business Definition: An external identifier issued by the ATO on behalf of the Tax Agent's Board.  It is used to uniquely identify an individual who has been registered by the Board as a Tax Agent.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[0-9]{8}" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="PersonUnstructuredNameFullNameT">
+				<xs:annotation>
+					<xs:documentation>Intermediary Contact Name</xs:documentation>
+					<xs:documentation>Alias: PAYEVNT68</xs:documentation>
+					<xs:documentation>Report Guidance: This is the authorised nominated contact person for the Intermediary.</xs:documentation>
+					<xs:documentation>Business Definition: The name of a person represented in a free format text. It may contain a complete name (first, family and other given names) or parts of it. This representation of a person's name is commonly used where the name is not used for proof of identity matching hence it is not required to be strongly validated. Examples of its use are: The name of the person who is used as a contact on behalf of an Organisation or the name of the recipient of a correspondence.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1" />
+						<xs:maxLength value="200" />
+						<xs:pattern value="([0-9a-zA-Z \.,\?\(\)\{\}:;'\|\-_=\\/@#$%\*=&amp;&quot;])*" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="ElectronicContact" type="tns:ElectronicContact">
+				<xs:annotation>
+					<xs:documentation>Intermediary Electronic Contact</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="1" maxOccurs="1" name="Declaration" type="tns:Declaration">
+				<xs:annotation>
+					<xs:documentation>Intermediary Declaration</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

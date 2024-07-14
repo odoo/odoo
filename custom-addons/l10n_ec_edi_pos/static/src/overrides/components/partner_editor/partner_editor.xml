@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="PartnerDetailsEdit" t-inherit="point_of_sale.PartnerDetailsEdit" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('partner-details-box')]" position="inside">
+            <t t-if="pos.isEcuadorianCompany()">
+                <div class="partner-detail col">
+                    <label class="form-label" for="id_type">Identification Type</label>
+                    <select class="detail form-select" name="l10n_latam_identification_type_id" id="id_type"
+                        t-model="changes.l10n_latam_identification_type_id">
+                        <t t-foreach="pos.l10n_latam_identification_types" t-as="l10n_latam_identification_type" t-key="l10n_latam_identification_type.id">
+                            <option t-att-value="l10n_latam_identification_type.id">
+                                <t t-esc="l10n_latam_identification_type.name" />
+                            </option>
+                        </t>
+                    </select>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

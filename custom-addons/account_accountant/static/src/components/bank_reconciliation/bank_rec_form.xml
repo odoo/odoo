@@ -1,0 +1,647 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Buttons -->
+    <t t-name="account_accountant.BankRecRecordFormButtonsHeaderLeft">
+        <div class="o_statusbar_buttons o_bank_rec_stats_buttons_aside_left py-1 ps-1">
+            <t t-set="areAllLinesValid" t-value="this.checkBankRecLinesInvalidFields(data)"/>
+            <button accesskey="v"
+                    class="btn btn-primary"
+                    t-if="data.state === 'valid' and areAllLinesValid"
+                    t-on-click="(ev) => this.actionValidate()">
+                <span>Validate</span>
+            </button>
+            <button class="btn btn-secondary text-muted"
+                    t-if="data.state === 'invalid' or (data.state === 'valid' and !areAllLinesValid)">
+                <span>Validate</span>
+            </button>
+            <button accesskey="r"
+                    class="btn btn-secondary"
+                    t-if="data.state === 'reconciled'"
+                    t-on-click="(ev) => this.actionReset()">
+                <span>Reset</span>
+            </button>
+            <button accesskey="c"
+                    class="btn btn-secondary"
+                    t-if="!data.st_line_to_check and areAllLinesValid"
+                    t-on-click="(ev) => this.actionToCheck()">
+                <span>To Check</span>
+            </button>
+            <button class="btn btn-secondary text-muted"
+                    t-if="!data.st_line_to_check and !areAllLinesValid">
+                <span>To Check</span>
+            </button>
+            <button accesskey="c"
+                    class="btn btn-secondary"
+                    t-if="data.st_line_to_check"
+                    t-on-click="(ev) => this.actionSetAsChecked()">
+                <span>Set as Checked</span>
+            </button>
+        </div>
+    </t>
+
+    <!-- Reconciliation models -->
+    <t t-name="account_accountant.BankRecRecordFormButtonsHeaderRight">
+        <div class="o_statusbar_buttons o_bank_rec_stats_buttons_aside_right">
+            <div t-if="['valid', 'invalid'].includes(data.state)"
+                 class="available_reco_model_ids">
+
+                <!-- Displayed reco models -->
+                <t t-set="nb_rendered_buttons" t-value="0"/>
+
+                <div class="o_bank_rec_reco_models_widget_div">
+                    <t t-foreach="data.available_reco_model_ids.records"
+                       t-as="reco_model"
+                       t-key="reco_model.data.id">
+                        <t t-set="is_selected"
+                           t-value="reco_model.data.id === data.selected_reco_model_id[0]"/>
+
+                        <t t-if="reco_model_index lt 5 or is_selected">
+                            <button
+                                t-on-click="() => this.actionSelectRecoModel(reco_model)"
+                                class="btn recon_model_button me-1 my-1"
+                                t-att-class="{'btn-secondary': !is_selected, 'btn-primary': is_selected}"
+                                t-out="reco_model.data.display_name"/>
+
+                            <t t-set="nb_rendered_buttons" t-value="nb_rendered_buttons + 1"/>
+                        </t>
+                    </t>
+
+                    <!-- Dropdown if more reco models -->
+                    <Dropdown t-if="data.available_reco_model_ids.records.length gt nb_rendered_buttons"
+                              togglerClass="'btn btn-light'"
+                              class="'bank_rec_reco_model_dropdown my-1'">
+                        <t t-set-slot="toggler">
+                            More
+                        </t>
+                        <t t-foreach="data.available_reco_model_ids.records"
+                           t-as="reco_model"
+                           t-key="reco_model.data.id">
+                            <t t-set="is_selected" t-value="reco_model.data.id === data.selected_reco_model_id.id"/>
+                            <DropdownItem t-if="reco_model_index gte 5 and !is_selected"
+                                          onSelected="() => this.actionSelectRecoModel(reco_model)">
+                                <t t-out="reco_model.data.display_name"/>
+                            </DropdownItem>
+                        </t>
+                    </Dropdown>
+                </div>
+
+                <!-- Creation of reco models -->
+                <Dropdown class="'bank_rec_reco_model_dropdown'"
+                          togglerClass="'btn btn-light'"
+                          position="'bottom-end'">
+                    <t t-set-slot="toggler">
+                        <i class="fa fa-cog"/>
+                    </t>
+                    <DropdownItem onSelected="() => this.actionCreateRecoModel()">
+                        Create model
+                    </DropdownItem>
+                    <DropdownItem onSelected="() => this.actionViewRecoModels()">
+                        View models
+                    </DropdownItem>
+                </Dropdown>
+
+            </div>
+        </div>
+    </t>
+
+    <!-- line_ids field -->
+    <t t-name="account_accountant.BankRecRecordFormLineIds">
+        <div name="line_ids" class="w-100">
+            <div class="o_list_renderer table-responsive">
+                <table class="o_list_table table table-sm position-relative mb-0 o_list_table_ungrouped table-striped o_bank_rec_lines_widget_table">
+                    <thead>
+                        <tr>
+                            <t t-foreach="line_ids_columns" t-as="column" t-key="column[0]">
+                                <t t-if="['amount_currency', 'debit', 'credit'].includes(column[0])">
+                                    <th class="o_list_number_th text-end" t-esc="column[1]"/>
+                                </t>
+                                <t t-elif="column[0] === '__trash'">
+                                    <th class="o_list_actions_header"/>
+                                </t>
+                                <t t-else="">
+                                    <th t-out="column[1]"/>
+                                </t>
+                            </t>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="data.line_ids.records" t-as="line" t-key="line_index">
+                            <t t-set="invalidFields" t-value="this.getBankRecLineInvalidFields(line)"/>
+
+                            <tr class="o_data_row o_selected_row o_list_no_open o_bank_rec_expanded_line"
+                                t-att-class="{
+                                    'o_bank_rec_liquidity_line': line.data.flag === 'liquidity',
+                                    'o_bank_rec_auto_balance_line': line.data.flag === 'auto_balance',
+                                    'o_bank_rec_selected_line': line.data.index === data.form_index and this.state.bankRecNotebookPage === 'manual_operations_tab',
+                                    'table-info': line.data.index === data.form_index and this.state.bankRecNotebookPage === 'manual_operations_tab',
+                                }"
+                                t-on-click="(ev) => this.handleLineClicked(ev, line)">
+
+                                <t t-foreach="line_ids_columns" t-as="column" t-key="column[0]">
+                                    <t t-if="column[0] === 'account'">
+                                        <td class="o_data_cell o_field_cell o_list_many2one"
+                                            t-att-class="{'o_invalid_cell': invalidFields.includes('account_id')}"
+                                            field="account_id"
+                                            t-att-title="line.data.account_id[1]"
+                                            t-out="line.data.account_id[1]"/>
+                                    </t>
+                                    <t t-if="column[0] === 'partner'">
+                                        <t t-if="line.data.flag === 'liquidity' and !line.data.partner_id">
+                                            <td class="o_data_cell o_field_cell o_list_many2one text-muted"
+                                                field="partner_id"
+                                                t-att-title="data.partner_name or ''"
+                                                t-out="data.partner_name or ''"/>
+                                        </t>
+                                        <t t-else="">
+                                            <td class="o_data_cell o_field_cell o_list_many2one"
+                                                field="partner_id"
+                                                t-att-title="line.data.partner_id[1]"
+                                                t-out="line.data.partner_id[1]"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="column[0] === 'date'">
+                                        <t t-if="['manual', 'early_payment', 'auto_balance', 'tax_line'].includes(line.data.flag)">
+                                            <td class="o_data_cell o_field_cell" field="date">
+                                                <span field="date" class="badge text-bg-secondary">New</span>
+                                            </td>
+                                        </t>
+                                        <t t-else="">
+                                            <td class="o_data_cell o_field_cell"
+                                                t-att-class="{'o_invalid_cell': invalidFields.includes('date')}"
+                                                field="date"
+                                                t-out="formatDateField(line.data.date)"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="column[0] === 'analytic_distribution'">
+                                        <td class="o_data_cell o_field_cell o_field_widget o_field_analytic_distribution" field="analytic_distribution">
+                                            <div class="o_field_tags d-inline-flex flex-wrap mw-100">
+                                                <AnalyticDistribution
+                                                    name="'analytic_distribution'"
+                                                    record="line"
+                                                    readonly="true"
+                                                    t-key="getKey(line.data)"
+                                                />
+                                            </div>
+                                        </td>
+                                    </t>
+                                    <t t-if="column[0] === 'taxes'" name="col_taxes">
+                                        <td class="o_data_cell o_field_cell o_field_widget o_field_many2many_tags"
+                                            field="tax_ids">
+                                            <div class="o_field_tags d-inline-flex flex-wrap mw-100">
+                                                <TagsList tags="line.data.tax_ids.records.map((tax) => ({text: tax.data.display_name, id: tax.resId}))"/>
+                                            </div>
+                                        </td>
+                                    </t>
+                                    <t t-if="column[0] === 'amount_currency'">
+                                        <t t-if="line.data.flag === 'exchange_diff'">
+                                            <td/>
+                                        </t>
+                                        <t t-else="">
+                                            <td class="o_data_cell o_field_cell o_list_number"
+                                                field="amount_currency"
+                                                style="justify-content: right;"
+                                                t-out="isMonetaryZero(line.data.amount_currency, line.data.currency_id[0]) ? '' : formatMonetaryField(line.data.amount_currency, line.data.currency_id[0])"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="column[0] === 'currency'">
+                                        <t t-if="line.data.flag === 'exchange_diff'">
+                                            <td/>
+                                        </t>
+                                        <t t-else="">
+                                            <td class="o_data_cell o_field_cell o_list_many2one"
+                                                field="currency_id"
+                                                t-att-title="line.data.currency_id[1]"
+                                                t-out="line.data.currency_id[1]"/>
+                                        </t>
+                                    </t>
+                                    <t t-if="column[0] === 'debit'">
+                                        <td class="o_data_cell o_field_cell o_list_number"
+                                            field="debit"
+                                            t-out="isMonetaryZero(line.data.debit, line.data.company_currency_id[0]) ? '' : formatMonetaryField(line.data.debit, line.data.company_currency_id[0])"/>
+                                    </t>
+                                    <t t-if="column[0] === 'credit'">
+                                        <td class="o_data_cell o_field_cell o_list_number"
+                                            field="credit"
+                                            t-out="isMonetaryZero(line.data.credit, line.data.company_currency_id[0]) ? '' : formatMonetaryField(line.data.credit, line.data.company_currency_id[0])"/>
+                                    </t>
+                                    <t t-if="column[0] === '__trash'">
+                                        <td class="o_list_record_remove">
+                                            <button t-if="['valid', 'invalid'].includes(data.state) and !['liquidity', 'auto_balance', 'tax_line'].includes(line.data.flag)"
+                                                    t-on-click.prevent.stop="(ev) => this.actionRemoveLine(line)"
+                                                    class="btn fa fa-trash-o"/>
+                                        </td>
+                                    </t>
+                                </t>
+                            </tr>
+                            <!-- Ensure the same color band will be applied -->
+                            <tr/>
+                            <tr class="o_data_row o_selected_row o_list_no_open o_bank_rec_second_line"
+                                t-att-class="{
+                                    'o_bank_rec_liquidity_line': line.data.flag === 'liquidity',
+                                    'o_bank_rec_auto_balance_line': line.data.flag === 'auto_balance',
+                                    'o_bank_rec_selected_line': line.data.index === data.form_index and this.state.bankRecNotebookPage === 'manual_operations_tab',
+                                    'table-info': line.data.index === data.form_index and this.state.bankRecNotebookPage === 'manual_operations_tab',
+                                }"
+                                t-on-click="(ev) => this.handleLineClicked(ev, line)">
+                                <td t-att-colspan="line_ids_columns.length - (display_currency_columns ? 5 : 3)"
+                                    class="o_data_cell o_field_cell o_list_char text-wrap fw-normal"
+                                    field="name">
+                                    <t t-if="line.data.source_aml_move_id[0] and (['new_aml', 'aml'].includes(line.data.flag) or (line.data.flag == 'liquidity' and data.state == 'reconciled'))">
+                                        <span class="o_form_uri fst-italic"
+                                              t-out="line.data.source_aml_move_id[1]"
+                                              t-on-click="() => this.actionRedirectToSourceMove(line)"/>
+                                        <span class="me-1 fst-italic" t-if="line.data.name">:</span>
+                                    </t>
+                                    <span t-if="line.data.bank_account"
+                                          class="text-muted fst-italic me-1"
+                                          t-out="line.data.bank_account"/>
+                                    <span class="text-muted fst-italic"
+                                          t-out="line.data.name"/>
+                                </td>
+                                <td t-if="display_currency_columns"
+                                    class="o_data_cell o_field_cell o_list_number"
+                                    field="amount_currency">
+                                    <span t-if="line.data.display_stroked_amount_currency"
+                                          class="text-muted text-decoration-line-through"
+                                          field="amount_currency"
+                                          t-out="formatMonetaryField(line.data.source_amount_currency, line.data.currency_id[0])"/>
+                                </td>
+                                <td t-if="display_currency_columns" field="currency_id"/>
+                                <td class="o_data_cell o_field_cell o_list_number text-end"
+                                    field="debit">
+                                    <span t-if="line.data.display_stroked_balance and !isMonetaryZero(line.data.debit, line.data.company_currency_id[0])"
+                                          class="text-muted text-decoration-line-through"
+                                          field="debit"
+                                          t-out="formatMonetaryField(line.data.source_debit, line.data.company_currency_id[0])"/>
+                                </td>
+                                <td class="o_data_cell o_field_cell o_list_number text-end"
+                                    field="credit">
+                                    <span t-if="line.data.display_stroked_balance and !isMonetaryZero(line.data.credit, line.data.company_currency_id[0])"
+                                          class="text-muted text-decoration-line-through"
+                                          field="credit"
+                                          t-out="formatMonetaryField(line.data.source_credit, line.data.company_currency_id[0])"/>
+                                </td>
+                                <td class="empty_trash_cell"/>
+                            </tr>
+                        </t>
+
+                        <t t-set="nb_extra_lines" t-value="5 - data.line_ids.records.length"/>
+                        <tr t-foreach="[...Array(Math.max(nb_extra_lines, 0)).keys()]" t-as="i" t-key="i">
+                            <td t-att-colspan="line_ids_columns.length">&#8205;</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </t>
+
+    <!-- Notebook - amls_tab -->
+    <t t-name="account_accountant.BankRecRecordNotebookAmls">
+        <div class="bank_rec_widget_form_amls_list_anchor" t-if="this.state.bankRecEmbeddedViewsData">
+            <BankRecViewEmbedder viewProps="this.notebookAmlsListViewProps()" t-key="data.st_line_id[0]"/>
+        </div>
+    </t>
+
+    <!-- Notebook - manual_operations_tab -->
+    <t t-name="account_accountant.BankRecRecordNotebookManualOperations">
+        <t t-set="line" t-value="this.getBankRecRecordLineInEdit()"/>
+        <div t-if="line" class="bank_rec_widget_manual_operations_anchor">
+            <t t-set="invalidFields" t-value="this.getBankRecLineInvalidFields(line)"/>
+            <t t-set="hasForcedNegativeValue"
+               t-value="line.data.flag === 'new_aml' and (line.data.source_balance lt 0.0 || line.data.source_amount_currency lt 0.0)"/>
+
+            <div class="o_group row align-items-start">
+                <div class=" o_inner_group grid col-lg-6">
+                    <!-- partner_id -->
+                    <t t-set="readonly"
+                       t-value="['tax_line', 'new_aml', 'exchange_diff'].includes(line.data.flag)"/>
+                    <div name="partner_id"
+                         class="o_wrap_field d-flex d-sm-contents flex-column mb-3 mb-sm-0">
+                        <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
+                            <label class="o_form_label"
+                                   t-att-class="{'o_form_label_readonly': readonly}">Partner</label>
+                        </div>
+                        <div class="o_field_widget o_field_many2one">
+                            <Many2OneField
+                                name="'partner_id'"
+                                record="line"
+                                readonly="readonly"
+                                canQuickCreate="false"
+                                domain="[['company_id', 'in', [false, data.company_id[0]]], '|', ['parent_id', '=', false], ['is_company', '=', true]]"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- partner extra values -->
+                    <div t-if="['auto_balance', 'manual'].includes(line.data.flag)
+                                and line.data.partner_receivable_account_id
+                                and line.data.partner_payable_account_id"
+                         class="o_wrap_field d-flex d-sm-contents flex-column mb-3 mb-sm-0">
+                        <div class="o_cell flex-grow-1 flex-sm-grow-0 o_wrap_label w-100 text-break text-900"/>
+                        <div class="o_cell flex-grow-1 flex-sm-grow-0" style="width: 100%;">
+                            <div class="d-flex" style="align-items: center; font-size: 0.9rem">
+                                <button class="btn btn-link"
+                                        style="white-space: nowrap"
+                                        t-on-click="() => this.actionSetPartnerReceivableAccount()">Receivable:</button>
+                                <div class="o_field_widget o_readonly_modifier o_field_monetary ml4 mb0">
+                                    <span t-out="formatMonetaryField(line.data.partner_receivable_amount, line.data.partner_currency_id[0])"/>
+                                </div>
+                                <span class="ml4 mr4">-</span>
+                                <button class="btn btn-link"
+                                        style="white-space: nowrap"
+                                        t-on-click="() => this.actionSetPartnerPayableAccount()">Payable:</button>
+                                <div class="o_field_widget o_readonly_modifier o_field_monetary ml4 mb0">
+                                    <span t-out="formatMonetaryField(line.data.partner_payable_amount, line.data.partner_currency_id[0])"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- account_id -->
+                    <t t-set="readonly"
+                       t-value="['liquidity', 'new_aml', 'exchange_diff'].includes(line.data.flag)"/>
+                    <div name="account_id"
+                         class="o_wrap_field d-flex d-sm-contents flex-column mb-3 mb-sm-0">
+                        <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
+                            <label class="o_form_label"
+                                   t-att-class="{'o_field_invalid': invalidFields.includes('account_id')}">Account</label>
+                        </div>
+                        <div class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0"
+                             style="width: 100%; margin-bottom: 5px">
+                            <div class="o_field_widget o_field_many2one"
+                                 t-att-class="{'o_field_invalid': invalidFields.includes('account_id')}">
+                                <Many2OneField
+                                    name="'account_id'"
+                                    record="line"
+                                    readonly="readonly"
+                                    canOpen="false"
+                                    canQuickCreate="false"
+                                    domain="() => line.getFieldDomain('account_id')"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- tax_ids -->
+                    <div name="tax_ids"
+                         t-if="['manual', 'auto_balance'].includes(line.data.flag)"
+                         class="o_wrap_field d-flex d-sm-contents flex-column mb-3 mb-sm-0">
+                        <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
+                            <label class="o_form_label">Taxes</label>
+                        </div>
+                        <div class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0"
+                             style="width: 100%; margin-bottom: 5px">
+                            <div class="o_field_widget o_field_many2many_tags">
+                                <Many2ManyTagsField
+                                    name="'tax_ids'"
+                                    record="line"
+                                    canCreate="false"
+                                    canQuickCreate="false"
+                                    canCreateEdit="false"
+                                    context="{'append_type_to_tax_name': true}"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- analytic_distribution -->
+                    <div name="analytic_distribution"
+                         t-if="hasGroupAnalyticAccounting"
+                         class="o_wrap_field d-flex d-sm-contents flex-column mb-3 mb-sm-0">
+                        <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
+                            <label class="o_form_label">Analytic</label>
+                        </div>
+                        <div class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0"
+                             style="width: 100%; margin-bottom: 5px">
+                            <div class="o_field_widget o_field_analytic_distribution">
+                                <!-- t-key is needed to force component rerender and avoid synchronization issue on record change -->
+                                <AnalyticDistribution
+                                    name="'analytic_distribution'"
+                                    record="line"
+                                    account_field="'account_id'"
+                                    business_domain="'general'"
+                                    allow_save="true"
+                                    t-key="line.data.index"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- date -->
+                    <div name="date"
+                         t-if="line.data.flag === 'liquidity'"
+                         class="o_wrap_field d-flex d-sm-contents flex-column mb-3 mb-sm-0">
+                        <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
+                            <label class="o_form_label"
+                                   t-att-class="{'o_field_invalid': invalidFields.includes('date')}">Date</label>
+                        </div>
+                        <div class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0"
+                             style="width: 100%; margin-bottom: 5px">
+                            <div class="o_field_widget o_field_date"
+                                 t-att-class="{'o_field_invalid': invalidFields.includes('date')}">
+                                <DateTimeField
+                                    name="'date'"
+                                    record="line"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="o_inner_group grid col-lg-6">
+                    <!-- name -->
+                    <t t-set="readonly"
+                       t-value="line.data.flag === 'exchange_diff'"/>
+                    <div name="name"
+                         class="o_wrap_field d-flex d-sm-contents flex-column mb-3 mb-sm-0">
+                        <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
+                            <label class="o_form_label"
+                                   t-att-class="{'o_form_label_readonly': readonly}">Label</label>
+                        </div>
+                        <div class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0"
+                             style="width: 100%; margin-bottom: 5px">
+                            <div class="o_field_widget o_field_char">
+                                <CharField
+                                    name="'name'"
+                                    record="line"
+                                    readonly="readonly"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- amount_currency -->
+                    <t t-set="amountFieldReadonly"
+                       t-value="line.data.flag === 'liquidity'"/>
+                    <t t-set="currencyFieldReadonly"
+                       t-value="['liquidity', 'tax_line', 'new_aml'].includes(line.data.flag)"/>
+                    <div name="amount_currency"
+                         t-if="line.data.company_currency_id[0] !== line.data.currency_id[0] and line.data.flag !== 'exchange_diff'"
+                         class="o_wrap_field d-flex d-sm-contents flex-column mb-3 mb-sm-0">
+                        <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
+                            <label class="o_form_label"
+                                   t-att-class="{'o_form_label_readonly': amountFieldReadonly}">Amount in Currency</label>
+                        </div>
+                        <div class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0"
+                             style="width: 100%; margin-bottom: 5px">
+                            <div class="d-flex">
+                                <!-- amount -->
+                                <div class="o_field_widget o_field_monetary">
+                                    <BankRecMonetaryField
+                                        name="'amount_currency'"
+                                        record="line"
+                                        readonly="amountFieldReadonly"
+                                        hasForcedNegativeValue="hasForcedNegativeValue"
+                                    />
+                                </div>
+                                <!-- in -->
+                                <span class="ml4 mr4">in</span>
+                                <!-- currency -->
+                                <div class="o_field_widget o_field_many2one">
+                                    <Many2OneField
+                                        name="'currency_id'"
+                                        record="line"
+                                        readonly="currencyFieldReadonly"
+                                        canOpen="false"
+                                        canQuickCreate="false"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- balance -->
+                    <t t-set="amountFieldReadonly"
+                       t-value="['liquidity', 'exchange_diff'].includes(line.data.flag) and line.data.company_currency_id[0] !== line.data.currency_id[0]"/>
+                    <div name="balance"
+                         class="o_wrap_field d-flex d-sm-contents flex-column mb-3 mb-sm-0">
+                        <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
+                            <label class="o_form_label"
+                                   t-att-class="{'o_form_label_readonly': amountFieldReadonly}">Amount</label>
+                        </div>
+                        <div class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0"
+                             style="width: 100%; margin-bottom: 5px">
+                            <div class="d-flex">
+                                <!-- amount -->
+                                <div class="o_field_widget o_field_monetary">
+                                    <BankRecMonetaryField
+                                        name="'balance'"
+                                        record="line"
+                                        readonly="amountFieldReadonly"
+                                        hasForcedNegativeValue="hasForcedNegativeValue"
+                                    />
+                                </div>
+                                <!-- in -->
+                                <span class="ml4 mr4">in</span>
+                                <!-- currency -->
+                                <div class="o_field_widget o_field_many2one">
+                                    <Many2OneField
+                                        name="'company_currency_id'"
+                                        record="line"
+                                        readonly="true"
+                                        canOpen="false"
+                                        canQuickCreate="false"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- suggestion -->
+                    <div name="suggestion"
+                         t-if="line.data.suggestion_html"
+                         class="o_wrap_field d-flex d-sm-contents flex-column mb-3 mb-sm-0">
+                        <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900"/>
+                        <div class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0"
+                             style="width: 100%; margin-bottom: 5px">
+                            <div t-on-click="handleSuggestionHtmlClicked">
+                                <t t-out="line.data.suggestion_html"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- Notebook - discuss -->
+    <t t-name="account_accountant.BankRecRecordNotebookChatter">
+        <div class="bank_rec_widget_form_discuss_anchor">
+            <Chatter threadModel="'account.move'" threadId="data.move_id[0]"/>
+        </div>
+    </t>
+
+    <!-- Notebook - transaction_details_tab -->
+    <t t-name="account_accountant.BankRecRecordNotebookTransactionDetails">
+        <div class="bank_rec_widget_form_transaction_details_anchor o_group row align-items-start">
+            <div class="o_wrap_field d-flex d-sm-contents flex-column mb-3 mb-sm-0">
+                <span t-out="data.st_line_transaction_details"/>
+            </div>
+        </div>
+    </t>
+
+    <!-- Main template -->
+    <t t-name="account_accountant.BankRecRecordForm">
+        <div class="o_xxl_form_view h-100 o_view_controller o_form_view">
+            <t t-set="record" t-value="this.bankRecModel.root"/>
+            <t t-set="data" t-value="state.bankRecRecordData"/>
+            <div class="o_form_view_container" t-ref="formContainer">
+                <div class="o_content">
+                    <div class="o_form_nosheet o_form_editable d-block">
+                        <!-- Header -->
+                        <div class="o_bank_rec_stats_buttons">
+                            <t t-call="account_accountant.BankRecRecordFormButtonsHeaderLeft"/>
+                            <t t-call="account_accountant.BankRecRecordFormButtonsHeaderRight"/>
+                        </div>
+
+                        <!-- line_ids -->
+                        <t t-call="account_accountant.BankRecRecordFormLineIds">
+                            <t t-set="line_ids_columns" t-value="this.getOne2ManyColumns()"/>
+                            <t t-set="display_currency_columns" t-value="!!line_ids_columns.find((c) => c[0] == 'currency')"/>
+                        </t>
+
+                        <!-- Notebook -->
+                        <t t-set="amls_tab_title">Match Existing Entries</t>
+                        <t t-set="manual_operations_tab_title">Manual Operations</t>
+                        <t t-set="discuss_tab_title">Discuss</t>
+                        <t t-set="transaction_details_tab_title">Transaction Details</t>
+                        <Notebook t-key="state.bankRecStLineId" defaultPage="state.bankRecNotebookPage || ''" onPageUpdate.bind="onPageUpdate" >
+                            <t t-set-slot="amls_tab"
+                               name="'amls_tab'"
+                               title="amls_tab_title"
+                               isVisible="['valid', 'invalid'].includes(data.state)">
+                                <t t-call="account_accountant.BankRecRecordNotebookAmls"/>
+                            </t>
+                            <t t-set-slot="manual_operations_tab"
+                               name="'manual_operations_tab'"
+                               title="manual_operations_tab_title"
+                               isVisible="['valid', 'invalid'].includes(data.state)">
+                                <t t-call="account_accountant.BankRecRecordNotebookManualOperations"/>
+                            </t>
+                            <t t-set-slot="discuss_tab"
+                               name="'discuss_tab'"
+                               title="discuss_tab_title"
+                               isVisible="true">
+                                <t t-call="account_accountant.BankRecRecordNotebookChatter"/>
+                            </t>
+                            <t t-set-slot="transaction_details_tab"
+                               name="'transaction_details_tab'"
+                               title="transaction_details_tab_title"
+                               isVisible="data.st_line_transaction_details and data.st_line_transaction_details != ''">
+                                <t t-call="account_accountant.BankRecRecordNotebookTransactionDetails"/>
+                            </t>
+                        </Notebook>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="account_accountant.BankRecEmbeddedListController" t-inherit="web.ListView" t-inherit-mode="primary">
+        <t t-set-slot="control-panel-additional-actions" position="replace"/>
+    </t>
+
+</templates>

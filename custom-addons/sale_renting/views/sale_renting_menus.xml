@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <menuitem
+        id="rental_menu_root"
+        name="Rental"
+        web_icon="sale_renting,static/description/icon.png"
+        groups="sales_team.group_sale_salesman"
+        sequence="45">
+
+        <menuitem id="rental_order_menu"
+            name="Orders"
+            sequence="2">
+
+            <menuitem id="rental_orders_all"
+                name="Orders"
+                action="rental_order_action"
+                sequence="1"/>
+
+            <menuitem id="menu_orders_customers"
+                name="Customers"
+                action="account.res_partner_action_customer"
+                sequence="2"/>
+
+            <menuitem id="rental_orders_today"
+                name="To Do Today"
+                sequence="3">
+
+                <menuitem id="rental_orders_pickup"
+                    name="Pickup"
+                    action="rental_order_today_pickup_action"
+                    sequence="1"/>
+
+                <menuitem id="rental_orders_return"
+                    name="Return"
+                    action="rental_order_today_return_action"
+                    sequence="2"/>
+
+            </menuitem>
+        </menuitem>
+
+        <menuitem id="menu_rental_schedule"
+            name="Schedule"
+            action="action_rental_order_schedule"
+            sequence="3"/>
+
+        <menuitem id="menu_rental_products"
+            name="Products"
+            action="rental_product_template_action"
+            sequence="4"/>
+
+        <menuitem id="menu_rental_reporting"
+            name="Reporting"
+            action="action_rental_report"
+            groups="sales_team.group_sale_manager"
+            sequence="5"/>
+
+        <menuitem id="menu_rental_config"
+            name="Configuration"
+            groups="sales_team.group_sale_manager"
+            sequence="10">
+
+            <menuitem id="menu_rental_settings"
+                name="Settings"
+                action="action_rental_config_settings"
+                groups="base.group_system"/>
+
+            <menuitem id="menu_sale_renting_periods"
+                name="Rental periods"
+                action="sale_temporal_recurrence_action"
+                sequence="20"/>
+
+        </menuitem>
+    </menuitem>
+</odoo>

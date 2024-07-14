@@ -1,0 +1,89 @@
+<templates>
+
+<t t-name="web_studio.ViewEditor.InteractiveEditorProperties.Field">
+
+    <ModifiersProperties node="props.node" availableOptions="props.availableOptions"/>
+
+    <!-- Attribute depending on views -->
+    <Property
+        t-if="isAttributeSupported('bold')"
+        name="'bold'"
+        type="'boolean'"
+        value="props.node.attrs.bold"
+        onChange.bind="onChangeAttribute"
+    >
+        Bold
+    </Property>
+    <Property
+        t-if="isAttributeSupported('optional')"
+        name="'optional'"
+        type="'selection'"
+        value="props.node.attrs.optional"
+        onChange.bind="onChangeAttribute"
+        childProps="optionalVisibilityChoices"
+    >
+        Optional
+    </Property>
+    <Property
+        t-if="isAttributeSupported('string')"
+        name="'string'"
+        type="'string'"
+        value="props.node.attrs.string || props.node.field.string"
+        onChange.bind="onChangeFieldString"
+    >
+        Label
+    </Property>
+    <Property
+        t-if="isAttributeSupported('help')"
+        name="'help'"
+        type="'string'"
+        value="props.node.attrs.help || props.node.field.help"
+        onChange.bind="onChangeAttribute"
+    >
+        Help Tooltip
+    </Property>
+
+    <TechnicalName t-if="env.debug" node="props.node"/>
+
+    <TypeWidgetProperties
+        node="props.node"
+        onChangeAttribute.bind="onChangeAttribute"
+    />
+
+    <t t-if="canShowDefaultValue">
+        <Property
+            name="'default_value'"
+            type="defaultValuesInputType"
+            value="state.defaultValue"
+            onChange.bind="onChangeDefaultValue"
+            childProps="defaultValuesChoices"
+        >
+            Default value
+        </Property>
+    </t>
+
+    <LimitGroupVisibility node="props.node" />
+
+    <t t-if="canEditSelectionChoices">
+        <button class="btn btn-link o_web_studio_edit_selection_values" t-on-click="editSelectionChoices">
+            <i class="fa fa-pencil"/> Edit Values
+        </button>
+    </t>
+
+    <SidebarPropertiesToolbox/>
+</t>
+
+<t t-name="web_studio.ViewEditor.InteractiveEditorProperties.Field.TechnicalName" >
+    <Property
+        name="'technical_name'"
+        type="'string'"
+        value="fieldName"
+        isReadonly="!canEdit"
+        onChange.bind="renameField"
+    >
+        <span class="w-100 d-inline-block">Technical Name</span>
+        <span t-if="canEdit" class="input-group-text d-inline-block pe-none">x_studio_</span>
+    </Property>
+</t>
+
+</templates>

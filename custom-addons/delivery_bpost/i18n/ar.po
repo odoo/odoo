@@ -1,0 +1,416 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_bpost
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_label_stock_type__a4
+msgid "A4"
+msgstr "A4"
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_label_stock_type__a6
+msgid "A6"
+msgstr "A6"
+
+#. module: delivery_bpost
+#: model:ir.model.fields,help:delivery_bpost.field_delivery_carrier__bpost_saturday
+msgid "Allow deliveries on Saturday (extra charges apply)"
+msgstr "السماح بالتوصيل يوم السبت (يتم احتساب رسوم إضافية)"
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/bpost_request.py:0
+#, python-format
+msgid ""
+"Authentication error -- wrong credentials\n"
+"(Detailed error: %s)"
+msgstr ""
+"خطأ في المُصادقة -- بيانات الاعتماد غير صحيحة\n"
+"(تفاصيل الخطأ: %s) "
+
+#. module: delivery_bpost
+#: model:ir.model.fields,field_description:delivery_bpost.field_delivery_carrier__bpost_account_number
+msgid "Bpost Account Number"
+msgstr "رقم حساب Bpost"
+
+#. module: delivery_bpost
+#: model:ir.model.fields,field_description:delivery_bpost.field_delivery_carrier__bpost_delivery_nature
+msgid "Bpost Delivery Nature"
+msgstr "طبيعة التوصيل من Bpost "
+
+#. module: delivery_bpost
+#: model:ir.model.fields,field_description:delivery_bpost.field_delivery_carrier__bpost_domestic_deliver_type
+msgid "Bpost Domestic Deliver Type"
+msgstr "نوع التوصيل المحلي من Bpost "
+
+#. module: delivery_bpost
+#: model:delivery.carrier,name:delivery_bpost.delivery_carrier_bpost_domestic
+#: model:product.template,name:delivery_bpost.product_product_delivery_bpost_domestic_product_template
+msgid "Bpost Domestic bpack 24h Pro"
+msgstr "باقة bpack 24 ساعة برو لخدمات Bpost المحلية"
+
+#. module: delivery_bpost
+#: model:ir.model.fields,field_description:delivery_bpost.field_delivery_carrier__bpost_international_deliver_type
+msgid "Bpost International Deliver Type"
+msgstr "نوع التوصيل الدولي من Bpost "
+
+#. module: delivery_bpost
+#: model:ir.model.fields,field_description:delivery_bpost.field_delivery_carrier__bpost_label_format
+msgid "Bpost Label Format"
+msgstr "تنسيق بطاقة عنوان Bpost"
+
+#. module: delivery_bpost
+#: model:ir.model.fields,field_description:delivery_bpost.field_delivery_carrier__bpost_label_stock_type
+msgid "Bpost Label Stock Type"
+msgstr "نوع مخزون بطاقة عنوان Bpost"
+
+#. module: delivery_bpost
+#: model_terms:ir.ui.view,arch_db:delivery_bpost.view_delivery_carrier_form_with_provider_bpost
+msgid "Bpost Package Type"
+msgstr "نوع طرد Bpost "
+
+#. module: delivery_bpost
+#: model:ir.model.fields,field_description:delivery_bpost.field_delivery_carrier__bpost_parcel_return_instructions
+msgid "Bpost Parcel Return Instructions"
+msgstr "تعليمات Bpost لإرجاع الطرود "
+
+#. module: delivery_bpost
+#: model:ir.model.fields,field_description:delivery_bpost.field_delivery_carrier__bpost_shipment_type
+msgid "Bpost Shipment Type"
+msgstr "نوع الشحن من Bpost"
+
+#. module: delivery_bpost
+#: model:delivery.carrier,name:delivery_bpost.delivery_carrier_bpost_inter
+#: model:product.template,name:delivery_bpost.product_product_delivery_bpost_world_product_template
+msgid "Bpost World Express Pro"
+msgstr "خدمة Bpost إكسبريس برو العالمية"
+
+#. module: delivery_bpost
+#: model:ir.model.fields,field_description:delivery_bpost.field_stock_package_type__package_carrier_type
+msgid "Carrier"
+msgstr "شركة الشحن"
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_shipment_type__documents
+msgid "DOCUMENTS"
+msgstr "المستندات "
+
+#. module: delivery_bpost
+#: model:ir.model.fields,field_description:delivery_bpost.field_delivery_carrier__bpost_saturday
+msgid "Delivery on Saturday"
+msgstr "التوصيل يوم السبت "
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_parcel_return_instructions__abandoned
+msgid "Destroy"
+msgstr "تدمير"
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_delivery_nature__domestic
+msgid "Domestic"
+msgstr "محلي"
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_shipment_type__gift
+msgid "GIFT"
+msgstr "هدية"
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_shipment_type__goods
+msgid "GOODS"
+msgstr "البضائع "
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_delivery_nature__international
+msgid "International"
+msgstr "دولي"
+
+#. module: delivery_bpost
+#: model_terms:ir.ui.view,arch_db:delivery_bpost.view_delivery_carrier_form_with_provider_bpost
+msgid "Label Format"
+msgstr "تنسيق بطاقة العنوان "
+
+#. module: delivery_bpost
+#: model_terms:ir.ui.view,arch_db:delivery_bpost.view_delivery_carrier_form_with_provider_bpost
+msgid "Label Type"
+msgstr "نوع بطاقة العنوان "
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_shipment_type__other
+msgid "OTHER"
+msgstr "غير ذلك"
+
+#. module: delivery_bpost
+#: model_terms:ir.ui.view,arch_db:delivery_bpost.view_delivery_carrier_form_with_provider_bpost
+msgid "Options"
+msgstr "الخيارات"
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_label_format__pdf
+msgid "PDF"
+msgstr "PDF"
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_label_format__png
+msgid "PNG"
+msgstr "PNG"
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/bpost_request.py:0
+#, python-format
+msgid "Packages over 30 Kg are not accepted by bpost."
+msgstr "لا تقبل bpost الطرود التي يفوق وزنها 30 كجم. "
+
+#. module: delivery_bpost
+#: model:ir.model.fields,field_description:delivery_bpost.field_delivery_carrier__bpost_developer_password
+msgid "Passphrase"
+msgstr "كلمة المرور "
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/bpost_request.py:0
+#, python-format
+msgid "Please provide at least one item to ship."
+msgstr "يرجى اختيار عنصر واحد على الأقل لشحنه."
+
+#. module: delivery_bpost
+#: model:ir.model.fields,field_description:delivery_bpost.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "المزود"
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/delivery_bpost.py:0
+#, python-format
+msgid "Return labels created into bpost"
+msgstr "تم إنشاء بطاقات عناوين الإرجاع في bpost "
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/delivery_bpost.py:0
+#, python-format
+msgid "Return shipment created into bpost"
+msgstr "تم إنشاء شحنة الإرجاع في bpost "
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_parcel_return_instructions__rta
+msgid "Return to sender by air"
+msgstr "الإرجاع إلى المرسل جواً "
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_parcel_return_instructions__rts
+msgid "Return to sender by road"
+msgstr "الإرجاع إلى المرسل براً "
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_shipment_type__sample
+msgid "SAMPLE"
+msgstr "عينة"
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/delivery_bpost.py:0
+#, python-format
+msgid "Shipment #%s has been cancelled"
+msgstr "لقد تم إلغاء الشحنة رقم %s  "
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/delivery_bpost.py:0
+#, python-format
+msgid "Shipment created into bpost"
+msgstr "تم إنشاء الشحنة في bpost "
+
+#. module: delivery_bpost
+#: model:ir.model,name:delivery_bpost.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "طُرُق الشَّحن"
+
+#. module: delivery_bpost
+#: model:ir.model,name:delivery_bpost.model_stock_package_type
+msgid "Stock package type"
+msgstr "نوع طرود المخزون "
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/bpost_request.py:0
+#, python-format
+msgid "The BPost shipping service is unresponsive, please retry later."
+msgstr "خدمة شحن BPost لا تستجيب، الرجاء إعادة المحاولة لاحقاً. "
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/bpost_request.py:0
+#, python-format
+msgid ""
+"The address of your company/warehouse is incomplete or wrong (Missing field(s):  \n"
+" %s)"
+msgstr ""
+"عنوان شركتك/مستودعك ناقص أو خاطئ (يوجد حقل (حقول) ناقصة:  \n"
+" %s)"
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/bpost_request.py:0
+#, python-format
+msgid ""
+"The estimated shipping price cannot be computed because all your products "
+"are service."
+msgstr "تعذر احتساب سعر الشحن التقديري لأن كافة منتجاتك من فئة الخدمات. "
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/bpost_request.py:0
+#, python-format
+msgid ""
+"The estimated shipping price cannot be computed because the weight is missing for the following product(s): \n"
+" %s"
+msgstr ""
+"تعذر احتساب سعر الشحن لعدم تحديد الوزن للمنتج (المنتجات) التالية: \n"
+" %s"
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/bpost_request.py:0
+#, python-format
+msgid ""
+"The recipient address is incomplete or wrong (Missing field(s):  \n"
+" %s)"
+msgstr ""
+"عنوان المستلم ناقص أو غير صحيح. (يوجد حقل (حقول) مفقودة:  \n"
+" %s) "
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/delivery_bpost.py:0
+#, python-format
+msgid "Tracking Links"
+msgstr "روابط التتبع "
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/delivery_bpost.py:0
+#, python-format
+msgid "Tracking Number:"
+msgstr "رقم التتبع: "
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/delivery_bpost.py:0
+#, python-format
+msgid "Tracking Numbers:"
+msgstr "أرقام التتبع: "
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/delivery_bpost.py:0
+#, python-format
+msgid "You cannot compute a passphrase for non-bpost carriers."
+msgstr "لا يمكنك تكوين كلمة مرور لشركات شحن غير bpost. "
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/bpost_request.py:0
+#, python-format
+msgid "Your company/warehouse address must be in Belgium to ship with bpost"
+msgstr ""
+"يجب أن يكون عنوان شركتك/مستودعك داخل بلجيكا لتتمكن من استخدام bpost للشحن "
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_domestic_deliver_type__bpack_24h_pro
+msgid "bpack 24h Pro"
+msgstr "باقة bpack 24 ساعة برو"
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_domestic_deliver_type__bpack_24h_business
+msgid "bpack 24h business"
+msgstr "باقة bpack 24 ساعة للأعمال"
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_domestic_deliver_type__bpack_bus
+msgid "bpack Bus"
+msgstr "ناقل bpost "
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_international_deliver_type__bpack_europe_business
+msgid "bpack Europe Business"
+msgstr "باقة bpack أوروبا للأعمال"
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_international_deliver_type__bpack_world_business
+msgid "bpack World Business"
+msgstr "باقة bpack العالمية للأعمال"
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__bpost_international_deliver_type__bpack_world_express_pro
+msgid "bpack World Express Pro"
+msgstr "باقة bpack إكسبريس برو العالمية"
+
+#. module: delivery_bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__delivery_carrier__delivery_type__bpost
+#: model:ir.model.fields.selection,name:delivery_bpost.selection__stock_package_type__package_carrier_type__bpost
+msgid "bpost"
+msgstr "bpost"
+
+#. module: delivery_bpost
+#: model_terms:ir.ui.view,arch_db:delivery_bpost.view_delivery_carrier_form_with_provider_bpost
+msgid "bpost Configuration"
+msgstr "تهيئة bpost "
+
+#. module: delivery_bpost
+#: model:ir.model.fields,field_description:delivery_bpost.field_delivery_carrier__bpost_default_package_type_id
+msgid "bpost Default Package Type"
+msgstr "نوع باقة BPost الافتراضي "
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/bpost_request.py:0
+#, python-format
+msgid ""
+"bpost Domestic is used only to ship inside Belgium. Please change the "
+"delivery method into bpost International."
+msgstr ""
+"تُستخدم خدمة bpost المحلية للشحن داخل بلجيكا فقط. الرجاء تغيير طريقة التوصيل"
+" لـbpost الدولية. "
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/bpost_request.py:0
+#, python-format
+msgid ""
+"bpost International is used only to ship outside Belgium. Please change the "
+"delivery method into bpost Domestic."
+msgstr ""
+"تُستخدم خدمة bpost الدولية للشحن خارج بلجيكا فقط. الرجاء تغيير طريقة التوصيل"
+" لـbpost المحلية. "
+
+#. module: delivery_bpost
+#: model_terms:ir.ui.view,arch_db:delivery_bpost.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:delivery_bpost.res_config_settings_view_form_stock
+msgid "bpost Shipping Methods"
+msgstr "طرق شحن BPost "
+
+#. module: delivery_bpost
+#. odoo-python
+#: code:addons/delivery_bpost/models/bpost_request.py:0
+#, python-format
+msgid "bpost did not return prices for this destination country."
+msgstr "لم تستطع bpost إظهار أسعار الإعادة من هذه الدولة."

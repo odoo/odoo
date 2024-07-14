@@ -1,0 +1,194 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_accountant_batch_payment
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_rejection_form
+msgid ""
+"<br/>\n"
+"                        <span>Do you want to cancel payments to retry them later or keep the batch open with unprocess payments, if you expect them later.</span>"
+msgstr ""
+"<br/>\n"
+"                        <span>คุณต้องการยกเลิกการชำระเงินเพื่อลองอีกครั้งในภายหลัง หรือเปิดชุดงานไว้พร้อมกับการชำระเงินที่ยังไม่ได้ถูกดำเนินการ หากคุณคาดว่าจะชำระในภายหลัง</span>"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model,name:account_accountant_batch_payment.model_bank_rec_widget
+msgid "Bank reconciliation widget for a single statement line"
+msgstr "วิดเจ็ตการกระทบยอดธนาคารสำหรับรายการใบแจ้งยอดเดียว"
+
+#. module: account_accountant_batch_payment
+#. odoo-python
+#: code:addons/account_accountant_batch_payment/models/account_batch_payment.py:0
+#: code:addons/account_accountant_batch_payment/models/bank_rec_widget.py:0
+#: model:ir.model,name:account_accountant_batch_payment.model_account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_rejection_form
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_search_bank_rec_widget
+#, python-format
+msgid "Batch Payment"
+msgstr "การชำระเงินเป็นชุด"
+
+#. module: account_accountant_batch_payment
+#. odoo-javascript
+#: code:addons/account_accountant_batch_payment/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#, python-format
+msgid "Batch Payments"
+msgstr "การชำระ"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_rejection_form
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_rejection_form
+msgid "Cancel Payments"
+msgstr "ยกเลิกการชำระเงิน"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_search_bank_rec_widget
+msgid "Date"
+msgstr "วันที่"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_rejection_form
+msgid "Expect Payments Later"
+msgstr "คาดว่าจะได้รับการชำระเงินในภายหลัง"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__in_reconcile_payment_ids
+msgid "In Reconcile Payment"
+msgstr "ในการกระทบยอดการชำระเงิน"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model,name:account_accountant_batch_payment.model_bank_rec_widget_line
+msgid "Line of the bank reconciliation widget"
+msgstr "บรรทัดของวิดเจ็ตการกระทบยอดธนาคาร"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model,name:account_accountant_batch_payment.model_account_batch_payment_rejection
+msgid "Manage the payment rejection from batch payments"
+msgstr "จัดการการปฏิเสธการชำระเงินจากการชำระเงินเป็นชุด"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__nb_batch_payment_ids
+msgid "Nb Batch Payment"
+msgstr "Nb การชำระเงินเป็นชุด"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__nb_rejected_payment_ids
+msgid "Nb Rejected Payment"
+msgstr "Nb การชำระเงินที่ถูกปฏิเสธ"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_list_bank_rec_widget
+msgid "Open Amount"
+msgstr "จำนวนที่เปิด"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_list_bank_rec_widget
+msgid "Open Amount (in Currency)"
+msgstr "ยอดคงเหลือของรายการบัญชี (เป็นสกุลเงิน)"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_search_bank_rec_widget
+msgid "Paid"
+msgstr "ชำระแล้ว"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model,name:account_accountant_batch_payment.model_account_reconcile_model
+msgid ""
+"Preset to create journal entries during a invoices and payments matching"
+msgstr ""
+"ตั้งค่าล่วงหน้าเพื่อสร้างรายการสมุดรายวันระหว่างการจับคู่ใบแจ้งหนี้และการชำระเงิน"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_search_bank_rec_widget
+msgid "Received"
+msgstr "ได้รับ"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__rejected_payment_ids
+msgid "Rejected Payment"
+msgstr "การชำระเงินที่ถูกปฏิเสธ"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_bank_rec_widget__selected_batch_payment_ids
+msgid "Selected Batch Payment"
+msgstr "การชำระเงินเป็นชุดที่เลือก"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_bank_rec_widget_line__source_batch_payment_id
+msgid "Source Batch Payment"
+msgstr "แหล่งที่มาของการชำระเงินเป็นชุด"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_list_bank_rec_widget
+msgid "Suggestions"
+msgstr "ข้อเสนอ"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_list_bank_rec_widget
+msgid "View"
+msgstr "ดู"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_rejection_form
+msgid "batches have been removed."
+msgstr "ชุดการชำระได้ถูกลบออกแล้ว"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_rejection_form
+msgid "payments from"
+msgstr "การชำระเงินจาก"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_rejection_form
+msgid "payments from the batch have been removed."
+msgstr "การชำระเงินจากชุดงานได้ถูกลบออกแล้ว"

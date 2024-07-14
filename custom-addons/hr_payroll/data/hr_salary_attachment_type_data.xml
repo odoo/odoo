@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_attachment_type_attachment" model="hr.salary.attachment.type">
+        <field name="name">Attachment of Salary</field>
+        <field name="code">ATTACH_SALARY</field>
+    </record>
+
+    <record id="hr_salary_attachment_type_assignment" model="hr.salary.attachment.type">
+        <field name="name">Assignment of Salary</field>
+        <field name="code">ASSIG_SALARY</field>
+    </record>
+
+    <record id="hr_salary_attachment_type_child_support" model="hr.salary.attachment.type">
+        <field name="name">Child Support</field>
+        <field name="code">CHILD_SUPPORT</field>
+        <field name="no_end_date" eval="True"/>
+    </record>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Hr Rule Parameter -->
+    <record id="rule_parameter_overtime_pay" model="hr.rule.parameter">
+        <field name="name">Overtime Pay Percentage</field>
+        <field name="code">overtime_pay_percent</field>
+        <field name="country_id" eval="False"/>
+    </record>
+    <!-- Hr Rule Parameter Value -->
+    <record id="rule_parameter_overtime_pay_value" model="hr.rule.parameter.value">
+        <field name="parameter_value">50</field>
+        <field name="rule_parameter_id" ref="hr_payroll_attendance.rule_parameter_overtime_pay"/>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+</odoo>

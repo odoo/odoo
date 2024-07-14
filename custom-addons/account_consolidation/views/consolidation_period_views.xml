@@ -1,0 +1,475 @@
+<odoo>
+    <data>
+        <!-- consolidation.period views -->
+
+        <record id="consolidation_period_tree" model="ir.ui.view">
+            <field name="name">consolidation.period.tree</field>
+            <field name="model">consolidation.period</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree string="Analysis Periods">
+                    <field name="chart_id"/>
+                    <field name="state"/>
+                    <field name="date_analysis_begin"/>
+                    <field name="date_analysis_end"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="consolidation_period_form" model="ir.ui.view">
+            <field name="name">consolidation.period.form</field>
+            <field name="model">consolidation.period</field>
+            <field name="arch" type="xml">
+                <form string="Analysis Period">
+                    <header>
+                        <button name="action_generate_journals" type="object"
+                                string="(Re)Compute" class="oe_highlight"
+                                groups="account_consolidation.group_consolidation_user"
+                                invisible="state == 'closed' or not id"/>
+                        <button name="action_close" type="object"
+                                string="Close"
+                                groups="account_consolidation.group_consolidation_user"
+                                invisible="state == 'closed' or not id"/>
+                        <button name="action_draft" type="object"
+                                string="Reset To Draft"
+                                groups="account_consolidation.group_consolidation_user"
+                                invisible="state == 'draft' or not id"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="action" name="%(trial_balance_report_action)d"
+                                    context="{'default_period_id': id}"
+                                    icon="fa-table" invisible="not id">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Consolidated Balance</span>
+                                    </div>
+                            </button>
+                            <button class="oe_stat_button" type="object" name="action_open_trial_balance_grid"
+                                    icon="fa-edit" invisible="not id">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Edit</span>
+                                    </div>
+                            </button>
+                            <button class="oe_stat_button" type="action" name="%(consolidation_account_action)d" icon="fa-bars"
+                                    invisible="not id"
+                                    context="{'search_default_chart_id':chart_id, 'default_chart_id': chart_id}">
+                                <field string="Accounts" name="chart_account_ids_count" widget="statinfo"/>
+                            </button>
+                            <button class="oe_stat_button" type="action" name="%(consolidation_journal_action)d" icon="fa-bars"
+                                    invisible="not id"
+                                    context="{'search_default_period_id':id, 'default_period_id': id}">
+                                <field string="Journals" name="journal_ids_count" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="chart_id" invisible="context.get('default_chart_id', False)" readonly="state == 'closed'" options="{'no_quick_create': True}"/>
+                                <field name="chart_currency_id" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="date_analysis_begin" readonly="state == 'closed'"/>
+                                <field name="date_analysis_end"
+                                       required="1"
+                                       readonly="state == 'closed'"/>
+                            </group>
+                        </group>
+
+                        <notebook invisible="not date_analysis_end">
+                            <!-- COMPANY PERIODS -->
+                            <page string="Company Periods" name="company_periods">
+                                <field name="company_period_ids" widget="one2many" nolabel="1"
+                                       context="{'default_date_company_begin': date_analysis_begin, 'default_date_company_end': date_analysis_end}"
+                                       readonly="state == 'closed'">
+                                    <tree editable="bottom">
+                                        <field name="company_id"/>
+                                        <field name="currency_company_id" string="Currency"/>
+                                        <field name="date_company_begin"/>
+                                        <field name="date_company_end"/>
+                                        <field name="rate_consolidation" string="Consolidation Rate (%)"/>
+                                        <field name="currency_rate_avg"/>
+                                        <field name="currency_rate_end"/>
+                                        <field name="consolidation_method" optional="hide"/>
+                                        <field name="rate_ownership" string="% Ownership" optional="hide"/>
+                                        <field name="rate_control" string="% Control" optional="hide"/>
+                                        <field name="exclude_journal_ids" widget="many2many_tags" domain="[('company_id', '=', company_id)]" optional="hide"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Sub-consolidations Periods" name="subconsolidation_periods"
+                                groups="base.group_no_one">
+                                <field name="using_composition_ids" string="Sub-consolidations periods">
+                                    <tree editable="bottom">
+                                        <field name="composed_period_id" string="Period"/>
+                                        <field name="composed_chart_currency_id" string="Currency"/>
+                                        <field name="rate_consolidation" string="Consolidation Rate (%)"/>
+                                        <field name="using_chart_currency_id" column_invisible="True"/>
+                                        <field name="currency_rate"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="consolidation_period_form_onboarding" model="ir.ui.view">
+            <field name="name">consolidation.period.form.onboarding</field>
+            <field name="model">consolidation.period</field>
+            <field name="inherit_id" ref="consolidation_period_form"/>
+            <field name="mode">primary</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <form position="inside">
+                    <footer position="replace">
+                        <button name="action_save_onboarding_create_step" class="btn btn-primary" type="object"
+                                string="Apply" data-hotkey="q"/>
+                        <button special="cancel" data-hotkey="x" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="consolidation_period_kanban" model="ir.ui.view">
+            <field name="name">consolidation.period.kanban</field>
+            <field name="model">consolidation.period</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_dashboard o_account_kanban"
+                        banner_route="/onboarding/account_consolidation_dashboard">
+                    <field name="color"/>
+                    <field name="chart_id"/> <!-- Needed to allow chart color update -->
+                    <templates>
+                        <t t-name="kanban-menu">
+                            <div class="container">
+                                <t t-call="analysis_period_menu"/>
+                            </div>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
+                                <div class="oe_kanban_content o_kanban_consolidation_content" style="height:100%">
+                                    <t t-call="analysis_period_title"/>
+                                    <div class="container o_kanban_card_content">
+                                        <div class="row">
+                                            <t t-call="analysis_period_body"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
+                        <t t-name="analysis_period_title">
+                            <div t-attf-class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="float-end me-3">
+                                        <field name="state" widget="label_selection"
+                                               invisible="state != 'closed'"
+                                               options="{'classes': {'draft': 'default', 'closed': 'danger'}}"/>
+                                    </div>
+                                    <div class="o_primary">
+                                        <a type="object" name="action_open_form">
+                                            <field name="chart_name"/>
+                                        </a>
+                                    </div>
+                                    <div class="o_secondary">
+                                        <field name="display_dates"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
+                        <t t-name="analysis_period_body">
+                            <div class="col-5 o_kanban_primary_left ps-3 pe-0">
+                                <button name="%(trial_balance_report_action)d" type="action" role="button"
+                                        class="btn btn-primary" context="{'default_period_id': id}">
+                                    Consolidated Balance
+                                </button>
+                            </div>
+                            <div class="col-7 o_kanban_primary_right">
+                                <div class="mb-2">
+                                    <field name="dashboard_sections" widget="consolidation_dashboard_field" class="row d-flex"/>
+                                </div>
+                                <div>
+                                    <field name="company_unmapped_accounts_counts" widget="consolidation_dashboard_field"
+                                           class="row d-flex"/>
+                                </div>
+                            </div>
+                        </t>
+
+                        <t t-name="analysis_period_menu">
+                            <div class="row">
+                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                    <h5 class="o_kanban_card_manage_title">
+                                        <span role="separator">Actions</span>
+                                    </h5>
+                                    <div>
+                                        <a t-if="!widget.auto_generated and record.state.raw_value == 'draft'"
+                                           name="action_generate_journals" role="menuitem" type="object"
+                                           class="dropdown-item">
+                                            (Re)compute
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a t-if="!widget.auto_generated" role="menuitem" type="object"
+                                           name="action_toggle_state">
+                                            <t t-if="record.state.raw_value == 'draft'">Close period</t>
+                                            <t t-else="">Reopen period</t>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                    <h5 class="o_kanban_card_manage_title">
+                                        <span role="separator">View</span>
+                                    </h5>
+                                    <div>
+                                        <a name="%(consolidation_journal_action)d" role="menuitem"
+                                           context="{'search_default_period_id': id, 'default_period_id': id}"
+                                           type="action">Journals
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a role="menuitem" type="object" name="action_open_chart_of_accounts">
+                                            Chart of accounts
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div t-if="!widget.auto_generated" class="o_kanban_card_manage_settings row">
+                                <div class="col-8">
+                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
+                            </div>
+
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="consolidation_period_search" model="ir.ui.view">
+            <field name="name">consolidation.period.search</field>
+            <field name="model">consolidation.period</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field string="Consolidation Chart" name="chart_id"/>
+                    <!-- NAMED FILTERS -->
+                    <filter string="Active" name="active" domain="[
+                    ('date_analysis_begin', '&lt;=', time.strftime('%Y-%m-%d')),
+                    ('date_analysis_end', '&gt;=', time.strftime('%Y-%m-%d')),
+                    ]" help="Only the periods containing today"/>
+                    <filter string="In The Future" name="future"
+                            domain="[('date_analysis_begin', '&gt;=', time.strftime('%Y-%m-%d'))]"
+                            help="Only the periods in the future"/>
+                    <filter string="In The Past" name="past"
+                            domain="[('date_analysis_end', '&lt;=', time.strftime('%Y-%m-%d'))]"
+                            help="Only the periods in the past"/>
+                    <separator/>
+                    <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                    <filter string="Closed" name="closed" domain="[('state','=','closed')]"/>
+                    <separator/>
+                    <filter string="Start Date" name="start_date" date="date_analysis_begin"/>
+                    <filter string="End Date" name="end_date" date="date_analysis_end"/>
+                    <!-- GROUP BY's -->
+                    <filter string="Consolidation" name="group_by_chart" context="{'group_by':'chart_id'}"/>
+                    <filter string="State" name="group_by_state" context="{'group_by':'state'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="consolidation_period_action" model="ir.actions.act_window">
+            <field name="name">Dashboard</field>
+            <field name="res_model">consolidation.period</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="consolidation_period_search"/>
+        </record>
+
+        <record id="analysis_period_config_action" model="ir.actions.act_window">
+            <field name="name">Analysis Periods</field>
+            <field name="res_model">consolidation.period</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="consolidation_period_action_onboarding" model="ir.actions.act_window">
+            <field name="name">Create First Period</field>
+            <field name="res_model">consolidation.period</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="consolidation_period_form_onboarding"/>
+            <field name="target">new</field>
+        </record>
+
+        <!-- consolidation.company_period views -->
+
+        <record id="consolidation_company_period_tree" model="ir.ui.view">
+            <field name="name">consolidation.company_period.tree</field>
+            <field name="model">consolidation.company_period</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree string="Company Periods">
+                    <field name="company_id"/>
+                    <field name="currency_company_id"/>
+                    <field name="period_id"/>
+                    <field name="rate_consolidation"/>
+                    <field name="exclude_journal_ids"/>
+                    <field name="date_company_begin"/>
+                    <field name="date_company_end"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="consolidation_company_period_form" model="ir.ui.view">
+            <field name="name">consolidation.company_period.form</field>
+            <field name="model">consolidation.company_period</field>
+            <field name="arch" type="xml">
+                <form string="Company Period">
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="period_id"/>
+                        </group>
+                        <notebook>
+                            <page string="Settings" name="settings">
+                                <group>
+                                    <group>
+                                        <field name="currencies_are_different" invisible="1"/>
+
+                                        <label for="rate_consolidation"/>
+                                        <div>
+                                            <field name="rate_consolidation" class="oe_inline"
+                                                   help="The rate used for the consolidation (basically this rate will multiply the sum of everything"/>
+                                            <span class="o_form_label oe_inline">%</span>
+                                        </div>
+
+
+                                        <label for="currency_rate_avg" string="Average Rate"
+                                               invisible="not currencies_are_different"/>
+                                        <div invisible="not currencies_are_different">
+                                            1
+                                            <field name="currency_chart_id" class="oe_inline"/>
+                                            =
+                                            <!-- EDITABLE FIELD IS HERE -->
+                                            <field name="currency_rate_avg" class="oe_inline"
+                                                   required="currencies_are_different"/>
+                                            &amp;nbsp;
+                                            <field name="currency_company_id" class="oe_inline"/>
+                                        </div>
+                                        <label for="currency_rate_end" string="End Rate"
+                                               invisible="not currencies_are_different"/>
+                                        <div invisible="not currencies_are_different">
+                                            1
+                                            <field name="currency_chart_id" class="oe_inline"/>
+                                            =
+                                            <!-- EDITABLE FIELD IS HERE -->
+                                            <field name="currency_rate_end" class="oe_inline"
+                                                   required="currencies_are_different"/>
+                                            &amp;nbsp;
+                                            <field name="currency_company_id" class="oe_inline"/>
+                                        </div>
+                                    </group>
+                                    <group>
+                                        <field name="date_company_begin" string="Start Date"/>
+                                        <field name="date_company_end" string="End Date"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <field name="exclude_journal_ids" domain="[('company_id', '=', company_id)]"
+                                           readonly="not company_id" widget="many2many_tags"/>
+                                </group>
+                            </page>
+                            <page string="Additional Information" name="additional_info">
+                                <group>
+                                    <group>
+                                        <field name="consolidation_method"/>
+                                        <label for="rate_control"/>
+                                        <div>
+                                            <field name="rate_control" class="oe_inline"/>
+                                            <span class="o_form_label oe_inline">%</span>
+                                        </div>
+                                        <label for="rate_ownership"/>
+                                        <div>
+                                            <field name="rate_ownership" class="oe_inline"/>
+                                            <span class="o_form_label oe_inline">%</span>
+                                        </div>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="consolidation_company_period_search" model="ir.ui.view">
+            <field name="name">consolidation.company_period.search</field>
+            <field name="model">consolidation.company_period</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="company_name"/>
+                    <field name="currency_company_id"/>
+                    <filter name="group_period_id" string="Period"
+                            context="{'group_by': 'period_id'}"/>
+                    <filter string="Start Date" name="start_date" date="date_company_begin"/>
+                    <filter string="End Date" name="end_date" date="date_company_end"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="consolidation_company_period_action" model="ir.actions.act_window">
+            <field name="name">Company Periods</field>
+            <field name="res_model">consolidation.company_period</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="consolidation_company_period_search"/>
+        </record>
+
+        <!-- consolidation.period.composition views -->
+
+        <record id="consolidation_period_composition_form" model="ir.ui.view">
+            <field name="name">consolidation.period.composition.form</field>
+            <field name="model">consolidation.period.composition</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="currencies_are_different" invisible="1"/>
+                    <group>
+                        <group>
+                            <!-- PERIOD (+ CURRENCY) -->
+                            <label for="composed_period_id" string="Period"/>
+                            <div>
+                                <field name="composed_period_id"
+                                       domain="[('id', '!=', context.get('from_analysis_id'))]"/>
+                                <span invisible="not composed_chart_currency_id">
+                                    (<field name="composed_chart_currency_id" string="Currency"/>)
+                                </span>
+                            </div>
+                        </group>
+                        <group>
+                            <!-- RATES -->
+                            <label for="rate_consolidation"/>
+                            <div>
+                                <field name="rate_consolidation" class="oe_inline"
+                                       help="The rate used for the consolidation (basically this rate will multiply the sum of everything"/>
+                                <span class="o_form_label oe_inline">%</span>
+                            </div>
+
+                            <label for="currency_rate" string="Currency Rate"
+                                   invisible="not currencies_are_different"/>
+                            <div invisible="not currencies_are_different">
+                                1
+                                <field name="using_chart_currency_id" class="oe_inline"/>
+                                =
+                                <!-- EDITABLE FIELD IS HERE -->
+                                <field name="currency_rate" class="oe_inline"
+                                       required="currencies_are_different"/>
+                                &amp;nbsp;
+                                <field name="composed_chart_currency_id" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

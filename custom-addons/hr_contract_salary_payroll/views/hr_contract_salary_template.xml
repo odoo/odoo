@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="salary_package_sidebar_payroll" inherit_id="hr_contract_salary.salary_package_sidebar">
+        <div name="salary_package_resume" position="before">
+            <label t-if="part_time" class="col-form-label" for="simulation_working_schedule">Working Schedule</label>
+            <select
+                t-if="part_time"
+                name="simulation_working_schedule"
+                class="form-control benefit_input"
+                required="1">
+                <option value="100" selected="1">Full Time</option>
+                <option value="90">9/10</option>
+                <option value="80">4/5</option>
+                <option value="60">3/5</option>
+                <option value="50">Half Time</option>
+                <option value="40">2/5</option>
+                <option value="20">1/5</option>
+            </select>
+        </div>
+    </template>
+</odoo>

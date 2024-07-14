@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_insurance_yearly_report" model="ir.actions.report">
+        <field name="name">Insurance Yearly Report PDF</field>
+        <field name="model">ch.yearly.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_ch_hr_payroll_elm.insurance_yearly_report</field>
+        <field name="report_file">l10n_ch_hr_payroll_elm.insurance_yearly_report</field>
+    </record>
+
+    <record id="action_is_report" model="ir.actions.report">
+        <field name="name">Is Report PDF</field>
+        <field name="model">l10n.ch.is.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_ch_hr_payroll_elm.insurance_yearly_report</field>
+        <field name="report_file">l10n_ch_hr_payroll_elm.insurance_yearly_report</field>
+    </record>
+</odoo>

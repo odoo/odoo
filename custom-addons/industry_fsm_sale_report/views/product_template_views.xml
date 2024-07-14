@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_product_timesheet_form_inherit" model="ir.ui.view">
+        <field name="name">product.template.timesheet.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="sale_project.product_template_form_view_invoice_policy_inherit_sale_project"/>
+        <field name="arch" type="xml">
+            <field name="project_template_id" position="after">
+                <field name="allow_worksheets" invisible="1"/>
+                <div class="o_td_label d-inline-flex" invisible="not allow_worksheets or service_tracking not in ['task_global_project', 'task_new_project']">
+                    <label for='worksheet_template_id'/>
+                    <span class='fa fa-lg fa-building-o fa-fw' title="Values set here are company-specific." groups="base.group_multi_company"/>
+                </div>
+                <field name="worksheet_template_id" invisible="not allow_worksheets or service_tracking not in ['task_global_project', 'task_new_project']" nolabel="1" context="{'default_res_model': 'project.task'}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

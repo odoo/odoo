@@ -1,0 +1,541 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_usps
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_intl_non_delivery_option__abandon
+msgid "Abandon"
+msgstr "Abandonner"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_account_validated
+msgid "Account Validated"
+msgstr "Compte validé"
+
+#. module: delivery_usps
+#: model:ir.model.fields,help:delivery_usps.field_delivery_carrier__usps_account_validated
+msgid "Check this box if your account is validated by USPS"
+msgstr "Cocher cette case si votre compte est validé par USPS"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid "Company phone number is invalid. Please insert a US phone number."
+msgstr ""
+"Le numéro de téléphone de la société est incorrect. Veuillez insérer un "
+"numéro américain correct."
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_content_type
+msgid "Content Type"
+msgstr "Type de contenu"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_delivery_nature
+msgid "Delivery Nature"
+msgstr "Nature de la livraison"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_content_type__documents
+msgid "Documents"
+msgstr "Documents"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_delivery_nature__domestic
+msgid "Domestic"
+msgstr "National"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/delivery_usps.py:0
+#, python-format
+msgid ""
+"Error:\n"
+"%s"
+msgstr ""
+"Erreur :\n"
+"%s"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_service__express
+msgid "Express"
+msgstr "Express"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_service__first_class
+msgid "First Class"
+msgstr "Première classe"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_first_class_mail_type__flat
+msgid "Flat"
+msgstr "Fixe"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_mail_type__flatrate
+msgid "Flat Rate"
+msgstr "Tarif fixe"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_domestic_regular_container__flat_rate_box
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_international_regular_container__flatratebox
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_mail_type__flatratebox
+msgid "Flat Rate Box"
+msgstr "Boîte à tarif fixe"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_domestic_regular_container__flat_rate_envelope
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_international_regular_container__flatrateenv
+msgid "Flat Rate Envelope"
+msgstr "Enveloppe à tarif fixe"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_content_type__gift
+msgid "Gift"
+msgstr "Cadeau"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_delivery_nature__international
+msgid "International"
+msgstr "International"
+
+#. module: delivery_usps
+#: model_terms:ir.ui.view,arch_db:delivery_usps.view_delivery_carrier_form_with_provider_usps
+msgid "Label Format"
+msgstr "Format de libellé"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_size_container__large
+msgid "Large"
+msgstr "Grande"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_mail_type__largeenvelope
+msgid "Large Envelope"
+msgstr "Grande enveloppe"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_domestic_regular_container__lg_flat_rate_box
+msgid "Large Flat Rate Box"
+msgstr "Grande boîte à prix fixe"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_domestic_regular_container__legal_flat_rate_envelope
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_international_regular_container__legalflatrateenv
+msgid "Legal Flat Rate Envelope"
+msgstr "Enveloppe format légal à prix fixe"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_first_class_mail_type__letter
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_mail_type__letter
+msgid "Letter"
+msgstr "Lettre"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_machinable
+msgid "Machinable"
+msgstr "Machinable"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_domestic_regular_container__md_flat_rate_box
+msgid "Medium Flat Rate Box"
+msgstr "Boîte moyenne à prix fixe"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_content_type__merchandise
+msgid "Merchandise"
+msgstr "Marchandise"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_intl_non_delivery_option
+msgid "Non delivery option"
+msgstr "Pas d'option de livraison"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_container__nonrectangular
+msgid "Non-rectangular"
+msgstr "Non rectangulaire"
+
+#. module: delivery_usps
+#: model_terms:ir.ui.view,arch_db:delivery_usps.view_delivery_carrier_form_with_provider_usps
+msgid "Options"
+msgstr "Options"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_label_file_type__pdf
+msgid "PDF"
+msgstr "PDF"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_mail_type__package
+msgid "Package"
+msgstr "Colis"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_custom_container_girth
+msgid "Package Girth"
+msgstr "Circonférence du colis"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_custom_container_height
+msgid "Package Height"
+msgstr "Hauteur du colis"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_custom_container_length
+msgid "Package Length"
+msgstr "Longueur du colis"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_first_class_mail_type__package_service
+msgid "Package Service"
+msgstr "Service de colis"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_custom_container_width
+msgid "Package Width"
+msgstr "Largeur du colis"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_domestic_regular_container__padded_flat_rate_envelope
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_international_regular_container__paddedflatrateenv
+msgid "Padded Flat Rate Envelope"
+msgstr "Enveloppe rembourrée à prix fixe"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_first_class_mail_type__parcel
+msgid "Parcel"
+msgstr "Colis"
+
+#. module: delivery_usps
+#: model:ir.model.fields,help:delivery_usps.field_delivery_carrier__usps_machinable
+msgid ""
+"Please check on USPS website to ensure that your package is machinable."
+msgstr ""
+"Veuillez vérifier sur le site internet d'USPS si votre colis est machinable."
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid ""
+"Please choose another service (maximum weight of this service is 4 pounds)"
+msgstr ""
+"Veuillez choisir un autre service (le poids maximal pour ce service est de "
+"1,8 kg [4 lb])"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid "Please enter a valid ZIP code in recipient address"
+msgstr "Saisissez un code postal correct pour l'adresse de destination."
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid "Please enter a valid ZIP code in your Company address"
+msgstr "Saisissez un code postal correct dans l'adresse de votre société"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid "Please provide at least one item to ship."
+msgstr "Veuillez fournir au moins un article à expédier."
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid ""
+"Please set country U.S.A in your company address, Service is only available "
+"for U.S.A"
+msgstr ""
+"Service uniquement disponible aux États-Unis. L'adresse de votre société "
+"doit se trouver aux États-Unis"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_first_class_mail_type__postcard
+msgid "Postcard"
+msgstr "Carte postale"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_service__priority
+msgid "Priority"
+msgstr "Priorité"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "Fournisseur"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid "Quantity for each move line should be less than 1000."
+msgstr ""
+"La quantité pour chaque ligne de mouvement de stock doit être de moins de "
+"1000."
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid "Recipient address cannot be found. Please check the address exists."
+msgstr ""
+"L'adresse du destinataire est introuvable. Veuillez vérifier que l'adresse "
+"existe."
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_container__rectangular
+msgid "Rectangular"
+msgstr "Rectangulaire"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_intl_non_delivery_option__redirect
+msgid "Redirect"
+msgstr "Redirection"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_redirect_partner_id
+msgid "Redirect Partner"
+msgstr "Redirection au partenaire"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_size_container__regular
+msgid "Regular"
+msgstr "Régulier"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_container__variable
+msgid "Regular < 12 inch"
+msgstr "Régulier < 12 pouces"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_content_type__return
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_intl_non_delivery_option__return
+msgid "Return"
+msgstr "Retour"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_content_type__sample
+msgid "Sample"
+msgstr "Échantillon"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/delivery_usps.py:0
+#, python-format
+msgid "Shipment #%s has been cancelled"
+msgstr "L'expédition #%s a été annulée"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/delivery_usps.py:0
+#, python-format
+msgid "Shipment created into USPS"
+msgstr "Envoi créé dans USPS"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/delivery_usps.py:0
+#, python-format
+msgid "Shipment created into USPS <br/> <b>Tracking Number: </b>%s"
+msgstr "Envoi créé dans USPS <br/> <b>Numéro de suivi : </b>%s "
+
+#. module: delivery_usps
+#: model:ir.model,name:delivery_usps.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "Modes d'expédition"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_domestic_regular_container__sm_flat_rate_box
+msgid "Small Flat Rate Box"
+msgstr "Petite boîte à prix fixe"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_domestic_regular_container__sm_flat_rate_envelope
+msgid "Small Flat Rate Envelope"
+msgstr "Petite enveloppe à prix fixe"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_label_file_type__tif
+msgid "TIF"
+msgstr "TIF"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid ""
+"The address of your company is missing or wrong (Missing field(s) :  \n"
+" %s)"
+msgstr ""
+"L'adresse de votre société est manquante ou incorrecte\n"
+"(Champ(s) manquant(s) : %s)"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid ""
+"The estimated shipping price cannot be computed because the weight is missing for the following product(s): \n"
+" %s"
+msgstr ""
+"Le prix d'expédition estimé ne peut pas être calculé car le poids manque pour le(s) produit(s) suivant(s) : \n"
+" %s"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid ""
+"The recipient address is missing or wrong (Missing field(s) :  \n"
+" %s)"
+msgstr ""
+"L'adresse du destinataire est manquante ou incorrecte.\n"
+"(Champ(s) manquant(s) : %s)"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid "The selected USPS service (%s) cannot be used to deliver this package."
+msgstr ""
+"Le service USPS sélectionné (%s) ne peut pas être utilisé pour livrer ce "
+"colis."
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/delivery_usps.py:0
+#, python-format
+msgid "Tracking Number:"
+msgstr "Numéro de suivi :"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_international_regular_container
+msgid "Type of USPS International regular container"
+msgstr "Type de conteneur régulier international USPS"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_domestic_regular_container
+msgid "Type of USPS domestic regular container"
+msgstr "Type de conteneur régulier domestique USPS"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_container
+msgid "Type of container"
+msgstr "Type de conteneur"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__delivery_type__usps
+msgid "USPS"
+msgstr "USPS"
+
+#. module: delivery_usps
+#: model_terms:ir.ui.view,arch_db:delivery_usps.view_delivery_carrier_form_with_provider_usps
+msgid "USPS Configuration"
+msgstr "Configuration USPS"
+
+#. module: delivery_usps
+#: model:delivery.carrier,name:delivery_usps.delivery_carrier_usps_domestic
+#: model:product.template,name:delivery_usps.product_product_delivery_usps_domestic_product_template
+msgid "USPS Domestic Flat Rate Envelope"
+msgstr "USPS Domestique Enveloppe à prix fixe"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid ""
+"USPS Domestic is used only to ship inside of the U.S.A. Please change the "
+"delivery method into USPS International."
+msgstr ""
+"USPS Domestic est utilisé uniquement pour les envois à l'intérieur des "
+"États-Unis. Modifiez le mode de livraison en USPS International."
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_first_class_mail_type
+msgid "USPS First Class Mail Type"
+msgstr "Type de courrier de première classe USPS"
+
+#. module: delivery_usps
+#: model:delivery.carrier,name:delivery_usps.delivery_carrier_usps_international
+#: model:product.template,name:delivery_usps.product_product_delivery_usps_international_product_template
+msgid "USPS International Flat Rate Box"
+msgstr "Boîte à taux fixe USPS International"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid ""
+"USPS International is used only to ship outside of the U.S.A. Please change "
+"the delivery method into USPS Domestic."
+msgstr ""
+"USPS International est utilisé uniquement pour les envois à l'extérieur des "
+"États-Unis. Modifiez le mode de livraison en USPS Domestic."
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_label_file_type
+msgid "USPS Label File Type"
+msgstr "Type de fichier d'étiquette USPS "
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_mail_type
+msgid "USPS Mail Type"
+msgstr "Type de courrier USPS"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_service
+msgid "USPS Service"
+msgstr "Service USPS"
+
+#. module: delivery_usps
+#: model_terms:ir.ui.view,arch_db:delivery_usps.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:delivery_usps.res_config_settings_view_form_stock
+msgid "USPS Shipping Methods"
+msgstr "Modes d'expédition USPS"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_username
+msgid "USPS User ID"
+msgstr "Identifiant de l'utilisateur USPS"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_size_container
+msgid "Usps Size Container"
+msgstr "Dimension du conteneur USPS"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid "Your company or recipient ZIP code is incorrect."
+msgstr "Le code postal de votre société ou du destinataire est incorrect."
+
+#. module: delivery_usps
+#: model_terms:ir.ui.view,arch_db:delivery_usps.view_delivery_carrier_form_with_provider_usps
+msgid "inch"
+msgstr "pouce"

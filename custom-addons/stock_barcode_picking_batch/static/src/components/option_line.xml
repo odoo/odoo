@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <div t-name="stock_barcode_picking_batch.OptionLine" class="o_barcode_option_line list-group-item"
+        t-on-click="select" t-attf-class="
+            {{isSelected ? 'o_selected o_highlight' : ''}}
+            {{props.additionalClass}}">
+        <div>
+            <i class="fa fa-fw fa-truck me-2 text-muted"/>
+            <span class="o_barcode_line_title me-2" t-esc="props.line.name"/>
+            <span t-if="props.line.state" t-esc="props.line.state"
+                class="badge rounded-pill text-capitalize fw-bold"/>
+        </div>
+        <div t-if="props.responsible" name="Responsible">
+            <i class="fa fa-fw fa-user me-2 text-muted"/>
+            <span class="o_barcode_picking_user" t-esc="props.responsible"/>
+        </div>
+    </div>
+</templates>

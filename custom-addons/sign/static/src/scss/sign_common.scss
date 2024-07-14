@@ -1,0 +1,283 @@
+.o_sign_template_header_wrapper .o_input {
+    --o-input-background-color: #{$o-webclient-background-color};
+}
+
+.o_sign_document_body {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.o_sign_pdf_iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    flex: 0 1 100%;
+    border: none;
+    display: block;
+}
+
+.o_sign_signer_status_wrapper {
+    flex-wrap: wrap;
+    overflow: auto;
+    div {
+        display: flex;
+    }
+    .o_sign_non_current_signers {
+        flex-wrap: wrap;
+        height: 100%;
+    }
+    .o_sign_signer_status {
+        flex-wrap: nowrap;
+        overflow: auto;
+        min-height: 100%;
+        color: $o-action;
+
+        .o_sign_signer_status_info {
+            margin:auto;
+        }
+        div {
+            line-height: 1.3;
+            flex-shrink: 0;
+            align-items: flex-start;
+        }
+        img {
+            height: 32px;
+            margin:auto;
+        }
+    }
+    .o_sign_signer {
+        &_waiting {
+            color: o-text-color('info');
+        }
+        &_refused {
+            color: o-text-color('danger');
+        }
+        &_completed {
+            color: o-text-color('success');
+        }
+    }
+}
+
+/* Document view */
+.o_sign_document {
+    display: flex;
+    flex-flow: column nowrap;
+    background-color: $o-view-background-color;
+
+    > .container-fluid {
+        flex: 0 0 auto;
+        margin: 0;
+    }
+
+    > .container {
+        flex: 0 0 auto;
+    }
+
+    .row {
+        > div {
+            > .o_page_header, > .alert {
+                margin: 10px 0;
+            }
+        }
+    }
+}
+
+.o_sign_image_document {
+    display: inline-block;
+    max-width: 100%;
+    margin-top: $o-horizontal-padding;
+
+    > img {
+        min-width: 100px;
+    }
+}
+
+.o_sign_validate_banner {
+    display: none;
+    opacity: 0;
+
+    @include o-position-absolute($bottom: 0, $left: 0);
+    width: 100%;
+    padding: 10px;
+
+    @include font-size(1.25em);
+    text-align: center;
+
+}
+
+.modal:is(.o_sign_thank_you_dialog, .o_sign_next_dialog) {
+    border: none;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    text-align: left;
+    .btn {
+        border-radius: 0;
+        border: none;
+    }
+    .modal-header {
+        border-top-left-radius: 0.0rem;
+        border-top-right-radius: 0.0rem;
+        background-color: $o-brand-odoo;
+        color: #fff;
+        .modal-title {
+            line-height: 1;
+            color: #fff;
+        }
+        .text-muted {
+            color: #fff !important;
+        }
+        .close {
+            color: #fff;
+            opacity: 1;
+            text-shadow: none;
+        }
+    }
+
+    .modal-body {
+        color: $o-main-text-color;
+        .o_thankyou_message {
+            margin-top: 14px;
+            &.alert {
+                border-radius: 0;
+                margin-left: -1rem !important;
+                margin-right: -1rem !important;
+            }
+        }
+        .o_thankyou_link {
+            margin-top: 25px;
+            > img {
+                width: 30px;
+            }
+            a {
+                color: $o-main-text-color;
+                &:hover {
+                    text-decoration: none;
+                    color: $o-brand-primary;
+                }
+            }
+        }
+    }
+
+    .modal-footer {
+        border-top: none;
+        text-align: left;
+        display: block;
+        &:empty {
+            padding: 0px;
+        }
+    }
+}
+.modal {
+    .o_sign_frame {
+        height: 0;
+        position: absolute;
+    }
+    .o_sign_frame.active {
+        visibility: visible;
+        top: 30%;
+        left: 5%;
+        height: 65%;
+        width: 20%;
+        border: 3px solid #017e84;
+        border-right: none;
+        border-radius: 22px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        opacity: 0.6;
+        :before {
+            content: attr(sign_label);
+            font-size: 120%;
+            color: #017E84;
+            font-family: "Inter",Sans;
+            left: 110%;
+            width: 250px;
+            display: inline-block;
+            position: absolute;
+            top: calc( -2% - 10px);
+            font-weight: 600;
+        }
+        :after {
+            content: attr(hash);
+            font-size: 120%;
+            color: #017E84;
+            font-family: $o-font-family-monospace;
+            width: 250px;
+            display: inline-block;
+            position: absolute;
+            left: 110%;
+            bottom: calc( -2% - 10px);
+        }
+    }
+}
+.modal.o_sign_signature_dialog {
+    .modal-footer {
+        display: flex;
+        justify-content: flex-start;
+    }
+}
+.modal {
+    .o_sign_refuse_confirm_message {
+        width: 100%;
+    }
+}
+
+.oe_sign_terms {
+    flex: auto !important;
+}
+
+@media only screen and (max-width:650px) {
+    .mobile-hide{
+        display: none !important;
+    }
+    .flex-fill {
+        flex: none;
+    }
+}
+
+@media only screen and (max-width:768px) {
+    .mobile-tablet-hide {
+        display: none !important;
+    }
+}
+
+@include media-breakpoint-down(md) {
+
+    .o_sign_item_bottom_sheet {
+        display: none;
+        opacity: 0;
+
+        &.show {
+            opacity: 1;
+            display: block;
+            box-shadow: 0 0 5px 0 rgba(0,0,0,0.25);
+        }
+
+        .o_sign_next_button {
+            text-transform: uppercase;
+        }
+
+        .o_sign_label {
+            width: 100%;
+            text-transform: uppercase;
+        }
+    }
+
+    .modal.o_sign_signature_dialog .modal-footer .btn {
+        width: calc((100% - 4 * 0.25rem) / 3) !important;
+    }
+}
+
+@media only screen and (max-width:380px) {
+    .mobile-xs-hide{
+        display: none !important;
+    }
+}
+.mobile-xs-show{
+    .dropdown-item{
+        margin-bottom: 3px;
+    }
+}
+@media only screen and (min-width:381px) {
+    .mobile-xs-show{
+        display: none !important;
+    }
+}

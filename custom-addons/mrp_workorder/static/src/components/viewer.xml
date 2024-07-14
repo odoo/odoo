@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp_workorder.DocumentViewer">
+        <t t-if="type === 'pdf'">
+            <div class="o_tablet_document" t-ref="pdf_viewer">
+                <iframe class="o_pdfview_iframe"
+                    alt="PDF file"
+                    t-att-src="urlPdf"
+                    t-att-name="props.resField"
+                    t-on-error.stop="onLoadFailed"
+                />
+            </div>
+        </t>
+        <t t-elif="type === 'google_slide'">
+            <div class="o_tablet_document" t-ref="slide_viewer">
+            <t t-set="url" t-value="urlSlide"/>
+            <t t-if="url">
+                <iframe class="o_embed_iframe w-100"
+                    alt="Slides viewer"
+                    t-att-src="url"
+                    t-att-name="props.resField"
+                    t-on-error.stop="onLoadFailed"
+                />
+            </t>
+            </div>
+        </t>
+        <t t-elif="type !== false">
+            <div class="o_tablet_document">
+                <img
+                    loading="lazy"
+                    class="img img-fluid"
+                    alt="Binary file"
+                    t-att-src="urlImage"
+                    t-att-name="props.resField"
+                    t-on-error.stop="onLoadFailed"
+                />
+            </div>
+        </t>
+    </t>
+</templates>

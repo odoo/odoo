@@ -1,0 +1,97 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_sale_shiprocket
+# 
+# Translators:
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2024
+# Wil Odoo, 2024
+# Larissa Manderfeld, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-21 16:01+0000\n"
+"PO-Revision-Date: 2024-06-28 05:15+0000\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: website_sale_shiprocket
+#: model:ir.model.fields,field_description:website_sale_shiprocket.field_payment_provider__custom_mode
+msgid "Custom Mode"
+msgstr "Modo personalizado"
+
+#. module: website_sale_shiprocket
+#. odoo-javascript
+#: code:addons/website_sale_shiprocket/static/src/xml/website_sale_delivery.xml:0
+#, python-format
+msgid ""
+"If you believe that it is an error, please contact the website "
+"administrator."
+msgstr ""
+"Si cree que esto es un error, contacte al administrador del sitio web."
+
+#. module: website_sale_shiprocket
+#. odoo-javascript
+#: code:addons/website_sale_shiprocket/static/src/xml/website_sale_delivery.xml:0
+#, python-format
+msgid "No suitable payment option could be found."
+msgstr "No se encontró una opción de pago adecuada."
+
+#. module: website_sale_shiprocket
+#. odoo-javascript
+#: code:addons/website_sale_shiprocket/static/src/js/website_sale_delivery.js:0
+#, python-format
+msgid "Pay Now"
+msgstr "Pagar ahora"
+
+#. module: website_sale_shiprocket
+#: model:ir.model,name:website_sale_shiprocket.model_payment_provider
+msgid "Payment Provider"
+msgstr "Proveedor de pago"
+
+#. module: website_sale_shiprocket
+#. odoo-javascript
+#: code:addons/website_sale_shiprocket/static/src/js/website_sale_delivery.js:0
+#, python-format
+msgid "Place Order"
+msgstr "Hacer pedido"
+
+#. module: website_sale_shiprocket
+#: model:ir.model.fields.selection,name:website_sale_shiprocket.selection__payment_provider__custom_mode__shiprocket_cash_on_delivery
+msgid "Shiprocket Cash On Delivery"
+msgstr "Pago a contra reembolso de Shiprocket"
+
+#. module: website_sale_shiprocket
+#: model:payment.provider,name:website_sale_shiprocket.payment_provider_shiprocket_cod
+msgid "Shiprocket: Cash on Delivery"
+msgstr "Shiprocket: pago a contra reembolso"
+
+#. module: website_sale_shiprocket
+#: model_terms:payment.provider,pending_msg:website_sale_shiprocket.payment_provider_shiprocket_cod
+msgid ""
+"You payment is in pending state as you have opted for cash on delivery.<br>\n"
+"            The delivery person will gather the payment during the delivery process."
+msgstr ""
+"Su pago se encuentra en estado pendiente ya que ha optado por el pago a contra reembolso.<br>\n"
+"            El repartidor recogerá el pago durante el proceso de entrega."
+
+#. module: website_sale_shiprocket
+#: model_terms:payment.provider,auth_msg:website_sale_shiprocket.payment_provider_shiprocket_cod
+msgid "Your payment has been authorized."
+msgstr "Su pago ha sido autorizado."
+
+#. module: website_sale_shiprocket
+#: model_terms:payment.provider,cancel_msg:website_sale_shiprocket.payment_provider_shiprocket_cod
+msgid "Your payment has been cancelled."
+msgstr "Su pago ha sido cancelado."
+
+#. module: website_sale_shiprocket
+#: model_terms:payment.provider,done_msg:website_sale_shiprocket.payment_provider_shiprocket_cod
+msgid "Your payment has been successfully processed."
+msgstr "Su pago ha sido procesado con éxito."

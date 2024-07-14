@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="hr_appraisal_view_form" model="ir.ui.view">
+        <field name="name">hr.appraisal.view.form</field>
+        <field name="model">hr.appraisal</field>
+        <field name="inherit_id" ref="hr_appraisal.view_hr_appraisal_form"/>
+        <field name="arch" type="xml">
+            <field name="manager_ids" position="after">
+                <field name="employee_feedback_ids" invisible="1"/>
+            </field>
+            <xpath expr="//button[@name='action_cancel']" position="after">
+                <button name="action_ask_feedback" data-hotkey="a" string="Ask Feedback" invisible="state != 'pending'" type="object"/>
+            </xpath>
+            <xpath expr="//button[@name='action_open_goals']" position="before">
+                <button class="oe_stat_button" name="action_open_survey_inputs" icon="fa-pencil-square-o" type="object" invisible="not employee_feedback_ids or 'uid' not in manager_user_ids and not is_manager">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="completed_survey_count"/>
+                            <span> / </span>
+                            <field name="total_survey_count"/>
+                        </span>
+                        <span class="o_stat_text">Feedbacks</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

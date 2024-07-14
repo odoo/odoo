@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 
+        https://www.icalculator.info/netherlands.html
+        https://www.icalculator.info/netherlands/income-tax-rates/2023.html
+     -->
+
+
+    <record id="l10n_nl_old_age_insurance" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_nl_hr_payroll.hr_salary_rule_category_social_security_employee"/>
+        <field name="name">Old Age Insurance (AOW)</field>
+        <field name="code">AOW</field>
+        <field name="sequence">105</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+gross = categories['GROSS']
+if contract.employee_id.is_non_resident and contract.l10n_nl_30_percent:
+    gross *= 0.70
+rates = payslip._rule_parameter('l10n_nl_social_security_rates_employee')['AOW']
+result_rate = -(rates[1] if contract.employee_id.is_non_resident else rates[0])
+cap = rates[2] / 12
+result = min(gross, cap)
+        </field>
+        <field name="struct_id" ref="l10n_nl_hr_payroll.hr_payroll_structure_nl_employee_salary"/>
+    </record>
+
+    <record id="l10n_nl_survivor_dependant_insurance" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_nl_hr_payroll.hr_salary_rule_category_social_security_employee"/>
+        <field name="name">Survivor Dependant Insurance (Anw)</field>
+        <field name="code">Anw</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+gross = categories['GROSS']
+if contract.employee_id.is_non_resident and contract.l10n_nl_30_percent:
+    gross *= 0.70
+rates = payslip._rule_parameter('l10n_nl_social_security_rates_employee')['Anw']
+result_rate = -(rates[1] if contract.employee_id.is_non_resident else rates[0])
+cap = rates[2] / 12
+result = min(gross, cap)
+        </field>
+        <field name="struct_id" ref="l10n_nl_hr_payroll.hr_payroll_structure_nl_employee_salary"/>
+    </record>
+
+    <record id="l10n_nl_long_medical_care_insurance" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_nl_hr_payroll.hr_salary_rule_category_social_security_employee"/>
+        <field name="name">Long Medical Care Insurance (Wlz)</field>
+        <field name="code">Wlz</field>
+        <field name="sequence">115</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+gross = categories['GROSS']
+if contract.employee_id.is_non_resident and contract.l10n_nl_30_percent:
+    gross *= 0.70
+rates = payslip._rule_parameter('l10n_nl_social_security_rates_employee')['Wlz']
+result_rate = -(rates[1] if contract.employee_id.is_non_resident else rates[0])
+cap = rates[2] / 12
+result = min(gross, cap)
+        </field>
+        <field name="struct_id" ref="l10n_nl_hr_payroll.hr_payroll_structure_nl_employee_salary"/>
+    </record>
+
+    <record id="l10n_nl_taxable_income" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_nl_hr_payroll.hr_salary_rule_category_taxable_income"/>
+        <field name="name">Taxable Income</field>
+        <field name="code">TAXABLE</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+gross = categories['GROSS']
+if contract.employee_id.is_non_resident and contract.l10n_nl_30_percent:
+    gross *= 0.70
+result = gross + categories['DED']
+        </field>
+        <field name="struct_id" ref="l10n_nl_hr_payroll.hr_payroll_structure_nl_employee_salary"/>
+    </record>
+
+    <record id="l10n_nl_income_tax" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_nl_hr_payroll.hr_salary_rule_category_income_tax"/>
+        <field name="name">Income Tax Due</field>
+        <field name="code">INCOMETAX</field>
+        <field name="sequence">160</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if contract.employee_id.is_non_resident:
+    rates = payslip._rule_parameter('l10n_nl_income_tax_rates_non_resident')
+else:
+    rates = payslip._rule_parameter('l10n_nl_income_tax_rates_resident')
+
+gross = categories['TAXABLE']
+result = 0
+
+for low, high, rate in rates:
+    low /= 12.0
+    high /= 12.0
+
+    if gross &gt; low:
+        result -= min(gross - low, high) * rate / 100.0
+        </field>
+        <field name="struct_id" ref="l10n_nl_hr_payroll.hr_payroll_structure_nl_employee_salary"/>
+    </record>
+
+    <record id="l10n_nl_health_insurance" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_nl_hr_payroll.hr_salary_rule_category_social_security_employer"/>
+        <field name="name">Health Insurance (Zvw)</field>
+        <field name="code">Zvw</field>
+        <field name="sequence">165</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+gross = categories['GROSS']
+if contract.employee_id.is_non_resident and contract.l10n_nl_30_percent:
+    gross *= 0.70
+rates = payslip._rule_parameter('l10n_nl_social_security_rates_employer')['Zvw']
+result_rate = -(rates[1] if contract.employee_id.is_non_resident else rates[0])
+cap = rates[2] / 12
+result = min(gross, - cap * 100 / result_rate)
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_nl_hr_payroll.hr_payroll_structure_nl_employee_salary"/>
+    </record>
+
+    <record id="l10n_nl_unemployment_insurance" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_nl_hr_payroll.hr_salary_rule_category_social_security_employer"/>
+        <field name="name">Unemployment Insurance (WW)</field>
+        <field name="code">WW</field>
+        <field name="sequence">166</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+gross = categories['GROSS']
+if contract.employee_id.is_non_resident and contract.l10n_nl_30_percent:
+    gross *= 0.70
+rates = payslip._rule_parameter('l10n_nl_social_security_rates_employer')['WW']
+result_rate = -(rates[1] if contract.employee_id.is_non_resident else rates[0])
+cap = rates[2] / 12
+result = min(gross, - cap * 100 / result_rate)
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_nl_hr_payroll.hr_payroll_structure_nl_employee_salary"/>
+    </record>
+
+    <record id="l10n_nl_ww_sector_fund" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_nl_hr_payroll.hr_salary_rule_category_social_security_employer"/>
+        <field name="name">Unemployment Insurance Sector Fund (WW)</field>
+        <field name="code">WWFund</field>
+        <field name="sequence">167</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+gross = categories['GROSS']
+if contract.employee_id.is_non_resident and contract.l10n_nl_30_percent:
+    gross *= 0.70
+rates = payslip._rule_parameter('l10n_nl_social_security_rates_employer')['WWFund']
+result_rate = -(rates[1] if contract.employee_id.is_non_resident else rates[0])
+cap = rates[2] / 12
+result = min(gross, - cap * 100 / result_rate)
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_nl_hr_payroll.hr_payroll_structure_nl_employee_salary"/>
+    </record>
+
+    <record id="l10n_nl_disability_insurance" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_nl_hr_payroll.hr_salary_rule_category_social_security_employer"/>
+        <field name="name">Disability Insurance (WAO/WIA)</field>
+        <field name="code">WAO/WIA</field>
+        <field name="sequence">168</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+gross = categories['GROSS']
+if contract.employee_id.is_non_resident and contract.l10n_nl_30_percent:
+    gross *= 0.70
+rates = payslip._rule_parameter('l10n_nl_social_security_rates_employer')['WAO/WIA']
+result_rate = -(rates[1] if contract.employee_id.is_non_resident else rates[0])
+cap = rates[2] / 12
+result = min(gross, - cap * 100 / result_rate)
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_nl_hr_payroll.hr_payroll_structure_nl_employee_salary"/>
+    </record>
+
+    <record id="l10n_nl_return_to_work_fund" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_nl_hr_payroll.hr_salary_rule_category_social_security_employer"/>
+        <field name="name">Return to Work Fund - Average (Whk)</field>
+        <field name="code">Whk</field>
+        <field name="sequence">169</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+gross = categories['GROSS']
+if contract.employee_id.is_non_resident and contract.l10n_nl_30_percent:
+    gross *= 0.70
+rates = payslip._rule_parameter('l10n_nl_social_security_rates_employer')['Whk']
+result_rate = -(rates[1] if contract.employee_id.is_non_resident else rates[0])
+cap = rates[2] / 12
+result = min(gross, - cap * 100 / result_rate)
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_nl_hr_payroll.hr_payroll_structure_nl_employee_salary"/>
+    </record>
+
+</odoo>

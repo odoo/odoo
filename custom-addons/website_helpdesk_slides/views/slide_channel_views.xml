@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_slide_channel_form_inherit_website_helpdesk_slides">
+            <field name="name">slide.channel.view.form.inherit.website.helpdesk.slides</field>
+            <field name="inherit_id" ref="website_slides.view_slide_channel_form"/>
+            <field name="model">slide.channel</field>
+            <field name="arch" type="xml">
+                <field name="is_published" position="before">
+                    <button name="action_view_helpdesk_teams"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-life-ring"
+                        groups="helpdesk.group_helpdesk_user"
+                        invisible="helpdesk_team_count &lt; 1">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="helpdesk_team_count" nolabel="1"/>
+                        </span>
+                        <span class="o_stat_text">Helpdesk Teams</span>
+                    </div>
+                </button>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

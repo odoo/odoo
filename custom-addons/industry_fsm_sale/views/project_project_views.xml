@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_view_form_inherit" model="ir.ui.view">
+        <field name="name">project.view.form.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="sale_timesheet.project_project_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='settings']//field[@name='sale_line_id']" position="before">
+                <field name="pricing_type" invisible="1"/>
+                <field name="timesheet_product_id" string="Default Service" context="{'default_detailed_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"
+                    invisible="not allow_timesheets or not pricing_type or not is_fsm"
+                    required="is_fsm and allow_billable and allow_timesheets"/>
+            </xpath>
+            <xpath expr="//page[@name='settings']//group/field[@name='sale_line_id']" position="attributes">
+                <attribute name="invisible">is_fsm or not allow_billable or not partner_id</attribute>
+            </xpath>
+            <xpath expr="//page[@name='settings']//group/field[@name='sale_line_id'][2]" position="attributes">
+                <attribute name="invisible">is_fsm or not allow_billable or not partner_id</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='sale_line_employee_ids']/tree/field[@name='sale_line_id'][1]" position="attributes">
+                <attribute name="column_invisible">parent.id or parent.is_fsm</attribute>
+                <attribute name="required">not parent.is_fsm</attribute>
+            </xpath>
+            <xpath expr="//field[@name='sale_line_employee_ids']/tree/field[@name='sale_line_id'][2]" position="attributes">
+                <attribute name="column_invisible">not parent.id or parent.is_fsm</attribute>
+                <attribute name="required">not parent.is_fsm</attribute>
+            </xpath>
+            <xpath expr="//field[@name='sale_line_employee_ids']/tree/field[@name='sale_line_id'][3]" position="attributes">
+                <attribute name="column_invisible">not parent.id or parent.is_fsm</attribute>
+                <attribute name="required">not parent.is_fsm</attribute>
+            </xpath>
+            <xpath expr="//field[@name='sale_line_employee_ids']/tree/field[@name='sale_line_id']" position="after">
+                <field name="timesheet_product_id" column_invisible="not parent.is_fsm" required="parent.is_fsm" context="{'default_detailed_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
+            </xpath>
+            <xpath expr="//field[@name='sale_line_employee_ids']/tree/field[@name='price_unit']" position="attributes">
+                <attribute name="readonly">not parent.is_fsm or not timesheet_product_id</attribute>
+            </xpath>
+            <xpath expr="//group[@name='group_sales_invoicing']/div" position="inside">
+                <field name="is_fsm" invisible="1"/>
+                <setting class="col-lg-12" help="Track the material used to complete tasks">
+                    <field name="allow_material"/>
+                </setting>
+            </xpath>
+            <xpath expr="//group[@name='group_sales_invoicing']/div" position="inside">
+                <setting help="Create new quotations directly from tasks" groups="industry_fsm.group_fsm_quotation_from_task">
+                    <field name="allow_quotations"/>
+                </setting>
+            </xpath>
+            <xpath expr="//page[@name='billing_employee_rate']" position="attributes">
+                <attribute name="invisible">not allow_timesheets and is_fsm or not allow_billable or not partner_id and not is_fsm</attribute>
+            </xpath>
+             <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="invisible">not allow_billable and not is_fsm</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_project_view_form_simplified_inherit" model="ir.ui.view">
+        <field name="name">project.project.view.form.simplified.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <field name="allow_billable" position="after">
+                <field name="allow_material" invisible="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="project_project_view_inherit_project_filter_fsm_sale" model="ir.ui.view">
+        <field name="name">project.project.select.inherit.project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="sale_project.project_project_view_inherit_project_filter"/>
+        <field name="arch" type="xml">
+            <field name="sale_order_id" position="attributes">
+                <attribute name="invisible">context.get('fsm_mode')</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_project_inherit_fsm_sale" model="ir.ui.view">
+        <field name="name">project.project.tree.fsm.sale</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="sale_project.project_project_view_tree_inherit_sale_project"/>
+        <field name="arch" type="xml">
+            <field name="sale_line_id" position="attributes">
+                <attribute name="invisible">context.get('fsm_mode')</attribute>
+            </field>
+            <field name="partner_id" position="after">
+                <field name="is_fsm" column_invisible="True"/>
+            </field>
+            <field name="partner_id" position="attributes">
+                <attribute name="invisible">not allow_billable and not is_fsm</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>

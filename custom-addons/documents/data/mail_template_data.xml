@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--Email template -->
+        <record id="mail_template_document_request" model="mail.template">
+            <field name="name">Document: Document Request</field>
+            <field name="model_id" ref="model_documents_share"/>
+            <field name="subject">Document Request {{ object.name != False and ': '+ object.name or '' }}</field>
+            <field name="email_to">{{ object.owner_id.email_formatted }}</field>
+            <field name="description">Sent to partner when requesting a document from them</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                    <tbody>
+                        <!-- HEADER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr><td valign="middle">
+                                        <span style="font-size: 10px;">
+                                            Document Request: <br/>
+                                            <t t-if="object.name">
+                                                <span style="font-size: 20px; font-weight: bold;" t-out="object.name or ''">Inbox Financial</span>
+                                            </t>
+                                        </span><br/>
+                                    </td><td valign="middle" align="right" t-if="not object.create_uid.company_id.uses_default_logo">
+                                        <img t-attf-src="/logo.png?company={{ object.create_uid.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="object.create_uid.company_id.name"/>
+                                    </td></tr>
+                                    <tr><td colspan="2" style="text-align:center;">
+                                      <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                    </td></tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <!-- CONTENT -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr><td valign="top" style="font-size: 13px;">
+                                        <div>
+                                            Hello <t t-out="object.owner_id.name or ''">OdooBot</t>,
+                                            <br/><br/>
+                                            <t t-out="object.create_uid.name or ''">OdooBot</t> (<t t-out="object.create_uid.email or ''">odoobot@example.com</t>) asks you to provide the following document:
+                                            <br/><br/>
+                                            <center>
+                                                <div>
+                                                    <t t-if="object.name">
+                                                        <b t-out="object.name or ''">Inbox Financial</b>
+                                                    </t>
+                                                </div>
+                                                <div>
+                                                    <t t-if="object.activity_note">
+                                                        <i t-out="object.activity_note or ''">Example of a note.</i>
+                                                    </t>
+                                                </div>
+                                                <br/>
+                                                <div style="margin: 16px 0px 16px 0px;">
+                                                    <a t-att-href="object.full_url"
+                                                        style="background-color: #875A7B; padding: 20px 30px 20px 30px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                                                        Upload the requested document
+                                                    </a>
+                                                </div>
+                                            </center><br/>
+                                            Please provide us with the missing document<t t-if="object.date_deadline"> before the link expires (planned on <t t-out="object.date_deadline">2021-05-17</t>)</t>.
+                                            <t t-if="user and user.signature">
+                                                <br/>
+                                                <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+                                                <br/>
+                                            </t>
+                                        </div>
+                                    </td></tr>
+                                    <tr><td style="text-align:center;">
+                                      <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                    </td></tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <!-- FOOTER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr><td valign="middle" align="left">
+                                        <t t-out="object.create_uid.company_id.name or ''">YourCompany</t>
+                                    </td></tr>
+                                    <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                                        <t t-out="object.create_uid.company_id.phone or ''">+1 650-123-4567</t>
+                                        <t t-if="object.create_uid.company_id.email">
+                                            | <a t-attf-href="'mailto:%s' % {{ object.create_uid.company_id.email }}" style="text-decoration:none; color: #454748;" t-out="object.create_uid.company_id.email or ''">info@yourcompany.com</a>
+                                        </t>
+                                        <t t-if="object.create_uid.company_id.website">
+                                            | <a t-attf-href="'%s' % {{ object.create_uid.company_id.website }}" style="text-decoration:none; color: #454748;" t-out="object.create_uid.company_id.website or ''">http://www.example.com</a>
+                                        </t>
+                                    </td></tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                    </td></tr>
+                    <!-- POWERED BY -->
+                    <tr><td align="center" style="min-width: 590px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                          <tr><td style="text-align: center; font-size: 13px;">
+                            <t t-if="object.date_deadline">
+                                This link expires on <b t-out="object.date_deadline or ''">2021-05-17</b>.<br/>
+                            </t>
+                            Powered by <a target="_blank" href="https://www.odoo.com/app/documents" style="color: #875A7B;">Odoo Documents</a>
+                          </td></tr>
+                        </table>
+                    </td></tr>
+                </table>
+            </field>
+            <field name="lang">{{ object.owner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Manual reminder; copy of document request template -->
+        <record id="mail_template_document_request_reminder" model="mail.template">
+            <field name="name">Document Request: Reminder</field>
+            <field name="model_id" ref="model_documents_document"/>
+            <field name="subject">Reminder to upload your document{{ object.name and ' : ' + object.name or '' }}</field>
+            <field name="email_to">{{ object.create_share_id.owner_id.email_formatted or object.request_activity_id.user_id.email_formatted }}</field>
+            <field name="description">Set reminders in activities to notify users who didn't upload their requested document</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                    <tbody>
+                        <!-- HEADER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr><td valign="middle">
+                                        <span style="font-size: 10px;">
+                                            Document Request: <br/>
+                                            <t t-if="object.create_share_id.name">
+                                                <span style="font-size: 20px; font-weight: bold;" t-out="object.create_share_id.name or ''">Inbox Financial</span>
+                                            </t>
+                                        </span><br/>
+                                    </td><td valign="middle" align="right">
+                                        <img t-attf-src="/logo.png?company={{ object.create_uid.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="object.create_uid.company_id.name"/>
+                                    </td></tr>
+                                    <tr><td colspan="2" style="text-align:center;">
+                                      <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                    </td></tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <!-- CONTENT -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr><td valign="top" style="font-size: 13px;">
+                                        <div>
+                                            Hello <t t-out="object.create_share_id.owner_id.name or ''">OdooBot</t>,
+                                            <br/><br/>
+                                            This is a friendly reminder to upload your requested document:
+                                            <br/><br/>
+                                            <center>
+                                                <div>
+                                                    <t t-if="object.create_share_id.name">
+                                                        <b t-out="object.create_share_id.name or ''">Inbox Financial</b>
+                                                    </t>
+                                                </div>
+                                                <div>
+                                                    <t t-if="object.create_share_id.activity_note">
+                                                        <i t-out="object.create_share_id.activity_note or ''">Example of a note.</i>
+                                                    </t>
+                                                </div>
+                                                <br/>
+                                                <div style="margin: 16px 0px 16px 0px;">
+                                                    <a t-att-href="object.create_share_id.full_url"
+                                                        style="background-color: #875A7B; padding: 20px 30px 20px 30px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                                                        Upload the requested document
+                                                    </a>
+                                                </div>
+                                            </center><br/>
+                                            Please provide us with the missing document before the link expires (planned on <t t-out="object.create_share_id.date_deadline or ''">2021-05-17</t>).
+                                            <br/><br/>
+                                            Thank you,
+                                            <t t-if="user and user.signature">
+                                                <br/>
+                                                <t t-out="user.signature">--<br/>Mitchell Admin</t>
+                                                <br/>
+                                            </t>
+                                        </div>
+                                    </td></tr>
+                                    <tr><td style="text-align:center;">
+                                      <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                    </td></tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <!-- FOOTER -->
+                        <tr>
+                            <td align="center" style="min-width: 590px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                    <tr><td valign="middle" align="left">
+                                        <t t-out="object.create_uid.company_id.name or ''">YourCompany</t>
+                                    </td></tr>
+                                    <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                                        <t t-out="object.create_uid.company_id.phone or ''">+1 650-123-4567</t>
+                                        <t t-if="object.create_uid.company_id.email">
+                                            | <a t-attf-href="'mailto:%s' % {{ object.create_uid.company_id.email }}" style="text-decoration:none; color: #454748;" t-out="object.create_uid.company_id.email">info@yourcompany.com</a>
+                                        </t>
+                                        <t t-if="object.create_uid.company_id.website">
+                                            | <a t-att-href="object.create_uid.company_id.website" style="text-decoration:none; color: #454748;" t-out="object.create_uid.company_id.website">http://www.example.com</a>
+                                        </t>
+                                    </td></tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                    </td></tr>
+                    <!-- POWERED BY -->
+                    <tr><td align="center" style="min-width: 590px;">
+                        <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                          <tr><td style="text-align: center; font-size: 13px;">
+                            <t t-if="object.create_share_id.date_deadline">
+                                This link expires on <b t-out="object.create_share_id.date_deadline">2021-05-17</b>.<br/>
+                            </t>
+                            Powered by <a target="_blank" href="https://www.odoo.com/app/documents" style="color: #875A7B;">Odoo Documents</a>
+                          </td></tr>
+                        </table>
+                    </td></tr>
+                </table>
+            </field>
+        </record>
+    </data>
+</odoo>

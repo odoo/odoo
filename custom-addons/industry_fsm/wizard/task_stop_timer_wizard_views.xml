@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_task_stop_timer_wizard_form" model="ir.ui.view">
+        <field name="name">view.task.stop.timer.wizard.form</field>
+        <field name="model">project.task.stop.timers.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="line_ids" invisible="1"/>
+                <div>
+                    Some employees are still running their timer for this task. Are you sure you want to continue?
+                </div>
+                <footer>
+                    <button string="Confirm" name="action_confirm" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn btn-default" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

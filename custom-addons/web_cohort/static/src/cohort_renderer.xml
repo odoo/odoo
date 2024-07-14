@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web_cohort.CohortRenderer">
+        <div class="o_cohort_renderer" t-att-class="props.class">
+            <div class="d-flex gap-1 px-3 py-2">
+                <div class="btn-group" role="toolbar" aria-label="Main actions">
+                    <t t-call="web.ReportViewMeasures">
+                        <t t-set="measures" t-value="model.metaData.measures"/>
+                        <t t-set="activeMeasures" t-value="[model.metaData.measure]"/>
+                    </t>
+                </div>
+                    <div class="btn-group">
+                    <ViewScaleSelector scales="scales" currentScale="model.metaData.interval" setScale.bind="setScale" />
+                </div>
+                    <div class="btn-group">
+                    <button class="btn btn-secondary fa fa-download o_cohort_download_button"
+                            title="Download as Excel file"
+                            t-on-click="downloadExcel"></button>
+                </div>
+            </div>
+            <t t-foreach="model.data" t-as="data" t-key="data_index">
+                <div t-if="data.title" class="table-responsive">
+                    <table class="table text-center mb-0">
+                        <thead>
+                            <tr>
+                                <th colspan="16" class="text-center align-middle">
+                                    <t t-esc="data.title" />
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div t-if="data.rows.length" class="table-responsive">
+                    <table class="o_data_table table table-bordered text-center mb-0">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" class="text-center align-middle">
+                                    <t t-esc="model.metaData.dateStartString" />
+                                </th>
+                                <th rowspan="2" class="text-center align-middle">
+                                    <t t-esc="model.metaData.measures[model.metaData.measure].string"/>
+                                </th>
+                                <th colspan="16" class="text-center align-middle">
+                                    <t t-esc="model.metaData.dateStopString" /> - By <t t-esc="model.intervals[model.metaData.interval]" />
+                                </th>
+                            </tr>
+                            <tr>
+                                <th t-foreach="range(data.rows[0].columns.length)" t-as="intervalNumber" t-key="intervalNumber"
+                                    class="text-center align-middle"
+                                >
+                                    <t t-if="model.metaData.timeline === 'backward'">
+                                        <t t-esc="intervalNumber - (data.rows[0].columns.length - 1)"/>
+                                    </t>
+                                    <t t-else="">
+                                        +<t t-esc="intervalNumber"/>
+                                    </t>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="data.rows" t-as="row" t-key="row.date"
+                                class="o_cohort_row_clickable"
+                                t-on-click.stop="() => props.onRowClicked(row)"
+                            >
+                                <td class="o_cohort_value text-center align-middle p-0">
+                                    <t t-esc="row.date" />
+                                </td>
+                                <td class="o_cohort_value text-center align-middle p-0">
+                                    <t t-esc="formatFloat(row.value)" />
+                                </td>
+                                <td t-foreach="row.columns" t-as="col" t-key="col.period" class="text-center align-middle p-0">
+                                    <t t-set="count" t-value="mode === 'churn' ? (col.churn_value === '-' ? '' : col.churn_value) : (col.value === '-' ? '' : col.value)" />
+                                    <t t-set="measure" t-value="model.metaData.measures[model.metaData.measure].string" />
+                                    <div class="o_cohort_highlight m-1 rounded p-1"
+                                        t-att-title="getCellTitle(col.period, measure, count)"
+                                        t-attf-style="background-color: rgba(0, 160, 157, {{col.percentage/100.0}}); color: {{col.percentage gt 50 and '#FFFFFF' or 'inherit'}}"
+                                        t-att-class="{o_cohort_value: col.value !== '-'}"
+                                    >
+                                        <t t-esc="formatPercentage(col.percentage / 100.0)"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="fw-bold">
+                            <tr>
+                                <td class="text-center align-middle">Average</td>
+                                <td class="text-center align-middle">
+                                    <t t-esc="formatFloat(data.avg.avg_value)"/>
+                                </td>
+                                <td t-foreach="data.avg.columns_avg" t-as="col" t-key="col_index" class="text-center align-middle">
+                                    <t t-if="data.avg.columns_avg[col]['count']">
+                                        <t t-esc="formatPercentage(data.avg.columns_avg[col]['percentage'] / (data.avg.columns_avg[col]['count'] * 100.0))" />
+                                    </t>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div t-if="model.data.length > 1 &amp;&amp; !data.rows.length"
+                    class="o_cohort_no_data text-center p-3 border"
+                >
+                    No data available.
+                </div>
+                <br/>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,605 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* industry_fsm_sale
+# 
+# Translators:
+# Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2023
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2023
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
+# Anni Saarelainen, 2023
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2023
+# Janne Rättyä <janne.rattya@web-veistamo.fi>, 2023
+# Martin Trigaux, 2023
+# Mikko Salmela <salmemik@gmail.com>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:11+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid "<b>Invoice your time and material</b> to your customer."
+msgstr "<b>Laskuta aikaa ja materiaalia</b> asiakkaalta."
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/project_task.py:0
+#, python-format
+msgid ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                            No products found. Let's create one!\n"
+"                        </p><p>\n"
+"                            Keep track of the products you are using to complete your tasks, and invoice your customers for the goods.\n"
+"                            Tip: using kits, you can add multiple products at once.\n"
+"                        </p><p>\n"
+"                            When your task is marked as done, your stock will be updated automatically. Simply choose a warehouse\n"
+"                            in your profile from where to draw stock.\n"
+"                        </p>"
+msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                            Tuotteita ei löytynyt. Luodaan sellainen!\n"
+"                        </p><p>\n"
+"                            Pidä kirjaa tuotteista, joita käytät työtehtävien suorittamiseen, ja laskuta tavaroita asiakkailtasi.\n"
+"                            Vinkki: sarjojen avulla voit lisätä useita tuotteita kerralla.\n"
+"                        </p><p>\n"
+"                            Kun tehtäväsi on merkitty tehdyksi, varastosi päivittyy automaattisesti. Valitse yksinkertaisesti varasto\n"
+"                            profiilissasi, josta haluat ottaa varastoa.\n"
+"                        </p>"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "<span>Disc.%</span>"
+msgstr "<span>Ale%</span>"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_sharing_project_task_inherit_view_form
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.view_task_form2_inherit
+msgid "<span>Products</span>"
+msgstr "<span>Tuotteet</span>"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "<strong class=\"mr16\">Subtotal</strong>"
+msgstr "<strong class=\"mr16\">Välisumma</strong>"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "<strong>Amount Due: </strong>"
+msgstr "<strong>Erääntyvä määrä: </strong>"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "<strong>Taxes</strong>"
+msgstr "<strong>Verot</strong>"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "<strong>Total</strong>"
+msgstr "<strong>Yhteensä</strong>"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "<strong>Untaxed amount</strong>"
+msgstr "<strong>Veroton määrä</strong>"
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/project_task.py:0
+#: code:addons/industry_fsm_sale/models/project_task.py:0
+#, python-format
+msgid "A customer should be set on the task to generate a worksheet."
+msgstr "Tehtävälle on asetettava asiakas, joka luo töiden kirjauksen liuskan."
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.industry_fsm_sale_product_catalog_inherit_search_view
+msgid "Added Products"
+msgstr "Lisätyt tuotteet"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "Amount"
+msgstr "Arvo"
+
+#. module: industry_fsm_sale
+#: model:ir.model.constraint,message:industry_fsm_sale.constraint_project_project_fsm_imply_task_rate
+msgid "An FSM project must be billed at task rate or employee rate."
+msgstr ""
+"Kenttätyön ohjauksen projekti on laskutettava tehtävä- tai työntekijähinnan "
+"mukaan."
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "An invoice has been created: %s"
+msgstr "Lasku on luotu: %s"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_account_analytic_line
+msgid "Analytic Account"
+msgstr "Kustannuspaikka"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_project__allow_billable
+msgid "Billable"
+msgstr "Laskutettava"
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/project_task.py:0
+#, python-format
+msgid ""
+"By saving this change, all timesheet entries will be linked to the selected "
+"Sales Order Item without distinction."
+msgstr ""
+"Kun tallennat tämän muutoksen, kaikki työaikakirjanpitomerkinnät liitetään "
+"erottelematta valittuun myyntitilauserään."
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/project_task.py:0
+#, python-format
+msgid "Choose Products"
+msgstr "Valitse tuotteet"
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid ""
+"Choose a <b>name</b> for your product <i>(e.g. Bolts, Screws, Boiler, "
+"etc.).</i>"
+msgstr ""
+"Valitse tuotteellesi <b>nimi</b> <i>(esim. pultit, ruuvit, kattila "
+"jne.).</i>"
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid ""
+"Click on a product to add it to your <b>list of materials</b>. <i>Tip: for "
+"large quantities, click on the number to edit it directly.</i>"
+msgstr ""
+"Klikkaa tuotetta lisätäksesi sen <b>materiaaliluetteloon</b>. <i>Vinkki: "
+"suurten määrien kohdalla voit muokata numeroa suoraan napsauttamalla "
+"sitä.</i>"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_res_config_settings
+msgid "Config Settings"
+msgstr "Asetukset"
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid "Confirm the creation of your <b>invoice</b>."
+msgstr "Vahvista <b>laskun</b> luominen."
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_task_view_list_fsm_sale_inherit
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.view_task_form2_inherit
+msgid "Create Invoice"
+msgstr "Luo lasku"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_view_form_inherit
+msgid "Create new quotations directly from tasks"
+msgstr "Luo uusia tarjouksia suoraan tehtävistä"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__currency_id
+msgid "Currency"
+msgstr "Valuutta"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_view_form_inherit
+msgid "Default Service"
+msgstr "Oletuspalvelu"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_sale_order_line__delivered_price_subtotal
+msgid "Delivered Subtotal"
+msgstr "Toimitettu välisumma"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_sale_order_line__delivered_price_total
+msgid "Delivered Total"
+msgstr "Toimitettu yhteensä"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_sale_order_line__delivered_price_tax
+msgid "Delivered Total Tax"
+msgstr "Toimitettu yhteensä vero"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__display_create_invoice_primary
+msgid "Display Create Invoice Primary"
+msgstr "Näytä Luo ensisijainen lasku"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__display_create_invoice_secondary
+msgid "Display Create Invoice Secondary"
+msgstr "Näytä Luo toissijainen lasku"
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/sale_order.py:0
+#, python-format
+msgid "Extra Quotation Created: %s"
+msgstr "Lisätarjous luotu: %s"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_project__allow_quotations
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__allow_quotations
+msgid "Extra Quotations"
+msgstr "Lisätarjoukset"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_report_project_task_user_fsm
+msgid "FSM Tasks Analysis"
+msgstr "Kenttätyön ohjauksen tehtävien analysointi"
+
+#. module: industry_fsm_sale
+#: model:product.template,name:industry_fsm_sale.field_service_product_product_template
+msgid "Field Service"
+msgstr "Kenttätyön ohjaus"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_product_product__fsm_partner_price_currency_id
+msgid "Fsm Partner Price Currency"
+msgstr "Kenttätyön ohjauksen kumppanin hinnan valuutta"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields.selection,name:industry_fsm_sale.selection__report_project_task_user_fsm__invoice_status__invoiced
+msgid "Fully Invoiced"
+msgstr "Kaikki laskutettu"
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/product_product.py:0
+#, python-format
+msgid "Invalid operator: %s"
+msgstr "Virheellinen operaattori: %s"
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/product_product.py:0
+#, python-format
+msgid "Invalid value: %s"
+msgstr "Virheellinen arvo: %s"
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/project_task.py:0
+#, python-format
+msgid "Invoice"
+msgstr "Lasku"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__portal_invoice_count
+msgid "Invoice Count"
+msgstr "Laskujen lukumäärä"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__invoice_status
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_report_project_task_user_fsm__invoice_status
+msgid "Invoice Status"
+msgstr "Laskutuksen tila"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.actions.act_window,help:industry_fsm_sale.project_task_action_to_invoice_fsm
+msgid ""
+"Invoice your time and material to your customers once your tasks are done."
+msgstr "Laskuta aikaa ja materiaalia asiakkaillesi, kun työsi on tehty."
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/project_task.py:0
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_sharing_project_task_inherit_view_form
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.view_task_form2_inherit
+#, python-format
+msgid "Invoices"
+msgstr "Laskut"
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid "Let's <b>track the material</b> you use for your task."
+msgstr "<b>Seurataan</b> tehtävään käyttämääsi <b>materiaalia</b>."
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid "Let's create a new <b>product</b>."
+msgstr "Luodaan uusi <b>tuote</b>."
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__material_line_product_count
+msgid "Material Line Product Count"
+msgstr "Tuoterivin tuotteiden lukumäärä"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__material_line_total_price
+msgid "Material Line Total Price"
+msgstr "Tuoterivin kokonaishinta"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_product_product__fsm_quantity
+msgid "Material Quantity"
+msgstr "Materiaalin määrä"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.view_task_form2_inherit
+msgid "New Quotation"
+msgstr "Uusi tarjous"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.actions.act_window,help:industry_fsm_sale.product_action_fsm
+msgid "No products found. Let's create one!"
+msgstr "Tuotteita ei löytynyt. Luodaan sellainen!"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.actions.act_window,help:industry_fsm_sale.project_task_action_to_invoice_fsm
+msgid "No tasks found. Let's create one!"
+msgstr "Ei tehtäviä. Luodaan uusi tehtävä!"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields.selection,name:industry_fsm_sale.selection__report_project_task_user_fsm__invoice_status__no
+msgid "Nothing to Invoice"
+msgstr "Ei laskutettavaa"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__invoice_count
+msgid "Number of invoices"
+msgstr "Laskujen lukumäärä"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_product_product__fsm_partner_price
+msgid "Partner Price"
+msgstr "Kumppanin hinta"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__portal_quotation_count
+msgid "Portal Quotation Count"
+msgstr "Portaalin tarjousten määrä"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__pricelist_id
+msgid "Pricelist"
+msgstr "Hinnasto"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_product_template
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.industry_fsm_sale_product_catalog_kanban_view
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "Product"
+msgstr "Tuote"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_product_product
+msgid "Product Variant"
+msgstr "Tuotevariaatio"
+
+#. module: industry_fsm_sale
+#: model:ir.actions.act_window,name:industry_fsm_sale.product_action_fsm
+#: model:ir.ui.menu,name:industry_fsm_sale.fsm_menu_settings_product
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.view_task_form2_inherit
+msgid "Products"
+msgstr "Tuotteet"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_project__allow_material
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__allow_material
+msgid "Products on Tasks"
+msgstr "Tehtävien tuotteet"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_project_project
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_product_product__project_id
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_product_template__project_id
+msgid "Project"
+msgstr "Projektit"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_project_sale_line_employee_map
+msgid "Project Sales line, employee mapping"
+msgstr "Projektin myyntirivi, työntekijäkartoitus"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "Quantity"
+msgstr "Määrä"
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/controllers/portal.py:0
+#, python-format
+msgid "Quotation"
+msgstr "Tarjous"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__quotation_count
+msgid "Quotation Count"
+msgstr "Tarjousten määrä"
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_sharing_project_task_inherit_view_form
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.view_task_form2_inherit
+#, python-format
+msgid "Quotations"
+msgstr "Tarjoukset"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.view_order_form_inherit_sale_project
+msgid "Related Task"
+msgstr "Aiheeseen liittyvä tehtävä"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_sale_advance_payment_inv
+msgid "Sales Advance Payment Invoice"
+msgstr "Myynnin ennakkolasku"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Myyntitilaus"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_project__sale_line_id
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__sale_line_id
+msgid "Sales Order Item"
+msgstr "Myyntitilausrivi"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,help:industry_fsm_sale.field_project_task__sale_line_id
+msgid ""
+"Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
+"By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
+"Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
+msgstr ""
+"Myyntitilauksen kohde, johon tähän tehtävään käytetty aika lisätään, jotta se voidaan laskuttaa asiakkaalta.\n"
+"Oletusarvoisesti valitaan projektille asetettu myyntitilauserä. Jos sellaista ei ole, käytetään viimeisintä ennakkoon maksettua myyntitilauserää, jolla on aikaa jäljellä.\n"
+"Poista myyntitilauserä, jotta tämä tehtävä ei ole laskutettava. Voit myös muuttaa tai poistaa myyntitilauserän kustakin työaikakirjanpidon merkinnästä erikseen."
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Myyntitilausrivi"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,help:industry_fsm_sale.field_project_project__sale_line_id
+msgid ""
+"Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
+"It can be modified on each task and timesheet entry individually if necessary."
+msgstr ""
+"Myyntitilauserä, joka valitaan oletusarvoisesti tämän projektin tehtäviin ja työaikatauluihin, paitsi jos työaikataulujen työntekijä on nimenomaisesti linkitetty toiseen projektin myyntitilauserään.\n"
+"Sitä voidaan tarvittaessa muuttaa jokaisessa tehtävässä ja työaikataulussa erikseen."
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_sale_line_employee_map__timesheet_product_id
+msgid "Service"
+msgstr "Palvelu"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_project_task
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_sale_order__task_id
+msgid "Task"
+msgstr "Tehtävä"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_project_task_recurrence
+msgid "Task Recurrence"
+msgstr "Tehtävän toistuvuus"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,help:industry_fsm_sale.field_sale_order__task_id
+msgid "Task from which this quotation have been created"
+msgstr "Tehtävä, josta tämä tarjous on luotu"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "Taxes"
+msgstr "Verot"
+
+#. module: industry_fsm_sale
+#: model:ir.model.constraint,message:industry_fsm_sale.constraint_project_project_material_imply_billable
+msgid "The material can be allowed only when the task can be billed."
+msgstr "Materiaali voidaan sallia vain, jos tehtävästä voidaan laskuttaa."
+
+#. module: industry_fsm_sale
+#: model:ir.model.constraint,message:industry_fsm_sale.constraint_project_project_timesheet_product_required_if_billable_and_time
+msgid ""
+"The timesheet product is required when the fsm project can be billed and "
+"timesheets are allowed."
+msgstr ""
+"Työaikakirjaustuotetta tarvitaan, kun kenttätyön ohjauksen projektia voidaan"
+" laskuttaa ja työaikakirjaukset ovat sallittuja."
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/sale_order.py:0
+#, python-format
+msgid "This Sales Order has been created from Task: %s"
+msgstr "Tämä myyntitilaus on luotu tehtävästä: %s"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.portal_my_task
+msgid "Time &amp; Material"
+msgstr "Time &amp; Material"
+
+#. module: industry_fsm_sale
+#: model:ir.actions.act_window,name:industry_fsm_sale.project_task_action_to_invoice_fsm
+#: model:ir.model.fields.selection,name:industry_fsm_sale.selection__report_project_task_user_fsm__invoice_status__to_invoice
+#: model:ir.ui.menu,name:industry_fsm_sale.fsm_menu_all_tasks_invoice
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_task_view_search_fsm_inherit_sale
+msgid "To Invoice"
+msgstr "Laskutettavaa"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.actions.act_window,help:industry_fsm_sale.product_action_fsm
+msgid "Track and bill the material used to complete your tasks."
+msgstr "Seuraa ja laskuta tehtävien suorittamiseen käytettyä materiaalia."
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_view_form_inherit
+msgid "Track the material used to complete tasks"
+msgstr "Seuraa tehtävien suorittamiseen käytettyä materiaalia"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_sale_line_employee_map__price_unit
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "Unit Price"
+msgstr "Yksikköhinta"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields.selection,name:industry_fsm_sale.selection__report_project_task_user_fsm__invoice_status__upselling
+msgid "Upselling Opportunity"
+msgstr "Lisämyynnin mahdollisuus"
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid "Use the breadcrumbs to navigate to your <b>list of products</b>."
+msgstr "Käytä leivänmuruja siirtyäksesi <b>tuoteluetteloon</b>."
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid "Use the breadcrumbs to return to your <b>task</b>."
+msgstr "Palaa <b>tehtävään</b> leivänmurujen avulla."
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid "Wait for the invoice to show up"
+msgstr "Odota, että lasku tulee näkyviin"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__warning_message
+msgid "Warning Message"
+msgstr "Varoitusviesti"

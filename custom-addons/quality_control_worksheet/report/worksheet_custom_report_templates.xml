@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="worksheet_custom_page" inherit_id="quality_control.worksheet_page">
+            <xpath expr="//t[@name='qc_content']" position="inside">
+                <div t-if="doc.test_type == 'worksheet' and doc.worksheet_template_id.report_view_id and worksheet_map.get(doc.id)">
+                    <hr/>
+                    <div name="worksheet_map" style="page-break-inside: avoid">
+                        <t t-set="worksheet" t-value="worksheet_map.get(doc.id)"/>
+                        <br/>
+                        <h2>Worksheet</h2>
+                        <t t-call="#{doc.worksheet_template_id.report_view_id.id}"/>
+                        <br/>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

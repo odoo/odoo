@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.social.twitter</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="social.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[hasclass('o_social_developer_settings')]" position="inside">
+                <setting string="Twitter Developer Account">
+                    <field name="twitter_use_own_account"/>
+                    <div class="content-group" invisible="not twitter_use_own_account">
+                        <div class="mt16">
+                            <label for="twitter_consumer_key" string="Consumer Key" class="col-3 col-lg-3 o_form_label"/>
+                            <field name="twitter_consumer_key" class="oe_inline"/>
+                        </div>
+                        <div class="mt16">
+                            <label for="twitter_consumer_secret_key" string="Consumer Secret Key" class="col-3 col-lg-3 o_form_label"/>
+                            <field name="twitter_consumer_secret_key" password="True" class="oe_inline"/>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_ke_bs" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.ke"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_ke_bs_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_ke_bs_A" model="account.report.line">
+                <field name="name">Assets</field>
+                <field name="code">KE_BS_A</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ke_bs_A_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KE_BS_A_1.balance + KE_BS_A_2.balance</field>
+                    </record>
+                    <record id="account_financial_report_ke_bs_A__control_balance" model="account.report.expression">
+                        <field name="label">_control_balance</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="[('account_id.internal_group', '=', 'asset')]"/>
+                        <field name="subformula">sum</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ke_bs_A_1" model="account.report.line">
+                        <field name="name">Non-current Assets</field>
+                        <field name="code">KE_BS_A_1</field>
+                        <field name="aggregation_formula">KE_BS_A_1_1.balance + KE_BS_A_1_2.balance + KE_BS_A_1_3.balance + KE_BS_A_1_4.balance + KE_BS_A_1_5.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_ke_bs_A_1_1" model="account.report.line">
+                                <field name="name">Property, plant and equipment</field>
+                                <field name="code">KE_BS_A_1_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">007 + 005 + 006</field>
+                            </record>
+                            <record id="account_financial_report_ke_bs_A_1_2" model="account.report.line">
+                                <field name="name">Investment properties</field>
+                                <field name="code">KE_BS_A_1_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">003 + 004</field>
+                            </record>
+                            <record id="account_financial_report_ke_bs_A_1_3" model="account.report.line">
+                                <field name="name">Intangible assets</field>
+                                <field name="code">KE_BS_A_1_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">002 + 001</field>
+                            </record>
+                            <record id="account_financial_report_ke_bs_A_1_4" model="account.report.line">
+                                <field name="name">Financial assets</field>
+                                <field name="code">KE_BS_A_1_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">008</field>
+                            </record>
+                            <record id="account_financial_report_ke_bs_A_1_5" model="account.report.line">
+                                <field name="name">Biological assets</field>
+                                <field name="code">KE_BS_A_1_5</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">009</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ke_bs_A_2" model="account.report.line">
+                        <field name="name">Current Assets</field>
+                        <field name="code">KE_BS_A_2</field>
+                        <field name="aggregation_formula">KE_BS_A_2_1.balance + KE_BS_A_2_2.balance + KE_BS_A_2_3.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_ke_bs_A_2_1" model="account.report.line">
+                                <field name="name">Inventories</field>
+                                <field name="code">KE_BS_A_2_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">100</field>
+                            </record>
+                            <record id="account_financial_report_ke_bs_A_2_2" model="account.report.line">
+                                <field name="name">Trade and other receivables</field>
+                                <field name="code">KE_BS_A_2_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">11</field>
+                            </record>
+                            <record id="account_financial_report_ke_bs_A_2_3" model="account.report.line">
+                                <field name="name">Cash and cash equivalents</field>
+                                <field name="code">KE_BS_A_2_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">12</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ke_bs_B" model="account.report.line">
+                <field name="name">Equity and Liabilities</field>
+                <field name="code">KE_BS_B</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ke_bs_B_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KE_BS_B_1.balance + KE_BS_B_2.balance</field>
+                    </record>
+                    <record id="account_financial_report_ke_bs_B__control_balance" model="account.report.expression">
+                        <field name="label">_control_balance</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="[
+                            '|', ('account_id.internal_group', '=', 'equity'),
+                            '|', ('account_id.internal_group', '=', 'income'),
+                            '|', ('account_id.internal_group', '=', 'expense'),
+                            ('account_id.internal_group', '=', 'liability')
+                        ]"/>
+                        <field name="subformula">sum</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ke_bs_B_1" model="account.report.line">
+                        <field name="name">Equity</field>
+                        <field name="code">KE_BS_B_1</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ke_bs_B_1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">KE_BS_B_1_1.balance + KE_BS_Earnings.balance + KE_BS_B_1_2.balance</field>
+                            </record>
+                            <record id="account_financial_report_ke_bs_B_1__control_balance" model="account.report.expression">
+                                <field name="label">_control_balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[
+                                    '|', ('account_id.internal_group', '=', 'income'),
+                                    '|', ('account_id.internal_group', '=', 'expense'),
+                                    ('account_id.internal_group', '=', 'equity')
+                                 ]"/>
+                                <field name="subformula">sum</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_ke_bs_B_1_1" model="account.report.line">
+                                <field name="name">Capital</field>
+                                <field name="code">KE_BS_B_1_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-301 - 300 - 304</field>
+                            </record>
+                            <record id="account_financial_report_ke_bs_B_1_earnings" model="account.report.line">
+                                <field name="name">Unappropriated Profit</field>
+                                <field name="code">KE_BS_Earnings</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_ke_bs_B_1_earnings_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="['|', ('account_id.account_type', '=', 'equity_unaffected'), '|', ('account_id.code', '=like', '4%'), ('account_id.code', '=like', '5%'),]"/>
+                                        <field name="date_scope">from_beginning</field>
+                                        <field name="subformula">-sum</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_ke_bs_B_1_2" model="account.report.line">
+                                <field name="name">Reserves</field>
+                                <field name="code">KE_BS_B_1_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-303 - 302</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ke_bs_B_2" model="account.report.line">
+                        <field name="name">Liabilities</field>
+                        <field name="code">KE_BS_B_2</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ke_bs_B_2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">KE_BS_B_2_1.balance + KE_BS_B_2_2.balance</field>
+                            </record>
+                            <record id="account_financial_report_ke_bs_B_2__control_balance" model="account.report.expression">
+                                <field name="label">_control_balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.internal_group', '=', 'liability')]"/>
+                                <field name="subformula">sum</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_ke_bs_B_2_1" model="account.report.line">
+                                <field name="name">Current Liabilities</field>
+                                <field name="code">KE_BS_B_2_1</field>
+                                <field name="aggregation_formula">KE_BS_B_2_1_1.balance + KE_BS_B_2_1_2.balance + KE_BS_B_2_1_3.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_ke_bs_B_2_1_1" model="account.report.line">
+                                        <field name="name">Trade and other payables</field>
+                                        <field name="code">KE_BS_B_2_1_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-21</field>
+                                    </record>
+                                    <record id="account_financial_report_ke_bs_B_2_1_2" model="account.report.line">
+                                        <field name="name">Deferred tax on liabilities and assets</field>
+                                        <field name="code">KE_BS_B_2_1_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-22\(222,223)</field>
+                                    </record>
+                                    <record id="account_financial_report_ke_bs_B_2_1_3" model="account.report.line">
+                                        <field name="name">Other financial liabilities</field>
+                                        <field name="code">KE_BS_B_2_1_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-222 - 223</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_ke_bs_B_2_2" model="account.report.line">
+                                <field name="name">Non-current Liabilities</field>
+                                <field name="code">KE_BS_B_2_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-23</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

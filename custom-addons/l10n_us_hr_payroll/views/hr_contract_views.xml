@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.view.form</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <group name="salary_info" position="after" >
+                <group>
+                    <group name="l10n_us_pre_tax" string="Pre-Tax Benefits" invisible="country_code != 'US'">
+                        <label for="l10n_us_pre_retirement_amount"/>
+                        <div class="o_row mw-50" name="l10n_us_pre_retirement_amount">
+                            <field name="l10n_us_pre_retirement_amount" nolabel="1"/>
+                            <field name="l10n_us_pre_retirement_type" nolabel="1" required="country_code == 'US'"/>
+                        </div>
+                        <label for="l10n_us_pre_retirement_matching_amount"/>
+                        <div class="o_row mw-50" name="l10n_us_pre_retirement_matching_amount">
+                            <field name="l10n_us_pre_retirement_matching_amount" nolabel="1"/>
+                            <field name="l10n_us_pre_retirement_matching_type" nolabel="1" required="country_code == 'US'"/>
+                        </div>
+                        <label for="l10n_us_pre_retirement_matching_yearly_cap" invisible="l10n_us_pre_retirement_matching_type != 'percent'"/>
+                        <div class="o_row mw-50" name="l10n_us_pre_retirement_matching_yearly_cap" invisible="l10n_us_pre_retirement_matching_type != 'percent'">
+                            <field name="l10n_us_pre_retirement_matching_yearly_cap" nolabel="1"/>
+                            <div class="mb-3">% of Yearly Salary</div>
+                        </div>
+                        <label for="l10n_us_health_benefits_medical"/>
+                        <div class="o_row mw-50" name="l10n_us_health_benefits_medical">
+                            <field name="l10n_us_health_benefits_medical" nolabel="1"/>
+                            <div class="mb-3">$ / slip</div>
+                        </div>
+                        <label for="l10n_us_health_benefits_dental"/>
+                        <div class="o_row mw-50" name="l10n_us_health_benefits_dental">
+                            <field name="l10n_us_health_benefits_dental" nolabel="1"/>
+                            <div class="mb-3">$ / slip</div>
+                        </div>
+                        <label for="l10n_us_health_benefits_vision"/>
+                        <div class="o_row mw-50" name="l10n_us_health_benefits_vision">
+                            <field name="l10n_us_health_benefits_vision" nolabel="1"/>
+                            <div class="mb-3">$ / slip</div>
+                        </div>
+                        <label for="l10n_us_health_benefits_fsa"/>
+                        <div class="o_row mw-50" name="l10n_us_health_benefits_fsa">
+                            <field name="l10n_us_health_benefits_fsa" nolabel="1"/>
+                            <div class="mb-3">$ / slip</div>
+                        </div>
+                        <label for="l10n_us_health_benefits_fsadc"/>
+                        <div class="o_row mw-50" name="l10n_us_health_benefits_fsadc">
+                            <field name="l10n_us_health_benefits_fsadc" nolabel="1"/>
+                            <div class="mb-3">$ / slip</div>
+                        </div>
+                        <label for="l10n_us_health_benefits_hsa"/>
+                        <div class="o_row mw-50" name="l10n_us_health_benefits_hsa">
+                            <field name="l10n_us_health_benefits_hsa" nolabel="1"/>
+                            <div class="mb-3">$ / slip</div>
+                        </div>
+                        <label for="l10n_us_commuter_benefits"/>
+                        <div class="o_row mw-50" name="l10n_us_commuter_benefits">
+                            <field name="l10n_us_commuter_benefits" nolabel="1"/>
+                            <div class="mb-3">$ / slip</div>
+                        </div>
+                    </group>
+                    <group name="l10n_us_post_tax" string="Post-Tax Deductions" invisible="country_code != 'US'">
+                        <label for="l10n_us_post_roth_401k_amount"/>
+                        <div class="o_row mw-50" name="l10n_us_post_roth_401k_amount">
+                            <field name="l10n_us_post_roth_401k_amount" nolabel="1"/>
+                            <field name="l10n_us_post_roth_401k_type" nolabel="1" required="country_code == 'US'"/>
+                        </div>
+                    </group>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

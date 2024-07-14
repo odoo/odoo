@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_lu_electronic_report_template_1_1">
+        <eCDFDeclarations xmlns="http://www.ctie.etat.lu/2011/ecdf">
+            <FileReference><t t-out="filename"/></FileReference>
+            <eCDFFileVersion>1.1</eCDFFileVersion>
+            <Interface><t t-out="interface"/></Interface>
+            <Agent>
+                <MatrNbr><t t-out="matr_number"/></MatrNbr>
+                <RCSNbr><t t-out="rcs_number"/></RCSNbr>
+                <VATNbr><t t-out="vat_number"/></VATNbr>
+            </Agent>
+            <Declarations>
+                <Declarer>
+                    <MatrNbr><t t-out="matr_number"/></MatrNbr>
+                    <RCSNbr><t t-out="rcs_number"/></RCSNbr>
+                    <VATNbr><t t-out="vat_number"/></VATNbr>
+                    <Declaration t-att-type="form['declaration_type']" model="1" t-att-language="lang" t-foreach="forms" t-as="form">
+                        <Year><t t-out="form['year']"/></Year>
+                        <Period><t t-out="form['period']"/></Period>
+                        <FormData>
+                            <t t-foreach="form['field_values']" t-as="l">
+                                <TextField t-if="l_value['field_type'] == 'char'" t-att-id="l"><t t-out="l_value['value']"/></TextField>
+                                <Choice t-if="l_value['field_type'] == 'boolean'" t-att-id="l"><t t-out="l_value['value']"/></Choice>
+                                <NumericField t-if="l_value['field_type'] == 'number'" t-att-id="l"><t t-out="l_value['value']"/></NumericField>
+                            </t>
+                        </FormData>
+                    </Declaration>
+                </Declarer>
+            </Declarations>
+        </eCDFDeclarations>
+    </template>
+
+    <template id="l10n_lu_electronic_report_template_2_0">
+        <eCDFDeclarations xmlns="http://www.ctie.etat.lu/2011/ecdf">
+            <FileReference><t t-out="filename"/></FileReference>
+            <eCDFFileVersion>2.0</eCDFFileVersion>
+            <Interface><t t-out="interface"/></Interface>
+            <Agent>
+                <MatrNbr><t t-out="agent_matr_number"/></MatrNbr>
+                <RCSNbr><t t-out="agent_rcs_number"/></RCSNbr>
+                <VATNbr><t t-out="agent_vat"/></VATNbr>
+            </Agent>
+            <Declarations>
+                <Declarer t-foreach="declarations" t-as="declaration">
+                    <MatrNbr><t t-out="declaration['matr_number']"/></MatrNbr>
+                    <RCSNbr><t t-out="declaration['rcs_number']"/></RCSNbr>
+                    <VATNbr><t t-out="declaration['vat_number']"/></VATNbr>
+                    <DeclarationGroup t-foreach="declaration['declaration_groups']" t-as="declaration_group">
+                        <t t-foreach="declaration_group['forms']" t-as='form'>
+                            <t t-call="l10n_lu_reports.DeclarationNode"/>
+                        </t>
+                        <MappingTable mapping="standard"/>
+                    </DeclarationGroup>
+                    <t t-foreach="declaration['declaration_singles']['forms']" t-as='form'>
+                        <t t-call="l10n_lu_reports.DeclarationNode"/>
+                    </t>
+                </Declarer>
+            </Declarations>
+        </eCDFDeclarations>
+    </template>
+    <!-- Declaration template (indented to have a correctly indented report when integrated in the l10n_lu_electronic_report_template_2_0 template) -->
+    <template id="DeclarationNode">
+                        <Declaration t-att-type="form['declaration_type']" t-att-model="form['model']" t-att-language="lang">
+                            <Year><t t-out="form['year']"/></Year>
+                            <Period><t t-out="form['period']"/></Period>
+                            <FormData>
+                            <t t-foreach="form['field_values']" t-as="l">
+                                <TextField t-if="l_value['field_type'] == 'char'" t-att-id="l"><t t-out="l_value['value']"/></TextField>
+                                <Choice t-if="l_value['field_type'] == 'boolean'" t-att-id="l"><t t-out="l_value['value']"/></Choice>
+                                <NumericField t-if="l_value['field_type'] == 'number'" t-att-id="l"><t t-out="l_value['value']"/></NumericField>
+                                <NumericField t-if="l_value['field_type'] == 'float'" t-att-id="l"><t t-out="format_float(l_value['value'])"/></NumericField>
+                            </t>
+                            <t t-if="form.get('tables')">
+                            <t t-foreach="form['tables']" t-as="table">
+                                <Table>
+                                <t t-set="count" t-value="1"/>
+                                <t t-foreach="table_value" t-as="table_line">
+                                    <Line t-att-num="count">
+                                        <t t-foreach="table_line_value" t-as="l">
+                                        <TextField t-if="l_value['field_type'] == 'char'" t-att-id="l"><t t-out="l_value['value']"/></TextField>
+                                        <Choice t-if="l_value['field_type'] == 'boolean'" t-att-id="l"><t t-out="l_value['value']"/></Choice>
+                                        <NumericField t-if="l_value['field_type'] == 'number'" t-att-id="l"><t t-out="l_value['value']"/></NumericField>
+                                        <NumericField t-if="l_value['field_type'] == 'float'" t-att-id="l"><t t-out="format_float(l_value['value'])"/></NumericField>
+                                        </t>
+                                    </Line>
+                                <t t-set="count" t-value="count + 1"/>
+                                </t>
+                                </Table>
+                            </t>
+                            </t>
+                            </FormData>
+                        </Declaration>
+    </template>
+</odoo>

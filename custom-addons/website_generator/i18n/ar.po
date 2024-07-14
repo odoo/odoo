@@ -1,0 +1,357 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_generator
+# 
+# Translators:
+# Malaz Abuidris <msea@odoo.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-31 15:28+0000\n"
+"PO-Revision-Date: 2024-02-07 08:49+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: website_generator
+#: model:mail.template,body_html:website_generator.email_template_website_scrapped
+msgid ""
+"<div>\n"
+"            <p><b>Great news!</b> Your website conversion is complete and your new integrated Odoo website is now live.</p>\n"
+"            <p>Check out your new website here: <a t-att-href=\"ctx.get('website_url')\"><t t-out=\"ctx.get('website_url')\"></t></a></p>\n"
+"            <p>Thank you for choosing Odoo for your web integration!</p>\n"
+"            <p>Best regards,</p>\n"
+"            <br>\n"
+"            <p>Odoo - The best open source website builder.</p>\n"
+"            </div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"            <p><b>أخبار رائعة!</b> اكتمل تحويل موقعك الإلكتروني وأصبح موقعك الإلكتروني المتكامل الجديد على أودو نشطاً الآن.</p>\n"
+"            <p>ألقِ نظرة على موقعنا الإلكتروني الجديد هنا: <a t-att-href=\"ctx.get('website_url')\"><t t-out=\"ctx.get('website_url')\"></t></a></p>\n"
+"            <p>شكراً لاختيارك أودو لتكامل الويب!</p>\n"
+"            <p>مع أطيب التحيات،</p>\n"
+"            <br>\n"
+"            <p>أودو - أفضل أداة مفتوحة المصدر لبناء المواقع الإلكترونية.</p>\n"
+"            </div>\n"
+"            "
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__additional_urls
+msgid "Additional URLs"
+msgstr "روابط URL إضافية "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "An error occurred"
+msgstr "حدث خطأ ما "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Attachment not found"
+msgstr "لم يتم العثور على المرفق "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Banned url"
+msgstr "رابط URL محظور "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Could not fetch result, invalid output uuid or result expired"
+msgstr ""
+"لم نتمكن من جلب النتائج. قد يكون المعرف الفريد (uuid) للمخرجات غير صالح أو "
+"ربما انتهت صلاحية النتائج "
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__create_date
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__display_name
+msgid "Display Name"
+msgstr "اسم العرض "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Done, website generated"
+msgstr "انتهيت، تم إنشاء الموقع الإلكتروني "
+
+#. module: website_generator
+#: model:ir.model,name:website_generator.model_ir_http
+msgid "HTTP Routing"
+msgstr "مسار HTTP"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__id
+msgid "ID"
+msgstr "المعرف "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Invalid dbuuid"
+msgstr "المعرف الفريد عالمياً لقاعدة البيانات غير صالح "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Invalid import products"
+msgstr "المنتجات التي تم استيرادها غير صالحة "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Invalid token"
+msgstr "الرمز غير صالح "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Invalid url"
+msgstr "رابط url غير صالح "
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/generator_wait/generator.xml:0
+#, python-format
+msgid "It should be ready in a"
+msgstr "يُفترض أن يكون جاهزاً في "
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__notified
+msgid "Notified"
+msgstr "تم الإخطار "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Number of allowed requests exhausted"
+msgstr "تم استهلاك عدد الطلبات المسموح بها "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Number of concurrent requests exceeded"
+msgstr "تم تجاوز عدد الطلبات المتزامنة "
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__page_count
+msgid "Number of pages"
+msgstr "عدد الصفحات "
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/generator_wait/generator.xml:0
+#, python-format
+msgid ""
+"Once your website is ready, this page will reload automatically. You can "
+"also close this page, we will send you an email once your website has been "
+"converted."
+msgstr ""
+"بمجرد أن يصبح موقعك الإلكتروني جاهزاً، ستتم إعادة تحميل هذه الصفحة تلقائياً."
+" يمكنك أيضا ًإغلاق هذه الصفحة وسنقوم بإرسال بريد إلكتروني لك بمجرد أن يتم "
+"تحويل موقعك الإلكتروني. "
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__uuid
+msgid "Output UUID generated from Website Scraper Server"
+msgstr "المعرف الفريد عالمياً للمخرجات، والذي تم إنشاؤه من خادم تجريف الويب "
+
+#. module: website_generator
+#: model:ir.model,name:website_generator.model_website_page
+msgid "Page"
+msgstr "الصفحة"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Processing"
+msgstr "معالجة "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Request is still processing, result not available yet"
+msgstr "لا يزال الطلب قيد المعالجة. النتائج غير متاحة بعد "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Server is currently under maintenance. Please retry later"
+msgstr "الخادم قيد الصيانة حالياً. الرجاء إعادة المحاولة لاحقاً "
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/generator_wait/generator.xml:0
+#, python-format
+msgid "Something went wrong"
+msgstr "حدث خطأ ما"
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__status
+msgid "Status"
+msgstr "الحالة "
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__status_message
+msgid "Status Message"
+msgstr "رسالة الحالة "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Success"
+msgstr "نجاح"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "The request asks for too many pages"
+msgstr "الطلب يطلب عدداً كبيراً من الصفحات "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/page.py:0
+#, python-format
+msgid "Top Menu for Website %s"
+msgstr "القائمة العلوية للموقع الإلكتروني %s "
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__target_url
+msgid "URL to scrape"
+msgstr "رابط URL لتجريفه "
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__version
+msgid "Version"
+msgstr "الإصدار"
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Version is unsupported"
+msgstr "الإصدار غير مدعوم "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Waiting for the server to process the request"
+msgstr "بانتظار معالجة الطلب بواسطة الخادم "
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/generator_wait/generator.xml:0
+#, python-format
+msgid "We could not convert your website, please try again later"
+msgstr ""
+"لم نتمكن من تحويل موقعك الإلكتروني، يرجى إعادة المحاولة مجدداً لاحقاً "
+
+#. module: website_generator
+#: model:ir.model.fields,field_description:website_generator.field_website_generator_request__website_id
+msgid "Website"
+msgstr "الموقع الإلكتروني"
+
+#. module: website_generator
+#: model:ir.actions.client,name:website_generator.website_generator_screen
+msgid "Website Generator"
+msgstr "أداة إنشاء المواقع الإلكترونية "
+
+#. module: website_generator
+#: model:ir.actions.server,name:website_generator.action_convert_scraping_request_ICP
+msgid "Website Generator After Install"
+msgstr "أداة إنشاء المواقع الإلكترونية بعد التثبيت "
+
+#. module: website_generator
+#: model:ir.model,name:website_generator.model_website_generator_request
+msgid "Website Generator Request"
+msgstr "طلب أداة إنشاء المواقع الإلكترونية "
+
+#. module: website_generator
+#: model:ir.actions.server,name:website_generator.cron_get_result_ir_actions_server
+msgid "Website Generator: Get website scraper results"
+msgstr ""
+"أداة إنشاء المواقع الإلكترونية: احصل على نتائج تجريف الموقع الإلكتروني "
+
+#. module: website_generator
+#: model:mail.template,name:website_generator.email_template_website_scrapped
+msgid "Website Scraped"
+msgstr "تم تجريف الموقع الإلكتروني "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Website blocked or unreachable"
+msgstr "تم حجب الموقع الإلكتروني أو لا يمكن الوصول إليه "
+
+#. module: website_generator
+#. odoo-python
+#: code:addons/website_generator/models/generator.py:0
+#, python-format
+msgid "Website not supported"
+msgstr "الموقع الإلكتروني غير مدعوم "
+
+#. module: website_generator
+#: model:mail.template,subject:website_generator.email_template_website_scrapped
+msgid "Your Odoo Website is Ready!"
+msgstr "موقعك الإلكتروني على أودو جاهز! "
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/generator_wait/generator.xml:0
+#, python-format
+msgid "Your website is being converted"
+msgstr "جاري تحويل موقعك الإلكتروني "
+
+#. module: website_generator
+#. odoo-javascript
+#: code:addons/website_generator/static/src/client_actions/generator_wait/generator.xml:0
+#, python-format
+msgid "few minutes"
+msgstr "بضع دقائق "

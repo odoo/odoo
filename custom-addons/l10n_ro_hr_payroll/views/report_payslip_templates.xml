@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_payslip_ro" inherit_id="hr_payroll.report_payslip" primary="True">
+    <!-- YTI Insert custo here -->
+</template>
+
+<template id="report_payslip_ro_lang">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="o" t-value="o.with_context(lang='ro_RO')"/>
+            <t t-call="l10n_ro_hr_payroll.report_payslip_ro" t-lang="o.env.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

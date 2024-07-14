@@ -1,0 +1,4219 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_reports
+# 
+# Translators:
+# Martin Trigaux, 2024
+# Wil Odoo, 2024
+# Abe Manyo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-04-04 14:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Abe Manyo, 2024\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid " and %s others"
+msgstr "dan %s lainnya"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid " and one other"
+msgstr "dan satu lainnya"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid " is not supported by the Journal Report"
+msgstr "tidak didukung oleh Laporan Jurnal"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/bank_reconciliation_report/warnings.xml:0
+#, python-format
+msgid "\" account balance is affected by"
+msgstr "\" saldo akun dipengaruhi oleh"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "%s is not a numeric value"
+msgstr "%s bukan merupakan nilai numerik"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filters.js:0
+#, python-format
+msgid "%s selected"
+msgstr "%s dipilih"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid ""
+"'Open General Ledger' caret option is only available form report lines "
+"targetting accounts."
+msgstr ""
+"Caret option 'Buka Buku Besar Umum' hanya tersedia untuk report lines yang "
+"menarget akun."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid ""
+"'View Bank Statement' caret option is only available for report lines "
+"targeting bank statements."
+msgstr ""
+"Caret option 'Lihat Laporan Bank' hanya tersedia untuk report lines yang "
+"menarget laporan bank."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "'external' engine does not support groupby, limit nor offset."
+msgstr "Engine 'external' tidak mendukung gropby, limit ataupun offset."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "(%s lines)"
+msgstr "(%s lines)"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.outstanding_receipts
+msgid "(+) Outstanding Receipts"
+msgstr "(+) Resi Belum Lunas"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.outstanding_payments
+msgid "(-) Outstanding Payments"
+msgstr "(-) Pembayaran Belum Lunas"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "(1 line)"
+msgstr "(1 line)"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "(No Group)"
+msgstr "(Tidak ada Kelompok)"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid ", Including Analytic Simulations"
+msgstr ", termasuk Simulasi Analiti"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid ", Only Show Unreconciled Entries"
+msgstr ", Hanya menunjukkan Entri yang Belum Direkonsiliasi"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/bank_reconciliation_report/warnings.xml:0
+#, python-format
+msgid ", leading to an unexplained difference of"
+msgstr ", berujung pada perbedaan yang tidak dapat dijelaskan sebesar"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.view_move_form_vat_return
+msgid "-> Refresh"
+msgstr "-> Refresh"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.aged_payable_report_period1
+#: model:account.report.column,name:account_reports.aged_receivable_report_period1
+msgid "1-30"
+msgstr "1-30"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.aged_payable_report_period2
+#: model:account.report.column,name:account_reports.aged_receivable_report_period2
+msgid "31-60"
+msgstr "31-60"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.aged_payable_report_period3
+#: model:account.report.column,name:account_reports.aged_receivable_report_period3
+msgid "61-90"
+msgstr "61-90"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.aged_payable_report_period4
+#: model:account.report.column,name:account_reports.aged_receivable_report_period4
+msgid "91-120"
+msgstr "91-120"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.view_account_report_file_download_error_wizard_form
+msgid ""
+"<i>Errors marked with <i class=\"fa fa-warning\"/> are critical and prevent "
+"the file generation.</i>"
+msgstr ""
+"<i>Error yang ditandai dengan <i class=\"fa fa-warning\"/> sangat penting "
+"dan mencegah pembuatan file.</i>"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.partner_view_buttons
+msgid "<span class=\"o_stat_text\">Partner Ledger</span>"
+msgstr "<span class=\"o_stat_text\">Ledger Mitra</span>"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_reports_journal_dashboard_kanban_view
+msgid "<span role=\"separator\">Reconciliation</span>"
+msgstr "<span role=\"separator\">Rekonsiliasi</span>"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.view_account_report_file_download_error_wizard_form
+msgid "<span>One or more error(s) occurred during file generation:</span>"
+msgstr "<span>Satu atau lebih error terjadi pada pembuatan file:</span>"
+
+#. module: account_reports
+#: model:ir.model.constraint,message:account_reports.constraint_account_report_horizontal_group_name_uniq
+msgid "A horizontal group with the same name already exists."
+msgstr "Kelompok horizontal dengan nama yang sama sudah tersedia."
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/widgets/account_report_x2many/account_report_x2many.js:0
+#, python-format
+msgid "A line with a 'Group By' value cannot have children."
+msgstr ""
+"Baris dengan value 'Kelompokkan Berdasarkan' tidak boleh memiliki anak."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_tax.py:0
+#, python-format
+msgid ""
+"A tax unit can only be created between companies sharing the same main "
+"currency."
+msgstr ""
+"Satuan pajak hanya dapat dibuat di antara perusahaan yang memiliki mata uang"
+" utama yang sama."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_tax.py:0
+#, python-format
+msgid ""
+"A tax unit must contain a minimum of two companies. You might want to delete"
+" the unit."
+msgstr ""
+"Satuan pajak harus memiliki minimal dua perusahaan. Anda mungkin perlu "
+"menghapus satuan tersebut."
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_total_assets0
+msgid "ASSETS"
+msgstr "AKTIVA"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/wizard/multicurrency_revaluation.py:0
+#: model:account.report.column,name:account_reports.aged_payable_report_account_name
+#: model:account.report.column,name:account_reports.aged_receivable_report_account_name
+#: model:account.report.column,name:account_reports.journal_report_communication
+#: model:account.report.column,name:account_reports.partner_ledger_report_account_code
+#: model:ir.model,name:account_reports.model_account_account
+#, python-format
+msgid "Account"
+msgstr "Akun"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Templat Bagan Akun"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Account Code / Tag"
+msgstr "Kode / Tag Akun"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_res_company__account_display_representative_field
+msgid "Account Display Representative Field"
+msgstr "Account Display Representative Field"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_report_custom_handler
+msgid "Account Report Custom Handler"
+msgstr "Account Report Custom Handler"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_report_footnote
+msgid "Account Report Footnote"
+msgstr "Account Report Footnote"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_tax_report_handler
+msgid "Account Report Handler for Tax Reports"
+msgstr "Account Report Handler for Tax Reports"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_res_partner__account_represented_company_ids
+#: model:ir.model.fields,field_description:account_reports.field_res_users__account_represented_company_ids
+msgid "Account Represented Company"
+msgstr "Account Represented Company"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_res_company__account_revaluation_journal_id
+msgid "Account Revaluation Journal"
+msgstr "Account Revaluation Journal"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_account_type.xml:0
+#, python-format
+msgid "Account:"
+msgstr "Account:"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_res_company__account_representative_id
+msgid "Accounting Firm"
+msgstr "Firma Akuntansi"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_report
+msgid "Accounting Report"
+msgstr "Laporan Akuntansi"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_report_line
+msgid "Accounting Report Line"
+msgstr "Accounting Report Line"
+
+#. module: account_reports
+#: model:ir.actions.act_window,name:account_reports.action_account_report_tree
+#: model:ir.ui.menu,name:account_reports.menu_action_account_report_tree
+#: model_terms:ir.ui.view,arch_db:account_reports.view_account_report_search
+msgid "Accounting Reports"
+msgstr "Laporan Akuntansi"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_analytic.xml:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_analytic_groupby.xml:0
+#, python-format
+msgid "Accounts"
+msgstr "Akun"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_form
+msgid "Accounts Coverage Report"
+msgstr "Laporan Coverage Akun"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.multicurrency_revaluation_to_adjust
+msgid "Accounts To Adjust"
+msgstr "Akun untuk Disesuaikan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Accounts coverage"
+msgstr "Coverage akun"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_mail_activity_type__category
+msgid "Action"
+msgstr "Tindakan"
+
+#. module: account_reports
+#: model:ir.model.fields,help:account_reports.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
+"Tindakan dapat memicu perilaku spesifik seperti membuka tampilan kalender "
+"atau secara otomatis ditandai sebagai selesai saat dokumen diunggah"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_mail_activity
+msgid "Activity"
+msgstr "Aktivitas"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Tipe Aktivitas"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/widgets/account_report_x2many/account_report_x2many.xml:0
+#, python-format
+msgid "Add a line"
+msgstr "Tambahkan baris"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_res_company__totals_below_sections
+#: model:ir.model.fields,field_description:account_reports.field_res_config_settings__totals_below_sections
+msgid "Add totals below sections"
+msgstr "Tambahkan total di bawah bagian"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.multicurrency_revaluation_report_adjustment
+msgid "Adjustment"
+msgstr "Pengaturan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_multicurrency_revaluation_report.py:0
+#, python-format
+msgid "Adjustment Entry"
+msgstr "Penyesuaian entri"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_cash_flow_report.py:0
+#, python-format
+msgid "Advance Payments received from customers"
+msgstr "Tagihan Muka yang diterima dari pelanggan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_cash_flow_report.py:0
+#, python-format
+msgid "Advance payments made to suppliers"
+msgstr "Tagihan muka yang dibuat untuk pemasok"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_form
+msgid "Advanced"
+msgstr "Lanjutan"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_aged_partner_balance_report_handler
+msgid "Aged Partner Balance Custom Handler"
+msgstr "Aged Partner Balance Custom Handler"
+
+#. module: account_reports
+#: model:account.report,name:account_reports.aged_payable_report
+#: model:account.report.line,name:account_reports.aged_payable_line
+#: model:ir.actions.client,name:account_reports.action_account_report_ap
+#: model:ir.ui.menu,name:account_reports.menu_action_account_report_aged_payable
+msgid "Aged Payable"
+msgstr "Utang Seusia"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_aged_payable_report_handler
+msgid "Aged Payable Custom Handler"
+msgstr "Aged Payable Custom Handler"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_reports_journal_dashboard_kanban_view
+msgid "Aged Payables"
+msgstr "Utang Seusia"
+
+#. module: account_reports
+#: model:account.report,name:account_reports.aged_receivable_report
+#: model:account.report.line,name:account_reports.aged_receivable_line
+#: model:ir.actions.client,name:account_reports.action_account_report_ar
+#: model:ir.ui.menu,name:account_reports.menu_action_account_report_aged_receivable
+msgid "Aged Receivable"
+msgstr "Piutang Seusia"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_aged_receivable_report_handler
+msgid "Aged Receivable Custom Handler"
+msgstr "Aged Receivable Custom Handler"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_reports_journal_dashboard_kanban_view
+msgid "Aged Receivables"
+msgstr "Piutang Seusia"
+
+#. module: account_reports
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_fiscal_position.xml:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filters.js:0
+#, python-format
+msgid "All"
+msgstr "Semua"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "All Journals"
+msgstr "Semua Jurnal"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filters.js:0
+#, python-format
+msgid "All Payable"
+msgstr "Semua Hutang"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filters.js:0
+#, python-format
+msgid "All Receivable"
+msgstr "Semua Piutang"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "All Report Variants"
+msgstr "Semua Varian Laporan"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.account_financial_report_ec_sales_amount
+#: model:account.report.column,name:account_reports.bank_reconciliation_report_amount
+msgid "Amount"
+msgstr "Jumlah"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.aged_payable_report_amount_currency
+#: model:account.report.column,name:account_reports.aged_receivable_report_amount_currency
+#: model:account.report.column,name:account_reports.bank_reconciliation_report_amount_currency
+#: model:account.report.column,name:account_reports.partner_ledger_report_amount_currency
+msgid "Amount Currency"
+msgstr "Jumlah Mata Uang"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid "Amount In Currency"
+msgstr "Jumlah Dalam Mata Uang"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid "Amount in currency: %s"
+msgstr "Jumlah dalam mata uang: %s"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid "Analytic Accounts Groupby"
+msgstr "Analytic Accounts Groupby"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_analytic.xml:0
+#, python-format
+msgid "Analytic Filter"
+msgstr "Filter Analitik"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_analytic_groupby.xml:0
+#: model:ir.model.fields,field_description:account_reports.field_account_report__filter_analytic_groupby
+#, python-format
+msgid "Analytic Group By"
+msgstr "Analitik Dikelompokkan Berdasarkan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid "Analytic Plans Groupby"
+msgstr "Analytic Plans Groupby"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/footnote/dialog/footnote_dialog.js:0
+#: code:addons/account_reports/static/src/components/account_report/line_name/line_name.xml:0
+#, python-format
+msgid "Annotate"
+msgstr "Anotasi"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_comparison.xml:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_comparison.xml:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_comparison.xml:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_comparison.xml:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_date.xml:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_date.xml:0
+#: code:addons/account_reports/static/src/components/multicurrency_revaluation_report/filters/filter_exchange_rate.xml:0
+#, python-format
+msgid "Apply"
+msgstr "Terapkan"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_date.xml:0
+#, python-format
+msgid "As of"
+msgstr "Pada"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "As of %s"
+msgstr "Sebagai %s"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.aged_payable_report_period0
+#: model:account.report.column,name:account_reports.aged_receivable_report_period0
+msgid "At Date"
+msgstr "Pada tanggal"
+
+#. module: account_reports
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account_reports/models/account_generic_tax_report.py:0
+#: code:addons/account_reports/static/src/components/journal_report/line/line.xml:0
+#: code:addons/account_reports/static/src/components/journal_report/line/line.xml:0
+#, python-format
+msgid "Audit"
+msgstr "Audit"
+
+#. module: account_reports
+#: model:ir.ui.menu,name:account_reports.account_reports_audit_reports_menu
+msgid "Audit Reports"
+msgstr "Laporan Audit"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_avgcre0
+msgid "Average creditors days"
+msgstr "Hari rata-rata kreditur"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_avdebt0
+msgid "Average debtors days"
+msgstr "Hari rata-rata debitur"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid "B: %s"
+msgstr "B: %s"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#: model:account.report.column,name:account_reports.balance_sheet_balance
+#: model:account.report.column,name:account_reports.cash_flow_report_balance
+#: model:account.report.column,name:account_reports.executive_summary_column
+#: model:account.report.column,name:account_reports.general_ledger_report_balance
+#: model:account.report.column,name:account_reports.partner_ledger_report_balance
+#: model:account.report.column,name:account_reports.profit_and_loss_column
+#: model_terms:ir.ui.view,arch_db:account_reports.account_reports_journal_dashboard_kanban_view
+#, python-format
+msgid "Balance"
+msgstr "Saldo"
+
+#. module: account_reports
+#: model:account.report,name:account_reports.balance_sheet
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_balancesheet0
+#: model:ir.actions.client,name:account_reports.action_account_report_bs
+#: model:ir.ui.menu,name:account_reports.menu_action_account_report_balance_sheet
+msgid "Balance Sheet"
+msgstr "Lembar Saldo"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.multicurrency_revaluation_report_balance_current
+msgid "Balance at Current Rate"
+msgstr "Saldo pada Current Rate"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.multicurrency_revaluation_report_balance_operation
+msgid "Balance at Operation Rate"
+msgstr "Saldo pada Operation Rate"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.multicurrency_revaluation_report_balance_currency
+msgid "Balance in Foreign Currency"
+msgstr "Saldo dalam Mata Uang Asing"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/bank_reconciliation_report.py:0
+#, python-format
+msgid "Balance of '%s'"
+msgstr "Saldo dari '%s'"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.balance_bank
+msgid "Balance of Bank"
+msgstr "Saldo Bank"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_generic_tax_report.py:0
+#, python-format
+msgid "Balance tax advance payment account"
+msgstr "Balance tax advance payment account"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_generic_tax_report.py:0
+#, python-format
+msgid "Balance tax current account (payable)"
+msgstr "Balance tax current account (payable)"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_generic_tax_report.py:0
+#, python-format
+msgid "Balance tax current account (receivable)"
+msgstr "Balance tax current account (receivable)"
+
+#. module: account_reports
+#: model:ir.actions.client,name:account_reports.action_account_report_bank_reconciliation
+msgid "Bank Reconciliation"
+msgstr "Rekonsiliasi Bank"
+
+#. module: account_reports
+#: model:account.report,name:account_reports.bank_reconciliation_report
+msgid "Bank Reconciliation Report"
+msgstr "Laporan Rekonsiliasi Bank"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_bank_reconciliation_report_handler
+msgid "Bank Reconciliation Report Custom Handler"
+msgstr "Custom Handler Laporan Rekonsiliasi Bank"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_bank_view0
+msgid "Bank and Cash Accounts"
+msgstr "Rekening Bank dan Kas"
+
+#. module: account_reports
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account_reports/models/account_general_ledger.py:0
+#: code:addons/account_reports/static/src/components/journal_report/line/line.xml:0
+#: model_terms:ir.ui.view,arch_db:account_reports.journal_report_pdf_export_main_table_body
+#, python-format
+msgid "Base Amount"
+msgstr "Jumlah Dasar"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_deferred_reports.py:0
+#, python-format
+msgid "Before"
+msgstr "Sebelum"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/footnote/dialog/footnote_dialog.xml:0
+#: code:addons/account_reports/static/src/components/aged_partner_balance/dialog/expected_date_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:account_reports.view_account_multicurrency_revaluation_wizard
+#: model_terms:ir.ui.view,arch_db:account_reports.view_report_export_wizard
+#, python-format
+msgid "Cancel"
+msgstr "Batal"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_generic_tax_report.py:0
+#, python-format
+msgid "Cannot audit tax from another model than account.tax."
+msgstr "Tidak dapat mengaudit pajak dari model lain selain account.tax."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Cannot generate carryover values for all fiscal positions at once!"
+msgstr ""
+"Tidak dapat membuat carryover value secara serentak untuk semua posisi "
+"fiskal!"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/line_cell/popover/carryover_popover.xml:0
+#, python-format
+msgid "Carryover"
+msgstr "Carryover"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Carryover adjustment for tax unit"
+msgstr "Penyesuaian carryover untuk satuan pajak"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Carryover can only be generated for a single column group."
+msgstr "Carryover hanya dapat dibuat untuk kelompok satu kolom."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Carryover from %s to %s"
+msgstr "Carryover dari %s ke %s"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_cash0
+msgid "Cash"
+msgstr "Kas"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_cash_flow_report_handler
+msgid "Cash Flow Report Custom Handler"
+msgstr "Custom Handler Laporan Arus Kas"
+
+#. module: account_reports
+#: model:account.report,name:account_reports.cash_flow_report
+#: model:ir.actions.client,name:account_reports.action_account_report_cs
+#: model:ir.ui.menu,name:account_reports.menu_action_account_report_cash_flow
+msgid "Cash Flow Statement"
+msgstr "Pernyataan Aliran Kas"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_cash_flow_report.py:0
+#, python-format
+msgid "Cash and cash equivalents, beginning of period"
+msgstr "Kas dan setara kas, permulaan periode"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_cash_flow_report.py:0
+#, python-format
+msgid "Cash and cash equivalents, closing balance"
+msgstr "Kas dan setara kas, saldo penutupan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_cash_flow_report.py:0
+#, python-format
+msgid "Cash flows from financing activities"
+msgstr "Aliran kas dari aktivitas keuangan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_cash_flow_report.py:0
+#, python-format
+msgid "Cash flows from investing & extraordinary activities"
+msgstr "Aliran kas dari aktivitas investasi & kejadian luar biasa"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_cash_flow_report.py:0
+#, python-format
+msgid "Cash flows from operating activities"
+msgstr "Aliran kas dari aktivitas operasi"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_cash_flow_report.py:0
+#, python-format
+msgid "Cash flows from unclassified activities"
+msgstr "Aliran kas dari aktivitas yang tidak diklasifikasikan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_cash_flow_report.py:0
+#: code:addons/account_reports/models/account_cash_flow_report.py:0
+#: code:addons/account_reports/models/account_cash_flow_report.py:0
+#, python-format
+msgid "Cash in"
+msgstr "Kas masuk"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_cash_flow_report.py:0
+#: code:addons/account_reports/models/account_cash_flow_report.py:0
+#: code:addons/account_reports/models/account_cash_flow_report.py:0
+#, python-format
+msgid "Cash out"
+msgstr "Kas keluar"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_cash_flow_report.py:0
+#, python-format
+msgid "Cash paid for operating activities"
+msgstr "Uang kas yang dibayar untuk kegiatan operasi"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_cash_received0
+msgid "Cash received"
+msgstr "Kas yang diterima"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_cash_flow_report.py:0
+#, python-format
+msgid "Cash received from operating activities"
+msgstr "Uang kas yang diterima dari kegiatan operasi"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_cash_spent0
+msgid "Cash spent"
+msgstr "Kas yang digunakan"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_cash_surplus0
+msgid "Cash surplus"
+msgstr "Kelebiihan kas"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_change_lock_date
+msgid "Change Lock Date"
+msgstr "Ganti Tanggal yang Dikunci"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/aged_partner_balance/line_name/line_name.js:0
+#, python-format
+msgid "Change expected date"
+msgstr "Ganti tanggal perkiraan"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/aged_partner_balance/line_name/line_name.xml:0
+#, python-format
+msgid "Change expected payment date"
+msgstr "Ganti tanggal perkiraan pembayaran"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.view_account_report_file_download_error_wizard_form
+msgid "Close"
+msgstr "Tutup"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_generic_tax_report.py:0
+#, python-format
+msgid "Closing Entry"
+msgstr "Entri Penutupan"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_closing_bank_balance0
+msgid "Closing bank balance"
+msgstr "Saldo bank penutup"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/sales_report/filters/filter_code.xml:0
+#, python-format
+msgid "Codes:"
+msgstr "Kode:"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_form
+msgid "Columns"
+msgstr "Kolom"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.general_ledger_report_communication
+msgid "Communication"
+msgstr "Komunikasi"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: model:ir.model,name:account_reports.model_res_company
+#: model:ir.model.fields,field_description:account_reports.field_account_tax_unit__company_ids
+#, python-format
+msgid "Companies"
+msgstr "Perusahaan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: model:ir.model.fields,field_description:account_reports.field_account_multicurrency_revaluation_wizard__company_id
+#, python-format
+msgid "Company"
+msgstr "Perusahaan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_tax.py:0
+#, python-format
+msgid ""
+"Company %s already belongs to a tax unit in %s. A company can at most be "
+"part of one tax unit per country."
+msgstr ""
+"Perusahaan %s sudah merupakan bagian satuan pajak di %s. Setiap perusahaan "
+"hanya dapat menjadi bagian dari 1 satuan pajak di setiap negara."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Company Currency"
+msgstr "Mata Uang Perusahaan"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_tax_unit.xml:0
+#, python-format
+msgid "Company Only"
+msgstr "Hanya Perusahaan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Company Settings"
+msgstr "Pengaturan Perusahaan"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_comparison.xml:0
+#, python-format
+msgid "Comparison"
+msgstr "Perbandingan"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfigurasi"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_generic_tax_report.py:0
+#, python-format
+msgid "Configure your TAX accounts - %s"
+msgstr "Konfigurasi akun PAJAK Anda - %s"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.res_config_settings_view_form
+msgid "Configure your tax accounts"
+msgstr "Konfigurasi akun pajak Anda"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_res_partner
+msgid "Contact"
+msgstr "Kontak"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_cost_sales0
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_direct_costs0
+msgid "Cost of Revenue"
+msgstr "Harga Pokok Penjualan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Could not expand term %s while evaluating formula %s"
+msgstr "Tidak dapat expand term %s saat mengevaluasi formula %s"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Could not parse account_code formula from token '%s'"
+msgstr "Tidak dapat parse formula account_code dari token '%s'"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/journal_report/line/line.xml:0
+#: code:addons/account_reports/static/src/components/journal_report/line/line.xml:0
+#: model:ir.model.fields,field_description:account_reports.field_account_tax_unit__country_id
+#: model_terms:ir.ui.view,arch_db:account_reports.journal_report_pdf_export_main_table_body
+#: model_terms:ir.ui.view,arch_db:account_reports.view_account_report_search
+#, python-format
+msgid "Country"
+msgstr "Negara"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.account_financial_report_ec_sales_country
+msgid "Country Code"
+msgstr "Kode Negara"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.view_account_multicurrency_revaluation_wizard
+msgid "Create Entry"
+msgstr "Buat Entri"
+
+#. module: account_reports
+#: model:ir.actions.server,name:account_reports.action_create_report_menu
+msgid "Create Menu Item"
+msgstr "Buat Item Menu"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_multicurrency_revaluation_wizard__create_uid
+#: model:ir.model.fields,field_description:account_reports.field_account_report_file_download_error_wizard__create_uid
+#: model:ir.model.fields,field_description:account_reports.field_account_report_footnote__create_uid
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group__create_uid
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group_rule__create_uid
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard__create_uid
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard_format__create_uid
+#: model:ir.model.fields,field_description:account_reports.field_account_tax_unit__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_multicurrency_revaluation_wizard__create_date
+#: model:ir.model.fields,field_description:account_reports.field_account_report_file_download_error_wizard__create_date
+#: model:ir.model.fields,field_description:account_reports.field_account_report_footnote__create_date
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group__create_date
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group_rule__create_date
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard__create_date
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard_format__create_date
+#: model:ir.model.fields,field_description:account_reports.field_account_tax_unit__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/wizard/multicurrency_revaluation.py:0
+#: model:account.report.column,name:account_reports.general_ledger_report_credit
+#: model:account.report.column,name:account_reports.journal_report_debit
+#: model:account.report.column,name:account_reports.partner_ledger_report_credit
+#: model:account.report.column,name:account_reports.trial_balance_report_credit
+#, python-format
+msgid "Credit"
+msgstr "Kredit"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.aged_payable_report_currency
+#: model:account.report.column,name:account_reports.aged_receivable_report_currency
+#: model:account.report.column,name:account_reports.bank_reconciliation_report_currency
+#: model:account.report.column,name:account_reports.general_ledger_report_amount_currency
+msgid "Currency"
+msgstr "Mata Uang"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_multicurrency_revaluation_report.py:0
+#, python-format
+msgid "Currency Rates (%s)"
+msgstr "Nilai Tukar Mata Uang (%s)"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.pdf_export_filters
+msgid "Currency:"
+msgstr "Mata Uang:"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.deferred_expense_current
+#: model:account.report.column,name:account_reports.deferred_revenue_current
+msgid "Current"
+msgstr "Terbaru"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_current_assets0
+#: model:account.report.line,name:account_reports.account_financial_report_current_assets_view0
+msgid "Current Assets"
+msgstr "Aktiva Lancar"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_current_liabilities0
+#: model:account.report.line,name:account_reports.account_financial_report_current_liabilities1
+msgid "Current Liabilities"
+msgstr "Pasiva Terkini"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_current_year_earnings_line_2
+msgid "Current Year Allocated Earnings"
+msgstr "Penghasilan Teralokasi pada Tahun Terkini"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_current_year_earnings_line_1
+msgid "Current Year Earnings"
+msgstr "Penghasilan Tahun Terkini"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_current_year_earnings0
+msgid "Current Year Unallocated Earnings"
+msgstr "Penghasilan Belum Teralokasi pada Tahun Terkini"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_ca_to_l0
+msgid "Current assets to liabilities"
+msgstr "Aktiva terhadap Pasiva Terkini"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_report__custom_handler_model_id
+msgid "Custom Handler Model"
+msgstr "Custom Handler Model"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_report__custom_handler_model_name
+msgid "Custom Handler Model Name"
+msgstr "Nama Custom Handler Model"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/bank_reconciliation_report.py:0
+#, python-format
+msgid ""
+"Custom engine _report_custom_engine_last_statement_balance_amount does not "
+"support groupby"
+msgstr ""
+"Custom engine _report_custom_engine_last_statement_balance_amount does not "
+"support groupby"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_comparison.xml:0
+#: model:account.report.column,name:account_reports.bank_reconciliation_report_date
+#: model:ir.model.fields,field_description:account_reports.field_account_multicurrency_revaluation_wizard__date
+#, python-format
+msgid "Date"
+msgstr "Tanggal"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filters.js:0
+#, python-format
+msgid "Date cannot be empty"
+msgstr "Tanggal tidak boleh kosong"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/wizard/multicurrency_revaluation.py:0
+#: model:account.report.column,name:account_reports.general_ledger_report_debit
+#: model:account.report.column,name:account_reports.journal_report_amount_currency
+#: model:account.report.column,name:account_reports.partner_ledger_report_debit
+#: model:account.report.column,name:account_reports.trial_balance_report_debit
+#, python-format
+msgid "Debit"
+msgstr "Debit"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/journal_report/line/line.xml:0
+#: model_terms:ir.ui.view,arch_db:account_reports.journal_report_pdf_export_main_table_body
+#, python-format
+msgid "Deductible"
+msgstr "Deductible"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/deferred_reports/warnings.xml:0
+#, python-format
+msgid "Deferrals have already been generated."
+msgstr "Deferral sudah dibuat."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_deferred_reports.py:0
+#: code:addons/account_reports/models/account_deferred_reports.py:0
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Deferred Entries"
+msgstr "Entri-entri yang ditangguhkan"
+
+#. module: account_reports
+#: model:ir.actions.client,name:account_reports.action_account_report_deferred_expense
+#: model:ir.ui.menu,name:account_reports.menu_action_account_report_deferred_expense
+msgid "Deferred Expense"
+msgstr "Penangguhan Pengeluaran "
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_deferred_expense_report_handler
+msgid "Deferred Expense Custom Handler"
+msgstr "Custom Handler Penangguhan Pengeluaran"
+
+#. module: account_reports
+#: model:account.report,name:account_reports.deferred_expense_report
+msgid "Deferred Expense Report"
+msgstr "Laporan Penangguhan Pengeluaran"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_deferred_report_handler
+msgid "Deferred Expense Report Custom Handler"
+msgstr "Custom Handler Laporan Penangguhan Pengeluaran"
+
+#. module: account_reports
+#: model:ir.actions.client,name:account_reports.action_account_report_deferred_revenue
+#: model:ir.ui.menu,name:account_reports.menu_action_account_report_deferred_revenue
+msgid "Deferred Revenue"
+msgstr "Penangguhan Pendapatan"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_deferred_revenue_report_handler
+msgid "Deferred Revenue Custom Handler"
+msgstr "Custom Handler Penangguhan Pendapatan "
+
+#. module: account_reports
+#: model:account.report,name:account_reports.deferred_revenue_report
+msgid "Deferred Revenue Report"
+msgstr "Laporan Penangguhan Pendapatan"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_expression_form
+msgid "Definition"
+msgstr "Definisi"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_res_company__account_tax_periodicity
+msgid "Delay units"
+msgstr "Satuan jeda"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_depreciation0
+msgid "Depreciation"
+msgstr "Penyusutan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_generic_tax_report.py:0
+#, python-format
+msgid "Difference from rounding taxes"
+msgstr "Perbedaan dari pembulatan pajak"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_report_line__display_custom_groupby_warning
+msgid "Display Custom Groupby Warning"
+msgstr "Tampilkan Peringatan Kelompokkan Berdasarkan Kustom"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_multicurrency_revaluation_wizard__display_name
+#: model:ir.model.fields,field_description:account_reports.field_account_report_file_download_error_wizard__display_name
+#: model:ir.model.fields,field_description:account_reports.field_account_report_footnote__display_name
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group__display_name
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group_rule__display_name
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard__display_name
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard_format__display_name
+#: model:ir.model.fields,field_description:account_reports.field_account_tax_unit__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard__doc_name
+msgid "Documents Name"
+msgstr "Nama Dokumen"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group_rule__domain
+msgid "Domain"
+msgstr "Ruang Lingkup"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_fiscal_position.xml:0
+#, python-format
+msgid "Domestic"
+msgstr "Lokal"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.view_account_report_file_download_error_wizard_form
+msgid "Download Anyway"
+msgstr "Tetap Unduh"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.res_config_settings_view_form
+msgid "Download the Data Inalterability Check Report"
+msgstr "Unduh Laporan Pemeriksaan Data INalterability"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/journal_report/line/line.xml:0
+#: model_terms:ir.ui.view,arch_db:account_reports.journal_report_pdf_export_main_table_body
+#, python-format
+msgid "Due"
+msgstr "Jatuh Tempo"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.partner_ledger_report_date_maturity
+msgid "Due Date"
+msgstr "Batas Waktu"
+
+#. module: account_reports
+#: model:ir.actions.client,name:account_reports.action_account_report_sales
+#: model:ir.ui.menu,name:account_reports.menu_action_account_report_sales
+msgid "EC Sales List"
+msgstr "Daftar Sales EC"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_ec_sales_report_handler
+msgid "EC Sales Report Custom Handler"
+msgstr "Custom Handler Laporan Sales EC"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_sales_report.py:0
+#, python-format
+msgid "EC tax on non EC countries"
+msgstr "Pajak EC pada negara bukan EC"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_sales_report.py:0
+#, python-format
+msgid "EC tax on same country"
+msgstr "Pajak EC di negara yang sama"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_equity0
+msgid "EQUITY"
+msgstr "EKUITAS"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid ""
+"Editing a manual report line is not allowed in multivat setup when "
+"displaying data from all fiscal positions."
+msgstr ""
+"Mengedit baris manual dalam laporan tidak diizinkan dalam setup multivat "
+"saat menampilkan data dari semua posisi fiskal."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid ""
+"Editing a manual report line is not allowed when multiple companies are "
+"selected."
+msgstr ""
+"Mengedit baris manual dalam laporan tidak diizinkan saat lebih dari satu "
+"perusahaan dipilih. "
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Enable Sections"
+msgstr "Aktifkan Bagian"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_variant.xml:0
+#, python-format
+msgid "Enable more ..."
+msgstr "Aktifkan lebih banyak ..."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_trial_balance_report.py:0
+#, python-format
+msgid "End Balance"
+msgstr "Salo Akhir"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_date.xml:0
+#, python-format
+msgid "End of Last Financial Year"
+msgstr "Akhir dari Tahun Keuangan Terakhir"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_date.xml:0
+#, python-format
+msgid "End of Last Month"
+msgstr "Akhir dari Bulan Terakhir"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_date.xml:0
+#, python-format
+msgid "End of Last Quarter"
+msgstr "Akhir dari Triwulan Terakhir"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid "Ending Balance:"
+msgstr "Saldo Akhir:"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/line/popover/debug_popover.xml:0
+#, python-format
+msgid "Engine"
+msgstr "Mesin"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_sales_report.py:0
+#, python-format
+msgid "Entries with partners with no VAT"
+msgstr "Entri dengan mitra tanpa PPN"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Error message"
+msgstr "Pesan Error"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/multicurrency_revaluation_report/filters/filter_exchange_rate.xml:0
+#, python-format
+msgid "Exchange Rates"
+msgstr "Kurs"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_account__exclude_provision_currency_ids
+msgid "Exclude Provision Currency"
+msgstr "Kecualikan Mata Uang Provisi"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.multicurrency_revaluation_excluded
+msgid "Excluded Accounts"
+msgstr "Akun yang DIkecualikan"
+
+#. module: account_reports
+#: model:account.report,name:account_reports.executive_summary
+#: model:ir.actions.client,name:account_reports.action_account_report_exec_summary
+#: model:ir.ui.menu,name:account_reports.menu_action_account_report_exec_summary
+msgid "Executive Summary"
+msgstr "Ringkasan Eksekutif"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.aged_payable_report_expected_date
+#: model:account.report.column,name:account_reports.aged_receivable_report_expected_date
+#: model:ir.model.fields,field_description:account_reports.field_account_move_line__expected_pay_date
+msgid "Expected Date"
+msgstr "Tanggal Perkiraan"
+
+#. module: account_reports
+#: model:ir.model.fields,help:account_reports.field_account_move_line__expected_pay_date
+msgid ""
+"Expected payment date as manually set through the customer statement(e.g: if"
+" you had the customer on the phone and want to remember the date he promised"
+" he would pay)"
+msgstr ""
+"Tanggal perkiraan pembayaran yang diatur secara manual melalui pernyataan "
+"pelanggan (misalnya: jika Anda menelepon pelanggan dan ingin mengingat "
+"tanggal pembayaran yang ia janjikan)"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_aged_partner_balance.py:0
+#, python-format
+msgid ""
+"Expected payment date for journal item %r has been changed from %s to %s on "
+"journal entry %r"
+msgstr ""
+"Tanggal pembayaran yang diharapkan untuk item jurnal %r telah diubah dari %s"
+" menjadi %s pada entri jurnal %r"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_multicurrency_revaluation_wizard__expense_provision_account_id
+msgid "Expense Account"
+msgstr "Akun Beban"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_res_company__account_revaluation_expense_provision_account_id
+msgid "Expense Provision Account"
+msgstr "Akun Pengeluaran Provisi"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/wizard/multicurrency_revaluation.py:0
+#, python-format
+msgid "Expense Provision for %s"
+msgstr "Pengeluaran Provisi untuk %s"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_expenses0
+#: model:account.report.line,name:account_reports.account_financial_report_expense0
+#: model:account.report.line,name:account_reports.account_financial_report_less_expenses0
+msgid "Expenses"
+msgstr "Pengeluaran"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: model_terms:ir.ui.view,arch_db:account_reports.view_report_export_wizard
+#, python-format
+msgid "Export"
+msgstr "Ekspor"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_reports_export_wizard_format
+msgid "Export format for accounting's reports"
+msgstr "Ekspor format untuk laporan akuntansi"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard__export_format_ids
+msgid "Export to"
+msgstr "Ekspor ke"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_reports_export_wizard
+msgid "Export wizard for accounting's reports"
+msgstr "Wizard ekspor untuk laporan akuntansi"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_expression_form
+msgid "Expression"
+msgstr "Expression"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid ""
+"Expression labelled '%s' of line '%s' is being overwritten when computing "
+"the current report. Make sure the cross-report aggregations of this report "
+"only reference terms belonging to other reports."
+msgstr ""
+"Ekspresi dengan label '%s' dari baris '%s' ditulis ulang saat menghitung "
+"laporan saat ini. Pastikan agregat laporan-silang dari laporan ini hanya "
+"mereferensikan ketentuan yang berasal dari laporan lain."
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group_rule__field_name
+msgid "Field"
+msgstr "Kolom"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Field %s does not exist on account.move.line."
+msgstr "Field %s tidak ada pada account.move.line."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid ""
+"Field %s of account.move.line is not stored, and hence cannot be used in a "
+"groupby expression"
+msgstr ""
+"Field %s untuk account.move.line tidak disimpan, dan karenanya tidak dapat "
+"digunakan di expression groupby"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid ""
+"Field 'Custom Handler Model' can only reference records inheriting from "
+"[%s]."
+msgstr ""
+"Field 'Custom Handler Model' hanya dapat merujuk record yang diwarisi dari "
+"[%s]."
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_report_file_download_error_wizard__file_content
+msgid "File Content"
+msgstr "Konten File"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.view_account_report_file_download_error_wizard_form
+msgid "File Download Errors"
+msgstr "Error Mengunduh File"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_report_file_download_error_wizard__file_generation_errors
+msgid "File Generation Errors"
+msgstr "Error Membuat File"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_report_file_download_error_wizard__file_name
+msgid "File Name"
+msgstr "Nama File"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/models/account_report.py:0
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_form
+#, python-format
+msgid "Filters"
+msgstr "Penyaring"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/aml_ir_filters.xml:0
+#: model_terms:ir.ui.view,arch_db:account_reports.pdf_export_filters
+#, python-format
+msgid "Filters:"
+msgstr "Filter-Filter:"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_fiscal_position.xml:0
+#, python-format
+msgid "Fiscal Position:"
+msgstr "Posisi Fiskal:"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_tax_unit__fpos_synced
+msgid "Fiscal Positions Synchronised"
+msgstr "Sinkronisasi Posisi Fiskal"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.view_tax_unit_form
+msgid ""
+"Fiscal Positions should apply to all companies of the tax unit. You may want"
+" to"
+msgstr ""
+"Posisi Fiskal harus diterapkan ke semua perusahaan dari satuan pajak yang "
+"sama. Anda mungkin harus"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_report__footnotes_ids
+msgid "Footnotes"
+msgstr "Catatan kaki"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/wizard/multicurrency_revaluation.py:0
+#, python-format
+msgid "Foreign currencies adjustment entry as of %s"
+msgstr "Entri penyesuaian mata uang asing sejak %s"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/line/popover/debug_popover.xml:0
+#, python-format
+msgid "Formula"
+msgstr "Rumus"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_comparison.xml:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_date.xml:0
+#, python-format
+msgid "From"
+msgstr "Dari"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid ""
+"From %s\n"
+"to  %s"
+msgstr ""
+"Dari %s\n"
+"ke  %s"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard_format__fun_param
+msgid "Function Parameter"
+msgstr "Parameter Fungsi"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard_format__fun_to_call
+msgid "Function to Call"
+msgstr "Function to Call"
+
+#. module: account_reports
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/models/account_trial_balance_report.py:0
+#: code:addons/account_reports/static/src/components/bank_reconciliation_report/warnings.xml:0
+#: code:addons/account_reports/static/src/components/multicurrency_revaluation_report/line_name.xml:0
+#: model:account.report,name:account_reports.general_ledger_report
+#: model:ir.actions.client,name:account_reports.action_account_report_general_ledger
+#: model:ir.ui.menu,name:account_reports.menu_action_account_report_general_ledger
+#, python-format
+msgid "General Ledger"
+msgstr "Buku Besar Umum"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_general_ledger_report_handler
+msgid "General Ledger Custom Handler"
+msgstr "Custom Handler Buku Besar Umum"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_deferred_reports.py:0
+#, python-format
+msgid "Generate entry"
+msgstr "Buat entri"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/wizard/report_export_wizard.py:0
+#, python-format
+msgid "Generated Documents"
+msgstr "Generated Documents"
+
+#. module: account_reports
+#: model:account.report,name:account_reports.generic_ec_sales_report
+msgid "Generic EC Sales List"
+msgstr "Daftar Sales EC Umum"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_generic_tax_report_handler
+msgid "Generic Tax Report Custom Handler"
+msgstr "Custom Handler Laporan Pajak Umum"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_generic_tax_report_handler_account_tax
+msgid "Generic Tax Report Custom Handler (Account -> Tax)"
+msgstr "Custom Handler Laporan Pajak Umum (Akun -> Pajak)"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_generic_tax_report_handler_tax_account
+msgid "Generic Tax Report Custom Handler (Tax -> Account)"
+msgstr "Custom Handler Laporan Pajak Umum (Pajak -> Akun)"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid "Global Tax Summary"
+msgstr "Ringkasan Pajak Global"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid "Go to report configuration"
+msgstr "Pergi ke konfigurasi laporan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_sales_report.py:0
+#, python-format
+msgid "Goods"
+msgstr "Barang"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/journal_report/line/line.xml:0
+#: model_terms:ir.ui.view,arch_db:account_reports.journal_report_pdf_export_main_table_body
+#, python-format
+msgid "Grid"
+msgstr "Grid"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_gross_profit0
+msgid "Gross Profit"
+msgstr "Laba Bruto"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_gross_profit0
+msgid "Gross profit"
+msgstr "Laba bruto"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_gpmargin0
+msgid "Gross profit margin (gross profit / operating income)"
+msgstr "Margin laba kotor (laba kotor / penghasilan operasi)"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_line_form
+#: model_terms:ir.ui.view,arch_db:account_reports.view_account_report_search
+msgid "Group By"
+msgstr "Dikelompokkan berdasarkan"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/journal_report/filter_extra_options.xml:0
+#, python-format
+msgid "Group By Months"
+msgstr "Kelompokkan Berdasarkan Bulan"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_horizontal_group_form
+msgid "Group Name"
+msgstr "Nama Kelompok"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_deferred_reports.py:0
+#, python-format
+msgid "Grouped Deferral Entry of %s"
+msgstr "Grouped Deferral Entry untuk %s"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid "Hide lines at 0"
+msgstr "Sembunyikan baris pada 0"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid "Hierarchy and Subtotals"
+msgstr "Hirarki dan Subtotal"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group_rule__horizontal_group_id
+#, python-format
+msgid "Horizontal Group"
+msgstr "Kelompok Horizontal"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_horizontal_groups.xml:0
+#, python-format
+msgid "Horizontal Group:"
+msgstr "Kelompok Horizontal:"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid "Horizontal Grouping"
+msgstr "Pengelompokkan Horizontal"
+
+#. module: account_reports
+#: model:ir.actions.act_window,name:account_reports.action_account_report_horizontal_groups
+#: model:ir.model.fields,field_description:account_reports.field_account_report__horizontal_group_ids
+#: model:ir.ui.menu,name:account_reports.menu_action_account_report_horizontal_groups
+msgid "Horizontal Groups"
+msgstr "Kelompok-kelompok Horizontal"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_report_horizontal_group
+msgid "Horizontal group for reports"
+msgstr "Kelompok horizontal untuk laporan-laporan"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_report_horizontal_group_rule
+msgid "Horizontal group rule for reports"
+msgstr "Peraturan kelompok horizontal untuk laporan-laporan"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.pdf_export_filters
+msgid "Horizontal:"
+msgstr "Horisontal:"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.res_config_settings_view_form
+msgid "How often tax returns have to be made"
+msgstr "Seberapa sering spt harus dibuat"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_multicurrency_revaluation_wizard__id
+#: model:ir.model.fields,field_description:account_reports.field_account_report_file_download_error_wizard__id
+#: model:ir.model.fields,field_description:account_reports.field_account_report_footnote__id
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group__id
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group_rule__id
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard__id
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard_format__id
+#: model:ir.model.fields,field_description:account_reports.field_account_tax_unit__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/journal_report/line/line.xml:0
+#: model_terms:ir.ui.view,arch_db:account_reports.journal_report_pdf_export_main_table_body
+#, python-format
+msgid "Impact On Grid"
+msgstr "Dampak Pada Grid"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/journal_report/line/line.xml:0
+#: model_terms:ir.ui.view,arch_db:account_reports.journal_report_pdf_export_main_table_body
+#, python-format
+msgid "Impacted Tax Grids"
+msgstr "Tax Grid Terdampak"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filters.js:0
+#, python-format
+msgid "In %s"
+msgstr "Di %s"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.view_account_report_search
+msgid "Inactive"
+msgstr "Tidak Aktif"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid "Include Analytic Simulations"
+msgstr "Masukkan Simulasi Analitik"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid "Include Draft Entries"
+msgstr "Masukkan Entri Draft"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/journal_report/filter_extra_options.xml:0
+#, python-format
+msgid "Include Payments"
+msgstr "Masukkan Pembayaran"
+
+#. module: account_reports
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid "Including Analytic Simulations"
+msgstr "Termasuk Simulasi Analitik"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.no_statement_unreconciled_payments
+#: model:account.report.line,name:account_reports.unreconciled_last_statement_payments
+msgid "Including Unreconciled Payments"
+msgstr "Termasuk Pembayaran yang Belum Direkonsilias "
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.no_statement_unreconciled_receipt
+#: model:account.report.line,name:account_reports.unreconciled_last_statement_receipts
+msgid "Including Unreconciled Receipts"
+msgstr "Termasuk Resi yang Belum Direkonsiliasi"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_income0
+#: model:account.report.line,name:account_reports.account_financial_report_totalincome0
+msgid "Income"
+msgstr "Penghasilan"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_multicurrency_revaluation_wizard__income_provision_account_id
+msgid "Income Account"
+msgstr "Akun Laba"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_res_company__account_revaluation_income_provision_account_id
+msgid "Income Provision Account"
+msgstr "Akun Pemasukkan Provisi"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/wizard/multicurrency_revaluation.py:0
+#, python-format
+msgid "Income Provision for %s"
+msgstr "Pemasukkan Provisi untuk %s"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/bank_reconciliation_report.py:0
+#, python-format
+msgid "Inconsistent Statements"
+msgstr "Laporan Tidak Konsisten"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid ""
+"Inconsistent data: more than one external value at the same date for a "
+"'most_recent' external line."
+msgstr ""
+"Data tidak konsisten: lebih dari satu value eksternal pada tanggal yang sama"
+" untuk baris eksternal 'most_recent'."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid ""
+"Inconsistent report_id in options dictionary. Options says %s; report is %s."
+msgstr ""
+"report_id tidak konsisten dalam options dictionary. Option mengatakan %s; "
+"laporan mengatakan %s."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/models/account_trial_balance_report.py:0
+#, python-format
+msgid "Initial Balance"
+msgstr "Saldo Awal"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/footnote/dialog/footnote_dialog.xml:0
+#, python-format
+msgid "Insert foot note here"
+msgstr "Masukkan catatan kaki disini"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid "Integer Rounding"
+msgstr "Pembulatan Integer"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/sales_report/warnings.xml:0
+#: code:addons/account_reports/static/src/components/sales_report/warnings.xml:0
+#: code:addons/account_reports/static/src/components/sales_report/warnings.xml:0
+#, python-format
+msgid "Intra-community taxes are applied on"
+msgstr "Pajak intra-community diterapkan pada"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/wizard/account_report_file_download_error_wizard.py:0
+#, python-format
+msgid "Invalid Partners"
+msgstr "Partner-Partner Tidak Valid"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/wizard/account_report_file_download_error_wizard.py:0
+#, python-format
+msgid "Invalid Products"
+msgstr "Produk-Produk Tidak Valid"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/wizard/account_report_file_download_error_wizard.py:0
+#, python-format
+msgid "Invalid Taxes"
+msgstr "Pajak-Pajak Tidak Valid"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Invalid domain formula in expression %r of line %r: %s"
+msgstr "Formula domain tidak valid di expression %r dari baris %r: %s"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Invalid method %r"
+msgstr "Metode tidak valid %r"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Invalid subformula in expression %r of line %r: %s"
+msgstr "Subformula di expression %r dari baris %r tidak valid: %s"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Invalid token '%s' in account_codes formula '%s'"
+msgstr "Token tidak valid '%s' di formula account_codes '%s'"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.aged_payable_report_invoice_date
+#: model:account.report.column,name:account_reports.aged_receivable_report_invoice_date
+#: model:account.report.column,name:account_reports.general_ledger_report_date
+#: model:account.report.column,name:account_reports.journal_report_date
+#: model:account.report.column,name:account_reports.partner_ledger_report_invoicing_date
+msgid "Invoice Date"
+msgstr "Tanggal Faktur"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_report__is_account_coverage_report_available
+msgid "Is Account Coverage Report Available"
+msgstr "Apakah Laporan Coverage Akun Tersedia"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.partner_ledger_report_journal_code
+#: model:ir.model,name:account_reports.model_account_journal
+#: model:ir.model.fields,field_description:account_reports.field_account_financial_year_op__account_tax_periodicity_journal_id
+#: model:ir.model.fields,field_description:account_reports.field_account_multicurrency_revaluation_wizard__journal_id
+#: model:ir.model.fields,field_description:account_reports.field_res_company__account_tax_periodicity_journal_id
+#: model:ir.model.fields,field_description:account_reports.field_res_config_settings__account_tax_periodicity_journal_id
+#: model_terms:ir.ui.view,arch_db:account_reports.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account_reports.setup_financial_year_opening_form
+msgid "Journal"
+msgstr "Jurnal"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_move
+msgid "Journal Entry"
+msgstr "Entri Jurnal"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Journal Groups"
+msgstr "Journal Groups"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_move_line
+msgid "Journal Item"
+msgstr "Item Jurnal"
+
+#. module: account_reports
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account_reports/models/account_deferred_reports.py:0
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/models/account_trial_balance_report.py:0
+#: code:addons/account_reports/models/bank_reconciliation_report.py:0
+#: code:addons/account_reports/static/src/components/aged_partner_balance/line_name/line_name.xml:0
+#: code:addons/account_reports/static/src/components/general_ledger/line_name.xml:0
+#: code:addons/account_reports/static/src/components/journal_report/line_name.xml:0
+#: code:addons/account_reports/static/src/components/partner_ledger/line_name.xml:0
+#, python-format
+msgid "Journal Items"
+msgstr "Item Jurnal"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_generic_tax_report.py:0
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid "Journal Items for Tax Audit"
+msgstr "Journal Items for Tax Audit"
+
+#. module: account_reports
+#: model:account.report,name:account_reports.journal_report
+#: model:ir.actions.client,name:account_reports.action_account_report_ja
+#: model:ir.ui.menu,name:account_reports.menu_action_account_report_ja
+msgid "Journal Report"
+msgstr "Laporan Jurnal"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_journal_report_handler
+msgid "Journal Report Custom Handler"
+msgstr "Custom Handler Laporan Jurnal"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_generic_tax_report.py:0
+#, python-format
+msgid "Journal items with archived tax tags"
+msgstr "Item jurnal dengan tag pajak yang diarsip"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Journals"
+msgstr "Jurnal-jurnal"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_journal.xml:0
+#: model_terms:ir.ui.view,arch_db:account_reports.pdf_export_filters
+#, python-format
+msgid "Journals:"
+msgstr "Jurnal:"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_liabilities_view0
+msgid "LIABILITIES"
+msgstr "PASIVA"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_liabilities_and_equity_view0
+msgid "LIABILITIES + EQUITY"
+msgstr "LIABILITAS + EKUITAS"
+
+#. module: account_reports
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account_reports/static/src/components/account_report/line/popover/debug_popover.xml:0
+#: code:addons/account_reports/wizard/multicurrency_revaluation.py:0
+#: model:account.report.column,name:account_reports.bank_reconciliation_report_label
+#: model:account.report.column,name:account_reports.journal_report_partner_name
+#, python-format
+msgid "Label"
+msgstr "Label"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_date.xml:0
+#, python-format
+msgid "Last Financial Year"
+msgstr "Tahun Keuangan yang Lalu"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_date.xml:0
+#, python-format
+msgid "Last Month"
+msgstr "Bulan Lalu"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_date.xml:0
+#, python-format
+msgid "Last Quarter"
+msgstr "Triwulan Lalu"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_reports_journal_dashboard_kanban_view
+msgid "Last Statement"
+msgstr "Statement Terakhir"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_reports_journal_dashboard_kanban_view
+msgid "Last Statement balance + Transactions since statement"
+msgstr "Saldo Laporan Terakhir + Transaksi semenjak laporan"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_multicurrency_revaluation_wizard__write_uid
+#: model:ir.model.fields,field_description:account_reports.field_account_report_file_download_error_wizard__write_uid
+#: model:ir.model.fields,field_description:account_reports.field_account_report_footnote__write_uid
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group__write_uid
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group_rule__write_uid
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard__write_uid
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard_format__write_uid
+#: model:ir.model.fields,field_description:account_reports.field_account_tax_unit__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_multicurrency_revaluation_wizard__write_date
+#: model:ir.model.fields,field_description:account_reports.field_account_report_file_download_error_wizard__write_date
+#: model:ir.model.fields,field_description:account_reports.field_account_report_footnote__write_date
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group__write_date
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group_rule__write_date
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard__write_date
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard_format__write_date
+#: model:ir.model.fields,field_description:account_reports.field_account_tax_unit__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.last_statement_balance
+msgid "Last statement balance"
+msgstr "Statement balance terakhir"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_deferred_reports.py:0
+#, python-format
+msgid "Later"
+msgstr "Nanti"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_reports_journal_dashboard_kanban_view
+msgid "Latest Statement"
+msgstr "Statement Terkini"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_report_footnote__line_id
+msgid "Line"
+msgstr "Baris"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/line/popover/debug_popover.xml:0
+#, python-format
+msgid "Line without formula"
+msgstr "Baris tanpa formula"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_form
+msgid "Lines"
+msgstr "Baris"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Load more..."
+msgstr "Muat lebih..."
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_tax_unit__main_company_id
+msgid "Main Company"
+msgstr "Perusahaan Utama"
+
+#. module: account_reports
+#: model:ir.model.fields,help:account_reports.field_account_tax_unit__main_company_id
+msgid ""
+"Main company of this unit; the one actually reporting and paying the taxes."
+msgstr ""
+"Perusahaan utama untuk unit ini; perusahaan yang sebetulnya melaporkan dan "
+"membayar pajak."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_multicurrency_revaluation_report.py:0
+#: model_terms:ir.ui.view,arch_db:account_reports.view_account_multicurrency_revaluation_wizard
+#, python-format
+msgid "Make Adjustment Entry"
+msgstr "Buat Entri Penyesuaian"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_report_file_download_error_wizard
+msgid "Manage the file generation errors from report exports."
+msgstr "Kelola error pembuatan file dari ekspor laporan."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Manual value"
+msgstr "Value manual"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Manual values"
+msgstr "Value-value manual"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.partner_ledger_report_matching_number
+msgid "Matching"
+msgstr "Sesuai"
+
+#. module: account_reports
+#: model:ir.model.fields,help:account_reports.field_account_tax_unit__company_ids
+msgid "Members of this unit"
+msgstr "Anggota unit ini"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Method '%s' must start with the '%s' prefix."
+msgstr "Metode '%s' harus memiliki awalan '%s'."
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.misc_operations
+msgid "Misc. operations"
+msgstr "Misc. operation"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/wizard/account_report_file_download_error_wizard.py:0
+#, python-format
+msgid "Missing Company Data"
+msgstr "Data Perusahaan Hilang"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group_rule__res_model_name
+msgid "Model"
+msgstr "Model"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_multicurrency_revaluation_report_handler
+msgid "Multicurrency Revaluation Report Custom Handler"
+msgstr "Custom Handler Laporan Multicurrency Revaluation"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_multicurrency_revaluation_wizard
+msgid "Multicurrency Revaluation Wizard"
+msgstr "Wizard Multicurrency Revaluation"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/res_company.py:0
+#, python-format
+msgid ""
+"Multiple draft tax closing entries exist for fiscal position %s after %s. There should be at most one. \n"
+" %s"
+msgstr ""
+"Lebih dari satu draft entri penutupan pajak untuk posisi fiskal %s setelah %s. Seharusnya hanya ada satu. \n"
+" %s"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/res_company.py:0
+#, python-format
+msgid ""
+"Multiple draft tax closing entries exist for your domestic region after %s. There should be at most one. \n"
+" %s"
+msgstr ""
+"Lebih dari satu draft entri penutupan pajak untuk wilayah lokal Anda setelah %s. Seharusnya hanya ada satu. \n"
+" %s"
+
+#. module: account_reports
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account_reports/models/account_general_ledger.py:0
+#: code:addons/account_reports/models/account_journal_report.py:0
+#: code:addons/account_reports/static/src/components/journal_report/line/line.xml:0
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group__name
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard_format__name
+#: model:ir.model.fields,field_description:account_reports.field_account_tax_unit__name
+#: model_terms:ir.ui.view,arch_db:account_reports.journal_report_pdf_export_main_table_body
+#: model_terms:ir.ui.view,arch_db:account_reports.view_tax_unit_form
+#, python-format
+msgid "Name"
+msgstr "Nama"
+
+#. module: account_reports
+#: model:ir.model.fields,help:account_reports.field_account_reports_export_wizard__doc_name
+msgid "Name to give to the generated documents."
+msgstr "Nama untuk diberikan ke dokumen yang dibuat."
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_profit0
+#: model:account.report.line,name:account_reports.account_financial_report_net_profit0
+msgid "Net Profit"
+msgstr "Laba Bersih"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_net_assets0
+msgid "Net assets"
+msgstr "Aktiva bersih"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_cash_flow_report.py:0
+#, python-format
+msgid "Net increase in cash and cash equivalents"
+msgstr "Aktiva yang meningkat dalam kas dan setara kas"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_npmargin0
+msgid "Net profit margin (net profit / income)"
+msgstr "Margin laba bersih (laba bersih / penghasilan)"
+
+#. module: account_reports
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/static/src/components/account_report/line_cell/popover/edit_popover.xml:0
+#, python-format
+msgid "No"
+msgstr "Tidak"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_comparison.xml:0
+#, python-format
+msgid "No Comparison"
+msgstr "Tidak ada Perbandingan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "No VAT number associated with your company. Please define one."
+msgstr ""
+"Tidak ada nomor PPN yang terhubung ke perusahaan Anda. Mohon sediakan satu "
+"nomor PPN."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/wizard/multicurrency_revaluation.py:0
+#, python-format
+msgid "No adjustment needed"
+msgstr "Tidak membutuhkan penyesuaian"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/account_report.xml:0
+#, python-format
+msgid "No data to display !"
+msgstr "Tidak ada data untuk ditampilkan !"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/chart_template.py:0
+#, python-format
+msgid "No default miscellaneous journal could be found for the active company"
+msgstr ""
+"Tidak ada jurnal miscellaneous default yang dapat ditemukan untuk perusahaan"
+" aktif"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_deferred_reports.py:0
+#, python-format
+msgid "No entry to generate."
+msgstr "Tidak ada entri untuk dibuat."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/wizard/multicurrency_revaluation.py:0
+#, python-format
+msgid "No provision needed was found."
+msgstr "Tidak ada provisi yang dibutuhkan yang ditemukan."
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filters.js:0
+#, python-format
+msgid "Non Trade Partners"
+msgstr "Non Trade Partners"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Non Trade Payable"
+msgstr "Non Trade Payable"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Non Trade Receivable"
+msgstr "Non Trade Receivable"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/journal_report/line/line.xml:0
+#: model_terms:ir.ui.view,arch_db:account_reports.journal_report_pdf_export_main_table_body
+#, python-format
+msgid "Non-Deductible"
+msgstr "Non-Deductible"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_horizontal_groups.xml:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filters.js:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filters.js:0
+#, python-format
+msgid "None"
+msgstr "Tidak Ada"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_deferred_reports.py:0
+#, python-format
+msgid "Not Started"
+msgstr "Belum Mulai"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filters.js:0
+#, python-format
+msgid "Number of periods cannot be smaller than 1"
+msgstr "Jumlah periode tidak boleh lebih kecil dari 1"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_off_sheet
+msgid "OFF BALANCE SHEET ACCOUNTS"
+msgstr "AKUN OFF-BALANCE SHEET"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filters.js:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filters.js:0
+#, python-format
+msgid "Odoo Warning"
+msgstr "Peringatan Odoo"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.aged_payable_report_period5
+#: model:account.report.column,name:account_reports.aged_receivable_report_period5
+msgid "Older"
+msgstr "Lebih Tua"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/wizard/report_export_wizard.py:0
+#, python-format
+msgid "One of the formats chosen can not be exported in the DMS"
+msgstr "Salah satu format yang dipilih tidak dapat diekspor ke DMS"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_move.py:0
+#, python-format
+msgid "Only Billing Administrators are allowed to change lock dates!"
+msgstr ""
+"Hanya Administrator Tagihan yang diperbolehkan untuk mengganti tanggal "
+"tutup!"
+
+#. module: account_reports
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_extra_options.xml:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid "Only Show Unreconciled Entries"
+msgstr "Hanya Tampilkan Entri yang Belum DIrekonsiliasi"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/aged_partner_balance/line_name/line_name.xml:0
+#: code:addons/account_reports/static/src/components/partner_ledger/line_name.xml:0
+#, python-format
+msgid "Open"
+msgstr "Terbuka"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_financial_year_op
+msgid "Opening Balance of Financial Year"
+msgstr "Opening Balance of Financial Year"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_income0
+msgid "Operating Income"
+msgstr "Penghasilan Operasi"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_expression_form
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_form
+#, python-format
+msgid "Options"
+msgstr "Opsi"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_extra_options.xml:0
+#: model_terms:ir.ui.view,arch_db:account_reports.journal_report_pdf_export_filters
+#: model_terms:ir.ui.view,arch_db:account_reports.pdf_export_filter_extra_options_template
+#, python-format
+msgid "Options:"
+msgstr "Opsi:"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_other_income0
+msgid "Other Income"
+msgstr "Penghasilan Lainnya"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.outstanding
+msgid "Outstanding Receipts/Payments"
+msgstr "Resi/Pembayaran yang Belum Lunas"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "PDF"
+msgstr "PDF"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard__report_id
+msgid "Parent Report Id"
+msgstr "Id Laporan Induk"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_reports_export_wizard_format__export_wizard_id
+msgid "Parent Wizard"
+msgstr "Wizard Induk"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.general_ledger_report_partner_name
+msgid "Partner"
+msgstr "Rekanan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Partner Categories"
+msgstr "Kategori-Kategori Partner"
+
+#. module: account_reports
+#: model:account.report,name:account_reports.partner_ledger_report
+#: model:ir.actions.client,name:account_reports.action_account_report_partner_ledger
+#: model:ir.ui.menu,name:account_reports.menu_action_account_report_partner_ledger
+#: model_terms:ir.ui.view,arch_db:account_reports.partner_view_buttons
+msgid "Partner Ledger"
+msgstr "Buku Besar Mitra"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_partner_ledger_report_handler
+msgid "Partner Ledger Custom Handler"
+msgstr "Custom Handler Buku Besar Mitra"
+
+#. module: account_reports
+#: model:ir.ui.menu,name:account_reports.account_reports_partners_reports_menu
+msgid "Partner Reports"
+msgstr "Laporan Mitra"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/aged_partner_balance/line_name/line_name.xml:0
+#: code:addons/account_reports/static/src/components/partner_ledger/line_name.xml:0
+#, python-format
+msgid "Partner is bad"
+msgstr "Partner buruk"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/aged_partner_balance/line_name/line_name.xml:0
+#: code:addons/account_reports/static/src/components/partner_ledger/line_name.xml:0
+#, python-format
+msgid "Partner is good"
+msgstr "Partner bagus"
+
+#. module: account_reports
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_partner.xml:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_partner.xml:0
+#, python-format
+msgid "Partners"
+msgstr "Rekanan"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.pdf_export_filters
+msgid "Partners Categories:"
+msgstr "Kategori-Kategori Partner:"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.pdf_export_filters
+msgid "Partners:"
+msgstr "Mitra:"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_aged_partner_balance.py:0
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Payable"
+msgstr "Utang"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_generic_tax_report.py:0
+#, python-format
+msgid "Payable tax amount"
+msgstr "Jumlah pajak terutang"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_current_liabilities_payable
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_creditors0
+msgid "Payables"
+msgstr "Utang"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_reports_journal_dashboard_kanban_view
+msgid "Payments"
+msgstr "Pembayaran"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_performance0
+msgid "Performance"
+msgstr "Performa"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid "Period comparison"
+msgstr "Perbandingan periode"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_res_config_settings__account_tax_periodicity
+#: model:ir.model.fields,help:account_reports.field_account_financial_year_op__account_tax_periodicity
+#: model:ir.model.fields,help:account_reports.field_res_company__account_tax_periodicity
+#: model:ir.model.fields,help:account_reports.field_res_config_settings__account_tax_periodicity
+#: model_terms:ir.ui.view,arch_db:account_reports.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account_reports.setup_financial_year_opening_form
+msgid "Periodicity"
+msgstr "Periode"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_financial_year_op__account_tax_periodicity
+msgid "Periodicity in month"
+msgstr "Periodisitas dalam bulan"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_analytic_groupby.xml:0
+#, python-format
+msgid "Plans"
+msgstr "Rencana"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_deferred_reports.py:0
+#, python-format
+msgid "Please set the deferred accounts in the accounting settings."
+msgstr "Mohon tetapkan akun yang ditangguhkan dalam pengaturan akuntansi."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_deferred_reports.py:0
+#, python-format
+msgid "Please set the deferred journal in the accounting settings."
+msgstr "Mohon tetapkan jurnal penangguhan di pengaturan akuntansi."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_generic_tax_report.py:0
+#, python-format
+msgid "Please specify the accounts necessary for the Tax Closing Entry."
+msgstr "Mohon tentukan akun yang dibutuhkan untuk Entri Penutupan Pajak."
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_fixed_assets_view0
+msgid "Plus Fixed Assets"
+msgstr "Ditambah Aktiva Tetap"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_non_current_assets_view0
+msgid "Plus Non-current Assets"
+msgstr "Ditambah Aktiva Tidak Lancar"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_non_current_liabilities0
+msgid "Plus Non-current Liabilities"
+msgstr "Ditambah Pasiva Tidak Lancar"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_position0
+msgid "Position"
+msgstr "Posisi"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/line_cell/popover/edit_popover.xml:0
+#, python-format
+msgid "Post"
+msgstr "Rekam"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid "Posted Entries Only"
+msgstr "Hanya Entri yang Sudah Terbit"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.view_move_form_vat_return
+msgid ""
+"Posting this entry will also update and post the unposted closings of the "
+"depending companies."
+msgstr ""
+"Memposting entri ini juga akan mengupdate dan mempos closing yang belum "
+"dipost dari perusahaan yang tergantung."
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_prepayements0
+msgid "Prepayments"
+msgstr "Prabayar"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_multicurrency_revaluation_wizard__preview_data
+msgid "Preview Data"
+msgstr "Pratinjau Data"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_comparison.xml:0
+#, python-format
+msgid "Previous Period"
+msgstr "Periode Sebelumnya"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_previous_year_earnings0
+msgid "Previous Years Unallocated Earnings"
+msgstr "Pendapatan Belum Teralokasi pada Tahun Sebelumnya"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.view_account_multicurrency_revaluation_wizard
+msgid ""
+"Proceed with caution as there might be an existing adjustment for this "
+"period ("
+msgstr ""
+"Hati-hati dalam melanjutkan karena mungkin terdapat penyesuaian sebelumnya "
+"untuk periode ini ("
+
+#. module: account_reports
+#: model:account.report,name:account_reports.profit_and_loss
+#: model:ir.actions.client,name:account_reports.action_account_report_pl
+#: model:ir.ui.menu,name:account_reports.menu_action_account_report_profit_and_loss
+msgid "Profit and Loss"
+msgstr "Laba dan Rugi"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_profitability0
+msgid "Profitability"
+msgstr "Profitabilitas"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.view_move_form_vat_return
+msgid "Proposition of tax closing journal entry."
+msgstr "Proposisi entri penutupan pajak."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/wizard/multicurrency_revaluation.py:0
+#, python-format
+msgid "Provision for %(for_cur)s (1 %(comp_cur)s = %(rate)s %(for_cur)s)"
+msgstr "Provisi untuk %(for_cur)s (1 %(comp_cur)s = %(rate)s %(for_cur)s)"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/multicurrency_revaluation_report/line_name.xml:0
+#, python-format
+msgid "Rates"
+msgstr "Rates"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_aged_partner_balance.py:0
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Receivable"
+msgstr "Piutang"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_generic_tax_report.py:0
+#, python-format
+msgid "Receivable tax amount"
+msgstr "Jumlah pajak piutang"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_debtors0
+#: model:account.report.line,name:account_reports.account_financial_report_receivable0
+msgid "Receivables"
+msgstr "Piutang"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_reports_journal_dashboard_kanban_view
+msgid "Reconciliation Report"
+msgstr "Laporan Rekonsiliasi"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_financial_year_op__account_tax_periodicity_reminder_day
+#: model:ir.model.fields,field_description:account_reports.field_res_config_settings__account_tax_periodicity_reminder_day
+#: model_terms:ir.ui.view,arch_db:account_reports.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account_reports.setup_financial_year_opening_form
+msgid "Reminder"
+msgstr "Pengingat"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_report_footnote__report_id
+msgid "Report"
+msgstr "Laporan"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_line_form
+msgid "Report Line"
+msgstr "Baris Laporan"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_form
+msgid "Report Name"
+msgstr "Nama Laporan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Report lines mentioning the account code"
+msgstr "Baris laporan yang menyebutkan kode akun"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_variant.xml:0
+#, python-format
+msgid "Report:"
+msgstr "Laporan:"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.res_config_settings_view_form
+msgid "Reporting"
+msgstr "Laporan"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group__report_ids
+msgid "Reports"
+msgstr "Laporan"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_line_form
+msgid "Reset to Standard"
+msgstr "Reset ke Standar"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_retained_earnings0
+msgid "Retained Earnings"
+msgstr "Laba Ditahan"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_return_investment0
+msgid "Return on investments (net profit / assets)"
+msgstr "Laba atas investasi (laba bersih / aktiva)"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_multicurrency_revaluation_wizard__reversal_date
+msgid "Reversal Date"
+msgstr "Tanggal Reversal"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_deferred_reports.py:0
+#, python-format
+msgid "Reversal of Grouped Deferral Entry of %s"
+msgstr "Reversal of Grouped Deferral Entry untuk %s"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/wizard/multicurrency_revaluation.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "Reversal of: %s"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.view_account_report_search
+msgid "Root Report"
+msgstr "Root Report"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_report_horizontal_group__rule_ids
+msgid "Rules"
+msgstr "Aturan"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_comparison.xml:0
+#, python-format
+msgid "Same Period Last Year"
+msgstr "Periode yang Sama pada Tahun Lalu"
+
+#. module: account_reports
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/static/src/components/account_report/footnote/dialog/footnote_dialog.xml:0
+#: code:addons/account_reports/static/src/components/aged_partner_balance/dialog/expected_date_dialog.xml:0
+#, python-format
+msgid "Save"
+msgstr "Simpan"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/search_bar/search_bar.xml:0
+#: code:addons/account_reports/static/src/components/account_report/search_bar/search_bar.xml:0
+#: code:addons/account_reports/static/src/components/account_report/search_bar/search_bar.xml:0
+#, python-format
+msgid "Search..."
+msgstr "Cari ..."
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_form
+msgid "Sections"
+msgstr "Bagian-Bagian"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_sales_report.py:0
+#, python-format
+msgid "Services"
+msgstr "Layanan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/wizard/account_report_file_download_error_wizard.py:0
+#, python-format
+msgid "Settings"
+msgstr "Pengaturan"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_report_executivesummary_st_cash_forecast0
+msgid "Short term cash forecast"
+msgstr "Perkiraan kas jangka pendek"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_multicurrency_revaluation_wizard__show_warning_move_id
+msgid "Show Warning Move"
+msgstr "Tunjukkan Peringatan Pergerakan"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/bank_reconciliation_report/warnings.xml:0
+#, python-format
+msgid "Some"
+msgstr "Beberapa"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/journal_report/filter_extra_options.xml:0
+#, python-format
+msgid "Sort By Date"
+msgstr "Kelompokkan Berdasarkan Tanggal"
+
+#. module: account_reports
+#: model:ir.model.fields,help:account_reports.field_res_company__account_representative_id
+msgid ""
+"Specify an Accounting Firm that will act as a representative when exporting "
+"reports."
+msgstr ""
+"Tentukan Firma Akuntansi yang akan bertindak sebagai perwakilan saat "
+"mengekspor laporan."
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_res_company__account_tax_periodicity_reminder_day
+msgid "Start from"
+msgstr "Mulai dari"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid "Starting Balance:"
+msgstr "Saldo Awal:"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/line/popover/debug_popover.xml:0
+#, python-format
+msgid "Subformula"
+msgstr "Subformula"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid "T: %s"
+msgstr "T: %s"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_partner.xml:0
+#, python-format
+msgid "Tags"
+msgstr "Label"
+
+#. module: account_reports
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account_reports/models/account_general_ledger.py:0
+#: code:addons/account_reports/static/src/components/journal_report/line/line.xml:0
+#: model_terms:ir.ui.view,arch_db:account_reports.journal_report_pdf_export_main_table_body
+#, python-format
+msgid "Tax Amount"
+msgstr "Jumlah Pajak"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_bank_statement_line__tax_closing_alert
+#: model:ir.model.fields,field_description:account_reports.field_account_move__tax_closing_alert
+#: model:ir.model.fields,field_description:account_reports.field_account_payment__tax_closing_alert
+msgid "Tax Closing Alert"
+msgstr "Peringatan Closing Pajak"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_bank_statement_line__tax_closing_end_date
+#: model:ir.model.fields,field_description:account_reports.field_account_move__tax_closing_end_date
+#: model:ir.model.fields,field_description:account_reports.field_account_payment__tax_closing_end_date
+msgid "Tax Closing End Date"
+msgstr "Tanggal Akhir Penutupan Pajak"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_bank_statement_line__tax_closing_show_multi_closing_warning
+#: model:ir.model.fields,field_description:account_reports.field_account_move__tax_closing_show_multi_closing_warning
+#: model:ir.model.fields,field_description:account_reports.field_account_payment__tax_closing_show_multi_closing_warning
+msgid "Tax Closing Show Multi Closing Warning"
+msgstr "Closing Pajak Menunjukkan Peringatan Multi Closing"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_general_ledger.py:0
+#, python-format
+msgid "Tax Declaration"
+msgstr "Deklarasi Pajak"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid "Tax Grids"
+msgstr "Tax Grids"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_tax_unit__vat
+msgid "Tax ID"
+msgstr "ID Pajak"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_generic_tax_report.py:0
+#, python-format
+msgid "Tax Paid Adjustment"
+msgstr "Penyesuaian Pajak Dibayar"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_generic_tax_report.py:0
+#, python-format
+msgid "Tax Received Adjustment"
+msgstr "Penyesuaian Pajak Diterima"
+
+#. module: account_reports
+#: model:ir.actions.client,name:account_reports.action_account_report_gt
+#: model:ir.ui.menu,name:account_reports.menu_action_account_report_gt
+#: model:mail.activity.type,name:account_reports.tax_closing_activity_type
+#: model:mail.activity.type,summary:account_reports.tax_closing_activity_type
+#: model_terms:ir.ui.view,arch_db:account_reports.view_move_form_vat_return
+msgid "Tax Report"
+msgstr "Laporan Pajak"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_bank_statement_line__tax_report_control_error
+#: model:ir.model.fields,field_description:account_reports.field_account_move__tax_report_control_error
+#: model:ir.model.fields,field_description:account_reports.field_account_payment__tax_report_control_error
+msgid "Tax Report Control Error"
+msgstr "Error Kontrol Laporan Pajak"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.setup_financial_year_opening_form
+msgid "Tax Return"
+msgstr "SPT"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.res_config_settings_view_form
+msgid "Tax Return Periodicity"
+msgstr "Periodisitas SPT"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_tax_unit
+#: model_terms:ir.ui.view,arch_db:account_reports.view_tax_unit_form
+msgid "Tax Unit"
+msgstr "Unit Pajak"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_tax_unit.xml:0
+#, python-format
+msgid "Tax Unit:"
+msgstr "Unit Pajak:"
+
+#. module: account_reports
+#: model:ir.actions.act_window,name:account_reports.action_view_tax_units
+#: model:ir.model.fields,field_description:account_reports.field_res_company__account_tax_unit_ids
+#: model:ir.ui.menu,name:account_reports.menu_view_tax_units
+msgid "Tax Units"
+msgstr "Unit-Unit Pajak"
+
+#. module: account_reports
+#: model:ir.model.fields.selection,name:account_reports.selection__mail_activity_type__category__tax_report
+msgid "Tax report"
+msgstr "Laporan Pajak"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/res_company.py:0
+#: code:addons/account_reports/models/res_company.py:0
+#: code:addons/account_reports/models/res_company.py:0
+#, python-format
+msgid "Tax return for %s%s"
+msgstr "Spt untuk %s%s"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/res_company.py:0
+#, python-format
+msgid "Tax return from %s to %s%s"
+msgstr "SPT untuk %s dari %s%s"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid "Taxes"
+msgstr "Pajak"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/journal_report/line/line.xml:0
+#: model_terms:ir.ui.view,arch_db:account_reports.journal_report_pdf_export_main_table_body
+#, python-format
+msgid "Taxes Applied"
+msgstr "Taxes Applied"
+
+#. module: account_reports
+#: model:ir.model.fields,help:account_reports.field_account_tax_unit__fpos_synced
+msgid ""
+"Technical field indicating whether Fiscal Positions exist for all companies "
+"in the unit"
+msgstr ""
+"Field teknis mengindikasikan apakah Posisi Fiskal tersedia untuk semua "
+"perusahaan dalam unit"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_ir_actions_account_report_download
+msgid "Technical model for accounting report downloads"
+msgstr "Model teknis untuk mengunduh laporan akuntansi"
+
+#. module: account_reports
+#: model:ir.model.fields,field_description:account_reports.field_account_report_footnote__text
+msgid "Text"
+msgstr "Teks"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/ellipsis/ellipsis.js:0
+#, python-format
+msgid "Text copied"
+msgstr "Teks disalin"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid ""
+"The 'load more limit' setting of this report is too low to display all the "
+"lines of the entry you're trying to show."
+msgstr ""
+"Pengaturan 'muat lebih banyak' untuk laporan ini terlalu rendah untuk "
+"menampilkan baris dari entri yang Anda ingin tunjukkan."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "The Accounts Coverage Report is not available for this report."
+msgstr "Laporan Coverage Akun tidak tersedia untuk laporan ini."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_move.py:0
+#, python-format
+msgid ""
+"The attachments of the tax report can be found on the <a href='#' data-oe-"
+"model='account.move' data-oe-id='%s'>closing entry</a> of the representative"
+" company."
+msgstr ""
+"Lampiran dari laporan pajak dapat ditemukan pada <a href='#' data-oe-"
+"model='account.move' data-oe-id='%s'>entri closing</a> dari perusahaan "
+"wakil."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_tax.py:0
+#, python-format
+msgid ""
+"The country detected for this VAT number does not match the one set on this "
+"Tax Unit."
+msgstr ""
+"Negara yang dideteksi untuk nomor PPN ini tidak cocok dengan yang ditetapkan"
+" di Unit Pajak."
+
+#. module: account_reports
+#: model:ir.model.fields,help:account_reports.field_account_tax_unit__country_id
+msgid ""
+"The country in which this tax unit is used to group your companies' tax "
+"reports declaration."
+msgstr ""
+"Negara yang mana unit pajak ini gunakan untuk mengelompokkan deklarasi "
+"laporan pajak perusahaan Anda. "
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_multicurrency_revaluation_report.py:0
+#, python-format
+msgid "The currency rate cannot be equal to zero"
+msgstr "Nilai tukar mata uang tidak boleh sama dengan nol"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/bank_reconciliation_report/warnings.xml:0
+#, python-format
+msgid "The current balance in the"
+msgstr "Saldo saat ini di"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/deferred_reports/warnings.xml:0
+#, python-format
+msgid "The entry that will be generated will take them into account."
+msgstr "Entri yang akan dibuat akan mempertimbangkan hal tersebut."
+
+#. module: account_reports
+#: model:ir.model.fields,help:account_reports.field_account_tax_unit__vat
+msgid "The identifier to be used when submitting a report for this unit."
+msgstr ""
+"Pengidentifikasi untuk digunakan saat mengirimkan laporan untuk unit ini."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_tax.py:0
+#, python-format
+msgid "The main company of a tax unit has to be part of it."
+msgstr ""
+"Perusahaan utama untuk unit pajak harus merupakan bagian dari unit tersebut."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid ""
+"The selected report line does not target a Journal Entry or a Journal Item."
+msgstr ""
+"Baris laporan yang dipilih tidak menyasar Entri Jurnal atau Item Jurnal."
+
+#. module: account_reports
+#: model:ir.model.fields,help:account_reports.field_res_company__account_tax_unit_ids
+msgid "The tax units this company belongs to."
+msgstr "Unit pajak di mana perusahaan ini berada."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "The used operator is not supported for this expression."
+msgstr "Operator yang digunakan tidak didukung untuk expression ini"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/warnings.xml:0
+#, python-format
+msgid "There are"
+msgstr "Terdapat"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/account_report.xml:0
+#, python-format
+msgid "There is no data to display for the given filters."
+msgstr "Tidak ada data untuk ditampilkan untuk filter tersebut."
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_date.xml:0
+#, python-format
+msgid "This Financial Year"
+msgstr "Tahun Fiskal Ini"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_date.xml:0
+#, python-format
+msgid "This Month"
+msgstr "Bulan Ini"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_date.xml:0
+#, python-format
+msgid "This Quarter"
+msgstr "Triwulan Ini"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid ""
+"This account exists in the Chart of Accounts but is not mentioned in any "
+"line of the report"
+msgstr ""
+"Akun ini terdapat di Bagan Akun tapi tidak disebutkan di baris manapun di "
+"laporan "
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid ""
+"This account is reported in a line of the report but does not exist in the "
+"Chart of Accounts"
+msgstr ""
+"Akun ini dilaporkan di baris laporan tapi tidak tersedia di Bagan Akun"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "This account is reported in multiple lines of the report"
+msgstr "Akun ini dilaporkan di lebih dari satu baris laporan"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "This account is reported multiple times on the same line of the report"
+msgstr "Akun ini dilaporkan lebih dari satu kali pada baris laporan yang sama"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.res_config_settings_view_form
+msgid ""
+"This allows you to choose the position of totals in your financial reports."
+msgstr ""
+"Ini memungkinkan Anda untuk memilih posisi total di laporan keuangan Anda."
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/warnings.xml:0
+#, python-format
+msgid ""
+"This company is part of a tax unit. You're currently not viewing the whole "
+"unit."
+msgstr ""
+"Perusahaan ini bagian dari unit pajak. Anda saat ini tidak melihat seluruh "
+"unit."
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/widgets/account_report_x2many/account_report_x2many.js:0
+#, python-format
+msgid ""
+"This line and all its children will be deleted. Are you sure you want to "
+"proceed?"
+msgstr ""
+"Baris ini dan semua anaknya akan dihapus. Apakah Anda yakiningin "
+"melanjutkan?"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_line_form
+msgid "This line uses a custom user-defined 'Group By' value."
+msgstr ""
+"Baris ini menggunakan value 'Kelompokkan Berdasarkan' kustom yang "
+"didefinisikan user."
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_form
+msgid "This option hides lines with a value of 0"
+msgstr "Opsi ini menyembunyikkan baris dengan value 0"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "This report already has a menuitem."
+msgstr "Laporan ini sudah memiliki item menu."
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.account_report_form
+msgid ""
+"This report is linked to a custom handler.\n"
+"                        You can customize it manually, but make sure your changes don't clash with what the handler does."
+msgstr ""
+"Laporan ini terhubung ke handler kustom.\n"
+"                        Anda dapat mengustomisasinya secara manual, tapi pastikan perubahan Anda tidak bertabrakan dengan apa yang handler lakukan."
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/multicurrency_revaluation_report/warnings.xml:0
+#, python-format
+msgid "This report only displays the data of the active company."
+msgstr "Laporan ini hanya menampilkan data dari perusahaan aktif"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "This subformula references an unknown expression: %s"
+msgstr "Subformula ini mereferensikan expression yang tidak diketahui: %s"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid ""
+"This tag is reported in a line of the report but is not linked to any "
+"account of the Chart of Accounts"
+msgstr ""
+"Tag ini dilaporkan di baris laporan tapi tidak dihubungkan ke akun apapun di"
+" Bagan Akun"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.view_move_form_vat_return
+msgid ""
+"This tax closing entry is posted, but the tax lock date is earlier than the "
+"covered period's last day. You might need to reset it to draft and refresh "
+"its content, in case other entries using taxes have been posted in the "
+"meantime."
+msgstr ""
+"Entri closing pajak ini sudah dipost, tapi tanggal kunci pajak lebih awal "
+"dari periode hari terakhir yang tercakup. Anda mungkin harus meresetnya "
+"menjadi draft lalu refresh konten, bila entri-entri lain menggunakan pajak "
+"yang telah dipost sementara ini."
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_date.xml:0
+#, python-format
+msgid "Today"
+msgstr "Hari Ini"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_deferred_reports.py:0
+#: code:addons/account_reports/models/account_general_ledger.py:0
+#: code:addons/account_reports/models/account_partner_ledger.py:0
+#: code:addons/account_reports/models/account_sales_report.py:0
+#: model:account.report.column,name:account_reports.aged_payable_report_total
+#: model:account.report.column,name:account_reports.aged_receivable_report_total
+#, python-format
+msgid "Total"
+msgstr "Total"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Total %s"
+msgstr "Total %s"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filters.js:0
+#, python-format
+msgid "Trade Partners"
+msgstr "Trade Partner"
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.transaction_without_statement
+msgid "Transactions without statement"
+msgstr "Transaksi tanpa statement"
+
+#. module: account_reports
+#: model:account.report,name:account_reports.trial_balance_report
+#: model:ir.actions.client,name:account_reports.action_account_report_coa
+#: model:ir.ui.menu,name:account_reports.menu_action_account_report_coa
+msgid "Trial Balance"
+msgstr "Saldo Trial"
+
+#. module: account_reports
+#: model:ir.model,name:account_reports.model_account_trial_balance_report_handler
+msgid "Trial Balance Custom Handler"
+msgstr "Trial Balance Custom Handler"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_sales_report.py:0
+#, python-format
+msgid "Triangular"
+msgstr "Triangular"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid ""
+"Trying to dispatch an action on a report not compatible with the provided "
+"options."
+msgstr ""
+"Mencoba untuk dispatch action pada laporan yang tidak kompatibel dengan opsi"
+" yang disediakan."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid ""
+"Trying to expand a group for a line which was not generated by a report "
+"line: %s"
+msgstr ""
+"Mencoba membesarkan sebuah kelompok untuk baris yang tidak dibuat dengan "
+"baris laporan: %s"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Trying to expand a line without an expansion function."
+msgstr "Mencoba membesarkan baris tanpa fungsi expansion."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Trying to expand groupby results on lines without a groupby value."
+msgstr "Mencoba membesarkan hasil groupby pada baris tanpa value groupby."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_journal_report.py:0
+#: code:addons/account_reports/models/account_journal_report.py:0
+#, python-format
+msgid ""
+"Trying to use the journal line expand function on a line that is not linked "
+"to a journal."
+msgstr ""
+"Mencoba untuk menggunakan fungsi expand baris jurnal pada baris yang tidak "
+"di-link ke jurnal."
+
+#. module: account_reports
+#: model:account.report.line,name:account_reports.account_financial_unaffected_earnings0
+msgid "Unallocated Earnings"
+msgstr "Pendapatan Belum Teralokasi"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid "Unfold All"
+msgstr "Buka Semua"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Unknown"
+msgstr "Tidak diketahui"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_partner_ledger.py:0
+#: code:addons/account_reports/models/account_sales_report.py:0
+#, python-format
+msgid "Unknown Partner"
+msgstr "Rekanan Tak Dikenal"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Unknown bound criterium: %s"
+msgstr "Kriteria bound yang tidak diketahui: %s"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Unknown date scope: %s"
+msgstr "Rentang tanggal yang tidak diketahui: %s"
+
+#. module: account_reports
+#: model:account.report,name:account_reports.multicurrency_revaluation_report
+#: model:ir.actions.client,name:account_reports.action_account_report_multicurrency_revaluation
+#: model:ir.ui.menu,name:account_reports.menu_action_account_report_multicurrency_revaluation
+msgid "Unrealized Currency Gains/Losses"
+msgstr "Keuntungan/Kerugian Mata Uang yang Belum Direalisasi"
+
+#. module: account_reports
+#: model:account.report.column,name:account_reports.account_financial_report_ec_sales_vat
+msgid "VAT Number"
+msgstr "NPWP"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.company_information
+msgid "VAT:"
+msgstr "PPN:"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/line/popover/debug_popover.xml:0
+#, python-format
+msgid "Value"
+msgstr "Value"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_move.py:0
+#, python-format
+msgid "Vat closing from %s to %s"
+msgstr "Penutupan PPN dari %s sampai %s"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "View Bank Statement"
+msgstr "Lihat Laporan Bank"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/line_cell/popover/carryover_popover.xml:0
+#, python-format
+msgid "View Carryover Lines"
+msgstr "Lihat Baris Carryover"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "View Journal Entry"
+msgstr "Lihat Entri Jurnal"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/models/account_sales_report.py:0
+#, python-format
+msgid "View Partner"
+msgstr "Lihat Mitra"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "View Payment"
+msgstr "Lihat Pembayaran"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.res_config_settings_view_form
+msgid ""
+"When ticked, totals and subtotals appear below the sections of the report"
+msgstr "Saat dicentang, total dan subtotal muncul di bawah bagian laporan"
+
+#. module: account_reports
+#: model:ir.model.fields,help:account_reports.field_res_company__totals_below_sections
+#: model:ir.model.fields,help:account_reports.field_res_config_settings__totals_below_sections
+msgid ""
+"When ticked, totals and subtotals appear below the sections of the report."
+msgstr "Saat dicentang, total dan subtotal muncul di bawah bagian laporan."
+
+#. module: account_reports
+#: model:ir.model.fields,help:account_reports.field_account_account__exclude_provision_currency_ids
+msgid ""
+"Whether or not we have to make provisions for the selected foreign "
+"currencies."
+msgstr ""
+"Apakah kita harus atau tidak harus membuat provisi untuk mata uang asing "
+"yang dipilih."
+
+#. module: account_reports
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid "With Draft Entries"
+msgstr "Dengan Entri Konsep"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_general_ledger.py:0
+#, python-format
+msgid "Wrong ID for general ledger line to expand: %s"
+msgstr "ID Salah untuk baris buku besar umum untuk di-expand: %s"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_partner_ledger.py:0
+#, python-format
+msgid "Wrong ID for partner ledger line to expand: %s"
+msgstr "ID Salah untuk baris buku besar mitra untuk di-expand: %s"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "Wrong format for if_other_expr_above/if_other_expr_below formula: %s"
+msgstr ""
+"Format salah untuk formula if_other_expr_above/if_other_expr_below: %s"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "XLSX"
+msgstr "XLSX"
+
+#. module: account_reports
+#. odoo-javascript
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#: code:addons/account_reports/static/src/components/account_report/line_cell/popover/edit_popover.xml:0
+#, python-format
+msgid "Yes"
+msgstr "Ya"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/multicurrency_revaluation_report/warnings.xml:0
+#, python-format
+msgid "You are using custom exchange rates."
+msgstr "Anda sedang menggunakan kurs custom."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_move.py:0
+#, python-format
+msgid "You can't open a tax report from a move without a VAT closing date."
+msgstr ""
+"Anda tidak dapat membuka laporan paja kdari pergerakkan tanpa tanggal "
+"closing PPN."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_move_line.py:0
+#, python-format
+msgid "You cannot add taxes on a tax closing move line."
+msgstr "Anda tidak dapat menambakan pajak ke baris pergerakkan closing pajak."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_deferred_reports.py:0
+#, python-format
+msgid ""
+"You cannot generate entries for a period that does not end at the end of the"
+" month."
+msgstr ""
+"Anda tidak dapat membuat entri-entri untuk periode yang tidak berakhir di "
+"akhir bulan."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_deferred_reports.py:0
+#, python-format
+msgid "You cannot generate entries for a period that is locked."
+msgstr "Anda tidak dapat membuat entri untuk periode yang dikunci."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot reset this closing entry to draft, as another closing entry has "
+"been posted at a later date."
+msgstr ""
+"Anda tidak dapat mereset closing entry ini menjadi draft, karena closing "
+"entry lain telah diposting untuk tanggal di masa depan."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot reset this closing entry to draft, as it would delete carryover "
+"values impacting the tax report of a locked period. To do this, you first "
+"need to modify you tax return lock date."
+msgstr ""
+"Anda tidak dapat mereset jurnal penutup menjadi draft, karena itu akan "
+"menghapus carryover sehingga berdampak pada laporan pajak periode yang "
+"dikunci. Untuk melakukan reset, Anda harus terlebih dahulu memodifikasi "
+"tanggal kunci spt Anda."
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_multicurrency_revaluation_report.py:0
+#, python-format
+msgid "You need to activate more than one currency to access this report."
+msgstr ""
+"Anda harus mengaktifkan lebih dari satu mata uang untuk mengakses laporan "
+"ini."
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.pdf_export_main
+msgid "[Draft]"
+msgstr "[Draft]"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/sales_report/warnings.xml:0
+#: code:addons/account_reports/static/src/components/sales_report/warnings.xml:0
+#: code:addons/account_reports/static/src/components/sales_report/warnings.xml:0
+#, python-format
+msgid "addressed to"
+msgstr "ditujukan kepada"
+
+#. module: account_reports
+#: model:ir.model.fields.selection,name:account_reports.selection__res_company__account_tax_periodicity__year
+msgid "annually"
+msgstr "per tahun"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_aged_partner_balance.py:0
+#: code:addons/account_reports/models/account_aged_partner_balance.py:0
+#, python-format
+msgid "any"
+msgstr "apapun"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account_reports.setup_financial_year_opening_form
+msgid "days after period"
+msgstr "hari setelah periode"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/bank_reconciliation_report/warnings.xml:0
+#, python-format
+msgid "doesn't match the balance of your"
+msgstr "tidak cocok dengan saldo Anda sebesar"
+
+#. module: account_reports
+#: model:ir.model.fields.selection,name:account_reports.selection__res_company__account_tax_periodicity__2_months
+msgid "every 2 months"
+msgstr "setiap 2 bulan"
+
+#. module: account_reports
+#: model:ir.model.fields.selection,name:account_reports.selection__res_company__account_tax_periodicity__4_months
+msgid "every 4 months"
+msgstr "setiap 4 bulan"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/bank_reconciliation_report/warnings.xml:0
+#, python-format
+msgid "have a starting balance different from the previous ending balance."
+msgstr "memiliki saldo awal yang berbeda dari saldo akhir sebelumnya."
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/line_cell/popover/carryover_popover.xml:0
+#, python-format
+msgid "in the next period."
+msgstr "pada periode berikutnya."
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/sales_report/warnings.xml:0
+#: code:addons/account_reports/static/src/components/sales_report/warnings.xml:0
+#: code:addons/account_reports/static/src/components/sales_report/warnings.xml:0
+#, python-format
+msgid "invoices"
+msgstr "Faktur"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/bank_reconciliation_report/warnings.xml:0
+#, python-format
+msgid "journal items"
+msgstr "item-item jurnal"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/bank_reconciliation_report/warnings.xml:0
+#, python-format
+msgid "last bank statement"
+msgstr "rekening koran terakhir"
+
+#. module: account_reports
+#: model:ir.model.fields.selection,name:account_reports.selection__res_company__account_tax_periodicity__monthly
+msgid "monthly"
+msgstr "per bula"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_report.py:0
+#, python-format
+msgid "n/a"
+msgstr "n/a"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/sales_report/warnings.xml:0
+#: code:addons/account_reports/static/src/components/sales_report/warnings.xml:0
+#: code:addons/account_reports/static/src/components/sales_report/warnings.xml:0
+#, python-format
+msgid "partners"
+msgstr "mitra-mitra"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/warnings.xml:0
+#, python-format
+msgid "prior or included in this period."
+msgstr "sebelum atau termasuk di periode ini."
+
+#. module: account_reports
+#: model:ir.model.fields.selection,name:account_reports.selection__res_company__account_tax_periodicity__trimester
+msgid "quarterly"
+msgstr "per quarter"
+
+#. module: account_reports
+#: model:ir.model.fields.selection,name:account_reports.selection__res_company__account_tax_periodicity__semester
+msgid "semi-annually"
+msgstr "setiap setengah tahun"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/bank_reconciliation_report/warnings.xml:0
+#, python-format
+msgid "statements"
+msgstr "laporan"
+
+#. module: account_reports
+#: model_terms:ir.ui.view,arch_db:account_reports.view_tax_unit_form
+msgid "synchronize fiscal positions"
+msgstr "sinkronisasi posisi fiskal"
+
+#. module: account_reports
+#. odoo-python
+#: code:addons/account_reports/models/account_tax.py:0
+#, python-format
+msgid "tax unit [%s]"
+msgstr "unit pajak [%s]"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/sales_report/warnings.xml:0
+#, python-format
+msgid "that are not established abroad."
+msgstr "yang tidak didirikan diluar negeri"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_comparison.xml:0
+#: code:addons/account_reports/static/src/components/account_report/filters/filter_date.xml:0
+#, python-format
+msgid "to"
+msgstr "kepada"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/warnings.xml:0
+#, python-format
+msgid "unposted Journal Entries"
+msgstr "Entri Jurnal yang belum dipost"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/line_cell/popover/carryover_popover.xml:0
+#, python-format
+msgid "were carried over to this line from previous period."
+msgstr "dibawa ke baris ini dari periode sebelumnya."
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/bank_reconciliation_report/warnings.xml:0
+#, python-format
+msgid "which don't originate from a bank statement nor payment."
+msgstr "yang tidak berasal dari rekening koran atau pembayaran bank."
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/sales_report/warnings.xml:0
+#, python-format
+msgid "who are not established in any of the EC countries."
+msgstr "yang tidak berdiri di negara EC apapun."
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/line_cell/popover/carryover_popover.xml:0
+#, python-format
+msgid "will be carried over to"
+msgstr "akan dibawa ke"
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/account_report/line_cell/popover/carryover_popover.xml:0
+#, python-format
+msgid "will be carried over to this line in the next period."
+msgstr "akan dibawa ke baris ini pada periode berikutnya."
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/sales_report/warnings.xml:0
+#, python-format
+msgid "without a valid intra-community VAT number."
+msgstr "tanpa nomor PPN intra-community yang valid."
+
+#. module: account_reports
+#. odoo-javascript
+#: code:addons/account_reports/static/src/components/multicurrency_revaluation_report/warnings.xml:0
+#, python-format
+msgid "⇒ Reset to Odoo’s Rate"
+msgstr "⇒ Reset ke Kurs Odoo"

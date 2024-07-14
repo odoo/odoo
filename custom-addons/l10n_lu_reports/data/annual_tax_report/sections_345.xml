@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_lu_annual_tax_report_sections_345" model="account.report">
+        <field name="name">Sections III, IV, V</field>
+        <field name="sequence">3</field>
+        <field name="country_id" ref="base.lu"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="l10n_lu_annual_tax_report_sections_345_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_lu_annual_tax_report_assessment_deductible_tax" model="account.report.line">
+                <field name="name">III. ASSESSMENT OF DEDUCTIBLE TAX (input tax)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_lu_annual_tax_report_sections_345_093" model="account.report.line">
+                        <field name="name">093 - Total input tax</field>
+                        <field name="code">L10N_LU_TAX_093</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="aggregation_formula">L10N_LU_TAX_080.balance + L10N_LU_TAX_084.balance + L10N_LU_TAX_088.balance + L10N_LU_TAX_179.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_lu_annual_tax_report_sections_458" model="account.report.line">
+                                <field name="name">Amount still to be allocated (fields 077, 081, 085): 458 - Invoiced by other taxable persons for goods or services supplied</field>
+                                <field name="code">L10N_LU_TAX_458</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_lu_annual_tax_report_sections_458_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">LUTAX_458.balance - L10N_LU_TAX_077.balance - L10N_LU_TAX_081.balance - L10N_LU_TAX_085.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_sections_459" model="account.report.line">
+                                <field name="name">Amount still to be allocated (fields 078, 082, 086): 459 - Due in respect of Intra-Community acquistions of goods</field>
+                                <field name="code">L10N_LU_TAX_459</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_lu_annual_tax_report_sections_459_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">LUTAX_459.balance - L10N_LU_TAX_078.balance - L10N_LU_TAX_082.balance - L10N_LU_TAX_086.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_sections_460" model="account.report.line">
+                                <field name="name">Amount still to be allocated (fields 079, 083, 087): 460 - Due or paid in respect of mportation of goods</field>
+                                <field name="code">L10N_LU_TAX_460</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_lu_annual_tax_report_sections_460_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">LUTAX_460.balance - L10N_LU_TAX_079.balance - L10N_LU_TAX_083.balance - L10N_LU_TAX_087.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_sections_461" model="account.report.line">
+                                <field name="name">Amount still to be allocated (fields 404, 405, 406): 461 - Due under the reverse charge</field>
+                                <field name="code">L10N_LU_TAX_461</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_lu_annual_tax_report_sections_461_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">LUTAX_461.balance - L10N_LU_TAX_404.balance - L10N_LU_TAX_405.balance - L10N_LU_TAX_406.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_sections_345_080" model="account.report.line">
+                                <field name="name">080 - Total of VAT on stock entries</field>
+                                <field name="code">L10N_LU_TAX_080</field>
+                                <field name="aggregation_formula">L10N_LU_TAX_077.balance + L10N_LU_TAX_078.balance + L10N_LU_TAX_079.balance + L10N_LU_TAX_404.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_lu_annual_tax_report_sections_345_077" model="account.report.line">
+                                        <field name="name">077 - Invoiced by other taxable persons for goods or services supplied</field>
+                                        <field name="code">L10N_LU_TAX_077</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_sections_345_077_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_sections_345_077_default" model="account.report.expression">
+                                                <field name="label">_default_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-tag(l10n_lu_reports.account_tag_077)</field>
+                                                <field name="date_scope">strict_range</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_sections_345_078" model="account.report.line">
+                                        <field name="name">078 - Due in respect of IC acquisitions of goods other than manufactured tobacco</field>
+                                        <field name="code">L10N_LU_TAX_078</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_sections_345_078_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_sections_345_078_default" model="account.report.expression">
+                                                <field name="label">_default_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-tag(l10n_lu_reports.account_tag_078)</field>
+                                                <field name="date_scope">strict_range</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_sections_345_079" model="account.report.line">
+                                        <field name="name">079 - Due or paid in respect of importations of goods other than manufactured tobacco and goods for non-business purposes</field>
+                                        <field name="code">L10N_LU_TAX_079</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_sections_345_079_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_sections_345_079_default" model="account.report.expression">
+                                                <field name="label">_default_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-tag(l10n_lu_reports.account_tag_079)</field>
+                                                <field name="date_scope">strict_range</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_sections_345_404" model="account.report.line">
+                                        <field name="name">404 - Due under the reverse charge</field>
+                                        <field name="code">L10N_LU_TAX_404</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_sections_345_404_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_sections_345_404_default" model="account.report.expression">
+                                                <field name="label">_default_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-tag(l10n_lu_reports.account_tag_404)</field>
+                                                <field name="date_scope">strict_range</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_sections_345_084" model="account.report.line">
+                                <field name="name">084 - Total of VAT on capital expenditures</field>
+                                <field name="code">L10N_LU_TAX_084</field>
+                                <field name="aggregation_formula">L10N_LU_TAX_081.balance + L10N_LU_TAX_082.balance + L10N_LU_TAX_083.balance + L10N_LU_TAX_405.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_lu_annual_tax_report_sections_345_081" model="account.report.line">
+                                        <field name="name">081 - Invoiced by other taxable persons for goods or services supplied</field>
+                                        <field name="code">L10N_LU_TAX_081</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_sections_345_081_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_sections_345_081_default" model="account.report.expression">
+                                                <field name="label">_default_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-tag(l10n_lu_reports.account_tag_081)</field>
+                                                <field name="date_scope">strict_range</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_sections_345_082" model="account.report.line">
+                                        <field name="name">082 - Due in respect of IC acquisitions of goods other than manufactured tobacco</field>
+                                        <field name="code">L10N_LU_TAX_082</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_sections_345_082_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_sections_345_082_default" model="account.report.expression">
+                                                <field name="label">_default_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-tag(l10n_lu_reports.account_tag_082)</field>
+                                                <field name="date_scope">strict_range</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_sections_345_083" model="account.report.line">
+                                        <field name="name">083 - Due or paid in respect of importations of goods other than manufactured tobacco and goods for non-business purposes</field>
+                                        <field name="code">L10N_LU_TAX_083</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_sections_345_083_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_sections_345_083_default" model="account.report.expression">
+                                                <field name="label">_default_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-tag(l10n_lu_reports.account_tag_083)</field>
+                                                <field name="date_scope">strict_range</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_sections_345_405" model="account.report.line">
+                                        <field name="name">405 - Due under the reverse charge</field>
+                                        <field name="code">L10N_LU_TAX_405</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_sections_345_405_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_sections_345_405_default" model="account.report.expression">
+                                                <field name="label">_default_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-tag(l10n_lu_reports.account_tag_405)</field>
+                                                <field name="date_scope">strict_range</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_sections_345_088" model="account.report.line">
+                                <field name="name">088 - Total of VAT on operational expenditures</field>
+                                <field name="code">L10N_LU_TAX_088</field>
+                                <field name="aggregation_formula">L10N_LU_TAX_085.balance + L10N_LU_TAX_086.balance + L10N_LU_TAX_087.balance + L10N_LU_TAX_406.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_lu_annual_tax_report_sections_345_085" model="account.report.line">
+                                        <field name="name">085 - Invoiced by other taxable persons for goods or services supplied</field>
+                                        <field name="code">L10N_LU_TAX_085</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_sections_345_085_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_sections_345_085_default" model="account.report.expression">
+                                                <field name="label">_default_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-tag(l10n_lu_reports.account_tag_085)</field>
+                                                <field name="date_scope">strict_range</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_sections_345_086" model="account.report.line">
+                                        <field name="name">086 - Due in respect of IC acquisitions of goods other than manufactured tobacco</field>
+                                        <field name="code">L10N_LU_TAX_086</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_sections_345_086_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_sections_345_086_default" model="account.report.expression">
+                                                <field name="label">_default_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-tag(l10n_lu_reports.account_tag_086)</field>
+                                                <field name="date_scope">strict_range</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_sections_345_087" model="account.report.line">
+                                        <field name="name">087 - Due or paid in respect of importations of goods other than manufactured tobacco and goods for non-business purposes</field>
+                                        <field name="code">L10N_LU_TAX_087</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_sections_345_087_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_sections_345_087_default" model="account.report.expression">
+                                                <field name="label">_default_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-tag(l10n_lu_reports.account_tag_087)</field>
+                                                <field name="date_scope">strict_range</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_sections_345_406" model="account.report.line">
+                                        <field name="name">406 - Due under the reverse charge</field>
+                                        <field name="code">L10N_LU_TAX_406</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_sections_345_406_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_sections_345_406_default" model="account.report.expression">
+                                                <field name="label">_default_balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-tag(l10n_lu_reports.account_tag_406)</field>
+                                                <field name="date_scope">strict_range</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_sections_345_179" model="account.report.line">
+                                <field name="name">179 - Other</field>
+                                <field name="code">L10N_LU_TAX_179</field>
+                                <field name="aggregation_formula">L10N_LU_TAX_090.balance + L10N_LU_TAX_092.balance + L10N_LU_TAX_228.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_lu_annual_tax_report_sections_345_090" model="account.report.line">
+                                        <field name="name">090 - Due in respect of the application of goods for business purposes</field>
+                                        <field name="code">L10N_LU_TAX_090</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_sections_345_090_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">LUTAX_090.balance</field>
+                                                <field name="subformula">cross_report</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_sections_345_092" model="account.report.line">
+                                        <field name="name">092 - Paid as joint and several guarantee</field>
+                                        <field name="code">L10N_LU_TAX_092</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_sections_345_092_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">LUTAX_092.balance</field>
+                                                <field name="subformula">cross_report</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_sections_345_228" model="account.report.line">
+                                        <field name="name">228 - Adjusted tax - special arrangement for tax suspension</field>
+                                        <field name="code">L10N_LU_TAX_228</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_sections_345_228_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">LUTAX_228.balance</field>
+                                                <field name="subformula">cross_report</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_sections_345_097" model="account.report.line">
+                        <field name="name">097 - Total input tax non-deductible</field>
+                        <field name="code">L10N_LU_TAX_097</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="aggregation_formula">L10N_LU_TAX_094.balance + L10N_LU_TAX_095.balance + L10N_LU_TAX_096.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_lu_annual_tax_report_sections_345_094" model="account.report.line">
+                                <field name="name">094 - Relating to transactions which are exempt pursuant to articles 44 and 56quater</field>
+                                <field name="code">L10N_LU_TAX_094</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_lu_annual_tax_report_sections_345_094_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">LUTAX_094.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_sections_345_095" model="account.report.line">
+                                <field name="name">095 - Where the deductible proportion determined in accordance to article 50 is applied</field>
+                                <field name="code">L10N_LU_TAX_095</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_lu_annual_tax_report_sections_345_095_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">LUTAX_095.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_sections_345_096" model="account.report.line">
+                                <field name="name">096 - Non recoverable input tax in accordance with Art. 56ter-1(7) and 56ter-2(7)</field>
+                                <field name="code">L10N_LU_TAX_096</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_lu_annual_tax_report_sections_345_096_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">LUTAX_096.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_sections_345_101" model="account.report.line">
+                        <field name="name">101 - Adjustment of deductions</field>
+                        <field name="code">L10N_LU_TAX_101</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="aggregation_formula">L10N_LU_TAX_098.balance + L10N_LU_TAX_099.balance + L10N_LU_TAX_100.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_lu_annual_tax_report_sections_345_098" model="account.report.line">
+                                <field name="name">098 - In accordance with provisions of Art. 53</field>
+                                <field name="code">L10N_LU_TAX_098</field>
+                                <field name="external_formula">monetary</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_sections_345_099" model="account.report.line">
+                                <field name="name">099 - In accordance with provisions of the grand-ducal Regulation of 7 March 1980 - option to tax land</field>
+                                <field name="code">L10N_LU_TAX_099</field>
+                                <field name="external_formula">monetary</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_sections_345_229" model="account.report.line">
+                                <field name="name">229 - Other (name)</field>
+                                <field name="code">L10N_LU_TAX_229</field>
+                                <field name="external_formula">string</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_sections_345_100" model="account.report.line">
+                                <field name="name">100 - Other (value)</field>
+                                <field name="code">L10N_LU_TAX_100</field>
+                                <field name="external_formula">monetary</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_sections_345_102" model="account.report.line">
+                        <field name="name">102 - Total input tax deductible</field>
+                        <field name="code">L10N_LU_TAX_102</field>
+                        <field name="aggregation_formula">L10N_LU_TAX_093.balance - L10N_LU_TAX_097.balance + L10N_LU_TAX_101.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_lu_annual_tax_report_tax_to_be_reclaimed" model="account.report.line">
+                <field name="name">IV. TAX TO BE PAID OR TO BE RECLAIMED</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_lu_annual_tax_report_sections_103" model="account.report.line">
+                        <field name="name">103 - Total tax due</field>
+                        <field name="code">L10N_LU_TAX_103</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_sections_103_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LUTAX_103.balance</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_sections_104" model="account.report.line">
+                        <field name="name">104 - Total input tax deductible</field>
+                        <field name="code">L10N_LU_TAX_104</field>
+                        <field name="aggregation_formula">L10N_LU_TAX_102.balance</field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_sections_105" model="account.report.line">
+                        <field name="name">105 - Exceeding amount</field>
+                        <field name="code">L10N_LU_TAX_105</field>
+                        <field name="aggregation_formula">L10N_LU_TAX_103.balance - L10N_LU_TAX_104.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_lu_annual_tax_report_additional_information" model="account.report.line">
+                <field name="name">V. ADDITIONAL INFORMATION</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_lu_annual_tax_report_sections_237" model="account.report.line">
+                        <field name="name">237 - Phone number for contacting the declaring person</field>
+                        <field name="code">L10N_LU_TAX_237</field>
+                        <field name="external_formula">string</field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_sections_110" model="account.report.line">
+                        <field name="name">110 - Average number of employees for the fiscal year</field>
+                        <field name="code">L10N_LU_TAX_110</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_sections_110_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_108.balance + L10N_LU_TAX_109.balance</field>
+                                <field name="figure_type">integer</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_lu_annual_tax_report_sections_108" model="account.report.line">
+                                <field name="name">108 - With salary or wage</field>
+                                <field name="code">L10N_LU_TAX_108</field>
+                                <field name="external_formula">integer</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_sections_109" model="account.report.line">
+                                <field name="name">109 - With no salary (family members)</field>
+                                <field name="code">L10N_LU_TAX_109</field>
+                                <field name="external_formula">integer</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_sections_238" model="account.report.line">
+                        <field name="name">238 - Books, records and documents</field>
+                        <field name="code">L10N_LU_TAX_238</field>
+                        <field name="external_formula">string</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

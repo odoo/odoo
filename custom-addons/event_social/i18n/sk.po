@@ -1,0 +1,53 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* event_social
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: event_social
+#. odoo-python
+#: code:addons/event_social/models/event_mail.py:0
+#: code:addons/event_social/models/event_type_mail.py:0
+#, python-format
+msgid ""
+"As social posts have no recipients, they cannot be triggered by "
+"registrations."
+msgstr ""
+"Keďže sociálne príspevky nemajú adresátov, nedajú sa spúšťať registráciami."
+
+#. module: event_social
+#: model:ir.model,name:event_social.model_event_mail
+msgid "Event Automated Mailing"
+msgstr "Automatizované zasielanie udalostí"
+
+#. module: event_social
+#: model:ir.model,name:event_social.model_event_type_mail
+msgid "Mail Scheduling on Event Category"
+msgstr "Plánovanie mailu event kategórie"
+
+#. module: event_social
+#: model:ir.model.fields,field_description:event_social.field_event_mail__notification_type
+#: model:ir.model.fields,field_description:event_social.field_event_type_mail__notification_type
+msgid "Send"
+msgstr "Poslať"
+
+#. module: event_social
+#: model:ir.model.fields.selection,name:event_social.selection__event_mail__notification_type__social_post
+#: model:ir.model.fields.selection,name:event_social.selection__event_type_mail__notification_type__social_post
+msgid "Social Post"
+msgstr "Príspevok na sociálnu sieť"

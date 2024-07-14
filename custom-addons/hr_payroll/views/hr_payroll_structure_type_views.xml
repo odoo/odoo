@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_structure_type_view_form" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.type.form</field>
+        <field name="model">hr.payroll.structure.type</field>
+        <field name="arch" type="xml">
+            <form string="Structure Type">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-calculator" type="action" name="%(action_view_hr_payroll_structure_from_type)d">
+                            <field string="Structures" name="struct_type_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Employee" class="oe_inline"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="country_id" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="country_code" invisible="1"/>
+                            <field name="wage_type"/>
+                        </group>
+                        <group>
+                            <field name="default_schedule_pay"/>
+                            <field name="default_resource_calendar_id"/>
+                            <field name="default_struct_id" domain="[('id', 'in', struct_ids)]"/>
+                            <field name="default_work_entry_type_id"/>
+                            <field name="struct_ids" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_payroll_structure_type_view_tree" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.type.tree</field>
+        <field name="model">hr.payroll.structure.type</field>
+        <field name="arch" type="xml">
+            <tree string="Structure Type">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="default_schedule_pay"/>
+                <field name="country_id"/>
+                <field name="country_code" column_invisible="1"/>
+                <field name="default_resource_calendar_id"/>
+                <field name="wage_type"/>
+                <field name="default_struct_id" domain="[('id', 'in', struct_ids)]"/>
+                <field name="struct_ids" column_invisible="True"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_payroll_structure_type_view_search" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.type.search</field>
+        <field name="model">hr.payroll.structure.type</field>
+        <field name="arch" type="xml">
+            <search string="Search Structure Type">
+                <field name="name" string="Contract Type"/>
+           </search>
+        </field>
+    </record>
+
+    <record id="action_hr_payroll_structure_type" model="ir.actions.act_window">
+        <field name="name">Structure Types</field>
+        <field name="res_model">hr.payroll.structure.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="hr_payroll_structure_type_view_search"/>
+        <field name="context">{'payroll_check_country': 1}</field>
+    </record>
+</odoo>

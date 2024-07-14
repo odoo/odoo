@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <record id="hmrc_send_wizard_form" model="ir.ui.view">
+            <field name="name">l10n_uk.hmrc.send.wizard.form</field>
+            <field name="model">l10n_uk.hmrc.send.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="message" invisible="1"/>
+                        <field name="hmrc_gov_client_device_id" invisible="1"/>
+                        <field name="obligation_id" options="{'no_create': True}"/>
+                    </group>
+                    <div class="alert alert-info" role="alert" style="margin-bottom:0px;" invisible="not message">
+                        We could not find a tax obligation that corresponds to the filters you set in the report.
+                        You can choose another obligation in this report, but the numbers sent will not be those you
+                        see in the report now.
+                    </div>
+                    <br invisible="not message"/>
+                    <div>
+                        <field name="accept_legal" no_label="1"/>
+                        When you submit this VAT information you are making a legal
+                        declaration that the information is true and complete. A false declaration
+                        can result in prosecution.
+                    </div>
+
+                    <footer>
+                        <widget name="send_hmrc_button" invisible="not accept_legal or not obligation_id"/>
+                        <button string="Cancel" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,115 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* appointment_hr_recruitment
+# 
+# Translators:
+# Hamed Mohammadi <hamed@dehongi.com>, 2023
+# Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
+# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
+"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,body_html:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <h2>Congratulations!</h2>\n"
+"            <div style=\"font-size: 13px;\">\n"
+"                Your application is really interesting and we'd like to plan an interview with you.<br>\n"
+"                Can you please use the button below to schedule it with one of our recruiters?\n"
+"                <br><br>\n"
+"            </div>\n"
+"            <a t-att-href=\"env['ir.config_parameter'].sudo().get_param('web.base.url') + '/book/interview'\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Plan my interview</a>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <h2>Congratulations!</h2>\n"
+"            <div style=\"font-size: 13px;\">\n"
+"                اپلیکیشن شما بسیار جالب است و ما مایلیم مصاحبه‌ای را با شما ترتیب دهیم.<br>\n"
+"                ممکن است از دکمه‌ی زیر برای تنظیم این مصاحبه با یکی از مسئولین استخدام استفاده کنید?\n"
+"                <br><br>\n"
+"            </div>\n"
+"            <a t-att-href=\"env['ir.config_parameter'].sudo().get_param('web.base.url') + '/book/interview'\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Plan my interview</a>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
+
+#. module: appointment_hr_recruitment
+#: model:ir.model.fields,field_description:appointment_hr_recruitment.field_appointment_invite__applicant_id
+#: model:ir.model.fields,field_description:appointment_hr_recruitment.field_calendar_event__applicant_id
+msgid "Applicant"
+msgstr "متقاضی"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model,name:appointment_hr_recruitment.model_appointment_invite
+msgid "Appointment Invite"
+msgstr "دعوت برای قرار ملاقات"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model,name:appointment_hr_recruitment.model_appointment_type
+msgid "Appointment Type"
+msgstr "نوع قرار ملاقات"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model,name:appointment_hr_recruitment.model_calendar_event
+msgid "Calendar Event"
+msgstr "رخداد گاهشمار"
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,subject:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid ""
+"Can we plan an interview together for your {{ (object.job_id.name + ' ') or "
+"'' }}application?"
+msgstr ""
+"ممکن است با یکدیگر مصاحبه‌ای در مورد اپلیکیشن‌تان داشته باشیم؟ "
+"{{(object.job_id.name + )}}"
+
+#. module: appointment_hr_recruitment
+#: model:appointment.type,name:appointment_hr_recruitment.appointment_type_interviews
+msgid "Interviews availabilities"
+msgstr "فرصت‌های مصاحبه"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model.fields,help:appointment_hr_recruitment.field_appointment_invite__applicant_id
+#: model:ir.model.fields,help:appointment_hr_recruitment.field_calendar_event__applicant_id
+msgid ""
+"Link an applicant to the appointment invite created.\n"
+"Used when creating an invitation from the Meeting action in the applicant form view."
+msgstr ""
+"یک متقاضی را به دعوت‌نامه‌‎ی ایجاد شده برای قرار ملاقات ربط دهید. هنگام "
+"ایجاد یک دعوت‌نامه برای جلسه در پنجره‌ی فرم متقاضی مورد استفاده قرار "
+"می‌گیرد."
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,name:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid "Recruitment: Schedule interview"
+msgstr "استخدام: برنامه‌ریزی مصاحبه"
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,description:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid ""
+"Send this email when you want to schedule an interview with a candidate"
+msgstr ""
+"این ایمیل را زمانی ارسال کنید که می‌خواهید مصاحبه‌ای را با یک فرد منتخب "
+"ترتیب دهید"

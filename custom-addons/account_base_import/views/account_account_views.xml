@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_base_import_list" model="ir.ui.view">
+        <field name="name">account.base.import.account.account.list</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <header>
+                   <button name="%(account_base_import.action_open_import_guide)d" type="action" string="Import" display="always"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_account_import" model="ir.actions.client">
+        <field name="name">Import Chart of Accounts</field>
+        <field name="tag">account_import_action</field>
+        <field name="target">current</field>
+        <field name="params" eval="{'model': 'account.account'}"/>
+    </record>
+
+</odoo>

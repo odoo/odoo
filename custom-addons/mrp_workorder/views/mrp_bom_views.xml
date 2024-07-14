@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_routing_workcenter_tree_view_inherited" model="ir.ui.view">
+        <field name="name">mrp.routing.workcenter.tree.view.inherited</field>
+        <field name="model">mrp.routing.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_routing_workcenter_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='time_cycle']" position="after">
+                <field name="quality_point_count"/>
+                <button name="action_mrp_workorder_show_steps" class="btn-link" title="Show Instructions" type="object" icon="fa-list-ul"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="mrp_bom_form_view_inherit" model="ir.ui.view">
+        <field name="name">mrp.bom.form.view</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='message_follower_ids']" position="after">
+                <field name="activity_ids"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

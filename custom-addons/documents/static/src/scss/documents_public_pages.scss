@@ -1,0 +1,204 @@
+// Variables
+$o-docs-gap: 8px;
+
+// ====== Documents public share page design ========
+body.o_docs_share_page {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    #wrap {
+        > header {
+            height: $o-navbar-height;
+            .o_company_logo img {
+                display: inline;
+                max-height: $o-navbar-height;
+            }
+            a > span {
+                display: inline-block;
+                max-width: 150px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+    }
+
+    // Generic card layout
+    .o_card {
+        margin-bottom: $o-docs-gap;
+        padding: $o-docs-gap $o-docs-gap+2 $o-docs-gap $o-docs-gap;
+        background: transparentize(white, 0.1);
+        color: $o-main-text-color;
+        flex-flow: row nowrap;
+
+        &.o_request_card {
+            background: transparentize(white, 0.9);
+            border: 1px dashed transparentize(white, 0.8);
+            box-shadow: none;
+            color: $gray-300;
+
+            .o_card_right img.rounded-circle {
+                box-shadow: 0 0 0 1px transparentize(white, 0.8);
+            }
+
+            .o_card_title span, .o_request_icon:hover {
+                color: white;
+            }
+
+            .o_request_icon {
+                width: 50px;
+                height: 59px;
+                position: relative;
+                margin: -$o-docs-gap 0 (-$o-docs-gap) (-$o-docs-gap);
+
+                &.o_request_allowed {
+                    cursor: pointer;
+                    background-color: transparentize(white, 0.87);
+                    &:hover {
+                        background-color: transparentize(white, 0.8);
+                    }
+                }
+            }
+        }
+
+        > div > figure {
+            max-width: 100%;
+        }
+
+        > .o_card_content {
+            margin: 0 $o-docs-gap*0.5 0 $o-docs-gap;
+            overflow: hidden;
+
+            .o_card_footer {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            small {
+                font-size: 11px;
+            }
+        }
+
+        .o_card_title {
+            @include o-text-overflow();
+            font-weight: 500;
+
+            a {
+                @include o-hover-text-color($headings-color, $link-color);
+            }
+        }
+
+        a {
+            @include o-hover-text-color($hover-color: $link-color);
+        }
+
+        .o_image {
+            margin-top: 2px;
+            width: 43px;
+            height: 43px;
+        }
+
+        .o_image_preview {
+            @include o-position-absolute(0,0,0,0);
+            margin: -$o-docs-gap 0 (-$o-docs-gap) (-$o-docs-gap);
+            background-size: cover;
+            background-position: center;
+        }
+    }
+
+
+    // single/multiple file sharing
+    #wrap.o_share_files {
+        main {
+            justify-content: center;
+            align-items: center;
+            flex: 1 1 auto;
+        }
+
+        .o_docs_single_container {
+            max-width: 100%;
+        }
+
+        .o_card {
+            @include media-breakpoint-down(md) {
+                justify-content: center;
+                flex-flow: row wrap;
+            }
+
+            .o_image {
+                width: 55px;
+                height: 55px;
+            }
+
+            .o_card_title {
+                color: $o-main-text-color;
+            }
+
+            &.o_request_card {
+                .o_request_icon {
+                    width: 60px;
+                    height: 75px;
+                }
+            }
+        }
+        .shadow-lg div {
+            padding: 4px;
+            width: 240px;
+        }
+    }
+
+    // Single file sharing with Preview
+    #wrap.o_share_files.o_has_preview {
+        > main {
+            padding: $grid-gutter-width*2 0;
+        }
+
+        .o_docs_single_container{
+            max-width: 600px;
+            max-height: 600px;
+
+            img {
+                margin: 0 auto;
+                min-height: 150px;
+                opacity: 0;
+                box-shadow: 0 0 20px transparentize(black, 0.75);
+                transition: opacity 0.8s;
+            }
+
+            .o_docs_single_actions {
+                padding-top: $o-docs-gap*2;
+
+                > span {
+                    margin-right: $grid-gutter-width;
+                }
+            }
+        }
+    }
+
+    // Workspace sharing
+    #wrap.o_share_workspace {
+        .o_docs_upload_wrapper {
+            overflow: hidden;
+
+            input {
+                font-size: 100px;
+                opacity: 0;
+                @include o-position-absolute(0, $left:0);
+                cursor:pointer;
+            }
+
+            &:hover .btn {
+                background-color: darken($o-brand-primary, 7.5%)
+            }
+        }
+
+        .o_docs_share_multible_bar .o_author {
+            width: 21px;
+            height: 21px;
+        }
+    }
+}

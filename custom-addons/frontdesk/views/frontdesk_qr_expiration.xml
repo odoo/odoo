@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="frontdesk_qr_expired">
+            <t t-call="web.layout">
+                <t t-set="head">
+                    <t t-call-assets="web.assets_frontend" t-js="false"/>
+                </t>
+                <div class="container vh-100 d-flex flex-column gap-4 align-items-center justify-content-center text-center">
+                    <div class="display-1 m-0 fw-bold">QR Code Expired.</div>
+                    <div class="display-3 mt-3 mb-0 fw-bold text-muted">Please rescan it.</div>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

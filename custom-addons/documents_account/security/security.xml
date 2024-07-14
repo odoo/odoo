@@ -1,0 +1,9 @@
+<odoo noupdate="1">
+
+        <record id="documents_folder_setting_company_rule" model="ir.rule">
+            <field name="name">documents.account.folder.settings: multicompany</field>
+            <field name="model_id" ref="model_documents_account_folder_setting"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+</odoo>

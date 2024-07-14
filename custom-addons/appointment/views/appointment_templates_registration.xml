@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="appointment_form" name="Website Appointment: Your Data">
+        <t t-set="no_breadcrumbs" t-value="True"/>
+        <t t-call="portal.portal_layout">
+            <div id="wrap" class="d-flex">
+                <t t-set="o_portal_fullwidth_alert" groups="appointment.group_appointment_manager">
+                    <t t-call="appointment.appointment_edit_in_backend"/>
+                </t>
+                <div class="container-lg h-100">
+                    <div t-attf-class="row mt-4 #{'bg-o-color-4 rounded-3 border' if not website else ''}">
+                        <div t-attf-class="col-12 col-md-8 #{'p-4' if not website else ''}">
+                            <div class="oe_structure o_appointment">
+                                <h4 class="pb-3">Add more details about you</h4>
+                                <div class="oe_structure"/>
+                                <div class="oe_structure o_appointment_attendee_form">
+                                    <div class="d-flex row justify-content-between">
+                                        <form class="appointment_submit_form"
+                                            t-attf-action="/appointment/#{appointment_type.id}/submit?#{keep_query('*')}"
+                                            method="POST">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <input type="hidden" name="datetime_str" t-att-value="datetime_str"/>
+                                            <input type="hidden" name="duration_str" t-att-value="duration_str"/>
+                                            <input type="hidden" name="available_resource_ids" t-att-value="available_resource_ids"/>
+                                            <input type="hidden" name="asked_capacity" t-att-value="asked_capacity"/>
+                                            <div class="row mb-4">
+                                                <label class="col-sm-3 col-form-label fw-normal" for="name">Full name*</label>
+                                                <div class="col-sm-9">
+                                                    <input type="char" class="form-control" name="name" required="1"
+                                                        t-att-value="'name' in partner_data and partner_data['name']"
+                                                        placeholder="e.g. John Smith"/>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-4">
+                                                <label class="col-sm-3 col-form-label fw-normal" for="email">Email*</label>
+                                                <div class="col-sm-9">
+                                                    <input type="email" class="form-control" name="email" required="1"
+                                                        t-att-value="'email' in partner_data and partner_data['email']"
+                                                        placeholder="e.g. john.smith@example.com"/>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-4">
+                                                <label class="col-sm-3 col-form-label fw-normal" for="phone">Phone number*</label>
+                                                <div class="col-sm-9">
+                                                    <input type="tel" class="form-control" name="phone" id="phone_field" required="1"
+                                                        t-att-value="'phone' in partner_data and partner_data['phone']"
+                                                        placeholder="e.g. +1(605)691-3277"/>
+                                                </div>
+                                            </div>
+                                            <t t-if="appointment_type.allow_guests">
+                                                <div class="row mb-4 mt-1">
+                                                    <label class="col-sm-3 col-form-label fw-normal">Guests</label>
+                                                    <div class="o_appointment_add_guests col-sm-9">
+                                                        <button type="button" class="o_appointment_input_guest_add btn btn-link ps-0"><i class="fa fa-plus me-1"/> Add Guests</button>
+                                                        <textarea type="email" id="o_appointment_input_guest_emails" class="form-control s_website_form_input d-none" name="guest_emails_str" placeholder="e.g. john.doe@email.com &#13;&#10;e.g. jane.doe@example.com&#13;&#10;..." rows="5"/>
+                                                        <button type="button" class="o_appointment_input_guest_cancel btn btn-link d-none ps-0">Cancel</button>
+                                                        <div class="o_appointment_validation_error alert alert-danger d-none mt-2">
+                                                            <i class="fa fa-warning me-1"/>
+                                                            <span class="o_appointment_error_text"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                            <t t-foreach="appointment_type.question_ids" t-as="question">
+                                                <div class="row mb-4" t-if="question.question_type!='text'">
+                                                    <label class="col-sm-3 col-form-label fw-normal" t-attf-for="question_#{question.id}" t-out="' '.join([question.name, '*' if question.question_required else ''])"/>
+                                                    <div class="col-sm-9">
+                                                        <t t-if="question.question_type == 'char'">
+                                                            <input type="char" class="form-control"
+                                                                t-attf-name="question_#{question.id}"
+                                                                t-att-required="question.question_required or None"
+                                                                t-att-placeholder="question.placeholder"/>
+                                                        </t>
+                                                        <t t-if="question.question_type == 'select'">
+                                                            <select t-attf-name="question_#{question.id}" class="form-select"
+                                                                t-att-required="question.question_required or None"
+                                                                t-att-placeholder="question.placeholder">
+                                                                <t t-foreach="question.answer_ids or []" t-as="answer">
+                                                                    <option t-att-value="answer.id"><t t-out="answer.name"/></option>
+                                                                </t>
+                                                            </select>
+                                                        </t>
+                                                        <t t-if="question.question_type == 'radio'">
+                                                            <div class="checkbox form-control form-check border-0 pb-0" t-foreach="question.answer_ids or []" t-as="answer">
+                                                                <label>
+                                                                    <input type="radio" t-attf-name="question_#{question.id}"
+                                                                        t-att-required="question.question_required or None"
+                                                                        t-att-value="answer.id" class="form-check-input me-2"/> <t t-out="answer.name"/>
+                                                                </label>
+                                                            </div>
+                                                        </t>
+                                                        <t t-if="question.question_type == 'checkbox'">
+                                                            <div t-attf-class="checkbox-group #{question.question_required and 'required' or ''}">
+                                                                <div class="checkbox form-control form-check border-0 pb-0" t-foreach="question.answer_ids or []" t-as="answer">
+                                                                    <label>
+                                                                        <input type="checkbox" t-attf-name="question_#{question.id}_answer_#{answer.id}"
+                                                                            t-att-value="answer.name" class="form-check-input me-2"/><t t-out="answer.name"/>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-4" t-if="question.question_type == 'text'">
+                                                    <label t-attf-for="question_#{question.id}" class="fw-normal mb-2" t-out="' '.join([question.name, '*' if question.question_required else ''])"/>
+                                                    <textarea class="form-control" rows="6"
+                                                        t-att-required="question.question_required or None"
+                                                        t-attf-name="question_#{question.id}"
+                                                        t-att-placeholder="question.placeholder"/>
+                                                </div>
+                                            </t>
+                                            <div groups="appointment.group_appointment_manager" class=" o_not_editable alert alert-info mt-4 text-center" role="status">
+                                                <a class="alert-link" t-attf-href="/web#id=#{appointment_type.id}&amp;view_type=form&amp;model=#{appointment_type._name}&amp;action=appointment.appointment_type_action">
+                                                    <i class="fa fa-pencil me-2" role="img" aria-label="Edit" title="Create custom questions in backend"/>Add Custom Questions
+                                                </a>
+                                            </div>
+                                            <div class="my-3 pt-3 border-top">
+                                                <div class="o_not_editable text-end">
+                                                    <button type="button" class="o_appointment_form_confirm_btn btn btn-primary ms-auto">Confirm Appointment</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="oe_structure"/>
+                            </div>
+                        </div>
+                        <t t-call="appointment.appointment_details_column">
+                            <!-- Used to check if we are on "Details" step -->
+                            <t t-set="isDetails" t-value="True"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

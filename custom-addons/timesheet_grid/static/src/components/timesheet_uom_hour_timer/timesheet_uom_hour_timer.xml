@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="timesheet_grid.TimesheetUOMHourTimer">
+        <button type="button"
+                t-if="displayButton"
+                t-on-click.stop.prevent="onClick"
+                class="o_icon_button me-8 me-2"
+                t-att-title="title" t-att-aria-label="title">
+            <i t-attf-class="fa {{iconClass}}" t-att-title="title"/>
+        </button>
+        <TimesheetDisplayTimer t-props="props"/>
+    </t>
+
+</templates>

@@ -1,0 +1,289 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_helpdesk_livechat
+# 
+# Translators:
+# Wil Odoo, 2023
+# Sarah Park, 2023
+# Daye Jeong, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Daye Jeong, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid ""
+"\n"
+"                    Create a new helpdesk ticket by typing <b>/ticket <i>ticket title</i></b><br>\n"
+"                    "
+msgstr ""
+"\n"
+"                    <b>/티켓<i>티켓 제목</i>을 입력하여 새 헬프데스크 티켓을 생성합니다</b><br>\n"
+"                    "
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/chatbot_script_step.py:0
+#, python-format
+msgid "%(name)s's Ticket"
+msgstr "%(name)s의 티켓"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_done
+msgid "Alright, we should have everything we need"
+msgstr "자, 필요한 모든 것을 준비했습니다"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/chatbot_script.py:0
+#, python-format
+msgid ""
+"An \"Email\" step type must exist before the \"Create Ticket\" step for a "
+"ticket to be created."
+msgstr "티켓을 만들려면 \"티켓 만들기\" 단계 앞에 \"이메일\" 단계 유형이 있어야 합니다."
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_technical_serial_misc
+msgid "Anything else to add?"
+msgstr "더 추가할 내용이 있나요?"
+
+#. module: website_helpdesk_livechat
+#: model:ir.ui.menu,name:website_helpdesk_livechat.helpdesk_team_canned_response_menu
+msgid "Canned Responses"
+msgstr "미리 준비된 답변"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model,name:website_helpdesk_livechat.model_chatbot_script
+msgid "Chatbot Script"
+msgstr "챗봇 스크립트"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model,name:website_helpdesk_livechat.model_chatbot_script_step
+msgid "Chatbot Script Step"
+msgstr "챗봇 스크립트 단계"
+
+#. module: website_helpdesk_livechat
+#: model_terms:ir.ui.view,arch_db:website_helpdesk_livechat.helpdesk_team_view_form_inherit_website_helpdesk_livechat
+msgid "Configure Canned Responses"
+msgstr "미리 준비된 답변 구성"
+
+#. module: website_helpdesk_livechat
+#: model_terms:ir.ui.view,arch_db:website_helpdesk_livechat.helpdesk_team_view_form_inherit_website_helpdesk_livechat
+msgid "Configure Live Chat Channel"
+msgstr "실시간 채팅 채널 구성하기"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model.fields.selection,name:website_helpdesk_livechat.selection__chatbot_script_step__step_type__create_ticket
+msgid "Create Ticket"
+msgstr "티켓 만들기"
+
+#. module: website_helpdesk_livechat
+#. odoo-javascript
+#: code:addons/website_helpdesk_livechat/static/src/messaging_service_patch.js:0
+#, python-format
+msgid "Create a new helpdesk ticket (/ticket ticket title)"
+msgstr "새 헬프데스크 티켓 만들기(/티켓 티켓 제목)"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "Created a new ticket: %s"
+msgstr "새 티켓 생성: %s"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model,name:website_helpdesk_livechat.model_discuss_channel
+msgid "Discussion Channel"
+msgstr "메일 및 채팅 채널"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_dispatch
+msgid "First, what is the nature of your issue?"
+msgstr "먼저, 문제의 성격이 무엇인가요?"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model.fields,field_description:website_helpdesk_livechat.field_chatbot_script__ticket_count
+msgid "Generated Ticket Count"
+msgstr "생성된 티켓 수"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref_yes
+msgid "Great, that will make our lives easier."
+msgstr "좋아요, 그럼 우리 삶이 더 편해질 거예요."
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script,title:website_helpdesk_livechat.chatbot_script_helpdesk_bot
+msgid "Helpdesk Bot"
+msgstr "헬프데스크 봇"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model,name:website_helpdesk_livechat.model_helpdesk_team
+#: model:ir.model.fields,field_description:website_helpdesk_livechat.field_chatbot_script_step__helpdesk_team_id
+msgid "Helpdesk Team"
+msgstr "고객센터 팀"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_welcome
+msgid "Here we go, help is on the way!"
+msgstr "곧 도와드리겠습니다!"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.answer,name:website_helpdesk_livechat.chatbot_script_helpdesk_step_dispatch_answer_technical
+msgid "I have a technical issue"
+msgstr "기술적인 문제가 발생했습니다"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.answer,name:website_helpdesk_livechat.chatbot_script_helpdesk_step_dispatch_answer_administrative
+msgid "I have an administrative question"
+msgstr "행정 관련 질문이 있습니다"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref_no
+msgid "It's OK, we can also find your contract by other means."
+msgstr "괜찮습니다. 다른 방법으로도 계약을 찾을 수 있습니다."
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_email
+msgid "Just a last thing, can we please have your email address?"
+msgstr "마지막으로 이메일 주소를 알려주시겠습니까?"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model.fields,field_description:website_helpdesk_livechat.field_helpdesk_team__use_website_helpdesk_livechat
+msgid "Live Chat"
+msgstr "실시간 채팅"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "Make sure you are using the right format:"
+msgstr "알맞은 양식을 사용 중인지 확인하시기 바랍니다:"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.answer,name:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref_answer_no
+msgid "No"
+msgstr "아니오"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "No tickets found for %s."
+msgstr "%s에 대한 상담을 찾을 수 없습니다."
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid ""
+"No tickets found for <b>%s</b>. <br> Make sure you are using the right "
+"format:<br> <b>/search_tickets <i>keyword</i></b>"
+msgstr ""
+"<b>%s</b>에 대한 티켓을 찾을 수 없습니다. <br> 올바른 형식을 사용하고 있는지 확인해주세요:<br> "
+"<b>/search_tickets <i>키워드</i></b>"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_ticket
+msgid ""
+"OK, I just created a ticket for you. You should receive an email "
+"confirmation very soon."
+msgstr "방금 티켓을 새로 생성했습니다. 곧 확인 이메일을 보내드리겠습니다."
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_technical_serial
+msgid "Please write below the serial number of your equipment."
+msgstr "장비의 일련번호를 아래에 적어주세요."
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref_input
+msgid "Please write below your customer reference."
+msgstr "아래에 고객 레퍼런스 번호를 적어주세요."
+
+#. module: website_helpdesk_livechat
+#. odoo-javascript
+#: code:addons/website_helpdesk_livechat/static/src/messaging_service_patch.js:0
+#, python-format
+msgid "Search helpdesk tickets (/search_tickets keyword)"
+msgstr "헬프데스크 티켓 검색 (/search_tickets 키워드)"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid ""
+"Search helpdesk tickets by typing <b>/search_tickets <i>keyword</i></b>"
+msgstr "<b>/search_tickets <i>키워드</i>를 입력하여 헬프데스크 티켓을 검색합니다</b>"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "Something is missing or wrong in command"
+msgstr "명령에 문제가 있거나 잘못되었습니다"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model.fields,field_description:website_helpdesk_livechat.field_chatbot_script_step__step_type
+msgid "Step Type"
+msgstr "단계 유형"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_technical_serial_thanks
+msgid "Thank you, that will help our engineers see what went wrong."
+msgstr "감사합니다. 저희 엔지니어가 무엇이 잘못되었는지 파악하는 데 도움이 될 것입니다."
+
+#. module: website_helpdesk_livechat
+#: model_terms:ir.ui.view,arch_db:website_helpdesk_livechat.chatbot_script_view_form
+msgid "Tickets"
+msgstr "티켓"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "Tickets search results for %s: "
+msgstr "%s에 대한 티켓 검색 결과: "
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref
+msgid ""
+"To start with, do you have a customer reference?\n"
+"They are written on each invoice you received, next to your name."
+msgstr ""
+"우선 고객 레퍼런스 번호가 있으십니까?\n"
+"고객 레퍼런스 번호는 받으신 청구서의 성함 옆에 기재되어 있습니다."
+
+#. module: website_helpdesk_livechat
+#: model:ir.model,name:website_helpdesk_livechat.model_res_users
+msgid "User"
+msgstr "사용자"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_issue
+msgid "We're all set. Now, what is your issue?"
+msgstr "모든 준비가 완료되었습니다. 어떤 문제가 있으신가요?"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.answer,name:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref_answer_yes
+msgid "Yes"
+msgstr "예"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "keyword"
+msgstr "키워드"

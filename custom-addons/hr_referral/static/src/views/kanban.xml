@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_referral.KanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="attributes">
+            <attribute name="class" add="o_referral_kanban" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="before">
+            <div class="o_referral_kanban_background" t-attf-style="background-image: url('/web/image/res.company/#{companyId}/hr_referral_background')">
+                <t t-if="showGrass">
+                    <div class="hr_referral_bg_city"/>
+                    <div class="hr_referral_bg_grass"/>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>

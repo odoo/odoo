@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="helpdesk.helpdesk_team3" model="helpdesk.team">
+        <field name="use_coupons" eval="True"/>
+    </record>
+
+    <record id="coupon_demo_1" model="loyalty.card">
+        <field name="code">4038992923614702669</field>
+        <field name="program_id" ref="loyalty.10_percent_coupon"/>
+    </record>
+
+    <record id="helpdesk.helpdesk_ticket_16" model="helpdesk.ticket">
+        <field name="coupon_ids" eval="[(6,0,[ref('helpdesk_sale_loyalty.coupon_demo_1')])]"/>
+    </record>
+    <record id="helpdesk.helpdesk_ticket_11" model="helpdesk.ticket">
+        <field name="coupon_ids" eval="[(6,0,[ref('helpdesk_sale_loyalty.coupon_demo_1')])]"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_view_map" model="ir.ui.view">
+        <field name="name">res.partner.view.map</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <map res_partner="id"/>
+        </field>
+    </record>
+    <record id="res_partner_action_contacts_view_map" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">map</field>
+        <field name="view_id" ref="res_partner_view_map"/>
+        <field name="act_window_id" ref="contacts.action_contacts"/>
+    </record>
+</odoo>

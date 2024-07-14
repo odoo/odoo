@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_tasks_portal_list_inherit" inherit_id="project.portal_tasks_list" name="Portal: My Tasks with Timesheets">
+        <xpath expr="//t[@t-out='timesheet_ids._convert_hours_to_days(task.effective_hours)']" position="replace">
+            <t t-out="timesheet_ids._convert_hours_to_days(task.portal_effective_hours)"/>
+        </xpath>
+        <xpath expr="//span[@t-field='task.effective_hours']" position="attributes">
+            <attribute name="t-field">task.portal_effective_hours</attribute>
+        </xpath>
+    </template>
+
+</odoo>

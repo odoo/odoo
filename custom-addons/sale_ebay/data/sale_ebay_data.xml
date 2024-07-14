@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<odoo>
+  <data noupdate="1">
+    <record id="base.USD" model="res.currency">
+      <field name="ebay_available" eval="True"/>
+    </record>
+    <record id="base.us" model="res.country">
+      <field name="ebay_available" eval="True"/>
+    </record>
+    <record id="us" model="ebay.site">
+      <field name="name">EBAY-US (United States)</field>
+      <field name="ebay_id">0</field>
+    </record>
+    <record id="sales_team.ebay_sales_team" model="crm.team">
+      <field name="active" eval="True"/>
+    </record>
+    <!-- ebay sites mapping: https://developer.ebay.com/devzone/merchandising/docs/concepts/siteidtoglobalid.html -->
+    <record id="ca" model="ebay.site">
+      <field name="name">EBAY-ENCA (Canada/English)</field>
+      <field name="ebay_id">2</field>
+    </record>
+    <record id="uk" model="ebay.site">
+      <field name="name">EBAY-GB (United Kingdom)</field>
+      <field name="ebay_id">3</field>
+    </record>
+    <record id="au" model="ebay.site">
+      <field name="name">EBAY-AU (Australia)</field>
+      <field name="ebay_id">15</field>
+    </record>
+    <record id="at" model="ebay.site">
+      <field name="name">EBAY-AT (Austria)</field>
+      <field name="ebay_id">16</field>
+    </record>
+    <record id="frbe" model="ebay.site">
+      <field name="name">EBAY-FRBE (Belgium/French)</field>
+      <field name="ebay_id">23</field>
+    </record>
+    <record id="fr" model="ebay.site">
+      <field name="name">EBAY-FR (France)</field>
+      <field name="ebay_id">71</field>
+    </record>
+    <record id="de" model="ebay.site">
+      <field name="name">EBAY-DE (Germany)</field>
+      <field name="ebay_id">77</field>
+    </record>
+    <record id="motors" model="ebay.site">
+      <field name="name">EBAY-MOTOR (Motors)</field>
+      <field name="ebay_id">100</field>
+    </record>
+    <record id="it" model="ebay.site">
+      <field name="name">EBAY-IT (Italy)</field>
+      <field name="ebay_id">101</field>
+    </record>
+    <record id="nlbe" model="ebay.site">
+      <field name="name">EBAY-NLBE (Belgium/Dutch)</field>
+      <field name="ebay_id">123</field>
+    </record>
+    <record id="nl" model="ebay.site">
+      <field name="name">EBAY-NL (Netherlands)</field>
+      <field name="ebay_id">146</field>
+    </record>
+    <record id="es" model="ebay.site">
+      <field name="name">EBAY-ES (Spain)</field>
+      <field name="ebay_id">186</field>
+    </record>
+    <record id="ch" model="ebay.site">
+      <field name="name">EBAY-CH (Switzerland)</field>
+      <field name="ebay_id">193</field>
+    </record>
+    <record id="hk" model="ebay.site">
+      <field name="name">EBAY-HK (Hong Kong)</field>
+      <field name="ebay_id">201</field>
+    </record>
+    <record id="in" model="ebay.site">
+      <field name="name">EBAY-IN (India)</field>
+      <field name="ebay_id">203</field>
+    </record>
+    <record id="ie" model="ebay.site">
+      <field name="name">EBAY-IE (Ireland)</field>
+      <field name="ebay_id">205</field>
+    </record>
+    <record id="my" model="ebay.site">
+      <field name="name">EBAY-MY (Malaysia)</field>
+      <field name="ebay_id">207</field>
+    </record>
+    <record id="frca" model="ebay.site">
+      <field name="name">EBAY-FRCA (Canada/French)</field>
+      <field name="ebay_id">210</field>
+    </record>
+    <record id="ph" model="ebay.site">
+      <field name="name">EBAY-PH (Philippines)</field>
+      <field name="ebay_id">211</field>
+    </record>
+    <record id="pl" model="ebay.site">
+      <field name="name">EBAY-PL (Poland)</field>
+      <field name="ebay_id">212</field>
+    </record>
+    <record id="sg" model="ebay.site">
+      <field name="name">EBAY-SG (Singapore)</field>
+      <field name="ebay_id">216</field>
+    </record>
+  </data>
+</odoo>

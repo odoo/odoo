@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="appointment_validated" name="Website Appointment: Appointment Confirmed" inherit_id="appointment.appointment_validated">
+        <xpath expr="//t[@t-call='portal.portal_layout']" position="attributes">
+            <attribute name="t-call">website.layout</attribute>
+        </xpath>
+        <xpath expr="//div[@id='wrap']" position="after">
+            <input t-if='state == "new" and website.plausible_shared_key' type='hidden' class='js_plausible_push'
+                data-event-name='Lead Generation' data-event-params='{"CTA": "Appointment"}' />
+        </xpath>
+        <xpath expr="//a[hasclass('o_appointment_validation_cancel_btn')]" position="before">
+            <nav t-if="appointment_type and appointment_type.category in ['punctual', 'recurring']">
+                <t t-set="all_appointments_url" t-value="'/appointment?' + keep_query('filter_appointment_type_ids', 'filter_staff_user_ids')"/>
+                <t t-set="invite_redirect_url" t-value="event.appointment_invite_id.redirect_url if event.appointment_invite_id else None"/>
+                <a t-att-href="invite_redirect_url or all_appointments_url" class="btn btn-link w-100 w-lg-auto ms-lg-3 mt-2 mt-lg-0 mb-lg-0">Schedule another appointment</a>   
+            </nav>
+        </xpath>
+        <xpath expr="//div[@id='wrap']" position="attributes">
+            <attribute name="class">o_appointment h-100 o_wappointment_wrap mt-4</attribute>
+        </xpath>
+    </template>
+</odoo>

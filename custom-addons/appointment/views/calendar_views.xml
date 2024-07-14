@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="calendar_event_calendar_view_inherit_appointment" model="ir.ui.view">
+        <field name="name">calendar.event.view.calendar.inherit.appointment</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_calendar"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='categ_ids']" position="after">
+                <field name="appointment_resource_ids" widget="many2many_tags" invisible="not appointment_resource_ids" options="{'icon': 'fa fa-cubes'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

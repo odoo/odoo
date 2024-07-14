@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- The spec from ANAF differs somewhat from the official SAF-T specification. 
+         See https://static.anaf.ro/static/10/Anaf/Informatii_R/RO_SAFT_SchemaDefCod_20230526.xlsx for the full spec. -->
+
+    <template id="saft_template" inherit_id="account_saft.saft_template" primary="True">
+        <!-- ===== Header ===== -->
+        <xpath expr="//Header/Company/t[@t-call='account_saft.company_header']" position="replace">
+            <t t-call="l10n_ro_saft.company_header"/>
+        </xpath>
+        
+        <!-- Additional fields are expected in the Header -->
+        <xpath expr="//Header/SelectionCriteria" position="after">
+            <!-- The HeaderComment field must indicate the type of declaration -->
+            <HeaderComment t-out="declaration_type"/>
+            <SegmentIndex>1</SegmentIndex>
+            <TotalSegmentsInsequence>1</TotalSegmentsInsequence>
+        </xpath>
+
+
+        <!-- ===== MasterFiles ===== -->
+
+        <!-- The AccountID must be the account code in the official Romanian CoA (PlanConturiBalSocCom)
+             whereas the StandardAccountID should be the account ID in Odoo. -->
+        <xpath expr="//MasterFiles/GeneralLedgerAccounts/Account/AccountID" position="attributes">
+            <attribute name="t-out">account.code</attribute>
+        </xpath>
+        <xpath expr="//MasterFiles/GeneralLedgerAccounts/Account/StandardAccountID" position="attributes">
+            <attribute name="t-out">account.id</attribute>
+        </xpath>
+
+        <!-- Customers must be shown, even if empty -->
+        <xpath expr="//MasterFiles/Customers" position="attributes">
+            <attribute name="t-if"/>
+        </xpath>
+
+        <!-- The CompanyStructure must be in its own node, and it must contain a RegistrationNumber node
+             containing the customer's Registration Number according to the spec's standard.
+             The CustomerID field must contain that same number as well. 
+             In addition, we must indicate the Account Receivable corresponding to that customer.-->
+        <xpath expr="//MasterFiles/Customers/Customer/t[@t-call='account_saft.addresses_contacts']" position="attributes">
+            <attribute name="t-call">l10n_ro_saft.company_structure</attribute>
+        </xpath>
+        <xpath expr="//MasterFiles/Customers/Customer/CustomerID" position="attributes">
+            <attribute name="t-out">partner_detail_map[partner_vals['partner'].id]['registration_number']</attribute>
+        </xpath>
+        <xpath expr="//MasterFiles/Customers/Customer/CustomerID" position="after">
+            <AccountID t-out="partner_vals['partner'].commercial_partner_id.property_account_payable_id.code"/>
+        </xpath>
+
+        <!-- Suppliers must be shown, even if empty -->
+        <xpath expr="//MasterFiles/Suppliers" position="attributes">
+            <attribute name="t-if"/>
+        </xpath>
+
+        <!-- Suppliers: same remarks as for Customers. -->
+        <xpath expr="//MasterFiles/Suppliers/Supplier/t[@t-call='account_saft.addresses_contacts']" position="attributes">
+            <attribute name="t-call">l10n_ro_saft.company_structure</attribute>
+        </xpath>
+        <xpath expr="//MasterFiles/Suppliers/Supplier/SupplierID" position="attributes">
+            <attribute name="t-out">partner_detail_map[partner_vals['partner'].id]['registration_number']</attribute>
+        </xpath>
+        <xpath expr="//MasterFiles/Suppliers/Supplier/SupplierID" position="after">
+            <AccountID t-out="partner_vals['partner'].commercial_partner_id.property_account_payable_id.code"/>
+        </xpath>
+
+        <!-- TaxTable must be shown, even if empty -->
+        <xpath expr="//MasterFiles/TaxTable" position="attributes">
+            <attribute name="t-if"/>
+        </xpath>
+
+        <!-- The TaxTable must indicate for each tax the Romanian Tax Type and the description of the Tax Type -->
+        <xpath expr="//MasterFiles/TaxTable/TaxTableEntry/TaxCodeDetails" position="before">
+            <TaxType t-out="tax_vals['l10n_ro_saft_tax_type']"/>
+            <Description t-out="tax_vals['l10n_ro_saft_tax_type_description']"/>
+        </xpath>
+
+        <!-- The TaxCode in the TaxTableEntry must be the code affected by ANAF. -->
+        <xpath expr="//MasterFiles/TaxTable/TaxTableEntry/TaxCodeDetails/TaxCode" position="attributes">
+            <attribute name="t-out">tax_vals['l10n_ro_saft_tax_code']</attribute>
+        </xpath>
+
+        <!-- Add the UOMTable, AnalysisTypeTable, MovementTypeTable and Products nodes -->
+        <xpath expr="//MasterFiles/TaxTable" position="after">
+            <UOMTable>
+                <UOMTableEntry t-foreach="uoms" t-as="uom">
+                    <UnitOfMeasure t-out="unece_code_by_uom[uom.id]"/>
+                    <Description t-out="uoms.category_id.name[:256]"/>
+                </UOMTableEntry>
+            </UOMTable>
+            <AnalysisTypeTable/>
+            <MovementTypeTable/>
+            <Products>
+                <Product t-if="product_vals_list" t-foreach="product_vals_list" t-as="product_vals">
+                    <ProductCode t-out="product_vals['default_code'][:70]"/>
+                    <ProductGroup t-out="product_vals['product_category'][:70]"/>
+                    <Description t-out="product_vals['name'][:256]"/>
+                    <ProductCommodityCode t-out="product_vals['commodity_code'][:70]"/>
+                    <UOMBase t-out="unece_code_by_uom[product_vals['uom_id']]"/>
+                    <UOMStandard t-out="unece_code_by_uom[product_vals['uom_id']]"/>
+                    <UOMToUOMBaseConversionFactor t-out="1"/>
+                </Product>
+            </Products>
+        </xpath>
+
+        <!-- Owners should be empty -->
+        <xpath expr="//Owners/Owner" position="replace"/>
+
+        <!-- Add the Assets section, even if empty -->
+        <xpath expr="//Owners" position="after">
+            <Assets/>
+        </xpath>
+
+        <!-- ===== GeneralLedgerEntries ===== -->
+
+        <!-- The CustomerID and SupplierID must be the Romanian-formatted registration number.
+             If there is no partner on the line, we must use the reporting company's registration number. -->
+        <xpath expr="//Transaction/t[1]" position="replace">
+            <t t-set="partner_info" t-value="partner_detail_map[move_vals['partner_id']]"/>
+            <t t-set="default_registration_number" t-value="partner_detail_map[company.partner_id.id]['registration_number']"/>
+            <CustomerID t-out="partner_info['registration_number'] if partner_info['type'] == 'customer' else default_registration_number"/>
+            <SupplierID t-out="partner_info['registration_number'] if partner_info['type'] == 'supplier' else default_registration_number"/>
+        </xpath>
+
+        <!-- Line is renamed TransactionLine -->
+        <xpath expr="//Line[@t-as='line_vals']" position="replace">
+            <TransactionLine t-foreach="move_vals['line_vals_list']" t-as="line_vals">
+                <RecordID t-out="line_vals['id']"/>
+                <AccountID t-out="account_code_by_id[line_vals['account_id']]"/>
+                <ValueDate t-out="move_vals['invoice_date']"/>
+                <SourceDocumentID t-out="move_vals['id']"/>
+                <t t-set="partner_info" t-value="partner_detail_map[line_vals['partner_id']]"/>
+                <CustomerID t-out="partner_info['registration_number'] if partner_info['type'] == 'customer' else default_registration_number"/>
+                <SupplierID t-out="partner_info['registration_number'] if partner_info['type'] == 'supplier' else default_registration_number"/>
+                <Description t-out="(line_vals['name'] or move_vals['name'])[:256]"/>
+                <t t-call="l10n_ro_saft.saft_template_line_debit_credit_amount"/>
+                <t t-call="l10n_ro_saft.saft_template_tax_information"/>
+            </TransactionLine>
+        </xpath>
+
+        <xpath expr="//TaxTableEntry/TaxCodeDetails/Country" position="before">
+            <BaseRate t-out="1.0"/>
+        </xpath>
+
+
+        <!-- ====== SourceDocuments ====== -->
+
+        <xpath expr="//AuditFile" position="inside">
+            <SourceDocuments>
+                <SalesInvoices>
+                    <t t-call="l10n_ro_saft.saft_template_invoices">
+                        <t t-set="invoice_vals" t-value="sale_invoice_vals"/>
+                    </t>
+                </SalesInvoices>
+                <PurchaseInvoices>
+                    <t t-call="l10n_ro_saft.saft_template_invoices">
+                        <t t-set="invoice_vals" t-value="purchase_invoice_vals"/>
+                    </t>
+                </PurchaseInvoices>
+                <Payments>
+                    <NumberOfEntries t-out="payment_vals['number']"/>
+                    <TotalDebit t-out="payment_vals['total_debit']"/>
+                    <TotalCredit t-out="payment_vals['total_credit']"/>
+                    <Payment t-foreach="payment_vals['move_vals_list']" t-as="move_vals">
+                        <PaymentRefNo t-out="move_vals['name']"/>
+                        <TransactionDate t-out="move_vals['date']"/>
+                        <PaymentMethod t-out="move_vals['payment_method']"/>
+                        <Description t-out="move_vals['description']"/>
+                        <SystemID t-out="move_vals['id']"/>
+                        <PaymentLine t-foreach="move_vals['payment_line_vals_list']" t-as="line_vals">
+                            <AccountID t-out="account_code_by_id[line_vals['account_id']]"/>
+                            <t t-if="line_vals.get('partner_id')">
+                                <t t-set="partner_info" t-value="partner_detail_map[line_vals['partner_id']]"/>
+                                <CustomerID t-out="partner_info['registration_number'] if partner_info['type'] == 'customer' else '0'"/>
+                                <SupplierID t-out="partner_info['registration_number'] if partner_info['type'] == 'supplier' else '0'"/>
+                            </t>
+                            <t t-else="">
+                                <CustomerID t-out="partner_detail_map[company.partner_id.id]['registration_number']"/>
+                                <SupplierID t-out="partner_detail_map[company.partner_id.id]['registration_number']"/>
+                            </t>
+                            <DebitCreditIndicator t-if="(line_vals['debit']) or (not line_vals['debit'] and not line_vals['credit'] and line_vals['move_type'] in ('in_invoice', 'out_refund'))" t-out="'D'"/>
+                            <DebitCreditIndicator t-if="(line_vals['credit']) or (not line_vals['debit'] and not line_vals['credit'] and line_vals['move_type'] in ('out_invoice', 'in_refund'))" t-out="'C'"/>
+                            <PaymentLineAmount>
+                                <Amount t-out="format_float(line_vals['debit'] or line_vals['credit'])"/>
+                                <CurrencyCode t-out="line_vals['currency_code']"/>
+                                <!-- Checking for negative debits/credits to correctly handle storno refunds -->
+                                <CurrencyAmount t-out="format_float(line_vals['amount_currency'] * (-1 if (line_vals['debit'] or line_vals['credit']) &lt; 0 else 1))"/>
+                                <ExchangeRate t-out="format_float(line_vals['rate'], digits=4)"/>
+                            </PaymentLineAmount>
+                            <t t-call="l10n_ro_saft.saft_template_tax_information"/>
+                        </PaymentLine>
+                    </Payment>
+                </Payments>
+                <MovementOfGoods/>
+            </SourceDocuments>
+        </xpath>
+    </template>
+
+    <template id="company_header" inherit_id="account_saft.company_header" primary="True">
+        <!-- The RegistrationNumber field for the company must contain:
+             - for registered non-Romanian companies: the CIF number;
+             - for VAT-registered Romanian companies: the VAT number;
+             - for non-VAT-registered Romanian companies: the CUI number -->
+        <xpath expr="//RegistrationNumber" position="replace">
+            <RegistrationNumber t-out="company_registration_number"/>
+        </xpath>
+        <xpath expr="//t[@t-call='account_saft.addresses_contacts']" position="replace">
+            <t t-call="l10n_ro_saft.addresses_contacts">
+                <t t-set="partner_id" t-value="company.partner_id.id"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="addresses_contacts" inherit_id="account_saft.addresses_contacts" primary="True">
+        <xpath expr="//Contact" position="attributes">
+            <attribute name="t-foreach">partner_info['l10n_ro_saft_contacts']</attribute>
+        </xpath>
+        <!-- The First Name and Last Name of contacts must be separated. -->
+        <xpath expr="//ContactPerson/FirstName" position="attributes">
+            <attribute name="t-out">partner_contact.name.rpartition(' ')[0][:35]</attribute>
+        </xpath>
+        <xpath expr="//ContactPerson/LastName" position="attributes">
+            <attribute name="t-out">partner_contact.name.rpartition(' ')[2][:35]</attribute>
+        </xpath>
+    </template>
+
+    <template id="company_structure">
+        <CompanyStructure>
+            <t t-set="partner_id" t-value="partner_vals['partner'].id"/>
+            <RegistrationNumber t-out="partner_detail_map[partner_id]['registration_number']"/>
+            <t t-call="l10n_ro_saft.addresses_contacts"/>
+        </CompanyStructure>
+    </template>
+
+    <!-- Need a different rounding, and always show the currency -->
+    <template id="saft_template_line_debit_credit_amount">
+        <DebitAmount t-if="line_vals['debit']">
+            <Amount t-out="format_float(line_vals['debit'])"/>
+            <CurrencyCode t-out="line_vals['currency_code']"/>
+            <CurrencyAmount t-out="format_float(line_vals['amount_currency'])"/>
+            <ExchangeRate t-out="format_float(line_vals['rate'], digits=4)"/>
+        </DebitAmount>
+        <CreditAmount t-if="line_vals['credit']">
+            <Amount t-out="format_float(line_vals['credit'])"/>
+            <CurrencyCode t-out="line_vals['currency_code']"/>
+            <CurrencyAmount t-out="format_float(-line_vals['amount_currency'])"/>
+            <ExchangeRate t-out="format_float(line_vals['rate'], digits=4)"/>
+        </CreditAmount>
+        <!-- When both debit and credit are 0.0, we still need to display one or the other, depending on the move_type -->
+        <DebitAmount t-if="not line_vals.get('debit') and not line_vals.get('credit') and line_vals.get('move_type', '') in ('in_invoice', 'out_refund')">
+            <Amount t-out="format_float(line_vals['debit'])"/>
+            <CurrencyCode t-out="line_vals['currency_code']"/>
+            <CurrencyAmount t-out="format_float(line_vals['amount_currency'])"/>
+            <ExchangeRate t-out="format_float(line_vals['rate'], digits=4)"/>
+        </DebitAmount>
+        <CreditAmount t-if="not line_vals.get('debit') and not line_vals.get('credit') and line_vals.get('move_type', '') in ('out_invoice', 'in_refund')">
+            <Amount t-out="format_float(line_vals['credit'])"/>
+            <CurrencyCode t-out="line_vals['currency_code']"/>
+            <CurrencyAmount t-out="format_float(-line_vals['amount_currency'])"/>
+            <ExchangeRate t-out="format_float(line_vals['rate'], digits=4)"/>
+        </CreditAmount>
+    </template>
+
+    <!-- For taxes, we need to display a tax with everything as 0 when one isn't set. -->
+    <template id="saft_template_tax_information">
+        <t t-if="line_vals.get('tax_detail_vals_list', [])">
+            <TaxInformation t-foreach="line_vals['tax_detail_vals_list']" t-as="tax_vals">
+                <t t-set="sign" t-value="-1 if line_vals['credit'] else 1"/>
+                <TaxType t-out="tax_vals['l10n_ro_saft_tax_type']"/>
+                <TaxCode t-out="tax_vals['l10n_ro_saft_tax_code']"/>
+                <TaxPercentage t-if="tax_vals['tax_amount_type'] == 'percent'" t-out="tax_vals['tax_amount']"/>
+                <TaxBaseDescription t-out="tax_vals['tax_name'][:70]"/>
+                <TaxAmount>
+                    <Amount t-out="format_float(sign * tax_vals['amount'])"/>
+                    <CurrencyCode t-out="tax_vals['currency_code']"/>
+                    <CurrencyAmount t-out="format_float(sign * tax_vals['amount_currency'])"/>
+                    <ExchangeRate t-out="format_float(tax_vals['rate'], digits=4)"/>
+                </TaxAmount>
+            </TaxInformation>
+        </t>
+        <t t-else="">
+            <TaxInformation>
+                <TaxType t-out="'000'"/>
+                <TaxCode t-out="'000000'"/>
+                <TaxAmount>
+                    <Amount t-out="0.00"/>
+                    <CurrencyCode t-out="line_vals['currency_code']"/>
+                    <CurrencyAmount t-out="0.00"/>
+                    <ExchangeRate t-out="1.0000"/>
+                </TaxAmount>
+            </TaxInformation>
+        </t>
+    </template>
+
+    <!-- Listing of invoices -->
+    <template id="saft_template_invoices">
+        <NumberOfEntries t-out="invoice_vals.get('number')"/>
+        <TotalDebit t-out="format_float(invoice_vals.get('total_debit'))"/>
+        <TotalCredit t-out="format_float(invoice_vals.get('total_credit'))"/>
+        <Invoice t-foreach="invoice_vals.get('move_vals_list', [])" t-as="move_vals">
+            <InvoiceNo t-out="move_vals['name']"/>
+            <t t-set="partner_info" t-value="partner_detail_map[move_vals['partner_id']]"/>
+            <t t-set="partner" t-value="partner_info['partner']"/>
+            <CustomerInfo t-if="partner_info['type'] == 'customer'">
+                <CustomerID t-out="partner_info['registration_number']"/>
+                <BillingAddress t-foreach="partner_info['addresses']" t-as="partner_address">
+                    <t t-call="account_saft.address"/>
+                </BillingAddress>
+            </CustomerInfo>
+            <SupplierInfo t-if="partner_info['type'] == 'supplier'">
+                <SupplierID t-out="partner_info['registration_number']"/>
+                <BillingAddress t-foreach="partner_info['addresses']" t-as="partner_address">
+                    <t t-call="account_saft.address"/>
+                </BillingAddress>
+            </SupplierInfo>
+            <AccountID t-out="partner.commercial_partner_id.property_account_payable_id.code"/>
+            <InvoiceDate t-out="move_vals['date']"/>
+            <InvoiceType t-out="move_vals['l10n_ro_saft_invoice_type']"/>
+            <SelfBillingIndicator t-out="move_vals['l10n_ro_saft_self_billing_indicator']"/>
+            <InvoiceLine t-foreach="move_vals.get('invoice_line_vals_list', [])" t-as="line_vals">
+                <AccountID t-out="account_code_by_id[line_vals['account_id']]"/>
+                <Quantity t-out="line_vals['quantity']"/>
+                <InvoiceUOM t-if="line_vals['product_uom_id']" t-out="unece_code_by_uom[line_vals['product_uom_id']]"/>
+                <UnitPrice t-out="format_float(line_vals['price_unit'] / line_vals['rate'])"/>
+                <TaxPointDate t-out="move_vals['invoice_date']"/>
+                <Description t-out="(line_vals['name'] or move_vals['name'])[:256]"/>
+                <InvoiceLineAmount>
+                    <Amount t-out="format_float(line_vals['debit'] or line_vals['credit'])"/>
+                    <CurrencyCode t-out="line_vals['currency_code']"/>
+                    <CurrencyAmount t-out="format_float(abs(line_vals['amount_currency']) * (-1 if (line_vals['debit'] or line_vals['credit']) &lt; 0 else 1))"/>
+                    <ExchangeRate t-out="format_float(line_vals['rate'], digits=4)"/>
+                </InvoiceLineAmount>
+                <DebitCreditIndicator t-if="(line_vals['debit']) or (not line_vals['debit'] and not line_vals['credit'] and line_vals['move_type'] in ('in_invoice', 'out_refund'))" t-out="'D'"/>
+                <DebitCreditIndicator t-if="(line_vals['credit']) or (not line_vals['debit'] and not line_vals['credit'] and line_vals['move_type'] in ('out_invoice', 'in_refund'))" t-out="'C'"/>
+                <t t-call="l10n_ro_saft.saft_template_tax_information"/>
+            </InvoiceLine>
+        </Invoice>
+    </template>
+</odoo>

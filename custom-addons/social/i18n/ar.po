@@ -1,0 +1,1922 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* social
+# 
+# Translators:
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__accounts_count
+msgid "# Accounts"
+msgstr "عدد الحسابات "
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "%s (max %s chars)"
+msgstr "%s (%s رموز كحد أقصى) "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid ", you must first link a social media."
+msgstr "، عليك أولاً ربط موقع تواصل اجتماعي. "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_http_error_view
+msgid "<b>An error occurred while trying to link your account</b>"
+msgstr "<b>حدث خطأ أثناء محاولة ربط حسابك</b> "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "<i class=\"fa fa-globe ms-1\" title=\"See the post\"/>"
+msgstr "<i class=\"fa fa-globe ms-1\" title=\"ألقِ نظرة على المنشور \"/>"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_http_error_view
+msgid "<i class=\"oi oi-arrow-left\"/> Go back to Odoo"
+msgstr "<i class=\"oi oi-arrow-left\"/> العودة إلى أودو "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_kanban
+msgid "<small class=\"pe-1\">Clicks:</small>"
+msgstr "<small class=\"pe-1\">نقرات:</small>"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_kanban
+msgid "<small class=\"pe-1\">Engagement:</small>"
+msgstr "<small class=\"pe-1\">التفاعل:</small> "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid ""
+"<strong>Congrats! Come back in a few minutes to check your "
+"statistics.</strong>"
+msgstr "<strong>تهانينا! عد مجدداً خلال بضع دقائق لتتفقد إحصائياتك.</strong> "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_needaction
+#: model:ir.model.fields,field_description:social.field_social_post__message_needaction
+msgid "Action Needed"
+msgstr "إجراء مطلوب"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__active
+msgid "Active"
+msgstr "نشط"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_ids
+msgid "Activities"
+msgstr "الأنشطة"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "زخرفة استثناء النشاط"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_state
+msgid "Activity State"
+msgstr "حالة النشاط"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "أيقونة نوع النشاط"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Add"
+msgstr "إضافة"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_form
+msgid "Add Post"
+msgstr "إضافة منشور "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/add_stream_modal.js:0
+#: code:addons/social/static/src/js/stream_post_kanban_controller.js:0
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Add a Stream"
+msgstr "إضافة وسائط "
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream_post
+msgid "Add a stream"
+msgstr "إضافة وسائط "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Add an image"
+msgstr "إضافة صورة"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "All Companies"
+msgstr "كافة الشركات "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_utm_campaign__social_post_ids
+msgid "All related social media posts"
+msgstr "كافة منشورات التواصل الاجتماعي ذات الصلة "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__account_allowed_ids
+msgid "Allowed Accounts"
+msgstr "الحسابات المسموح بها "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_search
+msgid "Archived"
+msgstr "مؤرشف"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__has_active_accounts
+#: model:ir.model.fields,field_description:social.field_social_post_template__has_active_accounts
+msgid "Are Accounts Available?"
+msgstr "هل الحسابات متاحة؟ "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__image_ids
+#: model:ir.model.fields,field_description:social.field_social_post_template__image_ids
+msgid "Attach Images"
+msgstr "إرفاق صور "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_attachment_count
+#: model:ir.model.fields,field_description:social.field_social_post__message_attachment_count
+msgid "Attachment Count"
+msgstr "عدد المرفقات"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model:ir.model.fields,field_description:social.field_social_account__audience
+#, python-format
+msgid "Audience"
+msgstr "الجمهور "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__audience_trend
+msgid "Audience Trend"
+msgstr "توجه الجمهور "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__author_link
+msgid "Author Link"
+msgstr "رابط الكاتب "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__author_name
+msgid "Author Name"
+msgstr "اسم الكاتب"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream_post__author_link
+msgid ""
+"Author link to the external social.media (ex: link to the Twitter Account)."
+msgstr "رابط الكاتب إلى social.media الخارجي (مثال: الرابط إلى حساب تويتر). "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Before posting, links will be converted to be trackable."
+msgstr "قبل النشر، سيتم تحويل الروابط لتكون قابلة للتتبع. "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_search
+msgid "By Stream"
+msgstr "حسب الوسائط "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__csrf_token
+msgid "CSRF Token"
+msgstr "رمز تزوير الطلب عبر المواقع "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__calendar_date
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+msgid "Calendar Date"
+msgstr "تاريخ التقويم "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__utm_campaign_id
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_form_quick_create_social
+msgid "Campaign"
+msgstr "الحملة"
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_view_utm_campaigns
+#: model:ir.ui.menu,name:social.menu_social_campaign
+msgid "Campaigns"
+msgstr "الحملات"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_view_utm_campaigns
+msgid ""
+"Campaigns are used to centralize your marketing efforts and track their "
+"results."
+msgstr "تُستخدم الحملات لتركيز جهودك التسويقية وتتبع نتائجها. "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__can_link_accounts
+msgid "Can link accounts?"
+msgstr "بإمكانه ربط الحسابات؟ "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+#, python-format
+msgid "Cancel"
+msgstr "إلغاء"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Choose which <b>account</b> you would like to link first."
+msgstr "اختر أي <b>الحسابات</b> ترغب في ربطه أولاً. "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Click to refresh."
+msgstr "اضغط للتحديث. "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "Clicks"
+msgstr "النقرات "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Comment Image"
+msgstr "صورة التعليق "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__company_id
+#: model:ir.model.fields,field_description:social.field_social_live_post__company_id
+#: model:ir.model.fields,field_description:social.field_social_post__company_id
+#: model:ir.model.fields,field_description:social.field_social_stream__company_id
+#: model:ir.model.fields,field_description:social.field_social_stream_post__company_id
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_stream_view_search
+msgid "Company"
+msgstr "الشركة "
+
+#. module: social
+#: model:ir.model,name:social.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات "
+
+#. module: social
+#: model:ir.ui.menu,name:social.menu_social_configuration
+msgid "Configuration"
+msgstr "التهيئة "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Connecting Problem"
+msgstr "مشكلة الاتصال "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__social_account_handle
+msgid ""
+"Contains the social media handle of the person that created this account. "
+"E.g: '@odoo.official' for the 'Odoo' Twitter account"
+msgstr ""
+"يحتوي على اسم المستخدم على مواقع التواصل الاجتماعي، للشخص الذي قام بإنشاء "
+"هذا الحساب. مثال: '@odoo.official' لحساب 'أودو' على تويتر "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_live_post__message
+msgid ""
+"Content of the social post message that is post-processed (links are "
+"shortened, UTMs, ...)"
+msgstr ""
+"محتوى رسالة المنشور الاجتماعي التي قم تمت معالجتها (تقصير الروابط، UTMs، "
+"...) "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__has_streams
+msgid "Controls if social streams are handled on this social media."
+msgstr ""
+"يتحكم في ما إذا كانت التدفقات الاجتماعية يتم التعامل معها على منصة التواصل "
+"الاجتماعي هذه. "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__can_link_accounts
+msgid "Controls if we can link accounts or not."
+msgstr "يتحكم في ما إذا كان بالإمكان ربط الحسابات أم لا. "
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_view_utm_campaigns
+msgid "Create a Campaign"
+msgstr "إنشاء حملة "
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_post
+msgid "Create a Post"
+msgstr "إنشاء منشور "
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_account.py:0
+#, python-format
+msgid ""
+"Create other accounts for %(media_names)s for this company or ask "
+"%(company_names)s to share their accounts"
+msgstr ""
+"إنشاء حسابات أخرى لـ %(media_names)s لهذه الشركة أو اطلب من "
+"%(company_names)s مشاركة حساباتها "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__create_uid
+#: model:ir.model.fields,field_description:social.field_social_live_post__create_uid
+#: model:ir.model.fields,field_description:social.field_social_media__create_uid
+#: model:ir.model.fields,field_description:social.field_social_post__create_uid
+#: model:ir.model.fields,field_description:social.field_social_post_template__create_uid
+#: model:ir.model.fields,field_description:social.field_social_stream__create_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_post__create_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__create_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_type__create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__create_date
+#: model:ir.model.fields,field_description:social.field_social_live_post__create_date
+#: model:ir.model.fields,field_description:social.field_social_media__create_date
+#: model:ir.model.fields,field_description:social.field_social_post__create_date
+#: model:ir.model.fields,field_description:social.field_social_post_template__create_date
+#: model:ir.model.fields,field_description:social.field_social_stream__create_date
+#: model:ir.model.fields,field_description:social.field_social_stream_post__create_date
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__create_date
+#: model:ir.model.fields,field_description:social.field_social_stream_type__create_date
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__has_account_stats
+msgid ""
+"Defines whether this account has Audience/Engagements/Stories stats.\n"
+"        Account with stats are displayed on the dashboard."
+msgstr ""
+"يحدد ما إذا كان لهذا الحساب جمهور/تفاعلات/إحصائيات القصص أم لا.\n"
+"        يتم عرض الحسابات ذات الإحصائيات في لوحة البيانات. "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__has_trends
+msgid "Defines whether this account has statistics tends or not."
+msgstr "يحدد ما إذا كان لهذا الحساب إحصائيات التوجهات أم لا. "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_comment.js:0
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Delete Comment"
+msgstr "حذف التعليق "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.res_config_settings_view_form
+msgid "Demo Mode"
+msgstr "وضع العرض التوضيحي "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__media_description
+msgid "Description"
+msgstr "الوصف"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.res_config_settings_view_form
+msgid "Developer Accounts"
+msgstr "حسابات المطورين "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__display_name
+#: model:ir.model.fields,field_description:social.field_social_live_post__display_name
+#: model:ir.model.fields,field_description:social.field_social_media__display_name
+#: model:ir.model.fields,field_description:social.field_social_post__display_name
+#: model:ir.model.fields,field_description:social.field_social_post_template__display_name
+#: model:ir.model.fields,field_description:social.field_social_stream__display_name
+#: model:ir.model.fields,field_description:social.field_social_stream_post__display_name
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__display_name
+#: model:ir.model.fields,field_description:social.field_social_stream_type__display_name
+msgid "Display Name"
+msgstr "اسم العرض "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_comment.js:0
+#, python-format
+msgid "Do you really want to delete %s"
+msgstr "هل ترغب حقاً في حذف %s "
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_post__state__draft
+msgid "Draft"
+msgstr "مسودة"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid ""
+"Due to length restrictions, the following posts cannot be posted:\n"
+" %s"
+msgstr ""
+"تعذر نشر المنشورات التالية لعدم توافقها مع الحد المسموح به لطول النص:\n"
+" %s "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Edit Comment"
+msgstr "تحرير التعليق "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_res_config_settings__module_social_demo
+msgid "Enable Demo Mode"
+msgstr "تمكين وضع العرض التوضيحي "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.res_config_settings_view_form
+msgid ""
+"Enable this option and load demo data to test the social module. This must "
+"never be used on a production database!"
+msgstr ""
+"قم بتمكين هذا الخيار لتحميل البيانات التجريبية لاختبار التطبيق الاجتماعي. "
+"يجب ألا يتم استخدامها في قاعدة بيانات الإنتاج مطلقاً! "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model:ir.model.fields,field_description:social.field_social_account__engagement
+#: model:ir.model.fields,field_description:social.field_social_live_post__engagement
+#: model:ir.model.fields,field_description:social.field_social_post__engagement
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_form
+#, python-format
+msgid "Engagement"
+msgstr "التفاعل"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__engagement_trend
+msgid "Engagement Trend"
+msgstr "توجه التفاعل "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__utm_medium_id
+msgid ""
+"Every time an account is created, a utm.medium is also created and linked to"
+" the account"
+msgstr ""
+"في كل مرة يتم إنشاء حساب فيها، يتم إنشاء utm.medium أيضاً وربطه بالحساب "
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_live_post__state__failed
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_kanban
+msgid "Failed"
+msgstr "فشل"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_live_post__failure_reason
+msgid "Failure Reason"
+msgstr "سبب الفشل"
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_social_stream_post
+#: model:ir.ui.menu,name:social.menu_social_stream_post
+msgid "Feed"
+msgstr "المنشورات الجديدة "
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+#, python-format
+msgid "Feed Posts"
+msgstr "المنشورات الجديدة "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__stream_posts_count
+msgid "Feed Posts Count"
+msgstr "عدد المنشورات الجديدة "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_follower_ids
+#: model:ir.model.fields,field_description:social.field_social_post__message_follower_ids
+msgid "Followers"
+msgstr "المتابعين"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_partner_ids
+#: model:ir.model.fields,field_description:social.field_social_post__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "المتابعين (الشركاء) "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "أيقونة من Font awesome مثال: fa-tasks "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__formatted_published_date
+msgid "Formatted Published Date"
+msgstr "تاريخ النشر المنسق "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__audience
+msgid ""
+"General audience of the Social Account (Page Likes, Account Follows, ...)."
+msgstr ""
+"الجمهور العام للحساب الاجتماعي (إعجابات الصفحات، متابعات الحساب، ...). "
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream
+msgid "Go to the"
+msgstr "الذهاب إلى "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_stream_view_search
+msgid "Group By"
+msgstr "تجميع حسب"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__social_account_handle
+msgid "Handle / Short Name"
+msgstr "اسم المستخدم / الاسم القصير "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Happy with the result? Let's post it!"
+msgstr "أأنت سعيد بالنتيجة؟ فلنقم بنشرها! "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__has_account_stats
+msgid "Has Account Stats"
+msgstr "يحتوي على إحصائيات الحساب "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__has_message
+#: model:ir.model.fields,field_description:social.field_social_post__has_message
+msgid "Has Message"
+msgstr "يحتوي على رسالة "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__has_trends
+msgid "Has Trends?"
+msgstr "يحتوي على التوجهات؟ "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__is_hatched
+msgid "Hatched"
+msgstr "Hatched"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__id
+#: model:ir.model.fields,field_description:social.field_social_live_post__id
+#: model:ir.model.fields,field_description:social.field_social_media__id
+#: model:ir.model.fields,field_description:social.field_social_post__id
+#: model:ir.model.fields,field_description:social.field_social_post_template__id
+#: model:ir.model.fields,field_description:social.field_social_stream__id
+#: model:ir.model.fields,field_description:social.field_social_stream_post__id
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__id
+#: model:ir.model.fields,field_description:social.field_social_stream_type__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_exception_icon
+msgid "Icon"
+msgstr "الأيقونة"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "الأيقونة للإشارة إلى النشاط المستثنى. "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__message_needaction
+#: model:ir.model.fields,help:social.field_social_post__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "إذا كان محددًا، فهناك رسائل جديدة عليك رؤيتها. "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__message_has_error
+#: model:ir.model.fields,help:social.field_social_media__message_has_sms_error
+#: model:ir.model.fields,help:social.field_social_post__message_has_error
+#: model:ir.model.fields,help:social.field_social_post__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "إذا كان محددًا، فقد حدث خطأ في تسليم بعض الرسائل."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__image
+#: model:ir.model.fields,field_description:social.field_social_media__image
+msgid "Image"
+msgstr "صورة"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__image_url
+msgid "Image URL"
+msgstr "رابط URL للصورة "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Image Url"
+msgstr "رابط URL للصورة "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__image_urls
+#: model:ir.model.fields,field_description:social.field_social_post_template__image_urls
+msgid "Images URLs"
+msgstr "روابط URL للصور "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream_post__stream_post_image_ids
+msgid "Images that were shared with this post."
+msgstr "الصور التي تمت مشاركتها مع هذا المنشور. "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Insights"
+msgstr "وجهات النظر "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__is_author
+msgid "Is Author"
+msgstr "الكاتب "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_is_follower
+#: model:ir.model.fields,field_description:social.field_social_post__message_is_follower
+msgid "Is Follower"
+msgstr "متابع"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid ""
+"It appears there is an issue with the Social Media link, click here to link "
+"the account again"
+msgstr ""
+"يبدو أنه هناك مشكلة برابط التواصل الاجتماعي. اضغط هنا لربط الحساب مجدداً "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_kanban_controller.js:0
+#, python-format
+msgid "It will appear in the Feed once it has posts to display."
+msgstr "سيظهر في المنشورات الجديدة بمجرد أن تكون هناك منشورات لعرضها. "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__write_uid
+#: model:ir.model.fields,field_description:social.field_social_live_post__write_uid
+#: model:ir.model.fields,field_description:social.field_social_media__write_uid
+#: model:ir.model.fields,field_description:social.field_social_post__write_uid
+#: model:ir.model.fields,field_description:social.field_social_post_template__write_uid
+#: model:ir.model.fields,field_description:social.field_social_stream__write_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_post__write_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__write_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_type__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__write_date
+#: model:ir.model.fields,field_description:social.field_social_live_post__write_date
+#: model:ir.model.fields,field_description:social.field_social_media__write_date
+#: model:ir.model.fields,field_description:social.field_social_post__write_date
+#: model:ir.model.fields,field_description:social.field_social_post_template__write_date
+#: model:ir.model.fields,field_description:social.field_social_stream__write_date
+#: model:ir.model.fields,field_description:social.field_social_stream_post__write_date
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__write_date
+#: model:ir.model.fields,field_description:social.field_social_stream_type__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Let's <b>connect</b> to Facebook, LinkedIn or Twitter."
+msgstr "فلنقم <b>بالاتصال</b> بـ Facebook ،LinkedIn أو Twitter. "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Let's create your own <b>social media</b> dashboard."
+msgstr "فلنقم بإنشاء لوحة بيانات <b>التواصل الاجتماعي</b> الخاصة بك. "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Let's start posting."
+msgstr "فلنبدأ بالنشر. "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Like"
+msgstr "إعجاب "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Likes"
+msgstr "الإعجابات"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__link_description
+msgid "Link Description"
+msgstr "ربط الوصف "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_kanban
+#, python-format
+msgid "Link Image"
+msgstr "ربط الصورة "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__link_image_url
+msgid "Link Image URL"
+msgstr "ربط رابط URL للصورة "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__link_title
+msgid "Link Title"
+msgstr "ربط العنوان "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__link_url
+msgid "Link URL"
+msgstr "رابط URL "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Link a new account"
+msgstr "ربط حساب جديد "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_media_view_kanban
+msgid "Link account"
+msgstr "ربط الحساب "
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_account
+msgid "Link an Account"
+msgstr "ربط حساب "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__company_id
+#: model:ir.model.fields,help:social.field_social_live_post__company_id
+#: model:ir.model.fields,help:social.field_social_stream__company_id
+#: model:ir.model.fields,help:social.field_social_stream_post__company_id
+msgid ""
+"Link an account to a company to restrict its usage or keep empty to let all "
+"companies use it."
+msgstr ""
+"قم بربط حساب بشركة لتقييد استخدامها أو اتركه فارغاً للسماح لكافة الشركات "
+"باستخدامه. "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_live_post__live_post_link
+msgid "Link of the live post on the target media."
+msgstr "رابط المنشور الذي قد تم نشره على منصة التواصل الاجتماعي المستهدفة. "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Link social accounts"
+msgstr "ربط الحسابات الاجتماعية "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__stats_link
+msgid "Link to the external Social Account statistics"
+msgstr "رابط لإحصاءات الحساب الاجتماعي الخارجية "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__is_media_disconnected
+msgid "Link with external Social Media is broken"
+msgstr "الرابط مع التواصل الاجتماعي الخارجي لا يعمل "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__account_allowed_ids
+msgid "List of the accounts which can be selected for this post."
+msgstr "قائمة الحسابات التي يمكن تحديدها لهذا المنشور. "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__live_posts_by_media
+msgid "Live Posts by Social Media"
+msgstr "منشورات حية بواسطة مواقع التواصل الاجتماعي "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Load more comments..."
+msgstr "تحميل المزيد من التعليقات..."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__max_post_length
+msgid "Max Post Length"
+msgstr "الحد الأقصى لطول المنشور "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__media_ids
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_kanban
+msgid "Media"
+msgstr "الإعلام "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__media_type
+#: model:ir.model.fields,field_description:social.field_social_media__media_type
+msgid "Media Type"
+msgstr "نوع الوسائط الاجتماعية "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_live_post__message
+#: model:ir.model.fields,field_description:social.field_social_post__message
+#: model:ir.model.fields,field_description:social.field_social_post_template__message
+#: model:ir.model.fields,field_description:social.field_social_stream_post__message
+msgid "Message"
+msgstr "الرسالة"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_has_error
+#: model:ir.model.fields,field_description:social.field_social_post__message_has_error
+msgid "Message Delivery error"
+msgstr "خطأ في تسليم الرسائل"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__message_length
+#: model:ir.model.fields,field_description:social.field_social_post_template__message_length
+msgid "Message Length"
+msgstr "كول الرسالة "
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "Message posted"
+msgstr "تم نشر الرسالة "
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid ""
+"Message posted partially. These are the ones that couldn't be posted:%s"
+msgstr "تم نشر الرسالة جزئياً. إليك ما لم نتمكن من نشره: %s "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_ids
+#: model:ir.model.fields,field_description:social.field_social_post__message_ids
+msgid "Messages"
+msgstr "الرسائل"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_live_post__state
+msgid ""
+"Most social.live.posts directly go from Ready to Posted/Failed since they result of a single call to the third party API.\n"
+"        A 'Posting' state is also available for those that are sent through batching (like push notifications)."
+msgstr ""
+"معظم social.live.posts تنتقل مباشرة من الحالة \"جاهزة\" إلى تم النشر/فشل النشر بما أنها تنتج عن استدعاء واحد لواجهة الطرف الثالث البرمجية.\n"
+"        تكون حالة 'جاري النشر' متاحة أيضاً للمنشورات التي يتم إرسالها على دفعات (كالإشعارات المنبثقة). "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "الموعد النهائي لنشاطاتي "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+msgid "My Posts"
+msgstr "منشوراتي "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_search
+msgid "My Streams"
+msgstr "وسائطي "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__name
+#: model:ir.model.fields,field_description:social.field_social_media__name
+#: model:ir.model.fields,field_description:social.field_social_post__name
+#: model:ir.model.fields,field_description:social.field_social_stream_type__name
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_form
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_search
+msgid "Name"
+msgstr "الاسم"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_kanban_controller.js:0
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "New Post"
+msgstr "منشور جديد "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "New content available"
+msgstr "يوجد محتوى جديد "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Next"
+msgstr "التالي"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "الفعالية التالية في تقويم الأنشطة "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "الموعد النهائي للنشاط التالي"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_summary
+msgid "Next Activity Summary"
+msgstr "ملخص النشاط التالي"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_type_id
+msgid "Next Activity Type"
+msgstr "نوع النشاط التالي"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_account
+msgid "No Social Account yet!"
+msgstr "لا يوجد حساب اجتماعي بعد! "
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream
+msgid "No Social Streams yet!"
+msgstr "لا توجد وسائط اجتماعية بعد! "
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream_post
+msgid "No Stream added yet!"
+msgstr "لم تتم إضافة وسائط بعد! "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "No comments yet."
+msgstr "لا توجد تعليقات بعد. "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_kanban_controller.js:0
+#, python-format
+msgid "No social accounts configured, please contact your administrator."
+msgstr "لا توجد أي حسابات اجتماعية مهيئة. يرجى التواصل مع المدير. "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_needaction_counter
+#: model:ir.model.fields,field_description:social.field_social_post__message_needaction_counter
+msgid "Number of Actions"
+msgstr "عدد الإجراءات"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Number of Followers of your channel"
+msgstr "عدد متابعي قناتك "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__click_count
+msgid "Number of clicks"
+msgstr "عدد النقرات"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_has_error_counter
+#: model:ir.model.fields,field_description:social.field_social_post__message_has_error_counter
+msgid "Number of errors"
+msgstr "عدد الأخطاء "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_utm_campaign__social_engagement
+msgid ""
+"Number of interactions (likes, shares, comments ...) with the social posts"
+msgstr ""
+"عدد التفاعلات (الإعجابات، المشاركات، التعليقات، ...) في المنشورات الاجتماعية"
+" "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__message_needaction_counter
+#: model:ir.model.fields,help:social.field_social_post__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__message_has_error_counter
+#: model:ir.model.fields,help:social.field_social_post__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "عدد الرسائل الحادث بها خطأ في التسليم"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_live_post__engagement
+#: model:ir.model.fields,help:social.field_social_post__engagement
+msgid "Number of people engagements with the post (Likes, comments...)"
+msgstr "عدد تفاعلات الأفراد مع المنشور (الإعجابات، التعليقات، ...) "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__engagement
+msgid "Number of people engagements with your posts (Likes, Comments, ...)."
+msgstr "عدد تفاعلات الأفراد مع منشوراتك (الإعجابات، التعليقات، ...) "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__stories
+msgid "Number of stories created from your posts (Shares, Re-tweets, ...)."
+msgstr ""
+"عدد القصص التي قد تم إنشاؤها من منشوراتك (المشاركات، إعادة التغريد، ...). "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid ""
+"Number of times people have engaged with your posts (likes, comments, "
+"shares,...)"
+msgstr ""
+"عدد المرات التي تفاعل فيها الأفراد مع منشوراتك (الإعجابات، التعليقات، "
+"المشاركات، ...) "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid ""
+"Number of times people who have engaged with your channel have created "
+"stories on their friends' or followers' feed (Shares, Retweets...)"
+msgstr ""
+"عدد المرات التي قام فيها الأفراد الذين تفاعلوا مع قناتك بإنشاء قصص في صفحات "
+"أصدقائهم أو متابعيهم (المشاركات، إعادة التغريد، ...) "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Or add"
+msgstr "أو إضافة "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__audience_trend
+msgid "Percentage of increase/decrease of the audience over a defined period."
+msgstr "نسبة زيادة/نقصان الجمهور خلال فترة محددة. "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__engagement_trend
+msgid ""
+"Percentage of increase/decrease of the engagement over a defined period."
+msgstr "نسبة زيادة/نقصان التفاعلات خلال فترة محددة. "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__stories_trend
+msgid "Percentage of increase/decrease of the stories over a defined period."
+msgstr "نسبة زيادة/نقصان القصص خلال فترة محددة. "
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "Please specify at least one account to post into (for post ID(s) %s)."
+msgstr "يرجى تحديد حساب واحد على الأقل للنشر فيه (لمعرفات المنشورات %s). "
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+#, python-format
+msgid "Post"
+msgstr "منشور "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_kanban
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_kanban
+#, python-format
+msgid "Post Image"
+msgstr "صورة المنشور "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/post_kanban_view.js:0
+#: code:addons/social/static/src/js/stream_post_comments.js:0
+#: code:addons/social/static/src/js/stream_post_kanban_renderer.js:0
+#, python-format
+msgid "Post Images"
+msgstr "صور المنشور "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_live_post__live_post_link
+#: model:ir.model.fields,field_description:social.field_social_stream_post__post_link
+msgid "Post Link"
+msgstr "رابط المنشور "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_search
+msgid "Post Message"
+msgstr "رسالة المنشور "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "Post Now"
+msgstr "انشر الآن "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream_post__post_link
+msgid ""
+"Post link to the external social.media (ex: link to the actual Facebook "
+"Post)."
+msgstr ""
+"رابط المنشور إلى social.media الخارجي (مثال: رابط المنشور الأصلي على "
+"Fecbook). "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Post on"
+msgstr "النشر في "
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_live_post__state__posted
+#: model:ir.model.fields.selection,name:social.selection__social_post__state__posted
+msgid "Posted"
+msgstr "مُرحّل "
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_live_post__state__posting
+#: model:ir.model.fields.selection,name:social.selection__social_post__state__posting
+msgid "Posting"
+msgstr "جاري النشر "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__stream_post_ids
+#: model:ir.ui.menu,name:social.menu_social_post
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_kanban
+msgid "Posts"
+msgstr "المنشورات "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__live_post_ids
+msgid "Posts By Account"
+msgstr "المنشورات حسب الحساب "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "Posts By Accounts"
+msgstr "المنشورات حسب الحسابات "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Press Enter to post. Press Shift+Enter to insert a Line Break."
+msgstr "اضغط على Enter للنشر. اضغط على Shift+Enter لإدراج فاصل الأسطر. "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Preview your post"
+msgstr "معاينة المنشور "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Previous"
+msgstr "السابق"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__post_method
+msgid "Publish your post immediately or schedule it at a later time."
+msgstr "قم بنشر منشورك فوراً أو قم بجدولته لوقت لاحق. "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+msgid "Published By"
+msgstr "تم النشر بواسطة "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__published_date
+msgid "Published Date"
+msgstr "تاريخ النشر"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__published_date
+msgid "Published date"
+msgstr "تاريخ النشر"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__rating_ids
+#: model:ir.model.fields,field_description:social.field_social_post__rating_ids
+msgid "Ratings"
+msgstr "التقييمات "
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_live_post__state__ready
+msgid "Ready"
+msgstr "جاهز"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__media_type
+msgid "Related Social Media"
+msgstr "مواقع التواصل الاجتماعي ذات الصلة "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__media_id
+msgid "Related Social Media (Facebook, Twitter, ...)."
+msgstr "مواقع التواصل الاجتماعي ذات الصلة (Facebook، Twitter، ...). "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__account_id
+msgid "Related social Account"
+msgstr "حساب التواصل الجتماعي ذو الصلة "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Reply"
+msgstr "الرد "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_user_id
+msgid "Responsible User"
+msgstr "المستخدم المسؤول"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_live_post_view_form
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "Retry"
+msgstr "إعادة المحاولة"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_has_sms_error
+#: model:ir.model.fields,field_description:social.field_social_post__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "خطأ في تسليم الرسائل النصية القصيرة "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "Schedule"
+msgstr "جدولة "
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_post__post_method__scheduled
+msgid "Schedule later"
+msgstr "الجدولة لاحقاً "
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_post__state__scheduled
+msgid "Scheduled"
+msgstr "تمت الجدولة"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__scheduled_date
+msgid "Scheduled Date"
+msgstr "التاريخ المجدول"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "Selected accounts (%s) do not match the selected company (%s)"
+msgstr "لا تتوافق الحسابات المحددة (%s) الشركة المحددة (%s) "
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_post__post_method__now
+msgid "Send now"
+msgstr "إرسال الآن "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__sequence
+msgid "Sequence"
+msgstr "تسلسل "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream__sequence
+msgid "Sequence used to order streams (mainly for the 'Feed' kanban view)"
+msgstr ""
+"التسلسل المستخدم لتنظيم الوسائط (للمنشورات الجديدة في عرض كانبان بشكل أساسي)"
+" "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__max_post_length
+msgid ""
+"Set a maximum number of characters can be posted in post. 0 for no limit."
+msgstr ""
+"قم بتحديد الحد الأقصى المسموح به من الأحرف في منشور. 0 إذا لم يكن هناك حد "
+"أقصى. "
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_social_global_settings
+#: model:ir.ui.menu,name:social.menu_social_global_settings
+msgid "Settings"
+msgstr "الإعدادات"
+
+#. module: social
+#: model:ir.model,name:social.model_social_account
+#: model:ir.model.fields,field_description:social.field_social_live_post__account_id
+#: model:ir.model.fields,field_description:social.field_social_stream__account_id
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_form
+msgid "Social Account"
+msgstr "الحساب الاجتماعي "
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_social_account
+#: model:ir.model.fields,field_description:social.field_social_media__account_ids
+#: model:ir.model.fields,field_description:social.field_social_post__account_ids
+#: model:ir.model.fields,field_description:social.field_social_post_template__account_ids
+#: model:ir.ui.menu,name:social.menu_social_account
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_list
+msgid "Social Accounts"
+msgstr "الحسابات الاجتماعية "
+
+#. module: social
+#: model:ir.model,name:social.model_social_live_post
+msgid "Social Live Post"
+msgstr "منشور اجتماعي حي "
+
+#. module: social
+#: model:res.groups,name:social.group_social_manager
+msgid "Social Manager"
+msgstr "المدير الاجتماعي "
+
+#. module: social
+#: model:ir.ui.menu,name:social.menu_social_global
+msgid "Social Marketing"
+msgstr "التسويق على وسائل التواصل الإجتماعي"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model:ir.actions.act_window,name:social.action_social_media
+#: model:ir.model,name:social.model_social_media
+#: model:ir.model.fields,field_description:social.field_social_account__media_id
+#: model:ir.model.fields,field_description:social.field_social_stream__media_id
+#: model:ir.model.fields,field_description:social.field_social_stream_type__media_id
+#: model:ir.ui.menu,name:social.menu_social_media
+#: model_terms:ir.ui.view,arch_db:social.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:social.social_media_view_kanban
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_form
+#, python-format
+msgid "Social Media"
+msgstr "مواقع التواصل الاجتماعي"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_utm_campaign__social_posts_count
+msgid "Social Media Posts"
+msgstr "منشورات وسائل التواصل الاجتماعي "
+
+#. module: social
+#: model:ir.model,name:social.model_social_post
+#: model:ir.model.fields,field_description:social.field_social_live_post__post_id
+#: model_terms:ir.ui.view,arch_db:social.social_live_post_view_form
+msgid "Social Post"
+msgstr "منشور اجتماعي "
+
+#. module: social
+#: model:ir.model,name:social.model_social_post_template
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Social Post Template"
+msgstr "قالب المنشور الاجتماعي "
+
+#. module: social
+#: model:ir.actions.act_window,name:social.social_post_template_action
+msgid "Social Post Templates"
+msgstr "قوالب المنشورات الاجتماعية "
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_social_post
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_calendar
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_pivot
+msgid "Social Posts"
+msgstr "المنشورات الاجتماعية "
+
+#. module: social
+#: model:ir.model,name:social.model_social_stream
+#: model:ir.model.fields,field_description:social.field_social_stream_post__stream_id
+#: model_terms:ir.ui.view,arch_db:social.social_stream_view_form
+msgid "Social Stream"
+msgstr "الوسائط الاجتماعية "
+
+#. module: social
+#: model:ir.model,name:social.model_social_stream_post
+#: model:ir.model,name:social.model_social_stream_type
+msgid "Social Stream Post"
+msgstr "منشور الوسائط الاجتماعية "
+
+#. module: social
+#: model:ir.model,name:social.model_social_stream_post_image
+msgid "Social Stream Post Image Attachment"
+msgstr "مرفق صورة منشور الوسائط الاجتماعية "
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_social_stream
+#: model:ir.ui.menu,name:social.menu_social_stream
+msgid "Social Streams"
+msgstr "الوسائط الاجتماعية "
+
+#. module: social
+#: model:res.groups,name:social.group_social_user
+msgid "Social User"
+msgstr "مستخدم وسائل التواصل الاجتماعي "
+
+#. module: social
+#: model:ir.actions.server,name:social.ir_cron_post_scheduled_ir_actions_server
+msgid "Social: Publish Scheduled Posts"
+msgstr "التواصل الاجتماعي: قم بنشر المنشورات المجدولة "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_comments_reply.js:0
+#, python-format
+msgid ""
+"Something went wrong while posting the comment. \n"
+"%s"
+msgstr ""
+"حدث خطأ ما أثناء نشر التعليق. \n"
+"%s "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_kanban_dashboard.js:0
+#, python-format
+msgid ""
+"Sorry, you're not allowed to re-link this account, please contact your "
+"administrator."
+msgstr "عذراً، لا يسمح لك بإعادة ربط هذا الحساب. يرجى التواصل مع مديرك. "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__source_id
+msgid "Source"
+msgstr "المصدر"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__live_posts_by_media
+msgid ""
+"Special technical field that holds a dict containing the live posts names by"
+" media ids (used for kanban view)."
+msgstr ""
+"حقل تقني اجتماعي به dict يحتوي على أسماء المنشورات الحية بواسطة معرفات "
+"الوسائط (يستخدم في عرض كانبان). "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__stats_link
+msgid "Stats Link"
+msgstr "رابط الإحصائيات "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_live_post__state
+#: model:ir.model.fields,field_description:social.field_social_post__state
+msgid "Status"
+msgstr "الحالة"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"الأنشطة المعتمدة على الحالة\n"
+"المتأخرة: تاريخ الاستحقاق مر\n"
+"اليوم: تاريخ النشاط هو اليوم\n"
+"المخطط: الأنشطة المستقبلية."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model:ir.model.fields,field_description:social.field_social_account__stories
+#, python-format
+msgid "Stories"
+msgstr "القصص "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__stories_trend
+msgid "Stories Trend"
+msgstr "توجه القصص "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_kanban_controller.js:0
+#, python-format
+msgid "Stream Added (%s)"
+msgstr "تمت إضافة وسط (%s) "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__stream_post_id
+msgid "Stream Post"
+msgstr "منشور في الوسائط "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__stream_post_image_ids
+msgid "Stream Post Images"
+msgstr "صور منشور الوسائط "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__stream_post_image_urls
+msgid "Stream Post Images URLs"
+msgstr "روابط URL لصور منشور في الوسائط "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__stream_type_ids
+msgid "Stream Types"
+msgstr "أنواع الوسائط "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__stream_type_type
+#: model:ir.model.fields,field_description:social.field_social_stream_type__stream_type
+msgid "Stream type name (technical)"
+msgstr "اسم نوع الوسائط (تقني) "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__has_streams
+msgid "Streams Enabled"
+msgstr "تم تمكين الوسائط "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__live_post_ids
+msgid "Sub-posts that will be published on each selected social accounts."
+msgstr "المنشورات الفرعية التي سيتم نشرها في كل من الحسابات الاجتماعية. "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Synchronize"
+msgstr "المزامنة"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post_template.py:0
+#, python-format
+msgid "The 'message' field is required for post ID %s"
+msgstr "حقل 'الرسالة' مطلوب لمعرف المنشور %s "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__account_ids
+#: model:ir.model.fields,help:social.field_social_post_template__account_ids
+msgid "The accounts on which this post will be published."
+msgstr "الحسابات التي سوف يتم نشر هذا المنشور فيها. "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream_post__author_name
+msgid ""
+"The post author name based on third party information (ex: 'John Doe')."
+msgstr "اسم كاتب المنشور بناءً على معلومات الطرف الثالث (مثال: \"جون دو\"). "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__state
+msgid ""
+"The post is considered as 'Posted' when all its sub-posts (one per social "
+"account) are either 'Failed' or 'Posted'"
+msgstr ""
+"يتم اعتبار المنشور \"قد تم نشره\" عندما تكون كافة منشوراته الفرعية إما \"قد "
+"تم نشرها\" أو \"فشلت\" "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream_post__published_date
+msgid "The post published date based on third party information."
+msgstr "تاريج نشر المنشور بناءً على معلومات الطرف الثالث. "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_live_post__failure_reason
+msgid ""
+"The reason why a post is not successfully posted on the Social Media (eg: "
+"connection error, duplicated post, ...)."
+msgstr ""
+"سبب تعذر نشر المنشور بنجاح على مواقع التواصل الاجتماعي (مثال: خطأ في "
+"الاتصال، منشور مكرر، ...). "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__media_image
+msgid "The related Social Media's image"
+msgstr "صورة مواقع التواصل الاجتماعي ذات الصلة "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__media_ids
+msgid "The social medias linked to the selected social accounts."
+msgstr "وسائل التواصل الاجتماعي المرتبطة بحسابات التواصل الاجتماعي المحددة. "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__has_post_errors
+msgid "There are post errors on sub-posts"
+msgstr "توجد أخطاء منشورات في المنشورات الفرعية "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__csrf_token
+msgid ""
+"This token can be used to verify that an incoming request from a social "
+"provider has not been forged."
+msgstr ""
+"يمكن استخدام هذا الرمز للتحقق من أنه لم يتم تزوير الطلب الوارد من المزود "
+"الاجتماعي. "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__name
+msgid "Title"
+msgstr "العنوان"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "To add a stream"
+msgstr "لإضافة وسائط "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__stream_type_id
+msgid "Type"
+msgstr "النوع"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "نوع النشاط المستثنى في السجل. "
+
+#. module: social
+#: model:ir.model,name:social.model_utm_campaign
+msgid "UTM Campaign"
+msgstr "حملة UTM"
+
+#. module: social
+#: model:ir.model,name:social.model_utm_medium
+#: model:ir.model.fields,field_description:social.field_social_account__utm_medium_id
+msgid "UTM Medium"
+msgstr "وسط UTM "
+
+#. module: social
+#: model:ir.model,name:social.model_utm_source
+msgid "UTM Source"
+msgstr "مصدر UTM "
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "Unknown error"
+msgstr "خطأ غير معروف"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post_template.py:0
+#, python-format
+msgid "Uploaded file does not seem to be a valid image."
+msgstr "لا يبدو أن الملف المرفوع صورة صالحة. "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.res_config_settings_view_form
+msgid ""
+"Use your own Developer Accounts on our Social app. Those credentials are "
+"provided in the developer section of your professional social media account."
+msgstr ""
+"استخدم حسابات المطورين الخاصة بك على تطبيقنا الاجتماعي. ستجد بيانات الاعتماد"
+" تلك في قسم المطور في حساب التواصل الاجتماعي المهني الخاص بك. "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__media_type
+#: model:ir.model.fields,help:social.field_social_media__media_type
+#: model:ir.model.fields,help:social.field_social_stream_post__media_type
+msgid ""
+"Used to make comparisons when we need to restrict some features to a "
+"specific media ('facebook', 'twitter', ...)."
+msgstr ""
+"يستخدم لإجراء المقارنات عند الحاجة إلى تقييد بعض الخصائص لموقع تواصل اجتماعي"
+" محدد ('facebook'، 'twitter'، ...). "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "View"
+msgstr "أداة العرض"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__website_message_ids
+#: model:ir.model.fields,field_description:social.field_social_post__website_message_ids
+msgid "Website Messages"
+msgstr "رسائل الموقع الإلكتروني "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__website_message_ids
+#: model:ir.model.fields,help:social.field_social_post__website_message_ids
+msgid "Website communication history"
+msgstr "سجل تواصل الموقع الإلكتروني "
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__post_method
+msgid "When"
+msgstr "الزمان"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__published_date
+msgid ""
+"When the global post was published. The actual sub-posts published dates may"
+" be different depending on the media."
+msgstr ""
+"عندما تم نشر المنشور العام. قد تختلف تواريخ نشر المنشورات الفرعية الفعلية "
+"بناءً على موقع التواصل الاجتماعي. "
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__image_ids
+#: model:ir.model.fields,help:social.field_social_post_template__image_ids
+msgid "Will attach images to your posts (if the social media supports it)."
+msgstr ""
+"سيقوم بإرفاق الصور بمنشوراتك (إذا كان موقع التواصل الاجتماعي يدعم ذلك). "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Write a comment..."
+msgstr "اكتب تعليقا..."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Write a message to get a preview of your post."
+msgstr "قم بكتابة رسالة لتحصل على معاينة لمنشورك. "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Write a reply..."
+msgstr "اكتب رداً... "
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_post
+msgid ""
+"Write an enticing post, add images and schedule it to be posted later on "
+"multiple platforms at once."
+msgstr ""
+"قم بكتابة منشور مثير للاهتمام وأضف الصور وقم بجدولته ليتم نشره لاحقاً على "
+"عدة منصات تواصل اجتماعي تارة واحدة. "
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/utm_medium.py:0
+#, python-format
+msgid ""
+"You cannot delete these UTM Mediums as they are linked to the following social accounts in Social:\n"
+"%(social_accounts)s"
+msgstr ""
+"لا يمكنك حذف أوساط UTM تلك، حيث إنها مرتبطة بالحسابات الاجتماعية التالية: \n"
+"%(social_accounts)s "
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/utm_source.py:0
+#, python-format
+msgid ""
+"You cannot delete these UTM Sources as they are linked to social posts in Social:\n"
+"%(utm_sources)s"
+msgstr ""
+"لا يمكنك حذف مصادر UTM تلك، حيث إنها مرتبطة بالحسابات الاجتماعية التالية: \n"
+"%(utm_sources)s "
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "You cannot reschedule a post that has already been posted."
+msgstr "لا يمكنك إعادة جدولة منشور قد تم نشره بالفعل. "
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "You cannot schedule a post in the past."
+msgstr "لا يمكنك جدولة منشور في الماضي. "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Your Post"
+msgstr "منشورك "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "a Stream from an existing account"
+msgstr "وسط من حساب موجود بالفعل "
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "before posting."
+msgstr "قبل النشر. "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_comment.js:0
+#, python-format
+msgid "comment/reply"
+msgstr "تعليق/رد "
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream
+msgid "dashboard"
+msgstr "لوحة البيانات "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "for"
+msgstr "لـ "
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "replies..."
+msgstr "الردود... "
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream_post
+msgid "to keep an eye on your own posts and monitor all social activities."
+msgstr "لتتمكن من مراقبة منشوراتك الخاصة وكافة الأنشطة الاجتماعية. "
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream
+msgid "to link your accounts and start posting."
+msgstr "لربط حساباتك والبدء بالنشر. "
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_account
+msgid "to start posting from Odoo."
+msgstr "لتبدأ بالنشر من أودو. "

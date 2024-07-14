@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_change_lock_date" model="ir.ui.view">
+            <field name="name">account.change.lock.date.form</field>
+            <field name="model">account.change.lock.date</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group string="Management Closing">
+                                <div class="text-muted mb-3" colspan="2">
+                                    <i>Lock specific journal entries</i>
+                                </div>
+                                <field name="period_lock_date" placeholder="Pick a date to lock"
+                                       options="{'warn_future': true}" />
+                                <field name="tax_lock_date" placeholder="Pick a date to lock"
+                                       options="{'warn_future': true}" />
+                            </group>
+                            <group string="Accounting Period Closing">
+                                <div class="text-muted mb-3" colspan="2">
+                                    <i>Lock all journal entries</i>
+                                </div>
+                                <field name="fiscalyear_lock_date" placeholder="Pick a date to lock"
+                                       options="{'warn_future': true}" />
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Save" name="change_lock_date" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_view_account_change_lock_date" model="ir.actions.act_window">
+            <field name="name">Accounting closing dates</field>
+            <field name="res_model">account.change.lock.date</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_change_lock_date"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            id="menu_action_change_lock_date"
+            name="Lock Dates"
+            action="action_view_account_change_lock_date"
+            parent="account.menu_finance_entries_actions"
+            sequence="55"
+            groups="account.group_account_manager"/>
+    </data>
+</odoo>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="appointment.appointment_type_dental_care" model="appointment.type">
+        <field name="reminder_ids" eval="[(6, 0, [ref('calendar_alarm_data_1h_sms')])]"/>
+    </record>
+</odoo>

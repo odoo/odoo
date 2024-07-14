@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_parameter_income_tax_rates_resident" model="hr.rule.parameter">
+        <field name="name">Netherlands: Residents Income Tax Rates</field>
+        <field name="code">l10n_nl_income_tax_rates_resident</field>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+    <record id="rule_parameter_income_tax_rates_resident_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+    (    0.00,     35742.00,  9.28),
+    (35742.01,     73031.00,  36.93),
+    (73031.01,  99999999.99,  49.5),
+]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_income_tax_rates_resident"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_income_tax_rates_non_resident" model="hr.rule.parameter">
+        <field name="name">Netherlands: Non Residents Income Tax Rates</field>
+        <field name="code">l10n_nl_income_tax_rates_non_resident</field>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+    <record id="rule_parameter_income_tax_rates_non_resident_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+    (    0.00,     35742.00,  9.28),
+    (35742.01,     73031.00,  36.93),
+    (73031.01,  99999999.99,  49.5),
+]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_income_tax_rates_non_resident"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <!-- {code: [resident_rate, non_resident_rate, cap]} -->
+    <record id="rule_parameter_social_security_rates_employee" model="hr.rule.parameter">
+        <field name="name">Netherlands: Employee Social Security Rates and Thresholds</field>
+        <field name="code">l10n_nl_social_security_rates_employee</field>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+    <record id="rule_parameter_social_security_rates_employee_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">{
+    'AOW': [17.9, 17.9, 35129.00],
+    'Anw': [ 0.1, 1.00, 35129.00],
+    'Wlz': [9.65, 9.65, 35129.00],
+}</field>
+        <field name="rule_parameter_id" ref="rule_parameter_social_security_rates_employee"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <!-- {code: [resident_rate, non_resident_rate, cap]} -->
+    <record id="rule_parameter_social_security_rates_employer" model="hr.rule.parameter">
+        <field name="name">Netherlands: Employer Social Security Rates and Thresholds</field>
+        <field name="code">l10n_nl_social_security_rates_employer</field>
+        <field name="country_id" ref="base.nl"/>
+    </record>
+    <record id="rule_parameter_social_security_rates_employer_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">{
+    'Zvw': [6.75, 6.75, 3886.93],
+    'WW':  [2.64, 2.64, 2013.37],
+    'WWFund': [0.77, 0.77, 430.64],
+    'WAO/WIA': [7.11, 7.11, 3892.52],
+    'Whk': [1.53, 15.3, 699.09],
+}</field>
+        <field name="rule_parameter_id" ref="rule_parameter_social_security_rates_employer"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+    <!-- UPS Product Packagings -->
+    <record id="ups_packaging_01" model="stock.package.type">
+        <field name="name">UPS Letter</field>
+        <field name="shipper_package_code">01</field>
+        <field name="package_carrier_type">ups</field>
+        <field name="max_weight">0.5</field>
+    </record>
+    <record id="ups_packaging_02" model="stock.package.type">
+        <field name="name">UPS Package/customer supplied</field>
+        <field name="shipper_package_code">02</field>
+        <field name="height">52</field>
+        <field name="width">52</field>
+        <field name="packaging_length">52</field>
+        <field name="package_carrier_type">ups</field>
+        <field name="max_weight">68</field>
+    </record>
+    <record id="ups_packaging_03" model="stock.package.type">
+        <field name="name">UPS Tube</field>
+        <field name="shipper_package_code">03</field>
+        <field name="package_carrier_type">ups</field>
+        <field name="max_weight">68</field>
+    </record>
+    <record id="ups_packaging_04" model="stock.package.type">
+        <field name="name">UPS Pak</field>
+        <field name="shipper_package_code">04</field>
+        <field name="package_carrier_type">ups</field>
+        <field name="max_weight">68</field>
+    </record>
+    <record id="ups_packaging_21" model="stock.package.type">
+        <field name="name">UPS Express Box</field>
+        <field name="shipper_package_code">21</field>
+        <field name="package_carrier_type">ups</field>
+        <field name="max_weight">68</field>
+    </record>
+    <record id="ups_packaging_24" model="stock.package.type">
+        <field name="name">UPS 25KG Box</field>
+        <field name="shipper_package_code">24</field>
+        <field name="package_carrier_type">ups</field>
+        <field name="max_weight">25</field>
+    </record>
+    <record id="ups_packaging_25" model="stock.package.type">
+        <field name="name">UPS 10KG Box</field>
+        <field name="shipper_package_code">25</field>
+        <field name="package_carrier_type">ups</field>
+        <field name="max_weight">10</field>
+    </record>
+    <record id="ups_packaging_30" model="stock.package.type">
+        <field name="name">UPS Pallet</field>
+        <field name="shipper_package_code">30</field>
+        <field name="height">1920</field>
+        <field name="width">2133</field>
+        <field name="packaging_length">3048</field>
+        <field name="package_carrier_type">ups</field>
+        <field name="max_weight">1000</field>
+    </record>
+    <record id="ups_packaging_2a" model="stock.package.type">
+        <field name="name">UPS Small Express Box</field>
+        <field name="shipper_package_code">2a</field>
+        <field name="package_carrier_type">ups</field>
+        <field name="max_weight">68</field>
+    </record>
+    <record id="ups_packaging_2b" model="stock.package.type">
+        <field name="name">UPS Medium Express Box</field>
+        <field name="shipper_package_code">2b</field>
+        <field name="package_carrier_type">ups</field>
+        <field name="max_weight">68</field>
+    </record>
+    <record id="ups_packaging_2c" model="stock.package.type">
+        <field name="name">UPS Flat Pack</field>
+        <field name="shipper_package_code">2c</field>
+        <field name="package_carrier_type">ups</field>
+        <field name="max_weight">68</field>
+    </record>
+
+    <record id="product_product_delivery_ups_us" model="product.product">
+      <field name="name">UPS US</field>
+      <field name="default_code">Delivery_011</field>
+      <field name="type">service</field>
+      <field name="categ_id" ref="delivery.product_category_deliveries"/>
+      <field name="sale_ok" eval="False"/>
+      <field name="purchase_ok" eval="False"/>
+      <field name="list_price">0.0</field>
+      <field name="invoice_policy">order</field>
+    </record>
+    <record id="delivery_carrier_ups_us" model="delivery.carrier">
+        <field name="name">UPS US</field>
+        <field name="product_id" ref="delivery_ups.product_product_delivery_ups_us"/>
+        <field name="delivery_type">ups</field>
+        <field name="ups_package_weight_unit">LBS</field>
+        <field name="ups_package_dimension_unit">IN</field>
+        <field name="ups_username">ups_odoo_test</field>
+        <field name="ups_passwd">Zh7~Q-bk/R7CeCxQS}Iw</field>
+        <field name="ups_shipper_number">R5R012</field>
+        <field name="ups_access_number">ED7F8A752151DEF5</field>
+        <field name="ups_default_package_type_id" ref="ups_packaging_02"/>
+    </record>
+
+    <record id="product_product_delivery_ups_be" model="product.product">
+      <field name="name">UPS BE</field>
+      <field name="default_code">Delivery_010</field>
+      <field name="type">service</field>
+      <field name="categ_id" ref="delivery.product_category_deliveries"/>
+      <field name="sale_ok" eval="False"/>
+      <field name="purchase_ok" eval="False"/>
+      <field name="list_price">0.0</field>
+      <field name="invoice_policy">order</field>
+    </record>
+    <record id="delivery_carrier_ups_be" model="delivery.carrier">
+        <field name="name">UPS BE</field>
+        <field name="product_id" ref="delivery_ups.product_product_delivery_ups_be"/>
+        <field name="delivery_type">ups</field>
+        <field name="ups_package_weight_unit">KGS</field>
+        <field name="ups_package_dimension_unit">CM</field>
+        <field name="ups_default_service_type">11</field>
+        <field name="ups_default_package_type_id" ref="ups_packaging_02"/>
+    </record>
+
+</data>
+</odoo>

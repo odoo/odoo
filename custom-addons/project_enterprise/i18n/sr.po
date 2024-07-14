@@ -1,0 +1,373 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* project_enterprise
+# 
+# Translators:
+# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Milan Bojovic <mbojovic@outlook.com>, 2023
+# コフスタジオ, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: コフスタジオ, 2024\n"
+"Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sr\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: project_enterprise
+#. odoo-python
+#: code:addons/project_enterprise/models/project_task.py:0
+#, python-format
+msgid "%s has %s tasks at the same time."
+msgstr ""
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_form
+msgid ""
+"<i class=\"fa fa-exclamation-circle me-2\" role=\"img\" title=\"Dependency "
+"warning\"/>"
+msgstr ""
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_sharing_project_task_view_kanban_inherited
+#: model_terms:ir.ui.view,arch_db:project_enterprise.view_task_kanban_inherited
+msgid ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow "
+"icon\" title=\"Arrow\" invisible=\"not planned_date_begin\"/>"
+msgstr ""
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_project_view_gantt
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_gantt
+msgid "<i class=\"fa fa-long-arrow-right\" title=\"Arrow\"/>"
+msgstr "<i class=\"fa fa-long-arrow-right\" title=\"Arrow\"/>"
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_form
+msgid "<i class=\"fa fa-random me-2\" role=\"img\" title=\"Planning overlap\"/>"
+msgstr ""
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_gantt
+msgid "<span class=\"fst-italic text-muted\"><i class=\"fa fa-lock\"/> Private</span>"
+msgstr ""
+"<span class=\"fst-italic text-muted\"><i class=\"fa fa-lock\"/> "
+"Privatni</span>"
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_gantt
+msgid "<strong>Assignees — </strong>"
+msgstr "<strong>Zaduženi — </strong>"
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_project_view_gantt
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_gantt
+msgid "<strong>Customer — </strong>"
+msgstr "<strong>Klijent — </strong>"
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.portal_my_task
+msgid "<strong>Deadline:</strong>"
+msgstr "<strong>Rok:</strong>"
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_gantt
+msgid "<strong>Milestone — </strong>"
+msgstr "<strong>Milestone — </strong>"
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.portal_my_task
+msgid "<strong>Planned Date:</strong>"
+msgstr "<strong>Planirani datum:</strong>"
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_project_view_gantt
+msgid "<strong>Project Manager — </strong>"
+msgstr "<strong>Projekni menadžer — </strong>"
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_gantt
+msgid "<strong>Project — </strong>"
+msgstr "<strong>Projekat — </strong>"
+
+#. module: project_enterprise
+#: model:ir.model.fields,field_description:project_enterprise.field_project_task__user_ids
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_map_view
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_map_view_no_title
+msgid "Assignees"
+msgstr "Zaduženi"
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_form
+msgid "Check it out <i class=\"oi oi-chevron-right ms-2\"/>"
+msgstr ""
+
+#. module: project_enterprise
+#: model:ir.model.fields,field_description:project_enterprise.field_project_task__partner_id
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_map_view
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_map_view_no_title
+msgid "Customer"
+msgstr "Klijent"
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_map_view
+msgid "Date"
+msgstr "Datum"
+
+#. module: project_enterprise
+#: model:ir.model.fields,field_description:project_enterprise.field_project_task__dependency_warning
+msgid "Dependency Warning"
+msgstr ""
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_form_in_gantt
+msgid "Discard"
+msgstr "Poništi"
+
+#. module: project_enterprise
+#: model:ir.model.fields,field_description:project_enterprise.field_project_task__display_warning_dependency_in_gantt
+msgid "Display Warning Dependency In Gantt"
+msgstr "Display Warning Dependency In Gantt"
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_map_view
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_map_view_no_title
+msgid "Milestone"
+msgstr "Milestone"
+
+#. module: project_enterprise
+#: model:ir.model.fields,field_description:project_enterprise.field_project_task__partner_mobile
+msgid "Mobile"
+msgstr "Mobilni"
+
+#. module: project_enterprise
+#. odoo-python
+#: code:addons/project_enterprise/models/project_task.py:0
+#, python-format
+msgid ""
+"One parameter is missing to use this method. You should give a start and end"
+" dates."
+msgstr ""
+"Jedan parametar nedostaje za korišćenje ove metode. Trebalo bi da navedete "
+"datum početka i završetka."
+
+#. module: project_enterprise
+#. odoo-python
+#: code:addons/project_enterprise/models/project_task.py:0
+#, python-format
+msgid ""
+"Operation not supported, you should always compare dependency_warning to "
+"True or False."
+msgstr ""
+
+#. module: project_enterprise
+#. odoo-python
+#: code:addons/project_enterprise/models/project_task.py:0
+#, python-format
+msgid ""
+"Operation not supported, you should always compare planning_overlap to True "
+"or False."
+msgstr ""
+
+#. module: project_enterprise
+#. odoo-python
+#: code:addons/project_enterprise/models/project_task.py:0
+#, python-format
+msgid "Overlapping Tasks"
+msgstr "Zadaci koji se preklapaju"
+
+#. module: project_enterprise
+#. odoo-python
+#: code:addons/project_enterprise/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_sharing_project_task_view_form_inherited
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_form
+#, python-format
+msgid "Planned Date"
+msgstr "Planirani Datum"
+
+#. module: project_enterprise
+#: model:ir.model.fields,field_description:project_enterprise.field_project_task__planned_date_start
+msgid "Planned Date Start"
+msgstr "Planirani datum početka"
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_project_view_gantt
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_gantt
+msgid "Planning"
+msgstr "Planiranje"
+
+#. module: project_enterprise
+#: model:ir.model.fields,field_description:project_enterprise.field_project_task__planning_overlap
+msgid "Planning Overlap"
+msgstr "Preklapanje Planiranja"
+
+#. module: project_enterprise
+#. odoo-javascript
+#: code:addons/project_enterprise/static/src/views/project_task_map/project_task_map_model.js:0
+#, python-format
+msgid "Private"
+msgstr "Privatno"
+
+#. module: project_enterprise
+#: model:ir.model,name:project_enterprise.model_project_project
+#: model:ir.model.fields,field_description:project_enterprise.field_project_task__project_id
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_map_view
+msgid "Project"
+msgstr "Projekat"
+
+#. module: project_enterprise
+#: model:ir.model,name:project_enterprise.model_project_milestone
+msgid "Project Milestone"
+msgstr "Project Milestone"
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_form_in_gantt
+msgid "Save"
+msgstr "Sačuvaj"
+
+#. module: project_enterprise
+#. odoo-python
+#: code:addons/project_enterprise/models/project_task.py:0
+#, python-format
+msgid ""
+"Some tasks weren't planned because the closest available starting date was "
+"too far ahead in the future"
+msgstr ""
+"Some tasks weren't planned because the closest available starting date was "
+"too far ahead in the future"
+
+#. module: project_enterprise
+#: model:ir.model.fields,field_description:project_enterprise.field_project_task__planned_date_begin
+#: model:ir.model.fields,field_description:project_enterprise.field_report_project_task_user__planned_date_begin
+msgid "Start date"
+msgstr "Datum početka"
+
+#. module: project_enterprise
+#: model:ir.model.fields,field_description:project_enterprise.field_project_task__partner_street
+msgid "Street"
+msgstr "Ulica"
+
+#. module: project_enterprise
+#: model:ir.model,name:project_enterprise.model_project_task
+msgid "Task"
+msgstr "Zadatak"
+
+#. module: project_enterprise
+#: model:ir.model,name:project_enterprise.model_project_task_recurrence
+msgid "Task Recurrence"
+msgstr "Ponavljanje zadatka"
+
+#. module: project_enterprise
+#: model:ir.model,name:project_enterprise.model_report_project_task_user
+msgid "Tasks Analysis"
+msgstr "Analiza zadataka"
+
+#. module: project_enterprise
+#. odoo-python
+#: code:addons/project_enterprise/models/project_task.py:0
+#, python-format
+msgid "Tasks have been successfully scheduled for the upcoming periods."
+msgstr "Zadaci su uspešno zakazani za predstojeće periode."
+
+#. module: project_enterprise
+#: model:ir.model.constraint,message:project_enterprise.constraint_project_task_planned_dates_check
+msgid "The planned start date must be before the planned end date."
+msgstr "Planirani datum početka mora biti pre planiranog datuma završetka."
+
+#. module: project_enterprise
+#. odoo-python
+#: code:addons/project_enterprise/models/project_task.py:0
+#, python-format
+msgid "This Progress Bar is not implemented."
+msgstr "Ova traka napretka nije implementirana."
+
+#. module: project_enterprise
+#. odoo-python
+#: code:addons/project_enterprise/models/project_task.py:0
+#, python-format
+msgid ""
+"This employee does not have a running contract during the selected period.\n"
+"The working hours of the company were used as a reference instead."
+msgstr ""
+"Ovaj zaposleni nema aktivni ugovor tokom odabranog perioda.\n"
+"Radni sati kompanije su korišćeni kao referenca umesto toga."
+
+#. module: project_enterprise
+#. odoo-python
+#: code:addons/project_enterprise/models/project_task.py:0
+#, python-format
+msgid "This task cannot be planned before Tasks %s, on which it depends."
+msgstr "Ovaj zadatak ne može biti planiran pre zadatka %s, od kojeg zavisi."
+
+#. module: project_enterprise
+#. odoo-python
+#: code:addons/project_enterprise/models/project_task.py:0
+#, python-format
+msgid ""
+"This user isn't expected to have any tasks assigned during this period "
+"because they don't have any running contract. Planned hours :"
+msgstr ""
+
+#. module: project_enterprise
+#: model_terms:ir.ui.view,arch_db:project_enterprise.res_config_settings_view_form
+msgid "Timesheets"
+msgstr "Karneti"
+
+#. module: project_enterprise
+#. odoo-javascript
+#: code:addons/project_enterprise/static/src/views/project_task_map/project_task_map_model.js:0
+#, python-format
+msgid "Unassigned"
+msgstr "Nedodeljeno"
+
+#. module: project_enterprise
+#. odoo-javascript
+#: code:addons/project_enterprise/static/src/task_gantt_popover.xml:0
+#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_form_in_gantt
+#, python-format
+msgid "Unschedule"
+msgstr "Otkaži"
+
+#. module: project_enterprise
+#: model:ir.model,name:project_enterprise.model_res_users
+msgid "User"
+msgstr "Korisnik"
+
+#. module: project_enterprise
+#: model:ir.model.fields,field_description:project_enterprise.field_project_task__user_names
+msgid "User Names"
+msgstr "Korisnička imena"
+
+#. module: project_enterprise
+#. odoo-javascript
+#: code:addons/project_enterprise/static/src/task_gantt_renderer.js:0
+#, python-format
+msgid "Warning"
+msgstr "Pažnja"
+
+#. module: project_enterprise
+#: model:ir.model.fields,field_description:project_enterprise.field_project_task__partner_zip
+msgid "Zip"
+msgstr "Poštanski broj"
+
+#. module: project_enterprise
+#. odoo-javascript
+#: code:addons/project_enterprise/static/src/task_gantt_model.js:0
+#, python-format
+msgid "👤 Unassigned"
+msgstr "👤 Neraspoređeno"
+
+#. module: project_enterprise
+#. odoo-javascript
+#: code:addons/project_enterprise/static/src/task_gantt_model.js:0
+#, python-format
+msgid "🔒 Private"
+msgstr "🔒 Privatno"

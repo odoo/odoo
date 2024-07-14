@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_rule_student_regular_pay_solidarity_cotisation" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_hr_payroll.hr_payroll_head_onss"/>
+        <field name="name">Solidarity Cotisation - Student Job</field>
+        <field name="code">ONSS</field>
+        <field name="sequence">18</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result=not contract.no_onss</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">BASIC</field>
+        <field name="amount_percentage">-2.71</field>
+        <field name="struct_id" ref="hr_payroll_structure_student_regular_pay"/>
+        <field name="partner_id" ref="l10n_be_hr_payroll.res_partner_onss"/>
+    </record>
+
+    <record id="hr_salary_rule_student_regular_pay_private_car" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_hr_payroll.hr_payroll_head_div_net"/>
+        <field name="name">Private car</field>
+        <field name="code">CAR.PRIV</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">170</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.transport_mode_private_car</field>
+        <field name="amount_python_compute">
+if not categories['BASIC']:
+    result = 0
+    result_qty = 0
+else:
+    result = contract.with_context(payslip_date=payslip.date_from)._get_private_car_reimbursed_amount(contract.km_home_work) * 3 / (13 * 5)
+    result_qty = worked_days['WORK100'].number_of_days if 'WORK100' in worked_days else 0
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_student_regular_pay"/>
+    </record>
+
+    <record id="hr_salary_rule_student_regular_pay_ch_worker" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_hr_payroll.hr_payroll_head_div_net"/>
+        <field name="name">Retain on Meal Voucher</field>
+        <field name="code">MEAL_V_EMP</field>
+        <field name="sequence">175</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.meal_voucher_amount)</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">-100.0</field>
+        <field name="amount_percentage_base">contract.meal_voucher_amount - contract.meal_voucher_paid_by_employer</field>
+        <field name="quantity">payslip.meal_voucher_count</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="l10n_be_hr_payroll.res_partner_meal_vouchers"/>
+        <field name="struct_id" ref="hr_payroll_structure_student_regular_pay"/>
+    </record>
+
+    <record id="hr_salary_rule_student_onss_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer"/>
+        <field name="name">Accounting: ONSS (Employer)</field>
+        <field name="code">ONSSEMPLOYER</field>
+        <field name="sequence">502</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = BASIC * 0.0542</field>
+        <field name="partner_id" ref="res_partner_onss"/>
+        <field name="struct_id" ref="hr_payroll_structure_student_regular_pay"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+    </record>
+</odoo>

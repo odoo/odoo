@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_reimbursement')),
+            ('code', '=', 'BASIC')]"/>
+        <value eval="{'amount_python_compute': 'result = 0'}"/>
+    </function>
+</odoo>

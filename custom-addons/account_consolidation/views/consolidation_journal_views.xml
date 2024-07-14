@@ -1,0 +1,224 @@
+<odoo>
+    <data>
+        <!-- SEARCH -->
+        <record id="trial_balance_grid_search" model="ir.ui.view">
+            <field name="name">consolidation.journal.line.search</field>
+            <field name="model">consolidation.journal.line</field>
+            <field name="arch" type="xml">
+                <search string="Trial balance">
+                    <field name="period_id"/>
+                    <field name="journal_id" string="Company"/>
+                    <field name="account_id"/>
+                    <field name="group_id" string="Group"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- GRID -->
+        <record id="view_trial_balance_report_grid" model="ir.ui.view">
+            <field name="name">account_consolidation.trial_balance.report.grid</field>
+            <field name="model">consolidation.journal.line</field>
+            <field name="arch" type="xml">
+                <grid string="Trial Balance" create="false" editable="1" js_class="consolidation_grid">
+                    <field name="group_id" type="row" section="1"/>
+                    <field name="account_id" type="row"/>
+                    <field name="journal_id" type="col"/>
+                    <!-- FIXME: Remove the widget once the input is implemented in GridEditable when no component is found -->
+                    <field name="amount" type="measure" widget="float"/>
+                </grid>
+            </field>
+        </record>
+
+        <!-- GRAPH -->
+        <record id="view_trial_balance_report_graph" model="ir.ui.view">
+            <field name="name">account_consolidation.trial_balance.report.grid</field>
+            <field name="model">consolidation.journal.line</field>
+            <field name="arch" type="xml">
+                <graph string="Trial Balance" sample="1">
+                    <field name="group_id"/>
+                    <field name="journal_id"/>
+                    <field name="amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- consolidation.journal views -->
+        <record id="consolidation_journal_tree" model="ir.ui.view">
+            <field name="name">consolidation.journal.tree</field>
+            <field name="model">consolidation.journal</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree string="Journals" create="false">
+                    <field name="name"/>
+                    <field name="period_id"/>
+                    <field name="currency_id" column_invisible="True"/>
+                    <field name="auto_generated"/>
+                    <field name="balance" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="consolidation_journal_form" model="ir.ui.view">
+            <field name="name">consolidation.journal.form</field>
+            <field name="model">consolidation.journal</field>
+            <field name="arch" type="xml">
+                <form string="Journal" create="false">
+                    <field name="state" invisible="1"/>
+                    <field name="auto_generated" invisible="1"/>
+                    <field name="chart_id" invisible="1"/>
+                    <div class="alert alert-info text-center" role="status"
+                         invisible="not auto_generated">
+                        This journal has been automatically generated on
+                        <field name="write_date" widget="date"/>.
+                        <button name="action_generate_journal_lines" type="object"
+                                string="Update" class="btn-link align-bottom m-0"
+                                groups="account_consolidation.group_consolidation_user"
+                                invisible="state == 'closed' or not id"/>
+                    </div>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" class="oe_inline"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="chart_id" options="{'no_quick_create': True}"/>
+                                <field name="period_id"
+                                       domain="[('state', '=', 'draft')]"
+                                       options="{'no_create': True, 'no_open': True}"
+                                       invisible="context.get('default_period_id', False)"
+                                       readonly="auto_generated"/>
+                                <label for="rate_consolidation" invisible="not auto_generated"/>
+                                <div invisible="not auto_generated">
+                                    <field name="rate_consolidation" class="oe_inline"/>
+                                    <span class="o_form_label oe_inline">%</span>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="company_period_id" options="{'no_open': True}"
+                                       readonly="1"
+                                       invisible="not id or not company_period_id"/>
+                                <field name="composition_id" options="{'no_open': True}"
+                                       readonly="1"
+                                       invisible="not id or not composition_id"/>
+                                <field name="currencies_are_different" invisible="1"/>
+                            </group>
+                        </group>
+                        <field name="line_ids" nolabel="1"
+                               invisible="not id"
+                               readonly="auto_generated">
+                            <tree editable="bottom">
+                                <field name="journal_originating_currency_id" column_invisible="True"/>
+                                <field name="account_id"/>
+                                <field name="note"/>
+                                <field name="chart_currency_id" column_invisible="True"/>
+                                <field name="currency_amount" sum="Total" widget="monetary"
+                                       column_invisible="not parent.currencies_are_different"
+                                       options="{'currency_field': 'journal_originating_currency_id'}"/>
+                                <field name="amount" string="Balance" sum="Total"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="consolidation_journal_search" model="ir.ui.view">
+            <field name="name">consolidation.journal.search</field>
+            <field name="model">consolidation.journal</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="period_id"/>
+                    <filter string="Auto-generated" name="autogen" domain="[('auto_generated','=', True)]"/>
+                    <filter string="Manually Created" name="created" domain="[('auto_generated','=', False)]"/>
+                    <filter name="group_period_id" string="Period"
+                            context="{'group_by': 'period_id'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="consolidation_journal_action" model="ir.actions.act_window">
+            <field name="name">Journals</field>
+            <field name="res_model">consolidation.journal</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="consolidation_journal_search"/>
+        </record>
+
+        <!-- consolidation.journal.line views -->
+
+        <record id="consolidation_journal_line_tree" model="ir.ui.view">
+            <field name="name">consolidation.journal.line.tree</field>
+            <field name="model">consolidation.journal.line</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree string="Consolidation Items" editable="top">
+                    <field name="journal_originating_currency_id" column_invisible="True"/>
+                    <field name="chart_currency_id" column_invisible="True"/>
+                    <field name="create_date" string="Date"/>
+                    <field name="account_id"/>
+                    <field name="note"/>
+                    <field name="currency_amount" widget="monetary" sum="Total"
+                           options="{'currency_field': 'journal_originating_currency_id'}"/>
+                    <field name="amount" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="consolidation_journal_line_form" model="ir.ui.view">
+            <field name="name">consolidation.journal.line.form</field>
+            <field name="model">consolidation.journal.line</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Journal Item">
+                    <field name="auto_generated" invisible="1"/>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="account_id"
+                                       invisible="context.get('default_account_id', False)"
+                                       readonly="auto_generated"/>
+                                <field name="amount" readonly="auto_generated"/>
+                            </group>
+                            <group>
+                                <field name="journal_id"
+                                       invisible="context.get('default_journal_id', False)"
+                                       readonly="auto_generated"
+                                       string="Journal"/>
+                                <field name="period_id"
+                                       invisible="context.get('default_period_id', False)"
+                                       readonly="auto_generated"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="note"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="consolidation_journal_line_search" model="ir.ui.view">
+            <field name="name">consolidation.journal.line.search</field>
+            <field name="model">consolidation.journal.line</field>
+            <field name="arch" type="xml">
+                <search string="Trial Balance">
+                    <field name="period_id"/>
+                    <field name="journal_id" string="Company"/>
+                    <field name="account_id"/>
+                    <field name="group_id" string="Group"/>
+                    <filter name="group_account_id" context="{'group_by': 'account_id'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="Consolidation_journal_line_action" model="ir.actions.act_window">
+            <field name="name">Consolidation Entries</field>
+            <field name="res_model">consolidation.journal.line</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="consolidation_journal_line_search"/>
+        </record>
+    </data>
+</odoo>

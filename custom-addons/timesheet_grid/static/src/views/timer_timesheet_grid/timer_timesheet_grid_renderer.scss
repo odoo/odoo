@@ -1,0 +1,18 @@
+@include media-breakpoint-up(sm) {
+    .o_timer_timesheet_grid_view .o_grid_column_total:not(.o_grid_highlighted) span.o_grid_bar_chart_overtime {
+        opacity: 0;
+    }
+}
+
+// This is a trick setting a max-width on the first column of the grid to avoid the
+// overlap on the first row and its column_title because of the extra width of the
+// o_grid_navigation_wrap.
+.o_grid_row_timer {
+    width: $o-web-grid-first-column-width;
+}
+
+.o_grid_column_timer_button + .o_grid_navigation_wrap .o_grid_navigation_buttons {
+    margin-left: -$o-web-grid-first-column-width;
+    left: map-get($spacers, 3);
+}
+

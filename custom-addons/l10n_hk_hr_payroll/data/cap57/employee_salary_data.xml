@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- RENTAL ALLOWANCE -->
+    <record id="cap57_employees_salary_rent_allowance" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Rent Allowance</field>
+        <field name="code">HRA</field>
+        <field name="sequence">1</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = employee.l10n_hk_rental_id and contract._get_contract_wage() &gt;= 10000 and 'SKIP_RENT_ALLOWANCE' not in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = min(contract._get_contract_wage() - 10000, employee.l10n_hk_rental_id.amount, payslip.paid_amount)</field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary"/>
+    </record>
+
+    <!-- BASIC -->
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary')),
+            ('code', '=', 'BASIC')]"/>
+        <value eval="{
+            'amount_python_compute': 'result = payslip.paid_amount - result_rules[&quot;HRA&quot;][&quot;total&quot;]',
+            'sequence': 2}"/>
+    </function>
+
+    <record id="cap57_employees_salary_fixed_commission" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Commission</field>
+        <field name="code">COMMISSION</field>
+        <field name="sequence">5</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'COMMISSION' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['COMMISSION'].amount
+result_name = inputs['COMMISSION'].name
+        </field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cap57_employees_salary_back_pay" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="name">Back Pay</field>
+        <field name="code">BACKPAY</field>
+        <field name="sequence">6</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'BACKPAY' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs['BACKPAY'].amount</field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <!-- Fixed Allowance -->
+    <record id="cap57_employees_salary_internet" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Internet Allowance</field>
+        <field name="code">ALW.INT</field>
+        <field name="sequence">30</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(not payslip.is_outside_contract and contract.l10n_hk_internet)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+prorata_rate = 1
+total_days = sum([wd.number_of_days for wd in payslip.worked_days_line_ids])
+actual_work_days = payslip._get_number_of_worked_days()
+prorata_rate = actual_work_days / total_days
+result = contract.l10n_hk_internet * prorata_rate
+        </field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary"/>
+    </record>
+
+    <record id="cap57_employees_salary_deduction" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Deduction</field>
+        <field name="code">GLOBAL_DEDUCTION</field>
+        <field name="sequence">98</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'GLOBAL_DEDUCTION' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = -inputs['GLOBAL_DEDUCTION'].amount</field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cap57_employees_salary_reimbursement" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Reimbursement</field>
+        <field name="code">GLOBAL_REIMBURSEMENT</field>
+        <field name="sequence">99</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'GLOBAL_REIMBURSEMENT' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs['GLOBAL_REIMBURSEMENT'].amount</field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <!-- 713 Gross -->
+    <record id="cap57_employees_salary_713_gross" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+        <field name="name">713 Gross</field>
+        <field name="code">713_GROSS</field>
+        <field name="sequence">100</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories['BASIC'] + categories['ALW'] + categories['DED']</field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <!-- Deduction and Reimbursement-->
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary')),
+            ('code', '=', 'DEDUCTION')]"/>
+        <value eval="{'sequence': 101}"/>
+    </function>
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary')),
+            ('code', '=', 'REIMBURSEMENT')]"/>
+        <value eval="{'sequence': 102}"/>
+    </function>
+    <record id="cap57_employees_salary_referral_fee" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Referral Fee</field>
+        <field name="code">REFERRAL_FEE</field>
+        <field name="sequence">103</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs['REFERRAL_FEE'].amount > 0.0 if 'REFERRAL_FEE' in inputs else False</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['REFERRAL_FEE'].amount
+result_name = inputs['REFERRAL_FEE'].name
+        </field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary"/>
+    </record>
+
+    <!-- End of Year Payment -->
+    <!-- Need to count MPF so will put in the same struct -->
+    <record id="cap57_employees_salary_end_of_year_payment" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="name">End of Year Payment</field>
+        <field name="code">END_OF_YEAR_PAYMENT</field>
+        <field name="sequence">109</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+domain = payslip._get_last_year_payslips_domain(payslip.date_from, payslip.date_to, [employee.id])
+last_year_payslips = payslip.env['hr.payslip'].search(domain, order='date_from desc')
+result = payslip.date_to.month == 12 and last_year_payslips
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+# Calculate the number of days in current year
+first_day = payslip.date_from + relativedelta(month=1, day=1)
+last_day = payslip.date_to + relativedelta(month=12, day=31)
+total_days = (last_day - first_day).days + 1
+
+# Find past 12-month payslips
+domain = payslip._get_last_year_payslips_domain(payslip.date_from, payslip.date_to, [employee.id])
+last_year_payslips = payslip.env['hr.payslip'].search(domain, order='date_from desc')
+
+# Calculate the work rate
+number_of_days = last_year_payslips._get_number_of_worked_days(only_full_pay=True)
+number_of_months = number_of_days / total_days * 12  # total_days remains the same for last 12 months and current year
+
+# Calculate the average monthly salary
+gross = last_year_payslips._get_line_values(['713_GROSS'], compute_sum=True)['713_GROSS']['sum']['total']
+gross -= last_year_payslips._get_total_non_full_pay()
+average_monthly_salary = inputs['CUST_AVG_MONTHLY_SALARY'].amount if inputs.get('CUST_AVG_MONTHLY_SALARY') else gross / number_of_months
+
+# Calculate the pro-rata rate
+current_year_payslips = last_year_payslips.filtered(lambda p: p.date_from &gt;= first_day) + payslip
+number_of_days = current_year_payslips._get_number_of_worked_days()
+prorata_rate = number_of_days / total_days
+
+result = average_monthly_salary * prorata_rate
+        </field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary"/>
+    </record>
+
+    <!-- MPF Gross -->
+    <record id="cap57_employees_salary_mpf_gross" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+        <field name="name">MPF Gross</field>
+        <field name="code">MPF_GROSS</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories['BASIC'] + categories['ALW'] + categories['DED']</field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary"/>
+    </record>
+
+    <!-- MPF -->
+    <record id="cap57_employees_salary_eemc" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_hk_hr_payroll.EEMPF" />
+        <field name="name">Employee Mandatory Contribution</field>
+        <field name="code">EEMC</field>
+        <field name="sequence">111</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+first_mpf_date = employee.first_contract_date + relativedelta(days=30)
+is_above_mpf_threshold = result_rules['MPF_GROSS']['total'] &gt;= payslip._rule_parameter('l10n_hk_mpf_threshold')
+result = is_above_mpf_threshold and first_mpf_date &lt;= payslip.date_from
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -min(0.05 * result_rules['MPF_GROSS']['total'], payslip._rule_parameter('l10n_hk_mpf_maximum'))
+        </field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary" />
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <record id="cap57_employees_salary_ermc" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_hk_hr_payroll.ERMPF" />
+        <field name="name">Employer Mandatory Contribution</field>
+        <field name="code">ERMC</field>
+        <field name="sequence">111</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+first_mpf_date = employee.first_contract_date + relativedelta(days=30)
+if first_mpf_date.day != 1:
+    first_mpf_date = first_mpf_date + relativedelta(months=1, day=payslip.date_from.day)
+    if (first_mpf_date - employee.first_contract_date).days + 1 &gt; 60:
+        first_mpf_date = first_mpf_date - relativedelta(months=1)
+result = first_mpf_date &lt;= payslip.date_from
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -min(0.05 * result_rules['MPF_GROSS']['total'], payslip._rule_parameter('l10n_hk_mpf_maximum'))
+first_mpf_date = employee.first_contract_date + relativedelta(days=30)
+if first_mpf_date.day != 1:
+    first_mpf_date = first_mpf_date + relativedelta(months=1, day=payslip.date_from.day)
+    if (first_mpf_date - employee.first_contract_date).days + 1 &gt; 60:
+        first_mpf_date = first_mpf_date - relativedelta(months=1)
+if first_mpf_date == payslip.date_from:
+    past_payslip_ids = payslip.env['hr.payslip'].search([
+        ('state', 'in', ['paid', 'done']),
+        ('date_to', '&gt;=', employee.first_contract_date),
+        ('date_to', '&lt;', payslip.date_from),
+        ('employee_id', '=', employee.id),
+    ])
+    gross_list = past_payslip_ids.line_ids.filtered(lambda line: line.code == 'MPF_GROSS').mapped('total')
+    result -= sum([min(0.05 * gross, payslip._rule_parameter('l10n_hk_mpf_maximum')) for gross in gross_list])
+        </field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary" />
+        <field name="appears_on_payslip">False</field>
+    </record>
+
+    <record id="cap57_employees_salary_eevc" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_hk_hr_payroll.EEMPF" />
+        <field name="name">Employee Voluntary Contribution</field>
+        <field name="code">EEVC</field>
+        <field name="sequence">112</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = employee.l10n_hk_mpf_vc_option in ['custom', 'max']</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if employee.l10n_hk_mpf_vc_option == 'custom':
+    result = -employee.l10n_hk_mpf_vc_percentage * result_rules['MPF_GROSS']['total']
+else:
+    result = -max(0.05 * result_rules['MPF_GROSS']['total'] - payslip._rule_parameter('l10n_hk_mpf_maximum') , 0)
+        </field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary" />
+        <field name="appears_on_payslip">True</field>
+    </record>
+
+    <record id="cap57_employees_salary_ervc" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_hk_hr_payroll.ERMPF" />
+        <field name="name">Employer Voluntary Contribution</field>
+        <field name="code">ERVC</field>
+        <field name="sequence">112</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = employee.l10n_hk_mpf_vc_option in ['custom', 'max']</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = result_rules['EEVC']['total']</field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary" />
+        <field name="appears_on_payslip">False</field>
+    </record>
+
+    <!-- Expenses -->
+    <record id="cap57_employees_salary_expense_refund" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Expenses Reimbursement</field>
+        <field name="code">EXPENSES</field>
+        <field name="sequence" eval="190"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = inputs['EXPENSES'].amount > 0.0 if 'EXPENSES' in inputs else False</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['EXPENSES'].amount
+result_name = inputs['EXPENSES'].name
+        </field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary"/>
+    </record>
+
+    <!-- GROSS -->
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary')),
+            ('code', '=', 'GROSS')]"/>
+        <value eval="{
+            'amount_python_compute': &quot;result = categories['BASIC'] + categories['ALW'] - categories['ERMPF']&quot;,
+            'sequence': 200,
+            'appears_on_payslip': False}"/>
+    </function>
+
+    <!-- NET -->
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary')),
+            ('code', '=', 'NET')]"/>
+        <value eval="{
+            'amount_python_compute': &quot;result = categories['BASIC'] + categories['ALW'] + categories['DED'] + categories['EEMPF']&quot;,
+            'sequence': 210}"/>
+    </function>
+
+    <!-- AUTOPAY -->
+    <record id="cap57_employees_salary_monthly_end_autopay" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_hk_hr_payroll.AUTOPAY"/>
+        <field name="name">Monthly End Autopay</field>
+        <field name="code">MEA</field>
+        <field name="sequence">220</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+is_same_month = employee.first_contract_date.month == payslip.date_from.month if employee.first_contract_date else False
+is_same_year = employee.first_contract_date.year == payslip.date_from.year if employee.first_contract_date else False
+new_join = is_same_month and is_same_year
+result = employee.first_contract_date.day &lt;= 15 or not new_join
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['NET']['total']
+        </field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cap57_employees_salary_second_batch_autopay" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_hk_hr_payroll.AUTOPAY"/>
+        <field name="name">2nd Batch Autopay</field>
+        <field name="code">SBA</field>
+        <field name="sequence">220</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+is_same_month = employee.first_contract_date.month == payslip.date_from.month if employee.first_contract_date else False
+is_same_year = employee.first_contract_date.year == payslip.date_from.year if employee.first_contract_date else False
+new_join = is_same_month and is_same_year
+result = employee.first_contract_date.day &gt; 15 and new_join
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['NET']['total']
+        </field>
+        <field name="struct_id" ref="l10n_hk_hr_payroll.hr_payroll_structure_cap57_employee_salary"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+</odoo>

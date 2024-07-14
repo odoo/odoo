@@ -1,0 +1,2361 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_accountant
+# 
+# Translators:
+# Denis Baranov <baranov@itlibertas.com>, 2023
+# Evgeniia Kotova, 2023
+# Vasiliy Korobatov <korobatov@gmail.com>, 2023
+# alenafairy, 2023
+# Ye Ye <vrio.ua@gmail.com>, 2023
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2023
+# Alena Vlasova, 2023
+# Martin Trigaux, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2024
+# Collex100, 2024
+# Nadia Martynova, 2024
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/bank_rec_widget_line.py:0
+#, python-format
+msgid ""
+"%(display_name_html)s with an open amount of %(open_amount)s will be fully "
+"reconciled by the transaction."
+msgstr ""
+"%(display_name_html)s с открытой суммой %(open_amount)s будут полностью "
+"выверены транзакцией."
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/bank_rec_widget_line.py:0
+#, python-format
+msgid ""
+"%(display_name_html)s with an open amount of %(open_amount)s will be reduced"
+" by %(amount)s."
+msgstr ""
+"%(display_name_html)s с открытой суммой %(open_amount)s будет уменьшена на "
+"%(amount)s."
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_form
+msgid "-> Reconcile"
+msgstr "-> Примириться"
+
+#. module: account_accountant
+#: model_terms:digest.tip,tip_description:account_accountant.digest_tip_account_accountant_0
+msgid "<b class=\"tip_title\">Tip: Bulk update journal items</b>"
+msgstr "<b class=\"tip_title\">Совет: Массовое обновление элементов журнала</b>"
+
+#. module: account_accountant
+#: model_terms:digest.tip,tip_description:account_accountant.digest_tip_account_accountant_1
+msgid ""
+"<b class=\"tip_title\">Tip: Find an Accountant or register your Accounting "
+"Firm</b>"
+msgstr ""
+"<b class=\"tip_title\">Совет: Найдите бухгалтера или зарегистрируйте свою "
+"бухгалтерскую фирму</b>"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/js/tours/account_accountant.js:0
+#, python-format
+msgid ""
+"<br>See how to manage your customer invoices in the "
+"<b>Customers/Invoices</b> menu"
+msgstr ""
+"<br>Посмотрите, как управлять счетами клиентов в меню \" "
+"<b>Клиенты/Счета\"</b>"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.account_reconcile_model_form_inherit_account_accountant
+msgid ""
+"<i title=\"Run manually\" role=\"img\" aria-label=\"Run manually\" class=\"fa fa-refresh\"/>\n"
+"                            Run manually"
+msgstr ""
+"<i title=\"Run manually\" role=\"img\" aria-label=\"Run manually\" class=\"fa fa-refresh\"/>\n"
+"                            Выполнить вручную"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_change_lock_date
+msgid "<i>Lock all journal entries</i>"
+msgstr "<i>Блокировка всех записей в журнале</i>"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_change_lock_date
+msgid "<i>Lock specific journal entries</i>"
+msgstr "<i>Блокировка определенных записей в журнале</i>"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_form_inherit
+msgid "<span class=\"o_stat_text\">1 Bank Transaction</span>"
+msgstr "<span class=\"o_stat_text\">1 Банковская операция</span>"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_form_inherit
+msgid "<span class=\"o_stat_text\">Bank Statement</span>"
+msgstr "<span class=\"o_stat_text\">Банковская выписка</span>"
+
+#. module: account_accountant
+#: model_terms:digest.tip,tip_description:account_accountant.digest_tip_account_accountant_1
+msgid "<span class=\"tip_button_text\">Find an Accountant</span>"
+msgstr "<span class=\"tip_button_text\">Найти бухгалтера</span>"
+
+#. module: account_accountant
+#: model_terms:digest.tip,tip_description:account_accountant.digest_tip_account_accountant_1
+msgid "<span class=\"tip_button_text\">Register your Accounting Firm</span>"
+msgstr ""
+"<span class=\"tip_button_text\">Зарегистрируйте свою бухгалтерскую "
+"фирму</span>"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/js/tours/account_accountant.js:0
+#, python-format
+msgid ""
+"<strong><b>Good job!</b> You went through all steps of this tour.</strong>"
+msgstr ""
+"<strong><b>Отличная работа!</b> Вы прошли все этапы этого тура.</strong>"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/kanban.js:0
+#: model:ir.model,name:account_accountant.model_account_account
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__account_id
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__account_id
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
+#, python-format
+msgid "Account"
+msgstr "Аккаунт"
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Шаблон плана счетов"
+
+#. module: account_accountant
+#: model:ir.actions.act_window,name:account_accountant.action_account_group_tree
+#: model:ir.ui.menu,name:account_accountant.menu_account_group
+msgid "Account Groups"
+msgstr "Группы Счетов"
+
+#. module: account_accountant
+#: model:ir.actions.act_window,name:account_accountant.account_tag_action
+#: model:ir.ui.menu,name:account_accountant.account_tag_menu
+msgid "Account Tags"
+msgstr "Тэги Счетов"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__transfer_from_account_id
+msgid "Account Transfer From"
+msgstr "Перевод со счета"
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_account_auto_reconcile_wizard
+msgid "Account automatic reconciliation wizard"
+msgstr "Мастер автоматической сверки счетов"
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_account_reconcile_wizard
+msgid "Account reconciliation wizard"
+msgstr "Мастер выверки счетов"
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_res_config_settings__deferred_expense_account_id
+msgid "Account used for deferred expenses"
+msgstr "Счет, используемый для учета расходов будущих периодов"
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_res_config_settings__deferred_revenue_account_id
+msgid "Account used for deferred revenues"
+msgstr "Счет, используемый для учета отложенных доходов"
+
+#. module: account_accountant
+#: model:ir.ui.menu,name:account_accountant.menu_accounting
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_partner_view_form
+msgid "Accounting"
+msgstr "Бухгалтерия"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_change_lock_date
+msgid "Accounting Period Closing"
+msgstr "Закрытие отчетного периода"
+
+#. module: account_accountant
+#: model:ir.actions.act_window,name:account_accountant.action_view_account_change_lock_date
+msgid "Accounting closing dates"
+msgstr "Даты закрытия бухгалтерского учета"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_auto_reconcile_wizard__account_ids
+msgid "Accounts"
+msgstr "Аккаунты"
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__account_auto_reconcile_wizard__search_mode__zero_balance
+msgid "Accounts with zero balances"
+msgstr "Счета с нулевым балансом"
+
+#. module: account_accountant
+#: model_terms:ir.actions.act_window,help:account_accountant.account_tag_action
+msgid "Add a new tag"
+msgstr "Добавить новый тег"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/js/tours/account_accountant.js:0
+#, python-format
+msgid ""
+"After the data extraction, check and validate the bill. If no vendor has "
+"been found, add one before validating."
+msgstr ""
+"После извлечения данных проверьте и подтвердите счет. Если поставщик не "
+"найден, добавьте его перед проверкой."
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/finish_buttons.xml:0
+#, python-format
+msgid "All Transactions"
+msgstr "Все транзакции"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_change_lock_date__fiscalyear_lock_date
+msgid "All Users Lock Date"
+msgstr "Все пользователи Дата блокировки"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__reco_model_autocomplete_ids
+msgid "All reconciliation models"
+msgstr "Все модели примирения"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__allow_partials
+msgid "Allow partials"
+msgstr "Разрешить частицы"
+
+#. module: account_accountant
+#: model:res.groups,name:account_accountant.group_fiscal_year
+msgid "Allow to define fiscal years of more or less than a year"
+msgstr "Разрешить определять учетные периоды более или менее года"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__amount_currency
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
+#, python-format
+msgid "Amount"
+msgstr "Сумма"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+msgid "Amount Computation"
+msgstr "Расчет суммы"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__amount_currency
+msgid "Amount Currency"
+msgstr "Сумма Валюты"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/kanban.js:0
+#, python-format
+msgid "Amount in Currency"
+msgstr "Сумма в валюте"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__amount
+msgid "Amount in company currency"
+msgstr "Сумма в валюте компании"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/wizard/account_reconcile_wizard.py:0
+#, python-format
+msgid ""
+"An entry will transfer %(amount)s from %(from_account)s to %(to_account)s."
+msgstr "Запись переводит %(amount)s из %(from_account)s в %(to_account)s."
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/kanban.js:0
+#, python-format
+msgid "Analytic"
+msgstr "Аналитический"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__analytic_distribution
+msgid "Analytic Distribution"
+msgstr "Аналитическое распределение"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__analytic_distribution_search
+msgid "Analytic Distribution Search"
+msgstr "Аналитический поиск по распределению"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__analytic_precision
+msgid "Analytic Precision"
+msgstr "Аналитическая точность"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__use_anglo_saxon
+msgid "Anglo-Saxon Accounting"
+msgstr "Англосаксонская бухгалтерия"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_form_with_buttons
+msgid "Are you sure you want to delete this statement?"
+msgstr "Вы уверены, что хотите удалить это заявление?"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/move_line_list_reconcile/move_line_list_reconcile.xml:0
+#: code:addons/account_accountant/static/src/components/move_line_list_reconcile/move_line_list_reconcile.xml:0
+#, python-format
+msgid "Auto-reconcile"
+msgstr "Автореконструкция"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/wizard/account_auto_reconcile_wizard.py:0
+#, python-format
+msgid "Automatically Reconciled Entries"
+msgstr "Автоматически выверенные проводки"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__available_reco_model_ids
+msgid "Available Reco Model"
+msgstr "Доступная модель Reco"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/finish_buttons.xml:0
+#, python-format
+msgid "Back to"
+msgstr "Вернуться к"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/global_info.xml:0
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__balance
+#, python-format
+msgid "Balance"
+msgstr "Баланс"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_digest_digest__kpi_account_bank_cash
+msgid "Bank & Cash Moves"
+msgstr "Банковские и кассовые операции"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__bank_account
+msgid "Bank Account"
+msgstr "Расчётный счет"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_bank_statement.py:0
+#, python-format
+msgid "Bank Reconciliation"
+msgstr "Выверка банковских счетов"
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_account_bank_statement
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_form_bank_rec_widget
+msgid "Bank Statement"
+msgstr "Банковская выписка"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_bank_statement.py:0
+#, python-format
+msgid "Bank Statement %s.pdf"
+msgstr "Банковская выписка %s.pdf"
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Строка банковской выписки"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_bank_statement.py:0
+#, python-format
+msgid "Bank Statement.pdf"
+msgstr "Банковская выписка.pdf"
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_bank_rec_widget
+msgid "Bank reconciliation widget for a single statement line"
+msgstr "Виджет сверки банковских счетов для одной строки выписки"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_change_lock_date
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_reconcile_model_widget_wizard
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_form_bank_rec_widget
+msgid "Cancel"
+msgstr "Отменить"
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_account_change_lock_date
+msgid "Change Lock Date"
+msgstr "Изменить дату блокировки"
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_account_reconcile_wizard__to_check
+msgid ""
+"Check if you are not certain of all the information of the counterpart."
+msgstr "Проверьте, если вы не уверены во всех данных контрагента."
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/move_line_list/move_line_list.xml:0
+#, python-format
+msgid "Choose a line to preview its attachments."
+msgstr "Выберите строку, чтобы просмотреть ее вложения."
+
+#. module: account_accountant
+#: model_terms:ir.actions.act_window,help:account_accountant.actions_account_fiscal_year
+msgid "Click here to create a new fiscal year."
+msgstr "Нажмите здесь, чтобы создать новый финансовый год."
+
+#. module: account_accountant
+#: model_terms:digest.tip,tip_description:account_accountant.digest_tip_account_accountant_1
+msgid ""
+"Click here to find an accountant or if you want to list out your accounting "
+"services on Odoo"
+msgstr ""
+"Нажмите здесь, чтобы найти бухгалтера или если вы хотите разместить список "
+"своих бухгалтерских услуг на Odoo"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/js/tours/account_accountant.js:0
+#, python-format
+msgid ""
+"Click on a fetched bank transaction to start the reconciliation process."
+msgstr ""
+"Нажмите на найденную банковскую операцию, чтобы начать процесс сверки."
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_res_company
+msgid "Companies"
+msgstr "Компании"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_auto_reconcile_wizard__company_id
+#: model:ir.model.fields,field_description:account_accountant.field_account_fiscal_year__company_id
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__company_id
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__company_id
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__company_id
+msgid "Company"
+msgstr "Компания"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__company_currency_id
+msgid "Company currency"
+msgstr "Валюта компании"
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_res_config_settings
+msgid "Config Settings"
+msgstr "Параметры конфигурации"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/rainbowman_content.xml:0
+#, python-format
+msgid "Congrats, you're all done!"
+msgstr "Поздравляем, все готово!"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/js/tours/account_accountant.js:0
+#, python-format
+msgid "Connect your bank and get your latest transactions."
+msgstr "Подключите свой банк и получайте информацию о последних транзакциях."
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_reconcile_model_widget_wizard
+msgid "Counterpart Values"
+msgstr "Корреспондирующие значения"
+
+#. module: account_accountant
+#: model:ir.actions.act_window,name:account_accountant.action_bank_statement_form_bank_rec_widget
+msgid "Create Statement"
+msgstr "Создать заявление"
+
+#. module: account_accountant
+#: model_terms:ir.actions.act_window,help:account_accountant.action_account_group_tree
+msgid "Create a new account group"
+msgstr "Создайте новый счет группы"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#, python-format
+msgid "Create model"
+msgstr "Создать модель"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/js/tours/account_accountant.js:0
+#, python-format
+msgid ""
+"Create your first vendor bill.<br/><br/><i>Tip: If you don’t have one on "
+"hand, use our sample bill.</i>"
+msgstr ""
+"Создайте свой первый счет от поставщика.<br/><br/> Совет<i>: если у вас нет "
+"под рукой такого счета, воспользуйтесь нашим образцом</i>"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_auto_reconcile_wizard__create_uid
+#: model:ir.model.fields,field_description:account_accountant.field_account_change_lock_date__create_uid
+#: model:ir.model.fields,field_description:account_accountant.field_account_fiscal_year__create_uid
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__create_uid
+msgid "Created by"
+msgstr "Создано"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_auto_reconcile_wizard__create_date
+#: model:ir.model.fields,field_description:account_accountant.field_account_change_lock_date__create_date
+#: model:ir.model.fields,field_description:account_accountant.field_account_fiscal_year__create_date
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__create_date
+msgid "Created on"
+msgstr "Создано"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/kanban.js:0
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__credit
+#, python-format
+msgid "Credit"
+msgstr "Кредит"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_bank_statement_line__cron_last_check
+msgid "Cron Last Check"
+msgstr "Последняя проверка Cron"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/kanban.js:0
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__currency_id
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_reconcile_tree
+#, python-format
+msgid "Currency"
+msgstr "Валюта"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__reco_currency_id
+msgid "Currency to use for reconciliation"
+msgstr "Валюта, используемая для сверки"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/bank_rec_widget.py:0
+#, python-format
+msgid "Customer/Vendor"
+msgstr "Заказчик/Поставщик"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/kanban.js:0
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__date
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__date
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_search_bank_rec_widget
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_search_bank_rec_widget
+#, python-format
+msgid "Date"
+msgstr "Дата"
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_account_move_line__deferred_end_date
+msgid "Date at which the deferred expense/revenue ends"
+msgstr "Дата окончания отложенного расхода/дохода"
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_account_move_line__deferred_start_date
+msgid "Date at which the deferred expense/revenue starts"
+msgstr "Дата, с которой начинается отсчет отложенных расходов/доходов"
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__res_company__deferred_amount_computation_method__day
+msgid "Days"
+msgstr "Дней"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/kanban.js:0
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__debit
+#, python-format
+msgid "Debit"
+msgstr "Дебет"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_move.py:0
+#, python-format
+msgid "Deferral of %s"
+msgstr "Отсрочка %s"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_res_company__deferred_amount_computation_method
+#: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__deferred_amount_computation_method
+msgid "Deferred Amount Computation Method"
+msgstr "Метод расчета отложенной суммы"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_move.py:0
+#: model:ir.model.fields,field_description:account_accountant.field_account_bank_statement_line__deferred_move_ids
+#: model:ir.model.fields,field_description:account_accountant.field_account_move__deferred_move_ids
+#: model:ir.model.fields,field_description:account_accountant.field_account_payment__deferred_move_ids
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_form_inherit
+#, python-format
+msgid "Deferred Entries"
+msgstr "Отложенные записи"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__deferred_journal_id
+msgid "Deferred Entries Journal"
+msgstr "Журнал отложенных записей"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_bank_statement_line__deferred_entry_type
+#: model:ir.model.fields,field_description:account_accountant.field_account_move__deferred_entry_type
+#: model:ir.model.fields,field_description:account_accountant.field_account_payment__deferred_entry_type
+msgid "Deferred Entry Type"
+msgstr "Тип отложенного ввода"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_res_company__deferred_expense_account_id
+#: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__deferred_expense_account_id
+#: model:ir.model.fields.selection,name:account_accountant.selection__account_move__deferred_entry_type__expense
+msgid "Deferred Expense"
+msgstr "Отложенные расходы"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_res_company__deferred_journal_id
+msgid "Deferred Journal"
+msgstr "Журнал отложенных операций"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_res_company__deferred_revenue_account_id
+#: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__deferred_revenue_account_id
+#: model:ir.model.fields.selection,name:account_accountant.selection__account_move__deferred_entry_type__revenue
+msgid "Deferred Revenue"
+msgstr "Отложенная выручка"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+msgid "Define fiscal years of more or less than one year"
+msgstr "Определять учетные периоды более или менее года"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_form_with_buttons
+msgid "Delete"
+msgstr "Удалить"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_search_bank_rec_widget
+msgid "Deposits"
+msgstr "Депозиты"
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_digest_digest
+msgid "Digest"
+msgstr "Обзор"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_auto_reconcile_wizard
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_reconcile_wizard
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_form_with_buttons
+msgid "Discard"
+msgstr "Отменить"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_reconcile_tree
+msgid "Discount Amount"
+msgstr "Сумма скидки"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_reconcile_tree
+msgid "Discount Date"
+msgstr "Дата скидки"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#, python-format
+msgid "Discuss"
+msgstr "Общение"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__display_allow_partials
+msgid "Display Allow Partials"
+msgstr "Отображение Разрешить частицы"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_auto_reconcile_wizard__display_name
+#: model:ir.model.fields,field_description:account_accountant.field_account_change_lock_date__display_name
+#: model:ir.model.fields,field_description:account_accountant.field_account_fiscal_year__display_name
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__display_name
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__display_name
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__display_stroked_amount_currency
+msgid "Display Stroked Amount Currency"
+msgstr "Отобразить строку Сумма Валюта"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__display_stroked_balance
+msgid "Display Stroked Balance"
+msgstr "Отображение строптивого баланса"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/digest.py:0
+#, python-format
+msgid "Do not have access, skip this data for user's digest email"
+msgstr ""
+"Нет доступа. Пропустите эти данные для резюме электронной почты пользователя"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/kanban.js:0
+#, python-format
+msgid "Edit Statement"
+msgstr "Редактировать заявление"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_fiscal_year__date_to
+#: model:ir.model.fields,field_description:account_accountant.field_account_move_line__deferred_end_date
+msgid "End Date"
+msgstr "Дата окончания"
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_account_fiscal_year__date_to
+msgid "Ending Date, included in the fiscal year."
+msgstr "Дата окончания, включенная в финансовый год."
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_res_company__invoicing_switch_threshold
+#: model:ir.model.fields,help:account_accountant.field_res_config_settings__invoicing_switch_threshold
+msgid ""
+"Every payment and invoice before this date will receive the 'From Invoicing'"
+" status, hiding all the accounting entries related to it. Use this option "
+"after installing Accounting if you were using only Invoicing before, before "
+"importing all your actual accounting data in to Odoo."
+msgstr ""
+"Каждый платеж и счет до этой даты получит статус 'From Invoicing', скрывая "
+"все бухгалтерские проводки, связанные с ним. Используйте эту опцию после "
+"установки Бухгалтерии, если до этого вы использовали только Счета-фактуры, "
+"перед импортом всех ваших фактических бухгалтерских данных в Odoo."
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/bank_rec_widget.py:0
+#, python-format
+msgid "Exchange Difference: %s"
+msgstr "Разница в обмене: %s"
+
+#. module: account_accountant
+#: model:ir.actions.act_window,name:account_accountant.action_open_auto_reconcile_wizard
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_auto_reconcile_wizard
+msgid "Find Entries to Reconcile Automatically"
+msgstr "Поиск записей для автоматической сверки"
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_account_fiscal_year
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+msgid "Fiscal Year"
+msgstr "Финансовый год"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.action_account_fiscal_year_form
+msgid "Fiscal Year 2018"
+msgstr "Учетный год 2018"
+
+#. module: account_accountant
+#: model:ir.actions.act_window,name:account_accountant.actions_account_fiscal_year
+#: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__group_fiscal_year
+#: model:ir.ui.menu,name:account_accountant.menu_account_fiscal_year
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+msgid "Fiscal Years"
+msgstr "Учетные годы"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__fiscalyear_last_day
+msgid "Fiscalyear Last Day"
+msgstr "Последний День Финансового Года"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__fiscalyear_last_month
+msgid "Fiscalyear Last Month"
+msgstr "Последний Месяц Финансового Года"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__flag
+msgid "Flag"
+msgstr "Флаг"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__force_partials
+msgid "Force Partials"
+msgstr "Силовые частицы"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__force_price_included_taxes
+msgid "Force Price Included Taxes"
+msgstr "Цена силы Включены налоги"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__form_index
+msgid "Form Index"
+msgstr "Индекс формы"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_auto_reconcile_wizard__from_date
+msgid "From"
+msgstr "От"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
+msgid "From Trade Payable accounts"
+msgstr "Со счетов кредиторской задолженности"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
+msgid "From Trade Receivable accounts"
+msgstr "Со счетов дебиторской задолженности"
+
+#. module: account_accountant
+#: model_terms:digest.tip,tip_description:account_accountant.digest_tip_account_accountant_0
+msgid ""
+"From any list view, select multiple records and the list becomes editable. "
+"If you update a cell, selected records are updated all at once. Use this "
+"feature to update multiple journal entries from the General Ledger, or any "
+"Journal view."
+msgstr ""
+"В любом представлении списка выберите несколько записей, и список станет "
+"доступным для редактирования. При обновлении ячейки выбранные записи "
+"обновляются все сразу. Используйте эту функцию для обновления нескольких "
+"записей журнала из Главной книги или любого представления журнала."
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__res_company__deferred_amount_computation_method__full_months
+msgid "Full Months"
+msgstr ""
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_res_company__generate_deferred_expense_entries_method
+#: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__generate_deferred_expense_entries_method
+msgid "Generate Deferred Expense Entries Method"
+msgstr "Метод создания проводок по отложенным расходам"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_res_company__generate_deferred_revenue_entries_method
+#: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__generate_deferred_revenue_entries_method
+msgid "Generate Deferred Revenue Entries Method"
+msgstr "Метод создания проводок по отложенным доходам"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+msgid "Generate Expense Entries"
+msgstr "Создание записей о расходах"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+msgid "Generate Revenue Entries"
+msgstr "Генерировать проводки по выручке"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/js/tours/account_accountant.js:0
+#: code:addons/account_accountant/static/src/js/tours/account_accountant.js:0
+#: code:addons/account_accountant/static/src/js/tours/account_accountant.js:0
+#, python-format
+msgid "Go to invoicing"
+msgstr "Перейти к выставлению счетов"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/js/tours/account_accountant.js:0
+#, python-format
+msgid ""
+"Great! Let’s continue.<br/><br/><i>Tip: If you choose to upload your bill, "
+"don’t forget to attach it.</i>"
+msgstr ""
+"Отлично! Давайте продолжим.<br/><br/> Совет<i>: Если вы решили загрузить "
+"счет, не забудьте прикрепить его</i>"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
+msgid "Group By"
+msgstr "Группировать по"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__group_tax_id
+msgid "Group Tax"
+msgstr "Групповой налог"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_move_line__has_deferred_moves
+msgid "Has Deferred Moves"
+msgstr "Откладывает переезды"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_auto_reconcile_wizard__id
+#: model:ir.model.fields,field_description:account_accountant.field_account_change_lock_date__id
+#: model:ir.model.fields,field_description:account_accountant.field_account_fiscal_year__id
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__id
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__id
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_bank_rec_widget__st_line_to_check
+msgid ""
+"If this checkbox is ticked, it means that the user was not sure of all the "
+"related information at the time of the creation of the move and that the "
+"move needs to be checked again."
+msgstr ""
+"Если этот флажок отмечен, это означает, что пользователь не был уверен во "
+"всей сопутствующей информации во время создания перемещения и что "
+"перемещение необходимо проверить еще раз."
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_search_bank_rec_widget
+msgid "Incoming"
+msgstr "Входящий"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Incorrect fiscal year date: day is out of range for month. Month: %s; Day: "
+"%s"
+msgstr ""
+"Неправильная дата финансового года: день выходит за пределы диапазона для "
+"месяца. Месяц: %s; День: %s"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__index
+msgid "Index"
+msgstr "Индекс"
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__bank_rec_widget__state__invalid
+msgid "Invalid"
+msgstr "Недействительный"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_search_bank_rec_widget
+msgid "Invalid statements"
+msgstr "Недопустимые утверждения"
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_bank_rec_widget__state
+msgid ""
+"Invalid: The bank transaction can't be validate since the suspense account is still involved\n"
+"Valid: The bank transaction can be validated.\n"
+"Reconciled: The bank transaction has already been processed. Nothing left to do."
+msgstr ""
+"Недействительно: Банковская транзакция не может быть подтверждена, т.к. все еще задействован промежуточный счет\n"
+"Valid: Банковская операция может быть подтверждена.\n"
+"Согласована: Банковская операция уже обработана. Больше ничего делать не нужно."
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_list_bank_rec_widget
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_search_bank_rec_widget
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_search_bank_rec_widget
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_reconcile_tree
+msgid "Invoice Date"
+msgstr "Дата счета"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_res_company__invoicing_switch_threshold
+#: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__invoicing_switch_threshold
+msgid "Invoicing Switch Threshold"
+msgstr "Порог переключения счетов-фактур"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__st_line_is_reconciled
+msgid "Is Reconciled"
+msgstr "Согласован"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__is_write_off_required
+msgid "Is a write-off move required to reconcile"
+msgstr "Требуется ли перемещение списания для выравнивания"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__is_transfer_required
+msgid "Is an account transfer required"
+msgstr "Требуется ли перевод средств на счет"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__transfer_warning_message
+msgid "Is an account transfer required to reconcile"
+msgstr "Требуется ли перевод счета для выверки"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__lock_date_violated_warning_message
+msgid "Is the date violating the lock date of moves"
+msgstr "Нарушает ли эта дата дату блокировки перемещений"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.account_journal_dashboard_kanban_view
+msgid "Items"
+msgstr "Элементы"
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_account_journal
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__journal_id
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__st_line_journal_id
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_search_bank_rec_widget
+msgid "Journal"
+msgstr "Журнал"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__journal_currency_id
+msgid "Journal Currency"
+msgstr "Валюта журнала"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_change_lock_date__period_lock_date
+msgid "Journal Entries Lock Date"
+msgstr "Журнальные записи Дата блокировки"
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_account_move
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__move_id
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_search_bank_rec_widget
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_search_bank_rec_widget
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_reconcile_tree
+msgid "Journal Entry"
+msgstr "Запись в журнале"
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_account_move_line
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_search_bank_rec_widget
+msgid "Journal Item"
+msgstr "Наименование в журнале"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_reconcile_tree
+msgid "Journal Items"
+msgstr "Статьи из журнала"
+
+#. module: account_accountant
+#: model:ir.actions.act_window,name:account_accountant.action_move_line_posted_unreconciled
+msgid "Journal Items to reconcile"
+msgstr "Статьи журнала для сверки"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
+msgid "Journal items where matching number isn't set"
+msgstr "Элементы журнала, в которых соответствующий номер не задан"
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_res_config_settings__deferred_journal_id
+msgid "Journal used for deferred entries"
+msgstr "Журнал, используемый для отложенных записей"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_digest_digest__kpi_account_bank_cash_value
+msgid "Kpi Account Bank Cash Value"
+msgstr "Kpi Account Bank Cash Value"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__label
+#, python-format
+msgid "Label"
+msgstr "Метка"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+msgid "Last Day"
+msgstr "Последний день"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_auto_reconcile_wizard__write_uid
+#: model:ir.model.fields,field_description:account_accountant.field_account_change_lock_date__write_uid
+#: model:ir.model.fields,field_description:account_accountant.field_account_fiscal_year__write_uid
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Последнее обновление"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_auto_reconcile_wizard__write_date
+#: model:ir.model.fields,field_description:account_accountant.field_account_change_lock_date__write_date
+#: model:ir.model.fields,field_description:account_accountant.field_account_fiscal_year__write_date
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__write_date
+msgid "Last Updated on"
+msgstr "Последнее обновление"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_auto_reconcile_wizard
+msgid "Launch"
+msgstr "Запустить"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/js/tours/account_accountant.js:0
+#, python-format
+msgid "Let’s automate your bills, bank transactions and accounting processes."
+msgstr ""
+"Давайте автоматизируем ваши счета, банковские операции и бухгалтерские "
+"процессы."
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/js/tours/account_accountant.js:0
+#, python-format
+msgid "Let’s go back to the dashboard."
+msgstr "Вернемся к рабочей панели."
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/js/tours/account_accountant.js:0
+#, python-format
+msgid "Let’s see how a bill looks like in form view."
+msgstr "Давайте посмотрим, как выглядит счет в виде формы."
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_auto_reconcile_wizard__line_ids
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__line_ids
+msgid "Line"
+msgstr "Линия"
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_bank_rec_widget_line
+msgid "Line of the bank reconciliation widget"
+msgstr "Строка виджета сверки банковских счетов"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__fiscalyear_lock_date
+msgid "Lock Date for All Users"
+msgstr "Дата блокировки для всех пользователей"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__period_lock_date
+msgid "Lock Date for Non-Advisers"
+msgstr "Дата блокировки для неруководителей"
+
+#. module: account_accountant
+#: model:ir.ui.menu,name:account_accountant.menu_action_change_lock_date
+msgid "Lock Dates"
+msgstr "Даты блокировки"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_change_lock_date
+msgid "Management Closing"
+msgstr "Управление закрытием"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#, python-format
+msgid "Manual Operations"
+msgstr "Ввести вручную"
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__res_company__generate_deferred_expense_entries_method__manual
+#: model:ir.model.fields.selection,name:account_accountant.selection__res_company__generate_deferred_revenue_entries_method__manual
+msgid "Manually & Grouped"
+msgstr "Вручную и по группам"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__manually_modified
+msgid "Manually Modified"
+msgstr "Изменено вручную"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/list_view_switcher.js:0
+#: code:addons/account_accountant/static/src/components/matching_link_widget/matching_link_widget.xml:0
+#, python-format
+msgid "Match"
+msgstr "Совпадение"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#, python-format
+msgid "Match Existing Entries"
+msgstr "Выбрать существующие записи"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_kanban_bank_rec_widget
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_search_bank_rec_widget
+msgid "Matched"
+msgstr "Подборка"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_payment.py:0
+#, python-format
+msgid "Matched Transactions"
+msgstr "Совпадающие операции"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__matching_rules_allow_auto_reconcile
+msgid "Matching Rules Allow Auto Reconcile"
+msgstr "Правила сопоставления Разрешить автоматическую сверку"
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_res_config_settings__deferred_amount_computation_method
+msgid "Method used to compute the amount of deferred entries"
+msgstr "Метод, использованный для расчета суммы отложенных записей"
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_res_config_settings__generate_deferred_expense_entries_method
+msgid "Method used to generate deferred expense entries"
+msgstr "Метод, используемый для создания записей по отложенным расходам"
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_res_config_settings__generate_deferred_revenue_entries_method
+msgid "Method used to generate deferred revenue entries"
+msgstr "Метод, используемый для создания записей по отложенной выручке"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/bank_rec_widget.py:0
+#, python-format
+msgid "Misc"
+msgstr "Разное"
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__res_company__deferred_amount_computation_method__month
+msgid "Months"
+msgstr "Месяцев"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#, python-format
+msgid "More"
+msgstr "Больше"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_move_line__move_attachment_ids
+msgid "Move Attachment"
+msgstr "Переместить вложение"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__move_line_ids
+msgid "Move lines to reconcile"
+msgstr "Переместите линии для согласования"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_fiscal_year__name
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__name
+msgid "Name"
+msgstr "Имя"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#, python-format
+msgid "New"
+msgstr "Новый"
+
+#. module: account_accountant
+#: model:ir.actions.act_window,name:account_accountant.action_bank_statement_line_form_bank_rec_widget
+#: model_terms:ir.ui.view,arch_db:account_accountant.account_journal_dashboard_kanban_view
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_form_bank_rec_widget
+msgid "New Transaction"
+msgstr "Новая транзакция"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/move_line_list/move_line_list.xml:0
+#, python-format
+msgid "No attachments linked."
+msgstr "Приложения не подключены."
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_search_bank_rec_widget
+msgid "No statement"
+msgstr "Нет заявления"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_bank_statement.py:0
+#, python-format
+msgid "No transactions matching your filters were found."
+msgstr "Транзакции, соответствующие вашим фильтрам, не найдены."
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_res_config_settings__tax_lock_date
+msgid ""
+"No users can edit journal entries related to a tax prior and inclusive of "
+"this date."
+msgstr ""
+"Ни один пользователь не может редактировать записи журнала, относящиеся к "
+"налогу до этой даты и включительно."
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_res_config_settings__fiscalyear_lock_date
+msgid ""
+"No users, including Advisers, can edit accounts prior to and inclusive of "
+"this date. Use it for fiscal year locking for example."
+msgstr ""
+"Никакие пользователи, включая Консультантов, не могут отредактировать счета "
+"до и включительно этой даты. Используйте его, например, для закрытия "
+"финансового года."
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_search_bank_rec_widget
+msgid "Not Matched"
+msgstr "Не совпадает"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_search_bank_rec_widget
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_tree_bank_rec_widget
+msgid "Notes"
+msgstr "Заметки"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_bank_statement.py:0
+#, python-format
+msgid "Nothing to do here!"
+msgstr "Здесь нечего делать!"
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__res_company__generate_deferred_expense_entries_method__on_validation
+msgid "On bill validation"
+msgstr "О проверке купюр"
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__res_company__generate_deferred_revenue_entries_method__on_validation
+msgid "On invoice validation"
+msgstr "При проверке счета-фактуры"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/wizard/account_change_lock_date.py:0
+#, python-format
+msgid "Only Billing Administrators are allowed to change lock dates!"
+msgstr "Только администраторы биллинга могут изменять даты блокировки!"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_reconcile_wizard
+msgid ""
+"Only partial reconciliation is possible. Proceed in multiple steps if you "
+"want to full reconcile."
+msgstr ""
+"Возможна только частичная сверка. Если вы хотите провести полную сверку, "
+"выполните несколько шагов."
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_res_config_settings__period_lock_date
+msgid ""
+"Only users with the 'Adviser' role can edit accounts prior to and inclusive "
+"of this date. Use it for period locking inside an open fiscal year, for "
+"example."
+msgstr ""
+"Только пользователи с ролью 'Консультант', могут отредактировать счета до и "
+"включительно этой даты. Используйте его, например,  для блокировки периода "
+"внутри открытого финансового года."
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_list_bank_rec_widget
+msgid "Open Amount"
+msgstr "Открытая Сумма"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_list_bank_rec_widget
+msgid "Open Amount in Currency"
+msgstr "Открытая сумма в валюте"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/bank_rec_widget.py:0
+#, python-format
+msgid "Open balance: %s"
+msgstr "Открытый баланс: %s"
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__account_auto_reconcile_wizard__search_mode__one_to_one
+msgid "Opposite balances one by one"
+msgstr "Противоположные балансы один за другим"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_move.py:0
+#, python-format
+msgid "Original Deferred Entries"
+msgstr "Первоначальные отложенные проводки"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_bank_statement_line__deferred_original_move_ids
+#: model:ir.model.fields,field_description:account_accountant.field_account_move__deferred_original_move_ids
+#: model:ir.model.fields,field_description:account_accountant.field_account_payment__deferred_original_move_ids
+msgid "Original Invoices"
+msgstr "Оригиналы счетов-фактур"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_reconcile_tree
+msgid "Originator Tax"
+msgstr "Налог на оригинатора"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_search_bank_rec_widget
+msgid "Outgoing"
+msgstr "Исходящие"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/kanban.js:0
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__partner_id
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__partner_id
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
+#, python-format
+msgid "Partner"
+msgstr "Партнер"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__partner_currency_id
+msgid "Partner Currency"
+msgstr "Валюта партнера"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__partner_name
+msgid "Partner Name"
+msgstr "Имя партнера"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__partner_payable_account_id
+msgid "Partner Payable Account"
+msgstr "Счет кредиторской задолженности партнера"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__partner_payable_amount
+msgid "Partner Payable Amount"
+msgstr "Партнерская задолженность Сумма"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__partner_receivable_account_id
+msgid "Partner Receivable Account"
+msgstr "Счет дебиторской задолженности партнера"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__partner_receivable_amount
+msgid "Partner Receivable Amount"
+msgstr "Партнерская дебиторская задолженность Сумма"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_auto_reconcile_wizard__partner_ids
+msgid "Partners"
+msgstr "Партнеры"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
+msgid "Payable"
+msgstr "К оплате"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#, python-format
+msgid "Payable:"
+msgstr "К оплате:"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_payment_form_inherit_account_accountant
+msgid "Payment Matching"
+msgstr "Согласование Платежей"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_bank_statement_line__payment_state_before_switch
+#: model:ir.model.fields,field_description:account_accountant.field_account_move__payment_state_before_switch
+#: model:ir.model.fields,field_description:account_accountant.field_account_payment__payment_state_before_switch
+msgid "Payment State Before Switch"
+msgstr "Состояние платежа перед переключением"
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_account_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_search_bank_rec_widget
+msgid "Payments"
+msgstr "Платежи"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.account_journal_dashboard_kanban_view
+msgid "Payments Matching"
+msgstr "Сопоставление платежей"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_change_lock_date
+msgid "Pick a date to lock"
+msgstr "Выберите дату для блокировки"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_move.py:0
+#, python-format
+msgid "Please set the deferred accounts in the accounting settings."
+msgstr "Пожалуйста, установите отложенные счета в настройках учета."
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_move.py:0
+#, python-format
+msgid "Please set the deferred journal in the accounting settings."
+msgstr ""
+"Пожалуйста, установите журнал отложенных операций в настройках "
+"бухгалтерского учета."
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+msgid "Post Deferred entries in:"
+msgstr "Проводка Отложенные записи в:"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_res_company__predict_bill_product
+#: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__predict_bill_product
+msgid "Predict Bill Product"
+msgstr "Прогнозирование вексельного продукта"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+msgid "Predict vendor bill product"
+msgstr "Прогнозирование счета поставщика"
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_account_reconcile_model
+msgid ""
+"Preset to create journal entries during a invoices and payments matching"
+msgstr ""
+"Предустановка для создания записей в журнале при сопоставлении счетов и "
+"платежей"
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_account_change_lock_date__fiscalyear_lock_date
+msgid ""
+"Prevents Journal Entry creation or modification up to the defined date "
+"inclusive for all users. As a closed period, all accounting operations are "
+"prohibited."
+msgstr ""
+"Запрещает создание или изменение записей журнала до заданной даты "
+"включительно для всех пользователей. В качестве закрытого периода все "
+"учетные операции запрещены."
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_account_change_lock_date__period_lock_date
+msgid ""
+"Prevents Journal entries creation up to the defined date inclusive. Except "
+"for Accountant users."
+msgstr ""
+"Предотвращает создание записей в журнале до заданной даты включительно. За "
+"исключением пользователей \"Бухгалтер\"."
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_account_change_lock_date__tax_lock_date
+msgid ""
+"Prevents Tax Returns modification up to the defined date inclusive (Journal "
+"Entries involving taxes). The Tax Return Lock Date is automatically set when"
+" the corresponding Journal Entry is posted."
+msgstr ""
+"Предотвращает модификацию налоговых деклараций до определенной даты "
+"включительно (журнальные проводки, связанные с налогами). Дата блокировки "
+"налоговой декларации автоматически устанавливается при публикации "
+"соответствующей журнальной записи."
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_form_with_buttons
+msgid "Print"
+msgstr "Печать"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
+msgid "Receivable"
+msgstr "Дебиторская задолженность"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#, python-format
+msgid "Receivable:"
+msgstr "Дебиторская задолженность:"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_auto_reconcile_wizard__search_mode
+#: model:ir.ui.menu,name:account_accountant.menu_account_reconcile
+#: model_terms:ir.ui.view,arch_db:account_accountant.account_journal_dashboard_kanban_view
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_reconcile_wizard
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_reconcile_tree
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_tree
+msgid "Reconcile"
+msgstr "Выверить"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_reconcile_wizard
+msgid "Reconcile & open"
+msgstr "Согласование и открытие"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__reco_account_id
+msgid "Reconcile Account"
+msgstr "Сверка счетов"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__reconcile_model_id
+msgid "Reconcile Model"
+msgstr "Согласовать модель"
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__bank_rec_widget__state__reconciled
+msgid "Reconciled"
+msgstr "Сверено"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__reco_model_id
+msgid "Reconciliation model"
+msgstr "Модель примирения"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+msgid "Record cost of goods sold in your journal entries"
+msgstr "Отразите себестоимость проданных товаров в журнальных записях"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_form_inherit
+msgid "Related Purchase(s)"
+msgstr "Сопутствующая покупка(и)"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_form_inherit
+msgid "Related Sale(s)"
+msgstr "Связанные продажи"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#, python-format
+msgid "Reset"
+msgstr "Сброс"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_reconcile_tree
+msgid "Residual"
+msgstr "Остаток"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_reconcile_tree
+msgid "Residual in Currency"
+msgstr "Остаток в валюте"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__return_todo_command
+msgid "Return Todo Command"
+msgstr "Возврат команды Todo"
+
+#. module: account_accountant
+#: model:ir.model,name:account_accountant.model_account_reconcile_model_line
+msgid "Rules for the reconciliation model"
+msgstr "Правила для модели примирения"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_change_lock_date
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_form_with_buttons
+msgid "Save"
+msgstr "Сохранить"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_form_bank_rec_widget
+msgid "Save & Close"
+msgstr "Сохранить и закрыть"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_form_bank_rec_widget
+msgid "Save & New"
+msgstr "Сохранить & Новый"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
+msgid "Search Journal Items to Reconcile"
+msgstr "Поиск статей журнала для сверки"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__selected_aml_ids
+msgid "Selected Aml"
+msgstr "Избранное Амл"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__selected_reco_model_id
+msgid "Selected Reco Model"
+msgstr "Выбранная модель Reco"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#, python-format
+msgid "Set as Checked"
+msgstr "Установить как Проверено"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__single_currency_mode
+msgid "Single Currency Mode"
+msgstr "Режим единой валюты"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__source_aml_id
+msgid "Source Aml"
+msgstr "Источник Амл"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__source_aml_move_id
+msgid "Source Aml Move"
+msgstr "Источник Aml Move"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__source_aml_move_name
+msgid "Source Aml Move Name"
+msgstr "Источник Aml Имя перемещения"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__source_amount_currency
+msgid "Source Amount Currency"
+msgstr "Источник Сумма Валюта"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__source_balance
+msgid "Source Balance"
+msgstr "Источник баланса"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__source_credit
+msgid "Source Credit"
+msgstr "Источник Кредит"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__source_debit
+msgid "Source Debit"
+msgstr "Источник Дебет"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__st_line_id
+msgid "St Line"
+msgstr "St Line"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__st_line_transaction_details
+msgid "St Line Transaction Details"
+msgstr "Детали транзакции St Line"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_fiscal_year__date_from
+#: model:ir.model.fields,field_description:account_accountant.field_account_move_line__deferred_start_date
+msgid "Start Date"
+msgstr "Дата начала"
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_account_fiscal_year__date_from
+msgid "Start Date, included in the fiscal year."
+msgstr "Дата начала, включается в финансовый год."
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__state
+msgid "State"
+msgstr "Область"
+
+#. module: account_accountant
+#: model:ir.actions.server,name:account_accountant.action_bank_statement_attachment
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_kanban_bank_rec_widget
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_search_bank_rec_widget
+msgid "Statement"
+msgstr "Заявление"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_search_bank_rec_widget
+msgid "Statement Line"
+msgstr "Строка заявления"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__suggestion_amount_currency
+msgid "Suggestion Amount Currency"
+msgstr "Предложение Сумма Валюта"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__suggestion_balance
+msgid "Suggestion Balance"
+msgstr "Баланс предложений"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__suggestion_html
+msgid "Suggestion Html"
+msgstr "Предложение Html"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_list_bank_rec_widget
+msgid "Suggestions"
+msgstr "Предложения"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__tax_id
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__tax_ids
+msgid "Tax"
+msgstr "Налог"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__tax_base_amount_currency
+msgid "Tax Base Amount Currency"
+msgstr "Налоговая база Сумма Валюта"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_reconcile_tree
+msgid "Tax Grids"
+msgstr "Налоговые сетки"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_res_config_settings__tax_lock_date
+msgid "Tax Lock Date"
+msgstr "Дата блокировки налога"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__tax_repartition_line_id
+msgid "Tax Repartition Line"
+msgstr "Линия перераспределения налогов"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_change_lock_date__tax_lock_date
+msgid "Tax Return Lock Date"
+msgstr "Дата блокировки налоговой декларации"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__tax_tag_ids
+msgid "Tax Tag"
+msgstr "Налоговая метка"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/kanban.js:0
+#, python-format
+msgid "Taxes"
+msgstr "Налоги"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__st_line_narration
+msgid "Terms and Conditions"
+msgstr "Условия и положения"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/rainbowman_content.xml:0
+#, python-format
+msgid "That's on average"
+msgstr "Это в среднем"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/wizard/account_reconcile_wizard.py:0
+#, python-format
+msgid ""
+"The date you set violates the lock date of one of your entry. It will be "
+"overriden by the following date : %(replacement_date)s"
+msgstr ""
+"Установленная вами дата нарушает дату блокировки одной из ваших записей. Она"
+" будет отменена следующей датой : %(replacement_date)s"
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_account_bank_statement_line__deferred_move_ids
+#: model:ir.model.fields,help:account_accountant.field_account_move__deferred_move_ids
+#: model:ir.model.fields,help:account_accountant.field_account_payment__deferred_move_ids
+msgid "The deferred entries created by this invoice"
+msgstr "Отложенные проводки, созданные по данному счету-фактуре"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_fiscal_year.py:0
+#, python-format
+msgid "The ending date must not be prior to the starting date."
+msgstr "Дата окончания не должна быть раньше даты начала."
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/bank_rec_widget_line.py:0
+#, python-format
+msgid ""
+"The invoice %(display_name_html)s with an open amount of %(open_amount)s "
+"will be entirely paid by the transaction."
+msgstr ""
+"Счет %(display_name_html)s с открытой суммой %(open_amount)s будет полностью"
+" оплачен транзакцией."
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/bank_rec_widget_line.py:0
+#, python-format
+msgid ""
+"The invoice %(display_name_html)s with an open amount of %(open_amount)s "
+"will be reduced by %(amount)s."
+msgstr ""
+"Счет %(display_name_html)s с открытой суммой %(open_amount)s будет уменьшен "
+"на %(amount)s."
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+msgid ""
+"The invoices up to this date will not be taken into account as accounting "
+"entries"
+msgstr ""
+"Счета-фактуры, выставленные до этой даты, не будут учитываться в качестве "
+"бухгалтерских проводок"
+
+#. module: account_accountant
+#: model:ir.model.fields,help:account_accountant.field_account_bank_statement_line__deferred_original_move_ids
+#: model:ir.model.fields,help:account_accountant.field_account_move__deferred_original_move_ids
+#: model:ir.model.fields,help:account_accountant.field_account_payment__deferred_original_move_ids
+msgid "The original invoices that created the deferred entries"
+msgstr ""
+"Оригинальные счета-фактуры, на основании которых были сделаны отложенные "
+"записи"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.res_config_settings_view_form
+msgid ""
+"The system will try to predict the product on vendor bill lines based on the"
+" label of the line"
+msgstr ""
+"Система попытается предсказать продукт в строках счета продавца, основываясь"
+" на метке строки"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"This bank transaction has been automatically validated using the "
+"reconciliation model '%s'."
+msgstr ""
+"Эта банковская операция была автоматически подтверждена с помощью модели "
+"сверки '%s'."
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/wizard/account_reconcile_wizard.py:0
+#, python-format
+msgid "This can only be used on journal items"
+msgstr "Это можно использовать только для статей журнала"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_reconcile_model_line.py:0
+#, python-format
+msgid ""
+"This reconciliation model can't be used in the manual reconciliation widget "
+"because its configuration is not adapted"
+msgstr ""
+"Эта модель сверки не может быть использована в виджете ручной сверки, "
+"поскольку ее конфигурация не адаптирована"
+
+#. module: account_accountant
+#: model:digest.tip,name:account_accountant.digest_tip_account_accountant_0
+msgid "Tip: Bulk update journal items"
+msgstr "Совет: Массовое обновление элементов журнала"
+
+#. module: account_accountant
+#: model:digest.tip,name:account_accountant.digest_tip_account_accountant_1
+msgid "Tip: Find an Accountant or register your Accounting Firm"
+msgstr ""
+"Совет: Найдите бухгалтера или зарегистрируйте свою бухгалтерскую фирму"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_account_auto_reconcile_wizard__to_date
+msgid "To"
+msgstr "Кому"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#: model:ir.model.fields,field_description:account_accountant.field_account_reconcile_wizard__to_check
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__st_line_to_check
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_search_bank_rec_widget
+#, python-format
+msgid "To Check"
+msgstr "Проверить"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_kanban_bank_rec_widget
+msgid "To check"
+msgstr "Чтобы проверить"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__todo_command
+msgid "Todo Command"
+msgstr "Команда Todo"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_reconcile_tree
+msgid "Total Balance"
+msgstr "Общий баланс"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_reconcile_tree
+msgid "Total Credit"
+msgstr "Общий кредит"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_reconcile_tree
+msgid "Total Debit"
+msgstr "Всего дебет"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_reconcile_tree
+msgid "Total Residual"
+msgstr "Итого Остаток"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_move_line_reconcile_tree
+msgid "Total Residual in Currency"
+msgstr "Итого остаток в валюте"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_bank_statement_line_search_bank_rec_widget
+msgid "Transaction"
+msgstr "Транзакция"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__transaction_currency_id
+msgid "Transaction Currency"
+msgstr "Валюта сделки"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#, python-format
+msgid "Transaction Details"
+msgstr "Детали транзакции"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.account_journal_dashboard_kanban_view
+msgid "Transactions"
+msgstr "Транзакции"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/wizard/account_reconcile_wizard.py:0
+#, python-format
+msgid "Transfer from %s"
+msgstr "Трансфер из %s"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/wizard/account_reconcile_wizard.py:0
+#, python-format
+msgid "Transfer to %s"
+msgstr "Перевести на %s"
+
+#. module: account_accountant
+#: model:ir.actions.server,name:account_accountant.auto_reconcile_bank_statement_line_ir_actions_server
+msgid "Try to reconcile automatically your statement lines"
+msgstr "Попробуйте автоматически выверять строки выписки"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_reconcile_search
+msgid "Unreconciled"
+msgstr "Несогласованные"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/res_company.py:0
+#, python-format
+msgid "Unreconciled statements lines"
+msgstr "Строки неоткорректированных отчетов"
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__bank_rec_widget__state__valid
+msgid "Valid"
+msgstr "Действительный"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_reconcile_model_widget_wizard
+#, python-format
+msgid "Validate"
+msgstr "Проверка"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/list_view_switcher.js:0
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_move_line_list_bank_rec_widget
+#, python-format
+msgid "View"
+msgstr "Просмотр"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#, python-format
+msgid "View models"
+msgstr "Посмотреть модели"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__wizard_id
+msgid "Wizard"
+msgstr "Мастер"
+
+#. module: account_accountant
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget__company_currency_id
+#: model:ir.model.fields,field_description:account_accountant.field_bank_rec_widget_line__company_currency_id
+msgid "Wizard Company Currency"
+msgstr "Валюта компании Wizard"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/wizard/account_reconcile_wizard.py:0
+#, python-format
+msgid "Write-Off"
+msgstr "Списание"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/wizard/account_reconcile_wizard.py:0
+#, python-format
+msgid "Write-Off Entry"
+msgstr "Запись о списании"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_fiscal_year.py:0
+#, python-format
+msgid ""
+"You can not have an overlap between two fiscal years, please correct the "
+"start and/or end dates of your fiscal years."
+msgstr ""
+"Вы не можете перекрывать два финансовых года, пожалуйста, исправьте даты "
+"начала и/или окончания ваших финансовых лет."
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/wizard/account_reconcile_wizard.py:0
+#, python-format
+msgid "You can only reconcile entries with up to two different accounts: %s"
+msgstr "Вы можете выровнять записи только с двумя разными счетами: %s"
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot change the account for a deferred line in %(move_name)s if it has"
+" already been deferred."
+msgstr ""
+"Вы не можете изменить счет для отложенной строки в %(move_name)s, если она "
+"уже была отложена."
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_move.py:0
+#, python-format
+msgid "You cannot create a deferred entry with a start date but no end date."
+msgstr ""
+"Вы не можете создать отложенную запись с начальной датой, но без конечной "
+"даты."
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot create a deferred entry with a start date later than the end "
+"date."
+msgstr ""
+"Вы не можете создать отложенную запись с датой начала позже даты окончания."
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot generate deferred entries for a miscellaneous journal entry."
+msgstr ""
+"Вы не можете создавать отложенные записи для разных записей в журнале."
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot reset to draft an invoice that is grouped in deferral entry. You "
+"can create a credit note instead."
+msgstr ""
+"Вы не можете сбросить в черновик счет-фактуру, сгруппированную в отложенной "
+"записи. Вместо этого можно создать кредитную ноту."
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/wizard/account_change_lock_date.py:0
+#, python-format
+msgid "You cannot set a lock date in the future."
+msgstr "Вы не можете установить дату блокировки в будущем."
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/bank_rec_widget_line.py:0
+#, python-format
+msgid ""
+"You might want to %(btn_start)sfully reconcile%(btn_end)s the document."
+msgstr ""
+"Возможно, вы захотите %(btn_start)sполностью сверить%(btn_end)s документ."
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/bank_rec_widget_line.py:0
+#, python-format
+msgid ""
+"You might want to make a %(btn_start)spartial reconciliation%(btn_end)s "
+"instead."
+msgstr ""
+"Возможно, вместо этого вы захотите сделать %(btn_start)sчастичное "
+"примирение%(btn_end)s."
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/bank_rec_widget_line.py:0
+#, python-format
+msgid "You might want to record a %(btn_start)spartial payment%(btn_end)s."
+msgstr ""
+"Возможно, вы захотите записать %(btn_start)sчастичную оплату%(btn_end)s."
+
+#. module: account_accountant
+#. odoo-python
+#: code:addons/account_accountant/models/bank_rec_widget_line.py:0
+#, python-format
+msgid ""
+"You might want to set the invoice as %(btn_start)sfully paid%(btn_end)s."
+msgstr ""
+"Возможно, вы захотите установить счет-фактуру как %(btn_start)sполностью "
+"оплаченный%(btn_end)s."
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/rainbowman_content.xml:0
+#, python-format
+msgid "You reconciled"
+msgstr "Вы согласовали"
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__bank_rec_widget_line__flag__aml
+msgid "aml"
+msgstr "aml"
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__bank_rec_widget_line__flag__auto_balance
+msgid "auto_balance"
+msgstr "автобаланс"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.view_account_reconcile_model_widget_wizard
+msgid "e.g. Bank Fees"
+msgstr "например, банковские комиссии"
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__bank_rec_widget_line__flag__early_payment
+msgid "early_payment"
+msgstr "досрочная_оплата"
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__bank_rec_widget_line__flag__exchange_diff
+msgid "exchange_diff"
+msgstr "exchange_diff"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#, python-format
+msgid "in"
+msgstr "в"
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__bank_rec_widget_line__flag__liquidity
+msgid "liquidity"
+msgstr "ликвидность"
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__bank_rec_widget_line__flag__manual
+msgid "manual"
+msgstr "ручной"
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__bank_rec_widget_line__flag__new_aml
+msgid "new_aml"
+msgstr "новый_aml"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/rainbowman_content.xml:0
+#, python-format
+msgid "seconds per transaction."
+msgstr "секунд на одну транзакцию."
+
+#. module: account_accountant
+#: model:ir.model.fields.selection,name:account_accountant.selection__bank_rec_widget_line__flag__tax_line
+msgid "tax_line"
+msgstr "налоговая_линия"
+
+#. module: account_accountant
+#: model_terms:ir.ui.view,arch_db:account_accountant.account_journal_dashboard_kanban_view
+msgid "to check"
+msgstr "проверять"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/rainbowman_content.xml:0
+#, python-format
+msgid "transaction in"
+msgstr "сделка в"
+
+#. module: account_accountant
+#. odoo-javascript
+#: code:addons/account_accountant/static/src/components/bank_reconciliation/rainbowman_content.xml:0
+#, python-format
+msgid "transactions in"
+msgstr "транзакции в"

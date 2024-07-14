@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ir_cron_sync_amazon_orders" model="ir.cron">
+        <field name="name">Amazon: sync orders</field>
+        <field name="model_id" ref="model_amazon_account"/>
+        <field name="state">code</field>
+        <field name="code">model._sync_orders()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">60</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="doall" eval="False"/>
+        <field name="priority">1000</field>
+    </record>
+
+    <record id="ir_cron_sync_amazon_pickings" model="ir.cron">
+        <field name="name">Amazon: sync delivery orders</field>
+        <field name="model_id" ref="model_stock_picking"/>
+        <field name="state">code</field>
+        <field name="code">model._sync_pickings()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">30</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=40)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="doall" eval="False"/>
+        <field name="priority">1000</field>
+    </record>
+
+    <record id="ir_cron_sync_amazon_inventory" model="ir.cron">
+        <field name="name">Amazon: sync available inventory</field>
+        <field name="model_id" ref="model_amazon_account"/>
+        <field name="state">code</field>
+        <field name="code">model._sync_inventory()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">30</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=40)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="doall" eval="False"/>
+        <field name="priority">1000</field>
+    </record>
+
+    <!-- Used only as a cron trigger. -->
+    <record id="ir_cron_sync_amazon_feeds" model="ir.cron">
+        <field name="name">Amazon: sync feeds</field>
+        <field name="model_id" ref="model_amazon_account"/>
+        <field name="state">code</field>
+        <field name="code">model._sync_feeds()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">9999</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="priority">1000</field>
+    </record>
+
+</odoo>

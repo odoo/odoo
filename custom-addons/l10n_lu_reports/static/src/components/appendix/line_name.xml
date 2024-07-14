@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="l10n_lu_reports.AppendixLineName" t-inherit="account_reports.AccountReportLineNameCustomizable">
+        <xpath expr="//td[@data-id='line_name']//div[hasclass('wrapper')]" position="replace">
+            <t t-if="props.line.unfoldable">
+                <a class="clickable" t-on-click="(ev) => controller.reportAction(ev, 'action_open_appendix_view')">
+                    <t t-out="props.line.name"/>
+                </a>
+                <button
+                    class="btn btn_action"
+                    t-on-click="(ev) => this.recomputeAction(ev)"
+                >
+                Recompute
+                </button>
+            </t>
+            <t t-else="">
+                <div data-id="content" class="content">
+                    <t t-component="env.component('AccountReportEllipsis')" t-props="{
+                            name: props.line.name?.toString(),
+                            type: 'string',
+                            maxCharacters: 80,
+                        }"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="soda_import_wizard_view_form" model="ir.ui.view">
+        <field name="name">soda.import.wizard.view.form</field>
+        <field name="model">soda.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="SODA Import">
+                <div class="alert alert-info" role="alert">
+                    The accounts in the SODA file will be mapped to the accounts listed below. If you change any of
+                    them, your choice will be the default one for future imports. Any empty mappings will create new
+                    accounts according to the ones defined in the SODA file.
+                </div>
+                <field name="soda_account_mapping_ids" nolabel="1" options="{'link': false, 'unlink': false}">
+                    <tree editable="bottom">
+                        <field name="display_name" string="SODA Account" readonly="1"/>
+                        <field name="account_id" required="1"/>
+                        <field name="company_id" column_invisible="True"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button string="Save &amp; Import" type="object"
+                        name="action_save_and_import" class="btn-primary"
+                        data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary"
+                        special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

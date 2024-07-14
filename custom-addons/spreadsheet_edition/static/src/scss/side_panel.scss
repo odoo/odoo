@@ -1,0 +1,46 @@
+.o_spreadsheet_pivot_side_panel,
+.o_spreadsheet_filter_editor_side_panel,
+.o_spreadsheet_global_filters_side_panel,
+.o-listing-details-side-panel,
+.o-listing-all-side-panel {
+    .o_side_panel_section {
+        background-color: #fff;
+        padding: 16px;
+
+        .o_side_panel_title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .o_model_field_selector,
+        .o_field_many2one {
+            width: 100%;
+
+            &,
+            *,
+            *:before,
+            *:after {
+                box-sizing: border-box;
+            }
+        }
+        .o_pivot_last_update {
+            padding-top: 5px;
+            color: darkgrey;
+        }
+    }
+
+    .o_side_panel_select {
+        background-color: #fff;
+        border-bottom: 1px solid #ccc;
+        padding: 16px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #f1f3f4;
+        }
+    }
+
+    .o_sp_en_display_name {
+        margin-bottom: 3px;
+    }
+}

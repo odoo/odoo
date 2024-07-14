@@ -1,0 +1,759 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* data_merge
+# 
+# Translators:
+# Wil Odoo, 2023
+# Rasareeyar Lappiam, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (สำเนา)"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_group.py:0
+#, python-format
+msgid "%s - Similarity: %s%%"
+msgstr "%s - ความเหมือน: %s%%"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid "%s records have been merged"
+msgstr "%s มีการรวมบันทึกแล้ว"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid ""
+"' deduplication rule.<br/>\n"
+"You can merge them"
+msgstr ""
+"' กฎการขจัดความซ้ำซ้อน<br/>\n"
+"คุณสามารถรวมพวกมันได้"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "<span class=\"me-1\">Every</span>"
+msgstr "<span class=\"me-1\">ทุก</span>"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "<span class=\"oe_inline\">%</span>"
+msgstr "<span class=\"oe_inline\">%</span>"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "<span invisible=\"not custom_merge_method\">Model specific</span>"
+msgstr "<span invisible=\"not custom_merge_method\">เฉพาะรุ่น</span>"
+
+#. module: data_merge
+#: model:ir.model.constraint,message:data_merge.constraint_data_merge_rule_uniq_model_id_field_id
+msgid "A field can only appear once!"
+msgstr "ฟิลด์สามารถปรากฏได้เพียงครั้งเดียว!"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__active
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__active
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__active
+msgid "Active"
+msgstr "เปิดใช้งาน"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__removal_mode__archive
+msgid "Archive"
+msgstr "เก็บถาวร"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_model_view_search
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Archived"
+msgstr "เก็บถาวรแล้ว"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid ""
+"Are you sure that you want to merge the selected records in their respective"
+" group?"
+msgstr "คุณแน่ใจหรือไม่ว่าต้องการรวมบันทึกที่เลือกไว้ในกลุ่มตามลำดับ?"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid "Are you sure that you want to merge these records?"
+msgstr "คุณแน่ใจหรือไม่ว่าต้องการรวมบันทึกเหล่านี้?"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__merge_mode__automatic
+msgid "Automatic"
+msgstr "โดยอัตโนมัติ"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_ir_model__is_merge_enabled
+#: model_terms:ir.ui.view,arch_db:data_merge.ir_model_view_search
+msgid "Can Be Merged"
+msgstr "สามารถรวมกันได้"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_rule.py:0
+#, python-format
+msgid "Case/Accent Insensitive Match"
+msgstr "การจับคู่ตัวพิมพ์เล็ก/ตัวพิมพ์เล็ก"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__company_id
+msgid "Company"
+msgstr "บริษัท"
+
+#. module: data_merge
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record_notification
+msgid "Configure rules to identify duplicate records"
+msgstr "กำหนดค่ากฎเพื่อระบุบันทึกที่ซ้ำกัน"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_res_partner
+msgid "Contact"
+msgstr "ติดต่อ"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_ir_model__ref_merge_ir_act_server_id
+msgid ""
+"Contextual menu action that redirects to the deduplicate view of data_merge."
+msgstr ""
+"การดำเนินการของเมนูตามบริบทที่เปลี่ยนเส้นทางไปยังมุมมองที่ไม่ซ้ำของ "
+"data_merge"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_create_uid
+msgid "Created By"
+msgstr "สร้างโดย"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_create_date
+msgid "Created On"
+msgstr "สร้างเมื่อ"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__create_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__create_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__create_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__create_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__create_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__create_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__mix_by_company
+msgid "Cross-Company"
+msgstr "ข้ามบริษัท"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__custom_merge_method
+msgid "Custom Merge Method"
+msgstr "วิธีการรวมแบบกำหนดเอง"
+
+#. module: data_merge
+#: model:ir.actions.server,name:data_merge.ir_cron_cleanup_ir_actions_server
+msgid "Data Merge: Cleanup Records"
+msgstr "การผสานข้อมูล: ล้างข้อมูลบันทึก"
+
+#. module: data_merge
+#: model:ir.actions.server,name:data_merge.ir_cron_find_duplicates_ir_actions_server
+msgid "Data Merge: Find Duplicate Records"
+msgstr "การผสานข้อมูล: ค้นหาบันทึกที่ซ้ำกัน"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__notify_frequency_period__days
+msgid "Days"
+msgstr "วัน"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+#, python-format
+msgid "Deduplicate"
+msgstr "ขจัดการซ้ำซ้อน"
+
+#. module: data_merge
+#: model:ir.ui.menu,name:data_merge.menu_data_merge_config_rules_deduplication
+#: model:ir.ui.menu,name:data_merge.menu_data_merge_group
+msgid "Deduplication"
+msgstr "การขจัดความซ้ำซ้อน"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_group
+msgid "Deduplication Group"
+msgstr "การขจัดความซ้ำซ้อนกลุ่ม"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_model
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__model_id
+msgid "Deduplication Model"
+msgstr "โมเดลการขจัดการซ้ำซ้อน"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_record
+msgid "Deduplication Record"
+msgstr "บันทึกขจัดการซ้ำซ้อน"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_rule
+msgid "Deduplication Rule"
+msgstr "กฏการขจัดความซ้ำซ้อน"
+
+#. module: data_merge
+#: model:ir.actions.act_window,name:data_merge.action_data_merge_config
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__rule_ids
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "Deduplication Rules"
+msgstr "กฎการขจัดความซ้ำซ้อน"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "Deduplication is forbidden on the model: %s"
+msgstr "การขจัดข้อมูลซ้ำซ้อนเป็นสิ่งต้องห้ามในโมเดล:%s"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__removal_mode__delete
+msgid "Delete"
+msgstr "ลบ"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__differences
+msgid "Differences"
+msgstr "ความแตกต่าง"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_record__differences
+msgid "Differences with the master record"
+msgstr "ข้อแตกต่างกับบันทึกหลัก"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.ir_model_view_form
+msgid "Disable Merge"
+msgstr "ปิดการผสาน"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_list
+msgid "Discard"
+msgstr "ละทิ้ง"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Discarded"
+msgstr "ละทิ้งแล้ว"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__display_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__display_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__display_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__divergent_fields
+msgid "Divergent Fields"
+msgstr "ฟิลด์ที่แตกต่างกัน"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__domain
+msgid "Domain"
+msgstr "โดเมน"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__removal_mode
+msgid "Duplicate Removal"
+msgstr "การลบที่ซ้ำกัน"
+
+#. module: data_merge
+#: model:ir.actions.act_window,name:data_merge.action_data_merge_record
+#: model:ir.actions.act_window,name:data_merge.action_data_merge_record_notification
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "Duplicates"
+msgstr "คัดลอก"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "Duplicates to Merge"
+msgstr "คัดลอกเพื่อผสาน"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__create_threshold
+msgid ""
+"Duplicates with a similarity below this threshold will not be suggested"
+msgstr "รายการที่ซ้ำกันซึ่งมีความเหมือนกันต่ำกว่าเกณฑ์นี้จะไม่ได้รับการแนะนำ"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.ir_model_view_form
+msgid "Enable Merge"
+msgstr "เปิดใช้งานการผสาน"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_rule.py:0
+#, python-format
+msgid "Exact Match"
+msgstr "เปิดการผสาน"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__field_values
+msgid "Field Values"
+msgstr "ค่าฟิลด์"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_ir_model__hide_merge_action
+msgid "Hide merge action button"
+msgstr "ซ่อนปุ่มการดำเนินการผสาน"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid "I've identified"
+msgstr "ฉันได้ระบุ"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__id
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_list
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_ir_model__is_merge_enabled
+msgid ""
+"If True, the generic data merge tool is available in the contextual menu of "
+"this model."
+msgstr ""
+"ถ้าเป็นจริง "
+"เครื่องมือผสานข้อมูลทั่วไปจะพร้อมใช้งานในเมนูตามบริบทของแบบโมเดลนี้"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__is_contextual_merge_action
+msgid ""
+"If True, this record is used for contextual menu action \"Merge\" on the "
+"target model."
+msgstr ""
+"หากเป็น จริง บันทึกนี้จะถูกใช้สำหรับการดำเนินการเมนูตามบริบทซึ่ง \"ผสาน\" "
+"บนโมเดลเป้าหมาย"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_ir_model__hide_merge_action
+msgid ""
+"If the model already has a custom merge method, the class attribute `_merge_disabled` is set to true on\n"
+"             that model and the generic data merge action should not be available on that model."
+msgstr ""
+"หากโมเดลมีวิธีการผสานแบบกำหนดเองอยู่แล้ว คลาสแอตทริบิวต์`_merge_disabled` จะถูกตั้งค่าเป็นจริงบน\n"
+"             โมเดลนั้นและการดำเนินการผสานข้อมูลทั่วไปไม่ควรมีอยู่ในโมเดล"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__is_deleted
+msgid "Is Deleted"
+msgstr "ถูกลบ"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__is_discarded
+msgid "Is Discarded"
+msgstr "ถูกละทิ้ง"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__is_master
+msgid "Is Master"
+msgstr "เป็นหลัก"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__last_notification
+msgid "Last Notification"
+msgstr "การแจ้งเตือนล่าสุด"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__write_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__write_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__write_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__write_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__write_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__write_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_record__used_in
+msgid "List of other models referencing this record"
+msgstr "รายการโมเดลอื่นๆ ที่อ้างอิงบันทึกนี้"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__notify_user_ids
+msgid "List of users to notify when there are new records to merge"
+msgstr "รายชื่อผู้ใช้ที่จะแจ้งเตือนเมื่อมีบันทึกใหม่ที่จะรวม"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__merge_mode__manual
+msgid "Manual"
+msgstr "ด้วยตัวเอง"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "Manual Selection - %s"
+msgstr "การเลือกด้วยตนเอง- %s"
+
+#. module: data_merge
+#. odoo-javascript
+#. odoo-python
+#: code:addons/data_merge/models/ir_model.py:0
+#: code:addons/data_merge/static/src/views/data_merge_list_view.xml:0
+#: model:ir.actions.server,name:data_merge.merge_action_crm_lost_reason
+#: model:ir.actions.server,name:data_merge.merge_action_crm_tag
+#: model:ir.actions.server,name:data_merge.merge_action_helpdesk_tag
+#: model:ir.actions.server,name:data_merge.merge_action_helpdesk_ticket
+#: model:ir.actions.server,name:data_merge.merge_action_project_tags
+#: model:ir.actions.server,name:data_merge.merge_action_project_task
+#: model:ir.actions.server,name:data_merge.merge_action_res_country
+#: model:ir.actions.server,name:data_merge.merge_action_res_country_state
+#: model:ir.actions.server,name:data_merge.merge_action_res_partner_category
+#: model:ir.actions.server,name:data_merge.merge_action_res_partner_industry
+#: model:ir.actions.server,name:data_merge.merge_action_res_partner_title
+#: model:ir.actions.server,name:data_merge.merge_action_utm_campaign
+#: model:ir.actions.server,name:data_merge.merge_action_utm_medium
+#: model:ir.actions.server,name:data_merge.merge_action_utm_source
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_list
+#, python-format
+msgid "Merge"
+msgstr "ผสาน"
+
+#. module: data_merge
+#: model:ir.ui.menu,name:data_merge.ir_model_menu_merge_action_manager
+msgid "Merge Action Manager"
+msgstr "ตัวจัดการการดำเนินการผสาน"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__match_mode
+msgid "Merge If"
+msgstr "ผสานหาก"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__merge_mode
+msgid "Merge Mode"
+msgstr "โหมดการผสาน"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_ir_model__ref_merge_ir_act_server_id
+msgid "Merge Server Action"
+msgstr "ผสานการดำเนินการของเซิร์ฟเวอร์"
+
+#. module: data_merge
+#: model:ir.actions.act_window,name:data_merge.ir_model_action_merge
+msgid "Merge action Manager"
+msgstr "ผสานตัวจัดการการดำเนินการ"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__is_contextual_merge_action
+msgid "Merge action attached"
+msgstr "แนบการดำเนินการผสาน"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "Missing required PostgreSQL extension: unaccent"
+msgstr "ไม่มีส่วนขยาย PostgreSQL ที่จำเป็น: ไม่เน้น"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__res_model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__res_model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__res_model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__res_model_id
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Model"
+msgstr "โมเดล"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__res_model_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__res_model_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__res_model_name
+msgid "Model Name"
+msgstr "ชื่อโมเดล"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_ir_model
+msgid "Models"
+msgstr "โมเดล"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__notify_frequency_period__months
+msgid "Months"
+msgstr "เดือน"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__name
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record_notification
+#, python-format
+msgid "No duplicates found"
+msgstr "ไม่พบรายการซ้ำ"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__notify_frequency
+msgid "Notify"
+msgstr "แจ้งเตือน"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__notify_frequency_period
+msgid "Notify Frequency Period"
+msgstr "แจ้งเตือนช่วงความถี่"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__notify_user_ids
+msgid "Notify Users"
+msgstr "แจ้งเตือนผู้ใช้"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "Query Failed."
+msgstr "แบบสอบถามล้มเหลว"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__record_ids
+msgid "Record"
+msgstr "บันทึก"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__group_id
+msgid "Record Group"
+msgstr "กลุ่มบันทึก"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__res_id
+msgid "Record ID"
+msgstr "ไอดีบันทึก"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Records"
+msgstr "บันทึก"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__records_to_merge_count
+msgid "Records To Merge Count"
+msgstr "จำนวนบันทึกที่รวม"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__domain
+msgid "Records eligible for the deduplication process"
+msgstr "บันทึกที่มีสิทธิ์สำหรับกระบวนการขจัดความซ้ำซ้อน"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "Records must be of the same model"
+msgstr "บันทึกต้องเป็นโมเดลเดียวกัน"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__merge_threshold
+msgid ""
+"Records with a similarity percentage above this threshold will be "
+"automatically merged"
+msgstr "บันทึกที่มีเปอร์เซ็นต์ความเหมือนกันเหนือเกณฑ์นี้จะถูกรวมโดยอัตโนมัติ"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Rule"
+msgstr "กฎ"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "Select a model to configure deduplication rules"
+msgstr "เลือกโมเดลเพื่อกำหนดค่ากฎการขจัดความซ้ำซ้อน"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__sequence
+msgid "Sequence"
+msgstr "ลำดับ"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__similarity
+msgid "Similarity %"
+msgstr "ความเหมือน %"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__merge_threshold
+msgid "Similarity Threshold"
+msgstr "เกณฑ์ที่เหมือนกัน"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_group__similarity
+msgid ""
+"Similarity coefficient based on the amount of text fields exactly in common."
+msgstr ""
+"ค่าสัมประสิทธิ์ที่เหมือนกันอิงตามจำนวนฟิลด์ข้อความที่เหมือนกันทุกประการ"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__rule_ids
+msgid "Suggest to merge records matching at least one of these rules"
+msgstr "แนะนำให้รวมบันทึกที่ตรงกับกฎเหล่านี้อย่างน้อยหนึ่งข้อ"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__create_threshold
+msgid "Suggestion Threshold"
+msgstr "การแนะนำเกณฑ์"
+
+#. module: data_merge
+#: model:ir.model.constraint,message:data_merge.constraint_data_merge_model_check_notif_freq
+msgid "The notification frequency should be greater than 0"
+msgstr "ความถี่ในการแจ้งเตือนควรมากกว่า 0"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "The referenced record does not exist"
+msgstr "ไม่มีบันทึกที่อ้างอิงอยู่"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid "The selected records have been merged"
+msgstr "บันทึกที่เลือกได้ถูกรวมเข้าด้วยกันแล้ว"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "The target model does not exists."
+msgstr "ไม่มีโมเดลเป้าหมาย"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "There is not referenced record"
+msgstr "ไม่มีบันทึกอ้างอิง"
+
+#. module: data_merge
+#: model:ir.model.constraint,message:data_merge.constraint_data_merge_model_uniq_name
+msgid "This name is already taken"
+msgstr "ชื่อนี้ถูกใช้ไปแล้ว"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__field_id
+msgid "Unique ID Field"
+msgstr "ฟิลด์ไอดีที่ไม่ซ้ำ"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.xml:0
+#, python-format
+msgid "Unselect"
+msgstr "ยกเลิกการเลือก"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_write_uid
+msgid "Updated By"
+msgstr "อัปเดตโดย"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_write_date
+msgid "Updated On"
+msgstr "อัปเดตเมื่อ"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__used_in
+msgid "Used In"
+msgstr "ใช้ใน"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__notify_frequency_period__weeks
+msgid "Weeks"
+msgstr "สัปดาห์"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__mix_by_company
+msgid "When enabled, duplicates across different companies will be suggested"
+msgstr "เมื่อเปิดใช้งาน รายการซ้ำกันในบริษัทต่างๆ จะถูกแนะนำ"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "You must select at least two %s in order to merge them."
+msgstr "คุณต้องเลือกอย่างน้อยสอง %sเพื่อที่จะรวมพวกมันเข้าด้วยกัน"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid "duplicate records with the '"
+msgstr "บันทึกที่ซ้ำกับ '"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid "here"
+msgstr "ที่นี้"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_merged
+msgid "merged into"
+msgstr "รวมเข้ากับ"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_main
+msgid "merged into this one"
+msgstr "รวมเข้ากับอันนี้"

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_partner_view_form" model="ir.ui.view">
+            <field name="name">res.partner.view.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <group name="fiscal_information" position="inside">
+                    <field name="l10n_br_tax_regime" invisible="'BR' not in fiscal_country_codes"/>
+                    <field name="l10n_br_taxpayer" invisible="'BR' not in fiscal_country_codes"/>
+                    <field name="l10n_br_activity_sector" invisible="'BR' not in fiscal_country_codes"/>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>

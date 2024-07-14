@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="view_hr_payslip_by_employees" model="ir.ui.view">
+            <field name="name">hr_payroll_payslip_employees</field>
+            <field name="model">hr.payslip.employees</field>
+            <field name="arch" type="xml">
+                <form string="Payslips by Employees">
+                    <span nolabel="1" colspan="2">This wizard will generate payslips for all selected employee(s) based on the dates and credit note specified on Payslips Run.</span>
+                    <separator string="Salary Structure"/>
+                    <div class="o_row">
+                        <p class="text-muted w-50">Set a specific structure if you wish to make an extra payslip (eg: End of the year bonus). If you leave this field empty, a regular payslip will be generated for all the selected employees, based on their contracts configuration.</p>
+                        <field name="structure_id" nolabel="1"/>
+                    </div>
+                    <separator string="Department" colspan="2"/>
+                    <div class="o_row">
+                        <p class="text-muted w-50">Set a specific department if you wish to select all the employees from this department (and subdepartments) at once.</p>
+                        <field name="department_id" nolabel="1"/>
+                    </div>
+                    <separator string="Employees"/>
+                    <field name="employee_ids" nolabel="1">
+                        <tree>
+                            <field name="name"/>
+                            <field name="work_email"/>
+                            <field name="department_id"/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button string="Generate" name="compute_sheet" type="object" class="oe_highlight" data-hotkey="q"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_hr_payslip_by_employees" model="ir.actions.act_window">
+            <field name="name">Generate Payslips</field>
+            <field name="res_model">hr.payslip.employees</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_hr_payslip_by_employees"/>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.actions.server" id="action_generate_payslips_from_work_entries">
+            <field name="name">Generate payslips</field>
+            <field name="model_id" ref="model_hr_payslip_employees"/>
+            <field name="binding_model_id" ref="model_hr_payslip_employees"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = env['hr.payslip.employees'].create({}).compute_sheet()
+            </field>
+        </record>
+</odoo>

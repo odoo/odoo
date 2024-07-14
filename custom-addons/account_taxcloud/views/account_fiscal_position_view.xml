@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_position_taxcloud_inherit_from_view" model="ir.ui.view">
+        <field name="name">account.fiscal.position.form.inherit</field>
+        <field name="model">account.fiscal.position</field>
+        <field name="inherit_id" ref="account.view_account_position_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <field name="is_taxcloud_configured" invisible="1"/>
+                <div class="alert alert-info text-center" role="alert"
+                    invisible="is_taxcloud_configured or not is_taxcloud">
+                    Please enter your Taxcloud credentials to compute tax rates automatically.
+                    <a class="alert-link" href="/web#action=account.action_account_config" role="button">Go to Settings.</a>
+                    <div invisible="auto_apply">
+                        Enable <b>Detect Automatically</b> to automatically use TaxCloud when selling to American customers.
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_taxcloud" invisible="'US' not in fiscal_country_codes"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

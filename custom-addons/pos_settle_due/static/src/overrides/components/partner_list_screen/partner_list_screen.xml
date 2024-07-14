@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_settle_due.PartnerListScreen" t-inherit="point_of_sale.PartnerListScreen" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('top-right-buttons')]" position="inside">
+            <t t-if="state.detailIsShown and state.editModeProps.partner.total_due">
+                <a class="button settle-due btn btn-lg btn-secondary" t-on-click="settleCustomerDue"> Settle due accounts</a>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('top-content')]/div[hasclass('back')]" position="after">
+             <div t-if="this.partnerInfos.overDue and this.partnerInfos.useLimit" class="partner-credit-limit-reached">
+                Credit limit reached!
+            </div>
+        </xpath>
+    </t>
+ </templates>

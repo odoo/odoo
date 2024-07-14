@@ -1,0 +1,48 @@
+.o_social_facebook_preview {
+    --social-facebook-color: #177af2;
+    .o_social_preview_icon_wrapper {
+        background-color: var(--social-facebook-color);
+
+        .fa {
+            transform: translate(0.3em, 0.2em);
+        }
+    }
+
+    .o_social_preview_author {
+        line-height: 1;
+
+        .o_social_preview_description {
+            font-size: 0.75em;
+        }
+    }
+}
+
+.o_social_comments_modal_facebook {
+    --social-facebook-color: #177af2;
+    a:not(.btn-outline-secondary):not(.o_social_comment_published_date):not(.o_social_post_published_date):not(.dropdown-item) {
+        color: var(--social-facebook-color);
+
+        &:hover, &:focus {
+            color: var(--social-facebook-color);
+            text-decoration: underline;
+        }
+    }
+}
+
+.o_social_stream_post_facebook_stats {
+    .o_social_facebook_likes.o_social_facebook_user_likes {
+        @include o-hover-text-color($o-enterprise-color, darken($o-enterprise-color, 10%));
+    }
+}
+
+.o_social_original_post_facebook_stats {
+    .o_social_facebook_likes.o_social_facebook_user_likes {
+        color: $o-enterprise-color;
+    }
+}
+
+.o_social_comments_modal {
+    .o_social_facebook_likes {
+        color: lighten($o-main-text-color, 10%);
+    }
+}

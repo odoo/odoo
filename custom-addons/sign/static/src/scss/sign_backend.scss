@@ -1,0 +1,209 @@
+.o_web_client {
+    .o_content {
+        .favorite_sign_button {
+            position: absolute;
+            @include o-hover-text-color($o-main-color-muted, $o-main-favorite-color);
+
+            &:hover:before {
+                content: "\f005";
+            }
+
+            &.favorite_sign_button_enabled {
+                @include o-hover-text-color($o-main-favorite-color, $o-main-color-muted);
+
+                &:hover:before {
+                    content: "\f006";
+                }
+            }
+        }
+        .o_form_view {
+            .o_field_pdfviewer, .o_field_pdf_viewer {
+                width: 100%;
+                height: 600px;
+                border: 0;
+            }
+        }
+    }
+    .modal-content {
+        .note-editable {
+            border: 0;
+        }
+    }
+
+    /* Module pages */
+    .o_sign_template, .o_sign_document {
+        display: flex;
+        flex-flow: column nowrap;
+        @include o-position-absolute(0, 0, 0, 0);
+        @include media-breakpoint-down(md) {
+            .o_sign_pdf_iframe {
+                flex: 0 0 100%;
+            }
+        }
+        background-color: $o-view-background-color;
+    }
+
+    /* Template edit view */
+    .o_sign_template {
+        .fa-pencil {
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity ease 250ms;
+        }
+        :hover > .fa-pencil {
+            opacity: 1.0; 
+        }
+
+        .o_sign_template_name_input {
+            width: auto;
+            display: inline-block;
+            border: 1px dashed white;
+            &:focus {
+                border: 1px solid silver;
+            }
+            &[disabled] {
+                background-color: transparent;
+                border: none;
+            }
+        }
+
+        .alert.o_sign_template_saved_info {
+            padding: 5px;
+            opacity: 0;
+        }
+
+        .o_sign_duplicate_sign_template {
+            padding: 0;
+            margin-bottom: 2px;
+        }
+
+        .o_sign_template_header_wrapper {
+            .o_sign_template_tags_and_save .o_field_many2many_selection {
+                width: auto !important; //makes many2many field one line
+            }
+        }
+    }
+
+
+    .o_sign_create_partner {
+        .fa-exclamation-circle {
+            padding: 0 10px;
+            color: map-get($theme-colors, 'danger');
+        }
+        .fa-check-circle {
+            padding-left: 10px;
+            color: map-get($theme-colors, 'success');
+        }
+    }
+
+    #o_sign_select_options_input .o_field_tags {
+        width: 100%;
+    }
+
+    .o_sign_add_partner {
+        border-bottom: 1px dashed $o-brand-secondary;
+    }
+
+    .o_sign_delete_field_button {
+        float: right;
+        &:before {
+            font-family: FontAwesome;
+            content: "";
+        }
+    }
+
+    #o_sign_pdf_ext {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .o_sign_resend_access_button {
+        padding: 0;
+    }
+    
+    .o_popover_offset {
+        top: 29px !important;
+        left: -4px !important #{"/*rtl:ignore*/"};
+        left: 4px !important #{"/*rtl:remove*/"};
+    }
+
+    .o_sign_close_button {
+        padding: 0;
+        background-color: transparent;
+        border: 0;
+        float: right;
+        line-height: 1;
+        text-shadow: 0 1px 0 #FFFFFF;
+        opacity: .5;
+    }
+}
+
+.o_block_scroll {
+    overflow: hidden;
+}
+
+.o_kanban_view {
+    .o_kanban_record {
+        .o_kanban_record_body {
+            .o_signers {
+                max-height: 6.3rem;
+                overflow: auto;
+            }
+        }
+    }
+}
+
+.o_sign_template_kanban .o_kanban_renderer {
+    .o_kanban_record {
+        .o_dropdown_kanban {
+            .dropdown-menu {
+                // the content of items in the dropdown menu of sign template is very long
+                // the width of the dropdown menu is extended to 12.9rem
+                // which leaves the same space on the left and right of the colorpicker
+                min-width: 12.9rem;
+                .oe_kanban_colorpicker {
+                    // the colorpicker is allowed to display more than 3 colors per line
+                    max-width: 12.9rem;
+                }
+            }
+        }
+        .o_kanban_record_body {
+            .o_signers {
+                .fa-times {
+                    position: absolute;
+                }
+                input {
+                    position: absolute;
+                }
+                span {
+                    margin-left: 1.3rem;
+                }
+            }
+        }
+    }
+}
+
+.o_sign_attachments {
+    .o_attachments {
+        display: flex;
+        flex-wrap: wrap;
+
+        .o_attachment {
+            width: auto;
+        }
+    }
+}
+
+@include media-breakpoint-down(md) {
+    .o_sign_signer_status_wrapper {
+        padding-right: 16px;
+    }
+}
+
+.o_sign_signer_status_wrapper {
+    height: 2.7rem;
+}
+
+.sign-popover {
+    z-index: 1055 !important;
+}

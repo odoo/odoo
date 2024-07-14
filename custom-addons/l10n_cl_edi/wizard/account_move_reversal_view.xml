@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_move_reversal" model="ir.ui.view">
+        <field name="name">account.move.reversal.form</field>
+        <field name="model">account.move.reversal</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_account_move_reversal"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <group>
+                    <group>
+                        <field name="country_code" invisible="1"/>
+                        <field name="l10n_cl_is_text_correction" invisible="country_code != 'CL'"/>
+                        <field name="l10n_cl_edi_reference_doc_code" readonly="1" force_save="1" invisible="1"/>
+                    </group>
+                    <group invisible="not l10n_cl_is_text_correction">
+                        <field name="l10n_cl_original_text"/>
+                        <field name="l10n_cl_corrected_text"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

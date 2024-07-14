@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="authorization_template">
+            <RespuestaAutorizacion>
+                <estado>AUTORIZADO</estado>
+                <numeroAutorizacion t-out="authorization_number"/>
+                <fechaAutorizacion t-out="authorization_date"/>
+                <ambiente t-out='mode'/>
+                <comprobante t-out="xml_file_content"/>
+            </RespuestaAutorizacion>
+        </template>
+    </data>
+</odoo>

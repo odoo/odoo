@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_departure_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.departure.wizard.view.form.extend</field>
+        <field name="model">hr.departure.wizard</field>
+        <field name="inherit_id" ref="hr.hr_departure_wizard_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='info']" position="inside">
+                <div><field name="send_hr_documents_access_link"/><label for="send_hr_documents_access_link"/></div>
+            </xpath>
+            <xpath expr="//div[@id='info']" position="after">
+                <div class="o_td_label" invisible="not send_hr_documents_access_link">
+                    <label for="private_email" class="o_form_label o_hr_form_label cursor-default"/>
+                </div>
+                <div class="column" invisible="not send_hr_documents_access_link">
+                    <div><field name="private_email"/></div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

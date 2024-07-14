@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="whatsapp.Message" t-inherit="mail.Message" t-inherit-mode="extension">
+        <xpath expr="//div[contains(@class, 'o-mail-Message-header')]" position="inside">
+            <t t-if="message.whatsappStatus === 'error' or message.type === 'whatsapp_message'">
+                <span class="fa fa-whatsapp ms-1" t-att-class="message.whatsappStatus === 'error' ? 'text-danger' : 'text-success'"
+                    t-att-title="message.whatsappStatus === 'error' ? 'Failed to send': 'Sent On WhatsApp'" />
+            </t>
+        </xpath>
+        <xpath expr="//div[contains(@class, 'o-mail-Message-header')]//MessageSeenIndicator" position="attributes">
+            <attribute name="t-if" add="and message.whatsappStatus !== 'error'" separator=" " />
+        </xpath>
+        <xpath expr="//div[contains(@class, 'o-mail-Message-bubble')]" position="attributes">
+            <attribute name="t-attf-class" add="{{ message.type === 'whatsapp_message' ? 'bg-success-light border border-success opacity-25' : ''}}" separator=" " />
+        </xpath>
+    </t>
+
+</templates>

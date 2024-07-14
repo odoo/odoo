@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="knowledge.InsertEmbeddedViewMenu">
+        <Dropdown togglerClass="'o_knowledge_icon_search opacity-trigger-hover'">
+            <t t-set-slot="toggler">
+                <t t-call="Knowledge.KnowledgeIcon"/>
+                Knowledge
+            </t>
+            <DropdownItem onSelected.bind="_onInsertEmbeddedViewInArticle">
+                <i class="oi oi-fw oi-view me-1"/>Insert view in article
+            </DropdownItem>
+            <DropdownItem onSelected.bind="_onInsertViewLinkInArticle">
+                <i class="fa fa-fw fa-link me-1"/>Insert link in article
+            </DropdownItem>
+        </Dropdown>
+    </t>
+</templates>

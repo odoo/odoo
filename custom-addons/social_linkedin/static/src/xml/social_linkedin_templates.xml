@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="social.StreamPostCommentsOriginalPost" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('o_social_original_post_author_image')]" position="inside">
+            <img t-if="originalPost.linkedin_author_image_url.raw_value" t-att-src="originalPost.linkedin_author_image_url.raw_value" alt="Author Image" class="rounded"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_social_comments_modal_original_post_content')]" position="inside">
+            <div t-if="originalPost.media_type.raw_value === 'linkedin'" class="text-start">
+                <div t-if="originalPost.linkedin_likes_count.raw_value !== 0" class="o_social_linkedin_likes ps-2 pe-3"
+                    t-att-data-post-id="originalPost.id.raw_value" >
+                    <i class="fa fa-thumbs-up me-1" title="Likes"/>
+                    <b class="o_social_likes_count" t-esc="originalPost.linkedin_likes_count.value"/>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,16 @@
+.o_control_panel {
+    a.o_spreadsheet_favorite {
+        margin: 0px 5px;
+        @include o-hover-text-color($gray-400, $o-main-favorite-color);
+        &:hover:before {
+            content: "\f005";
+        }
+
+        &.favorite_button_enabled {
+            @include o-hover-text-color($o-main-favorite-color, $gray-400);
+            &:hover:before {
+                content: "\f006";
+            }
+        }
+    }
+}

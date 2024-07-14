@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="planning_role_view_search_inherit_sale_planning" model="ir.ui.view">
+        <field name="name">planning.role.search.inherit.sale.planning</field>
+        <field name="model">planning.role</field>
+        <field name="inherit_id" ref="planning.planning_role_view_search"/>
+        <field name="arch" type="xml">
+            <field name="resource_ids" position="after">
+                <field name="product_ids"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="planning_role_view_kanban_inherit_sale_planning" model="ir.ui.view">
+        <field name="name">planning.role.kanban.inherit.sale.planning</field>
+        <field name="model">planning.role</field>
+        <field name="inherit_id" ref="planning.planning_role_view_kanban"/>
+        <field name="arch" type="xml">
+             <xpath expr="//div[hasclass('o_kanban_primary_left')]" position="after">
+                <div class="col o_kanban_primary_right">
+                    <field name="product_ids" widget="many2many_tags"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="planning_role_view_tree_inherit_sale_planning" model="ir.ui.view">
+        <field name="name">planning.role.tree.inherit.sale.planning</field>
+        <field name="model">planning.role</field>
+        <field name="inherit_id" ref="planning.planning_role_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="resource_ids" position="after">
+                <field name="product_ids" widget="many2many_tags" placeholder="e.g. Cleaning Services"
+                    domain="[('planning_role_id', '=', False), ('type', '=', 'service'), ('sale_ok', '=', True)]"
+                    context="{'default_detailed_type': 'service', 'default_detailed_type': 'service', 'default_planning_enabled': True, 'default_planning_role_id': id, 'default_uom_id': %(uom.product_uom_hour)d}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="sale_planning_role_view_form" model="ir.ui.view">
+        <field name="name">sale.planning.role.form</field>
+        <field name="model">planning.role</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="planning.planning_role_view_form"/>
+        <field name="arch" type="xml">
+            <field name="resource_ids" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>

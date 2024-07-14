@@ -1,0 +1,42 @@
+<odoo>
+    <record id="account_journal_dashboard_kanban_view" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='sale_purchase_refund']" position="after">
+                <div>
+                    <a type="object" name="action_open_reconcile" groups="account.group_account_user">Payments Matching</a>
+                </div>
+            </xpath>
+            <!-- The following section handles the reconcile button for the bank journals -->
+            <xpath expr="//div[@id='transactions']" position="before">
+                <t t-if="dashboard.number_to_reconcile > 0">
+                    <button type="object" name="action_open_reconcile" class="btn btn-primary" groups="account.group_account_user"> Reconcile <t t-out="dashboard.number_to_reconcile"/> Items</button>
+                </t>
+            </xpath>
+            <!-- The following section handles the reconcile button for the cash journals -->
+            <xpath expr="//button[@name='action_new_transaction']" position="replace">
+                <button t-if="dashboard.number_to_reconcile > 0" type="object" name="action_open_reconcile" class="btn btn-primary" groups="account.group_account_user"> Reconcile <t t-out="dashboard.number_to_reconcile"/> Items</button>
+                <button t-if="dashboard.number_to_reconcile == 0" type="object" name="action_new_transaction" class="btn btn-primary" groups="account.group_account_invoice">New Transaction</button>
+            </xpath>
+            <xpath expr="//div[@id='dashboard_bank_cash_right']" position="inside">
+                <t t-if="dashboard.number_to_check > 0">
+                    <div class="row">
+                        <div class="col overflow-hidden text-start">
+                            <a type="object" name="action_open_to_check"><t t-out="dashboard.number_to_check"/> to check</a>
+                        </div>
+                        <div class="col-auto text-end">
+                            <span class="o_kanban_monetary"><t t-out="dashboard.to_check_balance"/></span>
+                        </div>
+                    </div>
+                </t>
+            </xpath>
+            <xpath expr="//h5[@id='card_action_view_menus']" position="after">
+                <div>
+                    <a role="menuitem" type="object" name="action_open_bank_transactions">Transactions</a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

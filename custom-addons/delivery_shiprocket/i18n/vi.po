@@ -1,0 +1,677 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_shiprocket
+# 
+# Translators:
+# Wil Odoo, 2023
+# Thi Huong Nguyen, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "<b>Click on Add a New Channel</b>"
+msgstr "<b>Nhấp vào Thêm một kênh mới</b>"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid ""
+"<b>Copy your API User's Email and Password and paste into Shipping method's "
+"configuration.</b>"
+msgstr ""
+"<b>Sao chép email và mật khẩu người dùng API của bạn rồi dán vào cấu hình "
+"của phương thức vận chuyển.</b>"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid ""
+"<b>Fill the details and Click on Save Channel &amp; Test Connection "
+"button.</b>"
+msgstr ""
+"<b>Điền thông tin và nhấp vào nút Lưu Kênh &amp; kiểm tra kết nối.</b>"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid ""
+"<b>In Odoo configuration click on <i class=\"fa fa-refresh oe_inline\"/> "
+"icon near Shiprocket Channel to sync newly created channels.</b>"
+msgstr ""
+"<b>Trong cấu hình Odoo, nhấp vào biểu tượng <i class=\"fa fa-refresh "
+"oe_inline\"/> gần Kênh Shiprocket để đồng bộ các kênh mới được tạo.</b>"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "<b>Now click on Add for MANUAL</b>"
+msgstr "<b>Now click on Add for MANUAL</b>"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid ""
+"<b>Once your account is created, go to Settings &gt; API &gt; Configure. </b>\n"
+"                                <b>You can add new API User from the right side of the page.</b>\n"
+"                                <br/>"
+msgstr ""
+"<b>Sau khi tạo tài khoản, hãy đi đến Cài đặt &gt; Cấu hình API &gt;.</b>\n"
+"                             <b>Bạn có thể thêm Người dùng API mới từ phần bên phải của trang.</b>\n"
+"                              <br/>"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "<b>To Create a channel, Go to Shiprocket Channels</b>"
+msgstr "<b>Để tạo một kênh, hãy đi đến Kênh Shiprocket.</b>"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/> In test environment, to avoid "
+"charges, your shippings are automatically <b>cancelled</b> after the label "
+"creation. The amount of cancelled shipment will be returned in next 3-4 "
+"days."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>Để tránh bị tính phí, thì trong môi"
+" trường kiểm thử, các lô hàng của bạn sẽ tự động <b>bị hủy</b> sau khi tạo "
+"nhãn. Lượng hàng bị hủy sẽ được hoàn lại trong 3-4 ngày sau đó."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_manifests_generate
+msgid ""
+"A manifest is a document that is required by some carriers to streamline the"
+" pickup process.particularly when shipping out a high-volume of ecommerce "
+"orders."
+msgstr ""
+"Bản kê khai hàng hoá là một tài liệu mà một số hãng vận chuyển yêu cầu để "
+"tối ưu quá trình lấy hàng, đặc biệt là khi vận chuyển một lượng lớn đơn hàng"
+" thương mại điện tử."
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "API User"
+msgstr "Người dùng API"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "AWB assignment was unsuccessful: %s"
+msgstr "Chỉ định AWB không thành công: %s"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "AWB number(s) not found to cancel the shipment!"
+msgstr "Không tìm thấy mã số AWB để hủy lô hàng!"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Access token is generated successfully!"
+msgstr "Token truy cập được tạo thành công!"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Add Manual Channel"
+msgstr "Thêm kênh thủ công"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Add New Channel"
+msgstr "Thêm kênh mới"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Authentication failed! Please check your credentials."
+msgstr ""
+"Xác nhận không thành công! Vui lòng kiểm tra thông tin đăng nhập của bạn. "
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields.selection,name:delivery_shiprocket.selection__delivery_carrier__shiprocket_payment_method__cod
+msgid "COD"
+msgstr "COD"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_stock_package_type__package_carrier_type
+msgid "Carrier"
+msgstr "Đơn vị vận chuyển"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__channel_code
+msgid "Channel Code"
+msgstr "Mã kênh"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__name
+msgid "Channel Name"
+msgstr "Tên kênh"
+
+#. module: delivery_shiprocket
+#: model:ir.model,name:delivery_shiprocket.model_res_config_settings
+msgid "Config Settings"
+msgstr "Cài đặt cấu hình"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Configure Shiprocket channel in shipping method"
+msgstr "Cấu hình kênh Shiprocket trong phương thức vận chuyển"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Country is required!"
+msgstr "Yêu cầu chọn quốc gia!"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Courier (%s): %s"
+msgstr "Đơn vị chuyển phát (%s): %s"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__courier_code
+msgid "Courier Code"
+msgstr "Mã đơn vị chuyển phát"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Courier is not available for delivery!"
+msgstr "Đơn vị chuyển phát này không thể giao hàng!"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Courier: %s"
+msgstr "Đơn vị chuyển phát: %s"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Create API User"
+msgstr "Tạo người dùng API"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_pickup_request
+msgid ""
+"Create a pickup request for your order shipment using Validate button of the"
+" Delivery Order."
+msgstr ""
+"Tạo yêu cầu lấy hàng cho lô hàng cần vận chuyển của bạn bằng cách sử dụng "
+"nút Xác thực trong Phiếu xuất kho."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__create_uid
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__create_uid
+msgid "Created by"
+msgstr "Được tạo bởi"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__create_date
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__create_date
+msgid "Created on"
+msgstr "Được tạo vào"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__display_name
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_stock_picking__eway_bill_number
+msgid "EWay Bill"
+msgstr "Vận đơn điện tử"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Email is required!"
+msgstr "Yêu cầu điền email!"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_password
+msgid "Enter your Password from Shiprocket account (API)."
+msgstr "Nhập mật khẩu của bạn từ tài khoản Shiprocket (API)."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_email
+msgid "Enter your Username from Shiprocket account (API)."
+msgstr "Nhập tên người dùng của bạn từ tài khoản Shiprocket (API)."
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid ""
+"Eway Bill number is required to ship an order if order amount is more than "
+"50,000 INR."
+msgstr ""
+"Số vận đơn điện tử là thông tin bắt buộc để có thể vận chuyển đơn hàng nếu "
+"giá trị đơn hàng lớn hơn 50.000 INR."
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Failed to fetch Shiprocket Channel(s), Please try again later."
+msgstr "Không thể truy xuất (các) Kênh Shiprocket. Vui lòng thử lại sau."
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Failed to fetch Shiprocket Couriers(s), Please try again later."
+msgstr ""
+"Không thể truy xuất (các) Đơn vị chuyển phát Shiprocket. Vui lòng thử lại "
+"sau."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_manifests_generate
+msgid "Generate Manifest"
+msgstr "Tạo bản kê khai hàng hoá"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_access_token
+msgid "Generate access token using Shiprocket credentials"
+msgstr "Tạo token truy cập bằng cách sử dụng thông tin đăng nhập Shiprocket"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_courier_ids
+msgid ""
+"Get all the integrated Couriers from your Shiprocket account.Based on the "
+"courier selections the rate will be fetched from the Shiprocket."
+msgstr ""
+"Lấy tất cả đơn vị chuyển phát tích hợp từ tài khoản Shiprocket của bạn. Dựa "
+"trên lựa chọn đơn vị chuyển phát, cước phí sẽ được lấy từ Shiprocket."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_channel_id
+msgid ""
+"Get all the integrated channels from your Shiprocket account.This channel id"
+" is used to select or specify a custom channel at the time of Shiprocket "
+"order creation."
+msgstr ""
+"Lấy tất cả kênh tích hợp từ tài khoản Shiprocket của bạn. ID kênh được sử "
+"dụng để chọn hoặc chỉ định một kênh tùy chỉnh khi tạo đơn hàng Shiprocket."
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Go to"
+msgstr "Đi đến"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Go to Shipping Method"
+msgstr "Đi đến Phương thức vận chuyển"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Go to Shipping Methods"
+msgstr "Đi đến Phương thức vận chuyển"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__id
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__id
+msgid "ID"
+msgstr "ID"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Label generated of %s with Tracking Number: %s"
+msgstr "Nhãn được tạo của %s với Mã theo dõi: %s"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__write_uid
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__write_uid
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__write_date
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__write_date
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối vào"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/stock_package_type.py:0
+#, python-format
+msgid "Length, Width and Height is necessary for Shiprocket Package."
+msgstr ""
+"Chiều dài, chiều rộng và chiều cao là thông tin bắt buộc cho Kiện hàng "
+"Shiprocket."
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Manifest generated of %s"
+msgstr "Bản kê khai hàng hoá đã tạo của %s"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Order canceled successfully!"
+msgstr "Đơn hàng đã được hủy thành công!"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_default_package_type_id
+msgid "Package Type"
+msgstr "Kiểu đóng gói"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_payment_method
+msgid "Payment Method"
+msgstr "Phương thức thanh toán"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Phone or Mobile is required!"
+msgstr "Yêu cầu điền số điện thoại hoặc di động!"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_pickup_request
+msgid "Pickup Request"
+msgstr "Yêu cầu lấy hàng"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Pincode is required!"
+msgstr "Yêu cầu điền mã pin!"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Please configure Shiprocket credentials in the shipping method"
+msgstr ""
+"Vui lòng cấu hình thông tin đăng nhập Shiprocket trong phương thức vận "
+"chuyển"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields.selection,name:delivery_shiprocket.selection__delivery_carrier__shiprocket_payment_method__prepaid
+msgid "Prepaid"
+msgstr "Trả trước"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "Nhà cung cấp"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "SKU is missing!"
+msgstr "Thiếu SKU!"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Sale Order or Picking is required to get rate."
+msgstr "Phải có Đơn bán hàng hoặc Phiếu lấy hàng để xem cước phí."
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid ""
+"Same order is available in Shiprocket so label provided is the copy of "
+"existing one."
+msgstr ""
+"Một đơn hàng tương tự đang tồn tại trong Shiprocket, nên nhãn được cung cấp "
+"là bản sao của nhãn hiện có."
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Save Manual Channel"
+msgstr "Lưu kênh thủ công"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__name
+msgid "Service Name"
+msgstr "Tên dịch vụ"
+
+#. module: delivery_shiprocket
+#: model:product.template,name:delivery_shiprocket.product_product_delivery_shiprocket_product_template
+msgid "ShipRocket"
+msgstr "ShipRocket"
+
+#. module: delivery_shiprocket
+#: model:delivery.carrier,name:delivery_shiprocket.delivery_carrier_shiprocket
+msgid "ShipRocket Domestic"
+msgstr "ShipRocket nội địa"
+
+#. module: delivery_shiprocket
+#: model:ir.model,name:delivery_shiprocket.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "Shipping Methods"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields.selection,name:delivery_shiprocket.selection__delivery_carrier__delivery_type__shiprocket
+#: model:ir.model.fields.selection,name:delivery_shiprocket.selection__stock_package_type__package_carrier_type__shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.stock_picking_form_inherit_shiprocket
+msgid "Shiprocket"
+msgstr "Shiprocket"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_access_token
+msgid "Shiprocket Access Token"
+msgstr "Token truy cập Shiprocket"
+
+#. module: delivery_shiprocket
+#: model:ir.model,name:delivery_shiprocket.model_shiprocket_channel
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_channel_id
+msgid "Shiprocket Channel"
+msgstr "Kênh Shiprocket"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Shiprocket Configuration"
+msgstr "Cấu hình Shiprocket"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_res_config_settings__module_delivery_shiprocket
+msgid "Shiprocket Connector"
+msgstr "Kết nối Shiprocket"
+
+#. module: delivery_shiprocket
+#: model:ir.model,name:delivery_shiprocket.model_shiprocket_courier
+msgid "Shiprocket Courier"
+msgstr "Đơn vị chuyển phát Shiprocket"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_courier_ids
+msgid "Shiprocket Couriers"
+msgstr "Đơn vị chuyển phát Shiprocket"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_email
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__shiprocket_email
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__shiprocket_email
+msgid "Shiprocket Email"
+msgstr "Email Shiprocket"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Shiprocket Error: %s"
+msgstr "Lỗi Shiprocket: %s"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Shiprocket Notification"
+msgstr "Thông báo Shiprocket"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_stock_picking__shiprocket_orders
+msgid "Shiprocket Order(s)"
+msgstr "(Các) đơn hàng Shiprocket"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_password
+msgid "Shiprocket Password"
+msgstr "Mật khẩu Shiprocket"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.res_config_settings_view_form_sale_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.res_config_settings_view_form_stock_shiprocket
+msgid "Shiprocket Shipping Methods"
+msgstr "Phương thức vận chuyển Shiprocket"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Shiprocket Tutorial"
+msgstr "Hướng dẫn Shiprocket"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Shiprocket Tutorial for add channel"
+msgstr "Hướng dẫn Shiprocket về thêm kênh"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Shiprocket Website"
+msgstr "Trang web Shiprocket"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Shiprocket order(s) not found to cancel the shipment!"
+msgstr "Không tìm thấy (các) đơn hàng Shiprocket để hủy lô hàng!"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_default_package_type_id
+msgid ""
+"Shiprocket requires package dimensions for getting accurate rate, you can "
+"define these in a package type that you set as default"
+msgstr ""
+"Shiprocket yêu cầu điền kích thước kiện hàng để tính cước phí chính xác, bạn"
+" có thể xác định chúng trong loại kiện hàng được đặt làm mặc định."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_token_valid_upto
+msgid ""
+"Shiprocket token expires in 10 days. Token will be auto generate based on "
+"this token expiry date."
+msgstr ""
+"Token Shiprocket sẽ hết hạn trong 10 ngày. Token sẽ được tự động tạo dựa "
+"trên ngày hết hạn của token này."
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Sign up"
+msgstr "Đăng ký"
+
+#. module: delivery_shiprocket
+#: model:ir.model,name:delivery_shiprocket.model_stock_package_type
+msgid "Stock package type"
+msgstr "Loại kiện hàng tồn kho"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_stock_picking__shiprocket_orders
+msgid ""
+"Store shiprocket order(s) in a (+) separated string, used in cancelling the "
+"order."
+msgstr ""
+"Lưu (các) đơn hàng shiprocket trong một chuỗi được phân tách bằng dấu (+), "
+"được sử dụng để hủy đơn hàng."
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Street is required!"
+msgstr "Yêu cầu điền tên đường!"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Sync Channel from Shiprocket"
+msgstr "Đồng bộ kênh từ Shiprocket"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Sync Couriers from Shiprocket"
+msgstr "Đồng bộ đơn vị chuyển phát từ Shiprocket"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Test Connection"
+msgstr "Kiểm tra kết nối"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_payment_method
+msgid ""
+"The method of payment. Can be either COD (Cash on delivery) Or Prepaid while"
+" creating Shiprocket order."
+msgstr ""
+"Phương thức thanh toán. Có thể là COD (Tiền mặt khi giao hàng) hoặc Trả "
+"trước khi tạo đơn hàng Shiprocket."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_token_valid_upto
+msgid "Token Expiry"
+msgstr "Ngày hết hạn token"
+
+#. module: delivery_shiprocket
+#: model:ir.model,name:delivery_shiprocket.model_stock_picking
+msgid "Transfer"
+msgstr "Điều chuyển"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Weight is missing!"
+msgstr "Thiếu khối lượng!"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "to create a new account:"
+msgstr "để tạo một tài khoản mới:"

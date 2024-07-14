@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Gantt view -->
+        <record id="hr_attendance_gantt_view" model="ir.ui.view">
+            <field name="name">hr.attendance.gantt</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <gantt
+                       js_class="attendance_gantt"
+                       date_start="check_in"
+                       date_stop="check_out"
+                       string="Days"
+                       color="color"
+                       default_group_by="employee_id"
+                       default_scale="day"
+                       precision="{'day': 'hour:quarter', 'week': 'day:full', 'month': 'day:quarter'}"
+                       plan="0"
+                       progress="overtime_progress"
+                       progress_bar="employee_id"
+                >
+                </gantt>
+            </field>
+        </record>
+
+    <record id="hr_attendance.hr_attendance_action" model="ir.actions.act_window">
+        <field name="view_mode">gantt,tree,form</field>
+    </record>
+</odoo>

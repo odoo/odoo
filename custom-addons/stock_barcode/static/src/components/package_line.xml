@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="stock_barcode.PackageLineComponent">
+        <div t-on-click="select" t-att-data-package="line.package_id.name"
+            class="o_barcode_line list-group-item d-flex flex-row flex-nowrap py-3"
+            t-attf-class="{{componentClasses}}">
+            <div class="o_barcode_line_details flex-grow-1 flex-column flex-nowrap">
+                <t t-call="stock_barcode.LineSourceLocation"/>
+                <div name="package">
+                    <i class="fa fa-fw fa-archive"/>
+                    <t class="package" t-esc="line.package_id.name"/>
+                    <i class="fa fa-long-arrow-right mx-1"/>
+                    <t class="result-package" t-esc="line.result_package_id.name"/>
+                </div>
+                <t t-call="stock_barcode.LineQuantity"/>
+                <t t-call="stock_barcode.LineOwner"/>
+                <t t-call="stock_barcode.LineDestinationLocation"/>
+            </div>
+            <button t-on-click="() => this.props.openPackage(this.props.line.package_id.id)"
+                    class="o_line_button o_package_content btn btn-secondary ms-2 ms-sm-4">
+                <i class="fa fa-2x fa-dropbox"/>
+            </button>
+        </div>
+    </t>
+
+</templates>

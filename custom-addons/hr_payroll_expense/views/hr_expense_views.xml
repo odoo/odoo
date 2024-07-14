@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_expense_sheet_view_form_inherit_payroll" model="ir.ui.view">
+        <field name="name">hr.expense.sheet.view.form.payroll</field>
+        <field name="model">hr.expense.sheet</field>
+        <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="refund_in_payslip" invisible="1" readonly="state in ['done', 'post']"/>
+                <field name="payslip_id" invisible="not payslip_id"/>
+            </xpath>
+            <button name="action_sheet_move_create" position="after">
+                <button name="action_report_in_next_payslip" string="Report in Next Payslip" type="object" groups="account.group_account_manager" invisible="refund_in_payslip or state != 'approve' or payment_mode == 'company_account'" class="oe_highlight" data-hotkey="g"/>
+            </button>
+            <button name="action_sheet_move_create" position="attributes">
+                <attribute name="invisible">refund_in_payslip or state != 'approve'</attribute>
+            </button>
+        </field>
+    </record>
+</odoo>

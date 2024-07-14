@@ -1,0 +1,72 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_bank_statement_import_qif
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: account_bank_statement_import_qif
+#: model:ir.model.fields,help:account_bank_statement_import_qif.field_account_journal__qif_date_format
+msgid ""
+"Although the historic QIF date format is month-first (mm/dd/yy), many "
+"financial institutions use the local format.Therefore, it is frequent "
+"outside the US to have QIF date formatted day-first (dd/mm/yy)."
+msgstr ""
+
+#. module: account_bank_statement_import_qif
+#. odoo-python
+#: code:addons/account_bank_statement_import_qif/models/account_journal.py:0
+#, python-format
+msgid "Could not decipher the QIF file."
+msgstr "Nebolo možné dekódovať QIF súbor."
+
+#. module: account_bank_statement_import_qif
+#: model:ir.model.fields,help:account_bank_statement_import_qif.field_account_journal__qif_decimal_point
+msgid "Field used to avoid conversion issues."
+msgstr "Pole použité na zabránenie problémom s konverziou."
+
+#. module: account_bank_statement_import_qif
+#: model:ir.model,name:account_bank_statement_import_qif.model_account_journal
+msgid "Journal"
+msgstr "Účtovný denník"
+
+#. module: account_bank_statement_import_qif
+#: model:ir.model.fields,field_description:account_bank_statement_import_qif.field_account_journal__qif_date_format
+msgid "QIF Dates format"
+msgstr ""
+
+#. module: account_bank_statement_import_qif
+#: model:ir.model.fields,field_description:account_bank_statement_import_qif.field_account_journal__qif_decimal_point
+msgid "QIF Decimal Separator"
+msgstr ""
+
+#. module: account_bank_statement_import_qif
+#. odoo-python
+#: code:addons/account_bank_statement_import_qif/models/account_journal.py:0
+#, python-format
+msgid "This file is either not a bank statement or is not correctly formed."
+msgstr "Tento súbor nie je bankový výpis alebo nie je správne naformátovaný."
+
+#. module: account_bank_statement_import_qif
+#: model:ir.model.fields.selection,name:account_bank_statement_import_qif.selection__account_journal__qif_date_format__day_first
+msgid "dd/mm/yy"
+msgstr "dd/mm/yy"
+
+#. module: account_bank_statement_import_qif
+#: model:ir.model.fields.selection,name:account_bank_statement_import_qif.selection__account_journal__qif_date_format__month_first
+msgid "mm/dd/yy"
+msgstr "mm/dd/yy"

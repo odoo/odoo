@@ -1,0 +1,275 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <start>
+        <ref name="grid"/>
+    </start>
+    <define name="grid">
+        <element name="grid">
+            <ref name="acl"/>
+            <attribute name="string"/>
+            <optional>
+                <attribute name="editable"/>
+            </optional>
+            <optional>
+                <attribute name="class"/>
+            </optional>
+            <optional>
+                <attribute name="create_inline"/>
+            </optional>
+            <optional>
+                <attribute name="display_empty"/>
+            </optional>
+            <optional>
+                <attribute name="js_class"/>
+            </optional>
+            <optional>
+                <attribute name="hide_column_total"/>
+            </optional>
+            <optional>
+                <attribute name="hide_line_total"/>
+            </optional>
+            <optional>
+                <attribute name="barchart_total"/>
+            </optional>
+            <optional>
+                <attribute name="action"/>
+                <attribute name="type">
+                    <choice>
+                        <value>object</value>
+                        <value>action</value>
+                    </choice>
+                </attribute>
+            </optional>
+            <optional>
+                <attribute name="form_view_id"/>
+            </optional>
+            <optional>
+                <attribute name="sample"/>
+            </optional>
+            <interleave>
+                <oneOrMore><ref name="field"/></oneOrMore>
+                <zeroOrMore><ref name="button"/></zeroOrMore>
+                <zeroOrMore><ref name="xpath"/></zeroOrMore>
+                <optional>
+                    <element name="empty">
+                        <oneOrMore>
+                            <element name="p">
+                                <optional>
+                                    <attribute name="class"/>
+                                </optional>
+                                <interleave>
+                                    <text/>
+                                    <zeroOrMore>
+                                        <ref name="link"/>
+                                    </zeroOrMore>
+                                    <zeroOrMore>
+                                        <ref name="image"/>
+                                    </zeroOrMore>
+                                </interleave>
+                            </element>
+                        </oneOrMore>
+                    </element>
+                </optional>
+            </interleave>
+        </element>
+    </define>
+    <define name="overload">
+        <optional>
+            <!--
+                Alter matched element with content
+            -->
+            <choice>
+                <attribute name="position">
+                    <choice>
+                        <!-- Insert content before first child -->
+                        <value>before</value>
+                        <!-- Insert content after last child -->
+                        <value>after</value>
+                        <!-- Replace all children with content -->
+                        <value>inside</value>
+                        <!-- Replace matched element itself with content -->
+                        <value>replace</value>
+                    </choice>
+                </attribute>
+                <group>
+                    <attribute name="position">
+                        <!-- Edit element attributes -->
+                        <value>attributes</value>
+                    </attribute>
+                    <oneOrMore>
+                        <element name="attribute">
+                            <attribute name="name"><text/></attribute>
+                            <text />
+                        </element>
+                    </oneOrMore>
+                </group>
+            </choice>
+        </optional>
+    </define>
+    <define name="any">
+        <element>
+            <anyName/>
+            <zeroOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="any"/>
+                </choice>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="xpath">
+        <element name="xpath">
+            <optional><attribute name="expr"/></optional>
+            <ref name="overload"/>
+            <zeroOrMore>
+                <choice>
+                    <ref name="any"/>
+                    <ref name="button"/>
+                </choice>
+            </zeroOrMore>
+        </element>
+    </define>
+    <define name="field">
+        <element name="field">
+            <attribute name="name"/>
+            <choice>
+                <group>
+                    <attribute name="type"><value>row</value></attribute>
+                    <optional>
+                        <attribute name="section">
+                            <value>1</value>
+                        </attribute>
+                    </optional>
+                    <optional>
+                        <attribute name="widget"></attribute>
+                    </optional>
+                    <optional>
+                        <attribute name="invisible"/>
+                    </optional>
+                </group>
+                <group>
+                    <attribute name="type"><value>col</value></attribute>
+                    <optional><attribute name="operator"/></optional>
+                    <zeroOrMore>
+                        <element name="range">
+                            <attribute name="name"/>
+                            <attribute name="string"/>
+                            <attribute name="span"/>
+                            <attribute name="step"/>
+                            <optional><attribute name="default"/></optional>
+                            <optional><attribute name="hotkey"/></optional>
+                        </element>
+                    </zeroOrMore>
+                </group>
+                <group>
+                    <attribute name="type"><value>measure</value></attribute>
+                    <optional>
+                        <attribute name="widget"/>
+                        <optional>
+                            <attribute name="options"/>
+                        </optional>
+                    </optional>
+                    <optional>
+                        <attribute name="string"/>
+                    </optional>
+                    <optional><attribute name="operator"/></optional>
+                </group>
+                <group>
+                    <attribute name="type"><value>readonly</value></attribute>
+                    <optional><attribute name="operator"/></optional>
+                </group>
+                <group>
+                    <ref name="overload"/>
+                    <zeroOrMore>
+                        <choice>
+                            <ref name="field"/>
+                            <ref name="button"/>
+                        </choice>
+                    </zeroOrMore>
+                </group>
+            </choice>
+            <!-- other garbage -->
+            <optional><attribute name="on_change"/></optional>
+            <optional><attribute name="modifiers"/></optional>
+            <optional><attribute name="can_create"/></optional>
+            <optional><attribute name="can_write"/></optional>
+        </element>
+    </define>
+    <define name="button">
+        <element name="button">
+            <attribute name="string"/>
+            <attribute name="type">
+                <choice>
+                    <value>object</value>
+                    <value>action</value>
+                </choice>
+            </attribute>
+            <!-- method name or action id -->
+            <attribute name="name"/>
+            <optional><attribute name="class"/></optional>
+            <optional><attribute name="data-hotkey"/></optional>
+            <!-- Python dict literal -->
+            <optional><attribute name="context"/></optional>
+            <optional><attribute name="invisible"/></optional>
+        </element>
+    </define>
+    <define name="acl">
+        <optional>
+            <attribute name="create">
+                <choice>
+                    <value>true</value>
+                    <value>false</value>
+                </choice>
+            </attribute>
+        </optional>
+        <optional>
+            <attribute name="edit">
+                <choice>
+                    <value>true</value>
+                    <value>false</value>
+                </choice>
+            </attribute>
+        </optional>
+        <optional>
+            <attribute name="delete">
+                <choice>
+                    <value>true</value>
+                    <value>false</value>
+                </choice>
+            </attribute>
+        </optional>
+    </define>
+    <define name="image">
+        <element name="img">
+            <attribute name="src"/>
+            <optional>
+                <attribute name="class"/>
+            </optional>
+            <optional>
+                <attribute name="alt"/>
+            </optional>
+            <optional>
+                <attribute name="style"/>
+            </optional>
+        </element>
+    </define>
+    <define name="link">
+        <element name="a">
+            <attribute name="href"/>
+            <optional>
+                <attribute name="class"/>
+            </optional>
+            <optional>
+                <attribute name="target"/>
+            </optional>
+            <mixed>
+                <zeroOrMore>
+                    <ref name="image"/>
+                </zeroOrMore>
+            </mixed>
+        </element>
+    </define>
+</grammar>

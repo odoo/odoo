@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_journal_dashboard_kanban_view_inherited" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban.inherited</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//t[@t-name='JournalBodyBankCash']//div[hasclass('o_kanban_primary_right')]" position="inside">
+                <div t-if="journal_type == 'bank'">
+                    <div class="row">
+                        <div class="col-12">
+                            <a type="object" name="action_aba_ct_to_send">
+                                <t t-out="dashboard.num_aba_ct_to_send"/>
+                                Payments to send via ABA
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

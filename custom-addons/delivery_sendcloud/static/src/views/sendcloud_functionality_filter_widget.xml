@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="delivery_sendcloud.functionalities">
+        <div class="o_inner_group grid col-lg-6" style="grid-column: span 2;width: 100%;">
+            <t t-foreach="filterableFunc" t-as="func" t-key="func">
+                <div class="o_wrap_field d-flex d-sm-contents flex-column mb-3 mb-sm-0">
+                    <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
+                        <t t-set="funcString" t-value="_humanizeFunctionality(func)"/>
+                        <label class="o_form_label"><t t-out="funcString"/></label>
+                    </div>
+                    <div class="o_vertical">
+                        <t t-foreach="filterableFunc[func]" t-as="option" t-key="option">
+                            <div class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0">
+                                <label>
+                                    <input type="checkbox" class="form-check-input mx-2" t-on-input="() => this._onChecked(func, option)" t-att-checked="_isChecked(func,option)"/>
+                                    <t t-out="_humanizeFunctionality(option)"/>
+                                </label>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

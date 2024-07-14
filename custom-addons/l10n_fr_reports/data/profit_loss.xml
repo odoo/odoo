@@ -1,0 +1,848 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data auto_sequence="1">
+    <record id="account_financial_report_l10n_fr_cdr" model="account.report">
+        <field name="name">Profit and loss account</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="country_id" ref="base.fr"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_l10n_fr_cdr_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_line_01_fr_cdr_prod_exp_A" model="account.report.line">
+                <field name="name">Operating income (I)</field>
+                <field name="code">I</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_01_fr_cdr_prod_exp_A_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">i_1.balance + i_2.balance + i_3.balance + i_4.balance + i_5.balance + i_6.balance + i_7.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_fr_cdrp1" model="account.report.line">
+                        <field name="name">Sales of goods</field>
+                        <field name="code">i_1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrp1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7097 - 707</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrp2" model="account.report.line">
+                        <field name="name">Production sold (goods and services)</field>
+                        <field name="code">i_2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrp2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-701 - 706 - 7092 - 73 - 704 - 702 - 7098 - 705 - 7094 - 7096 - 7095 - 7091 - 703 - 708</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrp3" model="account.report.line">
+                        <field name="name">Stored production</field>
+                        <field name="code">i_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrp3_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-713</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrp4" model="account.report.line">
+                        <field name="name">Capitalized production</field>
+                        <field name="code">i_4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrp4_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-72</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrp5" model="account.report.line">
+                        <field name="name">Operating subsidies</field>
+                        <field name="code">i_5</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrp5_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-74</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrp6" model="account.report.line">
+                        <field name="name">Reversals of provisions (and depreciation), expense transfers</field>
+                        <field name="code">i_6</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrp6_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-796 - 781 - 791</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrp7" model="account.report.line">
+                        <field name="name">Other products</field>
+                        <field name="code">i_7</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrp7_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-751 - 752 - 756 - 753 - 754 - 758</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_01_fr_cdr_char_exp" model="account.report.line">
+                <field name="name">Operating expenses (II)</field>
+                <field name="code">II</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_01_fr_cdr_char_exp_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ii_1.balance + ii_2.balance + ii_3.balance + ii_4.balance + ii_5.balance + ii_6.balance + ii_7.balance + ii_8.balance + ii_9.balance + ii_10.balance + ii_11.balance + ii_12.balance</field>
+                        <field name="date_scope">normal</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_fr_cdrc1" model="account.report.line">
+                        <field name="name">Purchases of goods</field>
+                        <field name="code">ii_1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">608 + 607 + 6097</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrc2" model="account.report.line">
+                        <field name="name">Change in inventories (goods)</field>
+                        <field name="code">ii_2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6037</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrc3" model="account.report.line">
+                        <field name="name">Purchases of raw materials and other supplies</field>
+                        <field name="code">ii_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc3_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6091 + 601 + 602 + 6092</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrc4" model="account.report.line">
+                        <field name="name">Changes in inventories (raw materials and supplies)</field>
+                        <field name="code">ii_4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc4_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6032 + 6031</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrc5" model="account.report.line">
+                        <field name="name">Other purchases and external charges</field>
+                        <field name="code">ii_5</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc5_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">604 + 605 + 606 + 6090 + 6093 + 6094 + 6095 + 6096 + 6098 + 6099 + 61 + 62 + 650 + 651 + 652 + 653 + 654 + 656 + 657 + 658 + 659</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrc8" model="account.report.line">
+                        <field name="name">Taxes and duties</field>
+                        <field name="code">ii_6</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc8_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">649 + 644 + 635 + 637</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrc9" model="account.report.line">
+                        <field name="name">Wages and salaries</field>
+                        <field name="code">ii_7</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc9_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">648 + 641</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrc10" model="account.report.line">
+                        <field name="name">Social security charges</field>
+                        <field name="code">ii_8</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc10_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">645 + 633 + 646 + 631 + 647</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrc11" model="account.report.line">
+                        <field name="name">Depreciation and provisions on fixed assets: depreciation allowances</field>
+                        <field name="code">ii_9</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc11_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6812 + 6811</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrc12" model="account.report.line">
+                        <field name="name">Depreciation and provisions on fixed assets: provisions</field>
+                        <field name="code">ii_10</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc12_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6816</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrc13" model="account.report.line">
+                        <field name="name">Depreciation and provisions on current assets: provisions</field>
+                        <field name="code">ii_11</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc13_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6817</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrc14" model="account.report.line">
+                        <field name="name">Depreciation, amortisation and provisions for liabilities and charges: provisions</field>
+                        <field name="code">ii_12</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc14_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">6815</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="p_n_l_1_resultat_exploitation" model="account.report.line">
+                <field name="name">1-Operating result (I-II)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="p_n_l_1_resultat_exploitation_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">I.balance - II.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_01_fr_cdr16" model="account.report.line">
+                <field name="name">Share of profit on joint operations</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_fr_cdrp8" model="account.report.line">
+                        <field name="name">Profit allocated or loss transferred (III)</field>
+                        <field name="code">III</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrp8_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-755</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="p_n_l_pertes_supportee_ou_benefice_transfere_iv" model="account.report.line">
+                        <field name="name">Losses incurred or profit transferred (IV)</field>
+                        <field name="code">IV</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="p_n_l_pertes_supportee_ou_benefice_transfere_iv_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">655</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_01_fr_cdr_prod_fin" model="account.report.line">
+                <field name="name">Financial income (V)</field>
+                <field name="code">V</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_01_fr_cdr_prod_fin_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">v_1.balance + v_2.balance + v_3.balance + v_4.balance + v_5.balance + v_6.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_fr_cdrp9" model="account.report.line">
+                        <field name="name">Of participations</field>
+                        <field name="code">v_1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrp9_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-761</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrp10" model="account.report.line">
+                        <field name="name">Other securities and receivables in fixed assets</field>
+                        <field name="code">v_2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrp10_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-762</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrp11" model="account.report.line">
+                        <field name="name">Other interest and similar income</field>
+                        <field name="code">v_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrp11_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-763 - 768 - 765 - 764</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrp12" model="account.report.line">
+                        <field name="name">Reversals of provisions and expense transfers</field>
+                        <field name="code">v_4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrp12_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-786</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrp13" model="account.report.line">
+                        <field name="name">Positive exchange rate differences</field>
+                        <field name="code">v_5</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrp13_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-766</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrp14" model="account.report.line">
+                        <field name="name">Net income from sales of marketable securities</field>
+                        <field name="code">v_6</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrp14_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-767</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_01_fr_cdr_char_fin" model="account.report.line">
+                <field name="name">Financial charges (VI)</field>
+                <field name="code">VI</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_01_fr_cdr_char_fin_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">vi_1.balance + vi_2.balance + vi_3.balance + vi_4.balance + vi_5.balance</field>
+                        <field name="date_scope">normal</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_fr_cdrc17" model="account.report.line">
+                        <field name="name">Depreciation and provisions</field>
+                        <field name="code">vi_1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc17_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">686</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrc15" model="account.report.line">
+                        <field name="name">Sundry expenses</field>
+                        <field name="code">vi_2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc15_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">668</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrc18" model="account.report.line">
+                        <field name="name">Interest and similar charges</field>
+                        <field name="code">vi_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc18_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">661 + 664 + 665</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrc19" model="account.report.line">
+                        <field name="name">Negative exchange rate differences</field>
+                        <field name="code">vi_4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc19_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">666</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrc20" model="account.report.line">
+                        <field name="name">Net expenses on disposals of investment property</field>
+                        <field name="code">vi_5</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc20_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">667</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="p_n_l_2_resultat_financier_v_vi" model="account.report.line">
+                <field name="name">2.financial result (V-VI)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="p_n_l_2_resultat_financier_v_vi_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">V.balance - VI.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="p_n_l_3_resultat_courant_avant_impots_i_ii_iii_iv_v_vi" model="account.report.line">
+                <field name="name">3.current result before taxes(I-II+III-IV+V-VI)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="p_n_l_3_resultat_courant_avant_impots_i_ii_iii_iv_v_vi_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">I.balance + III.balance + V.balance - II.balance - IV.balance - VI.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_01_fr_cdr_prod_exc" model="account.report.line">
+                <field name="name">Extraordinary income (VII)</field>
+                <field name="code">VII</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_01_fr_cdr_prod_exc_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">vii_1.balance + vii_2.balance + vii_3.balance + vii_4.balance + vii_5.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_fr_cdrp15" model="account.report.line">
+                        <field name="name">On management operations</field>
+                        <field name="code">vii_1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrp15_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-771</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="p_n_l_produits_exceptionnels" model="account.report.line">
+                        <field name="name">Extraordinary income</field>
+                        <field name="code">vii_2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="p_n_l_produits_exceptionnels_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-772</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="p_n_l_produits_fiducie" model="account.report.line">
+                        <field name="name">On trust transactions</field>
+                        <field name="code">vii_5</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="p_n_l_produits_fiducie_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-774</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrp16" model="account.report.line">
+                        <field name="name">On capital transactions</field>
+                        <field name="code">vii_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrp16_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-775 - 778 - 777</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrp17" model="account.report.line">
+                        <field name="name">Reversals of provisions and expense transfers</field>
+                        <field name="code">vii_4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrp17_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-787 - 797</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_01_fr_cdr_char_exc" model="account.report.line">
+                <field name="name">Exceptional expenses (VIII)</field>
+                <field name="code">VIII</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_01_fr_cdr_char_exc_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">viii_1.balance + viii_2.balance + viii_3.balance + viii_4.balance</field>
+                        <field name="date_scope">normal</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_fr_cdrc21" model="account.report.line">
+                        <field name="name">On management operations</field>
+                        <field name="code">viii_1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc21_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">671 + 672</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="p_n_l_charges_fiducie" model="account.report.line">
+                        <field name="name">On trust transactions</field>
+                        <field name="code">viii_4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="p_n_l_charges_fiducie_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">674</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrc22" model="account.report.line">
+                        <field name="name">On capital transactions</field>
+                        <field name="code">viii_2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc22_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">678 + 675</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_fr_cdrc23" model="account.report.line">
+                        <field name="name">Depreciation and provisions</field>
+                        <field name="code">viii_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_fr_cdrc23_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">687</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="p_n_l_4_resultat_exceptionnel_vii_viii" model="account.report.line">
+                <field name="name">4. extraordinary result (VII-VIII)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="p_n_l_4_resultat_exceptionnel_vii_viii_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">VII.balance - VIII.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_01_fr_cdr24" model="account.report.line">
+                        <field name="name">Employee profit-sharing (IX)</field>
+                        <field name="code">IX</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_01_fr_cdr24_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">691</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_01_fr_cdr25" model="account.report.line">
+                        <field name="name">Income tax (X)</field>
+                        <field name="code">X</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_01_fr_cdr25_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">695 + 696 + 697 + 698 + 699</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_01_fr_cdr_prod" model="account.report.line">
+                <field name="name">Total income (I+III+V+VII)</field>
+                <field name="code">total_products</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_01_fr_cdr_prod_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">I.balance + III.balance + V.balance + VII.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_01_fr_cdr_char" model="account.report.line">
+                <field name="name">Total expenses (II+IV+VI+VIII+IX+X)</field>
+                <field name="code">total_charges</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_01_fr_cdr_char_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">II.balance + IV.balance + VI.balance + VIII.balance + IX.balance + X.balance</field>
+                        <field name="date_scope">normal</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_01_fr_cdr_tot" model="account.report.line">
+                <field name="name">Profit or loss</field>
+                <field name="code">total_all</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_01_fr_cdr_tot_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">total_products.balance - total_charges.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</data>
+<data>
+    <record id="account_financial_report_l10n_fr_cdr_action" model="ir.actions.client">
+        <field name="name">Profit and loss account</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('account_financial_report_l10n_fr_cdr')}"/>
+    </record>
+
+    <record id="account_financial_report_line_02_0_7_fr_bilan_passif" model="account.report.line">
+        <field name="action_id" ref="account_financial_report_l10n_fr_cdr_action"/>
+    </record>
+</data>
+</odoo>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+             xmlns:a="http://relaxng.org/ns/annotation/1.0"
+             datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+    <start>
+        <ref name="cohort" />
+    </start>
+
+    <define name="cohort">
+        <element name="cohort">
+            <attribute name="string"/>
+            <attribute name="date_start"/>
+            <attribute name="date_stop"/>
+            <optional><attribute name="disable_linking"/></optional>
+            <optional><attribute name="mode"/></optional>
+            <optional><attribute name="timeline"/></optional>
+            <optional><attribute name="interval"/></optional>
+            <optional><attribute name="measure"/></optional>
+            <optional><attribute name="sample"/></optional>
+            <zeroOrMore>
+                <ref name="field"/>
+            </zeroOrMore>
+        </element>
+    </define>
+
+    <define name="field">
+        <element name="field">
+            <attribute name="name"/>
+            <ref name="overload"/>
+            <optional><attribute name="string"/></optional>
+            <optional><attribute name="invisible"/></optional>
+            <optional><attribute name="groups"/></optional>
+            <zeroOrMore>
+                <choice>
+                    <ref name="field"/>
+                    <ref name="xpath"/>
+                </choice>
+            </zeroOrMore>
+        </element>
+    </define>
+
+    <define name="overload">
+        <optional>
+            <!--
+                Alter matched element with content
+            -->
+            <choice>
+                <attribute name="position">
+                    <choice>
+                        <!-- Insert content before first child -->
+                        <value>before</value>
+                        <!-- Insert content after last child -->
+                        <value>after</value>
+                        <!-- Replace all children with content -->
+                        <value>inside</value>
+                        <!-- Replace matched element itself with content -->
+                        <value>replace</value>
+                    </choice>
+                </attribute>
+                <group>
+                    <attribute name="position">
+                        <!-- Edit element attributes -->
+                        <value>attributes</value>
+                    </attribute>
+                    <oneOrMore>
+                        <element name="attribute">
+                            <attribute name="name"><text/></attribute>
+                            <text />
+                        </element>
+                    </oneOrMore>
+                </group>
+            </choice>
+        </optional>
+    </define>
+
+    <define name="any">
+        <element>
+            <anyName/>
+            <zeroOrMore>
+                <choice>
+                    <attribute>
+                        <anyName/>
+                    </attribute>
+                    <text/>
+                    <ref name="any"/>
+                </choice>
+            </zeroOrMore>
+        </element>
+    </define>
+
+    <define name="xpath">
+        <element name="xpath">
+            <optional><attribute name="expr"/></optional>
+            <ref name="overload"/>
+            <zeroOrMore>
+                <choice>
+                    <ref name="any"/>
+                    <ref name="field"/>
+                </choice>
+            </zeroOrMore>
+        </element>
+    </define>
+</grammar>

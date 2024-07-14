@@ -1,0 +1,3615 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#   * l10n_ch_hr_payroll
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.5alpha1+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-08-24 13:12+0000\n"
+"PO-Revision-Date: 2024-06-24 12:27+0000\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,help:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line__solution_number
+msgid ""
+"\n"
+"0: Not UVG insured (e.g. member of the board of directors not working in the company)\n"
+"1: AAP and AANP insured, with AANP deduction\n"
+"2: Insured AAP and AANP, without AANP deduction\n"
+"3: Only AAP insured, so no AANP deduction (for employees whose weekly work is < 8 h))"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_individual_account.py:0
+#, python-format
+msgid "%s-ch-global-account-%s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_individual_account.py:0
+#, python-format
+msgid "%s-ch-individual-account-%s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.actions.report,print_report_name:l10n_ch_hr_payroll.action_report_payslip_ch
+msgid "'Payslip - %s' % (object.employee_id.name)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.actions.report,print_report_name:l10n_ch_hr_payroll.action_report_individual_account
+msgid "(object._get_report_base_filename())"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance_line_rate__employer_non_occupational_part__100
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance_line_rate__employer_occupational_part__100
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance_line_rate__employer_part__100
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance_line_rate__employer_part__100
+msgid "100 %"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_ch_hr_payroll.hr_salary_rule_category_thirteen_month
+msgid "13th Month"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_salary_rule__l10n_ch_13th_month_included
+msgid "13th Month Included"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance_line_rate__employer_non_occupational_part__50
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance_line_rate__employer_occupational_part__50
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance_line_rate__employer_part__50
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance_line_rate__employer_part__50
+msgid "50 %"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_individual_account_view_form
+msgid "<span class=\"o_stat_text\">Eligible Employees</span>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_tax_rate_import_wizard_view_form
+msgid ""
+"<span class=\"text-muted\">Tax files (.txt format) can be found at "
+"https://www.estv.admin.ch/estv/fr/accueil/impot-federal-direct/impot-a-la-"
+"source/baremes-cantonaux.html</span>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_accident_insurance_line_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_additional_accident_insurance_line_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_sickness_insurance_line_view_form
+msgid "<span>CHF</span>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "<span>Individual Account Report for year </span>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "<strong>Address</strong>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "<strong>Bank Account</strong>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "<strong>Company Information</strong>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_monthly_summary
+msgid "<strong>Company:</strong> <br/>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "<strong>Designation</strong>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "<strong>Email</strong>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_monthly_summary
+msgid "<strong>Employee:</strong> <br/>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_monthly_summary
+msgid "<strong>From:</strong>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "<strong>Identification No</strong>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "<strong>Name</strong>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_monthly_summary
+msgid "<strong>Nr.</strong>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "<strong>Registration Number</strong>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "<strong>Salary Computation</strong>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_monthly_summary
+msgid "<strong>To:</strong>"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.constraint,message:l10n_ch_hr_payroll.constraint_l10n_ch_location_unit__unique
+msgid ""
+"A work location cannot be set more than once for the same company and "
+"partner."
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_aanp
+msgid "AANP"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_aanp_comp
+msgid "AANP (Comp. Part.)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_salary_rule__l10n_ch_aanp_included
+msgid "AANP Included"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_aanp_salary
+#: model:hr.salary.rule.category,name:l10n_ch_hr_payroll.hr_salary_rule_category_aanp_salary
+msgid "AANP Salary"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_aap_comp
+msgid "AAP (Comp. Part.)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_contract__l10n_ch_accident_insurance_line_id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_payslip__l10n_ch_accident_insurance_line_id
+msgid "AAP/AANP Insurance"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.actions.act_window,name:l10n_ch_hr_payroll.action_l10n_ch_accident_insurance
+#: model:ir.ui.menu,name:l10n_ch_hr_payroll.menu_l10n_ch_accident_insurance
+msgid "AAP/AANP Insurances"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_ac
+msgid "AC"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_ac_comp
+msgid "AC (Comp. Part.)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_ac_salary
+#: model:hr.salary.rule.category,name:l10n_ch_hr_payroll.hr_salary_rule_category_ac_salary
+msgid "AC Salary"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_compl_ac
+msgid "ACC"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_acc_salary
+#: model:hr.salary.rule.category,name:l10n_ch_hr_payroll.hr_salary_rule_category_acc_salary
+msgid "ACC Salary"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__074_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__074_000
+msgid "AK ALBICOLAC"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__048_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__048_000
+msgid "AK Aargauer Arbeitgeber"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__015_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__015_000
+msgid "AK Appenzell A.Rh."
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__016_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__016_000
+msgid "AK Appenzell I.Rh."
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__040_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__040_000
+msgid "AK Arbeitgeber Basel"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__089_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__089_000
+msgid "AK Banken"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__012_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__012_000
+msgid "AK Basel Stadt"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__066_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__066_000
+msgid "AK Baumeister"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__002_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__002_000
+msgid "AK Bern"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__087_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__087_000
+msgid "AK Bündner Gewerbe"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__106_007
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__106_007
+msgid "AK Caisse de compensation FER VALAIS SION"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__113_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__113_000
+msgid "AK Coiffure und Esthétique"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__031_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__031_000
+msgid "AK Coop"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__095_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__095_000
+msgid "AK EXFOUR"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__026_001
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__026_001
+msgid "AK Eidg. Ausgleichskasse"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__037_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__037_000
+msgid "AK Elektrizitätswerke"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__106_005
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__106_005
+msgid "AK FER CIAB"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__106_001
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__106_001
+msgid "AK FER CIAM"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__106_004
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__106_004
+msgid "AK FER CIAN"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__106_002
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__106_002
+msgid "AK FER CIFA"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__106_003
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__106_003
+msgid "AK FER CIGA"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__098_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__098_000
+msgid "AK Forte"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__046_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__046_000
+msgid "AK GastroSocial"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__107_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__107_000
+msgid "AK Geschäftsinhaber Bern"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__112_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__112_000
+msgid "AK Gewerbe St. Gallen"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__101_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__101_000
+msgid "AK Holz"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__003_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__003_000
+msgid "AK Luzern"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__033_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__033_000
+msgid "AK MOBIL"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__028_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__028_000
+msgid "AK Medisuisse"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__034_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__034_000
+msgid "AK Metzger"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__070_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__070_000
+msgid "AK Migros"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__078_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__078_000
+msgid "AK Milch"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__007_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__007_000
+msgid "AK Nidwalden"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__006_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__006_000
+msgid "AK Obwalden"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__032_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__032_000
+msgid "AK Ostschweizerischer Handel"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__099_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__099_000
+msgid "AK PROMEA"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__038_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__038_000
+msgid "AK Panvica"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__115_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__115_000
+msgid "AK Privatkliniken"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__013_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__013_000
+msgid "AK SVA Basel Land"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__017_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__017_000
+msgid "AK SVA St. Gallen"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__105_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__105_000
+msgid "AK Schweiz. Gewerbe"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__005_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__005_000
+msgid "AK Schwyz"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__030_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__030_000
+msgid "AK Simulac"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__011_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__011_000
+msgid "AK Solothurn"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__079_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__079_000
+msgid "AK Spida"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__045_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__045_000
+msgid "AK Spirituosen"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__060_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__060_000
+msgid "AK Swissmem"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__117_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__117_000
+msgid "AK Swisstempcomp"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__020_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__020_000
+msgid "AK Thurgau"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__055_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__055_000
+msgid "AK Thurgauer Gewerbe"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__069_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__069_000
+msgid "AK Transport"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__051_003
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__051_003
+msgid "AK Uhrenindustrie CCIH - Agence 51.3"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__051_010
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__051_010
+msgid "AK Uhrenindustrie CCIH - Agentur 10"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__051_004
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__051_004
+msgid "AK Uhrenindustrie CCIH - Agentur 51.4"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__051_005
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__051_005
+msgid "AK Uhrenindustrie CCIH - Agentur 51.5"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__051_007
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__051_007
+msgid "AK Uhrenindustrie CCIH - Agentur 51.7"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__051_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__051_000
+msgid "AK Uhrenindustrie CCIH - Zentralverwaltung"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__004_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__004_000
+msgid "AK Uri"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__022_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__022_000
+msgid "AK Vaud"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__081_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__081_000
+msgid "AK Versicherung x x x swissdec@insite.ch"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__023_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__023_000
+msgid "AK Wallis / CC Valais"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__009_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__009_000
+msgid "AK Zug"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__065_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__065_000
+msgid "AK Zürcher Arbeitgeber"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__103_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__103_000
+msgid "AK agrapi"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__114_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__114_000
+msgid "AK der Wirtschaftskammer Baselland"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__035_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__035_000
+msgid "AK scienceindustries"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "APR"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "AUG"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_avs
+msgid "AVS"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_avs_comp
+msgid "AVS (Comp. Part.)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_avs_salary
+#: model:hr.salary.rule.category,name:l10n_ch_hr_payroll.hr_salary_rule_category_avs_salary
+msgid "AVS Salary"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_salary_rule__l10n_ch_ac_included
+msgid "AVS/AC Included"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_contract__l10n_ch_social_insurance_id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_payslip__l10n_ch_social_insurance_id
+msgid "AVS/AC Insurance"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.actions.act_window,name:l10n_ch_hr_payroll.action_l10n_ch_social_insurance
+#: model:ir.ui.menu,name:l10n_ch_hr_payroll.menu_l10n_ch_social_insurance
+msgid "AVS/AC Insurances"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s14
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s14
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s14
+msgid "AXA Versicherungen AG"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance__ac_line_ids
+msgid "Ac Line"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_indemnity_accident
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_indemnity_accident
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_indemnity_accident_2
+msgid "Accident Indemnity"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:hr.salary.rule,note:l10n_ch_hr_payroll.l10n_ch_employees_aanp
+#: model_terms:hr.salary.rule,note:l10n_ch_hr_payroll.l10n_ch_employees_aanp_comp
+msgid "Accident Insurance (Non Occupational Rates)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:hr.salary.rule,note:l10n_ch_hr_payroll.l10n_ch_employees_aap_comp
+msgid "Accident Insurance (Occupational Rates)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_accident_insurance_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_accident_insurance_view_tree
+msgid "Accident Insurances"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_accident_insurance_line_view_form
+msgid "Accident Insurances Solutions"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_accident_wage
+msgid "Accident Wage"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:hr.salary.rule,note:l10n_ch_hr_payroll.l10n_ch_employees_laac_comp
+msgid "Additional Accident Insurance (LAAC)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.actions.act_window,name:l10n_ch_hr_payroll.action_l10n_ch_additional_accident_insurance
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_additional_accident_insurance_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_additional_accident_insurance_view_tree
+msgid "Additional Accident Insurances"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_additional_accident_insurance_line_view_form
+msgid "Additional Accident Insurances Solutions"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:hr.salary.rule,note:l10n_ch_hr_payroll.l10n_ch_employees_compl_ac
+#: model_terms:hr.salary.rule,note:l10n_ch_hr_payroll.l10n_ch_employees_compl_ac_comp
+msgid "Additional Unemployment Insurance"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_advance
+msgid "Advance"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_monthly_summary__aggregation_type
+msgid "Aggregation Type"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s22
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s22
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s22
+msgid "Allianz Suisse"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_monthly_summary
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_payslip_ch
+msgid "Amount"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_residence_category__annual-b
+msgid "Annual (Cat. B)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_annuities_ai
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_annuities_ai
+msgid "Annuities AI"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__ar
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__ar
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__ar
+msgid "Appenzell Rhodes-Extérieures"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__ai
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__ai
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__ai
+msgid "Appenzell Rhodes-Intérieures"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.contract.type,name:l10n_ch_hr_payroll.l10n_ch_contract_type_apprentice
+msgid "Apprenticeship contract"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_monthly_summary__month__4
+msgid "April"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__ag
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__ag
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__ag
+msgid "Argovie"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_residence_category__asylumseeker-n
+msgid "Asylum Seeker (Cat. N)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_monthly_summary__month__8
+msgid "August"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance__avs_line_ids
+msgid "Avs Line"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_location_unit__bur_ree_number
+msgid "BUR-REE-Number"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s6
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s6
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s6
+msgid "Baloise Versicherungen AG"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_basic_hourly
+msgid "Basic Hourly Salary"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,help:l10n_ch_hr_payroll.field_l10n_ch_hr_employee_children__deduction_start
+msgid "Beginning of the right to the child deduction"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__be
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__be
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__be
+msgid "Berne"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_birth_allowance
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_birth_allowance
+msgid "Birth Allowance"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_employee_children__birthdate
+msgid "Birthdate"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_bonus
+msgid "Bonus"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s26
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s26
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s26
+msgid "Branchen Versicherung Genossenschaft"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_monthly_summary__aggregation_type__company
+msgid "By Company"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_monthly_summary__aggregation_type__employee
+msgid "By Employee"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__bl
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__bl
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__bl
+msgid "Bâle-Campagne"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__bs
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__bs
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__bs
+msgid "Bâle-Ville"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_ca_fee
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_ca_fee
+msgid "CA Fee"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_fak
+msgid "CAF"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:hr.salary.rule,note:l10n_ch_hr_payroll.l10n_ch_employees_fak
+msgid "CAF Contribution (Family Allowances)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__066_002
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__066_002
+msgid "CCB Genève"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__059_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__059_000
+msgid "CICICAM / CINALFA"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund__caf_line_ids
+msgid "Caf Line"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__010_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__010_000
+msgid "Caisse AVS Fribourg"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__110_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__110_000
+msgid "Caisse AVS de la Fédération patronale vaudoise"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__024_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__024_000
+msgid "Caisse cantonale neuchâteloise de compensation (CCNC)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__150_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__150_000
+msgid "Caisse de compensation du canton du Jura"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_hr_payroll_employee_lang_view_form
+msgid "Cancel"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_employee__l10n_ch_canton
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_location_unit__canton
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_res_users__l10n_ch_canton
+msgid "Canton"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_car_expense
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_car_expense
+msgid "Car Expense"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_car_fees
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_car_fees
+msgid "Car Fees"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__021_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__021_000
+msgid "Cassa cantonale di compensazione AVS"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_employee__certificate
+msgid "Certificate Level"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__109_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__109_000
+msgid "Chambre vaudoise du commerce et de l'industrie (CVCI)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.actions.act_window,name:l10n_ch_hr_payroll.l10n_ch_hr_payroll_employee_lang_wizard_action
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_hr_payroll_employee_lang_wizard
+msgid "Change Employee Language"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_hr_payroll_employee_lang_wizard_line
+msgid "Change Employee Language Line"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_child_allowance
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_child_allowance
+msgid "Child Allowance"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_hr_employee_children_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_hr_employee_children_view_tree
+msgid "Children"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_religious_denomination__christiancatholic
+msgid "Christian Catholic"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_tax_rate_import_wizard_view_form
+msgid "Close"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_monthly_summary
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_payslip_ch
+msgid "Code"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,help:l10n_ch_hr_payroll.field_hr_salary_rule__l10n_ch_wage_statement
+msgid ""
+"Code meaning:\n"
+"- I: Gross base salary and regular allowances\n"
+"    - Ordinary salary paid, such as monthly, hourly, piece rate, working from home, etc.\n"
+"    - Regular allowances paid, such as allowances for position or for length of service,\n"
+"      residence, housing, travel or cost of living allowances.\n"
+"    - Tips paid subject to AVS contributions.\n"
+"    - Regular payments (at each pay) of a commission, turnover contribution or other bonus\n"
+"      paid regularly.\n"
+"- J: Gross amount of compensation for shift work, Sunday or night work and other arduousness\n"
+"     bonuses (compensation for on-call duty, dirty work, etc.).\n"
+"- K: Total amount of family allowances paid by the employer in the form of child allowances,\n"
+"     vocational training allowances, household allowances or care allowances.\n"
+"- Y: Benefits provided by insurance or similar institutions and which have an impact on\n"
+"     employee contributions\n"
+"- L: Amount of AVS/AI/APG/AC/ (1st pillar) and AANP (employee’s share) contributions.\n"
+"     Not included:\n"
+"        - the employer’s share,\n"
+"        - the Parifonds,\n"
+"        - daily allowance insurance in the event of IJM illness,\n"
+"        - LAAC supplementary accident insurance\n"
+"        - Social contributions must in principle be transmitted in the form of negative values.\n"
+"- M: Amount of ordinary contributions (employee's share) to LPP professional pension provision or\n"
+"     the 2nd pillar, in accordance with legal, statutory or regulatory provisions.\n"
+"     The amount indicated should not include redemption contributions.\n"
+"     Regular BVG-LPP contributions must in principle be transmitted as negative values.\n"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,help:l10n_ch_hr_payroll.field_hr_salary_rule__l10n_ch_yearly_statement
+msgid ""
+"Code meaning:\n"
+"- O: 13th salary paid (with the 14th and following) provided that it is not in the form of a bonus\n"
+"- P: Overtime pay\n"
+"- Q: Sporadic Benefits, e.g.\n"
+"        - bonuses,\n"
+"        - merit-based rewards,\n"
+"        - participation in profit or turnover,\n"
+"        - engagement bonuses and severance pay,\n"
+"        - loyalty bonuses, bonuses and gifts for length of service,\n"
+"        - fixed moving compensation,\n"
+"        - Christmas bonuses,\n"
+"        - compensation for members of the board of directors (attendance fees, fees, etc.).\n"
+"- R: Fringe Benefits\n"
+"        - board and lodging (section 2.1 of the salary certificate);\n"
+"      - the private share of the company car (section 2.2 of the salary certificate);\n"
+"      - other ancillary salary benefits (section 2.3 of the salary certificate);\n"
+"      - participation rights (section 5 of the salary certificate).\n"
+"- S: Capital Payment: Capital benefits of a pension nature paid by the employer directly to the\n"
+"     employee and likely to be taxed at a reduced rate.\n"
+"      - severance pay of a provident nature;\n"
+"      - capital benefits of a pension nature;\n"
+"      - salary payments after death.\n"
+"- T: Other Benefits: All other services covered on an optional basis by the employer, although\n"
+"     they are generally due by the employee.\n"
+"        - partial or total coverage of contributions owed by the employee to LPP professional\n"
+"          insurance, including executive insurance;\n"
+"        - payments to occupational pension institutions (2nd pillar) made by the employer in\n"
+"          favor of the employee (purchase contributions);\n"
+"        - payment of insurance contributions in favor of the employee and members of his family\n"
+"          (health insurance, optional 3rd pillar b insurance, life insurance, etc.);\n"
+"        - payment of contributions to recognized forms of linked individual pension provision (3rd pillar a)\n"
+"."
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_commission
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_commission
+msgid "Commission"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_individual_account__company_id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_location_unit__company_id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_monthly_summary__company_ids
+msgid "Company"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_ac_line__employer_additional_rate
+msgid "Company Additional Rate (%)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_company_car
+msgid "Company Car"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_company_car_employee
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_company_car_employee_2
+msgid "Company Car (Employee Part)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_compensation_fund_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.res_config_settings_view_form
+msgid "Company Information"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line_rate__employer_non_occupational_part
+msgid "Company Non Occupational Part"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line_rate__employer_occupational_part
+msgid "Company Occupational Part"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_ch_hr_payroll.hr_salary_rule_category_comp_part
+msgid "Company Part"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_ac_line__employer_rate
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_avs_line__employer_rate
+msgid "Company Rate (%)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_compl_ac_comp
+msgid "Compl. AC (Comp. Part.)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_salary_rule__l10n_ch_comp_ac_included
+msgid "Complementary AC Included"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_employee_children__name
+msgid "Complete Name"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_hr_payroll_employee_lang_view_form
+msgid "Confirm"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance__contract_number
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance__contract_number
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_lpp_insurance__contract_number
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance__contract_number
+msgid "Contract Number"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_contract__contract_type_id
+msgid "Contract Type"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_monthly_summary_view_form
+msgid "Create PDF"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_monthly_summary_view_form
+msgid "Create XLSX"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line_rate__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line_rate__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund_line__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_employee_children__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_payroll_employee_lang_wizard__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_payroll_employee_lang_wizard_line__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_individual_account__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_location_unit__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_lpp_insurance__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_monthly_summary__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line_rate__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_ac_line__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_avs_line__create_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_tax_rate_import_wizard__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line_rate__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line_rate__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund_line__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_employee_children__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_payroll_employee_lang_wizard__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_payroll_employee_lang_wizard_line__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_individual_account__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_location_unit__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_lpp_insurance__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_monthly_summary__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line_rate__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_ac_line__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_avs_line__create_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_tax_rate_import_wizard__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_residence_category__crossborder-g
+msgid "Cross Border (Cat. G)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_monthly_summary__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance__customer_number
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance__customer_number
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_lpp_insurance__customer_number
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance__customer_number
+msgid "Customer Number"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "DEC"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_location_unit__dpi_number
+msgid "DPI Number"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:hr.salary.rule,note:l10n_ch_hr_payroll.l10n_ch_employees_ijm
+#: model_terms:hr.salary.rule,note:l10n_ch_hr_payroll.l10n_ch_employees_ijm_comp
+msgid "Daily Sickness Insurance"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_monthly_summary__month__12
+msgid "December"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_individual_account__line_ids
+msgid "Declarations"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_employee_children__deduction_start
+msgid "Deduction Start"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,help:l10n_ch_hr_payroll.field_l10n_ch_location_unit__bur_ree_number
+msgid ""
+"Depending on the structure of the company and the number of workplaces, "
+"there are one or more REE numbers."
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_individual_account__name
+msgid "Description"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line_rate__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line_rate__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund_line__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_employee_children__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_payroll_employee_lang_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_payroll_employee_lang_wizard_line__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_individual_account__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_location_unit__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_lpp_insurance__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_monthly_summary__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line_rate__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_ac_line__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_avs_line__display_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_tax_rate_import_wizard__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_individual_account__documents_count
+msgid "Documents Count"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_individual_account__documents_enabled
+msgid "Documents Enabled"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_monthly_summary_view_form
+msgid "Download the Monthly Summary PDF file:"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_monthly_summary_view_form
+msgid "Download the Monthly Summary XLSX file:"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.hr_employee_view_form
+msgid "Eligible children for deduction"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_hr_employee
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_employee_children__employee_id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_payroll_employee_lang_wizard_line__employee_id
+msgid "Employee"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_ac_line__employee_additional_rate
+msgid "Employee Additional Rate (%)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_hr_employee_children
+msgid "Employee Children"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_hr_contract
+msgid "Employee Contract"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund_line__employee_rate
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_ac_line__employee_rate
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_avs_line__employee_rate
+msgid "Employee Rate (%)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_compensation_fund_view_form
+msgid "Employee Rates"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line_rate__employer_part
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line_rate__employer_part
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_accident_insurance_line_view_form
+msgid "Employer Part"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_monthly_summary__date_end
+msgid "End Period"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_salary_rule__l10n_ch_code
+msgid "External Code"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "FEB"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_family_allowance
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_family_allowance
+msgid "Family Allowance"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule.category,name:l10n_ch_hr_payroll.hr_salary_rule_category_caf
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_contract__l10n_ch_compensation_fund_id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_payslip__l10n_ch_compensation_fund_id
+msgid "Family Allowance (CAF)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.actions.act_window,name:l10n_ch_hr_payroll.action_l10n_ch_compensation_fund
+#: model:ir.ui.menu,name:l10n_ch_hr_payroll.menu_l10n_ch_compensation_fund
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_compensation_fund_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_compensation_fund_view_tree
+msgid "Family Allowances"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_monthly_summary__month__2
+msgid "February"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line_rate__female_rate
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line_rate__female_rate
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_accident_insurance_line_view_form
+msgid "Female Rate (%)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.contract.type,name:l10n_ch_hr_payroll.l10n_ch_contract_type_fixedSalaryMth
+msgid "Fixed term contract with monthly salary"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__ex
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__ex
+msgid "Foreign"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_free_housing
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_free_housing
+msgid "Free Housing"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_free_meals
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_free_meals
+msgid "Free Meals"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_free_room
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_free_room
+msgid "Free Room"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__fr
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__fr
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__fr
+msgid "Fribourg"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line_rate__date_from
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line_rate__date_from
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund_line__date_from
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line_rate__date_from
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_ac_line__date_from
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_avs_line__date_from
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_monthly_summary_view_form
+msgid "From"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_lpp_insurance__fund_number
+msgid "Fund Number"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s21
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s21
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s21
+msgid "GENERALI Versicherungen"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__046_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__046_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__046_000
+msgid "Gastrosocial"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_monthly_summary_view_form
+msgid "Generation Complete"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__ge
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__ge
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__ge
+msgid "Genève"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__gl
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__gl
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__gl
+msgid "Glaris"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_gratification
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_gratification
+msgid "Gratification"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__gr
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__gr
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__gr
+msgid "Grisons"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s270
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s270
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s270
+msgid "Groupe Mutuel"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__071_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__071_000
+msgid "Handel Schweiz"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_contract__l10n_ch_thirteen_month
+msgid "Has 13th Month"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s264
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s264
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s264
+msgid "Helsana Versicherungen AG"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s23
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s23
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s23
+msgid "Helvetia"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_holiday_bonus
+msgid "Holiday Bonus"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_holiday_departure
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_departure_time_off
+msgid "Holidays payment after departure"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s329
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s329
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s329
+msgid "Hotela Assurances SA"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__k329
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__k329
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__k329
+msgid "Hotela Caisse Maladie"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__044_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__044_000
+msgid "Hotela Caisse de Compensation"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line_rate__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line_rate__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund_line__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_employee_children__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_payroll_employee_lang_wizard__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_payroll_employee_lang_wizard_line__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_individual_account__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_location_unit__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_lpp_insurance__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_monthly_summary__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line_rate__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_ac_line__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_avs_line__id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_tax_rate_import_wizard__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_ijm
+msgid "IJM"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_ijm_comp
+msgid "IJM (Comp. Part.)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_salary_rule__l10n_ch_ijm_included
+msgid "IJM Included"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_contract__l10n_ch_sickness_insurance_line_ids
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_payslip__l10n_ch_sickness_insurance_line_ids
+#: model:ir.ui.menu,name:l10n_ch_hr_payroll.menu_l10n_ch_sickness_insurance
+msgid "IJM Insurances"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_ijm_salary
+#: model:hr.salary.rule.category,name:l10n_ch_hr_payroll.hr_salary_rule_category_ijm_salary
+msgid "IJM Salary"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_sickness_insurance_view_form
+msgid "IJM Solution"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_withholding_tax
+msgid "IS"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_is_correction
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_is_correction
+msgid "IS: Correction"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_res_company__l10n_ch_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_res_config_settings__l10n_ch_uid
+msgid "Identification Number (IDE-OFS)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/res_company.py:0
+#, python-format
+msgid "Identification Number (IDE-OFS) checksum is not correct"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/res_company.py:0
+#, python-format
+msgid "Identification Number (IDE-OFS) does not match the right format"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_indemnity_illness
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_indemnity_illness
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_indemnity_illness_2
+msgid "Illness Indemnity"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_tax_rate_import_wizard_view_form
+msgid "Import Tax Rate File"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.actions.act_window,name:l10n_ch_hr_payroll.l10n_ch_tax_rate_import_wizard_action
+#: model:ir.ui.menu,name:l10n_ch_hr_payroll.menu_l10n_ch_tax_rate_import_wizard
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_tax_rate_import_wizard_view_form
+msgid "Import Tax Rates"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_indemnity_ai
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_indemnity_ai
+msgid "Indemnity AI"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_indemnity_apg
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_indemnity_apg
+msgid "Indemnity APG"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.actions.report,name:l10n_ch_hr_payroll.action_report_individual_account
+msgid "Individual Account"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.actions.act_window,name:l10n_ch_hr_payroll.l10n_ch_individual_account_action
+#: model:ir.ui.menu,name:l10n_ch_hr_payroll.menu_l10n_ch_individual_account
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_individual_account_view_form
+msgid "Individual Accounts"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_individual_account.py:0
+#, python-format
+msgid "Individual Accounts - Year %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line__insurance_id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line__insurance_id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund_line__insurance_id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line__insurance_id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_ac_line__insurance_id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_avs_line__insurance_id
+msgid "Insurance"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance__insurance_code
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance__insurance_code
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund__insurance_code
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance__insurance_code
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance__insurance_code
+msgid "Insurance Code"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance__insurance_company
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance__insurance_company
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund__insurance_company
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance__insurance_company
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance__insurance_company
+msgid "Insurance Company"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance__insurance_company_address_id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance__insurance_company_address_id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_lpp_insurance__insurance_company_address_id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance__insurance_company_address_id
+msgid "Insurance Company Address"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.hr_contract_view_form
+msgid "Insurances"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_accident_insurance_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_additional_accident_insurance_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_sickness_insurance_view_form
+msgid "Insurer Information"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.contract.type,name:l10n_ch_hr_payroll.l10n_ch_contract_type_internshipContract
+msgid "Internship contract"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/hr_employee.py:0
+#, python-format
+msgid "Invalid marital status for employee %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "JAN"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "JUL"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "JUN"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_monthly_summary__month__1
+msgid "January"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_religious_denomination__jewishcommunity
+msgid "Jewish Community"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_contract__l10n_ch_job_type
+msgid "Job Type"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_jubilee_gift
+msgid "Jubilee Gift"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_monthly_summary__month__7
+msgid "July"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_monthly_summary__month__6
+msgid "June"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__ju
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__ju
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__ju
+msgid "Jura"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:hr.salary.rule,note:l10n_ch_hr_payroll.l10n_ch_employees_withholding_tax
+msgid ""
+"Kept tax in the source\n"
+"See: https://www.estv.admin.ch/estv/fr/accueil/impot-federal-direct/impot-a-la-source/baremes-cantonaux.html"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_employee__l10n_ch_children
+msgid "L10N Ch Children"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_accident_insurance_view_form
+msgid "LAA Solution"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_laac_comp
+msgid "LAAC (Comp. Part.)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_contract__l10n_ch_additional_accident_insurance_line_ids
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_payslip__l10n_ch_additional_accident_insurance_line_ids
+#: model:ir.ui.menu,name:l10n_ch_hr_payroll.menu_l10n_ch_additional_accident_insurance
+msgid "LAAC Insurances"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_laac_salary
+#: model:hr.salary.rule.category,name:l10n_ch_hr_payroll.hr_salary_rule_category_laac_salary
+msgid "LAAC Salary"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_additional_accident_insurance_view_form
+msgid "LAAC Solution"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_laac
+msgid "LAAC1"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_lpp
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_lpp
+msgid "LPP"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_lpp_comp
+msgid "LPP (Comp. Part.)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_lpp_comp
+msgid "LPP Comp. Part."
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_contract__l10n_ch_lpp_insurance_id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_payslip__l10n_ch_lpp_insurance_id
+msgid "LPP Insurance"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.actions.act_window,name:l10n_ch_hr_payroll.action_l10n_ch_lpp_insurance
+#: model:ir.ui.menu,name:l10n_ch_hr_payroll.menu_l10n_ch_lpp_insurance
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_lpp_insurance_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_lpp_insurance_view_tree
+msgid "LPP Insurances"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_lpp_redemption
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_lpp_redemption
+msgid "LPP: Redemption"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_payroll_employee_lang_wizard_line__lang
+msgid "Language"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line_rate__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line_rate__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund_line__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_employee_children__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_payroll_employee_lang_wizard__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_payroll_employee_lang_wizard_line__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_individual_account__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_location_unit__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_lpp_insurance__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_monthly_summary__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line_rate__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_ac_line__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_avs_line__write_uid
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_tax_rate_import_wizard__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line_rate__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line_rate__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund_line__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_employee_children__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_payroll_employee_lang_wizard__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_payroll_employee_lang_wizard_line__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_individual_account__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_location_unit__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_lpp_insurance__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_monthly_summary__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line_rate__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_ac_line__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_avs_line__write_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_tax_rate_import_wizard__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance__line_ids
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line_rate__line_id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance__line_ids
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line_rate__line_id
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance__line_ids
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line_rate__line_id
+msgid "Line"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_payroll_employee_lang_wizard__line_ids
+msgid "Lines"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_individual_account__lines_count
+msgid "Lines Count"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_contract__l10n_ch_job_type__lowercadre
+msgid "Lower Management"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__lu
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__lu
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__lu
+msgid "Lucerne"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_lunch_expense
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_lunch_expense
+msgid "Lunch Expense"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "MAR"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "MAY"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:hr.salary.rule,note:l10n_ch_hr_payroll.l10n_ch_employees_laac
+msgid "Main Additional Accident Insurance (LAAC)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line_rate__male_rate
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line_rate__male_rate
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_accident_insurance_line_view_form
+msgid "Male Rate (%)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_monthly_summary__month__3
+msgid "March"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_employee__marital
+msgid "Marital Status"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_employee__l10n_ch_marital_from
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_res_users__l10n_ch_marital_from
+msgid "Marital Status Start Date"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_marriage_allowance
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_marriage_allowance
+msgid "Marriage Allowance"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_indemnity_maternity
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_indemnity_maternity
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_indemnity_maternity_2
+msgid "Maternity Indemnity"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_monthly_summary__month__5
+msgid "May"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund__member_number
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance__member_number
+msgid "Member Number"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund__member_subnumber
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance__member_subnumber
+msgid "Member Subnumber"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_contract__l10n_ch_job_type__middlecadre
+msgid "Middle Management"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_military_wage
+msgid "Military Wage"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_military_wage
+msgid "Military compensation benefit (CCM)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_monthly_summary__month
+msgid "Month"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_salary_rule__l10n_ch_wage_statement
+msgid "Monthly Statistics"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.actions.act_window,name:l10n_ch_hr_payroll.l10n_ch_monthly_summary_action
+#: model:ir.ui.menu,name:l10n_ch_hr_payroll.menu_l10n_ch_monthly_summary
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_monthly_summary_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_monthly_summary_view_tree
+msgid "Monthly Summary"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_monthly_summary__monthly_summary_pdf_file
+msgid "Monthly Summary PDF"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_monthly_summary__monthly_summary_pdf_filename
+msgid "Monthly Summary Pdf Filename"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_monthly_summary__monthly_summary_xls_file
+msgid "Monthly Summary XLS"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_monthly_summary__monthly_summary_xls_filename
+msgid "Monthly Summary Xls Filename"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_monthly_summary
+msgid "Monthly Wage Type Summary."
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_employee__l10n_ch_municipality
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_location_unit__municipality
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_res_users__l10n_ch_municipality
+msgid "Municipality ID"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "NOV"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance__name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance__name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund__name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_lpp_insurance__name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance__name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance__name
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_monthly_summary
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_payslip_ch
+msgid "Name"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_residence_category__needforprotection-s
+msgid "Need For Protection (Cat. S)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__ne
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__ne
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__ne
+msgid "Neuchâtel"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__nw
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__nw
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__nw
+msgid "Nidwald"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_nightly_expense
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_nightly_expense
+msgid "Nightly Expense"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_accident_insurance.py:0
+#, python-format
+msgid "No AANP rates found for date %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_accident_insurance.py:0
+#, python-format
+msgid "No AAP rates found for date %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_accident_insurance.py:0
+#, python-format
+msgid "No AAP/AANP threshold found for date %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_social_insurance.py:0
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_social_insurance.py:0
+#, python-format
+msgid "No AC rates found for date %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_social_insurance.py:0
+#, python-format
+msgid "No AVS rates found for date %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_compensation_fund.py:0
+#, python-format
+msgid "No CAF rates found for date %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_sickness_insurance.py:0
+#, python-format
+msgid "No IJM rates found for date %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_sickness_insurance.py:0
+#, python-format
+msgid "No IJM threshold found for date %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_additional_accident_insurance.py:0
+#, python-format
+msgid "No LAAC rates found for date %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_additional_accident_insurance.py:0
+#, python-format
+msgid "No LAAC threshold found for date %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_accident_insurance.py:0
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_accident_insurance.py:0
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_additional_accident_insurance.py:0
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_sickness_insurance.py:0
+#, python-format
+msgid "No found rate for gender %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/hr_payslip.py:0
+#, python-format
+msgid ""
+"No specified canton for employees:\n"
+"%s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/hr_payslip.py:0
+#, python-format
+msgid ""
+"No specified tax scale for foreign employees:\n"
+"%s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/hr_rule_parameter.py:0
+#, python-format
+msgid ""
+"No tax rates found for the employee canton. Make sure you've actually "
+"imported using the wizard under Configuration -> Swiss -> Import Tax Rates"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_accident_insurance_line_view_form
+msgid "Non-occupational"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line_rate__non_occupational_female_rate
+msgid "Non-occupational Female Rate (%)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line_rate__non_occupational_male_rate
+msgid "Non-occupational Male Rate (%)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_residence_category__notificationprocedureforshorttermwork120days
+msgid "Notification Procedure for Short Term Work (120 days)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_residence_category__notificationprocedureforshorttermwork90days
+msgid "Notification Procedure for Short Term Work (90 days)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_monthly_summary__month__11
+msgid "November"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__025_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__025_000
+msgid "OCAS Genève, caisse genevoise de compensation (CCGC)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "OCT"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__ow
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__ow
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__ow
+msgid "Obwald"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_accident_insurance_line_view_form
+msgid "Occupational"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line_rate__occupational_female_rate
+msgid "Occupational Female Rate (%)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line_rate__occupational_male_rate
+msgid "Occupational Male Rate (%)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_monthly_summary__month__10
+msgid "October"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_salary_rule__l10n_ch_october_statement
+msgid "October Statement"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.res_config_settings_view_form
+msgid "Offical Company Information"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:hr.salary.rule,note:l10n_ch_hr_payroll.l10n_ch_employees_avs
+#: model_terms:hr.salary.rule,note:l10n_ch_hr_payroll.l10n_ch_employees_avs_comp
+msgid ""
+"Old Age &amp; Survivor's Insurance, Disability Insurance &amp; Loss of "
+"Earnings"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_social_insurance_view_form
+msgid "Old-age and survivors' insurance (AVS)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_optional_aanp
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_optional_aanp
+msgid "Optional employer part AANP"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_optional_cm
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_optional_cm
+msgid "Optional employer part CM"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_optional_ijm
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_optional_ijm
+msgid "Optional employer part IJM"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_optional_laac
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_optional_laac
+msgid "Optional employer part LAAC"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_optional_lpp
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_optional_lpp
+msgid "Optional employer part LPP"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_optional_lpp_redemption
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_optional_lpp_redemption
+msgid "Optional employer part LPP Redemption"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_residence_category__othersnotswiss
+msgid "Other (Without Swiss)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_other_expense
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_other_expense
+msgid "Other Expense"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_other_fees
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_other_fees
+msgid "Other Fees"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_religious_denomination__otherornone
+msgid "Other or None"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_individual_account__pdf_error
+msgid "PDF Error Message"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__marital__partnership_dissolved_by_declaration_of_lost
+msgid "Partnership Dissolved By Declaration of Lost"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__marital__partnership_dissolved_by_death
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__marital__partnership_dissolved_by_law
+msgid "Partnership Dissolved By Law"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_hr_payslip
+msgid "Pay Slip"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_payslip_run__l10n_ch_pay_13th_month
+msgid "Pay Thirteen Month"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_employee__l10n_ch_has_withholding_tax
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_res_users__l10n_ch_has_withholding_tax
+msgid "Pay Withholding Taxes"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:hr.salary.rule,note:l10n_ch_hr_payroll.l10n_ch_employees_lpp
+#: model_terms:hr.salary.rule,note:l10n_ch_hr_payroll.l10n_ch_employees_lpp_comp
+msgid ""
+"Pension\n"
+"Source:\n"
+"-https://hellosafe.ch/prevoyance/lpp/cotisation\n"
+"-https://finpension.ch/fr/glossaire/salaire-coordonne/"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.contract.type,name:l10n_ch_hr_payroll.l10n_ch_contract_type_indefiniteSalaryMth
+msgid "Permanent contract with monthly salary"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.contract.type,name:l10n_ch_hr_payroll.l10n_ch_contract_type_indefiniteSalaryMthAWT
+msgid "Permanent contract with monthly salary and annualized working time"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/wizard/l10n_ch_tax_rate_import.py:0
+#, python-format
+msgid "Please upload a tax file first."
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_individual_account_view_form
+msgid "Populate"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_res_company__l10n_ch_post_box
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_res_config_settings__l10n_ch_post_box
+msgid "Post Box"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_professional_training_allowance
+msgid "Professional Training Allowance"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_residence_category__provisionallyadmittedforeigners-f
+msgid "Provisionally Admitted Foreigners (Cat. F)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.work.entry.type,name:l10n_ch_hr_payroll.work_entry_type_bank_holiday
+msgid "Public Holiday"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_payslip_ch
+msgid "Quantity"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line__rate_ids
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line__rate_ids
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line__rate_ids
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_payslip_ch
+msgid "Rate"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_monthly_summary_view_form
+msgid "Reference Period"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_religious_denomination__reformedevangelical
+msgid "Reformed Evangelical"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__marital__registered_partnership
+msgid "Registered Partnership"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_employee__l10n_ch_religious_denomination
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_res_users__l10n_ch_religious_denomination
+msgid "Religious Denomination"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_representation_fees
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_representation_fees
+msgid "Representation Fees"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_employee__l10n_ch_residence_category
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_res_users__l10n_ch_residence_category
+msgid "Residence Category"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_residence_category__residentforeignnationalwithgainfulemployment-ci
+msgid "Residence Permit with Gainful Employment (Ci)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_contract__l10n_ch_job_type__lowestcadre
+msgid "Responsible for carrying out the work"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_employee__l10n_ch_retirement_insurance_number
+msgid "Retirement insurance number"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_religious_denomination__romancatholic
+msgid "Roman Catholic"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "SEP"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s95
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s95
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s95
+msgid "SOLIDA Versicherungen AG"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_employee__l10n_ch_sv_as_number
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_res_users__l10n_ch_sv_as_number
+msgid "SV-AS Number"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__019_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__019_000
+msgid "SVA Aargau"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__018_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__018_000
+msgid "SVA Graubünden"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__014_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__014_000
+msgid "SVA Schaffhausen"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__001_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__001_000
+msgid "SVA Zürich"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__sg
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__sg
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__sg
+msgid "Saint-Gall"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_advance
+msgid "Salary Advance"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_lpp_insurance_view_form
+msgid "Salary Attachments"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.hr_contract_view_form
+msgid "Salary Information"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_hr_rule_parameter
+msgid "Salary Rule Parameter"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_accident_wage
+msgid "Salary in case of accident"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_sick_wage
+msgid "Salary in case of illness"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_tax_scale__l
+msgid ""
+"Scale for German cross-border commuters who fulfill the conditions of the "
+"scale A"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_tax_scale__m
+msgid ""
+"Scale for German cross-border commuters who fulfill the conditions of the "
+"scale B"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_tax_scale__n
+msgid ""
+"Scale for German cross-border commuters who fulfill the conditions of the "
+"scale C"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_tax_scale__q
+msgid ""
+"Scale for German cross-border commuters who fulfill the conditions of the "
+"scale G"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_tax_scale__p
+msgid ""
+"Scale for German cross-border commuters who fulfill the conditions of the "
+"scale H"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_tax_scale__r
+msgid ""
+"Scale for Italian cross-border commuters who fulfill the conditions of the "
+"scale A"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_tax_scale__s
+msgid ""
+"Scale for Italian cross-border commuters who fulfill the conditions of the "
+"scale B"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_tax_scale__t
+msgid ""
+"Scale for Italian cross-border commuters who fulfill the conditions of the "
+"scale C"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_tax_scale__u
+msgid ""
+"Scale for Italian cross-border commuters who fulfill the conditions of the "
+"scale H"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_tax_scale__f
+msgid ""
+"Scale for Italian cross-border commuters whose spouse is working lucrative "
+"outside Switzerland"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_tax_scale__g
+msgid ""
+"Scale for income acquired as compensation which is paid to persons subject "
+"to withholding tax by a person other than that the employer"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_tax_scale__e
+msgid "Scale for income taxed under the procedure of simplified count"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_tax_scale__b
+msgid ""
+"Scale for married couples living in a common household with only one spouse "
+"is gainfully employed"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_tax_scale__c
+msgid "Scale for married couples with two incomes"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_tax_scale__d
+msgid "Scale for people whose AVS contributions are reimbursed"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_tax_scale__a
+msgid "Scale for single people"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_tax_scale__h
+msgid ""
+"Scale for single people living together with children or needy persons whom "
+"they take on maintenance essentials"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__sh
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__sh
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__sh
+msgid "Schaffhouse"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s1
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s1
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s1
+msgid "Schweizerische Mobiliar Versicherungsgesellschaft AG"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__sz
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__sz
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__sz
+msgid "Schwytz"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_jubilee_gift
+msgid "Seniority Gift"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__marital__separated
+msgid "Separated"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_monthly_summary__month__9
+msgid "September"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_residence_category__settled-c
+msgid "Settled (Cat. C)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_residence_category__shortterm-l
+msgid "Short Term (Cat. L)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_sick_wage
+msgid "Sick Wage"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.actions.act_window,name:l10n_ch_hr_payroll.action_l10n_ch_sickness_insurance
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_sickness_insurance_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_sickness_insurance_view_tree
+msgid "Sickness Insurances"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_sickness_insurance_line_view_form
+msgid "Sickness Insurances Solutions"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_payroll_employee_lang_wizard__slip_ids
+msgid "Slip"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_social_insurance_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_social_insurance_view_tree
+msgid "Social Insurances"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s225
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s225
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s225
+msgid "Sodalis"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__so
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__so
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__so
+msgid "Soleure"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line__solution_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line__solution_name
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line__solution_name
+msgid "Solution Name"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line__solution_number
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line__solution_number
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line__solution_number
+msgid "Solution Number"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line__solution_type
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line__solution_type
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line__solution_type
+msgid "Solution Type"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_salary_rule__l10n_ch_source_tax_included
+msgid "Source Tax Included"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_compensation_fund__insurance_company__008_000
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_social_insurance__insurance_company__008_000
+msgid "Sozialversicherungen Glarus"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_employee__l10n_ch_spouse_sv_as_number
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_res_users__l10n_ch_spouse_sv_as_number
+msgid "Spouse SV-AS-Number"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_employee__l10n_ch_spouse_work_canton
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_res_users__l10n_ch_spouse_work_canton
+msgid "Spouse Work Canton"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_employee__l10n_ch_spouse_work_start_date
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_res_users__l10n_ch_spouse_work_start_date
+msgid "Spouse Work Start Date"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_monthly_summary__date_start
+msgid "Start Period"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s999
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s999
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s999
+msgid "Suva"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s122
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s122
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s122
+msgid "Swica Versicherungen"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_employee__l10n_ch_church_tax
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_res_users__l10n_ch_church_tax
+msgid "Swiss Church Tax"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.hr_payslip_view_form_inherit
+msgid "Swiss Insurances"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.res_config_settings_view_form
+msgid "Swiss Localization"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_individual_account
+msgid "Swiss Payroll: Individual Account"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_monthly_summary
+msgid "Swiss Payroll: Monthly Summary"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_tax_rate_import_wizard
+msgid "Swiss Payroll: Tax rate import wizard"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_employee__l10n_ch_tax_scale
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_res_users__l10n_ch_tax_scale
+msgid "Swiss Tax Scale"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_additional_accident_insurance_line_rate
+msgid "Swiss: Accident Additional Insurances Line Rate (LAAC)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_accident_insurance
+msgid "Swiss: Accident Insurances (AAP/AANP)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_accident_insurance_line
+msgid "Swiss: Accident Insurances Line (AAP/AANP)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_accident_insurance_line_rate
+msgid "Swiss: Accident Insurances Line Rate (AAP/AANP)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_additional_accident_insurance
+msgid "Swiss: Additional Accident Insurances (LAAC)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_additional_accident_insurance_line
+msgid "Swiss: Additional Accident Insurances Line (LAAC)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__certificate__voceducationcompl
+msgid ""
+"Swiss: Complete learning attested by a federal certificate of capacity (CFC)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__certificate__mandatoryschoolonly
+msgid "Swiss: Compulsory schooling, without full vocational training"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__certificate__doctorate
+msgid "Swiss: Doctorate, habilitation"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_compensation_fund
+msgid "Swiss: Family Allowance (CAF)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_compensation_fund_line
+msgid "Swiss: Family Allowance Rate (CAF)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__certificate__highervoceducation
+msgid "Swiss: Higher Vocational Education"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__certificate__highervoceducationbachelor
+msgid "Swiss: Higher Vocational Education Bachelor"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__certificate__highervoceducationmaster
+msgid "Swiss: Higher Vocational Education Master"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__certificate__enterpriseeducation
+msgid "Swiss: In-company training only"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_lpp_insurance
+msgid "Swiss: LPP Insurances"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__certificate__universityentrancecertificate
+msgid "Swiss: Matura"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_sickness_insurance
+msgid "Swiss: Sickness Insurances (IJM)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_sickness_insurance_line
+msgid "Swiss: Sickness Insurances Line (IJM)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_sickness_insurance_line_rate
+msgid "Swiss: Sickness Insurances Line Rate (IJM)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_social_insurance
+msgid "Swiss: Social Insurances (AVS, AC)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_social_insurance_ac_line
+msgid "Swiss: Social Insurances - AC Line"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_social_insurance_avs_line
+msgid "Swiss: Social Insurances - AVS Line"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__certificate__teachercertificate
+msgid "Swiss: Teaching certificate at different levels"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__certificate__universitybachelor
+msgid "Swiss: University College Bachelor (university, ETH)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__certificate__universitymaster
+msgid "Swiss: University College Master (university, ETH)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__certificate__highereducationbachelor
+msgid "Swiss: University of Applied Sciences Bachelor"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__certificate__highereducationmaster
+msgid "Swiss: University of Applied Sciences Master"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.ui.menu,name:l10n_ch_hr_payroll.menu_configuration_l10n_ch
+#: model:ir.ui.menu,name:l10n_ch_hr_payroll.menu_reporting_l10n_ch
+msgid "Switzerland"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.actions.report,name:l10n_ch_hr_payroll.action_report_monthly_summary
+msgid "Switzerland: Monthly Summary"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.actions.report,name:l10n_ch_hr_payroll.action_report_payslip_ch
+msgid "Switzerland: Payslip"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s205
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s205
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s205
+msgid "Sympany"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_tax_rate_import_wizard__tax_file_ids
+msgid "Tax Files"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__ti
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__ti
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__ti
+msgid "Tessin"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,help:l10n_ch_hr_payroll.field_hr_employee__l10n_ch_retirement_insurance_number
+msgid ""
+"The Central Compensation Office in Geneva assigns a retirement insurance "
+"(RI) number to all newborns and immigrants, which is valid for the rest of "
+"your life and remains the same even after a name change. Further information"
+" on the structure of the RI number can be found on theSwiss Federal Social "
+"Insurance Office website (in Germnan)."
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_lpp_insurance_view_form
+msgid ""
+"The LPP amounts to pay (by the employee or the employer) are to be defined "
+"by hand from the"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/hr_employee.py:0
+#: code:addons/l10n_ch_hr_payroll/models/hr_employee.py:0
+#, python-format
+msgid ""
+"The SV-AS number should be a thirteen-digit number, comma-separated (eg: "
+"756.1848.4786.64)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_individual_account_view_form
+msgid ""
+"The files won't be posted in the employee portal if you don't have the "
+"Documents app."
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_hr_payroll_employee_lang_view_form
+msgid ""
+"The following employees have an invalid language for the selected salary structure.\n"
+"                        <br/>\n"
+"                        Please assign them a language below before continuing."
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/wizard/l10n_ch_tax_rate_import.py:0
+#, python-format
+msgid "The tax file has been successfully imported."
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_monthly_summary.py:0
+#, python-format
+msgid "There is no paid or done payslips over the selected period."
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_thirteen_month
+msgid "Thirteen Month"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_thirteen_month_provision
+msgid "Thirteen Month Provision"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,help:l10n_ch_hr_payroll.field_hr_employee__l10n_ch_sv_as_number
+#: model:ir.model.fields,help:l10n_ch_hr_payroll.field_res_users__l10n_ch_sv_as_number
+msgid ""
+"Thirteen-digit AS number assigned by the Central Compensation Office (CdC)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/hr_payslip.py:0
+#, python-format
+msgid "This document is a translation. This is not a legal document."
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line_rate__threshold
+msgid "Threshold"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__tg
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__tg
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__tg
+msgid "Thurgovie"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_accident_insurance_line_rate__date_to
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line_rate__date_to
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_compensation_fund_line__date_to
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line_rate__date_to
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_ac_line__date_to
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_social_insurance_avs_line__date_to
+msgid "To"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_contract__l10n_ch_job_type__highestcadre
+msgid "Top Management"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.report_individual_account
+msgid "Total Year"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_training_allowance
+msgid "Training Allowance"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:hr.salary.attachment.type,name:l10n_ch_hr_payroll.hr_salary_attachment_type_travel_expense
+#: model:hr.salary.rule,name:l10n_ch_hr_payroll.l10n_ch_employees_travel_expense
+msgid "Travel Expense"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:hr.salary.rule,note:l10n_ch_hr_payroll.l10n_ch_employees_ac
+#: model_terms:hr.salary.rule,note:l10n_ch_hr_payroll.l10n_ch_employees_ac_comp
+msgid ""
+"Unemployment Insurance\n"
+"Source: https://www.cvcicaisseavs.ch/en/employer/unemployment-insurance-ac.html"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_social_insurance_view_form
+msgid "Unemployment insurance (AC)"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/wizard/l10n_ch_tax_rate_import.py:0
+#, python-format
+msgid "Unmanaged transaction type 02: %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/wizard/l10n_ch_tax_rate_import.py:0
+#, python-format
+msgid "Unmanaged transaction type 03: %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/wizard/l10n_ch_tax_rate_import.py:0
+#, python-format
+msgid "Unrecognized canton code %s: %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/wizard/l10n_ch_tax_rate_import.py:0
+#, python-format
+msgid "Unrecognized line format: %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/wizard/l10n_ch_tax_rate_import.py:0
+#, python-format
+msgid "Unrecognized tax scale %s: %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/wizard/l10n_ch_tax_rate_import.py:0
+#, python-format
+msgid "Unrecognized transaction type %s: %s"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__ur
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__ur
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__ur
+msgid "Uri"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_res_users
+msgid "User"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__vs
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__vs
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__vs
+msgid "Valais"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__vd
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__vd
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__vd
+msgid "Vaud"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s116
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s116
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s116
+msgid "Vaudoise Assurances / Vaudoise Versicherungen"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s94
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s94
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s94
+msgid "Visana Versicherungen AG"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line_rate__wage_from
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line_rate__wage_from
+msgid "Wage From"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_additional_accident_insurance_line_rate__wage_to
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_sickness_insurance_line_rate__wage_to
+msgid "Wage To"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.actions.act_window,name:l10n_ch_hr_payroll.action_hr_salary_rule_l10n_ch_wage_types
+#: model:ir.ui.menu,name:l10n_ch_hr_payroll.menu_l10n_ch_wage_types
+msgid "Wage Types"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,help:l10n_ch_hr_payroll.field_hr_salary_rule__l10n_ch_aanp_included
+msgid ""
+"Whether the amount is included in the basis to compute the accident "
+"insurance deduction"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,help:l10n_ch_hr_payroll.field_hr_salary_rule__l10n_ch_comp_ac_included
+msgid ""
+"Whether the amount is included in the basis to compute the additional "
+"retirement/unemployement deduction"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,help:l10n_ch_hr_payroll.field_hr_salary_rule__l10n_ch_ijm_included
+#: model:ir.model.fields,help:l10n_ch_hr_payroll.field_hr_salary_rule__l10n_ch_source_tax_included
+msgid ""
+"Whether the amount is included in the basis to compute the daily sick pay "
+"deduction"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,help:l10n_ch_hr_payroll.field_hr_salary_rule__l10n_ch_ac_included
+msgid ""
+"Whether the amount is included in the basis to compute the "
+"retirement/unemployement deduction"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.res_users_view_form
+msgid "Withholding Taxes"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_contract__l10n_ch_job_type__nocadre
+msgid "Without management function"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_hr_payroll_employee_lang_wizard_line__wizard_id
+msgid "Wizard"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.ui.menu,name:l10n_ch_hr_payroll.menu_l10n_ch_location_unit
+msgid "Work Locations"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model,name:l10n_ch_hr_payroll.model_l10n_ch_location_unit
+msgid "Work Place - Swiss Payroll"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_location_unit_view_form
+msgid "Work address"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.actions.act_window,name:l10n_ch_hr_payroll.action_l10n_ch_location_unit
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_location_unit_view_tree
+msgid "Work addresses"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_location_unit__partner_id
+msgid "Working Address"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_individual_account__year
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_l10n_ch_monthly_summary__year
+msgid "Year"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields,field_description:l10n_ch_hr_payroll.field_hr_salary_rule__l10n_ch_yearly_statement
+msgid "Yearly Statistics"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/models/l10n_ch_monthly_summary.py:0
+#, python-format
+msgid "You must be logged in a Swiss company to use this feature"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#. odoo-python
+#: code:addons/l10n_ch_hr_payroll/wizard/l10n_ch_tax_rate_import.py:0
+#, python-format
+msgid "You must be logged into a Swiss company to use this feature"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__zg
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__zg
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__zg
+msgid "Zoug"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_canton__zh
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__hr_employee__l10n_ch_spouse_work_canton__zh
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_location_unit__canton__zh
+msgid "Zurich"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s12
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s12
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s12
+msgid "Zurich Versicherung"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_accident_insurance_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_additional_accident_insurance_view_form
+msgid "e.g. \"Accident Insurance Gastrosocial\""
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_compensation_fund_view_form
+msgid "e.g. \"Family Allowance AK Bern\""
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_lpp_insurance_view_form
+msgid "e.g. \"LPP Insurance AK Bern\""
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_sickness_insurance_view_form
+msgid "e.g. \"Sickness Insurance Gastrosocial\""
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_social_insurance_view_form
+msgid "e.g. \"Social Insurance AK Bern\""
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s10058
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s10058
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s10058
+msgid "elipsLife"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_ch_hr_payroll.l10n_ch_monthly_summary_view_form
+msgid "to"
+msgstr ""
+
+#. module: l10n_ch_hr_payroll
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_accident_insurance__insurance_company__s208
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_additional_accident_insurance__insurance_company__s208
+#: model:ir.model.fields.selection,name:l10n_ch_hr_payroll.selection__l10n_ch_sickness_insurance__insurance_company__s208
+msgid "ÖKK Kranken- und Unfallversicherungen AG (ab Deklarationsjahr 2023)"
+msgstr ""

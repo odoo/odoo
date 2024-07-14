@@ -1,0 +1,789 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Views definition -->
+        <record id="timesheet_view_tree_colored" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree.hr_timesheet</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="/tree" position="attributes">
+                    <attribute name="sample">1</attribute>
+                    <attribute name="js_class">timesheet_timer_list</attribute>
+                </xpath>
+                <xpath expr="/tree" position="inside">
+                    <field name="readonly_timesheet" column_invisible="True"/>
+                    <field name="is_timer_running" column_invisible="True"/>
+                    <field name="timer_start" column_invisible="True"/>
+                    <field name="display_timer" column_invisible="True"/>
+                </xpath>
+                <xpath expr="//field[@name='date']" position="attributes">
+                    <attribute name="readonly">readonly_timesheet or timer_start</attribute>
+                </xpath>
+                <xpath expr="//field[@name='unit_amount']" position="attributes">
+                    <attribute name="readonly">id and (readonly_timesheet or timer_start)</attribute>
+                    <attribute name="widget">timesheet_uom_timer</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="timesheet_view_tree_user_grid_inherited" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree.grid.timesheet_grid</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.timesheet_view_tree_user"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="js_class"></attribute>
+                </xpath>
+                <xpath expr="//field[@name='unit_amount']" position="attributes">
+                     <attribute name="widget">timesheet_uom</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="timesheet_view_tree_user_inherited" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree.timesheet_grid</field>
+            <field name="model">account.analytic.line</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="hr_timesheet.timesheet_view_tree_user"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="inside">
+                    <header>
+                        <button name="action_validate_timesheet" string="Validate" type="object"
+                                groups="hr_timesheet.group_hr_timesheet_approver"/>
+                    </header>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Add status bubble to analytic line kanban view -->
+        <record id="view_kanban_account_analytic_line_inherit_timesheet_grid" model="ir.ui.view">
+            <field name="name">account.analytic.line.view.kanban.inherit.timesheet.grid</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.view_kanban_account_analytic_line"/>
+            <field name="arch" type="xml">
+                <kanban position="attributes">
+                    <attribute name="js_class">timesheet_timer_kanban</attribute>
+                </kanban>
+                <xpath expr="/kanban" position="inside">
+                    <field name="validated" invisible="1" force_save="0"/>
+                </xpath>
+                <xpath expr="//div[hasclass('o_kanban_record_headings')]" position="after">
+                    <div>
+                        <span t-att-class="'o_status_bubble mx-0 float-end mt-1 o_color_bubble_' + (record.validated.raw_value ? 10 : 0)"
+                            class="o_timesheet_status_bubble" t-att-title="record.validated.raw_value ? 'Validated': 'Draft'"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Timesheet kanban view with validation button -->
+        <record id="view_kanban_account_analytic_line_inherit_timesheet_grid_validation" model="ir.ui.view">
+            <field name="name">account.analytic.line.kanban.timesheet_grid.validation.btn</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="timesheet_grid.view_kanban_account_analytic_line_inherit_timesheet_grid"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <kanban position="attributes">
+                    <attribute name="js_class">timesheet_validation_kanban</attribute>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Override Kanban view -->
+        <record id="timesheet_kanban_view" model="ir.ui.view">
+            <field name="name">account.analytic.line.kanban.timesheet_grid</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="timesheet_grid.view_kanban_account_analytic_line_inherit_timesheet_grid"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <kanban position="attributes">
+                    <attribute name="sample">1</attribute>
+                </kanban>
+                <xpath expr="/kanban" position="inside">
+                    <field name="readonly_timesheet" invisible="1"/>
+                    <field name="timer_start" invisible="1"/>
+                    <field name="display_timer" invisible="1"/>
+                    <field name="is_timer_running" invisible="1"/>
+                </xpath>
+                <xpath expr="//div/span[@name='duration']" position="replace"/>
+                <field name="name" position="attributes">
+                    <attribute name="required">0</attribute>
+                </field>
+                <xpath expr="//div[hasclass('o_kanban_record_headings')]" position="after">
+                    <div invisible="readonly_timesheet or display_timer">
+                        <field name="unit_amount" widget="timesheet_uom" options="{'force_button': true}"/>
+                    </div>
+                    <div class="ms-1">
+                        <div invisible="readonly_timesheet or not display_timer">
+                            <field name="duration_unit_amount" widget="timesheet_uom_timer" decoration-danger="duration_unit_amount &gt; 24 or unit_amount &lt; 0"
+                                decoration-muted="unit_amount == 0"
+                                class="d-flex align-items-center justify-content-center"/>
+                        </div>
+                        <div invisible="not readonly_timesheet">
+                            <field name="unit_amount_validate" widget="timesheet_uom" decoration-danger="duration_unit_amount &gt; 24 or unit_amount &lt; 0"
+                                decoration-muted="unit_amount == 0"/>
+                        </div>
+                    </div>
+                 </xpath>
+                 <xpath expr="//div[hasclass('o_kanban_record_bottom')]" position="inside">
+                    <xpath expr="//span[hasclass('o_timesheet_status_bubble')]" position="move"/>
+                 </xpath>
+            </field>
+        </record>
+        <!-- add timer to My Timesheet kanban view -->
+        <record id="hr_timesheet.act_hr_timesheet_line_view_kanban" model="ir.actions.act_window.view">
+            <field name="view_id" ref="timesheet_grid.timesheet_kanban_view"/>
+        </record>
+
+        <!-- Override Form view -->
+        <record id="timesheet_form_view" model="ir.ui.view">
+            <field name="name">account.analytic.line.kanban.timesheet_grid</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='unit_amount']" position="after">
+                    <field name="validated" invisible="1"/>
+                    <field name="user_can_validate" invisible="1"/>
+                    <field name="timer_start" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='unit_amount']" position="attributes">
+                    <attribute name="readonly">id and (readonly_timesheet or timer_start)</attribute>
+                </xpath>
+                <xpath expr="//sheet" position="before">
+                    <header>
+                        <button string="Validate" name="action_validate_timesheet" type="object" class="btn btn-primary"
+                            invisible="validated or not user_can_validate" context="{'use_notification': False}" data-hotkey="q"/>
+                        <button string="Reset to draft" name="action_invalidate_timesheet" type="object" class="btn btn-secondary"
+                            invisible="not validated or not user_can_validate" context="{'use_notification': False}" data-hotkey="r"/>
+                        <field name="validated_status" widget="statusbar"/>
+                    </header>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_timesheet_line_form_grid" model="ir.ui.view">
+            <field name="name">account.analytic.line.form.grid</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <header position="replace"/>
+            </field>
+        </record>
+
+        <record id="timesheet_view_form_user_grid" model="ir.ui.view">
+            <field name="name">account.analytic.line.form.user.grid</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.timesheet_view_form_user"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <header position="replace"/>
+            </field>
+        </record>
+
+        <record id="timesheet_view_grid" model="ir.ui.view">
+            <field name="name">account.analytic.line.grid.project</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <grid string="Timesheets"
+                      js_class="timer_timesheet_grid"
+                      barchart_total="1"
+                      create_inline="1"
+                      form_view_id="%(timesheet_grid.hr_timesheet_line_form_grid)d"
+                      editable="1"
+                      display_empty="1"
+                      sample="1">
+                    <field name="project_id" type="row" widget="timesheet_many2one"/>
+                    <field name="task_id" type="row" widget="timesheet_many2one"/>
+                    <field name="employee_id" type="row" invisible="1" widget="timesheet_many2one_avatar_employee"/>
+                    <field name="date" type="col">
+                        <range name="day" string="Day" span="day" step="day" hotkey="e"/>
+                        <range name="week" string="Week" span="week" step="day" hotkey="w" default="1"/>
+                        <range name="month" string="Month" span="month" step="day" hotkey="m"/>
+                    </field>
+                    <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                </grid>
+            </field>
+        </record>
+
+        <record id="timesheet_view_grid_by_project" model="ir.ui.view">
+            <field name="name">account.analytic.line.grid.project</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <grid string="Timesheets"
+                      editable="1"
+                      js_class="timesheet_grid"
+                      barchart_total="1"
+                      create_inline="1"
+                      form_view_id="%(timesheet_grid.timesheet_view_form_user_grid)d"
+                      display_empty="1">
+                    <field name="project_id" type="row" widget="timesheet_many2one"/>
+                    <field name="task_id" type="row" widget="timesheet_many2one"/>
+                    <field name="employee_id" type="row" invisible="1" widget="timesheet_many2one_avatar_employee"/>
+                    <field name="date" type="col">
+                        <range name="day" string="Day" span="day" step="day"/>
+                        <range name="week" string="Week" span="week" step="day"/>
+                        <range name="month" string="Month" span="month" step="day"/>
+                    </field>
+                    <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                </grid>
+            </field>
+        </record>
+
+        <record id="timesheet_view_grid_by_employee" model="ir.ui.view">
+            <field name="name">account.analytic.line.grid.employee</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" eval="False"/>
+            <field name="arch" type="xml">
+                <grid string="Timesheets"
+                      editable="1"
+                      js_class="timesheet_grid"
+                      barchart_total="1"
+                      create_inline="1"
+                      form_view_id="%(timesheet_grid.timesheet_view_form_user_grid)d"
+                      display_empty="1"
+                      sample="1">
+                    <field name="employee_id" type="row" widget="timesheet_many2one_avatar_employee"/>
+                    <field name="project_id" type="row" invisible="1" widget="timesheet_many2one"/>
+                    <field name="task_id" type="row" invisible="1" widget="timesheet_many2one"/>
+                    <field name="date" type="col">
+                        <range name="day" string="Day" span="day" step="day" hotkey="e"/>
+                        <range name="week" string="Week" span="week" step="day" hotkey="w" default="1"/>
+                        <range name="month" string="Month" span="month" step="day" hotkey="m"/>
+                    </field>
+                    <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                </grid>
+            </field>
+        </record>
+        <record id="timesheet_view_grid_by_employee_readonly" model="ir.ui.view">
+            <field name="name">account.analytic.line.grid.employee.readonly</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="timesheet_grid.timesheet_view_grid_by_employee"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="/grid" position="attributes">
+                    <attribute name="create">false</attribute>
+                    <attribute name="edit">false</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record id="timesheet_view_grid_by_employee_editable_manager" model="ir.ui.view">
+            <field name="name">account.analytic.line.grid.employee.manager</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="timesheet_grid.timesheet_view_grid_by_employee"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='employee_id']" position="attributes">
+                    <attribute name="section">1</attribute>
+                </xpath>
+                <field name="project_id" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </field>
+            </field>
+        </record>
+        <record id="timesheet_view_grid_by_employee_validation" model="ir.ui.view">
+            <field name="name">account.analytic.line.grid.employee.validation</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="timesheet_grid.timesheet_view_grid_by_employee_editable_manager"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='unit_amount']" position="before">
+                    <button type="object" class="btn-primary" name="action_validate_timesheet" string="Validate" data-hotkey="q"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="timesheet_view_search" model="ir.ui.view">
+            <field name="name">account.analytic.search</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='month']" position="before">
+                    <filter name="nonvalidated" string="Draft" domain="[('validated', '=', False)]"/>
+                    <filter name="validated" string="Validated" domain="[('validated', '=', True)]"/>
+                    <separator/>
+                </xpath>
+                <xpath expr="//filter[@name='mine']" position="after">
+                    <filter name="my_team_timesheet" string="My Team" domain="[
+                        '|',
+                            ('employee_id.timesheet_manager_id', '=', uid),
+                            '|',
+                                ('employee_id.parent_id.user_id', '=', uid),
+                                ('employee_id.is_subordinate', '=', True),
+                    ]"/>
+                    <filter name="my_department_timesheet" string="My Department" domain="[('employee_id.member_of_department', '=', True)]"/>
+                    <filter name="my_project" string="My Projects" domain="[('project_id.user_id', '=', uid)]" context="{'group_expand': False}"/>
+                    <filter name="my_tasks" string="My Tasks" domain="[('task_id.user_ids', 'in', uid)]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- make sure this view will be loaded after timesheet_grid.timesheet_view_search -->
+        <record id="hr_timesheet.hr_timesheet_line_my_timesheet_search" model="ir.ui.view">
+            <field name="inherit_id" ref="timesheet_view_search" />
+        </record>
+
+        <record id="hr_timesheet_line_inherit_my_timesheet_search" model="ir.ui.view">
+            <field name="name">view.search.my.timesheet.inherit</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_my_timesheet_search"/>
+            <field name="arch" type="xml">
+                <filter name="my_department_timesheet" position="replace"/>
+                <filter name="my_team_timesheet" position="replace"/>
+            </field>
+        </record>
+
+        <record id="project_task_view_form" model="ir.ui.view">
+            <field name="name">project.task.view.form.inherit.sale.timesheet.enterprise</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project_enterprise.project_task_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='stage_id']" position='before'>
+                    <field name="company_id" invisible="1"/>
+                    <field name="display_timesheet_timer" invisible="1"/>
+                    <field name="timer_pause" invisible="1" />
+                    <field name="display_timer_start_primary" invisible="1"/>
+                    <field name="display_timer_start_secondary" invisible="1"/>
+                    <field name="display_timer_stop" invisible="1"/>
+                    <field name="display_timer_pause" invisible="1"/>
+                    <field name="display_timer_resume" invisible="1"/>
+                    <button class="btn-primary" name="action_timer_start" type="object" string="Start" data-hotkey="z"
+                        invisible="not display_timer_start_primary or encode_uom_in_days" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <button class="btn-secondary" name="action_timer_start" type="object" string="Start" data-hotkey="z"
+                        invisible="not display_timer_start_secondary or encode_uom_in_days" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <button class="btn-primary o_fsm_stop" name="action_timer_stop" type="object" string="Stop" data-hotkey="z"
+                        invisible="not display_timer_stop or encode_uom_in_days" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <button class="btn-secondary" name="action_timer_pause" type="object" string="Pause" data-hotkey="w"
+                        invisible="not display_timer_pause or encode_uom_in_days" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <button class="btn-secondary" name="action_timer_resume" type="object" string="Resume" data-hotkey="w"
+                        invisible="not display_timer_resume or encode_uom_in_days" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="timer_start" widget="timer_start_field" class="align-self-center me-auto ms-2 h2" groups="hr_timesheet.group_hr_timesheet_user"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_task_view_gantt_timesheet" model="ir.ui.view">
+            <field name="name">project.task.view.gantt</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project_enterprise.project_task_view_gantt"/>
+            <field name="arch" type="xml">
+                <xpath expr="//gantt" position="attributes">
+                    <attribute name="progress_bar">user_ids,project_id</attribute>
+                    <attribute name="progress">progress</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="progress"/>
+                    <field name="effective_hours"/>
+                    <field name="total_hours_spent"/>
+                    <field name="encode_uom_in_days"/>
+                    <field name="allow_timesheets"/>
+                </xpath>
+                <xpath expr="//div[@t-if='partner_id']" position="after">
+                    <div t-if="allow_timesheets">
+                        <strong t-if="encode_uom_in_days">Days Spent — </strong>
+                        <strong t-else="">Hours Spent — </strong>
+                        <t t-esc="total_hours_spent_formatted"/>
+                        (<t t-esc="progressFormatted"/>%)
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Improve the task kanban in Project -->
+        <record id="project_task_view_kanban" model="ir.ui.view">
+            <field name="name">project.task.kanban.timer</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
+                    <field name="display_timesheet_timer" invisible="1"/>
+                    <field name="timer_start" invisible="1"/>
+                    <field name="timer_pause" invisible="1"/>
+                    <t t-if="record.display_timesheet_timer &amp;&amp; record.timer_pause.raw_value">
+                        <i class="fa fa-pause text-warning" title="Timer is Paused"></i>
+                    </t>
+                    <t t-elif="record.display_timesheet_timer &amp;&amp; record.timer_start.raw_value">
+                        <i class="fa fa-play text-success" title="Timer is Running"></i>
+                    </t>
+                </xpath>
+            </field>
+        </record>
+
+        <!--
+            Menus and Actions
+        -->
+        <record id="hr_timesheet.act_hr_timesheet_line" model="ir.actions.act_window">
+            <field name="name">My Timesheets</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_mode">grid,tree,form</field>
+            <field name="context">{
+                'grid_anchor': (datetime.date.today()).strftime('%Y-%m-%d'),
+                'my_timesheet_display_timer': True,
+                'group_expand': True,
+                "is_timesheet": 1,
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No timesheets found. Let's create one!
+                </p>
+                <p>
+                Keep track of your working hours by project every day and bill your customers for that time.
+              </p>
+            </field>
+        </record>
+
+        <record id="timesheet_validate_action" model="ir.actions.server">
+            <field name="name">Validate</field>
+            <field name="model_id" ref="analytic.model_account_analytic_line"/>
+            <field name="binding_model_id" ref="analytic.model_account_analytic_line"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="groups_id" eval="[(4, ref('hr_timesheet.group_hr_timesheet_approver'))]"/>
+            <field name="code">action = records.action_validate_timesheet()</field>
+        </record>
+
+        <record id="timesheet_grid_pivot_view_all_validate" model="ir.ui.view">
+            <field name="name">account.analytic.line.pivot.weekly.validate.timesheet_grid</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.view_hr_timesheet_line_pivot"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <pivot position="attributes">
+                    <attribute name="js_class">timesheet_validation_pivot_view</attribute>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="timesheet_action_view_grid" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">grid</field>
+            <field name="view_id" ref="timesheet_grid.timesheet_view_grid"/>
+            <field name="act_window_id" ref="hr_timesheet.act_hr_timesheet_line"/>
+        </record>
+
+        <record id="hr_timesheet.act_hr_timesheet_line" model="ir.actions.act_window">
+            <field name="mobile_view_mode">grid</field>
+        </record>
+
+        <record id="hr_timesheet.act_hr_timesheet_line_view_form" model="ir.actions.act_window.view">
+            <field name="view_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+        </record>
+
+
+        <record id="hr_timesheet.timesheet_action_all" model="ir.actions.act_window">
+            <field name="name">All Timesheets</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_mode">grid,tree,kanban</field>
+            <field name="mobile_view_mode">grid</field>
+            <field name="context">{
+                'group_expand': True,
+                "is_timesheet": 1,
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No timesheets found. Let's create one!
+                </p>
+                <p>
+                Keep track of your working hours by project every day and bill your customers for that time.
+              </p>
+            </field>
+        </record>
+
+        <record id="timesheet_action_view_all_grid" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">grid</field>
+            <field name="view_id" ref="timesheet_grid.timesheet_view_grid_by_employee_editable_manager"/>
+            <field name="act_window_id" ref="hr_timesheet.timesheet_action_all"/>
+        </record>
+
+        <record id="hr_timesheet.timesheet_action_view_all_form" model="ir.actions.act_window.view">
+            <field name="view_id" ref="hr_timesheet.timesheet_view_form_user"/>
+        </record>
+
+        <record id="hr_timesheet.timesheet_action_from_employee" model="ir.actions.act_window">
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new activity
+                </p><p>
+                    You can register and track your workings hours by project every
+                    day. Every time spent on a project will become a cost and can be re-invoiced to
+                    customers if required.
+                </p>
+                <p>Download our web/mobile apps to track your time from anywhere, even offline.</p>
+                <div>
+                    <a href="http://www.odoo.com/app/timesheet?platform=chrome" target="_blank" class="o_chrome_store_link d-none d-sm-inline-block">
+                        <img alt="Google Chrome Store" class="img img-fluid h-100" src="project/static/src/img/chrome_store.png"/>
+                    </a>
+                    <img alt="Apple App Store" class="img img-fluid h-100 o_config_app_store" style="cursor: pointer;" src="project/static/src/img/app_store.png"/>
+                    <img alt="Google Play Store" class="img img-fluid h-100 o_config_play_store" style="cursor: pointer;" src="project/static/src/img/play_store.png"/>
+                </div>
+            </field>
+        </record>
+
+        <record id="timesheet_action_view_form_employee_grid" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">grid</field>
+            <field name="view_id" ref="timesheet_grid.timesheet_view_grid_by_project"/>
+            <field name="act_window_id" ref="hr_timesheet.timesheet_action_from_employee"/>
+        </record>
+
+        <record id="hr_timesheet.timesheet_action_view_from_employee_form" model="ir.actions.act_window.view">
+            <field name="view_id" ref="hr_timesheet.timesheet_view_form_user"/>
+        </record>
+
+        <record id="action_timesheet_previous_week" model="ir.actions.act_window">
+            <field name="name">Timesheets to Validate</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_mode">grid,tree</field>
+            <field name="domain">[('is_timesheet', '=', True)]</field>
+            <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+            <field name="context">{
+                'grid_anchor': (datetime.date.today() - relativedelta(weeks=1)).strftime('%Y-%m-%d'),
+                'search_default_nonvalidated': True,
+                'search_default_my_team_timesheet': True,
+                'is_timesheet': 1,
+            }</field>
+            <field name="help" type="html">
+                <p>
+                    No activities to validate.
+                </p>
+                <p>
+                    Congratulations, you are up to date. <br/>
+                    Let's wait for your employees to start new activities.
+                </p>
+            </field>
+        </record>
+
+        <record id="timesheet_action_view_previous_week_grid" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">grid</field>
+            <field name="view_id" ref="timesheet_grid.timesheet_view_grid_by_employee_validation"/>
+            <field name="act_window_id" ref="action_timesheet_previous_week"/>
+        </record>
+
+        <record id="timesheet_action_view_previous_week_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+            <field name="act_window_id" ref="action_timesheet_previous_week"/>
+        </record>
+
+        <record id="timesheet_action_view_previous_week_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_timesheet.timesheet_view_form_user"/>
+            <field name="act_window_id" ref="action_timesheet_previous_week"/>
+        </record>
+
+        <record id="action_timesheet_previous_month" model="ir.actions.act_window">
+            <field name="name">Timesheets to Validate</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_mode">grid,tree</field>
+            <field name="domain">[('is_timesheet', '=', True)]</field>
+            <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+            <field name="context">{
+                'grid_anchor': (datetime.date.today() - relativedelta(months=1)).strftime('%Y-%m-%d'), 'grid_range': 'month',
+                'search_default_nonvalidated': True,
+                'search_default_my_team_timesheet': True,
+                "is_timesheet": 1,
+            }</field>
+            <field name="help" type="html">
+                <p>
+                    No activities to validate.
+                </p>
+                <p>
+                    Congratulations, you are up to date. <br/>
+                    Let's wait for your employees to start new activities.
+                </p>
+            </field>
+        </record>
+
+        <record id="timesheet_action_view_previous_month_grid" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">grid</field>
+            <field name="view_id" ref="timesheet_grid.timesheet_view_grid_by_employee_validation"/>
+            <field name="act_window_id" ref="action_timesheet_previous_month"/>
+        </record>
+
+        <record id="timesheet_action_view_previous_month_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+            <field name="act_window_id" ref="action_timesheet_previous_month"/>
+        </record>
+
+        <record id="timesheet_action_view_previous_month_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_timesheet.timesheet_view_form_user"/>
+            <field name="act_window_id" ref="action_timesheet_previous_month"/>
+        </record>
+
+
+        <record id="hr_employee_view_form_inherit_timesheet_validation" model="ir.ui.view">
+            <field name="name">hr.employee.form.timesheet.validation</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_employee_view_form_inherit_timesheet"/>
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='hourly_cost']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+                <xpath expr="//div[@name='hourly_cost']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+                <xpath expr="//group[@name='managers']" position="inside">
+                    <field name="timesheet_manager_id" widget="many2one_avatar"/>
+                </xpath>
+                <xpath expr="//group[@name='managers']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_employee_tree_inherit_timesheet" model="ir.ui.view">
+            <field name="name">hr.employee.tree.timesheet</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='work_location_id']" position="after">
+                    <field name="timesheet_manager_id" optional="hide" string="Timesheet Approver" widget="many2one_avatar"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_users_view_form" model="ir.ui.view">
+            <field name="name">hr.user.preferences.form.inherit.timesheet.grid</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="hr.res_users_view_form_profile" />
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='managers']" position="inside">
+                    <field name="timesheet_manager_id" readonly="not can_edit"/>
+                </xpath>
+                <xpath expr="//group[@name='managers']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="timesheet_grid_week_action_server" model="ir.actions.server">
+            <field name="name">Validation Timesheet Week_view Server Action</field>
+            <field name="model_id" ref="hr_timesheet.model_account_analytic_line"/>
+            <field name="state">code</field>
+            <field name="code">
+action = model._action_open_to_validate_timesheet_view('week')
+            </field>
+        </record>
+
+        <record id="timesheet_grid_month_action_server" model="ir.actions.server">
+            <field name="name">Validation Timesheet month_view Server Action</field>
+            <field name="model_id" ref="hr_timesheet.model_account_analytic_line"/>
+            <field name="state">code</field>
+            <field name="code">
+action = model._action_open_to_validate_timesheet_view('month')
+            </field>
+        </record>
+
+        <record id="timesheet_grid_all_timesheets_action_server" model="ir.actions.server">
+            <field name="name">Validation All Timesheet Server Action</field>
+            <field name="model_id" ref="hr_timesheet.model_account_analytic_line"/>
+            <field name="state">code</field>
+            <field name="code">
+action = model._action_open_to_validate_timesheet_view()
+            </field>
+        </record>
+
+        <!-- This action is not used directly, and is not to be updated, see comments in `_action_open_validate_timesheet_view` -->
+        <record id="timesheet_grid_to_validate_action" model="ir.actions.act_window">
+            <field name="name">Timesheets to Validate</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="domain">[('is_timesheet', '=', True)]</field>
+            <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+            <field name="context">{
+                'search_default_nonvalidated': True,
+                'search_default_my_team_timesheet': True,
+                'group_expand': True,
+                "is_timesheet": 1,
+            }</field>
+            <field name="view_mode">pivot,grid,tree,kanban,form</field>
+            <field name="mobile_view_mode">grid</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                No timesheets to validate
+              </p><p>
+                Check that your employees correctly filled in their timesheets and that their time is billable.
+              </p>
+            </field>
+        </record>
+
+        <record id="hr_timesheet_to_validate_action_pivot" model="ir.actions.act_window.view">
+            <field name="view_mode">pivot</field>
+            <field name="view_id"
+                   ref="timesheet_grid.timesheet_grid_pivot_view_all_validate"/>
+            <field name="act_window_id" ref="timesheet_grid_to_validate_action"/>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="hr_timesheet_to_validate_action_grid" model="ir.actions.act_window.view">
+            <field name="view_mode">grid</field>
+            <field name="view_id" ref="timesheet_grid.timesheet_view_grid_by_employee_validation" />
+            <field name="act_window_id" ref="timesheet_grid_to_validate_action" />
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="hr_timesheet_to_validate_action_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="timesheet_view_tree_user_inherited"/>
+            <field name="act_window_id" ref="timesheet_grid_to_validate_action" />
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="hr_timesheet_to_validate_action_kanban" model="ir.actions.act_window.view">
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="timesheet_grid.view_kanban_account_analytic_line_inherit_timesheet_grid_validation" />
+            <field name="act_window_id" ref="timesheet_grid_to_validate_action" />
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="hr_timesheet_to_validate_action_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_timesheet.timesheet_view_form_user" />
+            <field name="act_window_id" ref="timesheet_grid_to_validate_action" />
+            <field name="sequence">60</field>
+        </record>
+
+        <menuitem name="To Validate" id="menu_timesheet_grid_validate"
+                  parent="hr_timesheet.timesheet_menu_root"
+                  groups="hr_timesheet.group_hr_timesheet_approver"
+                  sequence="10"/>
+        <menuitem name="Last Week" id="menu_timesheet_grid_validate_previous_week"
+                  parent="menu_timesheet_grid_validate"
+                  action="timesheet_grid_week_action_server"/>
+        <menuitem name="Last Month" id="menu_timesheet_grid_validate_previous_month"
+                  parent="menu_timesheet_grid_validate"
+                  action="timesheet_grid_month_action_server"/>
+        <menuitem name="All Timesheets" id="menu_timesheet_grid_validate_all_timesheets"
+                  parent="menu_timesheet_grid_validate"
+                  action="timesheet_grid_all_timesheets_action_server"/>
+
+        <record id="invalidate_timesheet_action" model="ir.actions.server">
+            <field name="name">Reset to draft</field>
+            <field name="model_id" ref="analytic.model_account_analytic_line"/>
+            <field name="binding_model_id" ref="analytic.model_account_analytic_line"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="groups_id" eval="[(4, ref('hr_timesheet.group_hr_timesheet_approver'))]"/>
+            <field name="code">action = records.action_invalidate_timesheet()</field>
+        </record>
+
+        <record id="merge_timesheet_action" model="ir.actions.server">
+            <field name="name">Merge Timesheets</field>
+            <field name="model_id" ref="analytic.model_account_analytic_line"/>
+            <field name="binding_model_id" ref="analytic.model_account_analytic_line"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_merge_timesheets()</field>
+        </record>
+    </data>
+</odoo>

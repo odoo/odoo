@@ -1,0 +1,1880 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* social
+# 
+# Translators:
+# Wil Odoo, 2023
+# Daye Jeong, 2023
+# Sarah Park, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Sarah Park, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__accounts_count
+msgid "# Accounts"
+msgstr "# 계정"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "%s (max %s chars)"
+msgstr "%s (최대 %s자)"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid ", you must first link a social media."
+msgstr ", 먼저 소셜 미디어를 연결해야 합니다."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_http_error_view
+msgid "<b>An error occurred while trying to link your account</b>"
+msgstr "<b>계정을 연결하는 중에 오류가 발생했습니다</b>"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "<i class=\"fa fa-globe ms-1\" title=\"See the post\"/>"
+msgstr "<i class=\"fa fa-globe ms-1\" title=\"See the post\"/>"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_http_error_view
+msgid "<i class=\"oi oi-arrow-left\"/> Go back to Odoo"
+msgstr "<i class=\"oi oi-arrow-left\"/> Odoo로 돌아가기"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_kanban
+msgid "<small class=\"pe-1\">Clicks:</small>"
+msgstr "<small class=\"pe-1\">클릭:</small>"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_kanban
+msgid "<small class=\"pe-1\">Engagement:</small>"
+msgstr "<small class=\"pe-1\">참여:</small>"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid ""
+"<strong>Congrats! Come back in a few minutes to check your "
+"statistics.</strong>"
+msgstr "<strong>축하합니다! 몇 분 후에 다시 통계를 확인할 수 있습니다.</strong>"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_needaction
+#: model:ir.model.fields,field_description:social.field_social_post__message_needaction
+msgid "Action Needed"
+msgstr "조치 필요"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__active
+msgid "Active"
+msgstr "활성화"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_ids
+msgid "Activities"
+msgstr "활동"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "활동 예외 장식"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_state
+msgid "Activity State"
+msgstr "활동 상태"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "활동 유형 아이콘"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Add"
+msgstr "추가"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_form
+msgid "Add Post"
+msgstr "게시물 추가"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/add_stream_modal.js:0
+#: code:addons/social/static/src/js/stream_post_kanban_controller.js:0
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Add a Stream"
+msgstr "스트림 추가하기"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream_post
+msgid "Add a stream"
+msgstr "스트림 추가하기"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Add an image"
+msgstr "이미지 추가하기"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "All Companies"
+msgstr "모든 회사"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_utm_campaign__social_post_ids
+msgid "All related social media posts"
+msgstr "모든 관련 소셜 미디어 게시물"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__account_allowed_ids
+msgid "Allowed Accounts"
+msgstr "허용된 계정"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_search
+msgid "Archived"
+msgstr "보관됨"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__has_active_accounts
+#: model:ir.model.fields,field_description:social.field_social_post_template__has_active_accounts
+msgid "Are Accounts Available?"
+msgstr "계정이 있습니까?"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__image_ids
+#: model:ir.model.fields,field_description:social.field_social_post_template__image_ids
+msgid "Attach Images"
+msgstr "이미지 첨부"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_attachment_count
+#: model:ir.model.fields,field_description:social.field_social_post__message_attachment_count
+msgid "Attachment Count"
+msgstr "첨부 파일 수"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model:ir.model.fields,field_description:social.field_social_account__audience
+#, python-format
+msgid "Audience"
+msgstr "청중"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__audience_trend
+msgid "Audience Trend"
+msgstr "잠재 고객 동향"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__author_link
+msgid "Author Link"
+msgstr "작성자 링크"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__author_name
+msgid "Author Name"
+msgstr "작성자 이름"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream_post__author_link
+msgid ""
+"Author link to the external social.media (ex: link to the Twitter Account)."
+msgstr "외부 social.media에 대한 작성자 링크 (예: Twitter 계정에 대한 링크)"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Before posting, links will be converted to be trackable."
+msgstr "게시하기 전에 링크는 추적 가능하도록 변환됩니다."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_search
+msgid "By Stream"
+msgstr "스트림 별"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__csrf_token
+msgid "CSRF Token"
+msgstr "CSRF 토큰"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__calendar_date
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+msgid "Calendar Date"
+msgstr "일정표 날짜"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__utm_campaign_id
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_form_quick_create_social
+msgid "Campaign"
+msgstr "캠페인"
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_view_utm_campaigns
+#: model:ir.ui.menu,name:social.menu_social_campaign
+msgid "Campaigns"
+msgstr "캠페인"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_view_utm_campaigns
+msgid ""
+"Campaigns are used to centralize your marketing efforts and track their "
+"results."
+msgstr "캠페인은 마케팅 활동을 한 방향으로 집중시키고 그 결과를 추적하는 데 사용됩니다."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__can_link_accounts
+msgid "Can link accounts?"
+msgstr "계정을 연결할 수 있나요?"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+#, python-format
+msgid "Cancel"
+msgstr "취소"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Choose which <b>account</b> you would like to link first."
+msgstr "먼저 연결하려는 <b>계정</b>을 선택합니다."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Click to refresh."
+msgstr "클릭하여 새로고침합니다."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "Clicks"
+msgstr "클릭"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Comment Image"
+msgstr "댓글 이미지"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__company_id
+#: model:ir.model.fields,field_description:social.field_social_live_post__company_id
+#: model:ir.model.fields,field_description:social.field_social_post__company_id
+#: model:ir.model.fields,field_description:social.field_social_stream__company_id
+#: model:ir.model.fields,field_description:social.field_social_stream_post__company_id
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_stream_view_search
+msgid "Company"
+msgstr "회사"
+
+#. module: social
+#: model:ir.model,name:social.model_res_config_settings
+msgid "Config Settings"
+msgstr "환경 설정"
+
+#. module: social
+#: model:ir.ui.menu,name:social.menu_social_configuration
+msgid "Configuration"
+msgstr "설정"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Connecting Problem"
+msgstr "연결 문제"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__social_account_handle
+msgid ""
+"Contains the social media handle of the person that created this account. "
+"E.g: '@odoo.official' for the 'Odoo' Twitter account"
+msgstr "이 계정을 만든 사람의 소셜 미디어 계정명을 포함합니다. 예: 'Odoo' 트위터 계정의 경우 '@odoo.official'"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_live_post__message
+msgid ""
+"Content of the social post message that is post-processed (links are "
+"shortened, UTMs, ...)"
+msgstr "후처리된 소셜 게시물 메시지의 콘텐츠 (링크 단축, UTM 등)"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__has_streams
+msgid "Controls if social streams are handled on this social media."
+msgstr "소셜 스트림이 이 소셜 미디어에서 처리될지 여부를 제어합니다."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__can_link_accounts
+msgid "Controls if we can link accounts or not."
+msgstr "계정을 연결 여부를 제어합니다."
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_view_utm_campaigns
+msgid "Create a Campaign"
+msgstr "캠페인 만들기"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_post
+msgid "Create a Post"
+msgstr "게시물 작성"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_account.py:0
+#, python-format
+msgid ""
+"Create other accounts for %(media_names)s for this company or ask "
+"%(company_names)s to share their accounts"
+msgstr ""
+"회사의 %(media_names)s에 대한 다른 계정을 만들거나 %(company_names)s에게 계정을 공유하도록 요청하세요"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__create_uid
+#: model:ir.model.fields,field_description:social.field_social_live_post__create_uid
+#: model:ir.model.fields,field_description:social.field_social_media__create_uid
+#: model:ir.model.fields,field_description:social.field_social_post__create_uid
+#: model:ir.model.fields,field_description:social.field_social_post_template__create_uid
+#: model:ir.model.fields,field_description:social.field_social_stream__create_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_post__create_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__create_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_type__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__create_date
+#: model:ir.model.fields,field_description:social.field_social_live_post__create_date
+#: model:ir.model.fields,field_description:social.field_social_media__create_date
+#: model:ir.model.fields,field_description:social.field_social_post__create_date
+#: model:ir.model.fields,field_description:social.field_social_post_template__create_date
+#: model:ir.model.fields,field_description:social.field_social_stream__create_date
+#: model:ir.model.fields,field_description:social.field_social_stream_post__create_date
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__create_date
+#: model:ir.model.fields,field_description:social.field_social_stream_type__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__has_account_stats
+msgid ""
+"Defines whether this account has Audience/Engagements/Stories stats.\n"
+"        Account with stats are displayed on the dashboard."
+msgstr ""
+"이 계정에 잠재 고객/참여/스토리 통계가 있는지 여부를 정의합니다. \n"
+"        통계가 있는 계정이 현황판에 표시됩니다."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__has_trends
+msgid "Defines whether this account has statistics tends or not."
+msgstr "이 계정에 통계가 있는지 여부를 정의합니다."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_comment.js:0
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Delete Comment"
+msgstr "댓글 삭제하기"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.res_config_settings_view_form
+msgid "Demo Mode"
+msgstr "데모 모드"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__media_description
+msgid "Description"
+msgstr "설명"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.res_config_settings_view_form
+msgid "Developer Accounts"
+msgstr "개발자 계정"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__display_name
+#: model:ir.model.fields,field_description:social.field_social_live_post__display_name
+#: model:ir.model.fields,field_description:social.field_social_media__display_name
+#: model:ir.model.fields,field_description:social.field_social_post__display_name
+#: model:ir.model.fields,field_description:social.field_social_post_template__display_name
+#: model:ir.model.fields,field_description:social.field_social_stream__display_name
+#: model:ir.model.fields,field_description:social.field_social_stream_post__display_name
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__display_name
+#: model:ir.model.fields,field_description:social.field_social_stream_type__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_comment.js:0
+#, python-format
+msgid "Do you really want to delete %s"
+msgstr "정말로 %s를 삭제하시겠습니까"
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_post__state__draft
+msgid "Draft"
+msgstr "미결"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid ""
+"Due to length restrictions, the following posts cannot be posted:\n"
+" %s"
+msgstr ""
+"길이 제한으로 인해 다음 게시물을 게시할 수 없습니다:\n"
+" %s"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Edit Comment"
+msgstr "댓글 수정하기"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_res_config_settings__module_social_demo
+msgid "Enable Demo Mode"
+msgstr "데모 모드 활성화"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.res_config_settings_view_form
+msgid ""
+"Enable this option and load demo data to test the social module. This must "
+"never be used on a production database!"
+msgstr ""
+"이 옵션을 활성화하고 데모 데이터를 불러와 소셜 모듈을 테스트합니다. 프로덕션 데이터베이스에서는 해당 기능을 사용할 수 없습니다."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model:ir.model.fields,field_description:social.field_social_account__engagement
+#: model:ir.model.fields,field_description:social.field_social_live_post__engagement
+#: model:ir.model.fields,field_description:social.field_social_post__engagement
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_form
+#, python-format
+msgid "Engagement"
+msgstr "참여"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__engagement_trend
+msgid "Engagement Trend"
+msgstr "참여 동향"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__utm_medium_id
+msgid ""
+"Every time an account is created, a utm.medium is also created and linked to"
+" the account"
+msgstr "계정이 생성될 때마다 utm.medium도 생성되어 계정에 연결됩니다"
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_live_post__state__failed
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_kanban
+msgid "Failed"
+msgstr "실패함"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_live_post__failure_reason
+msgid "Failure Reason"
+msgstr "실패 이유"
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_social_stream_post
+#: model:ir.ui.menu,name:social.menu_social_stream_post
+msgid "Feed"
+msgstr "피드"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+#, python-format
+msgid "Feed Posts"
+msgstr "피드 게시물"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__stream_posts_count
+msgid "Feed Posts Count"
+msgstr "피드 게시물 수"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_follower_ids
+#: model:ir.model.fields,field_description:social.field_social_post__message_follower_ids
+msgid "Followers"
+msgstr "팔로워"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_partner_ids
+#: model:ir.model.fields,field_description:social.field_social_post__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "팔로워 (협력사)"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "멋진 아이콘 폰트 예: fa-tasks"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__formatted_published_date
+msgid "Formatted Published Date"
+msgstr "형식화된 게시 날짜"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__audience
+msgid ""
+"General audience of the Social Account (Page Likes, Account Follows, ...)."
+msgstr "소셜 계정의 일반 사용자 (페이지 좋아요, 계정 팔로우, ...)"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream
+msgid "Go to the"
+msgstr "이동"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_stream_view_search
+msgid "Group By"
+msgstr "그룹별"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__social_account_handle
+msgid "Handle / Short Name"
+msgstr "계정명 / 약칭"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Happy with the result? Let's post it!"
+msgstr "결과가 마음에 드시나요? 게시해 보세요!"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__has_account_stats
+msgid "Has Account Stats"
+msgstr "계정 통계가 있습니다"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__has_message
+#: model:ir.model.fields,field_description:social.field_social_post__has_message
+msgid "Has Message"
+msgstr "메시지가 있습니다"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__has_trends
+msgid "Has Trends?"
+msgstr "경향이 있습니까?"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__is_hatched
+msgid "Hatched"
+msgstr "계획됨"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__id
+#: model:ir.model.fields,field_description:social.field_social_live_post__id
+#: model:ir.model.fields,field_description:social.field_social_media__id
+#: model:ir.model.fields,field_description:social.field_social_post__id
+#: model:ir.model.fields,field_description:social.field_social_post_template__id
+#: model:ir.model.fields,field_description:social.field_social_stream__id
+#: model:ir.model.fields,field_description:social.field_social_stream_post__id
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__id
+#: model:ir.model.fields,field_description:social.field_social_stream_type__id
+msgid "ID"
+msgstr "ID"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_exception_icon
+msgid "Icon"
+msgstr "아이콘"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "예외 활동을 표시하기 위한 아이콘"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__message_needaction
+#: model:ir.model.fields,help:social.field_social_post__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "만약 선택하였으면, 신규 메시지에 주의를 기울여야 합니다."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__message_has_error
+#: model:ir.model.fields,help:social.field_social_media__message_has_sms_error
+#: model:ir.model.fields,help:social.field_social_post__message_has_error
+#: model:ir.model.fields,help:social.field_social_post__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합니다."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__image
+#: model:ir.model.fields,field_description:social.field_social_media__image
+msgid "Image"
+msgstr "이미지"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__image_url
+msgid "Image URL"
+msgstr "이미지 URL"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Image Url"
+msgstr "이미지 URL"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__image_urls
+#: model:ir.model.fields,field_description:social.field_social_post_template__image_urls
+msgid "Images URLs"
+msgstr "이미지 URL"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream_post__stream_post_image_ids
+msgid "Images that were shared with this post."
+msgstr "이 게시물과 공유된 이미지"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Insights"
+msgstr "통찰력"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__is_author
+msgid "Is Author"
+msgstr "작성자"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_is_follower
+#: model:ir.model.fields,field_description:social.field_social_post__message_is_follower
+msgid "Is Follower"
+msgstr "팔로워임"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid ""
+"It appears there is an issue with the Social Media link, click here to link "
+"the account again"
+msgstr "소셜 미디어 링크에 문제가 있는 것 같습니다. 계정을 다시 연결하려면 여기를 클릭하십시오."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_kanban_controller.js:0
+#, python-format
+msgid "It will appear in the Feed once it has posts to display."
+msgstr "표시할 게시물이 있으면 피드에 보여집니다."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__write_uid
+#: model:ir.model.fields,field_description:social.field_social_live_post__write_uid
+#: model:ir.model.fields,field_description:social.field_social_media__write_uid
+#: model:ir.model.fields,field_description:social.field_social_post__write_uid
+#: model:ir.model.fields,field_description:social.field_social_post_template__write_uid
+#: model:ir.model.fields,field_description:social.field_social_stream__write_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_post__write_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__write_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_type__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__write_date
+#: model:ir.model.fields,field_description:social.field_social_live_post__write_date
+#: model:ir.model.fields,field_description:social.field_social_media__write_date
+#: model:ir.model.fields,field_description:social.field_social_post__write_date
+#: model:ir.model.fields,field_description:social.field_social_post_template__write_date
+#: model:ir.model.fields,field_description:social.field_social_stream__write_date
+#: model:ir.model.fields,field_description:social.field_social_stream_post__write_date
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__write_date
+#: model:ir.model.fields,field_description:social.field_social_stream_type__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Let's <b>connect</b> to Facebook, LinkedIn or Twitter."
+msgstr "페이스북, 링크드인 또는 트위터에 <b>연결</b>해 보세요."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Let's create your own <b>social media</b> dashboard."
+msgstr "나만의 <b>소셜 미디어</b> 현황판을 만들어 봅시다."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Let's start posting."
+msgstr "게시글을 남겨봅시다."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Like"
+msgstr "좋아요"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Likes"
+msgstr "좋아요"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__link_description
+msgid "Link Description"
+msgstr "링크 설명"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_kanban
+#, python-format
+msgid "Link Image"
+msgstr "링크 이미지"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__link_image_url
+msgid "Link Image URL"
+msgstr "링크 이미지 URL"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__link_title
+msgid "Link Title"
+msgstr "링크 제목"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__link_url
+msgid "Link URL"
+msgstr "링크 URL"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Link a new account"
+msgstr "새 계정 연결하기"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_media_view_kanban
+msgid "Link account"
+msgstr "계정 연결"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_account
+msgid "Link an Account"
+msgstr "계정 연결하기"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__company_id
+#: model:ir.model.fields,help:social.field_social_live_post__company_id
+#: model:ir.model.fields,help:social.field_social_stream__company_id
+#: model:ir.model.fields,help:social.field_social_stream_post__company_id
+msgid ""
+"Link an account to a company to restrict its usage or keep empty to let all "
+"companies use it."
+msgstr "계정을 회사에 연결하여 사용을 제한하거나 비워 두어 모든 회사가 사용할 수 있도록 합니다."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_live_post__live_post_link
+msgid "Link of the live post on the target media."
+msgstr "타겟 매체의 라이브 게시물 링크입니다."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Link social accounts"
+msgstr "소셜 계정 연결"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__stats_link
+msgid "Link to the external Social Account statistics"
+msgstr "외부 소셜 계정 통계에 연결"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__is_media_disconnected
+msgid "Link with external Social Media is broken"
+msgstr "외부 소셜 미디어와의 연결이 끊어졌습니다"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__account_allowed_ids
+msgid "List of the accounts which can be selected for this post."
+msgstr "이 게시물에 대해 선택할 수 있는 계정 목록."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__live_posts_by_media
+msgid "Live Posts by Social Media"
+msgstr "소셜 미디어에 의한 실시간 게시물"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Load more comments..."
+msgstr "더 많은 댓글 불러오기..."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__max_post_length
+msgid "Max Post Length"
+msgstr "게시물 최대 길이"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__media_ids
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_kanban
+msgid "Media"
+msgstr "매체"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__media_type
+#: model:ir.model.fields,field_description:social.field_social_media__media_type
+msgid "Media Type"
+msgstr "매체 유형"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_live_post__message
+#: model:ir.model.fields,field_description:social.field_social_post__message
+#: model:ir.model.fields,field_description:social.field_social_post_template__message
+#: model:ir.model.fields,field_description:social.field_social_stream_post__message
+msgid "Message"
+msgstr "메시지"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_has_error
+#: model:ir.model.fields,field_description:social.field_social_post__message_has_error
+msgid "Message Delivery error"
+msgstr "메시지 전송 오류"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__message_length
+#: model:ir.model.fields,field_description:social.field_social_post_template__message_length
+msgid "Message Length"
+msgstr "메시지 길이"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "Message posted"
+msgstr "메시지 게시됨"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid ""
+"Message posted partially. These are the ones that couldn't be posted:%s"
+msgstr "메시지가 부분적으로 게시되었습니다. 다음 메시지는 게시되지 않았습니다:%s"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_ids
+#: model:ir.model.fields,field_description:social.field_social_post__message_ids
+msgid "Messages"
+msgstr "메시지"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_live_post__state
+msgid ""
+"Most social.live.posts directly go from Ready to Posted/Failed since they result of a single call to the third party API.\n"
+"        A 'Posting' state is also available for those that are sent through batching (like push notifications)."
+msgstr ""
+"대부분의 social.live.posts는 타사 API에 대한 단일 호출의 결과로 Ready에서 Posted/Failed로 바로 전달됩니다.\n"
+"        '게시' 상태는 일괄 게시(예를 들면 푸시 알림)를 통해 전송되는 상태에도 사용할 수 있습니다."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "내 활동 마감일"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+msgid "My Posts"
+msgstr "내 게시물"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_search
+msgid "My Streams"
+msgstr "나의 스트림"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__name
+#: model:ir.model.fields,field_description:social.field_social_media__name
+#: model:ir.model.fields,field_description:social.field_social_post__name
+#: model:ir.model.fields,field_description:social.field_social_stream_type__name
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_form
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_search
+msgid "Name"
+msgstr "이름"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_kanban_controller.js:0
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "New Post"
+msgstr "새로운 게시물"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "New content available"
+msgstr "새 콘텐츠 사용 가능"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Next"
+msgstr "다음"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "다음 활동 캘린더 행사"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "다음 활동 마감일"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_summary
+msgid "Next Activity Summary"
+msgstr "다음 활동 요약"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_type_id
+msgid "Next Activity Type"
+msgstr "다음 활동 유형"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_account
+msgid "No Social Account yet!"
+msgstr "아직 소셜 계정이 없습니다!"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream
+msgid "No Social Streams yet!"
+msgstr "아직 소셜 스트림이 없습니다!"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream_post
+msgid "No Stream added yet!"
+msgstr "아직 추가된 스트림이 없습니다!"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "No comments yet."
+msgstr "아직 댓글이 없습니다."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_kanban_controller.js:0
+#, python-format
+msgid "No social accounts configured, please contact your administrator."
+msgstr "소셜 계정이 설정되어 있지 않은 경우 관리자에게 문의해 주십시오."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_needaction_counter
+#: model:ir.model.fields,field_description:social.field_social_post__message_needaction_counter
+msgid "Number of Actions"
+msgstr "작업 수"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Number of Followers of your channel"
+msgstr "귀하의 채널 팔로워 수"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__click_count
+msgid "Number of clicks"
+msgstr "클릭 수"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_has_error_counter
+#: model:ir.model.fields,field_description:social.field_social_post__message_has_error_counter
+msgid "Number of errors"
+msgstr "오류 횟수"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_utm_campaign__social_engagement
+msgid ""
+"Number of interactions (likes, shares, comments ...) with the social posts"
+msgstr "소셜 게시물과의 상호 작용 (예: 공유, 댓글 등) 수"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__message_needaction_counter
+#: model:ir.model.fields,help:social.field_social_post__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "조치가 필요한 메시지 수"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__message_has_error_counter
+#: model:ir.model.fields,help:social.field_social_post__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "전송 오류가 발생한 메시지 수입니다."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_live_post__engagement
+#: model:ir.model.fields,help:social.field_social_post__engagement
+msgid "Number of people engagements with the post (Likes, comments...)"
+msgstr "게시물에 참여한 사람 수 (좋아요, 댓글 ...)"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__engagement
+msgid "Number of people engagements with your posts (Likes, Comments, ...)."
+msgstr "게시물과 관련된 사람들의 참여 수 (좋아요, 댓글 등)"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__stories
+msgid "Number of stories created from your posts (Shares, Re-tweets, ...)."
+msgstr "게시물에서 생성된 스토리 수 (공유, 리트윗, ...)"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid ""
+"Number of times people have engaged with your posts (likes, comments, "
+"shares,...)"
+msgstr "사람들이 내 게시물에 참여한 횟수 (좋아요, 댓글, 공유 등)"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid ""
+"Number of times people who have engaged with your channel have created "
+"stories on their friends' or followers' feed (Shares, Retweets...)"
+msgstr "채널에 참여한 사람들이 친구 또는 팔로어의 피드(공유, 리트윗 ...)에서 스토리를 생성한 횟수"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Or add"
+msgstr "추가하기"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__audience_trend
+msgid "Percentage of increase/decrease of the audience over a defined period."
+msgstr "일정 기간 동안 잠재 고객의 증가 / 감소 비율입니다."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__engagement_trend
+msgid ""
+"Percentage of increase/decrease of the engagement over a defined period."
+msgstr "정의된 기간 동안 참여 증가 / 감소 비율."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__stories_trend
+msgid "Percentage of increase/decrease of the stories over a defined period."
+msgstr "정해진 기간 동안 스토리의 증가 / 감소 비율."
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "Please specify at least one account to post into (for post ID(s) %s)."
+msgstr "게시할 계정을 하나 이상 지정해 주세요 (게시글 ID %s)."
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+#, python-format
+msgid "Post"
+msgstr "발행"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_kanban
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_kanban
+#, python-format
+msgid "Post Image"
+msgstr "이미지 게시"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/post_kanban_view.js:0
+#: code:addons/social/static/src/js/stream_post_comments.js:0
+#: code:addons/social/static/src/js/stream_post_kanban_renderer.js:0
+#, python-format
+msgid "Post Images"
+msgstr "이미지 게시"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_live_post__live_post_link
+#: model:ir.model.fields,field_description:social.field_social_stream_post__post_link
+msgid "Post Link"
+msgstr "게시물 링크"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_search
+msgid "Post Message"
+msgstr "메시지 게시"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "Post Now"
+msgstr "즉시 게시"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream_post__post_link
+msgid ""
+"Post link to the external social.media (ex: link to the actual Facebook "
+"Post)."
+msgstr "외부 social.media에 대한 게시물 링크 (예: 실제 Facebook 게시물에 대한 링크)"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Post on"
+msgstr "게시일"
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_live_post__state__posted
+#: model:ir.model.fields.selection,name:social.selection__social_post__state__posted
+msgid "Posted"
+msgstr "발행 완료"
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_live_post__state__posting
+#: model:ir.model.fields.selection,name:social.selection__social_post__state__posting
+msgid "Posting"
+msgstr "게시중"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__stream_post_ids
+#: model:ir.ui.menu,name:social.menu_social_post
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_kanban
+msgid "Posts"
+msgstr "게시물"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__live_post_ids
+msgid "Posts By Account"
+msgstr "계정별 게시물"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "Posts By Accounts"
+msgstr "계정별 게시물"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Press Enter to post. Press Shift+Enter to insert a Line Break."
+msgstr "Enter 키를 누르면 작성한 글이 게시됩니다. 줄 바꿈을 삽입하려면 Shift+Enter를 눌러주세요."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Preview your post"
+msgstr "게시물 미리보기"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Previous"
+msgstr "이전"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__post_method
+msgid "Publish your post immediately or schedule it at a later time."
+msgstr "게시물을 즉시 게시하거나 나중에 예약하십시오."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+msgid "Published By"
+msgstr "게시자"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__published_date
+msgid "Published Date"
+msgstr "게시한 날"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__published_date
+msgid "Published date"
+msgstr "게시 날짜"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__rating_ids
+#: model:ir.model.fields,field_description:social.field_social_post__rating_ids
+msgid "Ratings"
+msgstr "평가"
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_live_post__state__ready
+msgid "Ready"
+msgstr "준비"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__media_type
+msgid "Related Social Media"
+msgstr "관련 소셜 미디어"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__media_id
+msgid "Related Social Media (Facebook, Twitter, ...)."
+msgstr "관련 소셜 미디어 (Facebook, Twitter 등)"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__account_id
+msgid "Related social Account"
+msgstr "관련 소셜 계정"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Reply"
+msgstr "회신"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_user_id
+msgid "Responsible User"
+msgstr "담당 사용자"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_live_post_view_form
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "Retry"
+msgstr "재시도"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_has_sms_error
+#: model:ir.model.fields,field_description:social.field_social_post__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS 전송 에러"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "Schedule"
+msgstr "예약"
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_post__post_method__scheduled
+msgid "Schedule later"
+msgstr "나중에 예약"
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_post__state__scheduled
+msgid "Scheduled"
+msgstr "예약됨"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__scheduled_date
+msgid "Scheduled Date"
+msgstr "예정일"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "Selected accounts (%s) do not match the selected company (%s)"
+msgstr "선택된 계정 (%s)과 선택된 회사(%s)가 일치하지 않습니다"
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_post__post_method__now
+msgid "Send now"
+msgstr "지금 보내기"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__sequence
+msgid "Sequence"
+msgstr "순서"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream__sequence
+msgid "Sequence used to order streams (mainly for the 'Feed' kanban view)"
+msgstr "스트림을 주문하는 데 사용되는 시퀀스 (주로 '피드' 칸반 보기에 사용)"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__max_post_length
+msgid ""
+"Set a maximum number of characters can be posted in post. 0 for no limit."
+msgstr "작성할 수 있는 최대 글자 수를 설정합니다. 0일 경우 글자 수 제한이 없습니다."
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_social_global_settings
+#: model:ir.ui.menu,name:social.menu_social_global_settings
+msgid "Settings"
+msgstr "설정"
+
+#. module: social
+#: model:ir.model,name:social.model_social_account
+#: model:ir.model.fields,field_description:social.field_social_live_post__account_id
+#: model:ir.model.fields,field_description:social.field_social_stream__account_id
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_form
+msgid "Social Account"
+msgstr "소셜 계정"
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_social_account
+#: model:ir.model.fields,field_description:social.field_social_media__account_ids
+#: model:ir.model.fields,field_description:social.field_social_post__account_ids
+#: model:ir.model.fields,field_description:social.field_social_post_template__account_ids
+#: model:ir.ui.menu,name:social.menu_social_account
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_list
+msgid "Social Accounts"
+msgstr "소셜 계정"
+
+#. module: social
+#: model:ir.model,name:social.model_social_live_post
+msgid "Social Live Post"
+msgstr "소셜 실시간 게시물"
+
+#. module: social
+#: model:res.groups,name:social.group_social_manager
+msgid "Social Manager"
+msgstr "소셜 관리자"
+
+#. module: social
+#: model:ir.ui.menu,name:social.menu_social_global
+msgid "Social Marketing"
+msgstr "소셜 마케팅"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model:ir.actions.act_window,name:social.action_social_media
+#: model:ir.model,name:social.model_social_media
+#: model:ir.model.fields,field_description:social.field_social_account__media_id
+#: model:ir.model.fields,field_description:social.field_social_stream__media_id
+#: model:ir.model.fields,field_description:social.field_social_stream_type__media_id
+#: model:ir.ui.menu,name:social.menu_social_media
+#: model_terms:ir.ui.view,arch_db:social.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:social.social_media_view_kanban
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_form
+#, python-format
+msgid "Social Media"
+msgstr "소셜미디어"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_utm_campaign__social_posts_count
+msgid "Social Media Posts"
+msgstr "소셜 미디어 게시물"
+
+#. module: social
+#: model:ir.model,name:social.model_social_post
+#: model:ir.model.fields,field_description:social.field_social_live_post__post_id
+#: model_terms:ir.ui.view,arch_db:social.social_live_post_view_form
+msgid "Social Post"
+msgstr "소셜 게시"
+
+#. module: social
+#: model:ir.model,name:social.model_social_post_template
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Social Post Template"
+msgstr "소셜 게시물 템플릿"
+
+#. module: social
+#: model:ir.actions.act_window,name:social.social_post_template_action
+msgid "Social Post Templates"
+msgstr "소셜 게시물 템플릿"
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_social_post
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_calendar
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_pivot
+msgid "Social Posts"
+msgstr "소셜 게시물"
+
+#. module: social
+#: model:ir.model,name:social.model_social_stream
+#: model:ir.model.fields,field_description:social.field_social_stream_post__stream_id
+#: model_terms:ir.ui.view,arch_db:social.social_stream_view_form
+msgid "Social Stream"
+msgstr "소셜 스트림"
+
+#. module: social
+#: model:ir.model,name:social.model_social_stream_post
+#: model:ir.model,name:social.model_social_stream_type
+msgid "Social Stream Post"
+msgstr "소셜 스트림 게시물"
+
+#. module: social
+#: model:ir.model,name:social.model_social_stream_post_image
+msgid "Social Stream Post Image Attachment"
+msgstr "소셜 스트림 게시물 이미지 첨부"
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_social_stream
+#: model:ir.ui.menu,name:social.menu_social_stream
+msgid "Social Streams"
+msgstr "소셜 스트림"
+
+#. module: social
+#: model:res.groups,name:social.group_social_user
+msgid "Social User"
+msgstr "소셜 사용자"
+
+#. module: social
+#: model:ir.actions.server,name:social.ir_cron_post_scheduled_ir_actions_server
+msgid "Social: Publish Scheduled Posts"
+msgstr "소셜 : 예약된 게시물 게시"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_comments_reply.js:0
+#, python-format
+msgid ""
+"Something went wrong while posting the comment. \n"
+"%s"
+msgstr ""
+"댓글을 게시하는 동안 문제가 발생했습니다.  \n"
+"%s"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_kanban_dashboard.js:0
+#, python-format
+msgid ""
+"Sorry, you're not allowed to re-link this account, please contact your "
+"administrator."
+msgstr "죄송합니다. 이 계정을 다시 연결할 수 없습니다. 관리자에게 문의하십시오."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__source_id
+msgid "Source"
+msgstr "원본"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__live_posts_by_media
+msgid ""
+"Special technical field that holds a dict containing the live posts names by"
+" media ids (used for kanban view)."
+msgstr "미디어 ID (kanban보기에 사용)별로 실시간 게시물 이름이 포함된 사전을 보유한 특수 기술 필드."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__stats_link
+msgid "Stats Link"
+msgstr "통계 링크"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_live_post__state
+#: model:ir.model.fields,field_description:social.field_social_post__state
+msgid "Status"
+msgstr "상태"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"활동 기준 상태\n"
+"기한 초과: 기한이 이미 지났습니다.\n"
+"오늘: 활동 날짜가 오늘입니다.\n"
+"예정: 향후 계획된 활동입니다."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model:ir.model.fields,field_description:social.field_social_account__stories
+#, python-format
+msgid "Stories"
+msgstr "스토리"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__stories_trend
+msgid "Stories Trend"
+msgstr "스토리 경향"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_kanban_controller.js:0
+#, python-format
+msgid "Stream Added (%s)"
+msgstr "스트림 추가 (%s)"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__stream_post_id
+msgid "Stream Post"
+msgstr "스트림 게시물"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__stream_post_image_ids
+msgid "Stream Post Images"
+msgstr "스트림 게시물 이미지"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__stream_post_image_urls
+msgid "Stream Post Images URLs"
+msgstr "스트림 게시물 이미지 URL"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__stream_type_ids
+msgid "Stream Types"
+msgstr "스트림 유형"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__stream_type_type
+#: model:ir.model.fields,field_description:social.field_social_stream_type__stream_type
+msgid "Stream type name (technical)"
+msgstr "스트림 유형명 (기술)"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__has_streams
+msgid "Streams Enabled"
+msgstr "스트림 사용가능"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__live_post_ids
+msgid "Sub-posts that will be published on each selected social accounts."
+msgstr "선택한 각 소셜 계정에 게시될 하위 게시물."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Synchronize"
+msgstr "동기화"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post_template.py:0
+#, python-format
+msgid "The 'message' field is required for post ID %s"
+msgstr "'메시지' 필드는 게시물 ID %s의 필수 입력 사항입니다"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__account_ids
+#: model:ir.model.fields,help:social.field_social_post_template__account_ids
+msgid "The accounts on which this post will be published."
+msgstr "이 게시물이 게시될 계정입니다."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream_post__author_name
+msgid ""
+"The post author name based on third party information (ex: 'John Doe')."
+msgstr "타사 정보를 기반으로 한 게시물 작성자 이름 (예. '홍길동')."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__state
+msgid ""
+"The post is considered as 'Posted' when all its sub-posts (one per social "
+"account) are either 'Failed' or 'Posted'"
+msgstr "게시물은 모든 하위 게시물 (소셜 계정당 하나)이 '실패' 또는 '게시'인 경우 '게시 됨'으로 간주됩니다."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream_post__published_date
+msgid "The post published date based on third party information."
+msgstr "게시된 날짜는 타사 정보를 기준으로 합니다."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_live_post__failure_reason
+msgid ""
+"The reason why a post is not successfully posted on the Social Media (eg: "
+"connection error, duplicated post, ...)."
+msgstr "게시물이 소셜 미디어에 게시되지 않은 이유 (예: 연결 오류, 중복된 게시물 등)"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__media_image
+msgid "The related Social Media's image"
+msgstr "관련 소셜 미디어의 이미지"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__media_ids
+msgid "The social medias linked to the selected social accounts."
+msgstr "선택된 소셜 계정에 연결된 소셜 미디어."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__has_post_errors
+msgid "There are post errors on sub-posts"
+msgstr "하위 게시물에 게시물 오류가 있습니다"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__csrf_token
+msgid ""
+"This token can be used to verify that an incoming request from a social "
+"provider has not been forged."
+msgstr "소셜 미디어 플랫폼으로부터 들어오는 요청이 위조되지 않았는지 확인하는 토큰입니다."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__name
+msgid "Title"
+msgstr "제목"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "To add a stream"
+msgstr "스트림 추가하기"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__stream_type_id
+msgid "Type"
+msgstr "유형"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "레코드에 있는 예외 활동의 유형입니다."
+
+#. module: social
+#: model:ir.model,name:social.model_utm_campaign
+msgid "UTM Campaign"
+msgstr "UTM 캠페인"
+
+#. module: social
+#: model:ir.model,name:social.model_utm_medium
+#: model:ir.model.fields,field_description:social.field_social_account__utm_medium_id
+msgid "UTM Medium"
+msgstr "UTM 매체"
+
+#. module: social
+#: model:ir.model,name:social.model_utm_source
+msgid "UTM Source"
+msgstr "UTM 소스"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "Unknown error"
+msgstr "알 수 없는 오류"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post_template.py:0
+#, python-format
+msgid "Uploaded file does not seem to be a valid image."
+msgstr "업로드된 파일이 올바른 이미지가 아닌 것 같습니다."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.res_config_settings_view_form
+msgid ""
+"Use your own Developer Accounts on our Social app. Those credentials are "
+"provided in the developer section of your professional social media account."
+msgstr "소셜 앱에서 본인의 개발자 계정을 사용하십시오. 자격 증명은 전문 소셜 미디어 계정의 개발자 섹션에서 제공됩니다."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__media_type
+#: model:ir.model.fields,help:social.field_social_media__media_type
+#: model:ir.model.fields,help:social.field_social_stream_post__media_type
+msgid ""
+"Used to make comparisons when we need to restrict some features to a "
+"specific media ('facebook', 'twitter', ...)."
+msgstr "일부 기능을 특정 미디어 ( 'facebook', 'twitter' 등)로 제한해야 할 때 비교하는 데 사용됩니다."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "View"
+msgstr "화면"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__website_message_ids
+#: model:ir.model.fields,field_description:social.field_social_post__website_message_ids
+msgid "Website Messages"
+msgstr "웹사이트 메시지"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__website_message_ids
+#: model:ir.model.fields,help:social.field_social_post__website_message_ids
+msgid "Website communication history"
+msgstr "웹사이트 대화 이력"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__post_method
+msgid "When"
+msgstr "기간"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__published_date
+msgid ""
+"When the global post was published. The actual sub-posts published dates may"
+" be different depending on the media."
+msgstr "글로벌 게시물이 게시된 시점. 실제 하위 게시물 게시 날짜는 미디어에 따라 다를 수 있습니다."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__image_ids
+#: model:ir.model.fields,help:social.field_social_post_template__image_ids
+msgid "Will attach images to your posts (if the social media supports it)."
+msgstr "게시물에 이미지를 첨부합니다(소셜 미디어에서 지원하는 경우)."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Write a comment..."
+msgstr "댓글 쓰기..."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Write a message to get a preview of your post."
+msgstr "미리보기를 확인하려면 메시지를 작성하세요."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Write a reply..."
+msgstr "답글 쓰기..."
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_post
+msgid ""
+"Write an enticing post, add images and schedule it to be posted later on "
+"multiple platforms at once."
+msgstr "멋진 글과 이미지가 여러 플랫폼에 동시에 포스팅 될 수 있도록 예약하세요."
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/utm_medium.py:0
+#, python-format
+msgid ""
+"You cannot delete these UTM Mediums as they are linked to the following social accounts in Social:\n"
+"%(social_accounts)s"
+msgstr ""
+"이 UTM 매체는 다음 소셜 계정과 연결되어 있으므로 삭제할 수 없습니다:\n"
+"%(social_accounts)s"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/utm_source.py:0
+#, python-format
+msgid ""
+"You cannot delete these UTM Sources as they are linked to social posts in Social:\n"
+"%(utm_sources)s"
+msgstr ""
+"이 UTM 소스는 소셜 게시물과 연결되어 있으므로 삭제할 수 없습니다:\n"
+"%(utm_sources)s"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "You cannot reschedule a post that has already been posted."
+msgstr "이미 포스팅된 게시물의 일정은 변경할 수 없습니다."
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "You cannot schedule a post in the past."
+msgstr "이미 작성된 게시물은 예약할 수 없습니다."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Your Post"
+msgstr "귀하의 게시물"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "a Stream from an existing account"
+msgstr "기존 계정의 스트림"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "before posting."
+msgstr "게시하기 전에."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_comment.js:0
+#, python-format
+msgid "comment/reply"
+msgstr "댓글/답글"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream
+msgid "dashboard"
+msgstr "현황판"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "for"
+msgstr "for"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "replies..."
+msgstr "답글..."
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream_post
+msgid "to keep an eye on your own posts and monitor all social activities."
+msgstr "본인의 게시물 및 모든 소셜 활동을 모니터링할 수 있습니다."
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream
+msgid "to link your accounts and start posting."
+msgstr "계정을 연결하고 포스팅을 시작하세요."
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_account
+msgid "to start posting from Odoo."
+msgstr "Odoo에서 포스팅을 시작하세요."

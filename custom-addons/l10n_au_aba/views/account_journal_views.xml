@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="account_journal_form" model="ir.ui.view">
+            <field name="name">aba.account.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='bank_account']/group" position="inside">
+                    <group string='ABA' invisible="type != 'bank'">
+                        <field name="aba_bsb" readonly="not bank_account_id"/>
+                        <field name='aba_fic'/>
+                        <field name='aba_user_spec'/>
+                        <field name='aba_user_number'/>
+                        <field name='aba_self_balancing'/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

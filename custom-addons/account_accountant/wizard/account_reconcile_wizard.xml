@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_reconcile_wizard" model="ir.ui.view">
+        <field name="name">account.reconcile.wizard.form</field>
+        <field name="model">account.reconcile.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="company_id" invisible="1"/>
+                <field name="move_line_ids" invisible="1"/>
+                <field name="company_currency_id" invisible="1"/>
+                <field name="single_currency_mode" invisible="1"/>
+                <field name="is_write_off_required" invisible="1"/>
+                <field name="is_transfer_required" invisible="1"/>
+                <field name="display_allow_partials" invisible="1"/>
+                <field name="force_partials" invisible="1"/>
+
+                <div class="alert alert-warning" role="alert" invisible="not is_transfer_required">
+                    <field name="transfer_warning_message"/>
+                </div>
+                <div class="alert alert-warning" role="alert" invisible="not lock_date_violated_warning_message">
+                    <field name="lock_date_violated_warning_message"/>
+                </div>
+                <div class="alert alert-warning" role="alert" invisible="not force_partials">
+                    <p>Only partial reconciliation is possible. Proceed in multiple steps if you want to full reconcile.</p>
+                </div>
+                <div>
+                    <field name="reco_model_autocomplete_ids" invisible="1"/>
+                    <field name="reco_model_id" nolabel="1"
+                           domain="[['id', 'in', reco_model_autocomplete_ids]]"
+                           widget="selection_badge"
+                           options="{'horizontal': true}"
+                           invisible="not reco_model_autocomplete_ids and not reco_model_id and allow_partials"/>
+                </div>
+                <group>
+                    <group>
+                        <field name="allow_partials" invisible="not display_allow_partials" readonly="force_partials"/>
+                    </group>
+                    <group invisible="allow_partials">
+                        <label for="amount_currency"/>
+                        <div name="amount_div" class="d-flex o-row">
+                            <field name="amount_currency" required="not allow_partials"/>
+                            <field name="reco_currency_id" nolabel="1" invisible="single_currency_mode"/>
+                        </div>
+                    </group>
+                </group>
+                <group invisible="allow_partials">
+                    <group>
+                        <field name="account_id" required="not allow_partials"/>
+                        <field name="tax_id" context="{'append_type_to_tax_name': True}"/>
+                        <field name="journal_id" required="not allow_partials"/>
+                        <field name="label" required="not allow_partials"/>
+                    </group>
+                    <group>
+                        <field name="date" required="not allow_partials"/>
+                        <field name="to_check"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Reconcile" class="btn-primary" name="reconcile" type="object" data-hotkey="q"/>
+                    <button string="Reconcile &amp; open" class="btn-primary" name="reconcile_open" type="object" data-hotkey="o"/>
+                    <button string="Discard" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

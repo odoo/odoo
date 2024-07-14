@@ -1,0 +1,635 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_budget
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/account_budget.py:0
+#, python-format
+msgid ""
+"\"End Date\" of the budget line should be included in the Period of the "
+"budget"
+msgstr "예산 내역의 \"종료일\"은 예산 기간에 포함되어야 합니다."
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/account_budget.py:0
+#, python-format
+msgid ""
+"\"Start Date\" of the budget line should be included in the Period of the "
+"budget"
+msgstr "예산 내역의 \"시작일\"은 예산 기간에 포함되어야 합니다."
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_kanban
+msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Period\"/>"
+msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Period\"/>"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
+msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+msgid "<span class=\"o_stat_text\">Budget</span>"
+msgstr "<span class=\"o_stat_text\">예산</span>"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__account_ids
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_post_form
+msgid "Accounts"
+msgstr "계정"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__percentage
+msgid "Achievement"
+msgstr "달성"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_needaction
+msgid "Action Needed"
+msgstr "조치 필요"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_ids
+msgid "Activities"
+msgstr "활동"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "활동 예외 장식"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_state
+msgid "Activity State"
+msgstr "활동 상태"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "활동 유형 아이콘"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget_lines__practical_amount
+msgid "Amount really earned/spent."
+msgstr "실제 수익/지출액입니다."
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget_lines__theoritical_amount
+msgid "Amount you are supposed to have earned/spent at this date."
+msgstr "이 날짜 기준으로 예상되는 수익/지출 금액입니다."
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget_lines__planned_amount
+msgid ""
+"Amount you plan to earn/spend. Record a positive amount if it is a revenue "
+"and a negative amount if it is a cost."
+msgstr "수익/지출 예상 금액. 수익인 경우 양수 금액, 비용인 경우 음수 금액을 기록합니다."
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_account_analytic_account
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__analytic_account_id
+msgid "Analytic Account"
+msgstr "분석 계정"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__analytic_plan_id
+msgid "Analytic Plan"
+msgstr "분석 계획"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Approve"
+msgstr "결재하기"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_attachment_count
+msgid "Attachment Count"
+msgstr "첨부 파일 수"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_crossovered_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__crossovered_budget_id
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_tree
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Budget"
+msgstr "예산"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.act_account_analytic_account_cb_lines
+#: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+msgid "Budget Items"
+msgstr "예산 항목"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_crossovered_budget_lines
+msgid "Budget Line"
+msgstr "예산 명세"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_analytic_account__crossovered_budget_line
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__crossovered_budget_line
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_tree
+msgid "Budget Lines"
+msgstr "예산 명세"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__name
+msgid "Budget Name"
+msgstr "예산명"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__crossovered_budget_state
+msgid "Budget State"
+msgstr "예산 상태"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_account_budget_post
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__general_budget_id
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_post_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_post_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_post_tree
+msgid "Budgetary Position"
+msgstr "예산 포지션"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.open_budget_post_form
+#: model:ir.ui.menu,name:account_budget.menu_budget_post_form
+msgid "Budgetary Positions"
+msgstr "예산 포지션"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
+#: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+msgid "Budgets"
+msgstr "예산"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
+#: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
+msgid "Budgets Analysis"
+msgstr "예산 분석"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Cancel Budget"
+msgstr "예산 취소"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__crossovered_budget__state__cancel
+msgid "Cancelled"
+msgstr "취소됨"
+
+#. module: account_budget
+#: model_terms:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid "Click to create a new budget."
+msgstr "클릭해서 새 예산을 작성합니다."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__company_id
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__company_id
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__company_id
+msgid "Company"
+msgstr "회사"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget_lines__percentage
+msgid ""
+"Comparison between practical and theoretical amount. This measure tells you "
+"if you are below or over budget."
+msgstr "실제 수치와 이론적인 수치 사이의 비교. 이 측정은 귀하가 예산보다 낮거나 초과하는지 알려줍니다."
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Confirm"
+msgstr "승인"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__crossovered_budget__state__confirm
+msgid "Confirmed"
+msgstr "확인됨"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__create_uid
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__create_uid
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__create_date
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__create_date
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__currency_id
+msgid "Currency"
+msgstr "통화"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+msgid "Date"
+msgstr "날짜"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__display_name
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__display_name
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__crossovered_budget__state__done
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Done"
+msgstr "완료"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__crossovered_budget__state__draft
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Draft"
+msgstr "미결"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Draft Budgets"
+msgstr "예산안"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__date_to
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__date_to
+msgid "End Date"
+msgstr "종료일"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Entries..."
+msgstr "항목..."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_follower_ids
+msgid "Followers"
+msgstr "팔로워"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "팔로워 (협력사)"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "멋진 아이콘 폰트 예: fa-tasks"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "From"
+msgstr "시작"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Future Activities"
+msgstr "향후 활동"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+msgid "Group By"
+msgstr "그룹별"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__has_message
+msgid "Has Message"
+msgstr "메시지가 있습니다"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__id
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__id
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_exception_icon
+msgid "Icon"
+msgstr "아이콘"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "예외 활동을 표시하기 위한 아이콘"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "만약 선택하였으면, 신규 메시지에 주의를 기울여야 합니다."
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_has_error
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합니다."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__is_above_budget
+msgid "Is Above Budget"
+msgstr "예산 초과인가요?"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_is_follower
+msgid "Is Follower"
+msgstr "팔로워임"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__write_uid
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__write_uid
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__write_date
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__write_date
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Late Activities"
+msgstr "지연된 활동"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_has_error
+msgid "Message Delivery error"
+msgstr "메시지 전송 오류"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_ids
+msgid "Messages"
+msgstr "메시지"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "내 활동 마감일"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__name
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__name
+msgid "Name"
+msgstr "이름"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "다음 활동 캘린더 행사"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "다음 활동 마감일"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_summary
+msgid "Next Activity Summary"
+msgstr "다음 활동 요약"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_type_id
+msgid "Next Activity Type"
+msgstr "다음 활동 유형"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+msgid "Not Cancelled"
+msgstr "취소되지 않음"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_needaction_counter
+msgid "Number of Actions"
+msgstr "작업 수"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_has_error_counter
+msgid "Number of errors"
+msgstr "오류 횟수"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "조치가 필요한 메시지 수"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "전송 오류가 발생한 메시지 수입니다."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__paid_date
+msgid "Paid Date"
+msgstr "결제일"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Period"
+msgstr "기간"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__planned_amount
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Planned Amount"
+msgstr "계획 금액"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+msgid "Planned amount"
+msgstr "계획 금액"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__practical_amount
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+msgid "Practical Amount"
+msgstr "실제 금액"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+msgid "Practical amount"
+msgstr "실제 금액"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__rating_ids
+msgid "Ratings"
+msgstr "평가"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Reset to Draft"
+msgstr "미결로 초기화"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__user_id
+msgid "Responsible"
+msgstr "담당자"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_user_id
+msgid "Responsible User"
+msgstr "담당 사용자"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS 전송 에러"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Show all records which has next action date is before today"
+msgstr "다음 행동 날짜가 오늘 이전 인 모든 기록보기"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__date_from
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__date_from
+msgid "Start Date"
+msgstr "시작일"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__state
+msgid "Status"
+msgstr "상태"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"활동 기준 상태\n"
+"기한 초과: 기한이 이미 지났습니다.\n"
+"오늘: 활동 날짜가 오늘입니다.\n"
+"예정: 향후 계획된 활동입니다."
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/account_budget.py:0
+#, python-format
+msgid "The budget must have at least one account."
+msgstr "예산에는 계정이 1개 이상 있어야 합니다."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__theoritical_amount
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+msgid "Theoretical Amount"
+msgstr "이론 금액"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+msgid "Theoretical amount"
+msgstr "이론적 금액"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "To"
+msgstr "종료 시간"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "To Approve"
+msgstr "결재 대기"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "To Approve Budgets"
+msgstr "예산 승인 대기"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Today Activities"
+msgstr "오늘 활동"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_analytic_account__total_planned_amount
+msgid "Total Planned Amount"
+msgstr "총 편성 금액"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_analytic_account__total_practical_amount
+msgid "Total Practical Amount"
+msgstr "실제 금액 총액"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "레코드에 있는 예외 활동의 유형입니다."
+
+#. module: account_budget
+#: model_terms:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid "Use budgets to compare actual with expected revenues and costs"
+msgstr "예산 항목을 통해 수익 비용 예측치와 실제를 비교합니다."
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__crossovered_budget__state__validate
+msgid "Validated"
+msgstr "승인됨"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__website_message_ids
+msgid "Website Messages"
+msgstr "웹사이트 메시지"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__website_message_ids
+msgid "Website communication history"
+msgstr "웹사이트 대화 이력"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/account_budget.py:0
+#, python-format
+msgid ""
+"You have to enter at least a budgetary position or analytic account on a "
+"budget line."
+msgstr "예산 명세에 최소 예산 상태 또는 분석 계정을 입력해야 합니다."
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "e.g. Budget 2023: Optimistic"
+msgstr "예: 2023년도 예산: 양호"

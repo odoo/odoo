@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="appointment_resource_view_search" model="ir.ui.view">
+        <field name="name">appointment.resource.view.search</field>
+        <field name="model">appointment.resource</field>
+        <field name="arch" type="xml">
+            <search string="Appointment Resources">
+                <field name="name"/>
+                <field name="appointment_type_ids"/>
+                <field name="capacity"/>
+                <separator/>
+                <filter name="filter_active" string="Archived" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Available In" name="group_by_appointment_type" context="{'group_by': 'appointment_type_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="appointment_resource_view_form" model="ir.ui.view">
+        <field name="name">appointment.resource.view.form</field>
+        <field name="model">appointment.resource</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="active" invisible="1"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="resource_id" invisible="1"/>
+                    <field name="image_1920" class="oe_avatar" widget="image" options="{'preview_image': 'image_128'}"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <div class="d-flex">
+                                <field class="text-break" name="name" placeholder="e.g. Tennis Court 1"/>
+                            </div>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="capacity"/>
+                            <field name="shareable" invisible="capacity &lt;= 1"/>
+                            <field name="linked_resource_ids" widget="many2many_tags" options="{'no_create': True}"
+                                domain="[('id', '!=', id)]"/>
+                        </group>
+                        <group>
+                            <field name="resource_calendar_id" string="Opening Hours" groups="base.group_no_one"/>
+                            <field name="tz"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="appointment_resource_view_tree" model="ir.ui.view">
+        <field name="name">appointment.resource.view.tree</field>
+        <field name="model">appointment.resource</field>
+        <field name="arch" type="xml">
+            <tree multi_edit="1" sample="1">
+                <field name="company_id" column_invisible="True"/>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="appointment_type_ids" widget="many2many_tags" optional="hidden"/>
+                <field name="linked_resource_ids" widget="many2many_tags" optional="hidden"/>
+                <field name="shareable" optional="hidden"/>
+                <field name="resource_calendar_id" optional="hidden"/>
+                <field name="capacity" sum="Total Capacity"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="appointment_resource_action" model="ir.actions.act_window">
+        <field name="name">Resources</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">appointment.resource</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an Appointment Resource
+            </p>
+            <p>
+                Appointment Resources are the places or equipment people can book
+                (e.g. Tables, Tennis Courts, Meeting Rooms, ...)
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,80 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_loyalty_taxcloud
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_loyalty_taxcloud
+#. odoo-python
+#: code:addons/sale_loyalty_taxcloud/models/sale_order.py:0
+#, python-format
+msgid ""
+"Any order that has discounts and uses TaxCloud must be invoiced all at once to prevent faulty tax computation with Taxcloud.\n"
+"The following orders must be completely invoiced:\n"
+"%s"
+msgstr ""
+"Bất kỳ đơn hàng nào có chiết khấu và dùng TaxCloud bắt buộc phải được xuất hóa đơn cùng lúc để tránh sai sót khi tính toán thuế với Taxcloud.\n"
+"Những đơn hàng sau đây phải được lập hóa đơn toàn bộ:\n"
+"%s"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model.fields,field_description:sale_loyalty_taxcloud.field_account_move_line__reward_id
+msgid "Discount reward"
+msgstr "Phần thưởng chiết khấu"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model,name:sale_loyalty_taxcloud.model_account_move
+msgid "Journal Entry"
+msgstr "Bút toán"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model,name:sale_loyalty_taxcloud.model_account_move_line
+msgid "Journal Item"
+msgstr "Hạng mục bút toán"
+
+#. module: sale_loyalty_taxcloud
+#. odoo-python
+#: code:addons/sale_loyalty_taxcloud/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"Orders with coupons or promotions programs that use TaxCloud for automatic tax computation cannot be modified after having been invoiced.\n"
+"To modify this order, you must first cancel or refund all existing invoices."
+msgstr ""
+"Không thể chỉnh sửa đơn hàng có mã giảm giá hoặc chương trình khuyến mãi sử dụng TaxCloud để tính toán thuế tự động sau khi đã được xuất hóa đơn. \n"
+"Để chỉnh sửa đơn hàng, trước tiên bạn phải hủy hoặc hoàn tiền tất cả hóa đơn hiện có. "
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model,name:sale_loyalty_taxcloud.model_sale_order
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model,name:sale_loyalty_taxcloud.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Dòng đơn bán hàng"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model.fields,field_description:sale_loyalty_taxcloud.field_account_move_line__price_taxcloud
+#: model:ir.model.fields,field_description:sale_loyalty_taxcloud.field_sale_order_line__price_taxcloud
+msgid "Taxcloud Price"
+msgstr "Giá Taxcloud"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model.fields,help:sale_loyalty_taxcloud.field_account_move_line__reward_id
+msgid "The loyalty reward that created this line."
+msgstr "Phần thưởng khách hàng thân thiết đã tạo dòng này. "

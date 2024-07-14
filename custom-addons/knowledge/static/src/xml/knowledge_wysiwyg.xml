@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="knowledge.KnowledgeWysiwyg" t-inherit="web_editor.Wysiwyg" t-inherit-mode="primary">
+        <xpath expr="//Toolbar" position="inside">
+            <div id="knowledge-toolbar-btn-group" class="btn-group">
+                <div t-ref="knowledgeCommentsToolbarBtn" id="comment-line" title="Add a comment to selection" class="btn"><i class="fa fa-commenting fa-fw pe-1"/>Comment</div>
+            </div>
+        </xpath>
+    </t>
+</templates>

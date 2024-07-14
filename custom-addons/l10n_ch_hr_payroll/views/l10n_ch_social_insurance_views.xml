@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ch_social_insurance_view_tree" model="ir.ui.view">
+        <field name="name">l10n.ch.social.insurance.view.tree</field>
+        <field name="model">l10n.ch.social.insurance</field>
+        <field name="arch" type="xml">
+            <tree string="Social Insurances">
+                <field name="name"/>
+                <field name="insurance_company"/>
+                <field name="member_number"/>
+                <field name="member_subnumber"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_ch_social_insurance_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.social.insurance.view.form</field>
+        <field name="model">l10n.ch.social.insurance</field>
+        <field name="arch" type="xml">
+            <form string="Social Insurances">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder='e.g. "Social Insurance AK Bern"'/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="member_number"/>
+                            <field name="member_subnumber"/>
+                            <field name="insurance_company"/>
+                            <field name="insurance_code"/>
+                        </group>
+                    </group>
+                    <group string="Old-age and survivors' insurance (AVS)" colspan="2">
+                        <field name="avs_line_ids" nolabel="1" colspan="2">
+                            <tree editable="top">
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="employee_rate"/>
+                                <field name="employer_rate"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group string="Unemployment insurance (AC)" colspan="2">
+                        <field name="ac_line_ids" nolabel="1" colspan="2">
+                            <tree editable="top">
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="employee_rate"/>
+                                <field name="employer_rate"/>
+                                <field name="employee_additional_rate"/>
+                                <field name="employer_additional_rate"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_ch_social_insurance" model="ir.actions.act_window">
+        <field name="name">AVS/AC Insurances</field>
+        <field name="res_model">l10n.ch.social.insurance</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

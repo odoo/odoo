@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="social_post_view_kanban" model="ir.ui.view">
+        <field name="name">social.post.view.kanban.inherit.youtube</field>
+        <field name="model">social.post</field>
+        <field name="inherit_id" ref="social.social_post_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='click_count']" position="after">
+                <field name="youtube_title"/>
+                <field name="youtube_description"/>
+                <field name="youtube_video_id"/>
+                <field name="youtube_thumbnail_url"/>
+                <field name="youtube_video_url"/>
+            </xpath>
+            <xpath expr="//div[@name='o_social_stream_post_message_text']" position="inside">
+                <field name="youtube_description" t-if="record.youtube_description.raw_value"/>
+            </xpath>
+            <xpath expr="//div[@name='o_social_stream_post_message_text']" position="after">
+                <div class="text-center">
+                    <a t-att-href="record.youtube_video_url.raw_value" t-if="record.youtube_video_id.raw_value">
+                        <img t-att-src="record.youtube_thumbnail_url.raw_value" alt="YouTube Thumbnail"
+                            class="w-50 py-2 o_social_youtube_thumbnail"/>
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="social_post_view_form" model="ir.ui.view">
+        <field name="name">social.post.view.form.inherit.youtube</field>
+        <field name="model">social.post</field>
+        <field name="inherit_id" ref="social.social_post_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_social_post_empty_preview')]" position="inside">
+                <field name="youtube_accounts_other_count" invisible="1"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_social_post_empty_preview')]" position="attributes">
+                <!-- Either there are accounts other than youtube and the message is not empty either there is a youtube account and youtube title is not empty, or we have a video -->
+                <attribute name="invisible">youtube_accounts_other_count != 0 and message and message != '' or youtube_accounts_count != 0 and youtube_title and youtube_title != '' or youtube_video_id</attribute>
+            </xpath>
+            <xpath expr="//field[@name='message']" position="attributes">
+                <!-- If we only post on YouTube, hide the 'message' field as it is not used -->
+                <attribute name="invisible">youtube_accounts_other_count == 0 and youtube_accounts_count != 0</attribute>
+                <attribute name="readonly">not has_active_accounts or state in ['posting', 'posted']</attribute>
+                <attribute name="required">youtube_accounts_count == 0 or youtube_accounts_other_count != 0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='image_ids']" position="attributes">
+                <!-- If we only post on YouTube, hide the 'image_ids' field as it is not used -->
+                <attribute name="invisible">youtube_accounts_other_count == 0 and youtube_accounts_count != 0</attribute>
+                <attribute name="readonly">state in ['posting', 'posted']</attribute>
+            </xpath>
+            <xpath expr="//header" position="after">
+                <div class="alert alert-danger text-center" role="alert"
+                    invisible="youtube_accounts_count &lt;= 1">
+                    Please select a single YouTube account at a time.
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='social_post_global']" position="inside">
+                <field name="youtube_accounts_count" invisible="1"/>
+                <div name="notification_request_parameters" colspan="2" class="o_horizontal_separator mt-5"
+                    invisible="youtube_accounts_count == 0">
+                    YouTube Options
+                </div>
+                <field name="youtube_video_id" invisible="1"/>
+                <field name="youtube_access_token" invisible="1"/>
+                <field name="youtube_title" string="Video Title" onchange_on_keydown="True"
+                    placeholder="e.g. Odoo Social Tutorial"
+                    invisible="youtube_accounts_count != 1"
+                    readonly="state != 'draft'"
+                    required="youtube_accounts_count != 0"/>
+                <field name="youtube_description" string="Video Description" onchange_on_keydown="True"
+                    widget="text_emojis" placeholder="e.g. Engage your entire community with a single app! https://www.odoo.com/trial"
+                    invisible="youtube_accounts_count != 1"
+                    readonly="state != 'draft'"
+                    required="youtube_video_id"/>
+                <field name="youtube_video_privacy"
+                    invisible="youtube_accounts_count != 1"
+                    readonly="state != 'draft'"/>
+                <field name="youtube_video" widget="youtube_upload"
+                    invisible="youtube_accounts_count != 1"
+                    readonly="state != 'draft'"/>
+            </xpath>
+            <xpath expr="//group[@name='previews_placeholder']" position="inside">
+                <field name="youtube_preview" nolabel="1" colspan="2" widget="social_post_preview"
+                    readonly="1"
+                    invisible="youtube_accounts_count != 1 or ((not youtube_title or youtube_title == '') and not youtube_video_id)"
+                    class="o_social_preview_wrapper m-0 px-4 py-4 bg-200" />
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>

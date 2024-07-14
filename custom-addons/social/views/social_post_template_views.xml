@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="social_post_template_action" model="ir.actions.act_window">
+        <field name="name">Social Post Templates</field>
+        <field name="res_model">social.post.template</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="social_post_template_view_tree" model="ir.ui.view">
+        <field name="name">social.post.template.view.tree</field>
+        <field name="model">social.post.template</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="message"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="social_post_template_view_form" model="ir.ui.view">
+        <field name="name">social.post.template.view.form</field>
+        <field name="model">social.post.template</field>
+        <field name="arch" type="xml">
+            <form string="Social Post Template" class="o_social_post_view_form">
+                <sheet>
+                    <group>
+                        <group string="Your Post" name="social_post_global" class="o_social_post_form_content">
+                            <field name="has_active_accounts" invisible="1" />
+                            <field name="account_ids" options="{'no_create': True}" string="Post on" widget="many2many_checkboxes"
+                                 invisible="not has_active_accounts" />
+                            <div colspan="2" class="alert alert-info o_social_post_no_accounts_available" role="alert"
+                                invisible="has_active_accounts">
+                                <p><a href="/web#action=social.action_social_media">Link social accounts</a> before posting.</p>
+                            </div>
+                            <field name="message" widget="text_emojis" class="o_social_post_message_wrapper"
+                                onchange_on_keydown="True" force_save="1" default_focus="1"
+                                   readonly="not has_active_accounts"
+                                   required="True">
+                            </field>
+                            <field name="image_ids" widget="many2many_binary" class="o_social_post_form_attachments"/>
+                        </group>
+                        <group name="previews_placeholder" class="o_social_post_preview_group m-0">
+                            <div class="o_social_post_empty_preview overflow-hidden o_view_nocontent bg-100 rounded-end"
+                                invisible="account_ids and message and message != ''">
+                                <div class="o_nocontent_help">
+                                    <p class="o_view_nocontent_smiling_face">
+                                        Preview your post
+                                    </p>
+                                    <p>
+                                        Before posting, links will be converted to be trackable.
+                                    </p>
+                                </div>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</data>
+</odoo>

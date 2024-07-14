@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="fedex_pickup_location_loading">
+        <i id="#fedex_addresses" class="fa fa-circle-o-notch fa-spin center"/>
+    </t>
+
+    <t t-name="fedex_pickup_location_list">
+        <div class="mt-2" style="max-height: 20rem; overflow: auto;">
+            <ul id="fedex_addresses" class="list-group list-group-flush flex-lg-column">
+                <t t-foreach="fedex_pickup_locations" t-as="location" t-key="location_index">
+                    <li t-if="location" class="list-group-item">
+                        <div class="container">
+                            <t t-set="address" t-value="location.LocationDetail.LocationContactAndAddress.Address"/>
+                            <t t-set="pretty_address" t-value="address.StreetLines.join(', ') + ', ' + address.City + ' (' + address.PostalCode + ')'"/>
+                            <t t-set="name" t-value="location.LocationDetail.LocationTypeForDisplay"/>
+                            <b>
+                                <t t-out="name"/>
+                            </b>
+                            <span class="badge text-bg-secondary float-end">
+                                <t t-out="location.Distance.Value + ' ' + location.Distance.Units"/>
+                            </span>
+                            <br/>
+                            <t t-out="pretty_address"/>
+                            <span>
+                                <t t-set="encoded_origin" t-value="partner_address.split(' ').join('+')"/>
+                                <t t-set="encoded_destination" t-value="[name,  ...(pretty_address.split(' '))].join('+')"/>
+                                <a target="_Blank" t-attf-title="Find on Maps" t-attf-href="https://www.google.com/maps/dir/?api=1&amp;origin=#{encoded_origin}&amp;destination=#{encoded_destination}">
+                                    <i class="fa fa-map-marker fa-fw ms-2"/>
+                                </a>
+                            </span>
+                            <div class="o_fedex_address_encoded" style="display:none">
+                                <t t-out="location.address_stringified"/>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-sm float-end o_address_select">Select this location</button>
+                        </div>
+                    </li>
+                </t>
+            </ul>
+        </div>
+    </t>
+
+</templates>

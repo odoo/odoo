@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="mail_template_body_welcome_template">
+        <div class="o_layout oe_unremovable oe_unmovable bg-200 o_default_theme" data-name="Mailing">
+                <style id="design-element">.o_mail_wrapper h2 {
+                    font-weight: bolder;
+                }
+                .o_mail_wrapper p {
+                    color: rgb(108, 117, 125);
+                }
+                .o_mail_wrapper p > * {
+                    color: rgb(108, 117, 125);
+                }
+                .o_mail_wrapper li {
+                    color: rgb(108, 117, 125);
+                }
+                .o_mail_wrapper li > * {
+                    color: rgb(108, 117, 125);
+                }
+                .o_mail_wrapper hr {
+                    border-top-color: rgb(206, 212, 218) !important;
+                }</style>
+                    <div class="container o_mail_wrapper o_mail_regular oe_unremovable">
+                        <div class="row">
+                            <div class="col o_mail_no_options o_mail_wrapper_td bg-white oe_structure o_editable theme_selection_done">
+                                <div class="s_header_logo o_mail_block_header_logo o_mail_snippet_general pt16 pb16">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-lg-4"></div>
+                                            <div class="col-lg-4" style="text-align: center;">
+                                                <a style="text-decoration:none;" target="_blank" t-att-href="db_host">
+                                                    <img border="0" src="/mass_mailing/static/src/img/theme_default/s_default_image_header_logo.png" style="height:auto; max-width:100%;" width="180"/>
+                                                    </a>
+                                                </div>
+                                                <div class="col-lg-4" style="text-align: right;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="s_text_block o_mail_snippet_general pt40 pb16" style="padding-left: 15px; padding-right: 15px;">
+                                        <div class="container s_allow_columns">
+                                            <h2>Thank you for joining us!</h2>
+                                            <p>
+                                                <br/>We want to take this opportunity to welcome you to our ever-growing community!
+                                                <br/>Your platform is ready for work, it will help you reduce the costs of digital signatures, attract new customers and increase sales.
+                                            </p>
+                                            <p>
+                                                <img src="/mass_mailing/static/src/img/theme_default/signature.png" style="width:125px; margin-top:8px;margin-bottom:-25px;" alt="Signature"/>
+                                            </p>
+                                            <p>Michael Fletcher
+                                                <br/>
+                                                <span style="font-size: 12px; font-weight: bolder;">Customer Service</span>
+                                            </p>
+                                            <p style="text-align: center;">
+                                                <a role="button" t-att-href="db_host" class="btn btn-primary">LOGIN</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="s_hr pt16 pb16" data-snippet="s_hr" data-name="Separator">
+                                        <hr class="s_hr_1px s_hr_solid"/>
+                                    </div>
+                                    <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-lg o_mail_footer_description">
+                                                    <p>
+                                                        <strong>YourCompany</strong>
+                                                    </p>
+                                                    <div class="o_mail_footer_links">
+                                                        <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg" align="right">
+                                                    <div class="o_mail_footer_social pb16">
+                                                        <a aria-label="Facebook" title="Facebook" href="https://www.facebook.com/Odoo">
+                                                            <span class="fa fa-facebook"></span>
+                                                        </a>&#160;&#160;         
+                                                        <a style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
+                                                            <span class="fa fa-linkedin"></span>
+                                                        </a>&#160;&#160;          
+                                                        <a style="margin-left:10px" aria-label="Twitter" title="Twitter" href="https://twitter.com/Odoo">
+                                                            <span class="fa fa-twitter"></span>
+                                                        </a>&#160;&#160;           
+                                                        <a style="margin-left:10px" aria-label="Instagram" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
+                                                            <span class="fa fa-instagram"></span>
+                                                        </a>&#160;&#160;               
+                                                        <a style="margin-left:10px" aria-label="TikTok" title="TikTok" href="https://www.tiktok.com/@odoo">
+                                                            <span class="fa fa-tiktok"></span>
+                                                        </a>
+                                                    </div>
+                                                    <p class="o_mail_footer_copy">© 2023 All Rights Reserved</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+        </div>
+    </template>
+</odoo>

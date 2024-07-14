@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- /shop/l10n_mx_invoicing_info route -->
+    <template id="l10n_cl_edi_invoicing_info">
+        <t t-call="website_sale.checkout_layout">
+            <t t-set="additional_title">Billing information</t>
+            <t t-set="show_navigation_button" t-value="False"/>
+            <t t-set="_cta_classes" t-value="'a-submit a-submit-disable a-submit-loading'"/>
+            <t t-set="oe_structure">
+                <!-- This is the drag-and-drop area for website building blocs at the end of each
+                     checkout page. This is append at the of the page in `checkout_layout`. The
+                     templates created in the database to store blocs are hooked using XPath on the
+                     `oe_struture` element ID. Therefore, we can't use dynamic IDs (like with
+                     t-att-id) and each template needs to define a div element. -->
+                <div class="oe_structure" id="oe_structure_l10n_cl_edi_website_sale_extra_info_1"/>
+            </t>
+
+            <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
+                <div t-attf-class="container">
+                    <h3 class="mb-4">Invoicing info</h3>
+                    <form action="/shop/l10n_cl_invoicing_info" method="post">
+                        <h5 t-if="errors_empty" class="text-danger">Some required fields are empty</h5>
+                        <t t-if="errors_fields" t-foreach="errors_fields.values()" t-as="err">
+                            <h5 class="text-danger" t-esc="err"/>
+                        </t>
+                        <div class="row">
+                            <div class="col-12 col-xl-6 mb-3">
+                                <label class="col-form-label d-block"
+                                        for="l10n_cl_activity_description">
+                                    Document Type
+                                </label>
+                                <div id="div_l10n_cl_type_document" class="btn-group" role="group">
+                                    <input type="radio"
+                                            class="btn-check"
+                                            name="l10n_cl_type_document"
+                                            id="radio_ticket"
+                                            value="ticket"
+                                            t-att-checked="default_value.get('l10n_cl_type_document') == 'ticket'"/>
+                                    <label class="btn btn-outline-primary px-3" for="radio_ticket">Ticket</label>
+                                    <input type="radio"
+                                            class="btn-check"
+                                            name="l10n_cl_type_document"
+                                            id="radio_invoice"
+                                            value="invoice"
+                                            t-att-checked="default_value.get('l10n_cl_type_document') == 'invoice'"/>
+                                    <label class="btn btn-outline-primary px-3" for="radio_invoice">Invoice</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="div_l10n_cl_additional_fields" class="row"
+                                style="display: none">
+                            <div id="div_l10n_cl_activity_description" class="col-lg-6 mb-3">
+                                <label class="col-form-label"
+                                        for="l10n_cl_activity_description">
+                                    Activity Description
+                                </label>
+                                <input id="l10n_cl_activity_description" type="text"
+                                        name="l10n_cl_activity_description"
+                                        t-attf-class="form-control #{'l10n_cl_activity_description' in errors_empty and 'is-invalid' or ''}"
+                                        t-att-value="default_value.get('l10n_cl_activity_description')"/>
+                            </div>
+                            <div class="col-lg-6 mb-3">
+                                <label class="col-form-label" for="vat">VAT</label>
+                                <input type="text" name="vat"
+                                        t-attf-class="form-control #{('vat' in errors_empty or 'vat' in errors_fields) and 'is-invalid' or ''}"
+                                        t-att-value="default_value.get('vat')"
+                                        t-att-readonly="'1' if vat_warning else None"/>
+                                <small t-if="vat_warning"
+                                        class="d-block d-lg-none form-text text-muted">
+                                    Changing RUT number is not allowed once document(s) have
+                                    been issued for your account. If you need to change the RUT,
+                                    please create another account.
+                                </small>
+                            </div>
+                            <div id="div_dte_email" t-attf-class="col-lg-6 mb-3">
+                                <label t-attf-class="col-form-label" for="l10n_cl_dte_email">
+                                    DTE Email
+                                </label>
+                                <input id="l10n_cl_dte_email" type="email"
+                                        name="l10n_cl_dte_email"
+                                        t-attf-class="form-control #{'l10n_cl_dte_email' in errors_empty and 'is-invalid' or ''}"
+                                        t-att-value="default_value.get('l10n_cl_dte_email')"/>
+                            </div>
+                        </div>
+                        <t t-call="website_sale.navigation_buttons">
+                            <t t-set="_form_send_navigation" t-value="True"/>
+                            <t t-set="_cta_classes" t-value="'a-submit a-submit-disable a-submit-loading'"/>
+                        </t>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    </form>
+                </div>
+            </section>
+        </t>
+    </template>
+
+</odoo>

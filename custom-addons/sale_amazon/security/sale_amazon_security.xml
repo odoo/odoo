@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record model="ir.rule" id="amazon_account_comp_rule">
+        <field name="name">Amazon Account multi-company</field>
+        <field name="model_id" ref="model_amazon_account"/>
+        <field name="domain_force">['|', ('company_id', '=', False),
+            ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record model="ir.rule" id="amazon_offer_comp_rule">
+        <field name="name">Amazon Offer multi-company</field>
+        <field name="model_id" ref="model_amazon_offer"/>
+        <field name="domain_force">['|', ('company_id', '=', False),
+            ('company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>

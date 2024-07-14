@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.form</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract_salary.hr_contract_view_form"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <group name="employee_costs" position="attributes">
+                <attribute name="invisible">wage_type == 'hourly'</attribute>
+            </group>
+        </field>
+    </record>
+
+    <record id="hr_contract_salary_resume_view_search_inherit" model="ir.ui.view">
+        <field name="name">view.resource.calendar.search.inherit.payroll</field>
+        <field name="model">hr.contract.salary.resume</field>
+        <field name="inherit_id" ref="hr_contract_salary.hr_contract_salary_resume_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='archived']" position="before">
+                <filter name="impacts_monthly_total" string="Impacts Monthly Total" domain="[('impacts_monthly_total', '=', True)]"/>
+                <separator/>
+            </xpath>
+            <xpath expr="//search" position="inside">
+                <group expand='0'>
+                    <filter name="groupby_structure_type_id" context="{'group_by': 'structure_type_id'}"/>
+                    <filter name="groupby_code" context="{'group_by': 'code'}"/>
+                    <filter name="groupby_value_type" context="{'group_by': 'value_type'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_contract_salary.hr_contract_salary_resume_action" model="ir.actions.act_window">
+        <field name="context">{
+            'search_default_groupby_structure_type_id': True,
+        }</field>
+    </record>
+</odoo>

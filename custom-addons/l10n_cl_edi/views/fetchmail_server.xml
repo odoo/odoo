@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fetchmail_server_form_l10n_cl" model="ir.ui.view">
+        <field name="name">fetchmail.server.form.l10n.cl</field>
+        <field name="model">fetchmail.server</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="mail.view_email_server_form"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="l10n_cl_is_dte"/>
+                <field name="l10n_cl_last_uid"/>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+</odoo>

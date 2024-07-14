@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_partner_view_form_inherit" model="ir.ui.view">
+            <field name="name">l10n_be_reports.res.partner.view.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.partner_view_buttons"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_registry']" position="after">
+                    <field name="citizen_identification" invisible="company_type == 'company'" placeholder="e.g. 123455 555 6"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_report_partner_281_50_xml" model="ir.actions.report">
+            <field name="name">281.50 XML</field>
+            <field name="model">l10n_be.form.325</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">l10n_be_reports.report_281_50_xml</field>
+            <field name="report_file">l10n_be_reports.report_281_50_xml</field>
+        </record>
+
+        <record id="action_report_partner_281_50_pdf" model="ir.actions.report">
+            <field name="name">281.50 PDF</field>
+            <field name="model">l10n_be.form.325</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_be_reports.report_281_50_pdf</field>
+            <field name="report_file">l10n_be_reports.report_281_50_pdf</field>
+        </record>
+
+        <record id="action_report_325_form_pdf" model="ir.actions.report">
+            <field name="name">325 PDF</field>
+            <field name="model">l10n_be.form.325</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_be_reports.report_325_pdf</field>
+            <field name="report_file">l10n_be_reports.report_325_pdf</field>
+        </record>
+    </data>
+</odoo>

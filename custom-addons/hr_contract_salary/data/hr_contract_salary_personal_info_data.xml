@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    <record id="hr_contract_salary_personal_info_type_general" model="hr.contract.salary.personal.info.type">
+        <field name="name"></field>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_name" model="hr.contract.salary.personal.info">
+        <field name="name">Name</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'name')])"/>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_general"/>
+        <field name="applies_on">employee</field>
+        <field name="helper">(Lastname Firstname)</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_gender" model="hr.contract.salary.personal.info">
+        <field name="name">Gender</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'gender')])"/>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_general"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">radio</field>
+    </record>
+    <record id="hr_contract_salary_personal_info_gender_male" model="hr.contract.salary.personal.info.value">
+        <field name="name">Male</field>
+        <field name="value">male</field>
+        <field name="personal_info_id" ref="hr_contract_salary_personal_info_gender"/>
+    </record>
+    <record id="hr_contract_salary_personal_info_gender_female" model="hr.contract.salary.personal.info.value">
+        <field name="name">Female</field>
+        <field name="value">female</field>
+        <field name="personal_info_id" ref="hr_contract_salary_personal_info_gender"/>
+    </record>
+    <record id="hr_contract_salary_personal_info_gender_other" model="hr.contract.salary.personal.info.value">
+        <field name="name">Other</field>
+        <field name="value">other</field>
+        <field name="personal_info_id" ref="hr_contract_salary_personal_info_gender"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_birthdate" model="hr.contract.salary.personal.info">
+        <field name="name">Birthdate</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'birthday')])"/>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_general"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">date</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_country_of_birth" model="hr.contract.salary.personal.info">
+        <field name="name">Country of Birth</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'country_of_birth')])"/>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_general"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">dropdown</field>
+        <field name="dropdown_selection">country</field>
+        <field name="placeholder">Select a Country</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_place_of_birth" model="hr.contract.salary.personal.info">
+        <field name="name">Place of Birth</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'place_of_birth')])"/>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_general"/>
+        <field name="applies_on">employee</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_country_id" model="hr.contract.salary.personal.info">
+        <field name="name">Nationality</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'country_id')])"/>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_general"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">dropdown</field>
+        <field name="dropdown_selection">country</field>
+        <field name="placeholder">Select a Country</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_identification_id" model="hr.contract.salary.personal.info">
+        <field name="name">National Identification Number</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'identification_id')])"/>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_general"/>
+        <field name="applies_on">employee</field>
+        <field name="placeholder">00.00.00-000.00</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_type_address" model="hr.contract.salary.personal.info.type">
+        <field name="name">Address</field>
+        <field name="sequence">100</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_street" model="hr.contract.salary.personal.info">
+        <field name="name">Street</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'private_street')])"/>
+        <field name="applies_on">employee</field>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_address"/>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_street2" model="hr.contract.salary.personal.info">
+        <field name="name">Street 2</field>
+        <field name="is_required">False</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'private_street2')])"/>
+        <field name="applies_on">employee</field>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_address"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_city" model="hr.contract.salary.personal.info">
+        <field name="name">City</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'private_city')])"/>
+        <field name="applies_on">employee</field>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_address"/>
+        <field name="sequence">15</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_zip" model="hr.contract.salary.personal.info">
+        <field name="name">Zip Code</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'private_zip')])"/>
+        <field name="display_type">text</field>
+        <field name="applies_on">employee</field>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_address"/>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_state_id" model="hr.contract.salary.personal.info">
+        <field name="name">State</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'private_state_id')])"/>
+        <field name="applies_on">employee</field>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_address"/>
+        <field name="is_required">False</field>
+        <field name="display_type">dropdown</field>
+        <field name="dropdown_selection">state</field>
+        <field name="placeholder">Select a State</field>
+        <field name="sequence">25</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_country" model="hr.contract.salary.personal.info">
+        <field name="name">Country</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'private_country_id')])"/>
+        <field name="applies_on">employee</field>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_address"/>
+        <field name="display_type">dropdown</field>
+        <field name="dropdown_selection">country</field>
+        <field name="placeholder">Select a Country</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_type_certificate" model="hr.contract.salary.personal.info.type">
+        <field name="name">Certificate</field>
+        <field name="sequence">150</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_certificate" model="hr.contract.salary.personal.info">
+        <field name="name">Certificate</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'certificate')])"/>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_certificate"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">dropdown</field>
+        <field name="dropdown_selection">specific</field>
+    </record>
+    <record id="hr_contract_salary_personal_info_certificate_bachelor" model="hr.contract.salary.personal.info.value">
+        <field name="name">Bachelor</field>
+        <field name="value">bachelor</field>
+        <field name="personal_info_id" ref="hr_contract_salary_personal_info_certificate"/>
+    </record>
+    <record id="hr_contract_salary_personal_info_certificate_master" model="hr.contract.salary.personal.info.value">
+        <field name="name">Master</field>
+        <field name="value">master</field>
+        <field name="personal_info_id" ref="hr_contract_salary_personal_info_certificate"/>
+    </record>
+    <record id="hr_contract_salary_personal_info_certificate_doctor" model="hr.contract.salary.personal.info.value">
+        <field name="name">Doctor</field>
+        <field name="value">doctor</field>
+        <field name="personal_info_id" ref="hr_contract_salary_personal_info_certificate"/>
+    </record>
+    <record id="hr_contract_salary_personal_info_certificate_other" model="hr.contract.salary.personal.info.value">
+        <field name="name">Other</field>
+        <field name="value">other</field>
+        <field name="personal_info_id" ref="hr_contract_salary_personal_info_certificate"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_study_field" model="hr.contract.salary.personal.info">
+        <field name="name">Field of Study</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'study_field')])"/>
+        <field name="applies_on">employee</field>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_certificate"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_study_school" model="hr.contract.salary.personal.info">
+        <field name="name">School</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'study_school')])"/>
+        <field name="applies_on">employee</field>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_certificate"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_type_contact" model="hr.contract.salary.personal.info.type">
+        <field name="name">Contact Information</field>
+        <field name="sequence">200</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_email" model="hr.contract.salary.personal.info">
+        <field name="name">Email</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'private_email')])"/>
+        <field name="applies_on">employee</field>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_contact"/>
+        <field name="display_type">email</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_phone" model="hr.contract.salary.personal.info">
+        <field name="name">Phone Number</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'private_phone')])"/>
+        <field name="applies_on">employee</field>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_contact"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_acc_number" model="hr.contract.salary.personal.info">
+        <field name="name">Bank account</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'res.partner.bank'), ('name', '=', 'acc_number')])"/>
+        <field name="applies_on">bank_account</field>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_contact"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_private_license_plate" model="hr.contract.salary.personal.info">
+        <field name="name">Private License Plate</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'private_car_plate')])"/>
+        <field name="applies_on">employee</field>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_contact"/>
+        <field name="is_required">False</field>
+        <field name="sequence">245</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_type_emergency" model="hr.contract.salary.personal.info.type">
+        <field name="name">In case of emergency</field>
+        <field name="sequence">250</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_emergency_contact" model="hr.contract.salary.personal.info">
+        <field name="name">Person to call</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'emergency_contact')])"/>
+        <field name="applies_on">employee</field>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_emergency"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_emergency_phone" model="hr.contract.salary.personal.info">
+        <field name="name">Phone number</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'emergency_phone')])"/>
+        <field name="applies_on">employee</field>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_emergency"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_type_documents" model="hr.contract.salary.personal.info.type">
+        <field name="name">Personal Documents</field>
+        <field name="sequence">300</field>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_image_1920" model="hr.contract.salary.personal.info">
+        <field name="name">Employee Photo</field>
+        <field name="is_required">False</field>
+        <field name="res_field_id" model="ir.model.fields" eval="obj().search([('model', '=', 'hr.employee'), ('name', '=', 'image_1920')])"/>
+        <field name="applies_on">employee</field>
+        <field name="display_type">document</field>
+        <field name="info_type_id" ref="hr_contract_salary_personal_info_type_documents"/>
+    </record>
+
+    <record id="hr_contract_salary_personal_info_type_family" model="hr.contract.salary.personal.info.type">
+        <field name="name">Situation</field>
+        <field name="sequence">75</field>
+    </record>
+    </data>
+</odoo>

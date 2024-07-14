@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_res_bank_form_inherit_l10n_hk_hr_payroll" model="ir.ui.view">
+        <field name="name">res.bank.view.form.inherit</field>
+        <field name="model">res.bank</field>
+        <field name="inherit_id" ref="base.view_res_bank_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bic']" position="after">
+                <!-- # TODO: move this field to hr_payroll in master -->
+                <field name="country_code" invisible="1"/>
+                <field name="l10n_hk_bank_code" invisible="country_code != 'HK'" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

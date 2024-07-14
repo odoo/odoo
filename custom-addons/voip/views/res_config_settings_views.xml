@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.voip</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='integration']" position="inside">
+                <setting help="Schedule &amp; make calls from your database">
+                    <field name="module_voip"/>
+                    <div class="content-group" invisible="not module_voip">
+                        <div class="row mt16">
+                            <label for="pbx_ip" class="col-4 col-lg-4 o_light_label"/>
+                            <field name="pbx_ip" nolabel="1"/>
+                            <label for="wsServer" class="col-4 col-lg-4 o_light_label"/>
+                            <field name="wsServer" nolabel="1"/>
+                            <label for="mode" class="col-4 col-lg-4 o_light_label"/>
+                            <field name="mode" nolabel="1"/>
+                        </div>
+                    </div>
+                </setting>
+             </xpath>
+        </field>
+    </record>
+
+</odoo>

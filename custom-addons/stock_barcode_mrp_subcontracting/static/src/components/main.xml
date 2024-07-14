@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="stock_barcode.MainComponent" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('o_validate_page')]" position="after">
+            <button t-if="env.model.displayActionRecordComponents &amp;&amp; env.model.displayActionRecordComponents != 'hide'"
+                t-attf-class="btn {{env.model.displayActionRecordComponents == 'mandatory' ? 'btn-success' : 'btn-secondary'}} text-uppercase o_mrp_subcontracting"
+                t-on-click="recordComponents">Record Components</button>
+        </xpath>
+    </t>
+
+</templates>

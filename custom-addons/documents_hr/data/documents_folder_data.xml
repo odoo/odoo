@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="documents_hr_folder" model="documents.folder" forcecreate="1">
+            <field name="name">HR</field>
+            <field name="group_ids" eval="[(4, ref('hr.group_hr_user'))]"/>
+            <field name="read_group_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="user_specific">True</field>
+            <field name="sequence">12</field>
+        </record>
+    </data>
+</odoo>

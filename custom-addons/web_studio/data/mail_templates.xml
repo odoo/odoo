@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="notify_approval">
+        <p t-if="approved">Approved as <em t-esc="group_name"/> <i class="fa fa-thumbs-up text-success"/></p>
+        <p t-else="">Rejected as <em t-esc="group_name"/> <i class="fa fa-thumbs-down text-danger"/></p>
+    </template>
+
+    <template id="request_approval">
+        <span>
+            <t t-foreach="partner_ids" t-as="partner">
+                <a t-att-href="'/web#model=res.partner&amp;id=%s' % partner.id" t-att-data-oe-id="partner.id" data-oe-model="res.partner" class="o_mail_redirect" target="_blank">@<t t-esc="partner.name"/></a>
+            </t>
+            <br/>
+            <t t-esc="message"/>
+        </span>
+    </template>
+</odoo>

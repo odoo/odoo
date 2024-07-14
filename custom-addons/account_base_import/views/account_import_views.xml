@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_open_import_guide" model="ir.actions.client">
+        <field name="name">Accounting Import Guide</field>
+        <field name="tag">account_import_guide</field>
+        <field name="target">current</field>
+    </record>
+
+    <record id="action_open_coa_setup" model="ir.actions.act_window">
+        <field name="name">Chart of Accounts</field>
+        <field name="res_model">account.account</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="account.view_account_search"/>
+        <field name="view_id" ref="account.init_accounts_tree"/>
+    </record>
+
+</odoo>

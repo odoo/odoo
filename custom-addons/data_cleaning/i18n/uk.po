@@ -1,0 +1,495 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* data_cleaning
+# 
+# Translators:
+# Wil Odoo, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:22+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.notification
+msgid ""
+"' field cleaning rule.<br/>\n"
+"You can validate changes"
+msgstr ""
+"' правило очищення поля.<br/>\n"
+"Ви можете підтвердити зміни"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "<span class=\"me-1\">Every</span>"
+msgstr "<span class=\"me-1\">Кожен</span>"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__action
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_list
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "Action"
+msgstr "Дія"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__action_display
+msgid "Action Display"
+msgstr "Відображення дії"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__action_technical
+msgid "Action Technical"
+msgstr "Технічна дія"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__action
+msgid "Actions"
+msgstr "Дії"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__active
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__active
+msgid "Active"
+msgstr "Активно"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_cleaning_rule.py:0
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action_case__lower
+#, python-format
+msgid "All Lowercase"
+msgstr "Усі скорочення"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_cleaning_rule.py:0
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action_trim__all
+#, python-format
+msgid "All Spaces"
+msgstr "Усі пробіли"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_cleaning_rule.py:0
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action_case__upper
+#, python-format
+msgid "All Uppercase"
+msgstr "Усі з великої літери"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_model__cleaning_mode__automatic
+msgid "Automatic"
+msgstr "Автоматичний"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__action_case
+msgid "Case"
+msgstr "Випадок"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "Clean"
+msgstr "Очистити"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "Cleaning Actions"
+msgstr "Дії очищення"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__cleaning_mode
+msgid "Cleaning Mode"
+msgstr "Режим очищення"
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_data_cleaning_model
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__cleaning_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__cleaning_model_id
+msgid "Cleaning Model"
+msgstr "Модель очищення"
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_data_cleaning_record
+msgid "Cleaning Record"
+msgstr "Запис очищення"
+
+#. module: data_cleaning
+#: model:ir.model,name:data_cleaning.model_data_cleaning_rule
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_list
+msgid "Cleaning Rule"
+msgstr "Правило очищення"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_search
+msgid "Cleaning Rules"
+msgstr "Правило очищення"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__company_id
+msgid "Company"
+msgstr "Компанія"
+
+#. module: data_cleaning
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_cleaning_record
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_cleaning_record_notification
+msgid "Configure rules to identify records to clean"
+msgstr "Налаштуйте правила, щоб визначити записи для очищення"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__country_id
+msgid "Country"
+msgstr "Країна"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__create_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__create_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__create_uid
+msgid "Created by"
+msgstr "Створив"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__create_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__create_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__create_date
+msgid "Created on"
+msgstr "Створено"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__current_value
+msgid "Current"
+msgstr "Поточний"
+
+#. module: data_cleaning
+#: model:ir.actions.server,name:data_cleaning.ir_cron_clean_records_ir_actions_server
+msgid "Data Cleaning: Clean Records"
+msgstr "Очищення даних: Очистити записи"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_cleaning_model.py:0
+#, python-format
+msgid "Data to Clean"
+msgstr "Дані для очищення"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_model__notify_frequency_period__days
+msgid "Days"
+msgstr "Дні"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_list
+msgid "Discard"
+msgstr "Відмінити"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_search
+msgid "Discarded"
+msgstr "Відмінено"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__display_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__display_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__display_name
+msgid "Display Name"
+msgstr "Назва для відображення"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__field_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__field_id
+msgid "Field"
+msgstr "Поле"
+
+#. module: data_cleaning
+#: model:ir.ui.menu,name:data_cleaning.menu_data_cleaning_config_rules_cleaning
+#: model:ir.ui.menu,name:data_cleaning.menu_data_cleaning_record
+msgid "Field Cleaning"
+msgstr "Поле очищення"
+
+#. module: data_cleaning
+#: model:ir.actions.act_window,name:data_cleaning.action_data_cleaning_record
+#: model:ir.actions.act_window,name:data_cleaning.action_data_cleaning_record_notification
+msgid "Field Cleaning Records"
+msgstr "Записи поля очищення"
+
+#. module: data_cleaning
+#: model:ir.actions.act_window,name:data_cleaning.action_data_cleaning_config
+msgid "Field Cleaning Rules"
+msgstr "Правила поля очищення"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__field_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__name
+msgid "Field Name"
+msgstr "Назва поля"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_field_form
+msgid "Field To Clean"
+msgstr "Поле для очищення"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_cleaning_rule.py:0
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action_case__first
+#, python-format
+msgid "First Letters to Uppercase"
+msgstr "Перші літери з великої букви"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_cleaning_rule.py:0
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action__phone
+#, python-format
+msgid "Format Phone"
+msgstr "Формат телефону"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_cleaning_rule__action_case
+msgid ""
+"How the type case is set by the rule. 'First Letters to Uppercase' sets "
+"every letter to lowercase except the first letter of each word, which is set"
+" to uppercase."
+msgstr ""
+"Як тип встановлюється за правилом. \"Перші літери з великої\" встановлює "
+"кожну літеру в нижній регістр, за винятком першої літери кожного слова, яка "
+"має великі літери."
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.notification
+msgid "I've identified"
+msgstr "Я вже ідентифікував"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__last_notification
+msgid "Last Notification"
+msgstr "Останнє сповіщення"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__write_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__write_uid
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__write_uid
+msgid "Last Updated by"
+msgstr "Востаннє оновив"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__write_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__write_date
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__write_date
+msgid "Last Updated on"
+msgstr "Останнє оновлення"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_cleaning_model__notify_user_ids
+msgid "List of users to notify when there are new records to clean"
+msgstr ""
+"Список користувачів для сповіщення, коли будуть нові записи для очищення"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_model__cleaning_mode__manual
+msgid "Manual"
+msgstr "Вручну"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__res_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__res_model_id
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__res_model_id
+msgid "Model"
+msgstr "Модель"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__res_model_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__res_model_name
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__res_model_name
+msgid "Model Name"
+msgstr "Назва моделі"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_model__notify_frequency_period__months
+msgid "Months"
+msgstr "Місяці"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__name
+msgid "Name"
+msgstr "Ім'я"
+
+#. module: data_cleaning
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_cleaning_record
+#: model_terms:ir.actions.act_window,help:data_cleaning.action_data_cleaning_record_notification
+msgid "No cleaning suggestions"
+msgstr "Немає пропозицій для очищення"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__notify_frequency
+msgid "Notify"
+msgstr "Повідомити"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__notify_frequency_period
+msgid "Notify Frequency Period"
+msgstr "Сповіщати періодично"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__notify_user_ids
+msgid "Notify Users"
+msgstr "Сповістити користувачів"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__res_id
+msgid "Record ID"
+msgstr "ID запису"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__name
+msgid "Record Name"
+msgstr "Назва запису"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_search
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "Records"
+msgstr "Записи"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__records_to_clean_count
+msgid "Records To Clean"
+msgstr "Записи для очищення"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__rule_ids
+msgid "Rule"
+msgstr "Правило"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_model__rule_ids
+msgid "Rules"
+msgstr "Правила"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_cleaning_rule.py:0
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action__html
+#, python-format
+msgid "Scrap HTML"
+msgstr "Брак HTML"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_merge_model_form
+msgid "Select a model to configure cleaning actions"
+msgstr "Оберіть модель для налаштування дій очищення"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__sequence
+msgid "Sequence"
+msgstr "Послідовність"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_cleaning_rule.py:0
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action__case
+#, python-format
+msgid "Set Type Case"
+msgstr "Оберіть тип випадку"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__suggested_value_display
+msgid "Suggested"
+msgstr "Запропонований"
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_record__suggested_value
+msgid "Suggested Value"
+msgstr "Запропоноване значення"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_cleaning_rule.py:0
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action_trim__superfluous
+#, python-format
+msgid "Superfluous Spaces"
+msgstr "Зайві пробіли"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_cleaning_rule.py:0
+#, python-format
+msgid ""
+"The Python module `phonenumbers` is not installed. Format phone will not "
+"work."
+msgstr ""
+"Модуль Python `phonenumbers` не встановлено. Формат телефону не буде "
+"працювати."
+
+#. module: data_cleaning
+#: model:ir.model.constraint,message:data_cleaning.constraint_data_cleaning_model_check_notif_freq
+msgid "The notification frequency should be greater than 0"
+msgstr "Період сповіщень повинен бути більше 0."
+
+#. module: data_cleaning
+#: model:ir.model.fields,field_description:data_cleaning.field_data_cleaning_rule__action_trim
+msgid "Trim"
+msgstr "Забрати"
+
+#. module: data_cleaning
+#. odoo-python
+#: code:addons/data_cleaning/models/data_cleaning_rule.py:0
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_rule__action__trim
+#, python-format
+msgid "Trim Spaces"
+msgstr "Забрати пробіли"
+
+#. module: data_cleaning
+#. odoo-javascript
+#: code:addons/data_cleaning/static/src/views/data_cleaning_list_view.xml:0
+#, python-format
+msgid "Unselect"
+msgstr "Не обрано"
+
+#. module: data_cleaning
+#. odoo-javascript
+#: code:addons/data_cleaning/static/src/views/data_cleaning_list_view.xml:0
+#: model_terms:ir.ui.view,arch_db:data_cleaning.view_data_cleaning_record_list
+#, python-format
+msgid "Validate"
+msgstr "Підтвердити"
+
+#. module: data_cleaning
+#: model:ir.model.fields.selection,name:data_cleaning.selection__data_cleaning_model__notify_frequency_period__weeks
+msgid "Weeks"
+msgstr "Тижні"
+
+#. module: data_cleaning
+#: model:ir.model.fields,help:data_cleaning.field_data_cleaning_rule__action_trim
+msgid ""
+"Which spaces are trimmed by the rule. Leading, trailing, and successive "
+"spaces are considered superfluous."
+msgstr ""
+"Які пробіли забрані правилом. Перші, останні та послідовні пробіли "
+"вважаються зайвими."
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.notification
+msgid "here"
+msgstr "тут"
+
+#. module: data_cleaning
+#: model_terms:ir.ui.view,arch_db:data_cleaning.notification
+msgid "records to clean with the '"
+msgstr "записи для очищення з '"

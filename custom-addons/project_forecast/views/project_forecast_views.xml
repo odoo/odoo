@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Actions from project kanban -->
+    <record id="project_forecast_action_from_project" model="ir.actions.act_window">
+        <field name="name">Planning</field>
+        <field name="res_model">planning.slot</field>
+        <field name="view_mode">gantt,calendar,tree,form,pivot</field>
+        <field name="context">{
+            'search_default_group_by_resource': 1,
+            'planning_expand_resource': 1, 'planning_expand_role': 1, 'planning_expand_project': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No shifts found. Let's create one!
+            </p><p>
+                Let's start your planning by adding a new shift.
+            </p>
+        </field>
+    </record>
+
+    <record id="project_forecast_action_from_project_view_gantt" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">gantt</field>
+        <field name="view_id" ref="project_forecast.planning_view_gantt_inherit"/>
+        <field name="act_window_id" ref="project_forecast_action_from_project"/>
+    </record>
+
+    <record id="project_forecast_action_from_project_view_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="45"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="planning.planning_view_calendar"/>
+        <field name="act_window_id" ref="project_forecast_action_from_project"/>
+    </record>
+
+    <record id="project_forecast_action_from_project_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="50"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="planning.planning_view_tree"/>
+        <field name="act_window_id" ref="project_forecast_action_from_project"/>
+    </record>
+
+    <record id="project_forecast_action_from_project_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="55"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="planning.planning_action_schedule_by_resource_view_pivot_inherit"/>
+        <field name="act_window_id" ref="project_forecast_action_from_project"/>
+    </record>
+
+</odoo>

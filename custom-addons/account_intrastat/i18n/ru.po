@@ -1,0 +1,623 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_intrastat
+# 
+# Translators:
+# ILMIR <karamov@it-projects.info>, 2023
+# Martin Trigaux, 2023
+# Ivan Kropotkin <yelizariev@itpp.dev>, 2023
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__1_000_kwh
+msgid "1 000 kWh"
+msgstr "1 000 кВтч"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__1_000_m3
+msgid "1 000 m3"
+msgstr "1 000 m3"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__1_000_p/st
+msgid "1 000 p/st"
+msgstr "1 000 п/ст"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__100_p/st
+msgid "100 p/st"
+msgstr "100 п/ст"
+
+#. module: account_intrastat
+#: model_terms:ir.ui.view,arch_db:account_intrastat.account_move_line_tree_view_account_intrastat_transaction_codes
+msgid "Account move line"
+msgstr "Линия перемещения счета"
+
+#. module: account_intrastat
+#: model_terms:ir.ui.view,arch_db:account_intrastat.view_intrastat_code_search
+msgid "Active"
+msgstr "Активный"
+
+#. module: account_intrastat
+#. odoo-python
+#: code:addons/account_intrastat/models/account_intrastat_report.py:0
+#, python-format
+msgid "Arrival"
+msgstr "Прибытие"
+
+#. module: account_intrastat
+#: model_terms:ir.ui.view,arch_db:account_intrastat.invoice_form_inherit_account_intrastat
+msgid "Arrival country"
+msgstr "Страна прибытия"
+
+#. module: account_intrastat
+#: model_terms:ir.ui.view,arch_db:account_intrastat.view_intrastat_code_search
+msgid "By country"
+msgstr "По странам"
+
+#. module: account_intrastat
+#: model_terms:ir.ui.view,arch_db:account_intrastat.view_intrastat_code_search
+msgid "By type"
+msgstr "По типу"
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#, python-format
+msgid "Check the expired"
+msgstr "Проверьте истекший срок годности"
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#, python-format
+msgid "Check the premature"
+msgstr "Проверьте преждевременное"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__type__commodity
+#: model_terms:ir.ui.view,arch_db:account_intrastat.view_intrastat_code_search
+msgid "Commodity"
+msgstr "Товар"
+
+#. module: account_intrastat
+#: model:account.report.column,name:account_intrastat.intrastat_report_column_commodity_code
+#: model:ir.model.fields,field_description:account_intrastat.field_product_template__intrastat_code_id
+#: model_terms:ir.ui.view,arch_db:account_intrastat.product_product_tree_view_account_intrastat_supplementary_unit
+#: model_terms:ir.ui.view,arch_db:account_intrastat.product_product_tree_view_account_intrastat_weight
+msgid "Commodity Code"
+msgstr "Commodity Code"
+
+#. module: account_intrastat
+#: model:ir.model.fields,field_description:account_intrastat.field_product_product__intrastat_code_id
+msgid "Commodity code"
+msgstr "Код товара"
+
+#. module: account_intrastat
+#: model:ir.model,name:account_intrastat.model_res_company
+msgid "Companies"
+msgstr "Компании"
+
+#. module: account_intrastat
+#: model:ir.model.fields,field_description:account_intrastat.field_res_config_settings__company_country_id
+msgid "Company country"
+msgstr "Страна компании"
+
+#. module: account_intrastat
+#: model:ir.model,name:account_intrastat.model_res_config_settings
+msgid "Config Settings"
+msgstr "Параметры конфигурации"
+
+#. module: account_intrastat
+#: model:account.report.column,name:account_intrastat.intrastat_report_column_country_code
+#: model:ir.model,name:account_intrastat.model_res_country
+msgid "Country"
+msgstr "Страна"
+
+#. module: account_intrastat
+#: model:ir.model.fields,field_description:account_intrastat.field_product_product__intrastat_origin_country_id
+#: model:ir.model.fields,field_description:account_intrastat.field_product_template__intrastat_origin_country_id
+msgid "Country of Origin"
+msgstr "Страна происхождения"
+
+#. module: account_intrastat
+#: model:ir.model.fields,field_description:account_intrastat.field_res_company__intrastat_default_invoice_transaction_code_id
+#: model:ir.model.fields,field_description:account_intrastat.field_res_config_settings__intrastat_default_invoice_transaction_code_id
+msgid "Default invoice transaction code"
+msgstr "Код транзакции счета-фактуры по умолчанию"
+
+#. module: account_intrastat
+#: model:ir.model.fields,field_description:account_intrastat.field_res_company__intrastat_default_refund_transaction_code_id
+#: model:ir.model.fields,field_description:account_intrastat.field_res_config_settings__intrastat_default_refund_transaction_code_id
+msgid "Default refund transaction code"
+msgstr "Код операции возврата по умолчанию"
+
+#. module: account_intrastat
+#: model:ir.model.fields,field_description:account_intrastat.field_res_company__intrastat_transport_mode_id
+msgid "Default transport mode"
+msgstr "Режим транспортировки по умолчанию"
+
+#. module: account_intrastat
+#. odoo-python
+#: code:addons/account_intrastat/models/account_intrastat_report.py:0
+#, python-format
+msgid "Dispatch"
+msgstr "Диспетчер"
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/filters/filter_intrastat_options.xml:0
+#, python-format
+msgid "Extended Mode"
+msgstr "Расширенный режим"
+
+#. module: account_intrastat
+#: model:account.report.column,name:account_intrastat.intrastat_report_column_incoterm_code
+msgid "Incoterm Code"
+msgstr "Код инкотерма"
+
+#. module: account_intrastat
+#: model:ir.model.fields,field_description:account_intrastat.field_account_move_line__intrastat_transaction_id
+#: model_terms:ir.ui.view,arch_db:account_intrastat.invoice_form_inherit_account_intrastat
+#: model_terms:ir.ui.view,arch_db:account_intrastat.product_product_form_view_inherit_account_intrastat
+#: model_terms:ir.ui.view,arch_db:account_intrastat.product_template_form_view_inherit_account_intrastat
+msgid "Intrastat"
+msgstr "Intrastat"
+
+#. module: account_intrastat
+#: model:ir.actions.act_window,name:account_intrastat.action_report_intrastat_code_tree
+#: model:ir.model,name:account_intrastat.model_account_intrastat_code
+#: model:ir.ui.menu,name:account_intrastat.menu_report_intrastat_code
+#: model_terms:ir.ui.view,arch_db:account_intrastat.view_report_intrastat_code_form
+msgid "Intrastat Code"
+msgstr "Код интрастата"
+
+#. module: account_intrastat
+#: model:ir.model.fields,field_description:account_intrastat.field_account_bank_statement_line__intrastat_country_id
+#: model:ir.model.fields,field_description:account_intrastat.field_account_move__intrastat_country_id
+#: model:ir.model.fields,field_description:account_intrastat.field_account_payment__intrastat_country_id
+msgid "Intrastat Country"
+msgstr "Страна Интрастат"
+
+#. module: account_intrastat
+#: model:account.report,name:account_intrastat.intrastat_report
+#: model:ir.actions.client,name:account_intrastat.action_account_report_intrastat
+#: model:ir.ui.menu,name:account_intrastat.menu_action_account_report_intrastat
+msgid "Intrastat Report"
+msgstr "Интрастат Отчет"
+
+#. module: account_intrastat
+#: model:ir.model,name:account_intrastat.model_account_intrastat_report_handler
+msgid "Intrastat Report Custom Handler"
+msgstr "Пользовательский обработчик отчетов по интрастату"
+
+#. module: account_intrastat
+#: model:ir.model.fields,field_description:account_intrastat.field_account_bank_statement_line__intrastat_transport_mode_id
+#: model:ir.model.fields,field_description:account_intrastat.field_account_move__intrastat_transport_mode_id
+#: model:ir.model.fields,field_description:account_intrastat.field_account_payment__intrastat_transport_mode_id
+msgid "Intrastat Transport Mode"
+msgstr "Режим интрастатного транспорта"
+
+#. module: account_intrastat
+#: model_terms:ir.ui.view,arch_db:account_intrastat.view_report_intrastat_code_tree
+msgid "Intrastat code"
+msgstr "Интрастат код"
+
+#. module: account_intrastat
+#: model:ir.model.fields,help:account_intrastat.field_account_bank_statement_line__intrastat_country_id
+#: model:ir.model.fields,help:account_intrastat.field_account_move__intrastat_country_id
+#: model:ir.model.fields,help:account_intrastat.field_account_payment__intrastat_country_id
+msgid "Intrastat country, arrival for sales, dispatch for purchases"
+msgstr "Внутристрановая страна, прибытие для продаж, отправка для покупок"
+
+#. module: account_intrastat
+#: model:ir.model.fields,field_description:account_intrastat.field_res_country__intrastat
+msgid "Intrastat member"
+msgstr "Член Интрастата"
+
+#. module: account_intrastat
+#: model:ir.model.fields,field_description:account_intrastat.field_res_company__intrastat_region_id
+msgid "Intrastat region"
+msgstr "Внутристатский регион"
+
+#. module: account_intrastat
+#: model_terms:ir.ui.view,arch_db:account_intrastat.account_move_line_tree_view_account_intrastat_transaction_codes
+msgid "Intrastat transaction code"
+msgstr "Код внутритарифной операции"
+
+#. module: account_intrastat
+#. odoo-python
+#: code:addons/account_intrastat/models/account_intrastat_report.py:0
+#, python-format
+msgid "Invalid commodity intrastat code products."
+msgstr "Недействительный товарный интрастат-код продукции."
+
+#. module: account_intrastat
+#. odoo-python
+#: code:addons/account_intrastat/models/account_intrastat_report.py:0
+#, python-format
+msgid "Invalid transaction intrastat code entries."
+msgstr "Недействительные записи интрастат-кода транзакции."
+
+#. module: account_intrastat
+#: model:ir.model,name:account_intrastat.model_account_move
+msgid "Journal Entry"
+msgstr "Запись в журнале"
+
+#. module: account_intrastat
+#: model:ir.model,name:account_intrastat.model_account_move_line
+msgid "Journal Item"
+msgstr "Наименование в журнале"
+
+#. module: account_intrastat
+#: model:res.country,name:account_intrastat.xi
+msgid "Northern Ireland"
+msgstr "Северная Ирландия"
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/filters/filter_intrastat_partner.xml:0
+#, python-format
+msgid "Only with VAT numbers"
+msgstr "Только с номерами НДС"
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/filters/filter_intrastat_options.xml:0
+#, python-format
+msgid "Options:"
+msgstr "Опции:"
+
+#. module: account_intrastat
+#: model:account.report.column,name:account_intrastat.intrastat_report_column_product_origin_country
+#: model_terms:ir.ui.view,arch_db:account_intrastat.report_invoice_document_intrastat_2019
+msgid "Origin"
+msgstr "Источник"
+
+#. module: account_intrastat
+#: model:account.report.column,name:account_intrastat.intrastat_report_column_partner_vat
+msgid "Partner VAT"
+msgstr "Партнерский НДС"
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/filters/filter_intrastat_partner.xml:0
+#, python-format
+msgid "Partners:"
+msgstr "Партнеры:"
+
+#. module: account_intrastat
+#: model:ir.model,name:account_intrastat.model_product_template
+#: model_terms:ir.ui.view,arch_db:account_intrastat.product_product_tree_view_account_intrastat
+#: model_terms:ir.ui.view,arch_db:account_intrastat.product_product_tree_view_account_intrastat_weight
+msgid "Product"
+msgstr "Товар"
+
+#. module: account_intrastat
+#: model:ir.model.fields,field_description:account_intrastat.field_account_move_line__intrastat_product_origin_country_id
+msgid "Product Country"
+msgstr "Страна продуктов"
+
+#. module: account_intrastat
+#: model:ir.model,name:account_intrastat.model_product_product
+msgid "Product Variant"
+msgstr "Вариант продукта"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__type__region
+#: model_terms:ir.ui.view,arch_db:account_intrastat.view_intrastat_code_search
+msgid "Region"
+msgstr "Регион"
+
+#. module: account_intrastat
+#: model:account.report.column,name:account_intrastat.intrastat_report_column_region_code
+msgid "Region Code"
+msgstr "Код региона"
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#, python-format
+msgid "Some lines have expired intrastat"
+msgstr "Некоторые линии имеют истекший срок действия интрастата"
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#, python-format
+msgid "Some lines have premature intrastat"
+msgstr "Некоторые линии имеют преждевременную внутристатовую"
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#, python-format
+msgid "Some lines have undefined"
+msgstr "Некоторые строки имеют неопределенное значение"
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#, python-format
+msgid "Some products have undefined"
+msgstr "Некоторые продукты имеют неопределенный"
+
+#. module: account_intrastat
+#: model:ir.model.fields,field_description:account_intrastat.field_product_product__intrastat_supplementary_unit
+#: model:ir.model.fields,field_description:account_intrastat.field_product_template__intrastat_supplementary_unit
+#: model_terms:ir.ui.view,arch_db:account_intrastat.view_intrastat_code_search
+msgid "Supplementary Unit"
+msgstr "Дополнительное подразделение"
+
+#. module: account_intrastat
+#: model:account.report.column,name:account_intrastat.intrastat_report_column_supplementary_units
+#: model:ir.model.fields,field_description:account_intrastat.field_product_product__intrastat_supplementary_unit_amount
+#: model:ir.model.fields,field_description:account_intrastat.field_product_template__intrastat_supplementary_unit_amount
+msgid "Supplementary Units"
+msgstr "Дополнительные единицы"
+
+#. module: account_intrastat
+#: model_terms:ir.ui.view,arch_db:account_intrastat.product_product_tree_view_account_intrastat_supplementary_unit
+msgid "Supplementary Units per Product"
+msgstr "Дополнительные единицы на продукт"
+
+#. module: account_intrastat
+#: model:account.report.column,name:account_intrastat.intrastat_report_column_system
+msgid "System"
+msgstr "Система"
+
+#. module: account_intrastat
+#: model:ir.model.fields,help:account_intrastat.field_res_config_settings__company_country_id
+msgid "The country to use the tax reports from for this company"
+msgstr ""
+"Страна, из которой будут использоваться налоговые отчеты для этой компании"
+
+#. module: account_intrastat
+#: model:ir.model.fields,help:account_intrastat.field_product_product__intrastat_supplementary_unit_amount
+#: model:ir.model.fields,help:account_intrastat.field_product_template__intrastat_supplementary_unit_amount
+msgid "The number of supplementary units per product quantity."
+msgstr "Количество дополнительных единиц на количество товара."
+
+#. module: account_intrastat
+#. odoo-python
+#: code:addons/account_intrastat/models/account_intrastat_report.py:0
+#, python-format
+msgid "Total"
+msgstr "Всего"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__type__transaction
+#: model_terms:ir.ui.view,arch_db:account_intrastat.view_intrastat_code_search
+msgid "Transaction"
+msgstr "Транзакция"
+
+#. module: account_intrastat
+#: model:account.report.column,name:account_intrastat.intrastat_report_column_transaction_code
+msgid "Transaction Code"
+msgstr "Код транзакции"
+
+#. module: account_intrastat
+#: model_terms:ir.ui.view,arch_db:account_intrastat.view_intrastat_code_search
+msgid "Transport"
+msgstr "Транспорт"
+
+#. module: account_intrastat
+#: model:account.report.column,name:account_intrastat.intrastat_report_column_transport_code
+msgid "Transport Code"
+msgstr "Транспортный код"
+
+#. module: account_intrastat
+#: model:ir.model.constraint,message:account_intrastat.constraint_account_intrastat_code_intrastat_region_code_unique
+msgid "Triplet code/type/country_id must be unique."
+msgstr "Триплет код/тип/идентификатор страны должен быть уникальным."
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/filters/filter_intrastat_type.xml:0
+#, python-format
+msgid "Types:"
+msgstr "Типы:"
+
+#. module: account_intrastat
+#. odoo-python
+#: code:addons/account_intrastat/models/account_intrastat_report.py:0
+#, python-format
+msgid "Undefined supplementary unit products."
+msgstr "Неопределенные дополнительные единицы продукции."
+
+#. module: account_intrastat
+#. odoo-python
+#: code:addons/account_intrastat/models/account_intrastat_report.py:0
+#, python-format
+msgid "Undefined weight products."
+msgstr "Продукты неопределенного веса."
+
+#. module: account_intrastat
+#: model:account.report.column,name:account_intrastat.intrastat_report_column_value
+msgid "Value"
+msgstr "Значение"
+
+#. module: account_intrastat
+#. odoo-python
+#: code:addons/account_intrastat/models/account_intrastat_report.py:0
+#, python-format
+msgid "View Journal Entry"
+msgstr "Просмотреть запись в журнале"
+
+#. module: account_intrastat
+#: model:account.report.column,name:account_intrastat.intrastat_report_column_weight
+msgid "Weight"
+msgstr "Вес"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__c/k
+msgid "c/k"
+msgstr "к/к"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__ce/el
+msgid "ce/el"
+msgstr "це/эл"
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#, python-format
+msgid "commodity codes"
+msgstr "товарные коды"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__ct/l
+msgid "ct/l"
+msgstr "кт/л"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__gi_f_/_s
+msgid "gi F / S"
+msgstr "gi F / S"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__kg_90_%_sdt
+msgid "kg 90 % sdt"
+msgstr "кг 90 % sdt"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__kg_h2o2
+msgid "kg H2O2"
+msgstr "кг H2O2"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__kg_k2o
+msgid "kg K2O"
+msgstr "кг K2O"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__kg_koh
+msgid "kg KOH"
+msgstr "кг KOH"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__kg_n
+msgid "kg N"
+msgstr "кг N"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__kg_naoh
+msgid "kg NaOH"
+msgstr "кг NaOH"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__kg_p2o5
+msgid "kg P2O5"
+msgstr "кг P2O5"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__kg_u
+msgid "kg U"
+msgstr "кг U"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__kg_met_am_
+msgid "kg met.am."
+msgstr "kg met.am."
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__kg/net_eda
+msgid "kg/net eda"
+msgstr "кг/нетто эда"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__l_alc__100_%
+msgid "l alc. 100 %"
+msgstr "л алк. 100 %"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__m2
+msgid "m2"
+msgstr "м2"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__m3
+msgid "m3"
+msgstr "м3"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__p/st
+msgid "p/st"
+msgstr "п/ст"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__pa
+msgid "pa"
+msgstr "pa"
+
+#. module: account_intrastat
+#: model_terms:ir.ui.view,arch_db:account_intrastat.product_product_tree_view_account_intrastat_supplementary_unit
+msgid "product"
+msgstr "товар"
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#, python-format
+msgid "product commodity codes"
+msgstr "товарные коды продукции"
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#, python-format
+msgid "product's commodity codes"
+msgstr "товарные коды продукта"
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#, python-format
+msgid "supplementary units"
+msgstr "дополнительные устройства"
+
+#. module: account_intrastat
+#: model:ir.model.fields.selection,name:account_intrastat.selection__account_intrastat_code__supplementary_unit__t__co2
+msgid "t. CO2"
+msgstr "t. CO2"
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#, python-format
+msgid "transaction codes"
+msgstr "коды операций"
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#, python-format
+msgid "weights"
+msgstr "гири"
+
+#. module: account_intrastat
+#. odoo-javascript
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#: code:addons/account_intrastat/static/src/components/intrastat_report/warnings.xml:0
+#, python-format
+msgid "when they are required."
+msgstr "когда это необходимо."

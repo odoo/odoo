@@ -1,0 +1,453 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* partner_commission
+# 
+# Translators:
+# Wil Odoo, 2023
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# 湘子 南 <1360857908@qq.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: 湘子 南 <1360857908@qq.com>, 2024\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid ""
+"\n"
+"%s: from %s to %s"
+msgstr ""
+"\n"
+"%s：从%s到%s"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid " (%d month(s))"
+msgstr "(%d 月)"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__active
+msgid "Active"
+msgstr "已启用"
+
+#. module: partner_commission
+#: model:res.groups,name:partner_commission.group_commission_manager
+msgid "All Documents"
+msgstr "所有文档"
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.commission_plan_search_view
+msgid "Archived"
+msgstr "已存档"
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid "Automatic PO frequency"
+msgstr "自动采购订单 PO 频率"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__is_capped
+msgid "Capped"
+msgstr "封顶"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__purchase_order__purchase_type__commission
+#: model:product.template,name:partner_commission.product_commission_product_template
+msgid "Commission"
+msgstr "佣金"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_res_company__commission_automatic_po_frequency
+#: model:ir.model.fields,field_description:partner_commission.field_res_config_settings__commission_automatic_po_frequency
+msgid "Commission Automatic Po Frequency"
+msgstr "佣金自动PO频率"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_res_partner__commission_plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_res_users__commission_plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order__commission_plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order_log_report__commission_plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_subscription_report__commission_plan_id
+msgid "Commission Plan"
+msgstr "佣金计划"
+
+#. module: partner_commission
+#: model:ir.actions.act_window,name:partner_commission.action_commission_plans
+#: model:ir.ui.menu,name:partner_commission.menu_commission_plans
+msgid "Commission Plans"
+msgstr "佣金计划"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid "Commission on %(invoice)s, %(partner)s, %(amount)s"
+msgstr "关于 %(invoice)s、%(partner)s、%(amount)s 的委员会"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_commission_plan
+msgid "Commission plan"
+msgstr "佣金计划"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid "Commission refunded. Invoice: %s. Amount: %s."
+msgstr "佣金已退还。发票：%s。金额：%s。"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_commission_rule
+msgid "Commission rules management."
+msgstr "佣金规则管理。"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__company_id
+msgid "Company"
+msgstr "公司"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设置"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_res_partner
+msgid "Contact"
+msgstr "联系人"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__create_uid
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__create_date
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__create_date
+msgid "Created on"
+msgstr "创建日期"
+
+#. module: partner_commission
+#: model:ir.actions.act_window,name:partner_commission.action_view_customer_invoices
+msgid "Customer Invoices"
+msgstr "客户发票"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_res_partner_grade__default_commission_plan_id
+msgid "Default Commission Plan"
+msgstr "默认的佣金计划"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__display_name
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order__commission_plan_frozen
+msgid "Freeze Plan"
+msgstr "冻结计划"
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid "Frequency at which purchase orders will be automatically confirmed"
+msgstr "自动确认采购订单的频率"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__id
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_commission_rule__product_id
+msgid ""
+"If set, the rule does not apply to the whole category but only on the given product.\n"
+"The product must belong to the selected category.\n"
+"Use several rules if you need to match multiple products within a category."
+msgstr ""
+"如果设置，该规则不应用于整个类别，只应用于给定的产品。\n"
+"该产品必须属于选定的类别。\n"
+"如果您需要匹配一个类别中的多个产品，请应用多个规则。"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_purchase_order__invoice_commission_count
+msgid "Invoices that have generated commissions included in this order"
+msgstr "本订单中包含的已产生佣金的结算单"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_account_move
+msgid "Journal Entry"
+msgstr "日记账分录"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_account_move_line
+msgid "Journal Item"
+msgstr "日记账项目"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__write_uid
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__write_date
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__write_date
+msgid "Last Updated on"
+msgstr "上次更新日期"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "线索/商机"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__res_company__commission_automatic_po_frequency__manually
+msgid "Manually"
+msgstr "手动"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__max_commission
+msgid "Max Commission"
+msgstr "最大佣金"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_commission_rule__max_commission
+msgid "Maximum amount, specified in the currency of the pricelist, if given."
+msgstr "最高金额，如果给出的话，以价格表的货币指定。"
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid "Minimum PO amount total"
+msgstr "最小采购订单 PO 总计"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_res_company__commission_po_minimum
+#: model:ir.model.fields,field_description:partner_commission.field_res_config_settings__commission_po_minimum
+msgid "Minimum Total Amount for PO commission"
+msgstr "PO佣金的最低总金额"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__res_company__commission_automatic_po_frequency__monthly
+msgid "Monthly"
+msgstr "每月"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__name
+msgid "Name"
+msgstr "名称"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid "New commission. Invoice: %s. Amount: %s."
+msgstr "新佣金。发票：%s。金额：%s。"
+
+#. module: partner_commission
+#: model:res.groups,name:partner_commission.group_commission_user
+msgid "Own Documents Only"
+msgstr "仅限自己的单据"
+
+#. module: partner_commission
+#: model:ir.actions.server,name:partner_commission.cron_confirm_purchase_orders_ir_actions_server
+msgid "Partner Commission: confirm purchase orders"
+msgstr "合作伙伴佣金：确认采购订单"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_res_partner_grade
+msgid "Partner Grade"
+msgstr "合作伙伴等级"
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid "Partners Commissions"
+msgstr "合作伙伴 佣金"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__pricelist_id
+msgid "Pricelist"
+msgstr "价格表"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__purchase_order__purchase_type__procurement
+msgid "Procurement"
+msgstr "补货"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__product_id
+msgid "Product"
+msgstr "产品"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/commission_plan.py:0
+#, python-format
+msgid "Product %s does not belong to category %s"
+msgstr "产品 %s 不属于 %s 类别"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__category_id
+msgid "Product Category"
+msgstr "产品类别"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__product_id
+msgid "Purchase Default Product"
+msgstr "采购默认产品"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_purchase_order
+msgid "Purchase Order"
+msgstr "采购订单"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_purchase_order__purchase_type
+msgid "Purchase Type"
+msgstr "采购类型"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__res_company__commission_automatic_po_frequency__quarterly
+msgid "Quarterly"
+msgstr "每季度"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__rate
+msgid "Rate"
+msgstr "比率"
+
+#. module: partner_commission
+#: model:ir.model.constraint,message:partner_commission.constraint_commission_rule_check_rate
+msgid "Rate should be between 0 and 100."
+msgstr "费率应该在0和100之间。"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_account_bank_statement_line__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_account_move__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_account_payment__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order_log_report__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_subscription_report__referrer_id
+#: model_terms:ir.ui.view,arch_db:partner_commission.account_move_view_search_inherit_partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.sale_order_log_search
+#: model_terms:ir.ui.view,arch_db:partner_commission.sale_order_subsciption_view_search_inherit_partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.sale_order_view_search_inherit_partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.sale_subscription_report_search
+msgid "Referrer"
+msgstr "推荐人"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order__commission
+msgid "Referrer Commission"
+msgstr "推荐人佣金"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_account_bank_statement_line__commission_po_line_id
+#: model:ir.model.fields,field_description:partner_commission.field_account_move__commission_po_line_id
+#: model:ir.model.fields,field_description:partner_commission.field_account_payment__commission_po_line_id
+msgid "Referrer Purchase Order line"
+msgstr "推荐人采购订单行"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__commission_rule_ids
+#: model_terms:ir.ui.view,arch_db:partner_commission.commission_plan_form_view
+msgid "Rules"
+msgstr "规则"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__template_id
+msgid "Sale Order Template"
+msgstr "销售订单模板"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_sale_order_log_report
+msgid "Sales Log Analysis Report"
+msgstr "销售订单分析报告"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_sale_order
+msgid "Sales Order"
+msgstr "销售订单"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__sequence
+msgid "Sequence"
+msgstr "序列"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_purchase_order__invoice_commission_count
+#: model_terms:ir.ui.view,arch_db:partner_commission.purchase_order_form_inherit_partner_commission
+msgid "Source Invoices"
+msgstr "来源结算单"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_sale_subscription_report
+msgid "Subscription Analysis"
+msgstr "订阅分析"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_sale_order__commission_plan_id
+msgid "Takes precedence over the Referrer's commission plan."
+msgstr "优先于推荐人的佣金计划。"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid ""
+"The commission partner order %s must be checked manually (especially refund "
+"lines which can be duplicated)."
+msgstr "必须手动检查佣金合作伙伴订单%s（尤其是可能重复的退款行）。"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_res_partner_grade__default_commission_plan_id
+msgid ""
+"The default commission plan used for this grade. Can be overwritten on the "
+"partner form."
+msgstr "这个等级使用的默认佣金计划。可以在合作伙伴表单中覆盖。"
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid ""
+"The required minimum amount total needed to automatically confirm purchase "
+"orders"
+msgstr "自动确认采购订单所需的最低总金额"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__res_company__commission_automatic_po_frequency__weekly
+msgid "Weekly"
+msgstr "每周"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_commission_rule__is_capped
+msgid "Whether the commission is capped."
+msgstr "佣金是否有上限。"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_sale_order__commission_plan_frozen
+msgid ""
+"Whether the commission plan is frozen. When checked, the commission plan "
+"won't automatically be updated according to the partner level."
+msgstr "佣金计划是否被冻结。勾选后，佣金计划将不会根据合作伙伴级别自动更新。"

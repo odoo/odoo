@@ -1,0 +1,140 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_contract_salary_payroll
+# 
+# Translators:
+# Wil Odoo, 2023
+# Daye Jeong, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Daye Jeong, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_contract_salary_payroll
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.salary_package_sidebar_payroll
+msgid ""
+"<option value=\"100\" selected=\"1\">Full Time</option>\n"
+"                <option value=\"90\">9/10</option>\n"
+"                <option value=\"80\">4/5</option>\n"
+"                <option value=\"60\">3/5</option>\n"
+"                <option value=\"50\">Half Time</option>\n"
+"                <option value=\"40\">2/5</option>\n"
+"                <option value=\"20\">1/5</option>"
+msgstr ""
+"<option value=\"100\" selected=\"1\">풀타임</option>\n"
+"                <option value=\"90\">9/10</option>\n"
+"                <option value=\"80\">4/5</option>\n"
+"                <option value=\"60\">3/5</option>\n"
+"                <option value=\"50\">휴식 시간</option>\n"
+"                <option value=\"40\">2/5</option>\n"
+"                <option value=\"20\">1/5</option>"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_resume__code
+msgid "Code"
+msgstr "코드"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.ui.menu,name:hr_contract_salary_payroll.menu_hr_payroll_configuration_contract
+msgid "Contracts"
+msgstr "계약"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.ui.menu,name:hr_contract_salary_payroll.hr_payroll_menu_contract_type
+msgid "Employment Types"
+msgstr "고용 유형"
+
+#. module: hr_contract_salary_payroll
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_resume_view_search_inherit
+msgid "Impacts Monthly Total"
+msgstr "월별 총 영향"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model.fields.selection,name:hr_contract_salary_payroll.selection__hr_contract_salary_resume__value_type__payslip
+msgid "Payslip Value"
+msgstr "급여 명세 값"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model,name:hr_contract_salary_payroll.model_hr_payslip_worked_days
+msgid "Payslip Worked Days"
+msgstr "급여 명세서 근무일"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model.fields,help:hr_contract_salary_payroll.field_hr_contract_salary_resume__value_type
+msgid ""
+"Pick how the value of the information is computed:\n"
+"Fixed value: Set a determined value static for all links\n"
+"Contract value: Get the value from a field on the contract record\n"
+"Payslip value: Get the value from a field on the payslip record\n"
+"Sum of Benefits value: You can pick in all benefits and compute a sum of them\n"
+"Monthly Total: The information will be a total of all the informations in the category Monthly Benefits"
+msgstr ""
+"정보 값을 계산하는 방법을 선택합니다:\n"
+"고정 값: 모든 링크에 대해 미리 정해진 고정 값을 설정합니다.\n"
+"계약 값: 계약 레코드 내에 있는 필드에서 값을 검색합니다.\n"
+"급여 명세서 값: 급여 명세서 레코드 내의 필드에서 값을 가져옵니다.\n"
+"혜택 합계 값: 모든 관련 혜택을 선택하고 합산하여 총 가치를 계산합니다.\n"
+"월별 합계: 월별 혜택 카테고리 내의 모든 데이터를 합산하여 정보의 가치를 결정합니다."
+
+#. module: hr_contract_salary_payroll
+#. odoo-javascript
+#: code:addons/hr_contract_salary_payroll/static/src/xml/brut2net_modal.xml:0
+#, python-format
+msgid ""
+"Please note that this information may be inaccurate and should be used for "
+"reference only."
+msgstr "이 정보는 정확하지 않을 수 있으므로 참고용으로만 사용하시기 바랍니다."
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model,name:hr_contract_salary_payroll.model_hr_contract_salary_resume
+msgid "Salary Package Resume"
+msgstr "급여 패키지 요약"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.ui.menu,name:hr_contract_salary_payroll.hr_payroll_menu_contract_templates
+msgid "Templates"
+msgstr "템플릿(서식)"
+
+#. module: hr_contract_salary_payroll
+#. odoo-javascript
+#: code:addons/hr_contract_salary_payroll/static/src/xml/brut2net_modal.xml:0
+#, python-format
+msgid "The amounts are calculated  based on a full time permanent contract."
+msgstr "금액은 정규직 계약을 기준으로 계산됩니다."
+
+#. module: hr_contract_salary_payroll
+#. odoo-javascript
+#: code:addons/hr_contract_salary_payroll/static/src/xml/brut2net_modal.xml:0
+#, python-format
+msgid ""
+"There is no defined payroll structure for your contract. Please contact a "
+"responsible for more information."
+msgstr "계약에 대해 급여 체계가 정해지지 않았습니다. 자세한 내용은 담당자에게 문의하시기 바랍니다."
+
+#. module: hr_contract_salary_payroll
+#. odoo-python
+#: code:addons/hr_contract_salary_payroll/controllers/main.py:0
+#, python-format
+msgid ""
+"This is the gross calculated for the current month with a total of %s hours."
+msgstr "이번 달 총 %s시간으로 계산된 합계입니다."
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_resume__value_type
+msgid "Value Type"
+msgstr "값 유형"
+
+#. module: hr_contract_salary_payroll
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.salary_package_sidebar_payroll
+msgid "Working Schedule"
+msgstr "근무 일정"

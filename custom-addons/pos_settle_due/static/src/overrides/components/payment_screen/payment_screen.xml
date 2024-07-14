@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_settle_due.PaymentScreenButtons" t-inherit="point_of_sale.PaymentScreenButtons" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('partner-button')]/span[hasclass('partner-name')]" position="after">
+            <i class="fa fa-warning ms-2" t-if="currentOrder.get_partner() and this.partnerInfos.overDue and this.partnerInfos.useLimit" />
+        </xpath>
+
+        <xpath expr="//button[hasclass('partner-button')]" position="attributes">
+            <attribute name="t-att-class">
+                { 
+                    'highlight text-bg-primary' : this.highlightPartnerBtn,
+                    'btn-warning' : this.partnerInfos.overDue and this.partnerInfos.useLimit,
+                }
+            </attribute>
+        </xpath>
+    </t>
+ </templates>

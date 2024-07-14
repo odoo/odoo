@@ -1,0 +1,16 @@
+<odoo>
+    <record id="account_journal_dashboard_kanban_view" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='dashboard_bank_cash_left']" position="before">
+                <div class="alert alert-warning"
+                     role="alert"
+                     t-if="journal_type == 'bank' and !dashboard.has_bank_account_on_bank_journal and dashboard.country_code == 'DK'">
+                   This bank journal need to have a bank account !
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

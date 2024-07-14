@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="snippet_options" inherit_id="website.snippet_options" name="Helpdesk Snippet Options">
+    <xpath expr="." position="inside">
+        <div data-selector="main:has(ul.o_whelpdesk_topbar_filters)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="Help Center Page">
+            <we-checkbox string="Date Filter"
+                         data-customize-website-views="website_helpdesk.navbar_search_date"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Tags Filter"
+                         data-customize-website-views="website_helpdesk.navbar_search_tag"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="Type Filter"
+                         data-customize-website-views="website_helpdesk.navbar_search_type"
+                         data-no-preview="true"
+                         data-reload="/"/>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

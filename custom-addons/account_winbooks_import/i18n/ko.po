@@ -1,0 +1,221 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_winbooks_import
+# 
+# Translators:
+# Wil Odoo, 2023
+# Sarah Park, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Sarah Park, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid ""
+"<span/>\n"
+"                    <span class=\"text-warning mb4 mt16\" invisible=\"only_open\">\n"
+"                        The export of data from Winbooks for closed years might contain unbalanced entries. However if you want to try to import everything, Odoo will set the difference of balance in a Suspense Account.\n"
+"                    </span>"
+msgstr ""
+"<span/>\n"
+"                    <span class=\"text-warning mb4 mt16\" invisible=\"only_open\">\n"
+"                        마감 기간 동안 Winbook에서 데이터를 내 보내면 불균형 항목이 포함될 수 있습니다. 그러나 모든 것을 가져 오려면 Odoo는 Suspense Account에서 잔액의 차이를 설정합니다.\n"
+"                    </span>"
+
+#. module: account_winbooks_import
+#: model:ir.model,name:account_winbooks_import.model_account_winbooks_import_wizard
+msgid "Account Winbooks import wizard"
+msgstr "Winbooks 계정 가져오기 마법사"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#, python-format
+msgid "Accounting Settings"
+msgstr "회계 설정"
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid "Cancel"
+msgstr "취소"
+
+#. module: account_winbooks_import
+#: model:ir.model,name:account_winbooks_import.model_res_company
+msgid "Companies"
+msgstr "회사"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#, python-format
+msgid "Company Settings"
+msgstr "회사 설정"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#, python-format
+msgid "Counterpart (generated at import from Winbooks)"
+msgstr "상대방 (Winbook에서 가져올 때 생성됨)"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__zip_file
+msgid "File"
+msgstr "파일"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid "Import"
+msgstr "가져오기"
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid "Import (safe-mode)"
+msgstr "가져오기 (안전모드)"
+
+#. module: account_winbooks_import
+#. odoo-javascript
+#: code:addons/account_winbooks_import/static/src/xml/account_winbooks_import.xml:0
+#, python-format
+msgid "Import WBK"
+msgstr "WBK 가져오기"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__only_open
+msgid "Import only open years"
+msgstr "미결산 년도만 가져오기"
+
+#. module: account_winbooks_import
+#: model:ir.model,name:account_winbooks_import.model_account_move_line
+msgid "Journal Item"
+msgstr "전표 항목"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,help:account_winbooks_import.field_account_move_line__winbooks_line_id
+msgid "Line ID that was used in Winbooks"
+msgstr "Winbook에서 사용한 라인 ID"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,help:account_winbooks_import.field_account_move_line__winbooks_matching_number
+msgid "Matching number that was used in Winbooks"
+msgstr "Winbooks에서 사용된 번호와 일치"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#, python-format
+msgid "Please define the country on your company."
+msgstr "귀사의 국가를 설정하십시오."
+
+#. module: account_winbooks_import
+#: model_terms:ir.ui.view,arch_db:account_winbooks_import.winbooks_import_form
+msgid "Stage Search"
+msgstr "단계 검색"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_winbooks_import_wizard__suspense_code
+msgid "Suspense Account Code"
+msgstr "가계정 코드"
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#, python-format
+msgid ""
+"The code for the Suspense Account you entered doesn't match any account"
+msgstr "입력하신 가계정 코드와 일치하는 계정이 없습니다."
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#, python-format
+msgid ""
+"The following banks were used for multiple partners in Winbooks, which is not allowed in Odoo. The bank number has been only set on one of each group:\n"
+"%s"
+msgstr ""
+"Winbooks에서 복수의 파트너들이 다음 은행을 사용하였으나, Odoo에서 이는 허용되지 않습니다. 은행 지정 번호는 각 그룹 당 하나로만 설정되어 있습니다:\n"
+"%s"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,help:account_winbooks_import.field_account_winbooks_import_wizard__suspense_code
+msgid ""
+"This is the code of the account in which you want to put the counterpart of "
+"unbalanced moves. This might be an account from your Winbooks data, or an "
+"account that you created in Odoo before the import."
+msgstr ""
+"이것은 미결산 이동의 상대편을 넣을 계정의 코드입니다. 이 계정은 Winbook 데이터의 계정 또는 가져오기 전에 Odoo에서 생성한 "
+"계정일 수 있습니다."
+
+#. module: account_winbooks_import
+#: model:ir.actions.act_window,name:account_winbooks_import.winbooks_import_action
+msgid "Winbooks Import"
+msgstr "Winbooks 가져오기"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_move_line__winbooks_line_id
+msgid "Winbooks Line"
+msgstr "Winbooks 라인"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,field_description:account_winbooks_import.field_account_move_line__winbooks_matching_number
+msgid "Winbooks Matching Number"
+msgstr "Winbooks 일치 번호"
+
+#. module: account_winbooks_import
+#: model:ir.model.fields,help:account_winbooks_import.field_account_winbooks_import_wizard__only_open
+msgid ""
+"Years closed in Winbooks are likely to have incomplete data. The counter "
+"part of incomplete entries will be set in a suspense account"
+msgstr ""
+"Winbooks에서 마감된 연도는 불완전한 데이터를 가지고 있을 가능성이 높습니다. 완료되지 않은 항목의 상대편 부분이 미결산 계정으로 "
+"설정됩니다."
+
+#. module: account_winbooks_import
+#. odoo-python
+#: code:addons/account_winbooks_import/wizard/import_wizard.py:0
+#, python-format
+msgid "You should install a Fiscal Localization first."
+msgstr "재정 현지화 항목을 먼저 설치해야 합니다."

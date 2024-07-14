@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="delivery_iot.FieldMany2OneIoTScale" t-inherit="web.Many2OneField" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_field_many2one_selection')]" position="after">
+            <div t-if="showManualReadButton">
+                <button class="btn btn-primary" t-on-click="onClickReadWeight">
+                    Read weight
+                </button>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,265 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_recruitment_sign
+# 
+# Translators:
+# Jonas Zinkevicius <jozi@odoo.com>, 2023
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2023
+# Anatolij, 2023
+# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2023
+# Arunas V. <arunas@devoro.com>, 2023
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2023
+# Linas Versada <linaskrisiukenas@gmail.com>, 2023
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2023
+# Martin Trigaux, 2023
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2023
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024\n"
+"Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: lt\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_applicant__sign_request_count
+msgid "# Signatures"
+msgstr "Parašų sk."
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid "%s and %s are the signatories."
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_applicant_sign_view_form
+msgid "<span class=\"o_stat_text\">Signature Requests</span>"
+msgstr "<span class=\"o_stat_text\">Užklausos pasirašymui</span>"
+
+#. module: hr_recruitment_sign
+#: model:ir.model,name:hr_recruitment_sign.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__applicant_id
+msgid "Applicant"
+msgstr "Kandidatas"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__applicant_role_id
+msgid "Applicant Role"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__partner_name
+msgid "Applicant's Name"
+msgstr "Kandidato vardas"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,help:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__applicant_role_id
+msgid ""
+"Applicant's role on the templates to sign. The same role must be present in "
+"all the templates"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Attach a file"
+msgstr "Prisegti failą"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__attachment_ids
+msgid "Attachment"
+msgstr "Prisegtukas"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__partner_id
+msgid "Contact"
+msgstr "Kontaktas"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__cc_partner_ids
+msgid "Copy to"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__create_uid
+msgid "Created by"
+msgstr "Sukūrė"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__create_date
+msgid "Created on"
+msgstr "Sukurta"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Discard"
+msgstr "Atmesti"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__display_name
+msgid "Display Name"
+msgstr "Rodomas pavadinimas"
+
+#. module: hr_recruitment_sign
+#: model:ir.actions.act_window,name:hr_recruitment_sign.sign_recruitment_wizard_action
+msgid "Document Signature"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__sign_template_ids
+msgid "Documents to sign"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,help:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__sign_template_ids
+msgid ""
+"Documents to sign. Only documents with 1 or 2 different responsible are selectable.\n"
+"        Documents with 1 responsible will only have to be signed by the applicant while documents with 2 different responsible will have to be signed by both the applicant and the responsible.\n"
+"        "
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__has_both_template
+msgid "Has Both Template"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Paskutinį kartą atnaujino"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__write_date
+msgid "Last Updated on"
+msgstr "Paskutinį kartą atnaujinta"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Mail Options"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__message
+msgid "Message"
+msgstr "Žinutė"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid ""
+"No appropriate template could be found, please make sure you configured them"
+" properly."
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "No template available"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid "Only %s has to sign."
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Optional Message..."
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__possible_template_ids
+msgid "Possible Template"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.actions.server,name:hr_recruitment_sign.action_request_signature
+msgid "Request Signature"
+msgstr "Parašo užklausa"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__responsible_id
+msgid "Responsible"
+msgstr "Atsakingas"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Send"
+msgstr "Siųsti"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Sign Request Options"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__sign_template_responsible_ids
+msgid "Sign Template Responsible"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model,name:hr_recruitment_sign.model_hr_recruitment_sign_document_wizard
+msgid "Sign document in recruitment"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Signature Request"
+msgstr "Parašo užklausa"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid "Signature Request - %s"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/models/hr_applicant.py:0
+#, python-format
+msgid "Signature Requests"
+msgstr "Parašo užklausos"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__subject
+msgid "Subject"
+msgstr "Tema"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__template_warning
+msgid "Template Warning"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Write email or search contact..."
+msgstr "Rašyti el. laišką arba ieškoti kontakto..."
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/models/hr_applicant.py:0
+#, python-format
+msgid "You must define a Contact Name for this applicant."
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.message_signature_request
+msgid "requested a new signature on the following documents:"
+msgstr ""

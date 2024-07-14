@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_mx_employees_salary_isr" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">ISR (Income Tax)</field>
+        <field name="code">ISR</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+def find_rates(x, rates):
+    for low, high, fix, rate in rates:
+        if low &lt;= x &lt;= high:
+            return low, high, fix, rate
+
+gross = categories['GROSS']
+if gross:
+    isr_tables = payslip._rule_parameter('l10n_mx_isr_tables')
+    isr_table = isr_tables[contract.l10n_mx_schedule_pay]
+    low, high, fix, rate = find_rates(gross, isr_table)
+
+    result = -((categories['GROSS'] - low) * (rate / 100) + fix)
+else:
+    result = 0
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+        <field name="note">
+Income Tax Law
+https://www.diputados.gob.mx/LeyesBiblio/pdf/LISR.pdf
+
+ISR tables
+https://www.dof.gob.mx/nota_detalle.php?codigo=5640505&amp;fecha=12/01/2022#gsc.tab=0
+
+[(Gross monthly salary - Lower limit) x Percentage to be applied over the excess of the lower limit] + Fixed rate
+        </field>
+    </record>
+
+    <record id="l10n_mx_employees_salary_subsidy" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Used Subsidy</field>
+        <field name="code">SUBSIDY</field>
+        <field name="sequence">120</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+def find_rates(x, rates):
+    for low, high, fix in rates:
+        if low &lt;= x &lt;= high:
+            return low, high, fix
+
+gross = categories['GROSS']
+if gross:
+    subsidy_tables = payslip._rule_parameter('l10n_mx_subsidy_tables')
+    subsidy_table = subsidy_tables[contract.l10n_mx_schedule_pay]
+    low, high, fix = find_rates(gross, subsidy_table)
+    result = fix
+else:
+    result = 0
+        </field>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_integrated_daily_wage" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_integrated_daily_wage"/>
+        <field name="name">Integrated Daily Wage</field>
+        <field name="code">INTDAYWAGE</field>
+        <field name="sequence">124</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+coefficients = {
+    'daily': 1,
+    'weekly': 7,
+    '10_days': 10,
+    'bi_weekly': 15,
+    'monthly': 30,
+    'yearly': 365,
+}
+daily_salary = contract._get_contract_wage() / 30
+holiday_bonus_factor = contract.l10n_mx_holidays_count * contract.l10n_mx_holiday_bonus_rate / 100
+integration_factor = round((holiday_bonus_factor + contract.l10n_mx_christmas_bonus + 365) / 365 , 4)
+integrated_daily_wage = integration_factor * daily_salary
+result = integrated_daily_wage
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_work_risk" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Work Risks IMSS (Employer)</field>
+        <field name="code">RISKIMSSEMPLOYER</field>
+        <field name="sequence">125</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INTDAYWAGE']['total']
+result = integrated_daily_wage * coefficients[contract.l10n_mx_schedule_pay] * contract.l10n_mx_risk_bonus_rate / 100
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disease_maternity_fixed" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Disease and Maternity IMSS - Fixed Quota (Employer)</field>
+        <field name="code">DISFIXIMSSEMPLOYER</field>
+        <field name="sequence">130</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+coefficients = {
+    'daily': 1,
+    'weekly': 7,
+    '10_days': 10,
+    'bi_weekly': 15,
+    'monthly': 30,
+    'yearly': 365,
+}
+result = payslip._rule_parameter('l10n_mx_uma') * coefficients[contract.l10n_mx_schedule_pay]
+result_rate = 20.4
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+        <field name="note">Fixed quota for each collaborator for up to three UMA</field>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disease_maternity_additional" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Disease and Maternity IMSS - Additional Quota (Employer)</field>
+        <field name="code">DISADDIMSSEMPLOYER</field>
+        <field name="sequence">135</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INTDAYWAGE']['total']
+result = (integrated_daily_wage - 3 * payslip._rule_parameter('l10n_mx_uma')) * coefficients[contract.l10n_mx_schedule_pay]
+result_rate = 1.10
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+        <field name="note">Additional quota due to the difference of the SBC and three times UMA</field>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disease_maternity_additional_employee" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_social_security_employee"/>
+        <field name="name">Disease and Maternity IMSS - Additional Quota (Employee)</field>
+        <field name="code">DISADDIMSSEMPLOYEE</field>
+        <field name="sequence">136</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INTDAYWAGE']['total']
+result = (integrated_daily_wage - 3 * payslip._rule_parameter('l10n_mx_uma')) * coefficients[contract.l10n_mx_schedule_pay]
+result_rate = -0.4
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+        <field name="note">Additional quota due to the difference of the SBC and three times UMA</field>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disease_maternity_medical" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Disease and Maternity IMSS - Medical Expenses (Employer)</field>
+        <field name="code">DISMEDIMSSEMPLOYER</field>
+        <field name="sequence">140</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INTDAYWAGE']['total']
+result = integrated_daily_wage * coefficients[contract.l10n_mx_schedule_pay]
+result_rate = 1.05
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+        <field name="note">Medical expenses for pensioners and beneficiaries</field>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disease_maternity_medical_employee" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_social_security_employee"/>
+        <field name="name">Disease and Maternity IMSS - Medical Expenses (Employee)</field>
+        <field name="code">DISMEDIMSSEMPLOYEE</field>
+        <field name="sequence">141</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INTDAYWAGE']['total']
+result = integrated_daily_wage * coefficients[contract.l10n_mx_schedule_pay]
+result_rate = -0.375
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+        <field name="note">Medical expenses for pensioners and beneficiaries</field>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disease_maternity_money" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Disease and Maternity IMSS - In Money (Employer)</field>
+        <field name="code">DISMONIMSSEMPLOYER</field>
+        <field name="sequence">145</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INTDAYWAGE']['total']
+result = integrated_daily_wage * coefficients[contract.l10n_mx_schedule_pay]
+result_rate = 0.7
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disease_maternity_money_employee" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_social_security_employee"/>
+        <field name="name">Disease and Maternity IMSS - In Money (Employee)</field>
+        <field name="code">DISMONIMSSEMPLOYEE</field>
+        <field name="sequence">146</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INTDAYWAGE']['total']
+result = integrated_daily_wage * coefficients[contract.l10n_mx_schedule_pay]
+result_rate = -0.25
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disability_life" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Disability and Life IMSS (Employer)</field>
+        <field name="code">DISLIFIMSSEMPLOYER</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INTDAYWAGE']['total']
+result = integrated_daily_wage * coefficients[contract.l10n_mx_schedule_pay]
+result_rate = 1.75
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_disability_life_employee" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_social_security_employee"/>
+        <field name="name">Disability and Life IMSS (Employee)</field>
+        <field name="code">DISLIFIMSSEMPLOYEE</field>
+        <field name="sequence">151</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INTDAYWAGE']['total']
+result = integrated_daily_wage * coefficients[contract.l10n_mx_schedule_pay]
+result_rate = -0.625
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_retirement" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Retirement, assault in elderly and old age IMSS (Employer)</field>
+        <field name="code">RETIRIMSSEMPLOYER</field>
+        <field name="sequence">155</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INTDAYWAGE']['total']
+result = integrated_daily_wage * coefficients[contract.l10n_mx_schedule_pay]
+result_rate = 2
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_ceav" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Retirement, assault in elderly and old age (CEAV) IMSS (Employer)</field>
+        <field name="code">CEAVIMSSEMPLOYER</field>
+        <field name="sequence">160</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INTDAYWAGE']['total']
+result = integrated_daily_wage * coefficients[contract.l10n_mx_schedule_pay]
+result_rate = 3.15
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_ceav_employee" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_social_security_employee"/>
+        <field name="name">Retirement, assault in elderly and old age (CEAV) IMSS (Employee)</field>
+        <field name="code">CEAVIMSSEMPLOYEE</field>
+        <field name="sequence">161</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INTDAYWAGE']['total']
+result = integrated_daily_wage * coefficients[contract.l10n_mx_schedule_pay]
+result_rate = -1.125
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_imss_nursery" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">Nursery and Social Benefits IMSS (Employer)</field>
+        <field name="code">NURSIMSSEMPLOYER</field>
+        <field name="sequence">165</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INTDAYWAGE']['total']
+result = integrated_daily_wage * coefficients[contract.l10n_mx_schedule_pay]
+result_rate = 1
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_employees_salary_infonavit" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_social_security_employer"/>
+        <field name="name">INFONAVIT IMSS (Employer)</field>
+        <field name="code">INFONAVITIMSSEMPLOYER</field>
+        <field name="sequence">170</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+integrated_daily_wage = result_rules['INTDAYWAGE']['total']
+result = integrated_daily_wage * coefficients[contract.l10n_mx_schedule_pay]
+result_rate = 5
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_social_security_total_employee" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_social_security_employee_total"/>
+        <field name="name">IMSS Total (Employee)</field>
+        <field name="code">IMSSEMPLOYEETOTAL</field>
+        <field name="sequence">199</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -categories['IMSSEMPLOYEE']
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="l10n_mx_social_security_total_employer" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_mx_hr_payroll.hr_payroll_social_security_employer_total"/>
+        <field name="name">IMSS Total (Employee)</field>
+        <field name="code">IMSSEMPLOYERTOTAL</field>
+        <field name="sequence">199</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['IMSSEMPLOYER']
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_mx_hr_payroll.hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+</odoo>
+

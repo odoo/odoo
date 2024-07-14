@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_salary_structure_ind_emp" model="hr.payroll.structure">
+        <field name="name">Non-Executive Employee</field>
+        <field name="country_id" ref="base.in"/>
+        <field name="type_id" ref="hr_payroll_salary_structure_type_ind_emp"/>
+    </record>
+    <record id="l10n_in_hr_payroll.hr_payroll_salary_structure_type_ind_emp" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <!-- Salary Structure and structure type -->
+    <record id="hr_payroll_structure_in_employee_salary" model="hr.payroll.structure">
+        <field name="name">India: Regular Pay</field>
+        <field name="type_id" ref="hr_contract.structure_type_employee"/>
+        <field name="unpaid_work_entry_type_ids" eval="[(4, ref('hr_work_entry_contract.work_entry_type_unpaid_leave'))]"/>
+        <field name="country_id" ref="base.in"/>
+        <field name="report_id" ref="payslip_details_report"/>
+    </record>
+
+    <record id="hr_payroll_structure_in_stipend" model="hr.payroll.structure">
+        <field name="name">Stipend</field>
+        <field name="type_id" ref="l10n_in_hr_payroll.hr_payroll_salary_structure_type_ind_intern"/>
+        <field name="country_id" ref="base.in"/>
+        <field name="report_id" ref="payslip_details_report"/>
+        <field name="payslip_name">Stipend</field>
+    </record>
+
+    <record id="l10n_in_hr_payroll.hr_payroll_salary_structure_type_ind_intern" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_in_stipend"/>
+    </record>
+
+    <record id="structure_worker_0001" model="hr.payroll.structure">
+        <field name="name">Worker Pay</field>
+        <field name="type_id" ref="hr_contract.structure_type_worker"/>
+        <field name="country_id" ref="base.in"/>
+        <field name="report_id" ref="payslip_details_report"/>
+    </record>
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website_generator.WebsiteGenerator">
+    <div class="o_configurator_container">
+        <div class="o_configurator_screen h-100 d-flex flex-column">
+            <div style="height: 31px;">
+                <div class="o_configurator_odoo_logo mt-4 ms-4" style="width: 99px; height:31px"/>
+                <a href="/web" style="position: absolute; right: 0; top: 0; margin: 15px;"><span class="fa fa-close fa-2x"/></a>
+            </div>
+            <div class="o_configurator_screen_content d-flex h-100">
+                <div class="container align-self-center o_configurator_show">
+                    <t t-if="state.error">
+                        <div class="display-2 mb-2">Something went wrong</div>
+                        <div class="h1 fw-light mb-4 text-600">We could not convert your website, please try again later</div>
+                        <p t-esc="state.error"/>
+                    </t>
+                    <t t-else="">
+                        <div class="display-2 mb-2">Your website is being converted</div>
+                        <div class="h1 fw-light mb-4 text-600">It should be ready in a <b>few minutes</b></div>
+                        <p>Once your website is ready, this page will reload automatically. You can also close this page, we will send you an email once your website has been converted.</p>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

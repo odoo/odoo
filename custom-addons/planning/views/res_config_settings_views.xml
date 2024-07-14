@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.planning</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="55"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Planning" string="Planning" name="planning" groups="planning.group_planning_manager">
+                    <block title="Planning" name="planning">
+                        <setting help="Let employees unassign themselves from shifts">
+                            <field name="planning_allow_self_unassign"/>
+                            <div invisible="not planning_allow_self_unassign">
+                                <br/>
+                                <label for="planning_self_unassign_days_before" class="o_dark_label" string="Deadline"/>
+                                <field class="oe_inline col-4 col-lg-2 me-1 text-center" name="planning_self_unassign_days_before"/> days before the beginning of the shift
+                            </div>
+                        </setting>
+                        <setting name="planning_project_time_management" help="Plan resource allocation across projects and estimate deadlines more accurately">
+                            <field name="module_project_forecast" widget="upgrade_boolean"/>
+                        </setting>
+                    </block>
+                    <block>
+                        <setting groups="base.group_no_one" string="Recurring Shifts">
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <label for="planning_generation_interval" class="o_light_label" string="Generate shifts"/>
+                                    <field name="planning_generation_interval" class="oe_inline col-4 col-lg-2 me-1 text-center"/>
+                                    <span>months ahead</span>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="project_update_default_description" inherit_id="project.project_update_default_description">
+        <xpath expr="//div[@name='milestone']" position="before">
+            <div name="budget" t-if="project.budget and project.analytic_account_id and env.user.has_group('account.group_account_readonly')">
+                <t><t t-out="budget['percentage']"/>% (<t t-out="budget['spent_budget']"/>) of the <t t-out="budget['amount']"/> budget has been spent. <t t-out="budget['remaining_budget_percentage']"/>% (<t t-out="budget['remaining_budget']"/>) of the budget is remaining.</t>
+            </div>
+        </xpath>
+    </template>
+</odoo>

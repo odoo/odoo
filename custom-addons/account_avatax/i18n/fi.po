@@ -1,0 +1,755 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_avatax
+# 
+# Translators:
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
+# Kari Lindgren <karisatu@gmail.com>, 2023
+# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2023
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Mikko Salmela <salmemik@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "%(response)s"
+msgstr "vastaukset %(response)s"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "- %s (ID: %s) on %s"
+msgstr "- %s (ID: %s) josta %s"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i class=\"oi oi-fw oi-arrow-right\"/>\n"
+"                                How to Get Credentials"
+msgstr ""
+"<i class=\"oi oi-fw oi-arrow-right\"/>\n"
+"                                Miten hankkia tunnukset"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Go to Avatax portal\" role=\"img\" aria-label=\"Go to Avatax portal\" class=\"fa fa-external-link-square fa-fw\"/>\n"
+"                                Avatax portal"
+msgstr ""
+"<i title=\"Mene Avatax-portaaliin\" role=\"img\" aria-label=\"Mene Avatax-portaaliin\" class=\"fa fa-external-link-square fa-fw\"/>\n"
+"                                Avatax-portaali"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Show logs\" role=\"img\" aria-label=\"Show logs\" class=\"fa fa-file-text-o\"/>\n"
+"                                Show logs"
+msgstr ""
+"<i title=\"Näytä lokit\" role=\"img\" aria-label=\"Näytä lokit\" class=\"fa fa-file-text-o\"/>\n"
+"                                Näytä lokit"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Start logging for 30 minutes\" role=\"img\" aria-label=\"Start logging for 30 minutes\" class=\"fa fa-file-text-o\"/>\n"
+"                                Start logging for 30 minutes"
+msgstr ""
+"<i title=\"Aloita lokien kirjaaminen 30 minuutin ajaksi\" role=\"img\" aria-label=\"Aloita lokien kirjaaminen 30 minuutin ajaksi\" class=\"fa fa-file-text-o\"/>\n"
+"                                Aloita lokien kirjaaminen 30 minuutin ajaksi"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Sync Parameters\" role=\"img\" aria-label=\"Sync Parameters\" class=\"fa fa-refresh\"/>\n"
+"                                Sync Parameters"
+msgstr ""
+"<i title=\"Synkronointiparametrit\" role=\"img\" aria-label=\"Synkronointiparametrit\" class=\"fa fa-refresh\"/>\n"
+"                                Synkronointiparametrit"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Test connection\" role=\"img\" aria-label=\"Test connection\" class=\"fa fa-plug fa-fw\"/>\n"
+"                                Test connection"
+msgstr ""
+"<i title=\"Testaa yhteys\" role=\"img\" aria-label=\"Testaa yhteys\" class=\"fa fa-plug fa-fw\"/>\n"
+"                                Testaa yhteys"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "API ID"
+msgstr "API-tunnus"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "API KEY"
+msgstr "API Avain"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_account_fiscal_position__avatax_invoice_account_id
+msgid "Account that will be used by Avatax taxes for invoices."
+msgstr "Tili, jota Avatax-verot käyttävät laskuissa."
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_account_fiscal_position__avatax_refund_account_id
+msgid "Account that will be used by Avatax taxes for refunds."
+msgstr "Tili, jota Avatax-verot käyttävät palautuksia varten."
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Address Validation"
+msgstr "Osoitteen varmistus"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/wizard/avatax_validate_address.py:0
+#, python-format
+msgid "Address validation is only supported for North American addresses."
+msgstr "Osoitteen varmistustas tuetaan vain Pohjois-Amerikan osoitteille."
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/res_company.py:0
+#, python-format
+msgid "Authentication failed."
+msgstr "Tunnistautuminen epäonnistui."
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/res_company.py:0
+#, python-format
+msgid "Authentication success."
+msgstr "Tunnistautuminen onnistui."
+
+#. module: account_avatax
+#: model:account.fiscal.position,name:account_avatax.account_fiscal_position_avatax_us
+msgid "Automatic Tax Mapping (AvaTax)"
+msgstr "Automaattinen verokantojen yhdistäminen (AvaTax)"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_api_id
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_api_id
+msgid "Avalara API ID"
+msgstr "Avalara API ID"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_api_key
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_api_key
+msgid "Avalara API KEY"
+msgstr "Avalara API-avain"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_address_validation
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_address_validation
+msgid "Avalara Address Validation"
+msgstr "Avalara Osoitteen varmistus"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_avatax_unique_code__avatax_unique_code
+#: model:ir.model.fields,field_description:account_avatax.field_account_bank_statement_line__avatax_unique_code
+#: model:ir.model.fields,field_description:account_avatax.field_account_move__avatax_unique_code
+#: model:ir.model.fields,field_description:account_avatax.field_account_payment__avatax_unique_code
+#: model:ir.model.fields,field_description:account_avatax.field_res_partner__avatax_unique_code
+#: model:ir.model.fields,field_description:account_avatax.field_res_users__avatax_unique_code
+msgid "Avalara Code"
+msgstr "Avalara-koodi"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_partner_code
+msgid "Avalara Company Code"
+msgstr "Avalara Yrityksen koodi"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_environment
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_environment
+msgid "Avalara Environment"
+msgstr "Avalara ympäristö"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_partner__avalara_exemption_id
+#: model:ir.model.fields,field_description:account_avatax.field_res_users__avalara_exemption_id
+msgid "Avalara Exemption"
+msgstr "Avalara-erivapaus"
+
+#. module: account_avatax
+#: model:ir.actions.act_window,name:account_avatax.ir_logging_avalara_action
+msgid "Avalara Logging"
+msgstr "Avalara-lokitus"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_partner__avalara_partner_code
+#: model:ir.model.fields,field_description:account_avatax.field_res_users__avalara_partner_code
+msgid "Avalara Partner Code"
+msgstr "Avalara-kumppanikoodi"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_partner__avalara_show_address_validation
+#: model:ir.model.fields,field_description:account_avatax.field_res_users__avalara_show_address_validation
+msgid "Avalara Show Address Validation"
+msgstr "Avalara Näytä osoitteen varmistus"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.account_fiscal_position_form_inherit
+msgid "Avatax"
+msgstr "Avatax"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_product_category__avatax_category_id
+#: model:ir.model.fields,field_description:account_avatax.field_product_product__avatax_category_id
+#: model:ir.model.fields,field_description:account_avatax.field_product_template__avatax_category_id
+msgid "Avatax Category"
+msgstr "Avatax-luokka"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_bank_statement_line__avatax_tax_date
+#: model:ir.model.fields,field_description:account_avatax.field_account_move__avatax_tax_date
+#: model:ir.model.fields,field_description:account_avatax.field_account_payment__avatax_tax_date
+msgid "Avatax Date"
+msgstr "Avatax päivämäärä"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_fiscal_position__avatax_invoice_account_id
+msgid "Avatax Invoice Account"
+msgstr "Avatax-laskutili"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_avatax_exemption
+msgid "Avatax Partner Exemption Codes"
+msgstr "Avatax Partner erivapauskoodi"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_product_avatax_category
+msgid "Avatax Product Category"
+msgstr "Avatax tuotekategoria"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_fiscal_position__avatax_refund_account_id
+msgid "Avatax Refund Account"
+msgstr "Avataxin palautustili"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_account_bank_statement_line__avatax_tax_date
+#: model:ir.model.fields,help:account_avatax.field_account_move__avatax_tax_date
+#: model:ir.model.fields,help:account_avatax.field_account_payment__avatax_tax_date
+msgid ""
+"Avatax will use this date to calculate the tax on this invoice. If not "
+"specified it will use the Invoice Date."
+msgstr ""
+"Avatax käyttää tätä päivämäärää laskun veron laskemiseen. Jos sitä ei ole "
+"määritetty, se käyttää laskun päivämäärää."
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Cancel"
+msgstr "Peruuta"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__city
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "City"
+msgstr "Kaupunki"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_connection_test_result_view_form
+msgid "Close"
+msgstr "Sulje"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__code
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__code
+msgid "Code"
+msgstr "Koodi"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Commit Transactions"
+msgstr "Kirjoita tapahtumat"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_commit
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_commit
+msgid "Commit in Avatax"
+msgstr "Kirjoita Avataxiin"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_res_company
+msgid "Companies"
+msgstr "Yritykset"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__company_id
+msgid "Company"
+msgstr "Yritys"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Company Code"
+msgstr "Yrityksen koodi"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_res_config_settings
+msgid "Config Settings"
+msgstr "Asetukset"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_res_partner
+msgid "Contact"
+msgstr "Kontakti"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__country_id
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Country"
+msgstr "Maa"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__create_uid
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__create_uid
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__create_uid
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__create_date
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__create_date
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__create_date
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_res_partner__avalara_partner_code
+#: model:ir.model.fields,help:account_avatax.field_res_users__avalara_partner_code
+msgid "Customer Code set in Avalara for this partner."
+msgstr "Avalarassa tälle kumppanille asetettu asiakaskoodi."
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__description
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__description
+msgid "Description"
+msgstr "Kuvaus"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__display_name
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__display_name
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__display_name
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Environment"
+msgstr "Ympäristö"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_account_fiscal_position
+msgid "Fiscal Position"
+msgstr "Verokanta"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_latitude
+msgid "Geo Latitude"
+msgstr "Maantieteellinen leveys"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_longitude
+msgid "Geo Longitude"
+msgstr "Maantieteellinen pituus"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "Go to the configuration panel"
+msgstr "Mene asetusvalikkoon"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__id
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__id
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__id
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__is_already_valid
+msgid "Is Already Valid"
+msgstr "On jo voimassa"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_bank_statement_line__is_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_external_tax_mixin__is_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_move__is_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_payment__is_avatax
+msgid "Is Avatax"
+msgstr "Onko Avatax"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_account_move
+msgid "Journal Entry"
+msgstr "Päiväkirjan kirjaus"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__write_uid
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__write_uid
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__write_uid
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__write_date
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__write_date
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__write_date
+#: model:ir.model.fields,field_description:account_avatax.field_product_avatax_category__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Latitude"
+msgstr "Leveysaste"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Longitude"
+msgstr "Pituusaste"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_account_avatax_unique_code
+msgid "Mixin to generate unique ids for Avatax"
+msgstr "Mixin, jolla luodaan tunnuksia Avataxille"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_account_external_tax_mixin
+msgid "Mixin to manage common parts of external tax calculation"
+msgstr "Mixin, jossa voit hallita ulkoisten verojen yleisten osien laskentaa"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__name
+msgid "Name"
+msgstr "Nimi"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid ""
+"Odoo could not change the state of the transaction related to %(document)s in AvaTax\n"
+"Please check the status of `%(technical)s` in the AvaTax portal."
+msgstr ""
+"Odoo ei pystynyt muuttamaan AvaTaxissa tapahtuman %(document)s tilaa\n"
+"Tarkista `%(technical)s`:n tila AvaTax-portaalissa."
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/res_company.py:0
+#, python-format
+msgid "Odoo could not fetch the exemption codes of %(company)s"
+msgstr "Odoo ei pystynyt hakemaan erivapauskoodeja %(company)s"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid ""
+"Odoo could not fetch the taxes related to %(document)s.\n"
+"Please check the status of `%(technical)s` in the AvaTax portal."
+msgstr ""
+"Odoo ei pystynyt noutamaan %(document)s liittyviä veroja.\n"
+"Tarkista `%(technical)s`:n tila AvaTax-portaalissa."
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/wizard/avatax_validate_address.py:0
+#, python-format
+msgid "Odoo could not validate the address of %(partner)s with Avalara."
+msgstr "Odoo ei pystynyt vahvistamaan %(partner)s-osoitetta Avalaran kanssa."
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid ""
+"Odoo could not void the transaction related to %(document)s in AvaTax\n"
+"Please check the status of `%(technical)s` in the AvaTax portal."
+msgstr ""
+"Odoo ei pystynyt mitätöimään %(document)s-tapahtumaa AvaTaxissa\n"
+"Tarkista `%(technical)s`:n tila AvaTax-portaalissa."
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Original Address"
+msgstr "Alkuperäinen osoite"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__partner_id
+msgid "Partner"
+msgstr "Kumppani"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "Please add your AvaTax credentials"
+msgstr "Lisää AvaTax-tunnuksesi"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_product_template
+msgid "Product"
+msgstr "Tuote"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_product_category
+msgid "Product Category"
+msgstr "Tuotekategoria"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_product_product
+msgid "Product Variant"
+msgstr "Tuotevariaatio"
+
+#. module: account_avatax
+#: model:ir.model.fields.selection,name:account_avatax.selection__res_company__avalara_environment__production
+msgid "Production"
+msgstr "Valmistus"
+
+#. module: account_avatax
+#: model:ir.model.fields.selection,name:account_avatax.selection__res_company__avalara_environment__sandbox
+msgid "Sandbox"
+msgstr "Hiekkalaatikko"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Save Validated"
+msgstr "Tallenna varmistettu"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_avatax_unique_code.py:0
+#, python-format
+msgid "Search operation not supported"
+msgstr "Hakutoimintoa ei tueta"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_connection_test_result__server_response
+msgid "Server Response"
+msgstr "Palvelimen vastaus"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__state_id
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "State"
+msgstr "Alue"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__street
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Street"
+msgstr "Katuosoite"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__street2
+msgid "Street2"
+msgstr "Katuosoite2"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_avatax_validate_address
+msgid "Suggests validated addresses from Avatax"
+msgstr "Ehdottaa Avataxin varmistettuja osoitteita"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Synchronize the exemption codes from Avatax"
+msgstr "Synkronoi erivapauskoodit Avataxista"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/res_company.py:0
+#, python-format
+msgid "Test Result"
+msgstr "Testitulos"
+
+#. module: account_avatax
+#: model:ir.model,name:account_avatax.model_avatax_connection_test_result
+msgid "Test connection with avatax"
+msgstr "Testaa yhteys Avataxiin"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_res_config_settings__avalara_partner_code
+msgid ""
+"The Avalara Company Code for this company. Avalara will interpret as DEFAULT"
+" if it is not set."
+msgstr ""
+"Yrityksen Avalara-yrityskoodi. Avalara tulkitsee tämän oletusarvoksi, jos ei"
+" asetettu."
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid ""
+"The Avalara Tax Code is required for %(name)s (#%(id)s)\n"
+"See https://taxcode.avatax.avalara.com/"
+msgstr ""
+"Avalara-verokoodi vaaditaan %(name)s (#%(id)s) varten\n"
+"Katso https://taxcode.avatax.avalara.com/"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid ""
+"The following customer(s) need to have a zip, state and country when using "
+"Avatax:"
+msgstr ""
+"Seuraavilla asiakkailla on oltava postinumero, osavaltio ja maa, kun he "
+"käyttävät Avataxia:"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_res_config_settings__avalara_commit
+msgid "The transactions will be committed for reporting in Avatax."
+msgstr "Tapahtumat kirjoitetaan Avataxin raportointia varten."
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "This is already a valid address."
+msgstr "Tämä on jo voimassa oleva osoite."
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__setting_account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__setting_account_avatax
+msgid "Use AvaTax"
+msgstr "Käytä AvaTaxia"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_account_fiscal_position__is_avatax
+msgid "Use AvaTax API"
+msgstr "Käytä AvaTax API:ta"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_res_company__avalara_use_upc
+#: model:ir.model.fields,field_description:account_avatax.field_res_config_settings__avalara_use_upc
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_config_settings_view_form
+msgid "Use UPC"
+msgstr "Käytä UPC:tä"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_res_config_settings__avalara_use_upc
+msgid "Use Universal Product Code instead of custom defined codes in Avalara."
+msgstr "Käytä Avalarassa yleistuotekoodia mukautettujen koodien sijasta."
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_account_avatax_unique_code__avatax_unique_code
+#: model:ir.model.fields,help:account_avatax.field_account_bank_statement_line__avatax_unique_code
+#: model:ir.model.fields,help:account_avatax.field_account_move__avatax_unique_code
+#: model:ir.model.fields,help:account_avatax.field_account_payment__avatax_unique_code
+#: model:ir.model.fields,help:account_avatax.field_res_partner__avatax_unique_code
+#: model:ir.model.fields,help:account_avatax.field_res_users__avatax_unique_code
+msgid "Use this code to cross-reference in the Avalara portal."
+msgstr "Käytä tätä koodia ristiviittaukseen Avalara-portaalissa."
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_exemption__valid_country_ids
+msgid "Valid Country"
+msgstr "Voimassa oleva maa"
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.res_partner_form_inherit
+msgid "Validate"
+msgstr "Vahvista"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/res_partner.py:0
+#, python-format
+msgid "Validate address of %s"
+msgstr "Varmista osoite %s"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_res_config_settings__avalara_address_validation
+msgid ""
+"Validate and correct the addresses of partners in North America with "
+"Avalara."
+msgstr ""
+"Vahvista ja korjaa Pohjois-Amerikassa toimivien kumppaneiden osoitteet "
+"Avalaran avulla."
+
+#. module: account_avatax
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Validated Address"
+msgstr "Varmistettu osoite"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_city
+msgid "Validated City"
+msgstr "Varmistettu kaupunki"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_country_id
+msgid "Validated Country"
+msgstr "Varmistettu maa"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_state_id
+msgid "Validated State"
+msgstr "Varmistettu osavaltio"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_street
+msgid "Validated Street"
+msgstr "Varmistettu katu"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_street2
+msgid "Validated Street2"
+msgstr "Varmistettu katu2"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__validated_zip
+msgid "Validated Zip Code"
+msgstr "Varmistettu postinumero"
+
+#. module: account_avatax
+#: model:ir.model.fields,field_description:account_avatax.field_avatax_validate_address__zip
+#: model_terms:ir.ui.view,arch_db:account_avatax.avatax_validate_address_view_form
+msgid "Zip Code"
+msgstr "Postinumero"
+
+#. module: account_avatax
+#. odoo-python
+#: code:addons/account_avatax/models/product.py:0
+#, python-format
+msgid "[%s] %s"
+msgstr "[%s] %s"
+
+#. module: account_avatax
+#: model:ir.model.fields,help:account_avatax.field_product_category__avatax_category_id
+#: model:ir.model.fields,help:account_avatax.field_product_product__avatax_category_id
+#: model:ir.model.fields,help:account_avatax.field_product_template__avatax_category_id
+msgid "https://taxcode.avatax.avalara.com/"
+msgstr "https://taxcode.avatax.avalara.com/"

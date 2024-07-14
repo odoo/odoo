@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="spreadsheet_edition.SpreadsheetSelectorDialog">
+        <Dialog title="title">
+            <div class="o_spreadsheet_selector_dialog">
+                <div class="o-sp-dialog-meta-container">
+                    <div class="o-sp-dialog-meta-name">
+                        <div class="o-sp-dialog-meta-name-label" t-esc="nameLabel"/>
+                        <input type="text" class="o_input o_spreadsheet_name" t-model="state.name"/>
+                    </div>
+                    <div t-if="props.type === 'LIST'" class="o-sp-dialog-meta-threshold">
+                        <div class="o-sp-dialog-meta-threshold-text">Insert the first</div>
+                        <input id="threshold" type="number" class="o_input o-sp-dialog-meta-threshold-input" t-model="state.threshold"/>
+                        <div class="o-sp-dialog-meta-threshold-text">records of the list.</div>
+                    </div>
+                </div>
+                <div class="o-sp-dialog-spreadsheets">
+                    <Notebook>
+                    </Notebook>
+                </div>
+                <t t-set-slot="footer">
+                    <button class="btn btn-primary" t-att-disabled="state.confirmationIsPending" t-on-click="_confirm">Confirm</button>
+                    <button class="btn btn-secondary" t-on-click="_cancel">Cancel</button>
+                </t>
+            </div>
+        </Dialog>
+    </t>
+
+</templates>

@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="sms_template_data_default_alert" model="sms.template">
+            <field name="name">Subscription: Default SMS Alert</field>
+            <field name="model_id" ref="sale_subscription.model_sale_order"/>
+            <field name="body">{{ object.company_id.name }}: Your subscription {{ object.name }} needs your attention. If you have some concerns about it, please contact {{ object.user_id.name }}, your contact person.</field>
+        </record>
+
+        <record id="sms_template_data_payment_failure" model="sms.template">
+            <field name="name">Subscription: Payment failure</field>
+            <field name="model_id" ref="sale_subscription.model_sale_order"/>
+            <field name="body">{{ object.company_id.name }}: Our final attempt to process a payment for your subscription failed. As your payment should have been made on {{ object.next_invoice_date }}, your subscription has been terminated.</field>
+        </record>
+
+        <record id="sms_template_data_payment_reminder" model="sms.template">
+            <field name="name">Subscription: Payment reminder</field>
+            <field name="model_id" ref="sale_subscription.model_sale_order"/>
+            <field name="body">{{ object.company_id.name }}: We were unable to process a payment for your subscription. Your subscription {{ object.name }} is still valid but will be suspended on {{ object.next_invoice_date }} unless the payment succeeds in the meantime.</field>
+        </record>
+
+        <record id="sale_subscription_act_window_sms_composer_single" model="ir.actions.act_window">
+            <field name="name">Send an SMS Text Message</field>
+            <field name="res_model">sms.composer</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{
+                'default_composition_mode': 'mass',
+                'default_mass_keep_log': True,
+            }</field>
+            <field name="binding_model_id" ref="model_sale_order"/>
+            <field name="binding_view_types">list</field>
+        </record>
+        <record id="sale_subscription_act_window_sms_composer_multi" model="ir.actions.act_window">
+            <field name="name">Send an SMS Text Message</field>
+            <field name="res_model">sms.composer</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{
+                'default_composition_mode': 'comment',
+                'default_res_id': active_id,
+            }</field>
+            <field name="binding_model_id" ref="model_sale_order"/>
+            <field name="binding_view_types">form</field>
+        </record>
+    </data>
+</odoo>

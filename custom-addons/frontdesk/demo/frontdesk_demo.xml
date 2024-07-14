@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(3, ref('frontdesk.frontdesk_group_administrator'))]"/>
+        </record>
+    </data>
+    <data noupdate="0">
+        <!-- Stations -->
+        <record model="frontdesk.frontdesk" id="frontdesk_frontdesk_1">
+            <field name="name">Office 1</field>
+            <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="self_check_in">True</field>
+            <field name="drink_offer">True</field>
+            <field name="drink_ids" eval="[(4, ref('frontdesk.frontdesk_drink_1')), (4, ref('frontdesk.frontdesk_drink_2'))]"/>
+        </record>
+
+        <!-- Visitors  -->
+        <record model="frontdesk.visitor" id="frontdesk_visitor_1">
+            <field name="name">Tony Stark</field>
+            <field name="phone">1230004567</field>
+            <field name="email">stark@industries.com</field>
+            <field eval="datetime.now() + timedelta(hours=0.5)" name="check_in"/>
+            <field name="state">planned</field>
+            <field name="station_id" ref="frontdesk.frontdesk_frontdesk_1"/>
+        </record>
+    </data>
+</odoo>

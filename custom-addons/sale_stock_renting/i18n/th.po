@@ -1,0 +1,384 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_stock_renting
+# 
+# Translators:
+# Rasareeyar Lappiam, 2024
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:12+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/product_product.py:0
+#, python-format
+msgid "%(product)s (%(qty)s item)"
+msgstr "%(product)s (%(qty)s รายการ)"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/product_product.py:0
+#, python-format
+msgid "%(product)s (%(qty)s items)"
+msgstr "%(product)s (%(qty)s รายการ)"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.rental_order_wizard_view_form
+msgid ""
+"<i class=\"fa fa-warning\"/>\n"
+"                        <span>\n"
+"                            Some products don't have the requested qty available for pickup\n"
+"                        </span>"
+msgstr ""
+"<i class=\"fa fa-warning\"/>\n"
+"                        <span>\n"
+"                            สินค้าบางอย่างไม่มีจำนวนตามที่ขอสำหรับการรับสินค้า\n"
+"                        </span>"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.res_config_settings_inherit_view_form
+msgid "Activate to use stock deliveries and receipts for rental orders"
+msgstr "เปิดใช้งานเพื่อใช้การส่งมอบสต็อกและใบเสร็จรับเงินสำหรับใบสั่งเช่า"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,help:sale_stock_renting.field_res_company__padding_time
+#: model:ir.model.fields,help:sale_stock_renting.field_res_config_settings__padding_time
+msgid ""
+"Amount of time (in hours) during which a product is considered unavailable "
+"prior to renting (preparation time)."
+msgstr ""
+"ระยะเวลา (เป็นชั่วโมง) ในระหว่างที่สินค้าไม่พร้อมใช้งานก่อนการเช่า "
+"(เวลาเตรียม)"
+
+#. module: sale_stock_renting
+#. odoo-javascript
+#: code:addons/sale_stock_renting/static/src/widgets/qty_at_date_widget.xml:0
+#, python-format
+msgid "Availability"
+msgstr "ความพร้อมใช้งาน"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__qty_available
+msgid "Available"
+msgstr "มีอยู่"
+
+#. module: sale_stock_renting
+#. odoo-javascript
+#: code:addons/sale_stock_renting/static/src/widgets/qty_at_date_widget.xml:0
+#, python-format
+msgid "Available for Rent"
+msgstr "มีให้เช่า"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_res_company
+msgid "Companies"
+msgstr "บริษัท"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_res_config_settings
+msgid "Config Settings"
+msgstr "ตั้งค่าการกำหนดค่า"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.res_config_settings_inherit_view_form
+msgid "Default Padding Time"
+msgstr "เวลาขยายเริ่มต้น"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,help:sale_stock_renting.field_rental_order_wizard_line__tracking
+#: model:ir.model.fields,help:sale_stock_renting.field_sale_order_line__tracking
+msgid "Ensure the traceability of a storable product in your warehouse."
+msgstr "แน่ใจว่ามีการตรวจสอบย้อนกลับของสินค้าที่จัดเก็บได้ในคลังสินค้าของคุณ"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard__has_lines_missing_stock
+msgid "Has lines whose products have insufficient stock"
+msgstr "มีรายการสินค้าที่มีสต็อกไม่เพียงพอ"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard__has_tracked_lines
+msgid "Has lines with tracked products"
+msgstr "มีรายการสินค้าที่ติดตาม"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_res_company__rental_loc_id
+msgid "In rent"
+msgstr "อยู่ในค่าเช่า"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_rental_schedule__is_available
+msgid "Is Available"
+msgstr "พร้อม"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__is_product_storable
+msgid "Is Product Storable"
+msgstr "สินค้าสามารถจัดเก็บได้"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_account_move
+msgid "Journal Entry"
+msgstr "รายการสมุดรายวัน"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_stock_lot
+msgid "Lot/Serial"
+msgstr "ล็อต/ซีเรียล"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.res_config_settings_inherit_view_form
+msgid "Minimum amount of time between two rentals"
+msgstr "ระยะเวลาขั้นต่ำระหว่างการเช่าสองครั้ง"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/sale_order_line.py:0
+#, python-format
+msgid "No valid quant has been found in location %s for serial number %s!"
+msgstr "ไม่พบปริมาณที่ถูกต้องในตำแหน่ง %s สำหรับหมายเลขซีเรียล %s!"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.rental_schedule_view_gantt_inherit_stock
+msgid "Other rental(s) in conflict."
+msgstr "การเช่าอื่นๆ ที่ขัดแย้งกัน"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_res_config_settings__padding_time
+msgid "Padding"
+msgstr "การขยาย"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_res_company__padding_time
+msgid "Padding Time"
+msgstr "เวลาในการขยาย"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_rental_order_wizard
+msgid "Pick-up/Return products"
+msgstr "การรับ/ส่งคืนสินค้า"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__pickeable_lot_ids
+msgid "Pickeable Lot"
+msgstr "ล็อตที่เลือกได้"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__pickedup_lot_ids
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_order_line__pickedup_lot_ids
+msgid "Pickedup Lot"
+msgstr "รับล็อตแล้ว"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/wizard/rental_processing.py:0
+#, python-format
+msgid "Please specify the serial numbers picked up for the tracked products."
+msgstr "โปรดระบุหมายเลขซีเรียลที่รับสำหรับสินค้าที่ติดตาม"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/wizard/rental_processing.py:0
+#, python-format
+msgid "Please specify the serial numbers returned for the tracked products."
+msgstr "โปรดระบุหมายเลขซีเรียลที่มีการส่งคืนสำหรับสินค้าที่ติดตาม"
+
+#. module: sale_stock_renting
+#: model:product.template,name:sale_stock_renting.rental_stock_product_1_product_template
+msgid "Printer"
+msgstr "เครื่องพิมพ์"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_product_template
+msgid "Product"
+msgstr "สินค้า"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_product_product
+msgid "Product Variant"
+msgstr "ตัวแปรสินค้า"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_sale_rental_report
+msgid "Rental Analysis Report"
+msgstr "รายงานการวิเคราะห์การเช่า"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_sale_rental_schedule
+msgid "Rental Schedule"
+msgstr "กำหนดเวลาการเช่า"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.res_config_settings_inherit_view_form
+msgid "Rental Transfers"
+msgstr "การโอนค่าเช่า"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/sale_order_line.py:0
+#: code:addons/sale_stock_renting/models/sale_order_line.py:0
+#, python-format
+msgid "Rental move:"
+msgstr "ย้ายการเช่า:"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_res_config_settings__group_rental_stock_picking
+msgid "Rental pickings"
+msgstr "การเลือกเช่า"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_rental_order_wizard_line
+msgid "RentalOrderLine transient representation"
+msgstr "การเป็นตัวแทนชั่วคราวของบรรทัดคำสั่งเช่า"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_order_line__reserved_lot_ids
+msgid "Reserved Lot"
+msgstr "ล็อตที่จองไว้"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_stock_return_picking
+msgid "Return Picking"
+msgstr "ส่งคืนการรับ"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__returnable_lot_ids
+msgid "Returnable Lot"
+msgstr "ล็อตที่ส่งคืนได้"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__returned_lot_ids
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_order_line__returned_lot_ids
+msgid "Returned Lot"
+msgstr "ล็อตที่ส่งคืนแล้ว"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_sale_order
+msgid "Sales Order"
+msgstr "คำสั่งขาย"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "รายการคำสั่งขาย"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_product_product__preparation_time
+#: model:ir.model.fields,field_description:sale_stock_renting.field_product_template__preparation_time
+msgid "Security Time"
+msgstr "เวลารักษาความปลอดภัย"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_rental_report__lot_id
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_rental_schedule__lot_id
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.rental_report_search_view_inherit_lots
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.rental_schedule_view_search_inherit_lots
+msgid "Serial Number"
+msgstr "หมายเลขซีเรียล"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.rental_order_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.report_rental_order_document
+msgid "Serial Numbers"
+msgstr "หมายเลขซีเรียล"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_stock_move
+msgid "Stock Move"
+msgstr "ย้ายสต๊อก"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_stock_rule
+msgid "Stock Rule"
+msgstr "กฎสต็อก"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,help:sale_stock_renting.field_product_product__preparation_time
+#: model:ir.model.fields,help:sale_stock_renting.field_product_template__preparation_time
+msgid "Temporarily make this product unavailable before pickup."
+msgstr "ทำให้สินค้านี้งดให้บริการชั่วคราวก่อนการรับสินค้า"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,help:sale_stock_renting.field_res_company__rental_loc_id
+msgid ""
+"This technical location serves as stock for products currently in rentalThis"
+" location is internal because products in rentalare still considered as "
+"company assets."
+msgstr ""
+"ตำแหน่งทางเทคนิคนี้ทำหน้าที่เป็นสต็อกสำหรับสินค้าที่กำลังเช่าอยู่ "
+"ตำแหน่งนี้เป็นตำแหน่งภายในเนื่องจากสินค้าในการเช่ายังคงถือเป็นทรัพย์สินของบริษัท"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_rental_order_wizard_line__tracking
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_order_line__tracking
+msgid "Tracking"
+msgstr "การติดตาม"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/product_template.py:0
+#, python-format
+msgid ""
+"Tracking by lots isn't supported for rental products.\n"
+"You should rather change the tracking mode to unique serial numbers."
+msgstr ""
+"ไม่รองรับการติดตามตามล็อตสำหรับสินค้าให้เช่า\n"
+"คุณควรเปลี่ยนโหมดการติดตามเป็นหมายเลขซีเรียลที่ไม่ซ้ำกัน"
+
+#. module: sale_stock_renting
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_order_line__unavailable_lot_ids
+msgid "Unavailable Lot"
+msgstr "ล็อตไม่พร้อมใช้งาน"
+
+#. module: sale_stock_renting
+#: model:res.groups,name:sale_stock_renting.group_rental_stock_picking
+msgid "Use pickings for rental orders"
+msgstr "ใช้การเบิกสินค้าสำหรับใบสั่งเช่า"
+
+#. module: sale_stock_renting
+#. odoo-javascript
+#: code:addons/sale_stock_renting/static/src/widgets/qty_at_date_widget.xml:0
+#, python-format
+msgid "View Rentals"
+msgstr "ดูการเช่า"
+
+#. module: sale_stock_renting
+#: model:ir.model,name:sale_stock_renting.model_stock_warehouse
+#: model:ir.model.fields,field_description:sale_stock_renting.field_sale_rental_schedule__warehouse_id
+msgid "Warehouse"
+msgstr "โกดังสินค้า"
+
+#. module: sale_stock_renting
+#. odoo-python
+#: code:addons/sale_stock_renting/models/sale_order_line.py:0
+#, python-format
+msgid "You cannot change the product of lines linked to stock moves."
+msgstr "คุณไม่สามารถเปลี่ยนไลน์สินค้าที่เชื่อมโยงกับการย้ายสต็อกได้"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.res_config_settings_inherit_view_form
+msgid "hours"
+msgstr "ชั่วโมง"
+
+#. module: sale_stock_renting
+#: model_terms:ir.ui.view,arch_db:sale_stock_renting.product_template_inherit_view_form_stock_rental
+msgid "hours before orders"
+msgstr "ชั่วโมงก่อนสั่งซื้อ"
+
+#. module: sale_stock_renting
+#. odoo-javascript
+#: code:addons/sale_stock_renting/static/src/widgets/qty_at_date_widget.xml:0
+#, python-format
+msgid "to"
+msgstr "ถึง"

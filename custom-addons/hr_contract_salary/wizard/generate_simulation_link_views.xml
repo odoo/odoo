@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="generate_simulation_link_view_form" model="ir.ui.view">
+        <field name="name">generate.simulation.link.form</field>
+        <field name="model">generate.simulation.link</field>
+        <field name="arch" type="xml">
+            <form string="Generate a Simulation Link">
+                <group>
+                    <field name="contract_id"/>
+                    <field name="employee_job_id" />
+                    <field name="job_title" />
+                    <field name="display_warning_message" invisible="1"/>
+                    <field name="department_id" />
+                    <field name="contract_start_date"/>
+                    <field name="company_id" invisible="1" />
+                    <field name="employee_contract_id" invisible="1"/>
+                    <field name="employee_id" invisible="1"/>
+                    <field name="applicant_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <label for="final_yearly_costs"/>
+                    <div class="o_row o_hr_narrow_field-11">
+                        <field name="final_yearly_costs" nolabel="1"/>
+                        <span> /year</span>
+                    </div>
+                    <label for="validity"/>
+                    <div class="o_row">
+                        <field name="validity" class="o_hr_narrow_field" nolabel="1"/>
+                        <span> days</span>
+                    </div>
+                    <field name="email_to" invisible="True"/>
+                    <div class="text-center" colspan="2">
+                        <span class="text-muted fst-italic" invisible="contract_id">An offer template need to be selected to have an offer link.</span>
+                        <span class="text-muted fst-italic" invisible="not display_warning_message">An applicant name needs to be set to have an offer link.</span>
+                    </div>
+                    <div class="alert alert-danger text-center"
+                        role="alert" colspan="2"
+                        invisible="email_to or applicant_id">
+                        The employee does not have a valid work email set. The Simulation Link won't be able to be completed.
+                    </div>
+                </group>
+                <footer>
+                    <button name="action_send_offer" type="object" string="Send By Email" class="btn-primary" data-hotkey="e" invisible="not email_to and not applicant_id"/>
+                    <button name="action_save" type="object" string="Save" class="oe_highlight btn-secondary" data-hotkey="q" invisible="not email_to and not applicant_id"/>
+                    <button string="Discard" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="generate_simulation_link_action" model="ir.actions.act_window">
+        <field name="name">Generate a Simulation Link</field>
+        <field name="res_model">generate.simulation.link</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="generate_simulation_link_view_form"/>
+        <field name="context">{'active_model': 'hr.contract', 'default_employee_contract_id' : active_id,  'dialog_size':'medium'}</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="generate_offer_link_action" model="ir.actions.act_window">
+        <field name="name">Generate a Simulation Link</field>
+        <field name="res_model">generate.simulation.link</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="generate_simulation_link_view_form"/>
+        <field name="context">{'active_model': 'hr.applicant', 'dialog_size':'medium', 'default_applicant_id' : active_id}</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_type_form_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.type.inherit</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <field name="auto_print_reception_report_labels" position="after">
+                <field name="auto_print_carrier_labels" string="Carrier Labels" invisible="code == 'incoming'"/>
+                <field name="auto_print_export_documents" string="Export Documents" invisible="code == 'incoming'"/>
+            </field>
+            <xpath expr="//group[@name='auto_print']" position="after">
+                <group name="scale" invisible="code not in ['incoming', 'outgoing', 'internal']">
+                    <group string="Scales">
+                        <field name="iot_scale_ids" widget="many2many_tags" string="Connect Scale"/>
+                    </group>
+                    <group>
+                        <div colspan="2">
+                            If you connect your scales through the IoT App, the
+                            weight of the package will be set automatically when
+                            you do a "Put in Pack" operation.
+                            <a href="https://www.odoo.com/documentation/17.0/applications/productivity/iot/devices/scale.html"
+                                target="_blank" class="fa fa-arrow-right">
+                                How to connect scales?
+                            </a>
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

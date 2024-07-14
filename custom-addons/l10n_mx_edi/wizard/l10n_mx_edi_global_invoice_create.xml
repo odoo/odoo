@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_mx_edi_global_invoice_create_form" model="ir.ui.view">
+        <field name="name">l10n_mx_edi.global_invoice.create.form</field>
+        <field name="model">l10n_mx_edi.global_invoice.create</field>
+        <field name="groups_id" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+        <field name="arch" type="xml">
+            <form>
+                <!-- Invisible fields -->
+                <field name="move_ids" invisible="1"/>
+
+                <div>
+                    <group>
+                        <field name="periodicity"/>
+                    </group>
+                </div>
+
+                <footer>
+                    <button string="Create"
+                            data-hotkey="q"
+                            name="action_create_global_invoice"
+                            type="object"
+                            class="print btn-primary o_mail_send">
+                    </button>
+                    <button string="Cancel"
+                            data-hotkey="x"
+                            special="cancel"
+                            class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_account_move_create_global_invoice">
+        <field name="name">Create Global Invoice</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="groups_id" eval="[Command.link(ref('account.group_account_invoice'))]"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="state">code</field>
+        <field name="binding_view_types">list</field>
+        <field name="code">
+if records:
+    action = records.l10n_mx_edi_action_create_global_invoice()
+        </field>
+    </record>
+
+</odoo>

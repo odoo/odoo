@@ -1,0 +1,1900 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- https://www.socialsecurity.be/portail/glossaires/dmfa.nsf/ConsultFrImprPDF/149524602BB4229CC125835B00491C32/$FILE/VersComplDMFA191_F.pdf -->
+<odoo>
+<data>
+    <template id="dmfa_xml_report">
+        <DmfAOriginal xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="DmfAOriginal_20211.xsd">
+            <Form>
+
+                <!-- 00296
+                    DESCRIPTION:    Zone qui décrit la teneur d'un formulaire.
+
+                    DOMAINE DE DEFINITION:  Voir annexe 11 - Identification du formulaire.
+
+                    DMFA pour les déclarations multifonctionnelles trimestrielles
+
+
+                    TYPE:   Alphanumérique
+                    LONGUEUR:   7
+
+                    PRESENCE:   Indispensable
+                -->
+                <Identification>DMFA</Identification>
+
+                <!-- 00218
+                    DESCRIPTION:
+                    Date à laquelle le formulaire est créé.
+                    DOMAINE DE DEFINITION:
+                    AAAA est un élément de [année en cours -1 ; année en cours] ;
+                    La date ne peut pas se trouver dans le futur.
+
+
+                    TYPE:   Alphanumérique
+                    LONGUEUR:   10
+
+                    PRESENCE:   Indispensable
+                    FORMAT: AAAA-MM-JJ
+                    · AAAA est l'année
+                    · MM est le mois
+                    . JJ est le jour
+                -->
+                <FormCreationDate t-esc="datetime.date.today()"/>
+
+                <!-- 00299
+                    DESCRIPTION:    Moment précis, exprimé en heures, minutes, secondes et millièmes de secondes.
+
+                    DOMAINE DE DEFINITION:  HH est un élément de [00;23]
+                    MM est un élément de [00;59]
+                    SS est un élément de [00;59]
+                    SSS un élément de [000;999]
+
+
+
+                    TYPE:   Alphanumérique
+                    LONGUEUR:   12
+
+                    PRESENCE:   Indispensable
+
+                    FORMAT: HH:MM:SS.SSS
+                    . HH sont les heures
+                    . MM sont les minutes
+                    . SS sont les secondes
+                    . SSS sont les millièmes de secondes
+                -->
+                <FormCreationHour t-esc="time.strftime('%H:%M:%S.000')"/>
+
+                <!-- 00110
+                    DESCRIPTION:
+                    DOMAINE DE DEFINITION:
+                    0 = Original
+                    1 = Modification
+                    2 = Duplicata
+                    3 = Annulation
+                    4 = Révision
+                    5 = Rappel
+                    6 = Clôture
+                    7 = Modification de l'original version papier
+                    8 = Copie
+                    0 pour les déclarations multifonctionnelles trimestrielles
+
+                    TYPE:   Numérique
+                    LONGUEUR:   1
+
+                    PRESENCE:   Indispensable
+                -->
+                <AttestationStatus>0</AttestationStatus>
+
+                <!-- 00297
+                    DESCRIPTION:    Le type indique la nature du formulaire électronique.
+
+                    DOMAINE DE DEFINITION:
+                    RE = REQUEST - le formulaire contient une demande de renseignements
+                    PA = PROVISIONAL ANSWER - le formulaire contient une réponse provisoire à une demande de renseignements ou à une communication de renseignements
+                    FA = FINAL ANSWER - le formulaire contient une réponse définitive à une demande de renseignements ou à une communication de renseignements
+                    LA = LIMITED ANSWER - le formulaire contient une réponse limitée à une demande de renseignements ou à une communication de renseignements
+                    SU = SUBMISSION - le formulaire communique des renseignements
+
+                    SU pour les déclarations multifonctionnelles trimestrielles
+                    TYPE:   Alphanumérique
+                    LONGUEUR:   2
+                    PRESENCE:   Indispensable
+                -->
+                <TypeForm>SU</TypeForm>
+
+                <!-- 90082: Bloc fonctionnel permettant de préciser des références relatives à un ou plusieurs formulaires ; un formulaire pouvant être une déclaration DmfA originale, une déclaration de modification DmfA, une DRS, une demande de renseignements, une déclaration Dimona, etc.
+                Facultatif-->
+                <Reference>
+
+                    <!-- 00221
+                        DESCRIPTION:    Indique sur quoi porte la référence (00222 Numéro de référence) : sur cette déclaration, sur une déclaration qui est apparentée à cette déclaration ou sur un ensemble de déclarations (= un dossier) auquel appartient cette déclaration, sur cette demande, sur ce formulaire.
+                        DOMAINE DE DEFINITION:  0 = la référence porte sur un formulaire précédemment échangé n'ayant pas la même identification (voir annexes 11/302) et qui est en rapport avec le présent formulaire
+                        1 = la référence porte sur ce formulaire
+                        2 = la référence est un numéro de dossier et porte sur le dossier (= ensemble de déclarations) auquel appartient cette déclaration ou auquel appartient ce formulaire
+                        3 = la référence porte sur un formulaire précédemment échangé ayant la même identification (voir annexes 11/302) et qui est en rapport avec le présent formulaire, par exemple : la référence porte sur la déclaration qui doit être annulée par cette déclaration, ou sur la déclaration qui doit être remplacée par cette déclaration, ou sur la déclaration qui fait l'objet de modifications, ou sur la déclaration qui est à l'origine de la création de ce formulaire...
+                        4 = la référence porte sur une déclaration dans un autre scénario qui est apparentée à cette déclaration
+                        5 = la référence porte sur une demande
+                        6 = la référence porte sur une déclaration refusée
+                        7 = la référence porte sur l'employeur mentionné dans cette déclaration
+                        8 = la référence porte sur le travailleur mentionné dans cette déclaration
+                        9 = la référence est une communication structurée qui doit être utilisée dans le cadre d'un payement et porte sur ce formulaire
+                        1 pour les déclarations multifonctionnelles trimestrielles
+
+
+                        TYPE:   Numérique
+                        LONGUEUR:   1
+
+                        PRESENCE:   Indispensable
+                    -->
+                    <ReferenceType>1</ReferenceType> <!-- 1 = references this report -->
+
+                    <!-- 00298
+                        DESCRIPTION:   Valeur indiquant la source authentique d’un numéro de référence.
+                        DOMAINE DE DEFINITION:  1 = le numéro de référence est attribué par un déclarant ou demandeur (une entreprise, un secrétariat social, un développeur de logiciels, ...)
+                        2 = le numéro de ticket attribué par la Sécurité Sociale, identifiant de manière unique une déclaration , une demande ou une réponse
+                        3 = le numéro de référence est attribué par un secteur de la Sécurité Sociale
+                        4 = le numéro de référence est attribué par le service ePost
+                        5 = le numéro de référence est attribué par la BCSS
+                        6 = le numéro de référence est attribué par le système d'archivage (DOC-ID)
+                        7 = le numéro de référence est attribué par le DSP à un fichier archivé (DSP-ID)
+
+                        1 pour les déclarations multifonctionnelles trimestrielles
+
+
+                        TYPE:   Numérique
+                        LONGUEUR:   1
+
+                        PRESENCE:   Indispensable
+                    -->
+                    <ReferenceOrigin>1</ReferenceOrigin> <!-- 1 = reference given by an employer -->
+
+                    <!-- 00222
+                        DESCRIPTION:    Le numéro de référence.
+                        DOMAINE DE DEFINITION:
+                        Dans ce message, la longueur autorisée pour cette zone est de 20 positions.
+
+
+                        TYPE:   Alphanumérique
+                        LONGUEUR:   64
+
+                        PRESENCE:   Indispensable
+                    -->
+                    <ReferenceNbr t-esc="data.reference"/>
+                </Reference>
+
+                <!-- 90007 Bloc fonctionnel permettant de déclarer les données de la déclaration. -->
+                <EmployerDeclaration>
+
+                    <!-- 00013
+                        DESCRIPTION:    Détermination de l'année et du trimestre.
+                        Détermination de l'année et du trimestre de la déclaration.
+                        DOMAINE DE DEFINITION:
+                        Il doit être compris entre le premier trimestre 2003 (20031) et le dernier trimestre civil échu (AAAAT en cours -1).
+                        TYPE:   Numérique
+                        LONGUEUR:   5
+                        PRESENCE:   Indispensable
+                        FORMAT: AAAAT
+                        . AAAA est l'année
+                        . T est le trimestre
+                     -->
+                    <Quarter t-esc="quarter_repr"/>
+
+                    <!-- 00011
+                        DESCRIPTION: Chaque employeur, qu'il soit une personne physique, un groupement de personnes physiques ou une personne morale, qui occupe du personnel soumis à la loi du 27 juin 1969, doit être inscrit à l'ONSS. Il s'agit d'un numéro ONSS définitif.
+                        DOMAINE DE DEFINITION: Nombre entier et élément de [100006;199999934] pour les numéros définitifs.
+                        Si le numéro unique d’entreprise est connu (zone 00014 différent de zéro), le numéro ONSS peut être mis à la valeur zéro.
+                        TYPE:   Numérique
+                        LONGUEUR: 9
+                        PRESENCE:   Indispensable
+                        FORMAT: 0 ou NNNNNNNCC
+                        . NNNNNNN est le numéro
+                        · CC est le numéro de contrôle.
+                     -->
+                    <NOSSRegistrationNbr t-esc="onss_registration_number"/>
+
+                    <!-- 00012
+                        DESCRIPTION:    Code qui indique si une déclaration se rapporte à une période pendant laquelle elle est sous curatelle.
+                        DOMAINE DE DEFINITION:  0 = période pendant laquelle elle n'est pas sous la curatelle
+                                                1 = période pendant laquelle elle est sous curatelle
+                        TYPE:   Numérique
+                        LONGUEUR:   1
+                        PRESENCE:   Indispensable
+                    -->
+                    <Trusteeship>0</Trusteeship>
+
+                    <!-- 00014
+                        DESCRIPTION:    Numéro qui identifie de manière unique un employeur, qu'il s'agisse d'une personne physique, d'un groupement de personnes physiques ou d'une personne morale.
+                        DOMAINE DE DEFINITION:
+                        Nombre de 10 chiffres dont :
+                        les positions 1 à 8 correspondent à un numéro d'ordre, avec en première position un chiffre égal à zéro ou 1;
+                        les positions 9 et 10 correspondent à un nombre de contrôle.
+                        Si le numéro d'entreprise n'est pas connu, la valeur à renseigner est zéro.
+                        TYPE:   Numérique
+                        LONGUEUR:   10
+                        PRESENCE:   Indispensable
+                     -->
+                    <CompanyID t-esc="onss_company_id"/>
+
+                    <!--  00015
+                        DESCRIPTION:    Montant net à payer par l'employeur à l'ONSS.
+                        DOMAINE DE DEFINITION:  [0;999999999999999].
+                        TYPE:   Numérique
+                        LONGUEUR:   15
+                        PRESENCE: Indispensable
+                    -->
+                    <NetOwedAmount t-esc="global_contribution"/>
+
+                    <!-- 00016
+                        DESCRIPTION:    Code qui indique que les données de temps de travail (nombre de jours par semaine du régime de travail et nombre de jours de la prestation et les jours de vacances) sont converties.
+                        Ces données sont alors déclarées sur base d'un régime de travail de cinq jours par semaine.
+                        En cas de conversion, TOUTES les prestations de TOUTES les occupations, inclus les prestations déclarées à titre indicatif (maladie, chômage, accident du travail, etc.), doivent être converties.
+                        DOMAINE DE DEFINITION:
+                        0 = données non converties
+                        1 = données converties (uniquement pour les déclarations trimestrielles antérieures au troisième trimestre 2004)
+                        TYPE:   Numérique
+                        LONGUEUR:   1
+                        PRESENCE:   Obligatoire si le trimestre de déclaration est antérieur au troisième trimestre 2004.
+                    -->
+                    <System5 t-esc="system5"/>
+
+                    <!-- 00017
+                        DESCRIPTION:
+                        Date à laquelle les travailleurs prennent leurs vacances l'année suivante, ou, si plusieurs périodes ont été fixées, date de la période principale des vacances.
+                        Si les travailleurs prennent leurs vacances par roulement, date des premiers départs en vacances.
+                        Cette date doit permettre aux caisses de vacances de déterminer la date d'émission des pécules de vacances des travailleurs de cet employeur.
+                        Elle doit être déclarée uniquement au quatrième trimestre de l'année.
+                        DOMAINE DE DEFINITION:
+                        Elle est comprise entre le premier mai et le 31 décembre de l'année de la déclaration suivante.
+                        TYPE:   Alphanumérique
+                        LONGUEUR:   10
+                        PRESENCE:   Obligatoire si le trimestre de la déclaration est le 4e trimestre de l'année et si l'employeur occupe des travailleurs manuels.
+                        FORMAT: AAAA-MM-JJ
+                        · AAAA est l'année
+                        · MM est le mois
+                        . JJ est le jour
+                     -->
+                    <t t-if="holiday_starting_date != -1">
+                        <HolidayStartingDate t-esc="holiday_starting_date"/>
+                    </t>
+
+                    <t t-foreach="natural_persons" t-as="person">
+                        <t t-call="l10n_be_hr_payroll.NaturalPerson"/>
+                    </t>
+
+                    <ContributionUnrelatedToNP t-if="group_insurance_basis != '00000000000'">
+                        <UnrelatedEmployerClass t-esc="employer_class"/>
+                        <UnrelatedWorkerCode>865</UnrelatedWorkerCode>
+                        <UnrelatedCalculationBasis t-esc="group_insurance_basis"/>
+                        <UnrelatedAmount t-esc="group_insurance_amount"/>
+                    </ContributionUnrelatedToNP>
+
+                    <!-- 90002: Bloc fonctionnel permettant de déclarer les cotisations non liées à une personne physique dues par l'employeur. -->
+                    <!--
+                        - Cotisation non liée à une personne physique
+                        - CODE : 870 - Cotisation due sur le double pécule de vacances des employés, sur le pécule de vacances ou la prime Copernic des contractuels du secteur public fédéral et sur la prime de restructuration des militaires contractuels  Autres (type travailleurs)
+                        - uniquement autorisé pour le code travailleur pour une cotisation non liée à une personne physique (zone 00020)-->
+                    <ContributionUnrelatedToNP>
+
+                        <!-- 00019
+                            DESCRIPTION:    L'indice de catégorie permet de différencier les employeurs selon leurs obligations en fonction de particularités propres à l'activité exercée. Il est attribué par l'ONSS.
+                            Il s'agit ici de déclarer la catégorie de l'employeur pour laquelle une cotisation non liée à une personne physique est due.
+                            DOMAINE DE DEFINITION:  Nombre de 3 chiffres attribué par l'ONSS.
+                            TYPE:   Numérique
+                            LONGUEUR:   3
+                            PRESENCE:   Indispensable
+                         -->
+                        <UnrelatedEmployerClass t-esc="employer_class"/>
+
+                        <!-- 00020
+                            DESCRIPTION:    Ce code travailleur permet d'identifier une cotisation qui n'est pas liée à une personne physique mais qui est due au niveau de l'indice de catégorie de l'employeur.
+                            DOMAINE DE DEFINITION:  Les codes travailleur correspondant à une cotisation non liée à une personne physique (voir annexe 2 - Liste des codes travailleurs pour lesquels des cotisations sont dues).
+                            TYPE:   Numérique
+                            LONGUEUR:   3
+                            PRESENCE:   Indispensable
+                        -->
+                        <UnrelatedWorkerCode>870</UnrelatedWorkerCode>
+
+                        <!-- 00021
+                            DESCRIPTION:    Montant de base qui permet de calculer le montant de la cotisation non liée à une personne physique.
+                            Aucune base de calcul ne doit être mentionnée pour la cotisation de solidarité sur l’usage d’un véhicule de société (code travailleur 862).
+                            DOMAINE DE DEFINITION:  [0;9999999999999]
+                            TYPE:   Numérique
+                            LONGUEUR:   13
+                            PRESENCE:   Obligatoire si la cotisation déclarée doit être calculée à partir d’une base de calcul.
+                         -->
+                        <t t-if="unrelated_calculation_basis != -1">
+                            <UnrelatedCalculationBasis t-esc="unrelated_calculation_basis"/>
+                        </t>
+
+                        <!-- 00022
+                            DESCRIPTION:    Montant de la cotisation non liée à une personne physique et due par l’indice de catégorie de l'employeur.
+                            DOMAINE DE DEFINITION:  [0;9999999999999]
+                            TYPE:   Numérique
+                            LONGUEUR:   13
+                            PRESENCE:   Indispensable
+                        -->
+                        <UnrelatedAmount t-esc="double_holiday_pay_contribution"/>
+                    </ContributionUnrelatedToNP>
+
+                    <t t-if="employer_compensation">
+                        <EmployerCompensation>
+                            <CompensationCode>1</CompensationCode>
+                            <CompensationAmount t-esc="employer_compensation"/>
+                        </EmployerCompensation>
+                    </t>
+
+                </EmployerDeclaration>
+            </Form>
+        </DmfAOriginal>
+    </template>
+
+    <template id="NaturalPerson">
+        <!-- 90017 Bloc fonctionnel permettant de déclarer les données d'identification d'une personne physique.
+        Une personne physique ne peut se retrouver qu'une seule fois par déclaration.-->
+        <NaturalPerson>
+            <!-- 00023
+                DESCRIPTION:    Numéro de suite des personnes physiques au sein d'une déclaration.
+                Ce numéro doit être unique au sein d'une déclaration.
+                DOMAINE DE DEFINITION:  Nombre entier positif et élément de [1;9999999].
+
+                TYPE:   Numérique
+                LONGUEUR:   7
+
+                PRESENCE:   Indispensable
+            -->
+            <NaturalPersonSequenceNbr t-esc="person.sequence"/>
+            <!-- 00024
+                DESCRIPTION:    Numéro d'identification d'une personne physique au sein de la sécurité sociale. Il s'agit du numéro d'identification de la personne physique au registre national ou au registre bis des personnes physiques.
+
+                DOMAINE DE DEFINITION:
+                La valeur 0 n'est plus autorisée.
+
+
+                TYPE:   Numérique
+                LONGUEUR:   11
+
+                PRESENCE:   Indispensable
+
+                FORMAT: 0 ou NNNNNNNNNCC
+                · NNNNNNNNN est le numéro
+                · CC est le chiffre de contrôle.
+             -->
+            <INSS t-esc="person.identification_id"/>
+            <!-- Note, the following values are now forbidden:
+                - 00025 WorkerName
+                - 00026 WorkerFirstName
+                - 00027 WorkerInitial
+                - 00028 WorkerBirthdate
+                - 00029 WorkerSex
+                - 00030 WorkerStreet
+                - 00031 WorkerHouseNbr
+                - 00032 WorkerPostBox
+                - 00033 WorkerZIPCode
+                - 00034 WorkerCity
+                - 00035 WorkerCountry
+                - 00119 Nationality
+                - 00167 SIS
+                - 00168 WorkerBirthplace
+                - 00169 WorkerBirthplaceCountry
+             -->
+            <!-- 00615
+                DESCRIPTION:    Référence.
+                Référence de la personne physique utilisée par l'employeur ou un secrétariat social agréé.
+                DOMAINE DE DEFINITION:
+                Dans ce message, la longueur autorisée pour cette zone est de 20 positions.
+
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   200
+
+                PRESENCE:   Facultative
+             -->
+            <NaturalPersonUserReference t-esc="person.employee.id"/>
+            <t t-foreach="person.worker_records" t-as="worker">
+                <t t-call="l10n_be_hr_payroll.WorkerRecord"/>
+            </t>
+        </NaturalPerson>
+    </template>
+
+    <template id="WorkerRecord">
+        <!-- WorkerRecord: One per status in the quarter (employee/worker/apprentice) -->
+        <!-- Only employee currently supported -->
+        <!-- 90012 Bloc fonctionnel permettant de déclarer les données relatives à une ligne travailleur.
+            Une combinaison catégorie de l'employeur / code travailleur donnée ne peut se retrouver qu'une seule fois par personne physique.
+        -->
+        <WorkerRecord>
+            <!-- 00036
+                DESCRIPTION:   L'indice de catégorie permet de différencier les employeurs selon leurs obligations en fonction de particularités propres à l'activité exercée. Il est attribué par l'ONSS.
+                Pour une administration provinciale ou locale, cette indication de catégorie détermine les obligations de cotisations des administrations en fonction du régime de vacances qu'elles appliquent à leurs membres du personnel contractuels ou du règlement de pension auquel sont affiliés leurs membres du personnel nommés à titre définitif.
+                DOMAINE DE DEFINITION:  Nombre de 3 chiffres attribué par l'ONSS.
+                TYPE:   Numérique
+                LONGUEUR:   3
+                PRESENCE:   Indispensable
+             -->
+            <EmployerClass t-esc="employer_class"/>
+            <!-- 00037
+                DESCRIPTION:    Ce code permet d'identifier le type de travailleur pour lequel une cotisation spécifique est exigée (cotisation ordinaire, cotisation Fedris, cotisation spéciale prépensionné, cotisation spéciale personnel statutaire licencié, cotisation spéciale étudiant ou cotisation spéciale indemnités complémentaires).
+                DOMAINE DE DEFINITION:  Voir annexe 2 - Liste des codes travailleurs pour lesquels des cotisations sont dues ; uniquement les codes travailleurs pour lesquels la présence est égale à 1 ou 3.
+                Pour une administration provinciale ou locale, voir annexe 28 - Liste des codes travailleurs pour lesquels des cotisations sont dues APL ; uniquement les codes travailleurs pour lesquels la présence est égale à 1 ou 3.
+                En DmfA les stagiaires (= codes travailleurs 848 et 849) ne sont pas autorisés.
+                TYPE:   Numérique
+                LONGUEUR:   3
+                PRESENCE:   Indispensable
+             -->
+            <WorkerCode t-esc="worker.worker_code"/>
+            <!-- 00038
+                DESCRIPTION:
+                Date de début du trimestre sur lequel porte la déclaration du contrat travailleur.
+                Cette date peut coïncider avec le premier jour (01/01, 01/04, 01/07, 01/10) d'un trimestre civil (cas normal pour les employés).
+                Cependant, pour les travailleurs dont la rémunération ne coïncide pas avec le mois civil, il y a lieu d'entendre par date de début, le premier jour couvert par la première paie du trimestre civil.
+                La date de début du premier trimestre de l'année doit toujours coïncider avec le premier janvier.
+                Pour les déclarations des étudiants, des prépensionnés, du personnel statutaire licencié, des travailleurs pour lesquels des cotisations spéciales indemnités complémentaires sont dues et des membres d’un parlement ou d’un gouvernement fédéral / régional ainsi que pour celles de Fedris (catégories 027 et 028) et des tiers payants (catégories 099, 199, 299, 699), elle doit être égale au premier jour du trimestre civil.
+                DOMAINE DE DEFINITION:
+                AAAA est égal à l'année de la déclaration.
+
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   10
+
+                PRESENCE:   Indispensable
+
+                FORMAT: AAAA-MM-JJ
+                · AAAA est l'année
+                · MM est le mois
+                . JJ est le jour
+             -->
+            <NOSSQuarterStartingDate t-esc="quarter_start"/>
+            <!-- 00039
+                DESCRIPTION:
+                Date de fin du trimestre sur lequel porte la déclaration du contrat travailleur.
+                Cette date peut coïncider avec le dernier jour (31/03, 30/06, 30/09, 31/12) d'un trimestre civil (cas normal pour les employés).
+                Cependant, pour les travailleurs dont la rémunération ne coïncide pas avec le mois civil, il y a lieu d'entendre par date de fin, le dernier jour couvert par la dernière paie du trimestre civil.
+                Toutefois, lorsque ce dernier jour est immédiatement suivi d'un ou de plusieurs jours habituels de repos, le jour de repos qui n'est pas un dimanche est INCLUS dans le trimestre et devient alors la date de fin, sauf pour le quatrième trimestre de l'année. En effet la date de fin du quatrième trimestre de l'année doit toujours coïncider avec le 31 décembre.
+                Pour les déclarations des étudiants, des prépensionnés, du personnel statutaire licencié, des travailleurs pour lesquels des cotisations spéciales indemnités complémentaires sont dues et des membres d’un parlement ou d’un gouvernement fédéral / régional ainsi que pour celles de Fedris (catégories 027 et 028) et des tiers payants (catégories 099, 199, 299, 699), elle doit être égale au dernier jour du trimestre civil.
+                DOMAINE DE DEFINITION:
+                AAAA est égal à l'année de la déclaration.
+                TYPE:   Alphanumérique
+                LONGUEUR:   10
+                PRESENCE:   Indispensable
+                FORMAT: AAAA-MM-JJ
+                · AAAA est l'année
+                · MM est le mois
+                . JJ est le jour
+             -->
+            <NOSSQuarterEndingDate t-esc="quarter_end"/>
+            <!-- 00040
+                DESCRIPTION:    Code permettant de désigner un travailleur ayant le statut fiscal de frontalier.
+                DOMAINE DE DEFINITION:
+                0 = non frontalier
+                1 = frontalier
+                0 si la déclaration concerne un tiers payant (catégories de l'employeur 099, 199, 299, 699) ou un statutaire avec un lieu d’affectation à l’étranger ou un membre d’un parlement ou d’un gouvernement fédéral / régional.
+                TYPE:   Numérique
+                LONGUEUR:   1
+                PRESENCE:   Indispensable
+             -->
+            <Border t-esc="worker.frontier_worker"/>
+            <!-- 00041
+                DESCRIPTION:    Code se référant à la nomenclature des classes de risques génériques utilisées par les entreprises d'assurance pour la détermination des primes Accidents du Travail (AT). Les conditions précises de déclaration sont reprises dans le document des instructions DMFA à destination des employeurs.
+
+                Une activité est renseignée au niveau d'un travailleur lorsque celle-ci s'écarte de l'activité principale de l'entreprise et qu'elle a nécessité de facto une tarification spécifique reprise au niveau du contrat d'assurance Accidents du Travail.
+
+                Si la classe de risque du travailleur sur lequel porte la déclaration change en cours du trimestre, il y a lieu de déclarer la classe de risque au dernier jour du trimestre ou au dernier jour d'occupation pour le statut qui est déclaré. Ainsi un " ouvrier en atelier" qui devient " ouvrier sur chantier " sera déclaré comme " ouvrier sur chantier ". Un " ouvrier en atelier " qui devient " employé sédentaire " sera connu comme " ouvrier en atelier" pour la déclaration en tant qu'ouvrier et comme " employé sédentaire" pour la déclaration en tant qu'employé.
+
+                Elle est également nécessaire lorsqu'elle concerne un sportif. Elle sert alors aussi au calcul de la rémunération de base.
+
+                DOMAINE DE DEFINITION:  La liste des valeurs admises se trouve en annexe 6 - Activité par rapport au risque.
+
+                TYPE:   Numérique
+                LONGUEUR:   3
+
+                PRESENCE:   Obligatoire si l'activité du travailleur par
+                rapport au risque s'écarte de l'activité principale
+                de l'entreprise et qu'elle a nécessité de
+                facto une tarification spécifique reprise au niveau
+                du contrat d'assurance Accidents du Travail.
+
+              -->
+            <t t-if="worker.activity_with_risk != -1">
+                <ActivityWithRisk t-esc="worker.activity_with_risk"/>
+            </t>
+            <!-- See 00042: Deprecated since 2014-->
+            <t t-if="worker.local_unit_id != -1">
+                <LocalUnitID t-esc="worker.local_unit_id"/>
+            </t>
+            <!-- 00616
+                DESCRIPTION:   Référence.
+                Référence de la ligne travailleur utilisée par l'employeur ou un secrétariat social agréé.
+                DOMAINE DE DEFINITION:
+                Dans ce message, la longueur autorisée pour cette zone est de 20 positions.
+                TYPE:   Alphanumérique
+                LONGUEUR:   200
+                PRESENCE:   Facultative
+            -->
+            <!-- <WorkerRecordUserReference t-esc="worker.user_reference"/> -->
+            <t t-foreach="worker.occupations" t-as="occupation">
+                <t t-call="l10n_be_hr_payroll.Occupation"/>
+            </t>
+            <t t-foreach="worker.contributions" t-as="contribution">
+                <t t-call="l10n_be_hr_payroll.WorkerContribution"/>
+            </t>
+            <t t-foreach="worker.deductions" t-as="deduction">
+                <t t-call="l10n_be_hr_payroll.WorkerDeduction"/>
+            </t>
+            <t t-foreach="worker.student_contributions" t-as="contribution">
+                <t t-call="l10n_be_hr_payroll.StudentContribution"/>
+            </t>
+        </WorkerRecord>
+    </template>
+
+    <template id="WorkerDeduction">
+        <!-- 90110 Bloc fonctionnel permettant de déclarer les déductions demandées pour une ligne travailleur.
+            Une déduction ligne travailleur donnée (un code déduction) ne peut se retrouver qu'une seule fois par ligne travailleur.
+        -->
+        <WorkerDeduction>
+            <!-- 00086
+                DESCRIPTION:    Code qui indique la déduction demandée.
+                DOMAINE DE DEFINITION:  Les codes DmfA repris à l’annexe 4 - Liste des codes déductions.
+
+
+                TYPE:   Numérique
+                LONGUEUR:   4
+
+                PRESENCE:   Indispensable
+            -->
+            <DeductionCode t-esc="deduction.code"/>
+            <!-- 00088
+                DESCRIPTION:    Montant sur lequel un taux doit être appliqué afin de connaître le montant de la déduction demandée pour cette ligne travailleur ou occupation.
+                DOMAINE DE DEFINITION:  [0;99999999999]
+
+
+                TYPE:   Numérique
+                LONGUEUR:   11
+
+                PRESENCE:   Obligatoire si la déduction demandée est calculée à partir d’une base de calcul sur laquelle un taux doit être appliqué.
+            -->
+            <t t-if="deduction.deduction_calculation_basis != -1">
+                <DeductionCalculationBasis t-esc="deduction.deduction_calculation_basis"/>
+            </t>
+            <!-- 00089
+                DESCRIPTION:    Montant de la déduction demandée pour cette ligne travailleur ou occupation.
+                DOMAINE DE DEFINITION:  [0;99999999999].
+
+
+                TYPE:   Numérique
+                LONGUEUR:   11
+
+                PRESENCE:   Obligatoire si la déduction demandée correspond à un montant déductible du montant net à payer.
+            -->
+            <DeductionAmount t-esc="deduction.amount"/>
+            <!-- 00090
+                DESCRIPTION:
+                Date à laquelle la déduction prend cours pour cette ligne travailleur ou occupation.
+                Cette date ne correspond pas nécessairement à la date d’entrée en service du travailleur chez l’employeur.
+                DOMAINE DE DEFINITION:
+                Le domaine de définition varie en fonction de la déduction demandée (voir annexe 4).
+
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   10
+
+                PRESENCE:   Obligatoire si une date doit être déclarée pour la déduction demandée.
+
+                FORMAT: AAAA-MM-JJ
+                · AAAA est l'année
+                · MM est le mois
+                . JJ est le jour
+            -->
+            <t t-if="deduction.deduction_right_starting_date != -1">
+                <DeductionRightStartingDate t-esc="deduction.deduction_right_starting_date"/>
+            </t>
+            <!-- 00091
+                DESCRIPTION:    Nombre de mois faisant l'objet, au cours du trimestre traité, de la prise en charge temporaire, par l'ONSS, des frais d'administration encourus par l'employeur affilié à un Secrétariat Social Agréé.
+                DOMAINE DE DEFINITION:  [1;3]
+
+
+                TYPE:   Numérique
+                LONGUEUR:   1
+
+                PRESENCE:   Obligatoire si le Secrétariat Social revendique l'intervention de l'ONSS dans ses frais d'administration pour cet employeur.
+            -->
+            <t t-if="deduction.manager_cost_nbr_months != -1">
+                <ManagementCostNbrMonths t-esc="deduction.manager_cost_nbr_months"/>
+            </t>
+            <!-- 00092
+                DESCRIPTION:    Numéro d'identification d'une personne physique au sein de la sécurité sociale. Il s'agit du numéro d'identification de la personne physique au registre national ou au registre bis des personnes physiques.
+
+                NISS de la personne qui est en interruption de carrière (partielle ou totale) ou en prépension à mi-temps, et qui est remplacée par la personne pour laquelle la déduction est demandée en raison du remplacement.
+                DOMAINE DE DEFINITION:
+                Si le NISS n'est pas connu, la valeur à renseigner est zéro.
+
+
+                TYPE:   Numérique
+                LONGUEUR:   11
+
+                PRESENCE:   Obligatoire si la déduction est octroyée suite au remplacement d'une personne en interruption de carrière (partielle ou totale) ou prépension à mi-temps.
+
+                FORMAT: 0 ou NNNNNNNNNCC
+                · NNNNNNNNN est le numéro
+                · CC est le chiffre de contrôle.
+            -->
+            <t t-if="deduction.replace_inss != -1">
+                <ReplacedINSS t-esc="deduction.replace_inss"/>
+            </t>
+            <!-- 00093
+                DESCRIPTION:    Numéro d'identification d'une personne physique au sein de la sécurité sociale. Il s'agit du numéro d'identification de la personne physique au registre national ou au registre bis des personnes physiques.
+
+                NISS de la personne qui a ouvert le droit à la déduction lorsque celle-ci est demandée pour un travailleur remplaçant cette personne (ou son remplaçant).
+                DOMAINE DE DEFINITION:
+                Si le NISS n'est pas connu, la valeur à renseigner est zéro.
+
+
+                TYPE:   Numérique
+                LONGUEUR:   11
+
+                PRESENCE:   Obligatoire si la déduction est demandée pour un travailleur qui remplace la personne (ou son remplaçant) qui a ouvert le droit à la déduction.
+
+                FORMAT: 0 ou NNNNNNNNNCC
+                · NNNNNNNNN est le numéro
+                · CC est le chiffre de contrôle.
+            -->
+            <t t-if="deduction.applicant_inss != -1">
+                <ApplicantINSS t-esc="deduction.applicant_inss"/>
+            </t>
+            <!-- 00094
+                DESCRIPTION:    Origine de l'attestation nécessaire à l'octroi de la déduction.
+                Cette donnée ne sera pas demandée pour les réductions des cotisations qui sont d'application actuellement.
+                DOMAINE DE DEFINITION:
+                1 = ONEm
+                2 = CPAS
+                3 = Caisse d''assurance sociale pour travailleurs indépendants
+                4 = Apprenti agréé
+                5 = Ancien intérimaire
+
+
+                TYPE:   Numérique
+                LONGUEUR:   3
+
+                PRESENCE:   Facultative
+             -->
+            <t t-if="deduction.certificate_origin != -1">
+                 <CertificateOrigin t-esc="deduction.certificate_origin"/>
+            </t>
+             <!-- DeductionDetail: Check annexe 4 to see if mandatory -->
+        </WorkerDeduction>
+    </template>
+
+    <!-- YTI Missing functional bloc, not needed for classic CP200:
+        - 90005 DismissedStatutoryWorkerContribution
+        - 90011 IndemnityWAPM
+        - 90042 EarlyRetirementContribution
+        - 90108 DeductionDetail - Présent en fonction du type de Worker Deduction (voir annexe 4)
+        - 90109 OccupationDeduction
+        - 90172 SecondPillarInformation
+        - 90250 OccupationDeductionDetail
+        - 90336 ComplementaryIndemnity - See Annexe 2
+        - 90337 ComplIndemnityContribution - See annexe 2
+        - 90411 OccupationPublicServiceData
+        - 90412 ScaleSalary
+        - 90413 AdditionalScaleSalary
+        - 90438 ReorgMeasureInformation
+        - 90578 ActivationInformation
+     -->
+
+    <template id="StudentContribution">
+        <!-- 90003: Bloc fonctionnel permettant de déclarer la cotisation de solidarité due pour un étudiant. -->
+        <StudentContribution>
+            <!-- 00076
+                DESCRIPTION:    Rémunération qui donne lieu au calcul de la cotisation de solidarité pour les étudiants occupés dans le cadre d'un contrat d'occupation d'étudiants à condition que la durée d'engagement n'excède pas un certain nombre d'heures (à partir du 1/2017) ou de journées de travail (avant 1/2017) sur l'ensemble de l'année civile (voir zones nombre d’heures étudiant ou nombre de jours étudiant).
+                DOMAINE DE DEFINITION:  [0;999999999]
+                TYPE:   Numérique
+                LONGUEUR:   9
+                PRESENCE:   Indispensable
+             -->
+            <StudentRemunAmount t-esc="contribution.student_remun_amount"/>
+            <!-- 00077
+                DESCRIPTION:    Montant de la cotisation de solidarité due pour les étudiants occupés dans le cadre d'un contrat d'occupation d'étudiants à condition que la durée d'engagement n'excède pas un certain nombre d’heures (à partir du 1/2017) ou de journées de travail (avant 1/2017) sur l’ensemble de l'année civile (voir zones nombre d’heures étudiant ou nombre de jours étudiant).
+                DOMAINE DE DEFINITION:  [0;999999999].
+                TYPE:   Numérique
+                LONGUEUR:   9
+                PRESENCE:   Indispensable
+            -->
+            <StudentContributionAmount t-esc="contribution.student_contribution_amount"/>
+            <!-- 00078
+                DESCRIPTION:    Jusqu’au 4ème trimestre 2016 inclus :
+                Nombre de jours rémunérés à déclarer pour les étudiants occupés dans le cadre d'un contrat d'occupation d'étudiants à condition que la durée d'engagement n'excède pas un certain nombre de journées de travail sur l’ensemble de l’année civile (voir domaine de définition).
+                DOMAINE DE DEFINITION:  [0;50] à partir du 1er trimestre 2012 jusqu’au 4ème trimestre 2016 inclus
+                [0;23] jusqu’au 4ème trimestre 2011 inclus
+                TYPE:   Numérique
+                LONGUEUR:   2
+                PRESENCE:   Obligatoire si le travailleur étudiant est déclaré pour un trimestre antérieur au 1/2017.
+                Interdit à partir des déclarations du 1/2017.
+            -->
+            <t t-if="contribution.student_nbr_days != -1">
+                <StudentNbrDays t-esc="contribution.student_nbr_days"/>
+            </t>
+            <!--
+                DESCRIPTION:    A partir du 1er trimestre 2017 :
+                Nombre d’heures rémunérées à déclarer pour les étudiants occupés dans le cadre d'un contrat d'occupation d'étudiants à condition que la durée d'engagement n'excède pas un certain nombre d'heures de travail sur l'ensemble de l'année civile (voir domaine de définition).
+                DOMAINE DE DEFINITION:  [0;475] à partir du 1er trimestre 2017
+                TYPE:   Numérique
+                LONGUEUR:   3
+                PRESENCE:   Obligatoire si le travailleur étudiant est déclaré pour un trimestre postérieur au 4/2016.
+                Interdit pour les déclarations antérieures au 1/2017.
+             -->
+            <StudentHoursNbr t-esc="contribution.student_hours_nbr"/>
+            <!-- See 00042 -->
+            <LocalUnitID t-esc="contribution.local_unit_id"/>
+        </StudentContribution>
+    </template>
+
+    <template id="WorkerContribution">
+        <!-- 90001: Bloc fonctionnel permettant de déclarer les cotisations dues pour une ligne travailleur. -->
+        <WorkerContribution>
+            <!-- 00082
+                DESCRIPTION:    Le code travailleur cotisation permet, en combinaison avec le type de cotisation, d'identifier la cotisation déclarée, de déterminer si la cotisation est due et de connaître le taux ou le forfait de la cotisation.
+                DOMAINE DE DEFINITION:  Les codes travailleur représentant une cotisation ordinaire, une cotisation Fedris, une cotisation supplémentaire ou une cotisation spéciale indemnités complémentaires (voir annexe 2 ; pour une administration provinciale ou locale voir l'annexe 28 - Liste des codes travailleurs pour lesquels des cotisations sont dues - présence = 2, 3 ou 5).
+                TYPE:   Numérique
+                LONGUEUR:   3
+                PRESENCE:   Indispensable
+            -->
+            <ContributionWorkerCode t-esc="contribution.worker_code"/>
+            <!-- 00083
+                DESCRIPTION:    Le type de cotisation permet, en combinaison avec le code travailleur cotisation, d’identifier la cotisation déclarée, de déterminer si la cotisation est due et de connaître le taux ou le forfait de la cotisation.
+                DOMAINE DE DEFINITION:  Les valeurs admises en fonction du code travailleur cotisation se trouvent en annexe 3 - Valeurs autorisées pour le "Type de cotisation" en fonction des codes travailleurs cotisations.
+                TYPE:   Numérique
+                LONGUEUR:   1
+                PRESENCE:   Indispensable
+            -->
+            <ContributionType t-esc="contribution.contribution_type"/>
+            <!-- 00084
+                DESCRIPTION:    Montant sur lequel un taux doit être appliqué afin de connaître le montant de la cotisation due pour cette ligne travailleur.
+                DOMAINE DE DEFINITION:  [0;99999999999]
+                TYPE:   Numérique
+                LONGUEUR:   11
+                PRESENCE:   Obligatoire si la cotisation déclarée doit être calculée à partir d’une base de calcul sur laquelle un taux doit être appliqué.
+            -->
+            <t t-if="contribution.calculation_basis != -1">
+                <ContributionCalculationBasis t-esc="contribution.calculation_basis"/>  <!-- Probably not required -->
+            </t>
+            <!-- 00085
+                DESCRIPTION:   Montant de la cotisation due pour cette ligne travailleur ou pour cette indemnité complémentaire.
+                DOMAINE DE DEFINITION:  [0;99999999999].
+                TYPE:   Numérique
+                LONGUEUR:   11
+                PRESENCE:   Indispensable
+             -->
+            <ContributionAmount t-esc="contribution.amount"/>
+            <!-- 00086
+                DESCRIPTION:
+                Date à laquelle le travailleur a été embauché pour la première fois chez l’employeur
+                DOMAINE DE DEFINITION:
+                La date doit être comprise entre le 01/07/2007 et la date civile de fin du trimestre concerné (ces deux dates comprises)
+                TYPE:   Alphanumérique
+                LONGUEUR:   10
+                PRESENCE:   Obligatoire si le code travailleur cotisation = 826 et qu’il s’agit d’un jeune travailleur engagé avant l’âge de 25 ans pouvant bénéficier du forfait réduit
+                FORMAT: AAAA-MM-JJ
+                · AAAA est l'année
+                · MM est le mois
+                . JJ est le jour
+            -->
+            <t t-if="contribution.first_hiring_date != -1">
+                <FirstHiringDate t-esc="first_hiring_date"/>
+            </t>
+        </WorkerContribution>
+    </template>
+
+    <template id="Occupation">
+        <!-- Occupation ~= contract -->
+        <!-- 90015 Bloc fonctionnel permettant de déclarer les données relatives à une occupation. -->
+        <Occupation>
+
+            <!-- 00043
+                DESCRIPTION:    Numéro de suite des occupations au sein d’une ligne travailleur.
+                Ce numéro doit être unique au sein d'une ligne travailleur.
+                DOMAINE DE DEFINITION:  Nombre entier positif et élément de [1;99].
+                TYPE:   Numérique
+                LONGUEUR:   2
+                PRESENCE:   Indispensable
+             -->
+            <OccupationSequenceNbr t-esc="occupation.sequence"/>
+
+            <!-- 00044
+                DESCRIPTION:
+                Il s'agit de la date de début de l'occupation sur laquelle porte la déclaration.
+                Si l'occupation du travailleur n'a pas changé depuis son entrée en service chez l'employeur, cette date correspond à la date d'entrée en service chez l'employeur.
+                Si l'occupation a été modifiée (exemple : le travailleur est passé d'un régime de travail à temps plein à un régime de travail à temps partiel, la fraction de l'occupation a été modifiée, etc.), la date de début de l'occupation correspond au début de la période à laquelle se rapportent les nouvelles données de l'occupation.
+                Lorsqu'il est mis fin au contrat de travail et que des indemnités de rupture sont payées au travailleur, il y a lieu de déclarer les différentes périodes couvertes par une indemnité de rupture sous la forme d'une nouvelle occupation par période. Il s'agit alors de la date de début de la période couverte par l'indemnité de rupture.
+                DOMAINE DE DEFINITION:
+                Lorsque l'occupation ne concerne pas une période couverte par des indemnités de rupture, l'année doit être un élément de [année de la déclaration - 100 ; année de la déclaration].
+
+                De plus si l’occupation concerne un pompier volontaire (statut du travailleur = B), un ambulancier volontaire (statut du travailleur = VA) ou un volontaire de la Sécurité Civile (statut du travailleur = VA), la date doit être comprise entre les dates de début et de fin du trimestre pour la sécurité sociale.
+
+                Lorsque l'occupation concerne une période couverte par des indemnités de rupture, la date doit être supérieure ou égale à la date de début du trimestre pour la sécurité sociale.
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   10
+                PRESENCE:   Obligatoire si la déclaration ne concerne pas un tiers payant (déclaration pour des catégories de l'employeur différentes de 099, 199, 299, 699, 898 et 405) ou si la déclaration concerne un tiers payant et il s’agit d’une occupation correspondant à une période couverte par une indemnité de rupture.
+                FORMAT: AAAA-MM-JJ
+                · AAAA est l'année
+                · MM est le mois
+                . JJ est le jour
+             -->
+            <OccupationStartingDate t-esc="occupation.date_start"/>
+
+            <!-- 00045
+                DESCRIPTION:
+                Il s'agit de la date de fin de l'occupation sur laquelle porte la déclaration.
+                Si l'occupation du travailleur est inchangée et continue le trimestre suivant, cette date n'est pas complétée.
+                Si la fin de l'occupation a comme conséquence que le lien de subordination entre le travailleur et l'employeur est rompu, cette date correspond à la date de sortie chez l'employeur.
+                Lorsqu'il est mis fin au contrat de travail et que des indemnités de rupture sont payées au travailleur, il y a lieu de déclarer les différentes périodes couvertes par une indemnité de rupture sous la forme d'une nouvelle occupation par période. Il s'agit alors de la date de fin de la période couverte par l'indemnité de rupture.
+                DOMAINE DE DEFINITION:
+                Lorsque l'occupation ne concerne pas une période couverte par des indemnités de rupture, elle doit être comprise entre les dates de début et de fin du trimestre pour la sécurité sociale.
+                Lorsque l'occupation concerne une période couverte par des indemnités de rupture,
+                - l'année doit être égale à l'année de la date de début de l'occupation.
+                - la date doit être supérieure ou égale à la date de début du trimestre pour la sécurité sociale.
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   10
+                PRESENCE:   Obligatoire si la déclaration ne concerne pas un tiers payant (déclaration pour des catégories de l’employeur différente de 099, 199, 299, 699, 898 et 405) pour les cas suivants :
+                - L'occupation se termine dans le courant du trimestre de la déclaration.
+                - Il s'agit d'une occupation correspondant à une période couverte par une indemnité de rupture.
+                - Il s'agit d'une occupation pour un travailleur occasionnel ou d'une occupation pour un travailleur Flexi-Job ou d'une occupation pour un statutaire qui a été licencié ou d'une occupation pour un volontaire de la Sécurité Civile ou un ambulancier volontaire (statut du travailleur = VA).
+                - La ligne "Données de l'occupation relatives au secteur public" est présente et la zone "Motif de fin de la relation statutaire" de cette ligne est remplie. Ceci ne concerne que les statutaires.
+
+                Obligatoire si la déclaration concerne un tiers payant et il s'agit d'une occupation correspondant à une période couverte par une indemnité de rupture.
+
+                FORMAT: AAAA-MM-JJ
+                · AAAA est l'année
+                · MM est le mois
+                . JJ est le jour
+             -->
+            <t t-if="occupation.date_stop != -1">
+                <OccupationEndingDate t-esc="occupation.date_stop"/>
+            </t>
+
+            <!-- 00046
+                DESCRIPTION:    Numéro de commission paritaire dont relève le travailleur dans le cadre de l'occupation déclarée ou au moment du premier octroi d’indemnités complémentaires.
+
+                DOMAINE DE DEFINITION:  - CCC : Les commissions paritaires ; suite de 3 chiffres, cadrée à gauche.
+                - CCC.CC : Les sous-commissions paritaires ; suite de 3 chiffres suivie d'un point et de 2 chiffres, cadrée à gauche.
+                - CCC.CC.CC : Les sous-sous-commissions paritaires ; suite de 3 chiffres suivie d'un point et de 2 chiffres puis d'un point et de 2 chiffres.
+                - Si le travailleur ne ressort d’aucune commission paritaire, sous-commission paritaire ou sous-sous-commission paritaire, la valeur à remplir est 999.
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   9
+                PRESENCE:   Indispensable
+                FORMAT: CCC ou CCC.CC ou CCC.CC.CC
+             -->
+            <JointCommissionNbr t-esc="occupation.commission"/>
+
+            <!-- 00047
+                DESCRIPTION:    Si le régime de travail hebdomadaire est fixe, il s'agit du nombre de jours par semaine du travailleur. Le régime de travail est dit fixe lorsque le travailleur travaille un nombre fixe de jours par semaine. Il peut alors prendre les valeurs 1, 2, 3, 4, 5, 6 ou 7 jours/semaine.
+                Si le régime de travail hebdomadaire est variable, il s'agit du nombre moyen de jours par semaine durant lesquels le travailleur est censé effectuer un travail en tenant compte des jours de travail présents dans un cycle complet de travail.
+                DOMAINE DE DEFINITION:  [1; 700] pour tous les travailleurs, sauf exceptions reprises ci-après.
+                0 si le travailleur est en interruption complète de la carrière professionnelle ou s'il s'agit d'un travailleur statutaire occupé dans le cadre d'une mesure de réorganisation du temps de travail pour laquelle il n’effectue aucune prestation (mesure de réorganisation = 513, 516, 517, 542, 543, 545, 546 ou 599).
+                [0; 700] pour un travailleur qui au cours de la période concernée par la déclaration n'a dû fournir aucune prestation (Justification des jours = 7) ou s'il s'agit d'un travailleur statutaire occupé dans le cadre d'une mesure de réorganisation du temps de travail pour laquelle il peut effectuer des prestations (mesure de réorganisation = 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 531, 541 ou 544).
+                Si le nombre de jours par semaine du régime de travail est égal à zéro alors le nombre moyen d'heures par semaine du travailleur doit être à zéro et inversement.
+                500 pour un gardien ou gardienne d’enfants (code travailleur 497 (annexe 2) et 761 (annexe 28)) ou un membre d’un parlement ou d’un gouvernement fédéral / régional ou un mandataire local qui effectue des prestations.
+                En cas de conversion des prestations en régime 5 jours/semaine (uniquement pour les déclarations trimestrielles antérieures au troisième trimestre 2004), il doit être égal à 500.
+                Attention : les jours sont exprimés en centièmes de jours.
+                Exemples :
+                - 5 jours/semaine est exprimé sous la forme : 500.
+                - 2,66 jours/semaine est exprimé sous la forme : 266.
+                500 si la déclaration concerne un tiers payant (catégories de l'employeur 099, 199, 299, 699).
+                700 si la déclaration concerne un tiers déclarant avec la catégorie employeur 405.
+
+                TYPE:   Numérique
+                LONGUEUR:   3
+                PRESENCE:   Indispensable
+             -->
+            <WorkingDaysSystem t-esc="occupation.days_per_week"/>
+
+            <!-- 00050
+                DESCRIPTION:    Code qui indique si l'occupation est effectuée dans le cadre d'un contrat temps plein ou temps partiel.
+
+                DOMAINE DE DEFINITION:  0 = temps plein
+                1 = temps partiel
+                1 si la déclaration concerne un gardien ou gardienne d’enfants (code travailleur 497 (annexe 2) et 761 (annexe 28)), jusqu’au 2/2005 inclus.
+                0 si la déclaration concerne un mandataire local.
+                0 si la déclaration concerne un tiers payant (catégories de l'employeur 099, 199, 299, 699) ou un membre d’un parlement ou d’un gouvernement fédéral / régional.
+
+                TYPE:   Numérique
+                LONGUEUR:   1
+                PRESENCE:   Indispensable
+             -->
+            <ContractType t-esc="occupation.is_parttime"/>
+
+            <!-- 00049
+                DESCRIPTION:    Nombre moyen d'heures par semaine (exprimé en centièmes d’heures) pendant lesquelles la personne de référence est censée effectuer un travail.
+                C'est le nombre d'heures par semaine d'une personne occupée à temps plein dans la même entreprise, ou, à défaut, dans la même branche d’activités, dans une fonction analogue.
+                Le nombre moyen d'heures par semaine du travailleur divisé par le nombre moyen d'heures par semaine de la personne de référence définit la fraction d'occupation du travailleur.
+                DOMAINE DE DEFINITION:  [1;4800] pour tous les travailleurs, sauf exceptions reprises ci-après.
+                [1;5000] pour un travailleur à domicile - accueillant d'enfants - Communauté flamande (Statut du travailleur = D1).
+                [1;6000] pour un travailleur à domicile - accueillant d'enfants - Communauté française (Statut du travailleur = D2).
+                3800 pour un membre d’un parlement ou d’un gouvernement fédéral / régional ou un mandataire local.
+                Attention : Les heures sont exprimées en centièmes d’heures.
+                Exemples :
+                . 38 heures 20 min. est exprimé sous la forme : 3833
+                . 38 heures est exprimé sous la forme : 3800
+                Pour un gardien ou gardienne d’enfants, le nombre moyen d’heures par semaine de la personne de référence doit être égal à 38 heures par semaine (3800)
+
+                TYPE:   Numérique
+                LONGUEUR:   4
+                PRESENCE:   Obligatoire si le travailleur concerné travaille à temps partiel ou, indépendamment du fait que le travailleur est occupé à temps plein ou à temps partiel, s'il s'agit d'un travailleur saisonnier, intérimaire ou temporaire ou d'un travailleur à domicile ou d'un travailleur en interruption de carrière ou d'un travailleur ayant repris le travail à temps partiel suite à l'avis du médecin conseil ou d'un travailleur en prépension à mi-temps ou d'un travailleur avec des prestations réduites, jusqu'au 2/2005 inclus.
+
+                A partir du 3/2005 : obligatoire si la déclaration ne concerne pas un tiers payant (déclarations pour des catégories de l'employeur différentes de 033, 099, 199, 299 et 699).
+             -->
+            <t t-if="occupation.ref_mean_working_hours != -1">
+                <RefMeanWorkingHours t-esc="occupation.ref_mean_working_hours"/>
+            </t>
+
+            <!-- 90015
+                DESCRIPTION:    Nombre moyen d'heures par semaine (exprimé en centièmes d’heures) pendant lesquelles le travailleur est censé effectuer un travail conformément à son contrat de travail, abstraction faite d'éventuelles suspensions du contrat.
+                Le nombre moyen d'heures par semaine du travailleur divisé par le nombre moyen d'heures par semaine de la personne de référence définit la fraction d'occupation du travailleur.
+                Par personne de référence, on entend la personne occupée à temps plein dans la même entreprise ou, à défaut, dans la même branche d’activités, dans une fonction analogue.
+                DOMAINE DE DEFINITION:  [1;4800] pour tous les travailleurs, sauf exceptions reprises ci-après.
+                0 si le travailleur est en interruption complète de la carrière professionnelle ou s’il s'agit d’un travailleur statutaire occupé dans le cadre d’une mesure de réorganisation du temps de travail pour laquelle il n'effectue aucune prestation (mesure de réorganisation = 513, 516, 517, 542, 543, 545, 546 ou 599).
+                [0;4800] pour un travailleur qui au cours de la période concernée par la déclaration n'a dû fournir aucune prestation (Justification des jours = 7) ou s’il s’agit d’un travailleur statutaire occupé dans le cadre d’une mesure de réorganisation du temps de travail pour laquelle il peut effectuer des prestations (mesure de réorganisation = 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 531, 541 ou 544).
+                [0;5000] pour un travailleur à domicile - accueillant d'enfants - Communauté flamande (statut du travailleur = D1).
+                [0;6000] pour un travailleur à domicile - accueillant d'enfants - Communauté française (statut du travailleur = D2).
+                3800 pour un membre d’un parlement ou d’un gouvernement fédéral / régional ou un mandataire local qui effectue des prestations.
+                Si le nombre de jours par semaine du régime de travail est égal à zéro alors le nombre moyen d'heures par semaine du travailleur doit être à zéro et inversement.
+                Attention : Les heures sont exprimées en centièmes d’heures.
+                Exemples :
+                . 38 heures 20 min. est exprimé sous la forme : 3833
+                . 38 heures est exprimé sous la forme : 3800
+
+                TYPE:   Numérique
+                LONGUEUR:   4
+                PRESENCE:   Obligatoire si le travailleur concerné travaille à temps partiel ou, indépendamment du fait que le travailleur est occupé à temps plein ou à temps partiel, s'il s'agit d'un travailleur saisonnier, intérimaire, temporaire, d'un travailleur à domicile, d'un travailleur en interruption de carrière, d'un travailleur ayant repris le travail à temps partiel suite à l'avis du médecin conseil, d'un travailleur en prépension à mi-temps ou d'un travailleur avec des prestations réduites, jusqu'au 2/2005 inclus.
+                A partir du 3/2005 : obligatoire si la déclaration ne concerne pas un tiers payant (déclarations pour des catégories de l'employeur différentes de 033, 099, 199, 299 et 699).
+             -->
+            <MeanWorkingHours t-esc="occupation.mean_working_hours"/>
+
+            <!-- 00051
+                DESCRIPTION:    Code qui indique que le travailleur est occupé dans le cadre d'une mesure de réduction du temps de travail, indépendamment du fait qu'une éventuelle réduction des cotisations afférente à la mesure est demandée.
+                Ce code est également utilisé pour indiquer que le travailleur accompli des prestations de travail effectives pour lesquelles il reçoit une rémunération réduite.
+                DOMAINE DE DEFINITION:  Voir annexe 44 : Mesures de réorganisation du travail.
+                Cette zone ne peut avoir la valeur 599 si elle est dans le bloc 90438.
+
+                TYPE:   Numérique
+                LONGUEUR:   3
+                PRESENCE:   Obligatoire si l'occupation du travailleur est effectuée dans le cadre d'une mesure de réorganisation du travail susmentionnée.
+                Indispensable lorsque cette donnée est reprise dans le bloc 90438.
+             -->
+            <t t-if="occupation.reorganisation_measure != -1">
+                <ReorganisationMeasure t-esc="occupation.reorganisation_measure"/>
+            </t>
+
+            <!-- 00052
+                DESCRIPTION:    Code qui indique si l'occupation du travailleur est effectuée dans le cadre d'une mesure de promotion de l'emploi, indépendamment du fait qu'une réduction des cotisations afférente à la mesure est demandée.
+                DOMAINE DE DEFINITION:  Voir annexe 35 : Mesure de promotion de l'emploi.
+
+                TYPE:   Numérique
+                LONGUEUR:   3
+                PRESENCE:   Obligatoire si l'occupation du travailleur est effectuée dans le cadre d'une mesure de promotion de l'emploi susmentionnée.
+             -->
+            <t t-if="occupation.employment_promotion != -1">
+                <EmploymentPromotion t-esc="occupation.employment_promotion"/>
+            </t>
+
+            <!-- 00053
+                DESCRIPTION:    Code qui indique si l'occupation est effectuée dans le cadre d’un contrat particulier.
+
+                DOMAINE DE DEFINITION:  Voir annexe 21 - Liste des valeurs autorisées pour le statut du travailleur.
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   2
+                PRESENCE:   Obligatoire si l'occupation du travailleur est effectuée dans le cadre d'un contrat particulier mentionné à l'annexe 21.
+             -->
+            <t t-if="occupation.worker_status != -1">
+                <WorkerStatus t-esc="occupation.worker_status"/>
+            </t>
+
+            <!-- 00054
+                DESCRIPTION:    Code qui indique que la personne continue à exercer une activité professionnelle bien que pensionnée.
+                DOMAINE DE DEFINITION:
+                0 = non-pensionné
+                1 = pensionné
+
+                TYPE:   Numérique
+                LONGUEUR:   1
+                PRESENCE:   Indispensable
+             -->
+            <Retired t-esc="occupation.retired"/>
+
+            <!-- 00055
+                DESCRIPTION:    Code permettant de distinguer un apprenti.
+
+                DOMAINE DE DEFINITION:  A partir du trimestre 2019/4 :
+                1 = apprenti - formation en alternance
+
+                Avant le trimestre 2019/4 :
+                1 = apprenti agréé des classes moyennes
+                2 = apprenti avec contrat d'apprentissage industriel
+                3 = apprenti en formation de chef d'entreprise
+                4 = élève avec convention d’insertion socio-professionelle reconnue par les Communautés et Régions
+                5 = stagiaire en convention d'immersion professionnelle
+                TYPE:   Numérique
+                LONGUEUR:   1
+                PRESENCE:   Obligatoire si le travailleur est un apprenti.
+            -->
+            <t t-if="occupation.apprenticeship != -1">
+                <Apprenticeship t-esc="occupation.apprenticeship"/>
+            </t>
+
+            <!-- 00056
+                DESCRIPTION:    Code qui indique si le travailleur est payé selon un mode de rémunération particulier.
+
+                DOMAINE DE DEFINITION:
+                1 = travailleur qui perçoit une rémunération pour un travail à la pièce ou à l'entreprise ou qui est payé à la tâche (= prestation)
+                2 = travailleur qui est rémunéré exclusivement ou partiellement à la commission
+                3 = travailleur payé au moyen de titres-services
+
+
+
+                TYPE:   Numérique
+                LONGUEUR:   1
+
+                PRESENCE:   Obligatoire si le travailleur est payé selon un mode de rémunération susmentionné.
+            -->
+            <t t-if="occupation.remun_method != -1">
+                <RemunMethod t-esc="occupation.remun_method"/>
+            </t>
+
+            <!-- 00057
+                DESCRIPTION:    Pour les travailleurs rémunérés totalement ou partiellement au pourboire ou au service, ainsi que pour les marins pêcheurs, les travailleurs saisonniers dans le secteur de l'agriculture et de l'horticulture et les occasionnels de l'Horeca, la rémunération est déclarée sur une base forfaitaire.
+                Le numéro de fonction permet de connaître la fonction exercée par le travailleur et donc la rémunération forfaitaire journalière. La rémunération forfaitaire est obtenue en multipliant la rémunération forfaitaire journalière par le nombre de jours au forfait.
+
+                La rémunération forfaitaire doit être déclarée globalement sous le code rémunération 01.
+                DOMAINE DE DEFINITION:
+
+                La liste des valeurs admises se trouve en annexe 9.
+
+                TYPE:   Numérique
+                LONGUEUR:   2
+                PRESENCE:   Obligatoire si le travailleur est rémunéré totalement ou partiellement au pourboire ou au service, ou s’il s’agit d’un marin pêcheur et si la rémunération est déclarée sur une base forfaitaire.
+             -->
+            <t t-if="occupation.position_code != -1">
+                <PositionCode t-esc="occupation.position_code"/>
+            </t>
+
+            <!-- 00059
+                DESCRIPTION:    Ce code, destiné essentiellement aux compagnies aériennes, permet de déterminer la catégorie à laquelle appartient un travailleur employé à bord d’un avion. Le nombre de minutes de vol afférentes doit être déclaré.
+                Ce code doit également être utilisé pour désigner les pilotes militaires.
+
+                DOMAINE DE DEFINITION:  1 = pilote
+                2 = personnel de cabine
+                3 = autre
+
+
+
+                TYPE:   Numérique
+                LONGUEUR:   1
+
+                PRESENCE:   Obligatoire si le travailleur fait partie du personnel volant d’une compagnie aérienne ou s'il est un pilote militaire.
+             -->
+            <t t-if="occupation.flying_staff_class != -1">
+                <FlyingStaffClass t-esc="occupation.flying_staff_class"/>
+            </t>
+
+             <!-- 00060
+                DESCRIPTION:    Code qui indique si l'enseignant est payé en dixièmes ou en douzièmes.
+                DOMAINE DE DEFINITION:
+                10 = paiement en dixièmes
+                12 = paiement en douzièmes
+
+                TYPE:   Numérique
+                LONGUEUR:   2
+
+                PRESENCE:   Obligatoire si le travailleur exerce une fonction d'enseignant.
+            -->
+            <t t-if="occupation.TenthOrTwelfth != -1">
+                <TenthOrTwelfth t-esc="occupation.TenthOrTwelfth"/>
+            </t>
+
+            <!-- 00228
+                DESCRIPTION:    Code représentant l'activité économique de l'employeur ou de ses unités locales. Il s’agit de la nomenclature NACE-BEL, utilisée au niveau européen
+
+                DOMAINE DE DEFINITION:  Voir annexe 31 - Liste des codes NACE.
+                Si la déclaration ne concerne pas une administration provinciale ou locale, le code NACE doit être mis à "00000" dans le bloc Indemnité complémentaire.
+
+                TYPE:   Numérique
+                LONGUEUR:   5
+
+                PRESENCE:   Indispensable dans le bloc Indemnité complémentaire.
+                Facultatif dans le bloc Occupation de la ligne travailleur.
+             -->
+            <t t-if="occupation.ActivityCode != -1">
+                <ActivityCode t-esc="occupation.ActivityCode"/>
+            </t>
+
+            <!-- 00617
+                DESCRIPTION:    Référence.
+                Référence de l'occupation de la ligne travailleur utilisée par l'employeur ou un secrétariat social agréé.
+                DOMAINE DE DEFINITION:
+                Dans ce message, la longueur autorisée pour cette zone est de 20 positions.
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   200
+                PRESENCE:   Facultative
+             -->
+            <OccupationUserReference t-esc="occupation.contract.id"/>
+
+            <!-- 00042
+                DESCRIPTION:    Il s'agit du numéro identifiant une unité d'établissement (numéro attribué par la Banque-Carrefour des Entreprises).
+                Numéro identifiant l'établissement dans lequel ou à partir duquel le travailleur est occupé.
+                A partir des déclarations du 1/2014, l'unité d’établissement doit être déclarée exclusivement au niveau de l'occupation. Il s'agit de l'unité d'établissement où le travailleur exerce ses prestations ou bien à partir de laquelle celui-ci exerce son activité.
+                Jusqu’aux déclarations du 4/2013, l’unité d’établissement ne peut être déclarée qu’au niveau de la ligne travailleur.
+                Si le travailleur a exercé des prestations dans plusieurs sièges d'exploitation, il faut mentionner uniquement l'identifiant du siège de sa dernière prestation durant le trimestre.
+                Voir détails complémentaires dans les instructions générales aux employeurs.
+                A partir des déclarations du 1/2015, l'unité d’établissement doit également être déclarée au niveau de la cotisation travailleur étudiant. Il s'agit de l'unité d'établissement de la dernière prestation du travailleur étudiant durant le trimestre.
+                DOMAINE DE DEFINITION:  Nombre de 10 chiffres dont :
+                les positions 1 à 8 correspondent à un numéro d'ordre, avec en première position un chiffre compris entre 2 et 8;
+                les positions 9 et 10 correspondent à un nombre de contrôle.
+                A partir des déclarations du 1/2014 l'usage d'un numéro fictif peut être nécessaire :
+                - 8999999993 = Employeur étranger sans UE en Belgique pour les travailleurs qui ne sont pas occupés sur le territoire belge
+                - 8999999104 = Employeur étranger sans UE en Belgique pour les travailleurs qui sont occupés sur le territoire belge ou employeur de personnel de maison (catégories 037, 039 et codes travailleurs 035, 439, 043 et 044 dans les catégories 094 et 193) - Région flamande
+                - 8999999203 = Employeur étranger sans UE en Belgique pour les travailleurs qui sont occupés sur le territoire belge ou employeur de personnel de maison (catégories 037, 039 et codes travailleurs 035, 439, 043 et 044 dans les catégories 094 et 193) - Région Bruxelles-Capitale
+                - 8999999302 = Employeur étranger sans UE en Belgique pour les travailleurs qui sont occupés sur le territoire belge ou employeur de personnel de maison (catégories 037, 039 et codes travailleurs 035, 439, 043 et 044 dans les catégories 094 et 193) - Région wallonne sans les communes qui relèvent de la compétence de la Communauté germanophone
+                - 8999999401 = Employeur étranger sans UE en Belgique pour les travailleurs qui sont occupés sur le territoire belge ou employeur de personnel de maison (catégories 037, 039 et codes travailleurs 035, 439, 043 et 044 dans les catégories 094 et 193) - Région wallonne en ce qui concerne les communes qui relèvent de la compétence de la Communauté germanophone
+                - 8999999005 = Employeur en attente d'un numéro d'UE
+                - 8999999894 = Pas d’application - tiers payants (catégories d'employeurs 033, 099, 199, 299 et 699) - Indemnité de rupture - Statutaires avec un lieu d’affectation à l'étranger
+
+                Pour les déclarations du 4/2003, nombre de 5 chiffres correspondant à un code commune INS (voir annexe 1 - Liste des codes communes - code INS)
+
+                TYPE:   Numérique
+                LONGUEUR:   10
+                PRESENCE:   Obligatoire si la déclaration concerne le trimestre 2014/1 ou un trimestre ultérieur, indépendamment du fait que l’employeur a un ou plusieurs sièges d'exploitation.
+                Obligatoire si la déclaration concerne le trimestre 2015/1 ou un trimestre ultérieur pour un travailleur étudiant, indépendamment du fait que l’employeur a un ou plusieurs sièges d'exploitation.
+                Obligatoire si l'employeur a plusieurs sièges d'exploitation (à partir du troisième trimestre 2006), sauf pour les déclarations des prépensionnés, du personnel statutaire licencié et des travailleurs pour lesquels des cotisations spéciales indemnités complémentaires sont dues (codes travailleurs 876, 877, 879, 883, 885), ainsi que pour celles des indemnités d'accident du travail (catégorie 027) et des maladies professionnelles (catégorie 028) et des tiers payants (catégories d'employeurs 033, 099, 199, 299 et 699).
+                Obligatoire si l'employeur a plusieurs sièges d'exploitation pour les déclarations des deuxième et quatrième trimestres de chaque année (du deuxième trimestre 2004 au deuxième trimestre 2006 inclus), sauf pour les codes travailleurs et les catégories d’employeur mentionnés ci-dessus.
+                Obligatoire si la déclaration concerne le quatrième trimestre 2003, sauf pour les codes travailleurs et les catégories d'employeur mentionnés ci-dessus.
+            -->
+            <LocalUnitID t-esc="occupation.work_place"/>
+
+            <!-- 00625
+                DESCRIPTION:    Code qui indique que le travailleur est occupé au cours du trimestre selon un cycle de travail particulier
+                DOMAINE DE DEFINITION:
+                1. Travailleur à temps plein occupé dans un cycle de travail dépassant le trimestre qui, au cours du trimestre, a presté plus de jours que ceux prévus par son régime de travail moyen par semaine.
+                2. Travailleur à temps plein occupé dans un cycle de travail dépassant le trimestre qui, au cours du trimestre, a presté moins de jours que ceux prévus par son régime de travail moyen par semaine.
+                3. Travailleur à temps partiel occupé dans un cycle de travail dépassant le trimestre qui, au cours du trimestre, a presté plus de jours que ceux prévus par son régime de travail moyen par semaine.
+                4. Travailleur à temps partiel occupé dans un cycle de travail dépassant le trimestre qui, au cours du trimestre, a presté moins de jours que ceux prévus par son régime de travail moyen par semaine.
+                5. Travailleur à temps partiel qui, en sus de ses prestations contractuelles prévues, fournit au cours du trimestre un nombre de jours non récupérables.
+                6. Combinaison des points 3 et 5 ou des points 4 et 5.
+                7. Travailleur qui au cours du trimestre (ou de la partie de trimestre au cours de laquelle il était en service) n'a dû fournir aucune prestation
+                8. Un travailleur rémunéré partiellement au pourboire ou au service qui doit être déclaré sans salaire pour une partie de ses prestations.
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   1
+                PRESENCE:   Obligatoire si l'occupation du travailleur est effectuée selon une particularité reprise ci-dessus.
+             -->
+            <t t-if="occupation.days_justification != -1">
+                <DaysJustification t-esc="occupation.days_justification"/>
+            </t>
+
+            <t t-foreach="occupation.occupation_informations" t-as="info">
+                <t t-call="l10n_be_hr_payroll.OccupationInformations"/>
+            </t>
+            <t t-foreach="occupation.services" t-as="service">
+                <t t-call="l10n_be_hr_payroll.Service"/>
+            </t>
+            <t t-foreach="occupation.remunerations" t-as="remuneration">
+                <t t-call="l10n_be_hr_payroll.Remun"/>
+            </t>
+        </Occupation>
+    </template>
+
+    <template id="OccupationInformations">
+        <!-- 90313 Bloc fonctionnel permettant de déclarer des informations relatives à une occupation.-->
+        <t t-if="info.display_info">
+        <OccupationInformations>
+            <!-- 00197
+                DESCRIPTION:    Nombre de jours de vacances.
+                Zone indiquant le nombre de jours de vacances constitués par un marin déclaré avec la catégorie employeur 105, 205 ou 305.
+                DOMAINE DE DEFINITION:  Nombre entier et élément de [0 ; 999]
+                TYPE:   Numérique
+                LONGUEUR:   3
+                PRESENCE:   Obligatoire si il s’agit d'un membre du personnel d’un employeur déclaré avec la catégorie employeur 105, 205 ou 305 qui a acquis ces jours de vacances.
+                Cette donnée ne peut pas être utilisée pour les déclarations antérieures au 1er trimestre 2018.
+             -->
+            <HolidayDaysNumber t-esc="info.holiday_days_number"/>
+
+            <!-- 00728
+                DESCRIPTION:
+                Date à laquelle un membre du personnel nommé a dépassé une absence de plus de 6 mois pour cause de maladie. La période de maladie est calculée à partir du 1er jour de maladie indépendamment du fait de savoir si le capital congé maladie est épuisé ou si l’agent statutaire est en disponibilité.
+                DOMAINE DE DEFINITION:
+                AAAA est un élément de [année de la déclaration - 100; année de la déclaration]
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   10
+
+                PRESENCE:   Obligatoire si il s’agit d’un membre du personnel nommé absent depuis plus de six mois pour cause de maladie.
+                A partir des déclarations du 1/2006 s’il s’agit d’une DmfAPPL.
+                A partir des déclarations du 2/2017 s’il s’agit d’une DmfA
+
+                FORMAT: AAAA-MM-JJ
+                · AAAA est l'année
+                · MM est le mois
+                . JJ est le jour
+              -->
+            <SixMonthsIllnessDate t-esc="info.six_months_illness_date"/>
+
+            <!-- 00794
+                DESCRIPTION:    Code qui détermine si le travailleur est engagé dans le cadre d'une mesure pour l'emploi pour le secteur non marchand (maribel social et secteur non marchand).
+
+                DOMAINE DE DEFINITION:
+                1 = travailleur, déclaré auprès d’une administration provinciale ou locale, et engagé comme assistant en logistique dans le cadre du Maribel social (hôpitaux et maisons de soins psychiatriques)
+                2 = travailleur, déclaré auprès d’une administration provinciale ou locale, et engagé dans le cadre du Maribel social (pas assistant en logistique)
+                3 = travailleur, déclaré auprès d’une administration provinciale ou locale, qui suit une formation dans le cadre d’un projet de formation en soins infirmiers
+                4 = travailleur, déclaré auprès d’une administration provinciale ou locale, qui suit une formation dans le cadre d’un projet de formation en soins infirmiers et qui est engagé comme assistant en logistique dans le cadre du Maribel Social (hôpitaux et maisons de soins psychiatriques)
+                5 = travailleur, déclaré auprès d’une administration provinciale ou locale, qui suit une formation dans le cadre d’un projet de formation en soins infirmiers et qui est engagé dans le cadre du Maribel Social (pas assistant en logistique)
+                6 = travailleur contractuel, déclaré auprès d’une administration provinciale ou locale, et engagé en remplacement d’un travailleur qui suit une formation dans le cadre d’un projet de formation en soins infirmiers
+                7= travailleur, déclaré auprès d’un employeur autre qu’une administration provinciale ou locale, et engagé dans le cadre du Maribel social
+                8 = jeune moins qualifié, engagé dans le secteur non marchand en exécution du pacte de solidarité entre les générations (à partir du trimestre 2007/1)
+                9 = travailleur, déclaré auprès d’une administration provinciale ou locale, et engagé dans le cadre du Maribel Fiscal
+                10 = travailleur, déclaré auprès d’une administration provinciale ou locale, et engagé dans le cadre de l'accord sectoriel relatif aux secteurs fédéraux de la santé (pas de remplacement d'un travailleur qui bénéficie de l'octroi de congés supplémentaires à partir de 52 ans)
+                11 = travailleur, déclaré auprès d’une administration provinciale ou locale, et engagé en remplacement d’un travailleur qui bénéficie de l'octroi de congés supplémentaires à partir de 52 ans – accord sectoriel relatif aux secteurs fédéraux de la santé
+                La valeur 7 est autorisée à partir de 20052.
+                La valeur 8 est autorisée à partir de 20071.
+                Les valeurs 1 à 6 et 9 à 11 sont autorisées à partir de 20221.
+
+                TYPE:   Numérique
+                LONGUEUR:   2
+
+                PRESENCE:   Obligatoire si l'engagement s'effectue dans le secteur public dans le cadre du maribel social ou si le jeune est engagé dans le secteur non marchand en exécution du pacte de solidarité entre les générations
+            -->
+            <NOSSLPASocialMaribel t-esc="info.maribel"/>
+
+            <!-- 00795
+                DESCRIPTION:    A partir du 1/2020 travailleur occasionnel occupé dans l'Horeca ou dans le secteur des pompes funèbres.
+                A partir du 4/2013 jusqu'au 4/2019, travailleur qui est occupé comme occasionnel dans l'Horeca.
+                A partir du 3/2007 jusqu'au 3/2013, intérimaire qui est occupé comme occasionnel chez un employeur de l'Horeca.
+                A partir du 2/2005 jusqu'au 2/2007, extra de l'Horeca qui ne bénéficie pas de l’assujettissement réduit.
+                DOMAINE DE DEFINITION:  La lettre E
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   1
+
+                PRESENCE:   Obligatoire si le travailleur est un occasionnel de l'Horeca qui n'est pas déclaré dans la catégorie 317 (à partir du 4/2013) ou si le travailleur est un occasionnel occupé dans le secteur des pompes funèbres (catégorie 320 à partir du 1/2020).
+                A partir du 3/2007 jusqu'au 3/2013, obligatoire si le travailleur est un occasionnel de l'Horeca déclaré par un bureau d'intérim.
+                A partir du 2/2005 jusqu'au 2/2007, obligatoire si le travailleur est un extra de l'Horeca qui ne bénéficie pas de l'assujettissement réduit.
+            -->
+            <HorecaExtra t-esc="info.horeca_extra"/>
+
+            <!-- 00812
+                DESCRIPTION:    Le salaire horaire est le salaire, tel que convenu dans le contrat de travail, qui est dû pour une heure normale de travail prestée dans le trimestre.
+                Le salaire horaire ne peut être déclaré que pour les ouvriers du secteur de la construction au 3ème trimestre. Il s’agit alors du salaire horaire indexé dû à la fin du 3ème trimestre. Cette donnée ne peut plus être utilisée pour les déclarations postérieures au 2ème trimestre 2007.
+                DOMAINE DE DEFINITION:  Nombre entier et élément de [1;99999]
+                Attention : Le salaire horaire est exprimé en eurocents
+                Exemples :
+                35 euros et 20 cents est exprimé sous la forme : 03520
+                15 euros est exprimé sous la forme : 01500
+
+
+                TYPE:   Numérique
+                LONGUEUR:   5
+
+                PRESENCE:   Obligatoire si la déclaration concerne le 3ème trimestre et qu’il s’agit d’un ouvrier de la construction, à partir des déclarations du 3/2005 jusqu'aux déclarations du 2/2007.
+             -->
+            <HourRemun t-esc="info.hour_remun"/>
+
+            <!-- 00826
+                DESCRIPTION:    Notion signalant si le travailleur est dispensé ou non, de l’exécution de ses prestations.
+                Dans le bloc Indemnité Complémentaire (90336) : Notion signalant si le travailleur est dispensé, ou non, de l’exécution de ses prestations, dans le cadre d’une interruption de carrière à mi-temps.
+
+                Dans le bloc Occupation - Informations (90313) : Notion signalant si le travailleur bénéficie, ou non, d'une dispense totale de ses prestations durant tout le trimestre, dans le cadre d'un plan de sortie anticipée du marché du travail.
+                DOMAINE DE DEFINITION:  0 = pas de dispense de prestations
+                1 = dispense de prestations
+                2 = dispense de prestations durant tout le trimestre
+                3 = dispense de prestations durant tout le trimestre octroyée avant le 29/12/2017
+                4 = dispense de prestations durant tout le trimestre CCT ou accord individuel conclu avant le 29/12/2017
+                5 = dispense de prestations durant tout le trimestre et formation dont coût ≥ 20% salaire brut annuel
+                6 = dispense de prestations durant tout le trimestre et occupation au moins 1/3 temps pendant tout le trimestre
+                9 = pas d'application
+                Dans le bloc Indemnité Complémentaire (90336), seules les valeurs 0, 1 et 9 sont autorisées. La valeur 9 concerne un travailleur qui n'est pas en interruption de carrière (code travailleur différent de 885) ou un travailleur en interruption de carrière (code travailleur de 885) mais pas à mi-temps.
+                Dans le bloc Occupation - Informationsc (90313), seules les valeurs 0, 2, 3, 4, 5 et 6 sont autorisées.
+
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   1
+
+                PRESENCE:   Indispensable dans le bloc Indemnité Complémentaire (90336).
+
+                Obligatoire dans le bloc Occupation - Informations (90313), si dispense de prestations durant tout le trimestre ou, si application de la réduction travailleurs âgés - Région flamande (à partir du 1/2018) ou si application de la réduction travailleurs âgés - Communauté germanophone (à partir du 2/2018) ou si application de la réduction travailleurs âgés - Région wallonne (à partir du 3/2018).
+            -->
+            <ServiceExemptionNotion t-esc="info.service_exemption_notion"/>
+
+            <!-- 00862
+                DESCRIPTION:    Le salaire horaire est le salaire, tel que convenu dans le contrat de travail, qui est dû pour une heure normale de travail prestée dans le trimestre.
+                Jusqu'en 2010 inclus, le salaire horaire ne peut être déclaré que pour les ouvriers du secteur de la construction au 3ème trimestre. Il s'agit alors du salaire horaire indexé dû à la fin du 3ème trimestre. A partir du 1er trimestre 2011 ce salaire horaire indexé doit être déclaré chaque trimestre pour les ouvriers du secteur de la construction.
+                Cette donnée ne peut pas être utilisée pour les déclarations antérieures au 3ème trimestre 2007.
+                DOMAINE DE DEFINITION:  Nombre entier et élément de [1;999999]
+                Attention : Le salaire horaire est exprimé en millièmes d'euro
+                Exemples :
+                35 euros et 20 cents est exprimé sous la forme : 035200
+                15 euros est exprimé sous la forme : 015000
+
+
+                TYPE:   Numérique
+                LONGUEUR:   6
+
+                PRESENCE:   Obligatoire si la déclaration concerne le 3ème trimestre et qu'il s'agit d'un ouvrier de la construction, à partir des déclarations du 3/2007. A partir de 2011, obligatoire pour chaque trimestre lorsqu'il s'agit d'un ouvrier de la construction.
+            -->
+            <HourRemunInThousandthOfEuro t-esc="info.hour_remun_thousandth"/>
+
+            <!-- 00893
+                DESCRIPTION:    Code indiquant si le membre du personnel a été mis à disposition par l'employeur chez un autre employeur ou à été mis à disposition chez l'employeur par un autre employeur.
+                DOMAINE DE DEFINITION:
+                1 = membre du personnel détaché chez un autre employeur
+                2 = membre du personnel détaché par un autre employeur
+
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   1
+
+                PRESENCE:   Obligatoire si la déclaration concerne un trimestre à partir du 1/2022 et s'il s'agit d'un travailleur mis à disposition à temps plein auprès d'un employeur pour lequel la cotisation prime syndicale est due.
+            -->
+            <PostedWorker t-esc="info.posted_employee"/>
+
+            <!-- 01010
+                DESCRIPTION:    Nombre de jours d'incapacité de travail suite à une maladie ou à un accident de droit commun avec salaire garanti la première semaine, non compris le nombre de jours avec rémunération journalière garantie. Les jours de carence sont inclus lorsqu'ils sont payés par l'employeur.
+                Cette donnée ne peut pas être utilisée pour les déclarations antérieures au 1er trimestre 2011. Ceci ne concerne que les ouvriers du secteur de la construction.
+                DOMAINE DE DEFINITION:  [1;9200]
+                Attention : Les jours sont exprimés en centièmes de jours.
+
+
+                TYPE:   Numérique
+                LONGUEUR:   4
+
+                PRESENCE:   Obligatoire si il s'agit d'un ouvrier de la construction et que les jours sont couverts par un salaire garanti la première semaine ou lorsqu'il y a des jours de carence payés par l'employeur, à partir des déclarations du 1er trimestre 2011.
+            -->
+            <FirstWeekGuaranteedSalaryNbrDays t-esc="info.first_week_guaranteed_salary"/>
+
+            <!-- 01011
+                DESCRIPTION:    Total des rémunérations brutes, y compris celles qui ne sont pas soumises à des cotisations de sécurité sociale, payées par l'employeur dans le cadre d'une maladie ou d'un accident de droit commun au cours du trimestre concerné, non compris les indemnités payées par l'employeur pour le(s) jour(s) avec rémunération journalière garantie.
+                Cette donnée ne peut pas être utilisée pour les déclarations antérieures au 1er trimestre 2011. Jusqu’au 2020/1, ceci ne concerne que les ouvriers du secteur de la construction.
+                A partir du 2020/2, ceci concerne les travailleurs contractuels de tous les secteurs.
+                DOMAINE DE DEFINITION:  Nombre entier et élément de [1; 99999999999]
+
+
+                TYPE:   Numérique
+                LONGUEUR:   11
+
+                PRESENCE:   Obligatoire si il s'agit d'un ouvrier de la construction et que des rémunérations sont payées dans le cadre d'une maladie, à partir des déclarations du 1er trimestre 2011 jusqu’au 2020/1.
+                A partir du 2020/2, obligatoire s'il s'agit d’un travailleur contractuel et que des rémunérations sont payées dans le cadre d'une maladie.
+            -->
+            <IllnessGrossRemunAmount t-esc="info.illness_gross_remun"/>
+
+            <!-- 01012
+                DESCRIPTION:    Zone qui indique, pour une occupation a priori couverte par le champ d'application de Capelo (combinaison catégorie d'employeur – code travailleur ET employeur faisant partie du champ d'application), que la déclaration des blocs dits Capelo (Données de l'occupation relatives au secteur public, Traitement barémique et Supplément de traitement) n'est pas requise, parce que cette occupation n'est pas susceptible d'ouvrir le droit à une pension secteur public.
+                DOMAINE DE DEFINITION:  1 = dispense
+
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   1
+
+                PRESENCE:   Obligatoire si l'occupation n'est pas susceptible d'ouvrir le droit à une pension dans le secteur public pour un travailleur contractuel au service d'un employeur dans le champ d'application de Capelo.
+            -->
+            <PSDDclExemption t-esc="info.psddcl_exemption"/>
+
+            <!-- 01013
+                DESCRIPTION:    Zone qui fournit des informations supplémentaires concernant le champ d’application du régime de pension complémentaire.
+                DOMAINE DE DEFINITION:  1 = dispense
+                2 = travailleur qui relève du régime de pension complémentaire de "Provant" occupé chez un employeur avec plusieurs régimes de pension complémentaires.
+                L'usage de la valeur 2 est limitée aux administrations locales.
+
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   1
+
+                PRESENCE:   Obligatoire si le régime de pension complémentaire pour le secteur public fédéral n'est pas d'application (code 1)
+                ou, à partir du 4/2019, s’il n'y a plus création de droit de pension sectoriel complémentaire possible pour cause de pension (code 1)
+                ou si les régimes de pension complémentaires « contractuels locaux » et « Provant » ne sont pas d'application au travailleur en question d'une administration locale (code 1)
+                ou si une administration locale est affiliée à plusieurs régimes de pension complémentaires et que le travailleur en question relève du régime de « Provant » (code 2).
+            -->
+            <SupplPensionContributionExemption t-esc="info.suppl_pension_exemption"/>
+
+            <!-- 01063
+                DESCRIPTION:    Information permettant de prendre en compte un travailleur dans le calcul d’une obligation d’un employeur.
+                DOMAINE DE DEFINITION:  FWT (Former Work Placement Trainee) = Ancien stagiaire d’intégration en entreprise entrant en considération pour le calcul de la mise à disposition de 1% de places de stage et qui est engagé immédiatement après le stage par le même employeur dans les liens d’un contrat de travail.
+
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   3
+
+                PRESENCE:   Obligatoire si le travailleur est un ancien stagiaire d’intégration engagé immédiatement après le stage par le même employeur et s’il s’agit du trimestre d’engagement ou un des trois trimestres suivant l’engagement.
+            -->
+            <ObligationControlInformation t-esc="info.obligation_control"/>
+
+            <!-- 01092
+                DESCRIPTION:
+                La date de nomination pour un membre du personnel nommé à titre définitif est mentionnée ici.
+                La zone mentionne la date la plus récente de nomination en ce qui concerne la ligne d'occupation. Si un travailleur a été nommé à titre définitif à mi-temps au 01-01-2010, et que dans la même fonction, il a été nommé à temps plein au 01-01-2012, alors c'est la date du 01-01-2012 qui doit être mentionnée dans cette zone.
+                La zone ne doit pas être remplie pour un stagiaire en vue d'une nomination à titre définitif. Si le stage s'achève avec succès et que le membre du personnel statutaire a été effectivement nommé, c'est la date de la nomination à titre définitif (et non la date de début du stage) qui doit être remplie.
+                Cette zone n'est jamais utilisée lorsqu'il s'agit d’une DmfA.
+                DOMAINE DE DEFINITION:
+                [1900-01-01; dernier jour du trimestre de la déclaration]
+
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   10
+
+                PRESENCE:   Facultative
+
+                FORMAT: AAAA-MM-JJ
+                · AAAA est l'année
+                · MM est le mois
+                . JJ est le jour
+            -->
+            <DefinitiveNominationDate t-esc="info.definitive_nomination_date"/>
+
+            <!-- 01148
+                DESCRIPTION:
+                Date d’attribution du nouveau poste Maribel social
+                DOMAINE DE DEFINITION:
+                2016-04-01; dernier jour du trimestre de la déclaration
+
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   10
+
+                PRESENCE:   Obligatoire si la déclaration concerne un trimestre à partir du 1/2022 et s'il s'agit d'un travailleur d'un employeur affilié au Fonds Maribel Social du Secteur Public qui est engagé dans le cadre du Maribel social (ou fiscal), à l'occasion de l'octroi de nouveaux emplois dans l'année civile en question.
+                Interdit si la déclaration concerne un trimestre antérieur au 1/2022.
+
+                FORMAT: AAAA-MM-JJ
+                · AAAA est l'année
+                · MM est le mois
+                . JJ est le jour
+            -->
+            <NewMaribelEmploymentDate t-esc="info.maribel_date"/>
+
+            <!-- 01176
+                DESCRIPTION:    Zone qui indique que la cotisation pension du secteur public pour travailleurs statutaires, suite à des circonstances particulières, a une base de calcul dérogatoire.
+                DOMAINE DE DEFINITION:  1 = Dérogation
+
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   1
+
+                PRESENCE:   Obligatoire si la base de calcul de la cotisation pension du secteur public pour travailleurs statutaires est dérogatoire, à partir du 1/2017.
+                Interdite avant le 1/2017.
+            -->
+            <PSPContribCalcBasisDerogation t-esc="info.psp_contrib_derogation"/>
+
+            <!-- 01194
+                DESCRIPTION:    Code qui détermine si le travailleur est occupé dans le cadre d’une mesure carrière.
+                DOMAINE DE DEFINITION:
+                1 = travailleur occupé dans le cadre d’une fin de carrière en douceur
+                2 = Starter-Job
+                99 = Flexi-Job
+                Dans cette déclaration, seules les valeurs 1 (à partir du 1/2018) et 2 (à partir du 3/2018) sont permises.
+
+
+                TYPE:   Numérique
+                LONGUEUR:   2
+
+                PRESENCE:   Obligatoire si l'occupation du travailleur est effectuée dans le cadre d'une mesure carrière susmentionnée.
+                Interdite avant le premier trimestre 2018.
+            -->
+            <CareerMeasure t-esc="info.career_measure"/>
+
+            <!-- 01215
+                DESCRIPTION:    Indication du sous-secteur qui relève de la compétence flamande en matière d'activités non marchandes (accord intersectoriel flamand).
+                DOMAINE DE DEFINITION:  Voir annexe 46 – Détail secteur
+
+
+                TYPE:   Numérique
+                LONGUEUR:   4
+
+                PRESENCE:   Obligatoire si l’occupation a lieu dans un sous-secteur relevant de la compétence flamande en matière d'activités non marchandes.
+                Cette donnée ne peut pas être utilisée pour les déclarations antérieures au 1er trimestre 2019.
+            -->
+            <SectorDetail t-esc="info.sector_detail"/>
+
+            <!-- 01216
+                DESCRIPTION:    Budget total qui est attribué au travailleur sur le plan de la mobilité, et qu’il peut consacrer à un ou plusieurs piliers prévus par la législation : un véhicule de société respectueux de l’environnement, modes de transports alternatifs et durables et le paiement du solde du budget.
+                DOMAINE DE DEFINITION:  Nombre entier positif et élément de [1; 99999999999].
+                Le montant est exprimé en eurocents.
+
+
+                TYPE:   Numérique
+                LONGUEUR:   11
+
+                PRESENCE:   Obligatoire si le travailleur opte pour le budget mobilité et la partie non utilisée du solde du budget est versée au travailleur.
+            -->
+            <MobilityBudget t-esc="info.mobility_budget"/>
+
+            <!-- 01232
+                DESCRIPTION:    Nombre d'heures d'absence en vue de suivre une formation dans le cadre d'un congé formation flamand.
+                DOMAINE DE DEFINITION:  1;9999999].
+                Attention : Les heures sont exprimées en centièmes d’heures.
+                Exemples :
+                . 50 heures 30 min. est exprimé sous la forme : 5050
+                . 252 heures est exprimé sous la forme : 25200
+
+
+                TYPE:   Numérique
+                LONGUEUR:   7
+
+                PRESENCE:   Obligatoire si une absence concerne une formation suivie dans le cadre d’un congé formation flamand, à partir du 1/2020.
+            -->
+            <FlemishTrainingHolidayHoursNbr t-esc="info.flemish_training_hours"/>
+
+            <!-- 01237
+                DESCRIPTION:    Code qui indique que l’occupation du travailleur est effectuée dans le cadre d’une aide régionale à l’emploi.
+                DOMAINE DE DEFINITION:  B = Mesure de la Région Bruxelles-Capitale d’emploi d’insertion en économie sociale
+
+
+                TYPE:   Alphanumérique
+                LONGUEUR:   2
+
+                PRESENCE:   Obligatoire si l'occupation du travailleur est effectuée dans le cadre d'une aide régionale à l’emploi susmentionnée.
+                Cette donnée ne peut pas être utilisée pour les déclarations antérieures au 1er trimestre 2021.
+            -->
+            <RegionalAidMeasure t-esc="info.regional_aid_measure"/>
+        </OccupationInformations>
+        </t>
+    </template>
+
+    <template id="Service">
+        <t t-if="service.nbr_days != '00000' and service.nbr_hours != '00000'">
+        <!-- Service ~= Worked days -->
+        <!-- 90018: Bloc fonctionnel permettant de déclarer les prestations d'un travailleur pour une occupation de la ligne travailleur.
+            Une prestation donnée (un code prestation) ne peut se retrouver qu'une seule fois par occupation.
+        -->
+        <Service>
+            <!-- 00061
+                DESCRIPTION:    Numéro de suite des prestations au sein d’une occupation ligne travailleur.
+                Ce numéro doit être unique au sein d'une occupation ligne travailleur.
+                DOMAINE DE DEFINITION:  Nombre entier positif et élément de [1;99].
+
+
+                TYPE:   Numérique
+                LONGUEUR:   2
+
+                PRESENCE:   Indispensable
+            -->
+            <ServiceSequenceNbr t-esc="service.sequence"/>
+            <!-- 00062
+                DESCRIPTION:    Code permettant de déterminer le type de la prestation déclarée pour l'occupation du travailleur concerné.
+                DOMAINE DE DEFINITION:  Voir Annexe 8 - Codification des données de temps de travail.
+                TYPE:   Numérique
+                LONGUEUR:   3
+                PRESENCE:   Indispensable
+            -->
+            <ServiceCode t-esc="service.code"/>
+            <!-- 00063
+                DESCRIPTION:    Nombre de jours de la prestation à déclarer pour l'occupation du travailleur concerné.
+                Lorsque le nombre de jours de la prestation correspond à des données réelles, il est arrondi au demi-jour. Par contre lorsque le nombre de jours de la prestation est converti, il est arrondi au centième de jour.
+                DOMAINE DE DEFINITION:  [1;36600].
+                Attention : Les jours sont exprimés en centièmes de jours. Exemples :
+                . 62,22 jours est exprimé sous la forme : 6222
+                . 65 jours est exprimé sous la forme : 6500
+
+
+                TYPE:   Numérique
+                LONGUEUR:   5
+
+                PRESENCE:   Indispensable
+            -->
+            <ServiceNbrDays t-esc="service.nbr_days"/>
+            <!-- 00064
+                DESCRIPTION:    Nombre d'heures de la prestation (exprimé en centièmes d’heures) lorsque le travailleur concerné travaille à temps partiel ou, indépendamment du fait qu’il est occupé à temps plein ou à temps partiel, s'il s'agit d'un travailleur saisonnier, intermittent, d'un travailleur en interruption partielle de la carrière professionnelle, d’un travailleur en prépension à mi-temps, d'un travailleur ayant repris le travail à temps partiel suite à l'avis du médecin conseil, d’un travailleur avec des prestations réduites, d'un gardien ou gardienne d’enfants qui n'est pas lié par un contrat de travail, d’un travailleur statutaire occupé dans le cadre d’une mesure de réorganisation du temps de travail pour laquelle il peut effectuer des prestations (mesure de réorganisation = 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 514, 531, 541 ou 544), d'un travailleur rémunéré par des titres-services, d'un travailleur de l'Horeca, d’un travailleur Flexi-Job, d'un contractuel dans le secteur public en congé pour prestations partielles temporaires, d'un travailleur occupé par une administration provinciale ou locale.
+                Par travailleur intermittent, on entend :
+                - les travailleurs temporaires (voir statut du travailleur) et intérimaires telles que ces notions sont définies dans la loi du 24 juillet 1987 sur le travail temporaire, le travail intérimaire et la mise de travailleurs à disposition d'utilisateurs ;
+                - les travailleurs à domicile, tels qu'ils sont définis à l'article 3, 4° de l'A.R. du 28 novembre 1969 pris en exécution de la loi du 27 juin 1969 révisant l'arrêté-loi du 28 décembre 1944 concernant la sécurité sociale des travailleurs (voir statut du travailleur).
+                DOMAINE DE DEFINITION:  [1;9999999].
+                Attention : Les heures sont exprimées en centièmes d’heures.
+                Exemples :
+                . 50 heures 30 min. est exprimé sous la forme : 5050
+                . 252 heures est exprimé sous la forme : 25200
+
+
+                TYPE:   Numérique
+                LONGUEUR:   7
+
+                PRESENCE:   Obligatoire si le travailleur concerné travaille à temps partiel ou, indépendamment du fait que le travailleur est occupé à temps plein ou à temps partiel, s'il s'agit d'un travailleur saisonnier, intérimaire, temporaire, d'un travailleur à domicile, d'un travailleur en interruption partielle de la carrière professionnelle, d'un travailleur ayant repris le travail à temps partiel suite à l'avis du médecin conseil, d'un travailleur en prépension à mi-temps, d'un travailleur avec des prestations réduites, d'un gardien ou gardienne d’enfants qui n’est pas lié par un contrat de travail, d'un travailleur statutaire occupé dans le cadre d’une mesure de réorganisation du temps de travail pour laquelle il peut effectuer des prestations (mesure de réorganisation = 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 514, 531, 541 ou 544) d'un travailleur rémunéré par des titres-services, d’un travailleur de l’Horeca, d'un travailleur Flexi-Job, d'un contractuel dans le secteur public en congé pour prestations partielles temporaires, d'un travailleur occupé par une administration provinciale ou locale.
+            -->
+            <t t-if="service.nbr_hours != -1">
+                <ServiceNbrHours t-esc="service.nbr_hours"/>
+            </t>
+            <!-- 00065
+                DESCRIPTION:    Cette zone, destinée essentiellement aux compagnies aériennes, permet d’indiquer le nombre de minutes de vol qu’un travailleur, employé à bord d’un avion, a réellement presté pendant l'occupation déclarée.
+                Le nombre de minutes de vol doit également être déclaré pour les pilotes militaires.
+                DOMAINE DE DEFINITION:  Nombre entier et élément de [0; 9999999].
+
+
+                TYPE:   Numérique
+                LONGUEUR:   7
+
+                PRESENCE:   Obligatoire si le travailleur fait partie du personnel volant d’une compagnie aérienne ou s'il est pilote militaire.
+            -->
+            <t t-if="service.flight_nbr_minutes != -1">
+                <FlightNbrMinutes t-esc="service.flight_nbr_minutes"/>
+            </t>
+        </Service>
+        </t>
+    </template>
+
+    <template id="Remun">
+        <!-- 90019 Bloc fonctionnel permettant de déclarer les rémunérations d'un travailleur pour une occupation de la ligne travailleur.
+        Une rémunération donnée (une combinaison code rémunération / fréquence en mois de paiement de la prime / pourcentage de la rémunération sur base annuelle) ne peut se retrouver qu'une seule fois par occupation.
+         -->
+        <Remun>
+            <!-- 00066
+                DESCRIPTION:    Numéro de suite des rémunérations au sein d’une occupation ligne travailleur.
+                Ce numéro doit être unique au sein d'une occupation ligne travailleur.
+                DOMAINE DE DEFINITION:  Nombre entier positif et élément de [1;99].
+
+                TYPE:   Numérique
+                LONGUEUR:   2
+
+                PRESENCE:   Indispensable
+             -->
+            <RemunSequenceNbr t-esc="remuneration.sequence"/>
+            <!-- 00067
+                DESCRIPTION:    Code permettant de déterminer le type de donnée salariale déclarée pour l'occupation du travailleur concerné.
+
+                DOMAINE DE DEFINITION:  Voir Annexe 7 - Codification des rémunérations.
+
+                TYPE:   Numérique
+                LONGUEUR:   3
+                PRESENCE:   Indispensable
+             -->
+            <RemunCode t-esc="remuneration.code"/>
+            <!--
+                DESCRIPTION:    Fréquence utilisant le mois comme unité de mesure.
+                Exemples :
+                Une fois par mois = 1
+                Une fois par an = 12
+                Tous les deux ans = 24
+                Non périodique = 0
+
+                DOMAINE DE DEFINITION:
+                Nombre entier et élément de [0; 99].
+
+                TYPE:   Numérique
+                LONGUEUR:   2
+                PRESENCE:   Obligatoire si il s’agit d’une prime (code rémunération 02 ou 23).
+             -->
+            <t t-if="remuneration.frequency != -1">
+                <BonusPaymentFrequency t-esc="remuneration.frequency"/>
+            </t>
+            <!-- 00069
+                DESCRIPTION:    Ce pourcentage doit être déclaré lorsque la réduction de la durée du travail est introduite au moyen de l’octroi d’une rémunération horaire majorée et d’un repos compensatoire non rémunéré.
+                Il s’agit du pourcentage (exprimé en centièmes de pourcents) sur base annuelle correspondant au rapport entre le nombre de jours pour lesquels une rémunération a été payée et les jours effectifs déclarés. Le nombre de jours pour lesquels une rémunération a été payée correspond au nombre de jours effectifs déclarés auxquels on ajoute le nombre de jours de repos compensatoire dans le cadre d’une réduction du temps de travail.
+                DOMAINE DE DEFINITION:  [10000;15000].
+                Attention : Le pourcentage est exprimé en centième de pourcents.
+                Exemples : . 104,80% est exprimé sous la forme : 10480
+                . 106% est exprimé sous la forme : 10600
+
+                TYPE:   Numérique
+                LONGUEUR:   5
+
+                PRESENCE:   Obligatoire si il s’agit d’une rémunération (code rémunération 01) et le travailleur bénéficie d’une réduction de la durée du travail introduite au moyen de l’octroi d’une rémunération horaire majorée et d’un repos compensatoire non rémunéré.
+             -->
+            <t t-if="remuneration.percentage_paid != -1">
+                <PercentagePaid t-esc="remuneration.percentage_paid"/>
+            </t>
+            <!-- 00070
+                DESCRIPTION:    Total des rémunérations correspondant au type de rémunération (code rémunération éventuellement en combinaison avec la fréquence en mois de paiement de la prime ou le pourcentage de la rémunération sur base annuelle) pour l'occupation du travailleur.
+                DOMAINE DE DEFINITION:  Nombre entier positif et élément de [0; 99999999999].
+                La valeur zéro est autorisée uniquement pour le solde du budget mobilité (code rémunération 029).
+                Le montant est exprimé en eurocents.
+
+                TYPE:   Numérique
+                LONGUEUR:   11
+                PRESENCE:   Indispensable
+             -->
+            <RemunAmount t-esc="remuneration.amount if remuneration.code != '012' else '0' + remuneration.amount[1:]"/>
+        </Remun>
+    </template>
+
+    <template id="dmfa_pdf_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="wizard">
+                <t t-call="web.internal_layout">
+                    <t t-set="wizard" t-value="wizard.with_context(lang=wizard.env.lang)"/>
+                    <div class="page container-fluid">
+                        <div class="row text-center fw-bold">
+                            <div class="col-12">
+                                <div><h1 style="font-size: 3em;">DmfA Declaration (<t t-esc="data['quarter_display']"/>)</h1></div>
+                            </div>
+                        </div>
+                    </div>
+                    <t t-set="pretty_format" t-value="data['pretty_format']"/>
+                    <div class="mt-4 row">
+                        <div class="col-12">
+                            <div class="fw-bold">Global Information</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 border p-2">
+                            <table class="o_dmfa_info">
+                                <tr>
+                                    <td>Employer Class:</td>
+                                    <td style="text-align: right;"><t t-esc="data['employer_class']"/></td>
+                                </tr>
+                                <tr>
+                                    <td>ONSS Company ID:</td>
+                                    <td style="text-align: right;"><t t-esc="data['onss_company_id']"/></td>
+                                </tr>
+                                <tr>
+                                    <td>ONSS Registration Number:</td>
+                                    <td style="text-align: right;"><t t-esc="data['onss_registration_number']"/></td>
+                                </tr>
+                                <tr>
+                                    <td>Quarter Start:</td>
+                                    <td style="text-align: right;"><t t-esc="data['quarter_start']"/></td>
+                                </tr>
+                                <tr>
+                                    <td>Quarter End:</td>
+                                    <td style="text-align: right;"><t t-esc="data['quarter_end']"/></td>
+                                </tr>
+                                <tr>
+                                    <td>System 5:</td>
+                                    <td style="text-align: right;">No</td>
+                                </tr>
+                                <tr>
+                                    <td>Double Holiday Pay Global Amount:</td>
+                                    <td style="text-align: right;"><t t-esc="pretty_format(data['unrelated_calculation_basis'])"/> €</td>
+                                </tr>
+                                <tr name="double_pay_global">
+                                    <td>Double Holiday Pay Global Contributions:</td>
+                                    <td style="text-align: right;"><t t-esc="pretty_format(data['double_holiday_pay_contribution'])"/> €</td>
+                                </tr>
+                                <tr>
+                                    <td>Group Insurance Global Contributions:</td>
+                                    <td style="text-align: right;"><t t-esc="pretty_format(data['group_insurance_basis'])"/> €</td>
+                                </tr>
+                                <tr>
+                                    <td>Total of all Contributions:</td>
+                                    <td style="text-align: right;"><t t-esc="pretty_format(data['global_contribution'])"/> €</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="mt-4 row" name="employees_information">
+                        <div class="col-12">
+                            <div class="fw-bold">Employees Information</div>
+                        </div>
+                    </div>
+                    <t t-foreach="data['natural_persons']" t-as="natural_person">
+                        <p style="page-break-before:always;"> </p>
+                        <div class="row">
+                            <div class="col-12 border p-2">
+                                <div class="mb-2"><h3>Employee: <t t-esc="natural_person.employee.name"/></h3></div>
+                                <div class="mb-2">NISS: <t t-esc="natural_person.identification_id"/></div>
+                                <t t-foreach="natural_person.worker_records" t-as="worker_record">
+                                    <div class="mb-2">Worker Code: <t t-esc="worker_record.worker_code"/></div>
+                                    <t t-if="worker_record.occupations">
+                                        <t t-foreach="worker_record.occupations" t-as="occupation">
+                                            <div class="mb-2">
+                                                <h4>
+                                                    <b>Occupations # <t t-esc="occupation.sequence"/>:</b> From <t t-esc="occupation.date_start"/><t t-if="occupation.date_stop"> To <t t-esc="occupation.date_stop"/></t>
+                                                </h4>
+                                            </div>
+                                            <table class="o_dmfa_info">
+                                                <tr>
+                                                    <td>Reference Mean Working Hours</td>
+                                                    <td style="text-align: right;"><t t-esc="pretty_format(occupation.ref_mean_working_hours)"/></td>
+                                                </tr>
+                                                <t t-if="occupation.reorganisation_measure != -1">
+                                                    <tr>
+                                                        <td>Reorganization Measures:</td>
+                                                        <td style="text-align: right;"><t t-esc="occupation.reorganisation_measure"/></td>
+                                                    </tr>
+                                                </t>
+                                                <tr>
+                                                    <td>Days Per Week:</td>
+                                                    <td style="text-align: right;"><t t-esc="pretty_format(occupation.days_per_week)"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mean Working Hours:</td>
+                                                    <td style="text-align: right;"><t t-esc="pretty_format(occupation.mean_working_hours)"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Part Time:</td>
+                                                    <td style="text-align: right;"><t t-esc="occupation.is_parttime"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Joint Commission:</td>
+                                                    <td style="text-align: right;"><t t-esc="occupation.commission"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Work Place:</td>
+                                                    <td style="text-align: right;"><t t-esc="occupation.work_place"/></td>
+                                                </tr>
+                                            </table>
+                                            <t t-if="occupation.services">
+                                                <div class="mb-2 mt-2"><b>Services Summary:</b></div>
+                                                <table class="o_dmfa_table">
+                                                    <tr>
+                                                        <th>Code</th>
+                                                        <th># Days</th>
+                                                        <th># Hours</th>
+                                                    </tr>
+                                                    <t t-foreach="occupation.services" t-as="service">
+                                                        <tr>
+                                                            <td><t t-esc="service.code"/></td>
+                                                            <td><t t-esc="pretty_format(service.nbr_days)"/></td>
+                                                            <td><t t-esc="pretty_format(service.nbr_hours)"/></td>
+                                                        </tr>
+                                                    </t>
+                                                </table>
+                                            </t>
+                                            <t t-if="occupation.remunerations">
+                                                <div class="mb-2 mt-2"><b>Remunerations Summary:</b></div>
+                                                <table class="o_dmfa_table">
+                                                    <tr>
+                                                        <th>Code</th>
+                                                        <th>Frequency (Month)</th>
+                                                        <th>Amount</th>
+                                                    </tr>
+                                                    <t t-foreach="occupation.remunerations" t-as="remuneration">
+                                                        <tr>
+                                                            <td><t t-esc="remuneration.code"/></td>
+                                                            <td>
+                                                                <t t-if="remuneration.frequency != -1">
+                                                                    <t t-esc="remuneration.frequency"/>
+                                                                </t>
+                                                            </td>
+                                                            <td><t t-esc="pretty_format(remuneration.amount)"/> €</td>
+                                                        </tr>
+                                                    </t>
+                                                </table>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <t t-if="worker_record.deductions">
+                                        <div class="mb-2 mt-2"><b>Deductions Summary:</b></div>
+                                        <table class="o_dmfa_table">
+                                            <tr>
+                                                <th>Code</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                            <t t-foreach="worker_record.deductions" t-as="deduction">
+                                                <tr>
+                                                    <td><t t-esc="deduction.code"/></td>
+                                                    <td><t t-esc="pretty_format(deduction.amount)"/> €</td>
+                                                </tr>
+                                            </t>
+                                        </table>
+                                    </t>
+                                    <t t-if="worker_record.contributions">
+                                        <div class="mb-2 mt-2"><b>Contributions Summary:</b></div>
+                                        <table class="o_dmfa_table">
+                                            <tr>
+                                                <th>Code</th>
+                                                <th>Calculation Basis</th>
+                                                <th>Contribution Type</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                            <t t-foreach="worker_record.contributions" t-as="contribution">
+                                                <tr>
+                                                    <td><t t-esc="contribution.worker_code"/></td>
+                                                    <td><t t-esc="contribution.contribution_type"/></td>
+                                                    <td><t t-esc="pretty_format(contribution.calculation_basis)"/> €</td>
+                                                    <td><t t-esc="pretty_format(contribution.amount)"/> €</td>
+                                                </tr>
+                                            </t>
+                                        </table>
+                                    </t>
+                                    <t t-if="worker_record.student_contributions">
+                                        <div class="mb-2 mt-2"><b>Student Contributions Summary:</b></div>
+                                        <t t-foreach="worker_record.student_contributions" t-as="contribution">
+                                            <div class="mb-2">Work Address: <t t-esc="contribution.local_unit_id"/></div>
+                                            <div class="mb-2">Contribution: <t t-esc="pretty_format(contribution.student_contribution_amount)"/> €</div>
+                                            <div class="mb-2"># Hours: <t t-esc="pretty_format(contribution.student_hours_nbr)"/></div>
+                                        </t>
+                                    </t>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+</data>
+</odoo>

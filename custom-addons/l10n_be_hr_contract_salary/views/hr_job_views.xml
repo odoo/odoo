@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_job_view_form" model="ir.ui.view">
+        <field name="name">hr.job.view.form</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <page name="job_description_page" position="after">
+                <page string="Payroll" groups="hr_payroll.group_hr_payroll_user"
+                    name="page_payroll" invisible="not display_l10n_be_scale">
+                    <group col="2">
+                        <group col="1" >
+                            <field name="display_l10n_be_scale" invisible="1"/>
+                            <field name="l10n_be_contract_ip"/>
+                            <field name="l10n_be_contract_withholding_taxes_exemption"/>
+                        </group>
+                        <group col="2">
+                            <field name="l10n_be_custom_representation_fees"/>
+                            <separator string="Representation Fees" invisible="not l10n_be_custom_representation_fees"/>
+                            <field name="l10n_be_custom_representation_fees_homeworking" invisible="not l10n_be_custom_representation_fees"/>
+                            <field name="l10n_be_custom_representation_fees_phone" invisible="not l10n_be_custom_representation_fees"/>
+                            <field name="l10n_be_custom_representation_fees_internet" invisible="not l10n_be_custom_representation_fees"/>
+                            <field name="l10n_be_custom_representation_fees_car_management" invisible="not l10n_be_custom_representation_fees"/>
+                        </group>
+                    </group>
+                </page>
+            </page>
+            <xpath expr="//field[@name='l10n_be_contract_withholding_taxes_exemption']" position="after">
+                <xpath expr="//field[@name='l10n_be_scale_category']" position="move"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_job_payroll_view_tree" model="ir.ui.view">
+        <field name="name">hr.job.payroll.view.tree</field>
+        <field name="model">hr.job</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="company_id" column_invisible="True"/>
+                <field name="name" readonly="True"/>
+                <field name="department_id" readonly="True"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_be_hr_job_payroll_view_tree" model="ir.ui.view">
+        <field name="name">l10n.be.hr.job.payroll.view.tree</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="l10n_be_hr_contract_salary.hr_job_payroll_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='department_id']" position="after">
+                <field name="l10n_be_contract_ip"/>
+                <field name="l10n_be_contract_withholding_taxes_exemption" />
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="editable">bottom</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_hr_job_payroll_configuration" model="ir.actions.server">
+        <field name="name">Job Configuration</field>
+        <field name="model_id" ref="l10n_be_hr_contract_salary.model_hr_job"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.action_hr_job_payroll_configuration()
+        </field>
+    </record>
+
+</odoo>

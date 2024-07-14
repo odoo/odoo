@@ -1,0 +1,1036 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_ebay
+# 
+# Translators:
+# Wil Odoo, 2024
+# Wichanon Jamwutthipreecha, 2024
+# Rasareeyar Lappiam, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid ""
+" If you want to set quantity to 0, the Out Of Stock option should be enabled"
+" and the listing duration should set to Good 'Til Canceled"
+msgstr ""
+"หากคุณต้องการกำหนดจำนวนเป็น 0 ควรเปิดใช้งานตัวเลือกสินค้าหมดสต๊อก "
+"และระยะเวลาในรายการควรตั้งค่าเป็น \"ดี\" จนกว่าจะยกเลิก"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid ""
+" You need to have at least 2 variations selected for a multi-variations listing.\n"
+" Or if you try to delete a variation, you cannot do it by unselecting it. Setting the quantity to 0 is the safest method to make a variation unavailable."
+msgstr ""
+"คุณต้องมีอย่างน้อย 2 ตัวแปรที่เลือกสำหรับรายการหลายตัวแปร\n"
+"หรือหากคุณพยายามลบตัวแปร คุณไม่สามารถทำได้โดยยกเลิกการเลือก การตั้งค่าจำนวนเป็น 0 คือวิธีที่ปลอดภัยที่สุดในการทำให้ตัวแปรไม่พร้อมใช้งาน"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__product_template__ebay_listing_duration__days_10
+msgid "10 Days"
+msgstr "10 วัน"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__product_template__ebay_listing_duration__days_3
+msgid "3 Days"
+msgstr "3 วัน"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__product_template__ebay_listing_duration__days_30
+msgid "30 Days (only for fixed price)"
+msgstr "30 วัน (เฉพาะราคาคงที่)"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__product_template__ebay_listing_duration__days_5
+msgid "5 Days"
+msgstr "5 วัน"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__product_template__ebay_listing_duration__days_7
+msgid "7 Days"
+msgstr "7 วัน"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Activate Other Currencies"
+msgstr "เปิดใช้งานสกุลเงินอื่น ๆ"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Add other countries"
+msgstr "เพิ่มประเทศอื่น ๆ "
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid ""
+"All the quantities must be greater than 0 or you need to enable the Out Of "
+"Stock option."
+msgstr "ปริมาณทั้งหมดต้องมากกว่า 0 หรือคุณต้องเปิดใช้งานตัวเลือกสินค้าหมด"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_best_offer
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_best_offer
+msgid "Allow Best Offer"
+msgstr "อนุญาตข้อเสนอที่ดีที่สุด"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__product_template__ebay_listing_type__chinese
+msgid "Auction"
+msgstr "ประมูล"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_buy_it_now_price
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_buy_it_now_price
+msgid "Buy It Now Price"
+msgstr "ซื้อตอนนี้ราคา"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.ebay_link_listing_view
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_category_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_category_id
+msgid "Category"
+msgstr "หมวดหมู่"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_category_2_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_category_2_id
+msgid "Category 2 (Optional)"
+msgstr "หมวดหมู่ 2 (เลือกได้)"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__category_id
+msgid "Category ID"
+msgstr "หมวดหมู่ไอดี"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__category_parent_id
+msgid "Category Parent ID"
+msgstr "หมวดหมู่ไอดีหลัก"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__category_type
+msgid "Category Type"
+msgstr "ประเภทหมวด"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_item_condition__code
+msgid "Code"
+msgstr "โค้ด"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_res_config_settings
+msgid "Config Settings"
+msgstr "ตั้งค่าการกำหนดค่า"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid "Configure The eBay Integrator Now"
+msgstr "กำหนดค่าผู้รวม eBay ตอนนี้"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_res_partner
+msgid "Contact"
+msgstr "ติดต่อ"
+
+#. module: sale_ebay
+#: model:ir.actions.act_window,name:sale_ebay.action_country_all_form
+msgid "Countries"
+msgstr "ประเทศ"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Countries & Currencies"
+msgstr "ประเทศและสกุลเงิน"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_res_country
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_country
+msgid "Country"
+msgstr "ประเทศ"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__create_uid
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_item_condition__create_uid
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_link_listing__create_uid
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__create_uid
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_site__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__create_date
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_item_condition__create_date
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_link_listing__create_date
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__create_date
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_site__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_res_currency
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Currency"
+msgstr "สกุลเงิน"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__ebay_category__category_type__store
+msgid "Custom Store Category"
+msgstr "หมวดหมู่ร้านค้าที่กำหนดเอง"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "Describe the product characteristics..."
+msgstr "อธิบายลักษณะสินค้า..."
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_template_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_template_id
+msgid "Description Template"
+msgstr "คำอธิบายเทมเพลต"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_dev_id
+msgid "Developer Key"
+msgstr "กุญแจของนักพัฒนา"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__display_name
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_item_condition__display_name
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_link_listing__display_name
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__display_name
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_site__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_listing_duration
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_listing_duration
+msgid "Duration"
+msgstr "ระยะเวลา"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/sale_order.py:0
+#, python-format
+msgid ""
+"Ebay Synchronisation could not confirm because of the following error:\n"
+"%s"
+msgstr ""
+"ไม่สามารถยืนยันการซิงโครไนซ์ของ eBay ได้เนื่องจากข้อผิดพลาดต่อไปนี้:\n"
+"%s"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/sale_order.py:0
+#, python-format
+msgid ""
+"Ebay could not synchronize order:\n"
+"%s"
+msgstr ""
+"Ebay ไม่สามารถซิงโครไนซ์คำสั่งซื้อ:\n"
+"%s"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.ir_cron_sale_ebay_orders_sync_ir_actions_server
+msgid "Ebay: get new orders"
+msgstr "Ebay: รับคำสั่งใหม่"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.ir_cron_sale_ebay_orders_recovery
+msgid "Ebay: orders recovery"
+msgstr "Ebay: การกู้คืนคำสั่งซื้อ"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.ir_cron_sale_ebay_stock_sync_ir_actions_server
+msgid "Ebay: synchronise stock"
+msgstr "Ebay: ซิงโครไนซ์สต๊อก "
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.ir_cron_sale_ebay_categories_ir_actions_server
+msgid "Ebay: update categories"
+msgstr "Ebay: อัปเดตหมวดหมู่"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "End Item's Listing"
+msgstr "จบรายการ"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid ""
+"Error Encountered.\n"
+" No Variant Set To Be Listed On eBay."
+msgstr ""
+"พบข้อผิดพลาด\n"
+" ไม่มีชุดตัวแปรที่จะแสดงรายการบน eBay"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid ""
+"Error Encountered.\n"
+"%r"
+msgstr ""
+"เกิดข้อผิดพลาด\n"
+"%r"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "Fixed Price"
+msgstr "ราคาคงที่"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__product_template__ebay_listing_type__fixedpriceitem
+msgid "Fixed price"
+msgstr "ราคาคงที่"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__full_name
+msgid "Full Name"
+msgstr "ชื่อเต็ม"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_gallery_plus
+msgid "Gallery Plus"
+msgstr "Gallery Plus"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Generate Token"
+msgstr "สร้างโทเคน"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__product_template__ebay_listing_duration__gtc
+msgid "Good 'Til Cancelled (only for fixed price)"
+msgstr "ดีจนกระทั้งยกเลิก (สำหรับราคาคงที่เท่านั้น)"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__id
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_item_condition__id
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_link_listing__id
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__id
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_site__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: sale_ebay
+#: model:ir.model.fields,help:sale_ebay.field_res_country__ebay_available
+#: model:ir.model.fields,help:sale_ebay.field_res_currency__ebay_available
+msgid "If activated, can be used for eBay."
+msgstr "หากเปิดใช้งาน สามารถใช้กับ eBay ได้"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Import eBay config data and sync transactions"
+msgstr "นำเข้าข้อมูลการกำหนดค่า eBay และธุรกรรมการซิงค์"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid ""
+"Impossible to revise a listing into a multi-variations listing.\n"
+" Create a new listing."
+msgstr ""
+"เป็นไปไม่ได้ที่จะแก้ไขรายชื่อในรายการแบบหลายตัวแปร\n"
+"สร้างรายการใหม่"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_item_condition_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_item_condition_id
+msgid "Item Condition"
+msgstr "รายการเงื่อนไข"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__write_uid
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_item_condition__write_uid
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_link_listing__write_uid
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__write_uid
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_site__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__write_date
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_item_condition__write_date
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_link_listing__write_date
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__write_date
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_site__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_last_sync
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_last_sync
+msgid "Last update"
+msgstr "อัปเดตล่าสุด"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__leaf_category
+msgid "Leaf Category"
+msgstr "หมวดหมู่ Leaf "
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.ebay_link_listing_view
+msgid "Link Existing Listing"
+msgstr "ลิงค์รายการที่มีอยู่"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "Link With Existing eBay Listing"
+msgstr "เชื่อมโยงกับรายการ eBay ที่มีอยู่"
+
+#. module: sale_ebay
+#: model:ir.actions.act_window,name:sale_ebay.action_ebay_link_listing
+msgid "Link with Existing eBay Listing"
+msgstr "เชื่อมโยงกับรายการ eBay ที่มีอยู่"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.ebay_link_listing_view
+msgid "Link with eBay Listing"
+msgstr "ลิงก์กับรายการ eBay"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "List Item on eBay"
+msgstr "รายการบน eBay"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_listing_type
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_listing_type
+msgid "Listing Type"
+msgstr "ประเภทรายการ"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_location
+msgid "Location"
+msgstr "สถานที่"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_account_deletion_endpoint
+msgid "Marketplace account deletion notification endpoint"
+msgstr "จุดสิ้นสุดการแจ้งเตือนการลบบัญชีตลาดการซื้อขาย"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Mode"
+msgstr "โหมด"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Mode and credentials"
+msgstr "โหมดและข้อมูลรับรอง"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_category__name
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_item_condition__name
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__name
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_site__name
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/sale_ebay.py:0
+#, python-format
+msgid "No Business Policies"
+msgstr "ไม่มีนโยบายทางธุรกิจ"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__ebay_category__category_type__ebay
+msgid "Official eBay Category"
+msgstr "หมวดหมู่ eBay อย่างเป็นทางการ"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid "One parameter is missing."
+msgstr "พารามิเตอร์หายไปหนึ่งรายการ"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid "Or the condition is not compatible with the category."
+msgstr "หรือเงื่อนไขไม่เข้ากับหมวดหมู่"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_out_of_stock
+msgid "Out Of Stock"
+msgstr "หมดสต๊อก"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_seller_payment_policy_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_seller_payment_policy_id
+msgid "Payment Policy"
+msgstr "นโยบายการชำระเงิน"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Please provide your ebay production keys before enabling the account "
+"deletion notifications."
+msgstr ""
+"โปรดระบุรหัสการผลิต ebay ของคุณก่อนที่จะเปิดใช้งานการแจ้งเตือนการลบบัญชี"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Policies"
+msgstr "นโยบาย"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__policy_id
+msgid "Policy ID"
+msgstr "นโยบายไอดี"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_private_listing
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_private_listing
+msgid "Private Listing"
+msgstr "รายการส่วนตัว"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_product_template
+msgid "Product"
+msgstr "สินค้า"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Product Categories"
+msgstr "หมวดหมู่สินค้า"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_product_product
+msgid "Product Variant"
+msgstr "ตัวแปรสินค้า"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/sale_order.py:0
+#, python-format
+msgid "Product created from eBay transaction %s"
+msgstr "สินค้าที่สร้างขึ้นจากการทำธุรกรรมของ eBay %s"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__res_config_settings__ebay_domain__prod
+msgid "Production"
+msgstr "การผลิต"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_prod_app_id
+msgid "Production App Key"
+msgstr "รหัสแอปการผลิต"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_prod_cert_id
+msgid "Production Cert Key"
+msgstr "รหัสใบรับรองการผลิต"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_prod_token
+msgid "Production Token"
+msgstr "โทเคนการผลิต"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_use
+msgid "Publish On eBay"
+msgstr "เผยแพร่บน eBay"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_quantity
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_quantity
+msgid "Quantity On eBay"
+msgstr "จำนวนบน eBay"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_quantity_sold
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_quantity_sold
+msgid "Quantity Sold"
+msgstr "จำนวนที่ขายแล้ว"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "Relist Item"
+msgstr "แก้ไขรายการ"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_seller_return_policy_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_seller_return_policy_id
+msgid "Return Policy"
+msgstr "นโยบายคืนสินค้า"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "Revise Item"
+msgstr "แก้ไขรายการ"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_sale_order
+msgid "Sales Order"
+msgstr "คำสั่งขาย"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Sales Team"
+msgstr "ทีมขาย"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Sales Team to manage eBay sales"
+msgstr "ทีมขายเพื่อจัดการการขายของ eBay"
+
+#. module: sale_ebay
+#: model:ir.model.fields.selection,name:sale_ebay.selection__res_config_settings__ebay_domain__sand
+msgid "Sandbox"
+msgstr "Sandbox"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_sandbox_app_id
+msgid "Sandbox App Key"
+msgstr "รหัสแอป Sandbox"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_sandbox_cert_id
+msgid "Sandbox Cert Key"
+msgstr "รหัสใบรับรอง Sandbox"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_sandbox_token
+msgid "Sandbox Token"
+msgstr "โทเคน Sandbox "
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "Sell on eBay"
+msgstr "ขายบน eBay"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_seller_shipping_policy_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_seller_shipping_policy_id
+msgid "Shipping Policy"
+msgstr "นโยบายการจัดส่ง"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_start_date
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_start_date
+msgid "Start Date"
+msgstr "วันที่เริ่ม"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_price
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_price
+msgid "Starting Price for Auction"
+msgstr "ราคาเริ่มต้นสำหรับการประมูล"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Storage"
+msgstr "อุปกรณ์จัดเก็บ"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Storage location of your products"
+msgstr "สถานที่จัดเก็บสินค้าของคุณ"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_store_category_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_store_category_id
+msgid "Store Category (Optional)"
+msgstr "หมวดหมู่ร้านค้า (เลือกได้)"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_store_category_2_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_store_category_2_id
+msgid "Store Category 2 (Optional)"
+msgstr "หมวดหมู่ร้านค้า 2 (เลือกได้)"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_subtitle
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_subtitle
+msgid "Subtitle"
+msgstr "คำบรรยาย"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__short_summary
+msgid "Summary"
+msgstr "สรุป"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Sync now"
+msgstr "ซิงค์เลย"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "Synchronization"
+msgstr "การซิงโครไนซ์"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/sale_order.py:0
+#, python-format
+msgid "The Buyer Chose The Following Delivery Method :\n"
+msgstr "ผู้ซื้อเลือกวิธีการจัดส่งดังต่อไปนี้:\n"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/sale_order.py:0
+#, python-format
+msgid "The Buyer Posted :\n"
+msgstr "ผู้ซื้อโพสต์:\n"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"The python 'cryptography' module is not installed on your server.\n"
+"It is necessary to support eBay account deletion notifications, please contact your system administrator to install it."
+msgstr ""
+"ไม่ได้ติดตั้งโมดูล 'การเข้ารหัส' ของ python บนเซิร์ฟเวอร์ของคุณ\n"
+"จำเป็นต้องสนับสนุนการแจ้งเตือนการลบบัญชี eBay โปรดติดต่อผู้ดูแลระบบของคุณเพื่อติดตั้ง"
+
+#. module: sale_ebay
+#: model:ir.model.fields,help:sale_ebay.field_product_product__ebay_subtitle
+#: model:ir.model.fields,help:sale_ebay.field_product_template__ebay_subtitle
+msgid ""
+"The subtitle is restricted to 55 characters. Fees can be claimed by eBay for"
+" this feature"
+msgstr ""
+"คำบรรยายถูกจำกัดไว้ที่ 55 ตัวอักษร eBay "
+"สามารถเรียกเก็บค่าธรรมเนียมสำหรับฟีเจอร์นี้"
+
+#. module: sale_ebay
+#: model:ir.model.fields,help:sale_ebay.field_product_product__ebay_title
+#: model:ir.model.fields,help:sale_ebay.field_product_template__ebay_title
+msgid "The title is restricted to 80 characters"
+msgstr "ชื่อเรื่องถูกจำกัดไว้ที่ 80 ตัวอักษร"
+
+#. module: sale_ebay
+#: model:ir.model.fields,help:sale_ebay.field_product_product__ebay_category_2_id
+#: model:ir.model.fields,help:sale_ebay.field_product_template__ebay_category_2_id
+msgid ""
+"The use of a secondary category is not allowed on every eBay sites. Fees can"
+" be claimed by eBay for this feature"
+msgstr ""
+"ไม่อนุญาตให้ใช้หมวดหมู่รองทในทุกไซต์ของ eBay "
+"สามารถเรียกเก็บค่าธรรมเนียมสำหรับฟีเจอร์นี้"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid ""
+"There is no last synchronization date in your System Parameters. Create a "
+"System Parameter record with the key \"ebay_last_sync\" and the value set to"
+" the date of the oldest order you wish to synchronize in the format \"YYYY-"
+"MM-DD\"."
+msgstr ""
+"ไม่มีวันที่ซิงโครไนซ์ครั้งล่าสุดในระบบพารามิเตอร์ของคุณ "
+"สร้างบันทึกระบบพารามิเตอร์ด้วยคีย์ \"ebay_last_sync\" "
+"และตั้งค่าเป็นวันที่ของลำดับที่เก่าที่สุดที่คุณต้องการซิงโครไนซ์ในรูปแบบ "
+"\"YYYY-MM-DD\""
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid ""
+"This function should not be called with a range of more than 30 days, as "
+"eBay does not handle longer timespans. Instead use synchronize_orders which "
+"split in as many calls as needed."
+msgstr ""
+"ไม่ควรเรียกใช้ฟังก์ชันนี้โดยมีช่วงเวลาที่มากกว่า 30 วัน เนื่องจาก eBay "
+"ไม่รองรับระยะเวลาที่นานกว่านี้ได้ ให้ใช้ synchronize_orders "
+"ซึ่งแบ่งการโทรได้มากเท่าที่ต้องการแทน"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/res_partner.py:0
+#, python-format
+msgid ""
+"This is an automated notification as a deletion request has been received from eBay concerning the account \"%s (%s)\". The account has been anonymised already and his portal access revoked (if they had any).\n"
+"\n"
+"However, personal information might remain in linked documents, please review them according to laws that apply."
+msgstr ""
+"นี้คือการแจ้งเตือนอัตโนมัติเมื่อได้รับคำขอลบจาก eBay เกี่ยวกับบัญชี \"%s (%s)\" บัญชีจะถูกปกปิดชื่อแล้วและการเข้าถึงพอร์ทัลถูกเพิกถอน (ถ้ามี)\n"
+"\n"
+"อย่างไรก็ตาม ข้อมูลส่วนบุคคลอาจยังคงอยู่ในเอกสารที่เชื่อมโยง โปรดตรวจสอบตามกฎหมายที่บังคับใช้"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_title
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_title
+msgid "Title"
+msgstr "คำนำหน้าชื่อ"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_stock_picking
+msgid "Transfer"
+msgstr "โอน"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_policy__policy_type
+msgid "Type"
+msgstr "ประเภท"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_sync_stock
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_sync_stock
+msgid "Use Stock Quantity"
+msgstr "ใช้จำนวนสต๊อก"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_use
+msgid "Use eBay"
+msgstr "ใช้ eBay"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_country__ebay_available
+#: model:ir.model.fields,field_description:sale_ebay.field_res_currency__ebay_available
+msgid "Use on eBay"
+msgstr "ใช้บน eBay"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "Variants"
+msgstr "ตัวแปร"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_verification_token
+msgid "Verification Token"
+msgstr "ตรวจสอบยืนยันโทเคน"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_zip_code
+msgid "Zip"
+msgstr "รหัสไปรษณีย์"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "eBay"
+msgstr "eBay"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "eBay Account"
+msgstr "บัญชี eBay"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_ebay_category
+msgid "eBay Category"
+msgstr "หมวดหมู่ eBay "
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_description
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_description
+#: model_terms:ir.ui.view,arch_db:sale_ebay.product_template_sale_ebay_form_view
+msgid "eBay Description"
+msgstr "คำอธิบาย eBay "
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_domain
+msgid "eBay Environment"
+msgstr "สภาพแวดล้อม eBay "
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_fixed_price
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_fixed_price
+msgid "eBay Fixed Price"
+msgstr "ราคาคงที่ eBay"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_site__ebay_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_id
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_id
+msgid "eBay ID"
+msgstr "eBay ไอดี"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_ebay_item_condition
+msgid "eBay Item Condition"
+msgstr "รายการเงื่อนไข eBay "
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_ebay_link_listing
+msgid "eBay Link Listing"
+msgstr "รายการลิงก์ eBay "
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_ebay_link_listing__ebay_id
+msgid "eBay Listing ID"
+msgstr "รายการไอดี eBay "
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "eBay Marketplace Account Deletion/Closure Notifications"
+msgstr "การแจ้งเตือนการลบ/ปิดบัญชีตลาดการซื้อขายของ eBay"
+
+#. module: sale_ebay
+#: model:mail.activity.type,summary:sale_ebay.ebay_GDPR_notification
+msgid "eBay Odoo connector notification - account deletion"
+msgstr "การแจ้งเตือนตัวเชื่อมต่อ eBay Odoo - การลบบัญชี"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "eBay Options"
+msgstr "ตัวเลือก eBay"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_ebay_policy
+msgid "eBay Policy"
+msgstr "eBay นโยบาย"
+
+#. module: sale_ebay
+#: model:ir.model,name:sale_ebay.model_ebay_site
+msgid "eBay Site"
+msgstr "eBay ไซต์"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_listing_status
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_listing_status
+msgid "eBay Status"
+msgstr "สถานะ eBay"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_partner__ebay_id
+#: model:ir.model.fields,field_description:sale_ebay.field_res_users__ebay_id
+msgid "eBay User ID"
+msgstr "ไอดีผู้ใช้ eBay "
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_variant_url
+msgid "eBay Variant URL"
+msgstr "ตัวแปร URL eBay "
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_site
+msgid "eBay Website"
+msgstr "เว็บไซต์ eBay "
+
+#. module: sale_ebay
+#: model:mail.activity.type,name:sale_ebay.ebay_GDPR_notification
+msgid "eBay connector: account deletion notification"
+msgstr "ตัวเชื่อมต่อ eBay : แจ้งเตือนการลบบัญชี"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/sale_ebay.py:0
+#, python-format
+msgid ""
+"eBay error: Impossible to synchronize the categories. \n"
+"'%s'"
+msgstr ""
+"ข้อผิดพลาดของ eBay: ไม่สามารถซิงโครไนซ์หมวดหมู่ได้ \n"
+"'%s'"
+
+#. module: sale_ebay
+#. odoo-python
+#: code:addons/sale_ebay/models/product.py:0
+#, python-format
+msgid "eBay is unreachable. Please try again later."
+msgstr "eBay ไม่สามารถเข้าถึงได้ กรุณาลองใหม่อีกครั้งในภายหลัง"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "eBay parameters"
+msgstr "eBay พารามิเตอร์"
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid ""
+"eBay requires supporting customer account deletion/closure notifications."
+msgstr "eBay จำเป็นต้องรองรับการแจ้งเตือนการลบ/ปิดบัญชีลูกค้า"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_product_product__ebay_url
+#: model:ir.model.fields,field_description:sale_ebay.field_product_template__ebay_url
+msgid "eBay url"
+msgstr "eBay url"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.action_end_items_listings
+msgid "eBay: End product listings"
+msgstr "eBay: จบรายการสินค้า"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.action_list_items
+msgid "eBay: List products"
+msgstr "eBay: รายการสินค้า"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.action_relist_items
+msgid "eBay: Relist products"
+msgstr "eBay: แก้ไขรายการสินค้า"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.action_revise_items
+msgid "eBay: Revise products"
+msgstr "eBay: แก้ไขสินค้า"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.action_unlink_items_listings
+msgid "eBay: Unlink product listings"
+msgstr "eBay: ยกเลิกการลิงก์รายการสินค้า"
+
+#. module: sale_ebay
+#: model:ir.actions.server,name:sale_ebay.action_ebay_update_carrier
+msgid "eBay: Update carrier information"
+msgstr "eBay: อัปเดตข้อมูลผู้ให้บริการ"
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_currency
+msgid "ebay Currency"
+msgstr "สกุลเงิน ebay "
+
+#. module: sale_ebay
+#: model:ir.model.fields,field_description:sale_ebay.field_res_config_settings__ebay_sales_team
+msgid "ebay Sales Team"
+msgstr "ทีมการขาย ebay "
+
+#. module: sale_ebay
+#: model_terms:ir.ui.view,arch_db:sale_ebay.res_config_settings_view_form
+msgid "to setup this mechanism."
+msgstr "เพื่อตั้งค่ากลไกนี้"
+
+#. module: sale_ebay
+#: code:addons/sale_ebay/tools/ebaysdk.py:0
+#, python-format
+msgid ""
+"An unexpected error occured from eBay.\n"
+"Please check your credentials and try again later."
+msgstr ""
+"เกิดข้อผิดพลาดที่ไม่คาดคิดจาก eBay\n"
+"โปรดตรวจสอบข้อมูลประจำตัวของคุณและลองอีกครั้งในภายหลัง"

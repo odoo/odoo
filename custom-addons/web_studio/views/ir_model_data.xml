@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+   <record model="ir.ui.view" id="studio_customizations_filter">
+        <field name="name">web_studio.customizations_filter</field>
+        <field name="model">ir.model.data</field>
+        <field name="inherit_id" ref="base.view_model_data_search"/>
+        <field name="arch" type="xml">
+            <field name="module" position="after">
+                <filter string="Studio Customizations" name="studio_customiz" domain="[('studio', '=', True)]"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

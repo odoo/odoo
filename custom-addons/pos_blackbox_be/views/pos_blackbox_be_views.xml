@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_pos_pos_form" model="ir.ui.view">
+            <field name="name">pos.order.form.view.inherit</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"></field>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="duplicate">0</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_pos_order_kanban" model="ir.ui.view">
+            <field name="name">pos.order.kanban.view.inherit</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_order_kanban"></field>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="duplicate">0</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_pos_order_tree" model="ir.ui.view">
+            <field name="name">pos.order.tree.view.inherit</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"></field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="duplicate">0</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_log_book_form">
+            <field name="name">Log book</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos_blackbox_be.log</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="domain">[]</field>
+        </record>
+
+        <menuitem
+            id="menu_log_book"
+            action="action_log_book_form"
+            parent="point_of_sale.menu_point_of_sale"
+            sequence="110"
+            groups="point_of_sale.group_pos_manager"/>
+
+        <record model="ir.ui.view" id="view_pos_blackbox_be_log_tree">
+            <field name="name">Log book</field>
+            <field name="model">pos_blackbox_be.log</field>
+            <field name="arch" type="xml">
+                <tree string="Logs" default_order="date" create="false" edit="false" delete="false">
+                    <field name="user"/>
+                    <field name="date"/>
+                    <field name="action"/>
+                    <field name="model_name"/>
+                    <field name="record_name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_pos_config_kanban" model="ir.ui.view">
+            <field name="name">pos.config.kanban.view.inherit.pos_blackbox_be</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban" />
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="certified_blackbox_identifier"/>
+                    <field name="pos_version"/>
+                </field>
+                <xpath expr="//div[hasclass('o_kanban_card_header_title_name')]" position="after">
+                    <t t-if="record.certified_blackbox_identifier.value">
+                        <div class="badge text-bg-info o_kanban_inline_block me-1" t-esc="record.pos_version.value"/>
+                        <div class="badge text-bg-info o_kanban_inline_block me-1" t-esc="record.certified_blackbox_identifier.value"/>
+                    </t>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- include vat number in report -->
+        <template id="include_vat_number" inherit_id="web.external_layout_boxed">
+            <xpath expr="//div[@name='company_address']" position="after">
+                <div class="col-9" name="company_address">
+                    VAT: <t t-esc="company.vat"/>
+                </div>
+            </xpath>
+        </template>
+
+        <record id="pos_config_view_form_inherit_pos_blackbox_be" model="ir.ui.view">
+            <field name="name">pos.config.form.inherit.blackbox.be</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="pos_iot.pos_iot_config_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='row_scale']" position="after">
+                    <div class="row">
+                        <label string="Belgian Fiscal Data Module" for="iface_fiscal_data_module" class="col-lg-4 o_light_label"/>
+                        <field name="iface_fiscal_data_module"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_pos_order_filter_registered_transactions" model="ir.ui.view">
+            <field name="name">pos.order.list.select</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
+            <field name="arch" type="xml">
+                <search position="inside">
+                    <filter string="FDM transactions" name="fdm_transactions" domain="[('blackbox_signature','!=','')]"/>
+                </search>
+            </field>
+        </record>
+
+        <template id="include_vat_notice_report_external_header" inherit_id="web.external_layout_standard">
+            <xpath expr="//div[@name='moto']" position="replace">
+                <div class="col-5 text-center" style="margin-top:20px;">
+                    <strong>THIS IS NOT A VALID VAT TICKET</strong>
+                </div>
+                <div t-field="company.report_header"/>
+            </xpath>
+        </template>
+
+        <template id="include_vat_notice_report_internal" inherit_id="web.internal_layout">
+            <xpath expr="//div[hasclass('row')]" position="before">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <strong>THIS IS NOT A VALID VAT TICKET</strong>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="fdm_source">
+SIGNATURES:
+--------------------------------------------------------------------
+GLOBAL HASH: <t t-esc="main_hash" />
+            <t t-foreach="files" t-as="current_file">
+<t t-out="current_file['name']"/>: <t t-out="current_file['hash']"/> (size in bytes: <t t-out="current_file['size_in_bytes']"/>)
+            </t>
+--------------------------------------------------------------------
+
+CONTENT:
+            <t t-foreach="files" t-as="current_file">
+--------------------------------------------------------------------
+<t t-out="current_file['name']"/>
+--------------------------------------------------------------------
+<t t-out="current_file['contents']"/>
+            </t>
+        </template>
+
+        <template id="journal_file">
+FICHIER JOURNAL POUR CAISSE <t t-esc="pos_id" />:
+--------------------------------------------------------------------
+<t t-foreach="logs" t-as="log">
+    <t t-out="log.description"/>
+    ---------------------------------
+</t>
+        </template>
+
+    </data>
+</odoo>

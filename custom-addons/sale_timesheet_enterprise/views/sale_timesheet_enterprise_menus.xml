@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <menuitem id="hr_timesheet_menu_configuration_settings"
+              name="Configuration"
+              parent="hr_timesheet.timesheet_menu_root"
+              groups="hr_timesheet.group_timesheet_manager"
+              sequence="100"
+    >
+        <menuitem id="hr_timesheet.hr_timesheet_menu_configuration"
+                  name="Settings"
+                  sequence="10"
+        />
+        <menuitem id="hr_timesheet_menu_configuration_tips"
+                  name="Tips"
+                  action="hr_timesheet_tip_action"
+                  groups="group_use_timesheet_leaderboard"
+                  sequence="20"
+        />
+    </menuitem>
+
+</odoo>

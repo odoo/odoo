@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.mrp.mps</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="mrp.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='mrp_mps']" position="inside">
+                <div class="content-group mt16" invisible="not module_mrp_mps">
+                    <label string="Time Range" for="manufacturing_period" class="o_light_label mr8"/>
+                    <field name="manufacturing_period" widget="radio" class="o_light_label"/>
+                    <br/>
+                    <label string="Number of Columns" for="manufacturing_period_to_display" class="o_light_label mr8"/>
+                    <field name="manufacturing_period_to_display"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

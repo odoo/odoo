@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_payslip_ken" inherit_id="hr_payroll.report_payslip" primary="True">
+    <table name="employee-infos" id="employee_info_table_1" position="replace">
+        <table name="employee-infos" id="employee_info_table_1" class="table table-sm table-bordered">
+            <tr id="employee_info_line_1">
+                <td class="w-25"><strong>Employee</strong></td>
+                <td class="w-25"><strong>Employee's PIN</strong></td>
+                <td class="w-25"><strong>Designation</strong></td>
+                <td class="w-25"><strong>Pay Period</strong></td>
+            </tr>
+            <tr id="employee_info_line_2">
+                <td><span t-field="o.employee_id"/></td>
+                <td><span t-field="o.employee_id.l10n_ke_pin"/></td>
+                <td><span t-field="o.employee_id.job_title"/></td>
+                <td>
+                    <t t-if="o.date_from &lt; o.contract_id.date_start">
+                        <span t-field="o.contract_id.date_start"/>
+                    </t>
+                    <t t-else="">
+                        <span t-field="o.date_from"/>
+                    </t>
+                        - 
+                    <t t-if="o.contract_id.date_end and o.date_to &gt; o.contract_id.date_end">
+                        <span t-field="o.contract_id.date_end"/>
+                    </t>
+                    <t t-else="">
+                        <span t-field="o.date_to"/>
+                    </t>
+                </td>
+            </tr>
+            <tr id="employee_info_line_3">
+                <td><span t-field="o.employee_id.private_street"/></td>
+                <td class="w-25"><strong>Working Schedule</strong></td>
+                <td><strong>Identification</strong></td>
+                <td class="w-25"><strong>Contract Type</strong></td>
+            </tr>
+            <tr id="employee_info_line_4">
+                <td><span t-field="o.employee_id.private_city"/> <span t-field="o.employee_id.private_zip"/></td>
+                <td><span t-field="o.employee_id.contract_id.hours_per_week"/></td>
+                <td><span t-field="o.employee_id.identification_id"/></td>
+                <td><span t-field="o.employee_id.contract_id.contract_type_id"/></td>
+            </tr>
+            <tr id="employee_info_line_5">
+                <td><strong>Work Email</strong></td>
+                <td><strong>KRA PIN</strong></td>
+                <td><strong>NSSF Number</strong></td>
+                <td><strong>NHIF Number</strong></td>
+            </tr>
+            <tr id="employee_info_line_6">
+                <td><span t-field="o.employee_id.work_email"/></td>
+                <td><span t-field="o.employee_id.l10n_ke_kra_pin"/></td>
+                <td><span t-field="o.employee_id.l10n_ke_nssf_number"/></td>
+                <td><span t-field="o.employee_id.l10n_ke_nhif_number"/></td>
+            </tr>
+        </table>
+    </table>
+    <div id="to_pay" position="attributes">
+        <attribute name="invisible">1</attribute>
+    </div>
+</template>
+
+<template id="report_payslip_ken_lang">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="o" t-value="o.with_context(lang=o.employee_id.lang or o.env.lang)"/>
+            <t t-call="l10n_ke_hr_payroll.report_payslip_ken" t-lang="o.env.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_subscription_plan_view_form" model="ir.ui.view">
+        <field name="name">sale.subscription.plan.view.form</field>
+        <field name="model">sale.subscription.plan</field>
+        <field name="arch" type="xml">
+            <form string="Recurring Plan">
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button name="action_open_active_sub" type="object"
+                                class="oe_stat_button" icon="fa-dollar">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Subscriptions</span>
+                                <field name="active_subs_count" class="o_stat_value"/>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Monthly" class="d-block"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="sale_info" string="Details">
+                            <field name="active" invisible="1"/>
+                            <label for="billing_period_value" string="Billing Period"/>
+                            <div>
+                                <field name="billing_period_value" style="width: 3rem;"/>
+                                <field name="billing_period_unit" class="oe_inline"/>
+                            </div>
+                            <label for="auto_close_limit"/>
+                            <div>
+                                <field name="auto_close_limit" style="width: 3rem;"/>Days
+                            </div>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="invoice_mail_template_id" context="{'default_model': 'sale.order'}" placeholder="No automatic mail"/>
+                        </group>
+                        <group name="self_service" string="Self-Service">
+                            <field name="user_closable"/>
+                            <field name="user_quantity"/>
+                            <field name="user_extend"/>
+                            <field name="related_plan_id" domain="[('id', '!=', id)]" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <notebook name="main_book">
+                        <page string="Pricing" name="pricing">
+                            <field name="product_subscription_pricing_ids">
+                                <tree editable="1">
+                                    <control>
+                                        <create name="add_product_pricing" string="Add a price rule"/>
+                                    </control>
+                                    <field name="product_template_id" domain="[('recurring_invoice', '=', True)]"
+                                           options="{'no_create': 1}" required="1"/>
+                                    <field name="product_variant_ids" widget="many2many_tags"
+                                           groups="product.group_product_variant" options="{'no_create': 1}"
+                                           domain="[('product_tmpl_id', '=', product_template_id)]"/>
+                                    <field name="pricelist_id" groups="product.group_product_pricelist"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="price"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_subscription_plan_view_tree" model="ir.ui.view">
+        <field name="name">sale.subscription.plan.view.tree</field>
+        <field name="model">sale.subscription.plan</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="billing_period_display"/>
+                <field name="auto_close_limit_display"/>
+                <field name="active_subs_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="sale_subscription_plan_view_search" model="ir.ui.view">
+        <field name="name">sale.subscription.plan.view.search</field>
+        <field name="model">sale.subscription.plan</field>
+        <field name="arch" type="xml">
+            <search string="Recurring Plan">
+                <field name="name" string="name" filter_domain="['|', ('name', 'ilike', self), ('description', 'ilike', self)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="sale_subscription_action_plan" model="ir.actions.act_window">
+        <field name="name">Plans</field>
+        <field name="res_model">sale.subscription.plan</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" eval='sale_subscription_plan_view_search'/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new subscription plan
+            </p><p>
+                Create subscriptions plan
+            </p><p>
+                Subscription plans are used to configure the recurring, invoicing, and self-service behavior of subscriptions.
+            </p>
+        </field>
+    </record>
+</odoo>

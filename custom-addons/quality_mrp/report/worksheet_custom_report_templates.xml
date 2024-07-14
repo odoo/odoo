@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="worksheet_page" inherit_id="quality_control.worksheet_page">
+            <xpath expr="//t[@name='origin']" position="inside">
+                <div name="production_order" t-if="doc.production_id">
+                    <strong>Manufacturing Order: </strong>
+                    <span t-field="doc.production_id.display_name"/>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

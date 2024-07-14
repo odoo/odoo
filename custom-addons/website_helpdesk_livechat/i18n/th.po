@@ -1,0 +1,292 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_helpdesk_livechat
+# 
+# Translators:
+# Wil Odoo, 2023
+# Rasareeyar Lappiam, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid ""
+"\n"
+"                    Create a new helpdesk ticket by typing <b>/ticket <i>ticket title</i></b><br>\n"
+"                    "
+msgstr ""
+"\n"
+"                    สร้างทิกเก็ต Helpdesk ใหม่โดยการพิมพ์ <b>/ticket <i>ticket title</i></b><br>\n"
+"                    "
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/chatbot_script_step.py:0
+#, python-format
+msgid "%(name)s's Ticket"
+msgstr "ทิกเก็ตของ %(name)s"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_done
+msgid "Alright, we should have everything we need"
+msgstr "เอาล่ะ เราควรมีทุกสิ่งที่เราต้องการ"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/chatbot_script.py:0
+#, python-format
+msgid ""
+"An \"Email\" step type must exist before the \"Create Ticket\" step for a "
+"ticket to be created."
+msgstr ""
+"ต้องมีประเภทขั้นตอน \"อีเมล\" ก่อนขั้นตอน \"สร้างทิกเก็ต\" "
+"จึงจะสร้างทิกเก็ตได้"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_technical_serial_misc
+msgid "Anything else to add?"
+msgstr "มีอะไรที่ต้องการเพิ่มอีกหรือไม่?"
+
+#. module: website_helpdesk_livechat
+#: model:ir.ui.menu,name:website_helpdesk_livechat.helpdesk_team_canned_response_menu
+msgid "Canned Responses"
+msgstr "การตอบกลับสำเร็จรูป"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model,name:website_helpdesk_livechat.model_chatbot_script
+msgid "Chatbot Script"
+msgstr "สคริปต์แชทบอท"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model,name:website_helpdesk_livechat.model_chatbot_script_step
+msgid "Chatbot Script Step"
+msgstr "ขั้นตอนสคริปต์แชทบอท"
+
+#. module: website_helpdesk_livechat
+#: model_terms:ir.ui.view,arch_db:website_helpdesk_livechat.helpdesk_team_view_form_inherit_website_helpdesk_livechat
+msgid "Configure Canned Responses"
+msgstr "กำหนดค่าการตอบกลับสำเร็จรูป"
+
+#. module: website_helpdesk_livechat
+#: model_terms:ir.ui.view,arch_db:website_helpdesk_livechat.helpdesk_team_view_form_inherit_website_helpdesk_livechat
+msgid "Configure Live Chat Channel"
+msgstr "กำหนดค่าช่องไลฟ์แชท"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model.fields.selection,name:website_helpdesk_livechat.selection__chatbot_script_step__step_type__create_ticket
+msgid "Create Ticket"
+msgstr "สร้างทิกเก็ต"
+
+#. module: website_helpdesk_livechat
+#. odoo-javascript
+#: code:addons/website_helpdesk_livechat/static/src/messaging_service_patch.js:0
+#, python-format
+msgid "Create a new helpdesk ticket (/ticket ticket title)"
+msgstr "สร้างทิกเก็ต Helpdesk ใหม่ (/ticket ticket title)"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "Created a new ticket: %s"
+msgstr "สร้างทิกเก็ตใหม่: %s"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model,name:website_helpdesk_livechat.model_discuss_channel
+msgid "Discussion Channel"
+msgstr "ช่องการสนทนา"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_dispatch
+msgid "First, what is the nature of your issue?"
+msgstr "ก่อนอื่น ปัญหาของคุณคืออะไร?"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model.fields,field_description:website_helpdesk_livechat.field_chatbot_script__ticket_count
+msgid "Generated Ticket Count"
+msgstr "จำนวนทิกเก็ตที่สร้างขึ้น"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref_yes
+msgid "Great, that will make our lives easier."
+msgstr "เยี่ยมมาก นั่นจะทำให้ชีวิตของเราง่ายขึ้น"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script,title:website_helpdesk_livechat.chatbot_script_helpdesk_bot
+msgid "Helpdesk Bot"
+msgstr "บอท Helpdesk"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model,name:website_helpdesk_livechat.model_helpdesk_team
+#: model:ir.model.fields,field_description:website_helpdesk_livechat.field_chatbot_script_step__helpdesk_team_id
+msgid "Helpdesk Team"
+msgstr "ทีมดูแลช่วยเหลือ"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_welcome
+msgid "Here we go, help is on the way!"
+msgstr "เอาล่ะ ความช่วยเหลือกำลังมาถึงแล้ว!"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.answer,name:website_helpdesk_livechat.chatbot_script_helpdesk_step_dispatch_answer_technical
+msgid "I have a technical issue"
+msgstr "ฉันมีปัญหาทางเทคนิค"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.answer,name:website_helpdesk_livechat.chatbot_script_helpdesk_step_dispatch_answer_administrative
+msgid "I have an administrative question"
+msgstr "ฉันมีคำถามด้านการบริหาร"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref_no
+msgid "It's OK, we can also find your contract by other means."
+msgstr "ไม่เป็นไร เราสามารถค้นหาสัญญาของคุณได้ด้วยวิธีอื่น"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_email
+msgid "Just a last thing, can we please have your email address?"
+msgstr "สุดท้ายนี้ เราขอที่อยู่อีเมลของคุณได้ไหม"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model.fields,field_description:website_helpdesk_livechat.field_helpdesk_team__use_website_helpdesk_livechat
+msgid "Live Chat"
+msgstr "ไลฟ์แชท"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "Make sure you are using the right format:"
+msgstr "ตรวจสอบให้แน่ใจว่าคุณใช้รูปแบบที่ถูกต้อง:"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.answer,name:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref_answer_no
+msgid "No"
+msgstr "ไม่"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "No tickets found for %s."
+msgstr "ไม่พบทิกเก็ตสำหรับ %s"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid ""
+"No tickets found for <b>%s</b>. <br> Make sure you are using the right "
+"format:<br> <b>/search_tickets <i>keyword</i></b>"
+msgstr ""
+"ไม่พบทิกเก็ตสำหรับ <b>%s</b> <br> "
+"ตรวจสอบให้แน่ใจว่าคุณใช้รูปแบบที่ถูกต้อง:<br> <b>/search_tickets "
+"<i>keyword</i></b>"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_ticket
+msgid ""
+"OK, I just created a ticket for you. You should receive an email "
+"confirmation very soon."
+msgstr "โอเค ฉันเพิ่งสร้างทิกเก็ตให้กับคุณ คุณจะได้รับอีเมลยืนยันเร็วๆ นี้"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_technical_serial
+msgid "Please write below the serial number of your equipment."
+msgstr "กรุณาเขียนหมายเลขซีเรียลของอุปกรณ์ของคุณไว้ด้านล่าง"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref_input
+msgid "Please write below your customer reference."
+msgstr "กรุณาเขียนด้านล่างข้อมูลอ้างอิงลูกค้าของคุณ"
+
+#. module: website_helpdesk_livechat
+#. odoo-javascript
+#: code:addons/website_helpdesk_livechat/static/src/messaging_service_patch.js:0
+#, python-format
+msgid "Search helpdesk tickets (/search_tickets keyword)"
+msgstr "ค้นหาทิกเก็ต Helpdesk (/search_tickets keyword)"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid ""
+"Search helpdesk tickets by typing <b>/search_tickets <i>keyword</i></b>"
+msgstr ""
+"ค้นหาทิกเก็ต Helpdesk โดยพิมพ์ <b> /search_tickets<i>คีย์เวิร์ด</i></b>"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "Something is missing or wrong in command"
+msgstr "คำสั่งบางอย่างขาดหายไปหรือผิดพลาด"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model.fields,field_description:website_helpdesk_livechat.field_chatbot_script_step__step_type
+msgid "Step Type"
+msgstr "ประเภทขั้นตอน"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_technical_serial_thanks
+msgid "Thank you, that will help our engineers see what went wrong."
+msgstr "ขอบคุณ สิ่งนี้จะช่วยให้วิศวกรของเราเห็นว่ามีอะไรผิดพลาด"
+
+#. module: website_helpdesk_livechat
+#: model_terms:ir.ui.view,arch_db:website_helpdesk_livechat.chatbot_script_view_form
+msgid "Tickets"
+msgstr "ทิกเก็ต"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "Tickets search results for %s: "
+msgstr "ผลการค้นหาทิกเก็ตสำหรับ %s:"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref
+msgid ""
+"To start with, do you have a customer reference?\n"
+"They are written on each invoice you received, next to your name."
+msgstr ""
+"ก่อนอื่น คุณมีข้อมูลอ้างอิงของลูกค้าหรือไม่?\n"
+"ข้อมูลอ้างอิงถูกเขียนไว้บนใบแจ้งหนี้แต่ละใบที่คุณได้รับ ถัดจากชื่อของคุณ"
+
+#. module: website_helpdesk_livechat
+#: model:ir.model,name:website_helpdesk_livechat.model_res_users
+msgid "User"
+msgstr "ผู้ใช้"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.step,message:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_issue
+msgid "We're all set. Now, what is your issue?"
+msgstr "เราพร้อมแล้ว ตอนนี้ปัญหาของคุณคืออะไร?"
+
+#. module: website_helpdesk_livechat
+#: model:chatbot.script.answer,name:website_helpdesk_livechat.chatbot_script_helpdesk_step_administrative_customer_ref_answer_yes
+msgid "Yes"
+msgstr "ใช่"
+
+#. module: website_helpdesk_livechat
+#. odoo-python
+#: code:addons/website_helpdesk_livechat/models/helpdesk.py:0
+#, python-format
+msgid "keyword"
+msgstr "คีย์เวิร์ด"

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Appointment - ONBOARDING STEPS -->
+        <record id="appointment_onboarding_create_appointment_type_step" model="onboarding.onboarding.step">
+            <field name="title">Set your availabilities</field>
+            <field name="description">to automate appointments</field>
+            <field name="done_icon">fa-star</field>
+            <field name="button_text">Configure</field>
+            <field name="done_text">Looks great!</field>
+            <field name="panel_step_open_action_name">action_open_appointment_onboarding_create_appointment_type</field>
+            <field name="step_image" type="base64" file="base/static/img/onboarding_cog.png"></field>
+            <field name="step_image_filename">onboarding_cog.png</field>
+            <field name="step_image_alt">Onboarding Set Your Availabilities</field>
+            <field name="is_per_company" eval="False"/>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="appointment_onboarding_preview_invite_step" model="onboarding.onboarding.step">
+            <field name="title">Get your link</field>
+            <field name="description">to schedule appointments</field>
+            <field name="button_text">Preview</field>
+            <field name="panel_step_open_action_name">action_open_appointment_onboarding_preview_invite</field>
+            <field name="step_image" type="base64" file="base/static/img/onboarding_looking_glass.png"></field>
+            <field name="step_image_filename">onboarding_looking_glass.png</field>
+            <field name="step_image_alt">Onboarding Get your link</field>
+            <field name="is_per_company" eval="False"/>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="appointment_onboarding_configure_calendar_provider_step" model="onboarding.onboarding.step">
+            <field name="title">Connect your calendar</field>
+            <field name="description">With Outlook or Google</field>
+            <field name="done_icon">fa-star</field>
+            <field name="button_text">Connect</field>
+            <field name="panel_step_open_action_name">action_open_appointment_onboarding_configure_calendar_provider</field>
+            <field name="step_image" type="base64" file="base/static/img/onboarding_calendar.png"></field>
+            <field name="step_image_filename">onboarding_calendar.png</field>
+            <field name="step_image_alt">Onboarding Connect your calendar</field>
+            <field name="is_per_company" eval="False"/>
+            <field name="sequence">9</field>
+        </record>
+
+        <!-- Appointment - ONBOARDING PANEL -->
+        <record id="onboarding_onboarding_appointment" model="onboarding.onboarding">
+            <field name="name">Appointment Onboarding</field>
+            <field name="step_ids" eval="[
+                Command.link(ref('appointment.appointment_onboarding_create_appointment_type_step')),
+                Command.link(ref('appointment.appointment_onboarding_preview_invite_step')),
+                Command.link(ref('appointment.appointment_onboarding_configure_calendar_provider_step')),
+            ]"/>
+            <field name="route_name">appointment</field>
+            <field name="panel_close_action_name">action_close_panel_appointment</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="certificate_list_action" model="ir.actions.act_window">
+            <field name="name">certificates</field>
+            <field name="res_model">l10n_mx_edi.certificate</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context" eval="{'search_default_my_certificates': 1}"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Create the first certificate</p>
+            </field>
+        </record>
+
+        <record id="certificate_form_view" model="ir.ui.view">
+            <field name="name">certificate.form</field>
+            <field name="model">l10n_mx_edi.certificate</field>
+            <field name="arch" type="xml">
+                <form string="certificate Form">
+                    <sheet>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                            <field name="content"/>
+                            <field name="key"/>
+                            <field name="password" password="True"/>
+                            <label for="date_start" string="Validity"/>
+                            <div>
+                                <field name="date_start"/> -
+                                <field name="date_end"/>
+                            </div>
+                            <field name="serial_number"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="certificate_search_view" model="ir.ui.view">
+            <field name="name">certificate.search</field>
+            <field name="model">l10n_mx_edi.certificate</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="serial_number"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="certificate_tree_view">
+            <field name="name">certificate.tree</field>
+            <field name="model">l10n_mx_edi.certificate</field>
+            <field name="arch" type="xml">
+                <tree string="certificate Tree">
+                    <field name="serial_number"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

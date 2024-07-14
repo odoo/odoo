@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="approval_purchase_stock_request_view_form_inherit" model="ir.ui.view">
+        <field name="name">approval.purchase.stock.request.view.form.inherit</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_line_ids']" position="attributes">
+                <attribute name="context">{
+                    'tree_view_ref': 'approvals.approval_product_line_view_tree',
+                    'default_company_id': company_id,
+                }</attribute>
+            </xpath>
+            <xpath expr="//field[@name='location']" position="before">
+                <field name="hide_location" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='location']" position="attributes">
+                <attribute name="invisible">hide_location</attribute>
+                <attribute name="required">has_location == 'required' and approval_type != 'purchase'</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

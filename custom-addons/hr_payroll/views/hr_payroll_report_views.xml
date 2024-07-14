@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="payroll_report_view_pivot" model="ir.ui.view">
+            <field name="name">payroll.report.pivot</field>
+            <field name="model">hr.payroll.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Payroll Analysis" sample="1" js_class="hr_payroll_report_pivot">
+                    <field name="master_department_id" type="row"/>
+                    <field name="department_id" type="row"/>
+                    <field name="count" type="measure"/>
+                    <field name="net_wage" type="measure"/>
+                    <field name="gross_wage" type="measure"/>
+                    <field name="count_leave" type="measure"/>
+                    <field name="count_leave_unpaid" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="payroll_report_view_graph" model="ir.ui.view">
+            <field name="name">payroll.report.graph</field>
+            <field name="model">hr.payroll.report</field>
+            <field name="arch" type="xml">
+                <graph string="Payroll Analysis" type="line" sample="1">
+                    <field name="date_from"/>
+                    <field name="net_wage" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="hr_payroll_report_view_tree" model="ir.ui.view">
+            <field name="name">hr.payroll.report.view.tree</field>
+            <field name="model">hr.payroll.report</field>
+            <field name="arch" type="xml">
+                <tree string="Payroll Analysis" create="0">
+                    <field name="employee_id" widget="many2one_avatar_user"/>
+                    <field name="department_id" optional="show"/>
+                    <field name="job_id" optional="hide"/>
+                    <field name="type" optional="show"/>
+                    <field name="date_from" optional="show"/>
+                    <field name="date_to" optional="show"/>
+                    <field name="company_id" optional="show" groups="base.group_multi_company"/>
+                    <field name="basic_wage" optional="show" avg="Average of Basic Wage"/>
+                    <field name="net_wage" optional="show" avg="Average of Net Wage"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="payroll_report_view_search" model="ir.ui.view">
+            <field name="name">payroll.report.search</field>
+            <field name="model">hr.payroll.report</field>
+            <field name="arch" type="xml">
+                <search string="Payroll Analysis">
+                    <field name="company_id" filter_domain="[('company_id', 'ilike', self)]"/>
+                    <field name="employee_id" filter_domain="[('employee_id', 'ilike', self)]"/>
+                    <field name="department_id" filter_domain="[('department_id', 'ilike', self)]"/>
+                    <field name="master_department_id" filter_domain="[('master_department_id', 'ilike', self)]"/>
+                    <field name="job_id" filter_domain="[('job_id', 'ilike', self)]"/>
+                    <field name="work_code" filter_domain="[('work_code', 'ilike', self)]"/>
+                    <field name="work_type" filter_domain="[('work_type', 'ilike', self)]"/>
+                    <field name="name" filter_domain="[('name', 'ilike', self)]"/>
+                    <field name="date_from"/>
+                    <filter string="Last 365 Days Payslip" name="year" domain="[
+                        ('date_from', '>=', (context_today() + relativedelta(days=-365)).strftime('%Y-%m-%d')),
+                        ('date_from', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <separator/>
+                    <filter name="filter_date_from" date="date_from"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Employee" name="employee_id" context="{'group_by':'employee_id'}"/>
+                        <filter string="Department" name="department_id" context="{'group_by':'department_id'}"/>
+                        <filter string="Master Department" name="master_department_id" context="{'group_by':'master_department_id'}"/>
+                        <filter string="Job Position" name="job_id" context="{'group_by':'job_id'}"/>
+                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="payroll_report_action" model="ir.actions.act_window">
+            <field name="name">Payroll Analysis</field>
+            <field name="res_model">hr.payroll.report</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="search_view_id" ref="payroll_report_view_search"/>
+            <field name="context">{
+                'search_default_year': True
+            }</field>
+            <field name="help">This report performs analysis on your payslip.</field>
+        </record>
+
+    </data>
+</odoo>

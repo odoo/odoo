@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_hr_payslip_form_inherit_payroll_attendance" model="ir.ui.view">
+        <field name="name">hr.payslip.form.inherit.payroll.attendance</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <div class="oe_button_box" position="inside">
+                <button type="object" class="oe_stat_button" id="open_attendances"
+                    icon="fa-clock-o" name="action_open_attendances" invisible="attendance_count == 0">
+                    <field name="attendance_count" widget="statinfo" string="Attendances"/>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,544 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* social_push_notifications
+# 
+# Translators:
+# Miku Laitinen <miku.laitinen@gmail.com>, 2023
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Miika Nissi <miika.nissi@tawasta.fi>, 2023
+# Martin Trigaux, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+msgid "<span class=\"ps-2\">seconds</span>"
+msgstr "<span class=\"ps-2\">sekuntia</span>"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_marketing_campaign__social_post_ids
+#: model:ir.model.fields,field_description:social_push_notifications.field_utm_campaign__social_post_ids
+msgid "All related social media posts"
+msgstr "Kaikki asiaan liittyvät sosiaalisen median viestit"
+
+#. module: social_push_notifications
+#. odoo-javascript
+#: code:addons/social_push_notifications/static/src/xml/social_push_notifications_templates.xml:0
+#, python-format
+msgid "Allow"
+msgstr "Salli"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+msgid "Body"
+msgstr "Viesti"
+
+#. module: social_push_notifications
+#: model:ir.model,name:social_push_notifications.model_res_config_settings
+msgid "Config Settings"
+msgstr "Asetukset"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+msgid "Delay"
+msgstr "Viive"
+
+#. module: social_push_notifications
+#. odoo-javascript
+#: code:addons/social_push_notifications/static/src/xml/social_push_notifications_templates.xml:0
+#, python-format
+msgid "Deny"
+msgstr "Hylkää"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_website_visitor_push_subscription__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_post__display_push_notification_attributes
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_post_template__display_push_notification_attributes
+msgid "Display Push Notifications Attributes"
+msgstr "Näytä Push-ilmoitusten ominaisuudet"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_post__display_push_notifications_preview
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_post_template__display_push_notifications_preview
+msgid "Display Push Notifications Preview"
+msgstr "Näytä Push-ilmoitusten esikatselu"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,help:social_push_notifications.field_social_post__visitor_domain
+#: model:ir.model.fields,help:social_push_notifications.field_social_post_template__visitor_domain
+msgid "Domain to send push notifications to visitors."
+msgstr "Verkkotunnus push-ilmoitusten lähettämiseen kävijöille."
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_res_config_settings__firebase_enable_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_website__firebase_enable_push_notifications
+msgid "Enable Web Push Notifications"
+msgstr "Ota verkkosivun push-ilmoitukset käyttöön"
+
+#. module: social_push_notifications
+#. odoo-python
+#: code:addons/social_push_notifications/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+#, python-format
+msgid "Enable push notifications to be notified about new features."
+msgstr ""
+"Ota käyttöön push-ilmoitukset, jotta saat ilmoituksen uusista "
+"ominaisuuksista."
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_res_config_settings__firebase_admin_key_file
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_account__firebase_admin_key_file
+#: model:ir.model.fields,field_description:social_push_notifications.field_website__firebase_admin_key_file
+msgid "Firebase Admin Key File"
+msgstr "Firebase Admin Key File"
+
+#. module: social_push_notifications
+#. odoo-python
+#: code:addons/social_push_notifications/models/social_account.py:0
+#, python-format
+msgid "Firebase Admin Key File is missing from the configuration."
+msgstr "Firebase Admin Key File puuttuu kokoonpanosta."
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_res_config_settings__firebase_project_id
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_account__firebase_project_id
+#: model:ir.model.fields,field_description:social_push_notifications.field_website__firebase_project_id
+msgid "Firebase Project ID"
+msgstr "Firebase-projektin tunnus"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_res_config_settings__firebase_push_certificate_key
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_account__firebase_push_certificate_key
+#: model:ir.model.fields,field_description:social_push_notifications.field_website__firebase_push_certificate_key
+msgid "Firebase Push Certificate Key"
+msgstr "Firebase Push -varmenteen avain"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_res_config_settings__firebase_sender_id
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_account__firebase_sender_id
+#: model:ir.model.fields,field_description:social_push_notifications.field_website__firebase_sender_id
+msgid "Firebase Sender ID"
+msgstr "Firebase Sender ID"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_res_config_settings__firebase_web_api_key
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_account__firebase_web_api_key
+#: model:ir.model.fields,field_description:social_push_notifications.field_website__firebase_web_api_key
+msgid "Firebase Web API Key"
+msgstr "Firebase Web API -avain"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.push_notifications_preview
+msgid "Google Chrome ·"
+msgstr "Google Chrome -"
+
+#. module: social_push_notifications
+#: model:ir.model,name:social_push_notifications.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP-reititys"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_website_visitor_push_subscription__id
+msgid "ID"
+msgstr "ID"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+msgid "Icon"
+msgstr "Kuvake"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.social_post_template_view_form
+msgid "Icon Image"
+msgstr "Kuvakkeen kuva"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+msgid "Key File"
+msgstr "Avaintiedosto"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.social_post_view_form
+msgid "Local Time"
+msgstr "Paikallinen aika"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_media__media_type
+msgid "Media Type"
+msgstr "Median tyyppi"
+
+#. module: social_push_notifications
+#. odoo-python
+#: code:addons/social_push_notifications/models/social_live_post.py:0
+#: code:addons/social_push_notifications/models/social_post_template.py:0
+#, python-format
+msgid "New Message"
+msgstr "Uusi viesti"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_res_config_settings__notification_request_delay
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_account__notification_request_delay
+#: model:ir.model.fields,field_description:social_push_notifications.field_website__notification_request_delay
+msgid "Notification Request Delay (seconds)"
+msgstr "Ilmoituspyynnön viive (sekuntia)"
+
+#. module: social_push_notifications
+#. odoo-javascript
+#: code:addons/social_push_notifications/static/src/xml/social_push_notifications_templates.xml:0
+#: model:ir.model.fields,field_description:social_push_notifications.field_res_config_settings__notification_request_icon
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_account__notification_request_icon
+#: model:ir.model.fields,field_description:social_push_notifications.field_website__notification_request_icon
+#, python-format
+msgid "Notification Request Icon"
+msgstr "Ilmoituspyynnön kuvake"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_res_config_settings__notification_request_body
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_account__notification_request_body
+#: model:ir.model.fields,field_description:social_push_notifications.field_website__notification_request_body
+msgid "Notification Request Text"
+msgstr "Ilmoituspyynnön teksti"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_res_config_settings__notification_request_title
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_account__notification_request_title
+#: model:ir.model.fields,field_description:social_push_notifications.field_website__notification_request_title
+msgid "Notification Request Title"
+msgstr "Ilmoituspyynnön otsikko"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.social_post_template_view_form
+msgid "Notification Title"
+msgstr "Ilmoituksen otsikko"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.utm_campaign_view_kanban
+msgid "Notifications"
+msgstr "Ilmoitukset"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_marketing_campaign__social_push_notifications_count
+#: model:ir.model.fields,field_description:social_push_notifications.field_utm_campaign__social_push_notifications_count
+msgid "Number Of Push Notifications"
+msgstr "Push-ilmoitusten määrä"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+msgid "Project ID"
+msgstr "Projektitunnus"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.website_visitor_view_kanban
+msgid "Push"
+msgstr "Push"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+msgid "Push Certificate Key ID"
+msgstr "Push-varmenteen avaintunnus"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_post__push_notification_image
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_post_template__push_notification_image
+msgid "Push Icon Image"
+msgstr "Push-kuvakkeen kuva"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.website_visitor_view_search
+msgid "Push Notification Off"
+msgstr "Push-ilmoitus pois päältä"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.website_visitor_view_search
+msgid "Push Notification On"
+msgstr "Push-ilmoitus päällä"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.social_post_template_view_form
+msgid "Push Notification Options"
+msgstr "Push-ilmoitusvaihtoehdot"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_post__push_notification_title
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_post_template__push_notification_title
+msgid "Push Notification Title"
+msgstr "Push-ilmoituksen otsikko"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_marketing_campaign__social_push_notification_ids
+#: model:ir.model.fields,field_description:social_push_notifications.field_utm_campaign__social_push_notification_ids
+#: model:ir.model.fields.selection,name:social_push_notifications.selection__social_media__media_type__push_notifications
+#: model:social.media,name:social_push_notifications.social_media_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.utm_campaign_view_form
+msgid "Push Notifications"
+msgstr "Push-ilmoitukset"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_website_visitor__has_push_notifications
+msgid "Push Notifications Enabled"
+msgstr "Push-ilmoitukset käytössä"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_post__push_notifications_preview
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_post_template__push_notifications_preview
+msgid "Push Notifications Preview"
+msgstr "Push-ilmoitusten esikatselu"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_website_visitor_push_subscription__push_token
+msgid "Push Subscription"
+msgstr "Push-tilaus"
+
+#. module: social_push_notifications
+#: model:ir.model,name:social_push_notifications.model_website_visitor_push_subscription
+msgid "Push Subscription for a Website Visitor"
+msgstr "Push-tilaus verkkosivuston kävijälle"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_website_visitor__push_subscription_ids
+msgid "Push Subscriptions"
+msgstr "Push-tilaukset"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_post__push_notification_target_url
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_post_template__push_notification_target_url
+msgid "Push Target URL"
+msgstr "Push-kohteen URL-osoite"
+
+#. module: social_push_notifications
+#: model:ir.model.constraint,message:social_push_notifications.constraint_website_visitor_push_subscription_push_token_uniq
+msgid "Push token can't be duplicated!"
+msgstr "Push-tunnusta ei voi kopioida!"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_live_post__reached_visitor_ids
+msgid "Reached Visitors"
+msgstr "Tavoitetut kävijät"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.utm_campaign_view_form
+msgid "Send Push"
+msgstr "Lähetä push-ilmoitus"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.website_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.website_visitor_view_tree
+msgid "Send Push Notification"
+msgstr "Push-ilmoituksen lähettäminen"
+
+#. module: social_push_notifications
+#: model:ir.actions.server,name:social_push_notifications.social_send_push_notifications_action_server
+msgid "Send Push Notifications"
+msgstr "Push-ilmoitusten lähettäminen"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_post__use_visitor_timezone
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_post_template__use_visitor_timezone
+msgid "Send at Visitors' Timezone"
+msgstr "Lähetä huomioiden vierailijoiden aikavyöhyke"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+msgid ""
+"Send push notifications and configure this website's notifications "
+"permission request"
+msgstr ""
+"Lähetä push-ilmoituksia ja määritä tämän verkkosivuston ilmoitusten "
+"käyttöoikeuspyyntö"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+msgid "Sender ID"
+msgstr "Lähettäjän tunnus"
+
+#. module: social_push_notifications
+#: model:ir.model,name:social_push_notifications.model_social_account
+msgid "Social Account"
+msgstr "Sosiaalisen median tili"
+
+#. module: social_push_notifications
+#: model:ir.model,name:social_push_notifications.model_social_live_post
+msgid "Social Live Post"
+msgstr "Sosiaalisen median live-julkaisu"
+
+#. module: social_push_notifications
+#: model:ir.model,name:social_push_notifications.model_social_media
+msgid "Social Media"
+msgstr "Sosiaalinen media"
+
+#. module: social_push_notifications
+#: model:ir.model,name:social_push_notifications.model_social_post
+msgid "Social Post"
+msgstr "Sosiaalisen median julkaisu"
+
+#. module: social_push_notifications
+#: model:ir.model,name:social_push_notifications.model_social_post_template
+msgid "Social Post Template"
+msgstr "Sosiaalisen median julkaisun malli"
+
+#. module: social_push_notifications
+#. odoo-python
+#: code:addons/social_push_notifications/models/website_visitor.py:0
+#, python-format
+msgid "Some selected visitors do not allow push notifications."
+msgstr "Jotkin valitut vierailijat eivät salli push-ilmoituksia."
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.social_post_template_view_form
+msgid "Target URL"
+msgstr "Kohde URL"
+
+#. module: social_push_notifications
+#: model:ir.model.constraint,message:social_push_notifications.constraint_social_account_website_unique
+msgid "There is already a configuration for this website."
+msgstr "Tätä verkkosivustoa varten on jo olemassa määritys."
+
+#. module: social_push_notifications
+#: model:ir.model.fields,help:social_push_notifications.field_social_account__website_id
+msgid ""
+"This firebase configuration will only be used for the specified website"
+msgstr ""
+"Tätä firebase-konfiguraatiota käytetään vain määritetyllä verkkosivustolla"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,help:social_push_notifications.field_social_post__push_notification_image
+#: model:ir.model.fields,help:social_push_notifications.field_social_post_template__push_notification_image
+msgid "This icon will be displayed in the browser notification"
+msgstr "Tämä kuvake näkyy selaimen ilmoituksessa"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+msgid "Title"
+msgstr "Otsikko"
+
+#. module: social_push_notifications
+#: model:ir.model,name:social_push_notifications.model_utm_campaign
+msgid "UTM Campaign"
+msgstr "UTM-kampanja"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+msgid "Use your own Firebase Account for this website's push notifications"
+msgstr ""
+"Käytä omaa Firebase-tiliäsi tämän verkkosivuston push-ilmoituksia varten"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_res_config_settings__firebase_use_own_account
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_account__firebase_use_own_account
+#: model:ir.model.fields,field_description:social_push_notifications.field_website__firebase_use_own_account
+msgid "Use your own Firebase account"
+msgstr "Käytä omaa Firebase-tiliäsi"
+
+#. module: social_push_notifications
+#: model:ir.model.fields,help:social_push_notifications.field_social_media__media_type
+msgid ""
+"Used to make comparisons when we need to restrict some features to a "
+"specific media ('facebook', 'twitter', ...)."
+msgstr ""
+"Käytetään vertailujen tekemiseen, kun joitakin ominaisuuksia on rajoitettava"
+" tiettyyn mediaan ('facebook', 'twitter', ...)."
+
+#. module: social_push_notifications
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_post__visitor_domain
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_post_template__visitor_domain
+msgid "Visitor Domain"
+msgstr "Vierailijan verkkotunnus"
+
+#. module: social_push_notifications
+#: model:ir.ui.menu,name:social_push_notifications.social_visitor
+msgid "Visitors"
+msgstr "Vierailijat"
+
+#. module: social_push_notifications
+#. odoo-python
+#: code:addons/social_push_notifications/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+#, python-format
+msgid "Want to discover new versions?"
+msgstr "Haluatko tutustua uusiin versioihin?"
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+msgid "Web API Key"
+msgstr "Web API -avain"
+
+#. module: social_push_notifications
+#: model:ir.model,name:social_push_notifications.model_website
+#: model:ir.model.fields,field_description:social_push_notifications.field_social_account__website_id
+msgid "Website"
+msgstr "Verkkosivu"
+
+#. module: social_push_notifications
+#: model:ir.model,name:social_push_notifications.model_website_visitor
+#: model:ir.model.fields,field_description:social_push_notifications.field_website_visitor_push_subscription__website_visitor_id
+msgid "Website Visitor"
+msgstr "Verkkosivun vierailija"
+
+#. module: social_push_notifications
+#. odoo-python
+#: code:addons/social_push_notifications/models/social_account.py:0
+#, python-format
+msgid "You can't delete a Push Notification account."
+msgstr "Push-ilmoitustiliä ei voi poistaa."
+
+#. module: social_push_notifications
+#. odoo-python
+#: code:addons/social_push_notifications/models/social_account.py:0
+#, python-format
+msgid ""
+"You have to install \"google_auth>=1.18.0\" to be able to send push "
+"notifications."
+msgstr ""
+"Sinun on asennettava \"google_auth>=1.18.0\", jotta voit lähettää push-"
+"ilmoituksia."
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+msgid "e.g. \"280765099157\""
+msgstr "esim. \"280765099157\""
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+msgid "e.g. \"BIzbSyXhhsFHEgphW55CSg5cV7h7c_S-AuTMKc9\""
+msgstr "esim. \"BIzbSyXhhsFHEgphW55CSg5cV7h7c_S-AuTMKc9\""
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+msgid "e.g. \"CCSc77KP_LX8dTAogFakOoJ_VqNP15u0-43psDJe__a9B...\""
+msgstr "e.g. \"CCSc77KP_LX8dTAogFakOoJ_VqNP15u0-43psDJe__a9B...\""
+
+#. module: social_push_notifications
+#: model_terms:ir.ui.view,arch_db:social_push_notifications.res_config_settings_view_form
+msgid "e.g. \"my-project-id\""
+msgstr "esim. \"my-project-id\""
+
+#. module: social_push_notifications
+#: model:ir.model.fields,help:social_push_notifications.field_social_post__use_visitor_timezone
+#: model:ir.model.fields,help:social_push_notifications.field_social_post_template__use_visitor_timezone
+msgid ""
+"e.g: If you post at 15:00 your time, all visitors will receive the post at "
+"15:00 their time."
+msgstr ""
+"esimerkiksi: Jos lähetät viestin klo 15:00 sinun aikaasi, kaikki vierailijat"
+" saavat viestin klo 15:00 heidän aikaansa."

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="jpk_export_monthly_template">
+        <JPK xmlns:etd="http://crd.gov.pl/xml/schematy/dziedzinowe/mf/2021/06/08/eD/DefinicjeTypy/" t-attf-xmlns="#{xmlns}">
+            <Naglowek>
+                <KodFormularza kodSystemowy="JPK_V7M (2)" wersjaSchemy="1-0E">JPK_VAT</KodFormularza>
+                <WariantFormularza t-out="2"/>
+                <DataWytworzeniaJPK t-out="date_now"/>
+                <NazwaSystemu>Odoo</NazwaSystemu>
+                <CelZlozenia poz="P_7" t-out="2 if options.get('l10n_pl_is_amendment') else 1"/>
+                <KodUrzedu t-out="company.l10n_pl_reports_tax_office_id.code"/>
+                <Rok t-out="date_year"/>
+                <Miesiac t-out="date_month"/>
+            </Naglowek>
+            <Podmiot1 rola="Podatnik">
+                <OsobaFizyczna t-if="not company.partner_id.is_company">
+                    <etd:NIP t-if="company.vat[:2].isdecimal()" t-out="company.vat.replace(' ', '')"/>
+                    <etd:NIP t-else="" t-out="company.vat[2:].replace(' ', '')"/>
+                    <etd:ImiePierwsze t-out="company.display_name.split()[0]"/>
+                    <etd:Nazwisko t-if="len(company.display_name.split()) > 1" t-out="' '.join(company.display_name.split()[1:])"/>
+                    <etd:Nazwisko t-else="" t-out=""/>
+                    <etd:DataUrodzenia t-out="options.get('l10n_pl_birthdate')"/>
+                    <Email t-if="company.email" t-out="company.email"/>
+                    <Email t-else="" t-out=""/>
+                    <Telefon t-if="company.phone" t-out="company.phone"/>
+                </OsobaFizyczna>
+                <OsobaNiefizyczna t-if="company.partner_id.is_company">
+                    <etd:NIP t-if="company.vat[:2].isdecimal()" t-out="company.vat.replace(' ', '')"/>
+                    <etd:NIP t-else="" t-out="company.vat[2:].replace(' ', '')"/>
+                    <etd:PelnaNazwa t-out="company.display_name"/>
+                    <Email t-if="company.email" t-out="company.email"/>
+                    <Email t-else="" t-out=""/>
+                    <Telefon t-if="company.phone" t-out="company.phone"/>
+                </OsobaNiefizyczna>
+            </Podmiot1>
+            <Deklaracja t-if="agg_values">
+                <Naglowek>
+                    <KodFormularzaDekl kodSystemowy="VAT-7 (22)" kodPodatku="VAT" rodzajZobowiazania="Z"
+                                       wersjaSchemy="1-0E">VAT-7</KodFormularzaDekl>
+                    <WariantFormularzaDekl>22</WariantFormularzaDekl>
+                </Naglowek>
+                <PozycjeSzczegolowe>
+                    <P_10 t-if="agg_values.get('10')" t-out="float_repr(agg_values.get('10'), 0)"/>
+                    <P_11 t-if="agg_values.get('11')" t-out="float_repr(agg_values.get('11'), 0)"/>
+                    <P_12 t-if="agg_values.get('12')" t-out="float_repr(agg_values.get('12'), 0)"/>
+                    <P_13 t-if="agg_values.get('13')" t-out="float_repr(agg_values.get('13'), 0)"/>
+                    <P_14 t-if="agg_values.get('14')" t-out="float_repr(agg_values.get('14'), 0)"/>
+                    <P_15 t-if="agg_values.get('15')" t-out="float_repr(agg_values.get('15'), 0)"/>
+                    <P_16 t-if="agg_values.get('16')" t-out="float_repr(agg_values.get('16'), 0)"/>
+                    <P_17 t-if="agg_values.get('17')" t-out="float_repr(agg_values.get('17'), 0)"/>
+                    <P_18 t-if="agg_values.get('18')" t-out="float_repr(agg_values.get('18'), 0)"/>
+                    <P_19 t-if="agg_values.get('19')" t-out="float_repr(agg_values.get('19'), 0)"/>
+                    <P_20 t-if="agg_values.get('20')" t-out="float_repr(agg_values.get('20'), 0)"/>
+                    <P_21 t-if="agg_values.get('21')" t-out="float_repr(agg_values.get('21'), 0)"/>
+                    <P_22 t-if="agg_values.get('22')" t-out="float_repr(agg_values.get('22'), 0)"/>
+                    <P_23 t-if="agg_values.get('23')" t-out="float_repr(agg_values.get('23'), 0)"/>
+                    <P_24 t-if="agg_values.get('24') or agg_values.get('23')" t-out="float_repr(agg_values.get('24', 0), 0)"/>
+                    <P_25 t-if="agg_values.get('25')" t-out="float_repr(agg_values.get('25'), 0)"/>
+                    <P_26 t-if="agg_values.get('26') or agg_values.get('25')" t-out="float_repr(agg_values.get('26', 0), 0)"/>
+                    <P_27 t-if="agg_values.get('27')" t-out="float_repr(agg_values.get('27'), 0)"/>
+                    <P_28 t-if="agg_values.get('28') or agg_values.get('27')" t-out="float_repr(agg_values.get('28', 0), 0)"/>
+                    <P_29 t-if="agg_values.get('29')" t-out="float_repr(agg_values.get('29'), 0)"/>
+                    <P_30 t-if="agg_values.get('30') or agg_values.get('29')" t-out="float_repr(agg_values.get('30', 0), 0)"/>
+                    <P_31 t-if="agg_values.get('31')" t-out="float_repr(agg_values.get('31'), 0)"/>
+                    <P_32 t-if="agg_values.get('32') or agg_values.get('31')" t-out="float_repr(agg_values.get('32', 0), 0)"/>
+                    <P_33 t-if="agg_values.get('33')" t-out="float_repr(agg_values.get('33'), 0)"/>
+                    <P_34 t-if="agg_values.get('34')" t-out="float_repr(agg_values.get('34'), 0)"/>
+                    <P_35 t-if="agg_values.get('35')" t-out="float_repr(agg_values.get('35'), 0)"/>
+                    <P_36 t-if="agg_values.get('36')" t-out="float_repr(agg_values.get('36'), 0)"/>
+                    <P_37 t-if="not float_is_zero(agg_values.get('37'), 0)" t-out="float_repr(agg_values.get('37'), 0)"/>
+                    <P_38 t-out="float_repr(agg_values.get('38', 0), 0)"/>
+                    <P_39 t-if="agg_values.get('39')" t-out="float_repr(agg_values.get('39'), 0)"/>
+                    <P_40 t-if="agg_values.get('40')" t-out="float_repr(agg_values.get('40'), 0)"/>
+                    <P_41 t-if="agg_values.get('41')" t-out="float_repr(agg_values.get('41'), 0)"/>
+                    <P_42 t-if="agg_values.get('42')" t-out="float_repr(agg_values.get('42'), 0)"/>
+                    <P_43 t-if="agg_values.get('43')" t-out="float_repr(agg_values.get('43'), 0)"/>
+                    <P_44 t-if="agg_values.get('44')" t-out="float_repr(agg_values.get('44'), 0)"/>
+                    <P_45 t-if="agg_values.get('45')" t-out="float_repr(agg_values.get('45'), 0)"/>
+                    <P_46 t-if="'46' in agg_values and float_compare(agg_values.get('46'), 0, 0) != 1"
+                          t-out="float_repr(agg_values.get('46'), 0)"/>
+                    <P_47 t-if="agg_values.get('47')" t-out="float_repr(agg_values.get('47'), 0)"/>
+                    <P_48 t-if="not float_is_zero(agg_values.get('48', 0), 0)" t-out="float_repr(agg_values.get('48', 0), 0)"/>
+                    <P_49 t-if="agg_values.get('49') and not float_is_zero(agg_values.get('49'), 0)" t-out="float_repr(agg_values.get('49'), 0)"/>
+                    <P_50 t-if="agg_values.get('50') and not float_is_zero(agg_values.get('50'), 0)" t-out="float_repr(agg_values.get('50'), 0)"/>
+                    <P_51 t-out="float_repr(agg_values.get('51', 0), 0)"/>
+                    <P_52 t-if="agg_values.get('52')" t-out="float_repr(agg_values.get('52'), 0)"/>
+                    <P_53 t-if="agg_values.get('53')" t-out="float_repr(agg_values.get('53'), 0)"/>
+                    <P_54 t-if="not float_is_zero(agg_values.get('54', 0), 0)" t-out="float_repr(agg_values.get('54'), 0)"/>
+                    <P_540 t-if="not float_is_zero(agg_values.get('54', 0), 0) and options.get('l10n_pl_repayment_timeframe') == '540'" t-out="1"/>
+                    <P_55 t-if="not float_is_zero(agg_values.get('54', 0), 0) and options.get('l10n_pl_repayment_timeframe') == '55'" t-out="1"/>
+                    <P_56 t-if="not float_is_zero(agg_values.get('54', 0), 0) and options.get('l10n_pl_repayment_timeframe') == '56'" t-out="1"/>
+                    <P_560 t-if="not float_is_zero(agg_values.get('54', 0), 0) and options.get('l10n_pl_repayment_timeframe') == '560'" t-out="1"/>
+                    <P_57 t-if="not float_is_zero(agg_values.get('54', 0), 0) and options.get('l10n_pl_repayment_timeframe') == '57'" t-out="1"/>
+                    <P_58 t-if="not float_is_zero(agg_values.get('54', 0), 0) and options.get('l10n_pl_repayment_timeframe') == '58'" t-out="1"/>
+                    <P_59 t-if="options.get('l10n_pl_repayment_future_tax')" t-out="1"/>
+                    <P_60 t-if="options.get('l10n_pl_repayment_future_tax') and options.get('l10n_pl_repayment_future_tax_amount')"
+                          t-out="float_repr(options.get('l10n_pl_repayment_future_tax_amount'), 0)"/>
+                    <P_61 t-if="options.get('l10n_pl_repayment_future_tax') and options.get('l10n_pl_repayment_future_tax_type')"
+                          t-out="options.get('l10n_pl_repayment_future_tax_type')"/>
+                    <P_62 t-if="agg_values.get('53') and not float_is_zero(agg_values.get('53', 0) - agg_values.get('54', 0), 0)" t-out="float_repr(agg_values.get('53', 0) - agg_values.get('54', 0), 0)"/> <!--
+                    <P_63 />
+                    <P_64 /> Margin-based not supported by Odoo  -->
+                    <P_65 t-if="agg_values.get('65', 0)" t-out="1"/>
+                    <P_66 t-if="any(val.get('l10n_pl_vat_tt_d', 0) != 0 for val in list_values)"
+                          t-out="1"/> <!-- TODO fill P_660 with 1 when paid electronically, EDI -->
+                    <P_67 t-if="options.get('l10n_pl_paid_before_deadline')" t-out="1"/>
+                    <P_68 t-if="float_compare(agg_values.get('68', 0), 0, 2) != 1"
+                          t-out="float_repr(agg_values.get('68', 0), 0)"/> <!-- only negative or 0 values can be entered -->
+                    <P_69 t-if="float_compare(agg_values.get('69', 0), 0, 2) != 1"
+                          t-out="float_repr(agg_values.get('69', 0), 0)"/> <!-- only negative or 0 values can be entered -->
+                    <P_ORDZU t-if="options.get('l10n_pl_reason_amendment')" t-out="options.get('l10n_pl_reason_amendment')"/>
+                </PozycjeSzczegolowe>
+                <Pouczenia>1</Pouczenia>
+            </Deklaracja>
+            <Ewidencja>
+                <SprzedazWiersz t-foreach="output_tax_moves" t-as="i">
+                    <LpSprzedazy t-out="i_index+1"/>
+                    <KodKrajuNadaniaTIN t-if="i.get('vat')" t-out="i.get('vat')[:2].isdecimal() and i.get('vat')[:2] or i.get('country_code')"/>
+                    <NrKontrahenta t-if="i.get('vat')" t-out="not i.get('vat')[:2].isdecimal() and i.get('vat')[2:].replace(' ', '') or i.get('vat').replace(' ', '')"/>
+                    <NrKontrahenta t-else="" t-out="'BRAK'"/>
+                    <NazwaKontrahenta t-if="i.get('partner_complete_name')" t-out="i['partner_complete_name']"/>
+                    <NazwaKontrahenta t-else="" t-out="'BRAK'"/>
+                    <DowodSprzedazy t-out="i.get('move_name')"/>
+                    <DataWystawienia t-out="i.get('invoice_date')"/>
+                    <DataSprzedazy t-if="i.get('sale_date') and i.get('move_type') in ('out_invoice','out_refund')" t-out="i.get('sale_date')"/>
+                    <TypDokumentu t-if="i.get('pos_session_id')" t-out="'RO'"/>
+                    <TypDokumentu t-elif="i.get('move_type') == 'entry'" t-out="'WEW'"/>
+                    <TypDokumentu t-elif="i.get('pos_order_id')" t-out="'FP'"/> <!-- to change everywhere to not include tax -->
+                    <t t-if="i.get('gtus') and i.get('move_type') not in ('in_invoice', 'in_refund', 'in_receipt', 'entry') and not i.get('pos_session_id')">
+                    <GTU_01 t-if="'GTU_01' in i.get('gtus')" t-out="1"/>
+                    <GTU_02 t-if="'GTU_02' in i.get('gtus')" t-out="1"/>
+                    <GTU_03 t-if="'GTU_03' in i.get('gtus')" t-out="1"/>
+                    <GTU_04 t-if="'GTU_04' in i.get('gtus')" t-out="1"/>
+                    <GTU_05 t-if="'GTU_05' in i.get('gtus')" t-out="1"/>
+                    <GTU_06 t-if="'GTU_06' in i.get('gtus')" t-out="1"/>
+                    <GTU_07 t-if="'GTU_07' in i.get('gtus')" t-out="1"/>
+                    <GTU_08 t-if="'GTU_08' in i.get('gtus')" t-out="1"/>
+                    <GTU_09 t-if="'GTU_09' in i.get('gtus')" t-out="1"/>
+                    <GTU_10 t-if="'GTU_10' in i.get('gtus')" t-out="1"/>
+                    <GTU_11 t-if="'GTU_11' in i.get('gtus')" t-out="1"/>
+                    <GTU_12 t-if="'GTU_12' in i.get('gtus')" t-out="1"/>
+                    <GTU_13 t-if="'GTU_13' in i.get('gtus')" t-out="1"/>
+                    </t>
+                    <WSTO_EE t-if="i.get('oss_tag')" t-out="1"/> <!--
+                    <IED /> Designation used by operators of electronic interfaces that are not registered for the purposes of the IOSS or OSS specific schemes and facilitate the supply of goods to private individuals -->
+                    <TP t-if="i.get('l10n_pl_links_with_customer')" t-out="1"/> <!-- link customer supplier -->
+                    <TT_WNT t-if="i.get('l10n_pl_vat_tt_wnt', 0) != 0" t-out="1"/> <!-- Intra-Com Acquisition goods second VAT payer Triangular -->
+                    <TT_D t-if="i.get('l10n_pl_vat_tt_d', 0) != 0" t-out="1"/> <!-- Intra-Com Supply of goods second VAT payer Triangular --> <!--
+                    <MR_T/> Margin-based not supported by Odoo
+                    <MR_UZ/> Margin-based not supported by Odoo -->
+                    <I_42 t-if="i.get('l10n_pl_vat_i_42', 0) != 0" t-out="1"/> <!-- https://www.asd-int.com/en/what-is-a-customs-regime-the-example-of-the-customs-regime-42/
+                    So goods from Out Of Europe, imported in a EU country, but sold to a customer from another country -->
+                    <I_63 t-if="i.get('l10n_pl_vat_i_63', 0) != 0" t-out="1"/> <!-- https://poradnikprzedsiebiorcy.pl/-procedura-celna-63-a-nowe-oznaczenie-w-pliku-jpk-v7-przyklady-cz-i
+                    So: From Out of Europe, imported in EU country, resold to a Out Of Europe Country for transformation, then imported back in the first EU country, before being sold in another EU country -->
+                    <B_SPV t-if="i.get('l10n_pl_vat_b_spv')" t-out="1"/> <!-- For all SPV/MPV https://poradnikprzedsiebiorcy.pl/-b-spv-dostawa-w-jakich-sytuacjach-oznaczamy-w-pliku-jpk-v7
+                    B_SPV, when the taxpayer sells a single-purpose voucher on its own behalf;-->
+                    <B_SPV_DOSTAWA t-if="i.get('l10n_pl_vat_b_spv_dostawa')" t-out="1"/> <!-- B_SPV_DOSTAWA, when the taxpayer delivers the goods/performs the service as part of the exchange for a single-purpose voucher that he did not issue himself -->
+                    <B_MPV_PROWIZJA t-if="i.get('l10n_pl_vat_b_mpv_prowizja')" t-out="1"/> <!-- B_MPV_PROWIZJA, when the taxpayer acts as an intermediary in the sale of vouchers for various purposes and does not exchange them for goods/services -->
+                    <KorektaPodstawyOpodt t-if="'46' in i.get('tax_values')" t-out="1"/>
+                    <TerminPlatnosci t-if="'46' in i.get('tax_values')" t-out="i.get('reversed_move_date_due')"/>
+                    <DataZaplaty t-if="'47' in i.get('tax_values')" t-out="i.get('date')"/>
+                    <t t-if="not i.get('pos_order_id')">
+                    <K_10 t-if="'10' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('10'), 2)"/>
+                    <K_11 t-if="'11' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('11'), 2)"/>
+                    <K_12 t-if="'12' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('12'), 2)"/>
+                    <K_13 t-if="'13' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('13'), 2)"/>
+                    <K_14 t-if="'14' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('14'), 2)"/>
+                    <K_15 t-if="'15' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('15'), 2)"/>
+                    <K_16 t-if="'16' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('16'), 2)"/>
+                    <K_17 t-if="'17' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('17'), 2)"/>
+                    <K_18 t-if="'18' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('18'), 2)"/>
+                    <K_19 t-if="'19' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('19'), 2)"/>
+                    <K_20 t-if="'20' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('20'), 2)"/>
+                    <K_21 t-if="'21' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('21'), 2)"/>
+                    <K_22 t-if="'22' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('22'), 2)"/>
+                    <K_23 t-if="'23' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('23'), 2)"/>
+                    <K_24 t-if="'23' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('24', 0.00), 2)"/> <!-- 0.00 should atleast always be declared if transaction in K_23 -->
+                    <K_25 t-if="'25' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('25'), 2)"/>
+                    <K_26 t-if="'25' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('26', 0.00), 2)"/> <!-- 0.00 should atleast always be declared if transaction in K_25 -->
+                    <K_27 t-if="'27' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('27'), 2)"/>
+                    <K_28 t-if="'27' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('28', 0.00), 2)"/> <!-- 0.00 should atleast always be declared if transaction in K_27 -->
+                    <K_29 t-if="'29' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('29'), 2)"/>
+                    <K_30 t-if="'29' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('30', 0.00), 2)"/> <!-- 0.00 should atleast always be declared if transaction in K_29 -->
+                    <K_31 t-if="'31' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('31'), 2)"/>
+                    <K_32 t-if="'31' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('32', 0.00), 2)"/> <!-- 0.00 should atleast always be declared if transaction in K_31 -->
+                    <K_33 t-if="'33' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('33'), 2)"/>
+                    <K_34 t-if="'34' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('34'), 2)"/>
+                    <K_35 t-if="'35' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('35'), 2)"/>
+                    <K_36 t-if="'36' in i.get('tax_values')" t-out="float_repr(i.get('tax_values').get('36'), 2)"/> <!--
+                    <SprzedazVAT_Marza/> Margin-based not supported by Odoo -->
+                    </t>
+                </SprzedazWiersz>
+                <SprzedazCtrl>
+                    <LiczbaWierszySprzedazy t-out="len(output_tax_moves)"/>
+                    <PodatekNalezny t-out="float_repr(sum_output_tax, 2)"/>
+                </SprzedazCtrl>
+                <ZakupWiersz t-foreach="input_tax_moves" t-as="b">
+                    <LpZakupu t-out="b_index+1"/>
+                    <KodKrajuNadaniaTIN t-if="b.get('vat')" t-out="b.get('vat')[:2].isdecimal() and b.get('vat')[:2] or b.get('country_code')"/>
+                    <NrDostawcy t-if="b.get('vat')" t-out="not b.get('vat')[:2].isdecimal() and b.get('vat')[2:].replace(' ', '') or b.get('vat').replace(' ', '')"/>
+                    <NrDostawcy t-else="" t-out="'BRAK'"/>
+                    <NazwaDostawcy t-if="b.get('partner_complete_name')" t-out="b.get('partner_complete_name')"/>
+                    <NazwaDostawcy t-else="" t-out="'BRAK'"/>
+                    <DowodZakupu t-out="b.get('move_name')"/>
+                    <DataZakupu t-out="b.get('move_date')"/>
+                    <DataWplywu t-if="b.get('create_date') != b.get('move_date')" t-out="b.get('create_date')"/>
+                    <DokumentZakupu t-if="b.get('move_type') == 'entry'" t-out="'WEW'"/> <!--
+                    Did not do 'MK' as we need to know when the supplier is using cash basis accounting
+                    Did not do VAT_RR, as we need to provide a way to generate this type of invoice, (for example, it should be written on it that it is a VAT RR invoice => buying agricultural products) -->
+                    <IMP t-if="'28' in b.get('tax_values') or '26' in b.get('tax_values')" t-out="1"/>
+                    <K_40 t-if="'40' in b.get('tax_values')" t-out="float_repr(b.get('tax_values').get('40'), 2)"/>
+                    <K_41 t-if="'41' in b.get('tax_values')" t-out="float_repr(b.get('tax_values').get('41'), 2)"/>
+                    <K_42 t-if="'42' in b.get('tax_values')" t-out="float_repr(b.get('tax_values').get('42'), 2)"/>
+                    <K_43 t-if="'43' in b.get('tax_values')" t-out="float_repr(b.get('tax_values').get('43'), 2)"/>
+                    <K_44 t-if="'44' in b.get('tax_values')" t-out="float_repr(b.get('tax_values').get('44'), 2)"/>
+                    <K_45 t-if="'45' in b.get('tax_values')" t-out="float_repr(b.get('tax_values').get('45'), 2)"/>
+                    <K_46 t-if="'46' in b.get('tax_values')" t-out="float_repr(b.get('tax_values').get('46'), 2)"/>
+                    <K_47 t-if="'47' in b.get('tax_values')" t-out="float_repr(b.get('tax_values').get('47'), 2)"/> <!--
+                    <ZakupVAT_Marza /> Margin-based not supported by Odoo -->
+                </ZakupWiersz>
+                <ZakupCtrl>
+                    <LiczbaWierszyZakupow t-out="len(input_tax_moves)"/>
+                    <PodatekNaliczony t-out="float_repr(sum_input_tax, 2)"/>
+                </ZakupCtrl>
+            </Ewidencja>
+        </JPK>
+    </template>
+
+
+    <!-- Due to the xpaths, the indent in the file generated does not follow exactly the logic here.
+            Thus, the indent here is not perfect on purpose, so the file generated has the right indent -->
+    <template id="jpk_export_quarterly_template" inherit_id="l10n_pl_reports.jpk_export_monthly_template" primary="True">
+        <!-- This template is used when returning quarterly the jpk -->
+
+                <xpath expr="//*[local-name()='JPK']/*[local-name()='Naglowek']/*[local-name()='KodFormularza']" position="replace">
+                    <KodFormularza kodSystemowy="JPK_V7K (2)" wersjaSchemy="1-0E">JPK_VAT</KodFormularza>
+                </xpath>
+                <xpath expr="//*[local-name()='JPK']/*[local-name()='Deklaracja']/*[local-name()='Naglowek']" position="replace">
+                    <Naglowek>
+                    <KodFormularzaDekl kodSystemowy="VAT-7K (16)" kodPodatku="VAT" rodzajZobowiazania="Z"
+                                       wersjaSchemy="1-0E">VAT-7K</KodFormularzaDekl>
+                    <WariantFormularzaDekl>16</WariantFormularzaDekl>
+                    <Kwartal t-out="int(date_month)//3"/>
+                </Naglowek>
+                </xpath>
+    </template>
+</odoo>

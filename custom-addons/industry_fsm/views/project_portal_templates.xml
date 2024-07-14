@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_task_sign_button" name="Sign Button With Dialog">
+        <a t-if="task.has_to_be_signed()" role="button" class="btn btn-primary align-self-start" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#">
+            <i class="fa fa-check me-1"/>Sign
+        </a>
+        <!-- modal relative to the sign action -->
+        <div role="dialog" class="modal fade mt-5 pt-5" id="modalaccept">
+            <div class="modal-dialog" t-if="task.has_to_be_signed()">
+                <form id="accept" method="POST" t-att-data-task-id="task.id" t-att-data-token="task.access_token" class="js_accept_json modal-content js_website_submit_form">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <header class="modal-header">
+                        <h4 class="modal-title">Sign Task</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </header>
+                    <main class="modal-body" id="sign-dialog">
+                        <t t-call="portal.signature_form">
+                            <t t-set="call_url" t-value="task.get_portal_url(suffix='/worksheet/sign/%s' % source)"/>
+                            <t t-set="default_name" t-value="task.partner_id.name"/>
+                            <t t-set="font_color" t-value="'black'"/>
+                            <t t-set="send_label">Sign</t>
+                        </t>
+                    </main>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <template id="portal_my_task" inherit_id="project.portal_my_task">
+        <xpath expr="//t[@t-set='backend_url']" position="after">
+            <t t-set="source_action_id" t-value="task.env.ref('industry_fsm.project_task_action_fsm').id if source == 'fsm' else task.env.ref('project.action_view_all_task').id"/>
+            <t t-set="backend_url" t-value="'/web#model=project.task&amp;id=%s&amp;action=%s&amp;view_type=form' % (task.id, source_action_id)"/>
+        </xpath>
+        <xpath expr="//div[@id='nav-report']" position="attributes">
+            <attribute name="t-if">not task.is_fsm and timesheets and allow_timesheets</attribute>
+        </xpath>
+        <xpath expr="//div[@t-field='task.partner_id']" position="attributes">
+            <attribute name="t-options">{
+                "widget": "contact",
+                "fields": ["phone", "email"] + (["address"] if task.is_fsm else []),
+            }</attribute>
+        </xpath>
+    </template>
+</odoo>

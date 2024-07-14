@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="report_281_10">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="employee">
+                    <t t-call="web.external_layout">
+                        <div t-if="report_data" class="page">
+                            <div class="row">
+                                <div class="col-12 text-center text-uppercase fw-bold">
+                                    <h1>281.10 Sheet: Income <span t-esc="report_data['f2002_inkomstenjaar']"/></h1>
+                                </div>
+                            </div>
+                            <div class="row border">
+                                <div class="col-4 border-end">
+                                    <strong>1. Nr.</strong> <span t-esc="employee.id"/>
+                                </div>
+                                <div class="col-8">
+                                    <strong>2. Date of entry: </strong> <span t-esc="report_data['f10_2055_datumvanindienstt']"/>
+                                    <strong> Departure Date: </strong> <span t-esc="report_data['f10_2056_datumvanvertrek']"/>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-4 border-end">
+                                    <strong>3. Income debtor:</strong> <br/>
+                                    <span t-esc="report_data['v0014_naam']"/> <br/>
+                                    <span t-esc="report_data['v0015_adres']"/><br/>
+                                    <span t-esc="report_data['v0016_postcode']"/>,
+                                    <span t-esc="report_data['v0017_gemeente']"/> <br/>
+                                    <span t-esc="report_data['v0024_nationaalnr']"/> <br/>
+                                </div>
+                                <div class="col-4 border-start">
+                                    <strong>4. Sender:</strong> <br/>
+                                    <span t-esc="report_data['v0014_naam']"/> <br/>
+                                    <span t-esc="report_data['v0015_adres']"/><br/>
+                                    <span t-esc="report_data['v0016_postcode']"/>,
+                                    <span t-esc="report_data['v0017_gemeente']"/> <br/>
+                                    <span t-esc="report_data['v0024_nationaalnr']"/> <br/>
+                                </div>
+                                <div class="col-4 border-start">
+                                    <strong>4. Beneficiary:</strong><br/>
+                                    <span t-esc="report_data['f2013_naam'] + ' ' + report_data['f2114_voornamen']"/><br/>
+                                    <span t-esc="report_data['f2015_adres']"/><br/>
+                                    <span t-if="'f2016_postcodebelgisch' in report_data" t-esc="report_data['f2016_postcodebelgisch']"/>,
+                                    <span t-esc="report_data['employee_city']"/><br/>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-7">
+                                    <div class="row">
+                                        <div class="col">
+                                            <strong>5. National number:</strong>
+                                            <span t-esc="report_data['f2011_nationaalnr']"/><br/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-9">
+                                            <span class="text-start text-uppercase fw-bold">6. REMUNERATION (other than referred to under 10, 11a and 12a)</span>
+                                        </div>
+                                        <div class="col-1 text-end">
+                                            <strong>Code</strong>
+                                        </div>
+                                        <div class="col-2 text-end">
+                                            <strong>Amount</strong>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-1">a) Remuneration: </div>
+                                        <div class="col-4 text-end"><span t-esc="report_data['f10_2060_gewonebezoldiginge']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-11 fw-bold offset-1">b) Benefits in kind:</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-6 fw-bold offset-2">* amount</div>
+                                        <div class="col-4 text-end"><span t-esc="report_data['f10_2076_voordelenaardbedrag']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-6 fw-bold offset-2">* nature</div>
+                                        <div class="col-4 text-end"><span t-esc="report_data['f10_2099_aard']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-1">c) Loyalty stamps</div>
+                                        <div class="col-4 text-end"><span t-esc="report_data['f10_2069_fidelitystamps']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-11 fw-bold offset-1">d) Stock options</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-6 fw-bold offset-2">1° Awarded in 2023</div>
+                                        <div class="col-4 text-end"><span t-esc="report_data['f10_2082_bedrag']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-6 fw-bold offset-2">2° Awarded before 2023</div>
+                                        <div class="col-4 text-end"><span t-esc="report_data['f10_2083_bedrag']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-6 fw-bold offset-2">* percentage(s)</div>
+                                        <div class="col-4 text-end"><span t-esc="report_data['f10_2106_percentages']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-6 fw-bold offset-2">* Options granted by a foreign company not having an establishment in Belgium</div>
+                                        <div class="col-4 text-end">
+                                            <t t-if="report_data['f10_2039_optiebuitvennoots'] != '0'">
+                                                <span>Yes</span>
+                                            </t>
+                                            <t t-if="report_data['f10_2039_optiebuitvennoots'] == '0'">
+                                                <span>No</span>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-11 fw-bold offset-1">e) Benefit of any kind resulting from temporary unemployment benefits directly reimbursed to ONEM</div>
+                                        <div class="col-4 text-end"><span t-esc="report_data['f10_2204_repaidsums']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">A. Total: (6a + 6b + 6c + 6d, 1° + 6d + 6e, 2° + 6e)</div>
+                                        <div class="col-1 text-end">250</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2062_totaal']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">7. Miscellaneous taxable income</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">a) Early vacation pay (other than referred to under 11b and 12b): </div>
+                                        <div class="col-1 text-end">251</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2063_vervroegdvakantieg']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">b) Arrears (other than referred to in 9b, 11c and 12c): </div>
+                                        <div class="col-1 text-end">252</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2064_afzbelachterstall']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">c) Cancellation indemnities (other than referred to under 11d and 12d) and redeployment indemnities:</div>
+                                        <div class="col-1 text-end">308</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2065_opzeggingsreclasseringsverg']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">d) Remuneration for the month of December (Public authority) (2):</div>
+                                        <div class="col-1 text-end">247</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2070_decemberremuneration']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">8. Bad weather stamps</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">Amount</div>
+                                        <div class="col-1 text-end">271</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2116_badweatherstamps']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">9. Non-recurring benefits linked to results</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">a) Advantages</div>
+                                        <div class="col-1 text-end">242</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2117_nonrecurrentadvantages']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">b) Arrears </div>
+                                        <div class="col-1 text-end">243</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2127_nonrecurrentadvantagesoutdated']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">10. Taxable at the rate of 33%:</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-9 fw-bold offset-1">a) Occasional worker in the Horeca sector</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2132_horeca']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-9 fw-bold offset-1">b) Retired worker in the care sector</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2178_pensioner']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">Total (10.a + 10.b)</div>
+                                        <div class="col-1 text-end">263</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2141_total']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">11. Remuneration obtained by athletes within the framework of their sporting activity:</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">a) Remuneration </div>
+                                        <div class="col-1 text-end">273</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2119_sportremuneration']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">b) Early vacation pay </div>
+                                        <div class="col-1 text-end">274</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2120_sportvacancysavings']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">c) Arrears </div>
+                                        <div class="col-1 text-end">275</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2121_sportoutdated']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">d) Cancellation indemnities</div>
+                                        <div class="col-1 text-end">276</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2122_sportindemnificationofretraction']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">12. Remuneration obtained by sports competition referees for their refereeing services, or by trainers, coaches and accompanying persons for their activity for the benefit of sportsmen:</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">a) Remuneration </div>
+                                        <div class="col-1 text-end">277</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2123_managerremuneration']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">b) Early vacation pay </div>
+                                        <div class="col-1 text-end">278</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2124_managervacancysavings']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">c) Arrears </div>
+                                        <div class="col-1 text-end">279</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2125_manageroutdated']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">d) Cancellation indemnities</div>
+                                        <div class="col-1 text-end">280</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2126_managerindemnificationofretraction']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">13. PC Privé</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">Amount of the employer's intervention</div>
+                                        <div class="col-1 text-end">240</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2130_privatepc']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="page-break-before: always;"/>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">14. Contribution to travel costs:</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-9 fw-bold offset-1">a) Public transport</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2086_openbaargemeenschap']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-11 fw-bold offset-1"> b) Organized public transport</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">* Amount</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2087_bedrag']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">* Individual agreement available</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2040_individualconvention']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-9 fw-bold offset-1">c) Other means of transport</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2088_andervervoermiddel']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">Total: (14a + 14b + 14c)</div>
+                                        <div class="col-1 text-end">254</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2077_totaal']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">15. Impulse Fund</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">Premium from the Impulse Fund for general medicine obtained by a general practitioner approved to settle in a "priority" area</div>
+                                        <div class="col-1 text-end">267</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2066_impulsfund']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">16. Deductions for supplementary pensions</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">a) Normal contributions and premiums</div>
+                                        <div class="col-1 text-end">285</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2081_gewonebijdragenenpremies']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1"> b) Contributions and bonuses for individual continuation</div>
+                                        <div class="col-1 text-end">283</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2072_pensioentoezetting']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-9 fw-bold offset-1">Fund or company</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2102_kas']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">c) Contributions and premiums for free supplementary pensions for salaried workers</div>
+                                        <div class="col-1 text-end">387</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2128_vrijaanvullendpensioenwerknemers']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-9 fw-bold offset-1">Checkout</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2103_kasvrijaanvullendpensioen']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">17. Remuneration for overtime in the hospitality industry which qualifies for the exemption</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">a) from employers who do not use the cash register system</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-2">1° Ordinary remuneration</div>
+                                        <div class="col-1 text-end">335</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2061_bedragoveruren300horeca']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-2">Number of overtime hours</div>
+                                        <div class="col-1 text-end">336</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2167_aantaloveruren300horeca']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-2">2° Arrears</div>
+                                        <div class="col-1 text-end">337</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2111_achterstalloveruren300horeca']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-2">Number of overtime hours</div>
+                                        <div class="col-1 text-end">338</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2168_achterstallaantaloveruren300horeca']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">b) from employers who use the cash register system</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-2">1° Ordinary remuneration</div>
+                                        <div class="col-1 text-end">395</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2143_bedragoveruren360horeca']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-2">Number of overtime hours</div>
+                                        <div class="col-1 text-end">396</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2169_aantaloveruren360horeca']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-2">2° Arrears</div>
+                                        <div class="col-1 text-end">397</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2165_achterstalloveruren360horeca']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-2">Number of overtime hours</div>
+                                        <div class="col-1 text-end">398</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2170_achterstallaantaloveruren360horeca']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">18. Overtime which gives the right to extra pay</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">a) Total number of overtime hours actually worked</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">1° - which count for the limit up to 180 hours</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2118_overtimehours180']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">  - in the construction sector with registration system</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2176_overtimehours180']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-2">  Total (18.a.1)</div>
+                                        <div class="col-1 text-end">305</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2142_totalovertimehours180']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-2">2° which are taken into account for the limit up to 360 hours </div>
+                                        <div class="col-1 text-end">317</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2110_aantaloveruren360']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">b) Basis for the calculation of the additional salary relating to overtime giving right to a reduction of:</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-2">66.81 %</div>
+                                        <div class="col-1 text-end">233</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2067_rechtvermindering66_81']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">Number of hours</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2095_aantaluren']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-2">57.75 %</div>
+                                        <div class="col-1 text-end">234</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2068_rechtvermindering57_75']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">Number of hours</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2097_aantaluren']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">19. Remuneration which is taken into account for the exemption for voluntary overtime or net overtime hours in the public sector</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">a) Voluntary overtime worked from 01.07.2023 as part of the relaunch:</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-2">1) Remuneration</div>
+                                        <div class="col-1 text-end">381</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2079_covidovertimeremuneration2023']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-2">2) Overtime hours worked and paid from 01.07.2023</div>
+                                        <div class="col-1 text-end">382</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2138_covidovertimehours2023']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">b) Voluntary overtime worked in 2022 as part of the recovery</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-2">1) Remuneration</div>
+                                        <div class="col-1 text-end">378</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2197_covidovertimeremuneration2022']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-2">2) Overtime hours worked in 2022 and paid in 2023</div>
+                                        <div class="col-1 text-end">379</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2199_covidovertimehours2022']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">c) Provided in 2021 as part of the fight against COVID-19 and / or as part of the recovery plan or net overtime worked in 2021 in the public sector</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">1) Remuneration</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-3">- for overtime worked between 01.01.2021 and 30.06.2021 included with employers belonging to crucial sectors or in the public sector</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2190_covidovertimeremunerationfirstsemester']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-3">- for overtime worked between 01.07.2021 and 31.12.2021 as part of the recovery plan</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2191_covidovertimeremunerationsecondsemester']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-6 fw-bold offset-3">TOTAL</div>
+                                        <div class="col-1 text-end">310</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2135_amountpaidforvolontarysuplementaryhourscovid']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">2) Overtime</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-3">- provided from 01.01.2021 to 30.06.2021 inclusive with employers belonging to crucial sectors or in the public sector and paid in 2023</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2192_covidovertimehoursfirstsemester']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-3">- provided from 01.07.2021 to 31.12.2021 included as part of the recovery plan and paid in 2023</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2193_covidovertimehourssecondsemester']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-6 fw-bold offset-3">TOTAL</div>
+                                        <div class="col-1 text-end">311</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2194_covidovertimehourstotal']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">20. Purchasing power premium which is taken into account for the exemption</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">Amount</div>
+                                        <div class="col-1 text-end">386</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2189_purchasingbonus']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">21. Withholding Taxes</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-9 fw-bold offset-1">a) based on income received from employer</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2131_bedrijfsvoorheffingvanwerkgever']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-9 fw-bold offset-1">b) based on income received from a related foreign company</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2133_bedrijfsvoorheffingbuitenlvenverbondenwerkgever']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">TOTAL</div>
+                                        <div class="col-1 text-end">286</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2074_bedrijfsvoorheffing']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">22. Special contributions for social security</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">Amount</div>
+                                        <div class="col-1 text-end">287</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2075_bijzonderbijdrage']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">23. Public sector staff without an employment contract</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">Amount</div>
+                                        <div class="col-1 text-end">290</div>
+                                        <div class="col-2 text-end">
+                                            <t t-if="report_data['f10_2041_overheidspersoneel'] == 1">
+                                                <span>Yes</span>
+                                            </t>
+                                            <t t-if="report_data['f10_2041_overheidspersoneel'] != 1">
+                                                <span>No</span>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">24. Employment bonus</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-1">Amount</div>
+                                        <div class="col-1 text-end">284</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2115_bonus']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">25. Miscellaneous information</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-11 fw-bold offset-1">a) Movements by cycle or by speed-pedelec</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">* Km</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2058_km']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">* Total compensation</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2071_totalevergoeding']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-11 fw-bold offset-1">b) Employer-specific expenses</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">- lump sum reimbursements based on serious standards</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2200_compensationwithstandards']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">- lump sum reimbursements in the absence of serious standards</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2078_compensationamountwithoutstandards']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">- reimbursements based on supporting documents</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2201_compensationwithdocuments']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">- mobility allowance</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2084_mobiliteitsvergoedi']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-11 fw-bold offset-1">c) Tips</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">* code</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2045_code']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">* Social Security package</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2113_forfaitrsz']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">Amount</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2073_tipamount']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-11 fw-bold offset-1">d) Frontier workers</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">* number of days out of border area</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2090_outborderdays']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-9 fw-bold offset-1">e) Exempt income received in fulfillment of a flexi-job contract</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2166_flexi_job']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-9 fw-bold offset-1">f) Beneficiary premium</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2177_winstpremies']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-9 fw-bold offset-1">g) Mobility budget: total amount</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2134_totaalbedragmobiliteitsbudget']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-9 fw-bold offset-1">h) First employment agreement: compensatory supplement</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2179_startersjob']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-9 fw-bold offset-1">i) Volunteer firefighter, volunteer ambulance driver and volunteer Civil Protection agent: allowances which are taken into account for the exemption</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2180_onkostenbrandweerenambulanciers']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-11 fw-bold offset-1">j) Student job</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">* total amount of all remuneration paid under a student employment contract</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2136_amountcontractofstudent']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">* specific remuneration paid in 2023 for specific services performed in 2023, 2022, 2021 and/or 2020</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2137_amountstudentspecificperiod']"/></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">26. Remuneration and other benefits received from a related foreign company</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-11 fw-bold offset-1">a) Code 250</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">1° Compensation, not mentioned in 2°, 3°, 4°</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2181_remunerationetrang']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">2° Actions</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2182_aandelenetrang']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">3° Bonuses, premiums and stock options</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2183_bonuspremieoaandelenoptiesetrang']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">4° Benefits in kind</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2184_anderevaaetrang']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-11 fw-bold offset-1">b) Other codes</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">Code</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2092_othercode1']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-3">Amount</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2185_amountother1']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">Code</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2094_othercode2']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-3">Amount</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2186_amountother2']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">Code</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2096_othercode3']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-3">Amount</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2187_amountother3']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">Code</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2098_othercode4']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-7 fw-bold offset-3">Amount</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2188_amountother4']"/></div>
+                                    </div>
+                                    <div style="page-break-before: always;"/>
+                                    <div class="row border-top">
+                                        <div class="col-11 fw-bold offset-1">* Compensation granted to insurance inspectors in reimbursement of costs</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">Circ. administrative 19.03.1982 Ci. RH. 241/315.785</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2037_vergoedingkosten']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-11 fw-bold offset-1">* Mention: MOBILITY ALLOWANCE</div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">Total amount paid or awarded (the taxable part must be added to Total remuneration 2.060)</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2084_mobiliteitsvergoedi']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-10">
+                                            <span class="text-start text-uppercase fw-bold">27. Foreign seasonal worker in agriculture and horticulture subject to professional withholding tax who provided a residence certificate</span>
+                                        </div>
+                                        <div class="col-2 text-end">
+                                            <t t-if="report_data['f10_2038_seasonalworker'] != '0.00 €'">
+                                                <span>Yes</span>
+                                            </t>
+                                            <t t-if="report_data['f10_2038_seasonalworker'] == '0.00 €'">
+                                                <span>No</span>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-10">
+                                            <span class="text-start text-uppercase fw-bold">28. Foreign executive or researcher</span>
+                                        </div>
+                                        <div class="col-2 text-end">
+                                            <t t-if="report_data['f10_2034_ex'] != '0.00 €'">
+                                                <span>Yes</span>
+                                            </t>
+                                            <t t-if="report_data['f10_2034_ex'] == '0.00 €'">
+                                                <span>No</span>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-8 fw-bold offset-2">Secondment allowance</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2080_detacheringsvergoed']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-12">
+                                            <span class="text-start text-uppercase fw-bold">29. Special tax regimes for inpatriate taxpayers and inpatriate researchers</span>
+                                        </div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-9 fw-bold offset-1">a) Repetitive expenses</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2202_amount']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-9 fw-bold offset-1">b) Other expenses resulting directly from employment in Belgium</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2203_amount']"/></div>
+                                    </div>
+                                    <div class="row border-top">
+                                        <div class="col-9 fw-bold offset-1">c) Gross amount of remuneration</div>
+                                        <div class="col-2 text-end"><span t-esc="report_data['f10_2206_grossamountremuneration']"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border border-top-0">
+                                <div class="col-12">
+                                    <div class="row border-top">
+                                        <div class="col-10">
+                                            <span class="text-start text-uppercase fw-bold">30. Remuneration paid or awarded for services carried out within the framework of association activities after exceeding an hourly limit</span>
+                                        </div>
+                                        <div class="col-2 text-end">
+                                            <t t-if="report_data['f10_2031_associationactivity'] != '0.00 €'">
+                                                <span>Yes</span>
+                                            </t>
+                                            <t t-if="report_data['f10_2031_associationactivity'] == '0.00 €'">
+                                                <span>No</span>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

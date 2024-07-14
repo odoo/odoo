@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- appointment.type -->
+    <record id="appointment_type_rule_user" model="ir.rule">
+        <field name="name">appointment.type: apt user rule</field>
+        <field name="model_id" ref="model_appointment_type"/>
+        <field name="domain_force">[
+            '|', '|', '|',
+                ('create_uid', '=', user.id),
+                ('staff_user_ids.id', '=', user.id),
+                ('staff_user_ids', '=', False),
+                ('schedule_based_on', '=', 'resources')]</field>
+        <field name="groups" eval="[(4, ref('appointment.group_appointment_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="appointment_type_rule_user_unlink" model="ir.rule">
+            <field name="name">appointment.type: apt user rule (unlink = own only)</field>
+            <field name="model_id" ref="model_appointment_type"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('appointment.group_appointment_user'))]"/>
+            <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="appointment_type_rule_admin" model="ir.rule">
+        <field name="name">appointment.type: apt administrator rule</field>
+        <field name="model_id" ref="model_appointment_type"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('appointment.group_appointment_manager'))]"/>
+    </record>
+
+    <!-- appointment.slot -->
+    <record id="appointment_slot_rule_user" model="ir.rule">
+        <field name="name">appointment.slot: user rule: own type only</field>
+        <field name="model_id" ref="model_appointment_slot"/>
+        <field name="domain_force">[('appointment_type_id.create_uid', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('appointment.group_appointment_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="appointment_slot_rule_admin" model="ir.rule">
+        <field name="name">appointment.slot: apt administrator rule</field>
+        <field name="model_id" ref="model_appointment_slot"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('appointment.group_appointment_manager'))]"/>
+    </record>
+
+    <!-- appointment.invite -->
+    <record id="appointment_invite_rule_user" model="ir.rule">
+        <field name="name">appointment.invite: user rule</field>
+        <field name="model_id" ref="model_appointment_invite"/>
+        <field name="domain_force">['|', ('create_uid', '=', user.id), ('staff_user_ids.id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('appointment.group_appointment_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="appointment_invite_rule_user_unlink" model="ir.rule">
+        <field name="name">appointment.invite: apt user rule (unlink = own only)</field>
+        <field name="model_id" ref="model_appointment_invite"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('appointment.group_appointment_user'))]"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="appointment_invite_rule_admin" model="ir.rule">
+        <field name="name">appointment.invite: apt administrator rule</field>
+        <field name="model_id" ref="model_appointment_invite"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('appointment.group_appointment_manager'))]"/>
+    </record>
+</odoo>

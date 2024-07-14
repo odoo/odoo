@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="spreadsheet_edition.EditableName">
+    <t t-if="state.isEditing">
+        <div><input type="text" class="o_input o_sp_en_name" t-model="state.name"/></div>
+        <div class="btn btn-link o_sp_en_save" t-on-click="save">Save</div><br/>
+    </t>
+    <t t-else="">
+        <div class="o_sp_en_display_name" t-esc="props.displayName"/>
+        <div class="btn btn-link o_sp_en_rename" t-on-click="rename"><i class="fa fa-pencil me-1"/>Rename</div><br/>
+    </t>
+</t>
+
+</templates>

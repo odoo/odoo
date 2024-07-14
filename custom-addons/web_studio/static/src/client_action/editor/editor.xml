@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.Editor">
+    <div
+        t-on-studio-edit-view="switchViewLegacy"
+        class="o_web_studio_editor">
+        <EditorMenu switchView.bind="switchView" switchTab.bind="switchTab" />
+        <StudioActionContainer reloadId="state.actionContainerId"/>
+    </div>
+</t>
+
+</templates>

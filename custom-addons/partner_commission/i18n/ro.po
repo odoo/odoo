@@ -1,0 +1,462 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* partner_commission
+# 
+# Translators:
+# Vacaru Adrian <adrian.vacaru@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# Corina Calin, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Corina Calin, 2024\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid ""
+"\n"
+"%s: from %s to %s"
+msgstr ""
+"\n"
+"%s : de la %s la %s"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid " (%d month(s))"
+msgstr "(%d lună(i))"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__active
+msgid "Active"
+msgstr "Activ"
+
+#. module: partner_commission
+#: model:res.groups,name:partner_commission.group_commission_manager
+msgid "All Documents"
+msgstr "Toate Documentele"
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.commission_plan_search_view
+msgid "Archived"
+msgstr "Arhivat"
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid "Automatic PO frequency"
+msgstr "Frecvență Automată de PO"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__is_capped
+msgid "Capped"
+msgstr "Plafonat"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__purchase_order__purchase_type__commission
+#: model:product.template,name:partner_commission.product_commission_product_template
+msgid "Commission"
+msgstr "Comision"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_res_company__commission_automatic_po_frequency
+#: model:ir.model.fields,field_description:partner_commission.field_res_config_settings__commission_automatic_po_frequency
+msgid "Commission Automatic Po Frequency"
+msgstr "Comisionarea frecvenței automate a PO-ului"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_res_partner__commission_plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_res_users__commission_plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order__commission_plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order_log_report__commission_plan_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_subscription_report__commission_plan_id
+msgid "Commission Plan"
+msgstr "Plan de Comision"
+
+#. module: partner_commission
+#: model:ir.actions.act_window,name:partner_commission.action_commission_plans
+#: model:ir.ui.menu,name:partner_commission.menu_commission_plans
+msgid "Commission Plans"
+msgstr "Planuri de Comision"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid "Commission on %(invoice)s, %(partner)s, %(amount)s"
+msgstr "Comision pe %(invoice)s,%(partner)s,%(amount)s"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_commission_plan
+msgid "Commission plan"
+msgstr "Plan de comision"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid "Commission refunded. Invoice: %s. Amount: %s."
+msgstr "Comision rambursat. Factură: %s. Sumă:%s."
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_commission_rule
+msgid "Commission rules management."
+msgstr "Managementul regulilor de comision"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_res_company
+msgid "Companies"
+msgstr "Companii"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__company_id
+msgid "Company"
+msgstr "Companie"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_res_config_settings
+msgid "Config Settings"
+msgstr "Setări de configurare"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_res_partner
+msgid "Contact"
+msgstr "Contact"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__create_uid
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__create_uid
+msgid "Created by"
+msgstr "Creat de"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__create_date
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__create_date
+msgid "Created on"
+msgstr "Creat în"
+
+#. module: partner_commission
+#: model:ir.actions.act_window,name:partner_commission.action_view_customer_invoices
+msgid "Customer Invoices"
+msgstr "Facturi clienți"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_res_partner_grade__default_commission_plan_id
+msgid "Default Commission Plan"
+msgstr "Plan de Comision Implicit"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__display_name
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order__commission_plan_frozen
+msgid "Freeze Plan"
+msgstr "Plan de înghețare"
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid "Frequency at which purchase orders will be automatically confirmed"
+msgstr "Frecvența la care comenzile de achiziție vor fi confirmate automat"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__id
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_commission_rule__product_id
+msgid ""
+"If set, the rule does not apply to the whole category but only on the given product.\n"
+"The product must belong to the selected category.\n"
+"Use several rules if you need to match multiple products within a category."
+msgstr ""
+"Dacă este setată, regula nu se aplică întregii categorii, ci doar produsului dat.\n"
+"Produsul trebuie să aparțină categoriei selectate.\n"
+"Folosiți mai multe reguli dacă trebuie să potriviți mai multe produse dintr-o categorie."
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_purchase_order__invoice_commission_count
+msgid "Invoices that have generated commissions included in this order"
+msgstr "Facturi care au generat comisioane incluse în această comandă"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_account_move
+msgid "Journal Entry"
+msgstr "Intrare de jurnal "
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_account_move_line
+msgid "Journal Item"
+msgstr "Element de jurnal"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__write_uid
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__write_uid
+msgid "Last Updated by"
+msgstr "Ultima actualizare făcută de"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__write_date
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__write_date
+msgid "Last Updated on"
+msgstr "Ultima actualizare pe"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Pistă/Oportunitate"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__res_company__commission_automatic_po_frequency__manually
+msgid "Manually"
+msgstr "Manual"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__max_commission
+msgid "Max Commission"
+msgstr "Comision Maxim"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_commission_rule__max_commission
+msgid "Maximum amount, specified in the currency of the pricelist, if given."
+msgstr "Suma maximă, specificată în moneda listei de prețuri, dacă este dată."
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid "Minimum PO amount total"
+msgstr "Suma totală minimă a PO-ului"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_res_company__commission_po_minimum
+#: model:ir.model.fields,field_description:partner_commission.field_res_config_settings__commission_po_minimum
+msgid "Minimum Total Amount for PO commission"
+msgstr "Suma totală minimă pentru comisionul PO-ului"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__res_company__commission_automatic_po_frequency__monthly
+msgid "Monthly"
+msgstr "Lunar"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__name
+msgid "Name"
+msgstr "Nume"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid "New commission. Invoice: %s. Amount: %s."
+msgstr "Comision nou. Factură: %s . Sumă: %s"
+
+#. module: partner_commission
+#: model:res.groups,name:partner_commission.group_commission_user
+msgid "Own Documents Only"
+msgstr "Doar Documente Proprii"
+
+#. module: partner_commission
+#: model:ir.actions.server,name:partner_commission.cron_confirm_purchase_orders_ir_actions_server
+msgid "Partner Commission: confirm purchase orders"
+msgstr "Comision partener: confirmați comenzile de achiziție"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_res_partner_grade
+msgid "Partner Grade"
+msgstr "Grad Partener"
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid "Partners Commissions"
+msgstr "Comisioane Parteneri"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__pricelist_id
+msgid "Pricelist"
+msgstr "Listă de prețuri"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__purchase_order__purchase_type__procurement
+msgid "Procurement"
+msgstr "Aprovizionare"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__product_id
+msgid "Product"
+msgstr "Produs"
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/commission_plan.py:0
+#, python-format
+msgid "Product %s does not belong to category %s"
+msgstr "Produsul %s nu aparține categoriei %s"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__category_id
+msgid "Product Category"
+msgstr "Categorie produs"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__product_id
+msgid "Purchase Default Product"
+msgstr "Achiziționare Produs Implicit"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_purchase_order
+msgid "Purchase Order"
+msgstr "Comandă de achiziție"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_purchase_order__purchase_type
+msgid "Purchase Type"
+msgstr "Tip de achiziție"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__res_company__commission_automatic_po_frequency__quarterly
+msgid "Quarterly"
+msgstr "Trimestrial"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__rate
+msgid "Rate"
+msgstr "Rată"
+
+#. module: partner_commission
+#: model:ir.model.constraint,message:partner_commission.constraint_commission_rule_check_rate
+msgid "Rate should be between 0 and 100."
+msgstr "Rata ar trebui să fie între 0 și 100."
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_account_bank_statement_line__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_account_move__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_account_payment__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order_log_report__referrer_id
+#: model:ir.model.fields,field_description:partner_commission.field_sale_subscription_report__referrer_id
+#: model_terms:ir.ui.view,arch_db:partner_commission.account_move_view_search_inherit_partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.sale_order_log_search
+#: model_terms:ir.ui.view,arch_db:partner_commission.sale_order_subsciption_view_search_inherit_partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.sale_order_view_search_inherit_partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.sale_subscription_report_search
+msgid "Referrer"
+msgstr "Referent"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_sale_order__commission
+msgid "Referrer Commission"
+msgstr "Comision Referent"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_account_bank_statement_line__commission_po_line_id
+#: model:ir.model.fields,field_description:partner_commission.field_account_move__commission_po_line_id
+#: model:ir.model.fields,field_description:partner_commission.field_account_payment__commission_po_line_id
+msgid "Referrer Purchase Order line"
+msgstr "Linie de comandă de achiziție a referitorului"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_plan__commission_rule_ids
+#: model_terms:ir.ui.view,arch_db:partner_commission.commission_plan_form_view
+msgid "Rules"
+msgstr "Reguli"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__template_id
+msgid "Sale Order Template"
+msgstr "Template de comandă de vânzare"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_sale_order_log_report
+msgid "Sales Log Analysis Report"
+msgstr "Raport de analiză a vânzărilor"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_sale_order
+msgid "Sales Order"
+msgstr "Comandă de vânzare"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_commission_rule__sequence
+msgid "Sequence"
+msgstr "Secvență"
+
+#. module: partner_commission
+#: model:ir.model.fields,field_description:partner_commission.field_purchase_order__invoice_commission_count
+#: model_terms:ir.ui.view,arch_db:partner_commission.purchase_order_form_inherit_partner_commission
+msgid "Source Invoices"
+msgstr "Facturi Sursă"
+
+#. module: partner_commission
+#: model:ir.model,name:partner_commission.model_sale_subscription_report
+msgid "Subscription Analysis"
+msgstr "Analiza abonament"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_sale_order__commission_plan_id
+msgid "Takes precedence over the Referrer's commission plan."
+msgstr "Are prioritate față de planul de comision al referitorului."
+
+#. module: partner_commission
+#. odoo-python
+#: code:addons/partner_commission/models/account_move.py:0
+#, python-format
+msgid ""
+"The commission partner order %s must be checked manually (especially refund "
+"lines which can be duplicated)."
+msgstr ""
+"Comanda partenerului comisionar %s trebuie verificată manual (în special "
+"liniile de rambursare care pot fi duplicate)."
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_res_partner_grade__default_commission_plan_id
+msgid ""
+"The default commission plan used for this grade. Can be overwritten on the "
+"partner form."
+msgstr ""
+"Planul de comision implicit utilizat pentru acest grad. Poate fi suprascris "
+"pe formularul de partener."
+
+#. module: partner_commission
+#: model_terms:ir.ui.view,arch_db:partner_commission.res_config_settings_view_form
+msgid ""
+"The required minimum amount total needed to automatically confirm purchase "
+"orders"
+msgstr ""
+"Suma totală minimă necesară pentru a confirma automat comenzile de achiziție"
+
+#. module: partner_commission
+#: model:ir.model.fields.selection,name:partner_commission.selection__res_company__commission_automatic_po_frequency__weekly
+msgid "Weekly"
+msgstr "Săptămânal"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_commission_rule__is_capped
+msgid "Whether the commission is capped."
+msgstr "Dacă Comisionul este plafonat"
+
+#. module: partner_commission
+#: model:ir.model.fields,help:partner_commission.field_sale_order__commission_plan_frozen
+msgid ""
+"Whether the commission plan is frozen. When checked, the commission plan "
+"won't automatically be updated according to the partner level."
+msgstr ""
+"Dacă planul de comision este înghețat. Când este bifat, planul de comision "
+"nu va fi actualizat automat în funcție de nivelul partenerului."

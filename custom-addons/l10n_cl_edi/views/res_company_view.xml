@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_company_l10n_cl_edi_form" model="ir.ui.view">
+            <field name="model">res.company</field>
+            <field name="name">view.company.l10n.cl.edi.form</field>
+            <field name="inherit_id" ref="base.view_company_form" />
+            <field name="arch" type="xml">
+                <field name="vat" position="after">
+                    <field name="l10n_cl_sii_taxpayer_type" invisible="country_id != %(base.cl)d"/>
+                    <field name="l10n_cl_dte_service_provider" invisible="country_id != %(base.cl)d"/>
+                    <field name="l10n_cl_company_activity_ids" placeholder="Company Activity Codes"
+                           widget="many2many_tags"
+                           options="{'no_create': True}" context="{'search_by_code': True}"
+                           invisible="country_id != %(base.cl)d"
+                           required="l10n_cl_dte_service_provider in ['SII', 'SIITEST']"/>
+                    <field name="l10n_cl_is_there_shared_certificate" invisible="country_code != 'CL'"/>
+                </field>
+                <xpath expr="//notebook" position="inside" invisible="country_id != %(base.cl)d">
+                    <page name="dte" string="Electronic Invoicing" invisible="l10n_cl_dte_service_provider not in ['SII', 'SIITEST', 'SIIDEMO']">
+                        <group colspan="2">
+                            <group>
+                                <field name="l10n_cl_dte_email" widget="email" required="l10n_cl_dte_service_provider in ['SII', 'SIITEST']"/>
+                                <field name="l10n_cl_sii_regional_office" required="l10n_cl_dte_service_provider in ['SII', 'SIITEST']"/>
+                            </group>
+                            <group>
+                                <field name="l10n_cl_dte_resolution_number"
+                                       required="l10n_cl_dte_service_provider in ['SII', 'SIITEST']"/>
+                                <field name="l10n_cl_dte_resolution_date"
+                                       required="l10n_cl_dte_service_provider in ['SII', 'SIITEST']"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

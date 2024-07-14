@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="website_controller_page_form_dialog" model="ir.ui.view">
+        <field name="name">website_page_form</field>
+        <field name="model">website.controller.page</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="page_type" invisible="1" />
+                <field name="model_id" invisible="1" force_save="True"/>
+                <field name="website_published" invisible="1"/>
+
+                <group>
+                    <group string="Basic parameters">
+                        <field name="page_name" />
+                        <label for="name_slugified" string="URL"/>
+                        <div>
+                            <span>/model/</span>
+                            <field name="name_slugified" nolabel="1" class="d-inline bg-300" force_save="True"/>
+                            <span invisible="name_slugified" class="bg-300">...</span>
+                            <span invisible="page_type == 'listing'">
+                                /my-little-record-23
+                            </span>
+                        </div>
+                    </group>
+                    <group string="Advanced">
+                        <field name="record_domain" widget="domain" options="{'model': 'model'}"/>
+                        <field name="view_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Menus">
+                            <field name="menu_ids" />
+                        </page>
+                    </notebook>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="website_controller_page_form_dialog_new" model="ir.ui.view">
+        <field name="name">website_controller_page_form_dialog_new</field>
+        <field name="model">website.controller.page</field>
+        <field name="inherit_id" ref="website_studio.website_controller_page_form_dialog"/>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='model_id']" position="after">
+                <field name="model" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='view_id']" position="replace">
+                <field name="use_menu" widget="boolean_toggle" options='{"autosave": False}' invisible="page_type == 'single'" />
+                <field name="auto_single_page" widget="boolean_toggle" options='{"autosave": False}' invisible="page_type == 'single'" readonly="page_type == 'single'" />
+            </xpath>
+
+            <xpath expr="//notebook" position="replace"/>
+        </field>
+    </record>
+
+
+</odoo>

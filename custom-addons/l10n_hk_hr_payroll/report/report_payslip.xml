@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_payslip_document" inherit_id="hr_payroll.report_payslip" primary="True">
+        <xpath expr="//table[@name='employee-infos']" position="replace">
+            <div class="row mt-4 mb-2">
+                <div class="col-auto col-3 mw-100 mb-2">
+                    <strong>Employee:</strong><br/>
+                    <span class="m-0" t-field="o.employee_id">John Smith</span>
+                </div>
+                <div class="col-auto col-3 mw-100 mb-2">
+                    <strong>Pay Period:</strong><br/>
+                    <span t-if="o.date_from &lt; o.contract_id.date_start" t-field="o.contract_id.date_start">Start Date</span>
+                    <span t-else="" t-field="o.date_from">From</span>
+                    -
+                    <span t-if="o.contract_id.date_end and o.date_to &gt; o.contract_id.date_end" t-field="o.contract_id.date_end">End Date</span>
+                    <span t-else="" t-field="o.date_to">To</span>
+                </div>
+                <div class="col-auto col-3 mw-100 mb-2">
+                    <strong>Address:</strong><br/>
+                    <div t-if="o.employee_id.private_street"><span t-field="o.employee_id.private_street" />,<br/></div>
+                    <div t-if="o.employee_id.private_street2"><span t-field="o.employee_id.private_street2" />,<br/></div>
+                    <span t-field="o.employee_id.private_city" />
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//table[@t-if='not o.struct_id.hide_basic_on_pdf']/tr" position="replace">
+            <tr>
+                <td class="w-25"><strong>Basic Salary (<span class="text-capitalize" t-out="o.contract_id.wage_type"/>)</strong></td>
+                <td style="color:#875A7B" class="w-75">
+                    <span t-out="o.contract_id._get_contract_wage()" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}">$100.0</span>
+                </td>
+            </tr>
+        </xpath>
+        <xpath expr="//div[@id='to_pay']" position="replace" />
+
+    </template>
+
+    <template id="report_payslip">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="o" t-value="o.with_context(lang=o.employee_id.sudo().lang or o.env.lang)"/>
+                <t t-call="l10n_hk_hr_payroll.report_payslip_document" t-lang="o.env.lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>

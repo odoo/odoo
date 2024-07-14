@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_rule_houserentallowancemetro_nonmetro" model="hr.salary.rule">
+        <field name="code">HRAMN</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+nonmetro_alw = contract.l10n_in_house_rent_allowance_metro_nonmetro / 100
+result = contract.wage * nonmetro_alw
+        </field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">House Rent Allowance</field>
+        <field name="partner_id" ref="hr_houserent_allowance_register"/>
+        <field name="sequence" eval="51"/>
+        <field name="note">HRA is an allowance given by the employer to the employee for taking care of his rental or accommodation expenses.</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_salary_rule_special" model="hr.salary.rule">
+        <field name="code">SA</field>
+        <field name="name">Grade/Special/Management/Supplementary Allowance</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.l10n_in_supplementary_allowance)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = contract.l10n_in_supplementary_allowance</field>
+        <field name="sequence" eval="20"/>
+        <field name="note">This allowance is normally given as an additional benefit to employees and is fully taxable.</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payroll_rule_child1" model="hr.salary.rule">
+        <field name="code">CHEA</field>
+        <field name="name">Child Education Allowance</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(employee.children)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+amounts = payslip._rule_parameter('l10n_in_chea_value')
+if employee.children == 1:
+    result = amounts[0]
+else:
+    result = amounts[1]
+        </field>
+        <field name="sequence" eval="18"/>
+        <field name="note">Per school going child 1200 per annum is non-taxable.Maximum for 2 children, so max 2400 per annum becomes non-taxable.</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payroll_rule_child2" model="hr.salary.rule">
+        <field name="code">CHEAH</field>
+        <field name="name">Child Hostel Allowance</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(employee.l10n_in_residing_child_hostel)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+amounts = payslip._rule_parameter('l10n_in_child_hostel_allowance')
+if employee.l10n_in_residing_child_hostel == 1:
+    result = amounts[0]
+else:
+    result = amounts[1]
+        </field>
+        <field name="note">In case the children are in hostel, the exemption available for child.</field>
+        <field name="sequence" eval="19"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+     </record>
+
+    <record id="hr_payroll_rule_city1" model="hr.salary.rule">
+        <field name="code">CBDA</field>
+        <field name="name">City Compensatory Allowance</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="condition_select">none</field>
+        <field name="sequence" eval="21"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+city_alw_percent = payslip._rule_parameter('l10n_in_city_alw_percent')
+result = contract.wage * city_alw_percent
+        </field>
+        <field name="note">This allowance is paid to Employees who are posted in big cities. The purpose is to compensate the high cost of living in cities like Mumbai, Delhi, etc. However it is Fully Taxable.</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payroll_rule_metrocity" model="hr.salary.rule">
+        <field name="code">CMETRO</field>
+        <field name="name">City Allowance for Metro city</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="condition_select">none</field>
+        <field name="sequence" eval="22"/>
+        <field name="amount_select">fix</field>
+        <field name="amount_fix">850.0</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payroll_rule_nonmetrocity" model="hr.salary.rule">
+        <field name="code">CNMETRO</field>
+        <field name="name">City Allowance for Non Metro city</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="condition_select">none</field>
+        <field name="sequence" eval="25"/>
+        <field name="amount_select">fix</field>
+        <field name="amount_fix">800.0</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_salary_rule_arrears" model="hr.salary.rule">
+        <field name="code">ARRE</field>
+        <field name="name">Arrears</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = 'ARS' in inputs and inputs['ARS'].amount</field>
+        <field eval="0.0" name="amount_fix"/>
+        <field name="sequence" eval="28"/>
+        <field name="note">Generally arrears are fully taxable, but employee may claim exemption u/s 89(1).
+One would need to compute income tax on the arrears if it would have been received in actual year.
+Now difference of income tax between payment year and actual year would be allowed for deduction.</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_salary_rule_medical" model="hr.salary.rule">
+        <field name="code">MEDA</field>
+        <field name="name">Medical Reimbursement</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = 'MR' in inputs and inputs['MR'].amount</field>
+        <field name="sequence" eval="32"/>
+        <field name="note">This component is on-taxable up to 15000 per year (or Rs 1500 per month) on producing medical bills.</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+     <record id="hr_salary_rule_food_coupon" model="hr.salary.rule">
+        <field name="amount_select">fix</field>
+        <field eval="50" name="amount_fix"/>
+        <field name="quantity">'WORK100' in worked_days and worked_days['WORK100'].number_of_days</field>
+        <field name="code">FC</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Food Allowance</field>
+        <field name="partner_id" ref="hr_food_coupen_register"/>
+        <field name="sequence" eval="33"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+     </record>
+
+     <record id="hr_payslip_rule_employer_alw_esic" model="hr.salary.rule">
+        <field name="code">ESICF</field>
+        <field name="name">Employer's State Insurance Corporation</field>
+        <field name="sequence" eval="168"/>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = result_rules['GROSS']['total'] &lt;= payslip._rule_parameter('l10n_in_esicf_value')</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+esicf_percent = payslip._rule_parameter('l10n_in_esicf_percent')
+gross = categories['GROSS']
+result = gross * esicf_percent
+        </field>
+        <field name="sequence" eval="110"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payslip_rule_alw_erpf" model="hr.salary.rule">
+        <field name="code">ERPF</field>
+        <field name="name">Employer's PF Contribution</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+pf_ctb_percent = payslip._rule_parameter('l10n_in_pf_percent')
+result = -contract.wage * pf_ctb_percent
+        </field>
+        <field name="sequence" eval="37"/>
+        <field name="partner_id" ref="hr_register_provident_fund"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="note">Both the employees and employer contribute to the fund at the rate of 12% of the basic wages, dearness allowance and retaining allowance, if any, payable to employees per month.</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_salary_rule_journals" model="hr.salary.rule">
+        <field name="code">PERJ</field>
+        <field name="name">Book and Periodicals Allowance (BNP)</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = 'PJ' in inputs and inputs['PJ'].amount</field>
+        <field name="sequence" eval="34"/>
+        <field name="note">Some employers may provide component for buying magazines, journals and books as a part of knowledge enhancement for business growth.This part would become non taxable on providing original bills.</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_salary_rule_uniform_senior" model="hr.salary.rule">
+        <field name="code">UNIFS</field>
+        <field name="name">Uniform/Dress Allowance for Senior Executive</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">fix</field>
+        <field eval="1000" name="amount_fix"/>
+        <field name="sequence" eval="35"/>
+        <field name="note">Some sections of employees mat get allowance for purchase of office dress/uniform.In such case, the component would become non-taxable.</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_salary_rule_telephone" model="hr.salary.rule">
+        <field name="code">TELR</field>
+        <field name="name">Telephone Reimbursement</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = 'TR' in inputs and inputs['TR'].amount</field>
+        <field name="sequence" eval="36"/>
+        <field name="note">In some of the cases, companies may provide a component for telephone bills.Employees may provide actual phone usage bills to reimburse this component and make it non-taxable.
+        </field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_salary_rule_prof_develope" model="hr.salary.rule">
+        <field name="code">PDA</field>
+        <field name="name">Professional Development Allowance</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">fix</field>
+        <field eval="0.0" name="amount_fix"/>
+        <field name="sequence" eval="37"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payroll_rule_car" model="hr.salary.rule">
+        <field name="code">CAR</field>
+        <field name="name">Car Expenses Reimbursement</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = 'CEI' in inputs and inputs['CEI'].amount</field>
+        <field name="sequence" eval="38"/>
+        <field name="note">In case company provides component for this and employee use self owned car for official and personal purposes, Rs 1800 per month would be non-taxable on showing bills for fuel or can maintenance. This amount would be Rs 2400 in case car is more capacity than 1600cc.</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_salary_rule_internet" model="hr.salary.rule">
+        <field name="code">INT</field>
+        <field name="name">Mobile and Internet Expense</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = 'IE' in inputs and inputs['IE'].amount</field>
+        <field name="sequence" eval="39"/>
+        <field name="note">Employer may also provide reimbursement of  Mobile and Internet Expense and thus this would become non taxable.</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_salary_rule_driver" model="hr.salary.rule">
+        <field name="code">DRI</field>
+        <field name="name">Driver Salary</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.l10n_in_driver_salay)</field>
+        <field name="amount_select">fix</field>
+        <field eval="900.0" name="amount_fix"/>
+        <field name="sequence" eval="40"/>
+         <field name="note">Rs. 900 per month (non taxable)</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+
+    <!--hr salary rules for Deductions -->
+
+    <record id="hr_payslip_rule_tds" model="hr.salary.rule">
+        <field name="code">TDS</field>
+        <field name="name">Tax Deducted at Source</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.l10n_in_tds)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = -(contract.l10n_in_tds)</field>
+        <field name="partner_id" ref="hr_tds_register"/>
+        <field name="sequence" eval="140"/>
+        <field name="note">As per income tax rules, all payment which are taxable in nature should be done after deduction of taxes at the source itself. Hence employer compute income tax on salary payment and deduct it every month. This TDS is based on employee’s saving/investment declaration at the start of year. If investments for tax saving is not done, large amount may be deducted in last few months.</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payslip_rule_epf" model="hr.salary.rule">
+        <field name="code">EPMF</field>
+        <field name="name">Employee's PF Contribution</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+pf_ctb_percent = payslip._rule_parameter('l10n_in_pf_percent')
+result = -contract.wage * pf_ctb_percent
+        </field>
+        <field name= "note">Employer contribution does not become part of employee’s income and hence income tax is not payable on this part.</field>
+        <field name="partner_id" ref="hr_register_provident_fund"/>
+        <field name="sequence" eval="150"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payslip_rule_enps" model="hr.salary.rule">
+        <field name="code">ENPFC</field>
+        <field name="name">Employee's NPS Contribution</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+pf_ctb_percent = payslip._rule_parameter('l10n_in_cbda_percent')
+result = -contract.wage * pf_ctb_percent
+        </field>
+        <field name="sequence" eval="155"/>
+        <field name="partner_id" ref="hr_nps_contribution_register"/>
+        <field name="note">Employee can claim deduction even of employer's contribution to NPS.</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payslip_rule_vpf" model="hr.salary.rule">
+        <field name="code">VPF</field>
+        <field name="name">Voluntary Provident Fund Contribution</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.l10n_in_voluntary_provident_fund)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+VPF = contract.l10n_in_voluntary_provident_fund
+result = -contract.wage * VPF / 100
+        </field>
+        <field name="sequence" eval="160"/>
+        <field name="partner_id" ref="hr_vpf_contribution_register"/>
+        <field name="note">VPF is a safe option wherein you can contribute more than the PF ceiling of 12% that has been mandated by the government.This additional amount enjoys all the benefits of PF except that the employer is not liable to contribute any extra amount apart from 12%.An added advantage is that the interest rate is equal to the interest rate of PF and he withdrawal is tax free. Please note that the maximum contribution towards VPF is 100% of your Basic.The highest rate of interest (close to 9%) makes it a very attractive saving scheme. Because of these advantages many employees chose not to close their PF account even after getting employment else where other than India.Employees also get a major tax break on their entire contribution to the fund up to a ceiling of Rs. 70,000/-</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payslip_rule_cpt" model="hr.salary.rule">
+        <field name="code">CPT</field>
+        <field name="name">Deduction for Company Provided Transport</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">fix</field>
+        <field eval="-1500.0" name="amount_fix"/>
+        <field name="partner_id" ref="hr_company_transport_register"/>
+        <field name="sequence" eval="165"/>
+        <field name="note">Company provided transport amount is based on company.</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+     <record id="hr_salary_rule_food_coupon_ded" model="hr.salary.rule">
+        <field name="amount_select">fix</field>
+        <field eval="-50" name="amount_fix"/>
+        <field name="quantity">'WORK100' in worked_days and worked_days['WORK100'].number_of_days</field>
+        <field name="code">FD</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Deduction Towards Food Coupons</field>
+        <field name="partner_id" ref="hr_food_coupen_register"/>
+        <field name="sequence" eval="166"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+     </record>
+
+    <record id="hr_payslip_rule_lwf_employee" model="hr.salary.rule">
+        <field name="code">LWFE</field>
+        <field name="name">Employee's Deduction Towards State Labour Welfare Fund</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">fix</field>
+        <field eval="-3.0" name="amount_fix"/>
+        <field name="sequence" eval="170"/>
+        <field name="partner_id" ref="hr_labour_Welfare_fund_register"/>
+        <field name="note">The LWF is applicable to all the members of the organisation except the Management staff (Staffs having authority to sign on the cheque/official documents on behalf of the organisation). for e.x. Employee Contribution is Rs. 3.00 and Employer contribution Rs. 6.00 Total Rs 9.00 and deposited to the LWF office.It is half yearly contribution (June and December).</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payslip_rule_lwf_employer" model="hr.salary.rule">
+        <field name="code">LWF</field>
+        <field name="name">Employer's Deduction Towards State Labour Welfare Fund </field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">fix</field>
+        <field eval="-6.0" name="amount_fix"/>
+        <field name="sequence" eval="171"/>
+        <field name="partner_id" ref="hr_labour_Welfare_fund_register"/>
+        <field name="note">The LWF is applicable to all the members of the organisation except the Management staff (Staffs having authority to sign on the cheque/official documents on behalf of the organisation). for e.x. Employee Contribution is Rs. 3.00 and Employer contribution Rs. 6.00 Total Rs 9.00 and deposited to the LWF office.It is half yearly contribution (June and December).</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payslip_rule_cgti" model="hr.salary.rule">
+        <field name="code">CGTI</field>
+        <field name="name">Deduction Towards Company Provided Group Term Insurance</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">fix</field>
+        <field eval="-1000.0" name="amount_fix"/>
+        <field name="partner_id" ref="hr_group_term_insurance_register"/>
+        <field name="sequence" eval="175"/>
+        <field name="note">Group term insurance provides a solid foundation to a comprehensive employee benifit program,backed up by government asistance in the form of valuable tax incentives to both employees and employers.</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payslip_rule_dla" model="hr.salary.rule">
+        <field name="code">DLA</field>
+        <field name="name">Deduction Towards Leave Availed</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'LAI' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = -inputs['LAI'].amount</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payslip_rule_cmt" model="hr.salary.rule">
+        <field name="code">CMT</field>
+        <field name="name">Deduction Towards Company Provided Medical Insurance</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.l10n_in_medical_insurance)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -contract.l10n_in_medical_insurance
+        </field>
+        <field eval="-50.0" name="amount_fix"/>
+        <field name="partner_id" ref="hr_medical_insurance_register"/>
+        <field name="sequence" eval="185"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payslip_rule_ode" model="hr.salary.rule">
+        <field name="code">ODE</field>
+        <field name="name">Other Deduction from Employer</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">fix</field>
+        <field eval="-200.0" name="amount_fix"/>
+        <field name="partner_id" ref="hr_other_deduction_register"/>
+        <field name="sequence" eval="187"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payslip_rule_ernps" model="hr.salary.rule">
+        <field name="code">ENPC</field>
+        <field name="name">Employer's NPS Contribution</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+pf_ctb_percent = payslip._rule_parameter('l10n_in_cbda_percent')
+result = -contract.wage * pf_ctb_percent
+        </field>
+        <field name="sequence" eval="190"/>
+        <field name="partner_id" ref="hr_nps_contribution_register"/>
+        <field name= "note">Any amount contributed by your employer to your NPS account is treated as part of your salary and is included in your income but you can claim deduction under Section 80C for this too.thus, effectively making it exempt from tax within the limit of 10% of your basic salary. This is very useful and tax efficient for you particularly if you fall in the maximum tax.</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payslip_rule_erpf" model="hr.salary.rule">
+        <field name="code">EPF</field>
+        <field name="name">Employer's PF Contribution</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+pf_ctb_percent = payslip._rule_parameter('l10n_in_pf_percent')
+result = -contract.wage * pf_ctb_percent
+        </field>
+        <field name="sequence" eval="195"/>
+        <field name="partner_id" ref="hr_register_provident_fund"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="note">Both the employees and employer contribute to the fund at the rate of 12% of the basic wages, dearness allowance and retaining allowance, if any, payable to employees per month.</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payslip_rule_employer_esics" model="hr.salary.rule">
+        <field name="code">ESICS</field>
+        <field name="name">Employer's State Insurance Corporation</field>
+        <field name="sequence" eval="168"/>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.l10n_in_esic_amount)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = -contract.l10n_in_esic_amount</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payslip_rule_expense" model="hr.salary.rule">
+        <field name="code">EXPENSE</field>
+        <field name="name">Refund Expenses</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'EXPENSES' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['EXPENSES'].amount
+result_name = inputs['EXPENSES'].name
+        </field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="hr_payslip_rule_gratuity" model="hr.salary.rule">
+        <field name="code">GRATUITY</field>
+        <field name="name">Gratuity</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="sequence" eval="169"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.l10n_in_gratuity)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = -contract.l10n_in_gratuity</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="l10n_in_hr_salary_rule_pf" model="hr.salary.rule">
+        <field name="code">PF</field>
+        <field name="name">Provident fund - Employee</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="sequence" eval="107"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+treshhold, coef = payslip._rule_parameter('l10n_in_pf_amount')[0]
+result = 0
+if categories['BASIC'] &lt; treshhold:
+    result = - categories['BASIC'] * coef[1]
+else:
+    work_rate = 1
+    if payslip.worked_days_line_ids:
+        total_days = sum(payslip.worked_days_line_ids.mapped('number_of_days'))
+        total_unpaid_days = worked_days['LEAVE90'].number_of_days if 'LEAVE90' in worked_days else 0
+        work_rate = (total_days - total_unpaid_days) / total_days
+    result = coef[0] * work_rate
+        </field>
+        <field name="struct_id" ref="l10n_in_hr_payroll.hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+    <record id="l10n_in_hr_salary_rule_pfe" model="hr.salary.rule">
+        <field name="code">PFE</field>
+        <field name="name">Provident fund - Employer</field>
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="sequence" eval="110"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['PF']['total']
+        </field>
+        <field name="struct_id" ref="l10n_in_hr_payroll.hr_payroll_salary_structure_ind_emp"/>
+    </record>
+
+</odoo>

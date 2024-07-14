@@ -1,0 +1,1585 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_amazon
+# 
+# Translators:
+# Wil Odoo, 2023
+# Thi Huong Nguyen, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_amazon
+#: model:mail.template,body_html:sale_amazon.order_sync_failure
+msgid ""
+"<div>\n"
+"            <p>The synchronization of the Amazon order with reference <t t-out=\"ctx.get('amazon_order_ref') or ''\">REF</t> encountered an error and was not completed.</p>\n"
+"            <p>Unless the order is canceled in SellerCentral, no other synchronization will be attempted.</p>\n"
+"            <p>To schedule a new synchronization attempt, proceed as follows:\n"
+"                <ol>\n"
+"                    <li>Enter the Developer Tools.</li>\n"
+"                    <li>Open the form of the Amazon Account on which the order was placed.</li>\n"
+"                    <li>Navigate to the Order Follow-up tab.</li>\n"
+"                    <li>Set a date for <em>Last Orders Sync</em> that is anterior to the last status update of the order.</li>\n"
+"                    <li>Save the changes and click on the <em>SYNC ORDERS</em> button.</li>\n"
+"                </ol>\n"
+"            </p>\n"
+"            <p>If the problem persists, contact <a href=\"https://www.odoo.com/help/\">Odoo support</a>.</p>\n"
+"        </div>\n"
+"        "
+msgstr ""
+"<div>\n"
+"            <p>Việc đồng bộ hóa đơn hàng Amazon có mã tham chiếu <t t-out=\"ctx.get('amazon_order_ref') or ''\">REF</t> đã gặp lỗi và không được hoàn thành.</p>\n"
+"            <p>Nếu đơn hàng không bị hủy trong SellerCentral, thì việc đồng bộ hóa sẽ không được thực hiện.</p>\n"
+"            <p>Để lên lịch thử đồng bộ hóa mới, hãy tiến hành như sau:\n"
+"                <ol>\n"
+"                    <li>Nhập Công cụ nhà phát triển.</li>\n"
+"                    <li>Mở biểu mẫu của tài khoản Amazon mà đơn hàng này được đặt.</li>\n"
+"                    <li>Điều hướng tới tab Theo dõi đơn hàng.</li>\n"
+"                    <li>Đặt ngày cho <em>Đồng bộ đơn hàng cuối cùng</em> trước ngày cập nhật cuối cùng của đơn hàng.</li>\n"
+"                    <li>Lưu thay đổi và bấm vào nút <em>ĐỒNG BỘ ĐƠN HÀNG</em>.</li>\n"
+"                </ol>\n"
+"            </p>\n"
+"            <p>Nếu vấn đề vẫn xảy ra, hãy liên hệ <a href=\"https://www.odoo.com/help/\">đội ngũ hỗ trợ của Odoo</a>.</p>\n"
+"        </div>\n"
+"        "
+
+#. module: sale_amazon
+#: model:mail.template,body_html:sale_amazon.picking_sync_failure
+msgid ""
+"<style>\n"
+"                .amz_table {\n"
+"                    width: 100%;\n"
+"                    max-width: 900px;\n"
+"                    border-collapse: collapse;\n"
+"                }\n"
+"\n"
+"                .amz_table th,\n"
+"                .amz_table td {\n"
+"                    border: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .amz_table th {\n"
+"                    white-space: nowrap;\n"
+"                }\n"
+"\n"
+"                .amz_table thead th {\n"
+"                    padding: 0.5em 0.5em;\n"
+"                    text-align: center;\n"
+"                    border-bottom: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .amz_table tbody th,\n"
+"                .amz_table tbody td {\n"
+"                    padding: 0.5em 0.5em 1em;\n"
+"                    vertical-align: top;\n"
+"                }\n"
+"            </style>\n"
+"            <div>\n"
+"                <p>The synchronization of the delivery orders encountered some errors and was not completed.</p>\n"
+"                <p>Please correct the problem before manually synchronizing the delivery orders again, as no other synchronization will be attempted.</p>\n"
+"                <p>Here are the errors sent by Amazon: </p>\n"
+"                <table class=\"amz_table\">\n"
+"                    <thead>\n"
+"                        <tr>\n"
+"                            <th>Order Reference</th>\n"
+"                            <th>Message</th>\n"
+"                        </tr>\n"
+"                    </thead>\n"
+"                    <tbody>\n"
+"                        <tr t-foreach=\"ctx.get('error_messages')\" t-as=\"error\">\n"
+"                            <th><t t-out=\"error['order_ref']\"></t></th>\n"
+"                            <td>\n"
+"                                <t t-if=\"error['message']\" t-out=\"error['message']\"></t>\n"
+"                                <t t-else=\"\">An unknown error occurred during the synchronisation with Amazon.\n"
+"                                    Unfortunately you need to manually check if the state of the order is correct or not.\n"
+"                                    You can find all information about this\n"
+"                                    <a href=\"https://www.odoo.com/documentation/latest/applications/sales/sales/amazon_connector/manage.html#manage_deliveries_errors\">\n"
+"                                        in the documentation\n"
+"                                    </a>.</t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<style>\n"
+"                .amz_table {\n"
+"                    width: 100%;\n"
+"                    max-width: 900px;\n"
+"                    border-collapse: collapse;\n"
+"                }\n"
+"\n"
+"                .amz_table th,\n"
+"                .amz_table td {\n"
+"                    border: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .amz_table th {\n"
+"                    white-space: nowrap;\n"
+"                }\n"
+"\n"
+"                .amz_table thead th {\n"
+"                    padding: 0.5em 0.5em;\n"
+"                    text-align: center;\n"
+"                    border-bottom: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .amz_table tbody th,\n"
+"                .amz_table tbody td {\n"
+"                    padding: 0.5em 0.5em 1em;\n"
+"                    vertical-align: top;\n"
+"                }\n"
+"            </style>\n"
+"            <div>\n"
+"                <p>Đã gặp lỗi và không thể hoàn tất việc đồng bộ phiếu xuất kho.</p>\n"
+"                <p>Vui lòng xử lý vấn đề trước khi đồng bộ lại phiếu xuất kho theo cách thủ công, vì hệ thống sẽ không thử đồng bộ lại.</p>\n"
+"                <p>Đây là lỗi được gửi về từ Amazon: </p>\n"
+"                <table class=\"amz_table\">\n"
+"                    <thead>\n"
+"                        <tr>\n"
+"                            <th>Mã đơn hàng</th>\n"
+"                            <th>Thông báo</th>\n"
+"                        </tr>\n"
+"                    </thead>\n"
+"                    <tbody>\n"
+"                        <tr t-foreach=\"ctx.get('error_messages')\" t-as=\"error\">\n"
+"                            <th><t t-out=\"error['order_ref']\"></t></th>\n"
+"                            <td>\n"
+"                                <t t-if=\"error['message']\" t-out=\"error['message']\"></t>\n"
+"                                <t t-else=\"\">Một lỗi không xác định đã xảy ra trong quá trình đồng bộ với Amazon.\n"
+"                                    Rất tiếc là bạn cần kiểm tra thủ công xem trạng thái đơn hàng có chính xác hay không.\n"
+"                                    Bạn có thể tìm thấy mọi thông tin về vấn đề này\n"
+"                                    <a href=\"https://www.odoo.com/documentation/latest/applications/sales/sales/amazon_connector/manage.html#manage_deliveries_errors\">\n"
+"                                        trong tài liệu\n"
+"                                    </a>.</t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"            </div>\n"
+"        "
+
+#. module: sale_amazon
+#: model:mail.template,body_html:sale_amazon.inventory_sync_failure
+msgid ""
+"<style>\n"
+"                .amz_table {\n"
+"                    width: 100%;\n"
+"                    max-width: 900px;\n"
+"                    border-collapse: collapse;\n"
+"                }\n"
+"\n"
+"                .amz_table th,\n"
+"                .amz_table td {\n"
+"                    border: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .amz_table th {\n"
+"                    white-space: nowrap;\n"
+"                }\n"
+"\n"
+"                .amz_table thead th {\n"
+"                    padding: 0.5em 0.5em;\n"
+"                    text-align: center;\n"
+"                    border-bottom: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .amz_table tbody th,\n"
+"                .amz_table tbody td {\n"
+"                    padding: 0.5em 0.5em 1em;\n"
+"                    vertical-align: top;\n"
+"                }\n"
+"            </style>\n"
+"            <div>\n"
+"                <p>The synchronization of the products availability for Amazon Account\n"
+"                    <b><t t-out=\"ctx.get('amazon_account') or ''\">REF</t></b>\n"
+"                    encountered some errors and was not completed.</p>\n"
+"                <p>Here are the errors sent by Amazon: </p>\n"
+"                <table class=\"amz_table\">\n"
+"                    <thead>\n"
+"                        <tr>\n"
+"                            <th>SKU</th>\n"
+"                            <th>Message</th>\n"
+"                        </tr>\n"
+"                    </thead>\n"
+"                    <tbody>\n"
+"                        <tr t-foreach=\"ctx.get('error_messages')\" t-as=\"error\">\n"
+"                            <th><t t-out=\"error['sku']\"></t></th>\n"
+"                            <td>\n"
+"                                <t t-if=\"error['message']\" t-out=\"error['message']\"></t>\n"
+"                                <t t-else=\"\">An unknown error occurred during the synchronisation with Amazon.\n"
+"                                    Unfortunately you need to manually check if the available quantity for the product is correct or not.\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<style>\n"
+"                .amz_table {\n"
+"                    width: 100%;\n"
+"                    max-width: 900px;\n"
+"                    border-collapse: collapse;\n"
+"                }\n"
+"\n"
+"                .amz_table th,\n"
+"                .amz_table td {\n"
+"                    border: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .amz_table th {\n"
+"                    white-space: nowrap;\n"
+"                }\n"
+"\n"
+"                .amz_table thead th {\n"
+"                    padding: 0.5em 0.5em;\n"
+"                    text-align: center;\n"
+"                    border-bottom: 1px solid #888;\n"
+"                }\n"
+"\n"
+"                .amz_table tbody th,\n"
+"                .amz_table tbody td {\n"
+"                    padding: 0.5em 0.5em 1em;\n"
+"                    vertical-align: top;\n"
+"                }\n"
+"            </style>\n"
+"            <div>\n"
+"                <p>Việc đồng bộ tình trạng còn hàng của sản phẩm cho tài khoản Amazon\n"
+"                    <b><t t-out=\"ctx.get('amazon_account') or ''\">REF</t></b>\n"
+"                    đã gặp lỗi và không thể hoàn tất .</p>\n"
+"                <p>Đây là lỗi được gửi về từ Amazon: </p>\n"
+"                <table class=\"amz_table\">\n"
+"                    <thead>\n"
+"                        <tr>\n"
+"                            <th>Đơn vị phân loại hàng hóa</th>\n"
+"                            <th>Thông báo</th>\n"
+"                        </tr>\n"
+"                    </thead>\n"
+"                    <tbody>\n"
+"                        <tr t-foreach=\"ctx.get('error_messages')\" t-as=\"error\">\n"
+"                            <th><t t-out=\"error['sku']\"></t></th>\n"
+"                            <td>\n"
+"                                <t t-if=\"error['message']\" t-out=\"error['message']\"></t>\n"
+"                                <t t-else=\"\">Một lỗi không xác định đã xảy ra trong quá trình đồng bộ với Amazon.\n"
+"                                    Rất tiếc là bạn cần kiểm tra thủ công xem số lượng sản phẩm có sẵn đã chính xác hay chưa.\n"
+"                                </t>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"            </div>\n"
+"        "
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_marketplace__api_ref
+msgid "API Identifier"
+msgstr "Định danh API"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__aws_access_key
+msgid "AWS Access Key"
+msgstr "Khóa truy cập AWS"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__aws_secret_key
+msgid "AWS Secret Key"
+msgstr "Mã khóa bí mật AWS"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__aws_session_token
+msgid "AWS Session Token"
+msgstr "Token phiên AWS"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_offer__account_id
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_search
+msgid "Account"
+msgstr "Tài khoản"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid "Account Name"
+msgstr "Tên tài khoản "
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__active
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_search
+msgid "Active"
+msgstr "Đang hoạt động"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid ""
+"After validation of the credentials, the marketplaces\n"
+"                                                to which this account has access will be\n"
+"                                                synchronized and automatically made available."
+msgstr ""
+"Sau khi xác nhận thông tin đăng nhập, marketplace\n"
+"                                                mà tài khoản này có quyền truy cập sẽ được\n"
+"                                                đồng bộ hóa và tự động khả dụng. "
+
+#. module: sale_amazon
+#: model:ir.model,name:sale_amazon.model_amazon_account
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid "Amazon Account"
+msgstr "Tài khoản Amazon"
+
+#. module: sale_amazon
+#: model:ir.actions.act_window,name:sale_amazon.list_amazon_account_action
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_tree
+#: model_terms:ir.ui.view,arch_db:sale_amazon.res_config_settings_view_form
+msgid "Amazon Accounts"
+msgstr "Tài khoản Amazon"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_res_partner__amazon_email
+#: model:ir.model.fields,field_description:sale_amazon.field_res_users__amazon_email
+msgid "Amazon Email"
+msgstr "Email Amazon"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_offer__amazon_feed_ref
+#: model:ir.model.fields,field_description:sale_amazon.field_stock_picking__amazon_feed_ref
+msgid "Amazon Feed Reference"
+msgstr "Mã trang chủ Amazon"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_sale_order_line__amazon_item_ref
+msgid "Amazon Item Ref"
+msgstr "Mã mặt hàng Amazon"
+
+#. module: sale_amazon
+#: model:ir.model,name:sale_amazon.model_amazon_marketplace
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_marketplace_view_form
+msgid "Amazon Marketplace"
+msgstr "Marketplace Amazon"
+
+#. module: sale_amazon
+#: model:ir.actions.act_window,name:sale_amazon.list_amazon_marketplace_action
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_marketplace_view_tree
+#: model_terms:ir.ui.view,arch_db:sale_amazon.res_config_settings_view_form
+msgid "Amazon Marketplaces"
+msgstr "Marketplace Amazon"
+
+#. module: sale_amazon
+#: model:ir.model,name:sale_amazon.model_amazon_offer
+#: model:ir.model.fields,field_description:sale_amazon.field_sale_order_line__amazon_offer_id
+msgid "Amazon Offer"
+msgstr "Ưu đãi Amazon"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_offer_view_tree
+msgid "Amazon Offers"
+msgstr "Ưu đãi Amazon"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_recover_order_wizard__amazon_order_ref
+msgid "Amazon Order Reference"
+msgstr "Mã đơn hàng Amazon"
+
+#. module: sale_amazon
+#: model:ir.model,name:sale_amazon.model_amazon_recover_order_wizard
+msgid "Amazon Recover Order Wizard"
+msgstr "Công cụ phục hồi đơn hàng Amazon"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_sale_order__amazon_order_ref
+msgid "Amazon Reference"
+msgstr "Mã tham chiếu Amazon"
+
+#. module: sale_amazon
+#: model:product.template,name:sale_amazon.default_product_product_template
+msgid "Amazon Sale"
+msgstr "Bán hàng Amazon"
+
+#. module: sale_amazon
+#: model:product.template,name:sale_amazon.shipping_product_product_template
+msgid "Amazon Shipping"
+msgstr "Vận chuyển Amazon"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_offer__amazon_sync_status
+#: model:ir.model.fields,field_description:sale_amazon.field_stock_picking__amazon_sync_status
+msgid "Amazon Synchronization Status"
+msgstr "Trạng thái đồng bộ Amazon"
+
+#. module: sale_amazon
+#: model_terms:ir.actions.act_window,help:sale_amazon.list_amazon_account_action
+msgid "Amazon accounts correspond to Amazon Seller Central accounts."
+msgstr "Tài khoản Amazon tương ứng với tài khoản Amazon Seller Central. "
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_marketplace.py:0
+#, python-format
+msgid "Amazon marketplaces cannot be deleted."
+msgstr "Không thể xóa marketplace Amazon. "
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_account.py:0
+#, python-format
+msgid "Amazon move: %s"
+msgstr "Dịch chuyển Amazon: %s"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/stock_picking.py:0
+#, python-format
+msgid ""
+"Amazon requires that a tracking reference is provided with each delivery. "
+"Since the current carrier doesn't automatically provide a tracking "
+"reference, you need to set one manually."
+msgstr ""
+"Amazon yêu cầu phải cung cấp mã theo dõi cho từng lần giao hàng. Vì đơn vị "
+"vận chuyển hiện tại không tự động cung cấp mã theo dõi, bạn cần phải tự đặt "
+"mã theo cách thủ công. "
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/stock_picking.py:0
+#, python-format
+msgid ""
+"Amazon requires that a tracking reference is provided with each delivery. "
+"You need to assign a carrier to this delivery."
+msgstr ""
+"Amazon yêu cầu phải cung cấp mã theo dõi cho từng lần giao hàng. Bạn cần chỉ"
+" định đơn vị vận chuyển cho đơn giao hàng này. "
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_AE
+msgid "Amazon.ae"
+msgstr "Amazon.ae"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_CA
+msgid "Amazon.ca"
+msgstr "Amazon.ca"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_JP
+msgid "Amazon.co.jp"
+msgstr "Amazon.co.jp"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_UK
+msgid "Amazon.co.uk"
+msgstr "Amazon.co.uk"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_US
+msgid "Amazon.com"
+msgstr "Amazon.com"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_AU
+msgid "Amazon.com.au"
+msgstr "Amazon.com.au"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_BE
+msgid "Amazon.com.be"
+msgstr "Amazon.com.be"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_BR
+msgid "Amazon.com.br"
+msgstr "Amazon.com.br"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_MX
+msgid "Amazon.com.mx"
+msgstr "Amazon.com.mx"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_TR
+msgid "Amazon.com.tr"
+msgstr "Amazon.com.tr"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_DE
+msgid "Amazon.de"
+msgstr "Amazon.de"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_EG
+msgid "Amazon.eg"
+msgstr "Amazon.eg"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_ES
+msgid "Amazon.es"
+msgstr "Amazon.es"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_FR
+msgid "Amazon.fr"
+msgstr "Amazon.fr"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_IN
+msgid "Amazon.in"
+msgstr "Amazon.in"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_IT
+msgid "Amazon.it"
+msgstr "Amazon.it"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_NL
+msgid "Amazon.nl"
+msgstr "Amazon.nl"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_PL
+msgid "Amazon.pl"
+msgstr "Amazon.pl"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_SA
+msgid "Amazon.sa"
+msgstr "Amazon.sa"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_SE
+msgid "Amazon.se"
+msgstr "Amazon.se"
+
+#. module: sale_amazon
+#: model:amazon.marketplace,name:sale_amazon.marketplace_SG
+msgid "Amazon.sg"
+msgstr "Amazon.sg"
+
+#. module: sale_amazon
+#: model:mail.template,name:sale_amazon.inventory_sync_failure
+msgid "Amazon: Available Inventory for Offers Synchronization Failure"
+msgstr "Amazon: Lỗi đồng bộ tồn kho có sẵn để bán"
+
+#. module: sale_amazon
+#: model:mail.template,name:sale_amazon.picking_sync_failure
+msgid "Amazon: Delivery Order Synchronization Failure"
+msgstr "Amazon: Đồng bộ hóa phiếu xuất kho không thành công"
+
+#. module: sale_amazon
+#: model:mail.template,name:sale_amazon.order_sync_failure
+msgid "Amazon: Order Synchronization Failure"
+msgstr "Amazon: Đồng bộ hóa đơn hàng không thành công"
+
+#. module: sale_amazon
+#: model:ir.actions.server,name:sale_amazon.ir_cron_sync_amazon_inventory_ir_actions_server
+msgid "Amazon: sync available inventory"
+msgstr "Amazon: đồng bộ tồn kho có sẵn"
+
+#. module: sale_amazon
+#: model:ir.actions.server,name:sale_amazon.ir_cron_sync_amazon_pickings_ir_actions_server
+msgid "Amazon: sync delivery orders"
+msgstr "Amazon: đồng bộ phiếu xuất kho"
+
+#. module: sale_amazon
+#: model:ir.actions.server,name:sale_amazon.ir_cron_sync_amazon_feeds_ir_actions_server
+msgid "Amazon: sync feeds"
+msgstr "Amazon: đồng bộ trang chủ"
+
+#. module: sale_amazon
+#: model:ir.actions.server,name:sale_amazon.ir_cron_sync_amazon_orders_ir_actions_server
+msgid "Amazon: sync orders"
+msgstr "Amazon: đồng bộ đơn hàng"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.authorization_error
+msgid "An error occurred"
+msgstr "Đã xảy ra lỗi"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.authorization_error
+msgid "An error occurred while linking your account with Amazon."
+msgstr "Đã xảy ra lỗi khi liên kết tài khoản của bạn với Amazon."
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__available_marketplace_ids
+msgid "Available Marketplaces"
+msgstr "Marketplace khả dụng"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.authorization_error
+msgid "Back to my account"
+msgstr "Quay lại tài khoản của tôi"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__company_id
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_offer__company_id
+msgid "Company"
+msgstr "Công ty"
+
+#. module: sale_amazon
+#: model:ir.model,name:sale_amazon.model_res_config_settings
+msgid "Config Settings"
+msgstr "Cài đặt cấu hình"
+
+#. module: sale_amazon
+#: model:ir.model,name:sale_amazon.model_res_partner
+msgid "Contact"
+msgstr "Liên hệ"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/utils.py:0 code:addons/sale_amazon/utils.py:0
+#, python-format
+msgid "Could not establish the connection to the API."
+msgstr "Không thể thiết lập kết nối với API."
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/utils.py:0
+#, python-format
+msgid "Could not establish the connection to the feed URL."
+msgstr "Không thể thiết lập kết nối với URL nguồn cấp dữ liệu."
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/utils.py:0
+#, python-format
+msgid "Could not establish the connection to the proxy."
+msgstr "Không thể thiết lập kết nối với proxy."
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/controllers/onboarding.py:0
+#, python-format
+msgid "Could not find Amazon account with id %s"
+msgstr "Không thể tìm kiếm tài khoản Amazon có id %s"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/utils.py:0
+#, python-format
+msgid "Could not process the feed document send by Amazon."
+msgstr "Không thể xử lý tài liệu trang chủ được gửi từ Amazon."
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__create_uid
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_marketplace__create_uid
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_offer__create_uid
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_recover_order_wizard__create_uid
+msgid "Created by"
+msgstr "Được tạo bởi"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__create_date
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_marketplace__create_date
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_offer__create_date
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_recover_order_wizard__create_date
+msgid "Created on"
+msgstr "Được tạo vào"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid "Credentials"
+msgstr "Thông tin đăng nhập"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/res_config_settings.py:0
+#: model_terms:ir.ui.view,arch_db:sale_amazon.res_config_settings_view_form
+#, python-format
+msgid "Default Products"
+msgstr "Sản phẩm mặc định"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.recover_order_wizard_form
+msgid "Discard"
+msgstr "Huỷ bỏ"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__display_name
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_marketplace__display_name
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_offer__display_name
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_recover_order_wizard__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: sale_amazon
+#: model:ir.model.fields.selection,name:sale_amazon.selection__amazon_offer__amazon_sync_status__done
+#: model:ir.model.fields.selection,name:sale_amazon.selection__stock_picking__amazon_sync_status__done
+msgid "Done"
+msgstr "Hoàn tất"
+
+#. module: sale_amazon
+#: model:ir.model.fields.selection,name:sale_amazon.selection__amazon_offer__amazon_sync_status__error
+#: model:ir.model.fields.selection,name:sale_amazon.selection__stock_picking__amazon_sync_status__error
+msgid "Error"
+msgstr "Lỗi"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/utils.py:0
+#, python-format
+msgid "Error code: %s; description: %s"
+msgstr "Mã lỗi: %s; mô tả: %s"
+
+#. module: sale_amazon
+#: model:ir.model.fields.selection,name:sale_amazon.selection__amazon_marketplace__region__eu-west-1
+msgid "Europe"
+msgstr "Châu Âu"
+
+#. module: sale_amazon
+#: model:ir.model.fields.selection,name:sale_amazon.selection__amazon_marketplace__region__us-west-2
+msgid "Far East"
+msgstr "Viễn Đông"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_order_view_form
+msgid "Fulfilled by Amazon"
+msgstr "Xử lý đơn hàng bởi Amazon"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_order_view_form
+msgid "Fulfilled by Merchant"
+msgstr "Xử lý đơn hàng bởi người bán"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_sale_order__amazon_channel
+msgid "Fulfillment Channel"
+msgstr "Kênh xử lý đơn hàng"
+
+#. module: sale_amazon
+#: model:ir.model.fields.selection,name:sale_amazon.selection__sale_order__amazon_channel__fba
+msgid "Fulfillment by Amazon"
+msgstr "Xử lý đơn hàng bởi Amazon"
+
+#. module: sale_amazon
+#: model:ir.model.fields.selection,name:sale_amazon.selection__sale_order__amazon_channel__fbm
+msgid "Fulfillment by Merchant"
+msgstr "Xử lý đơn hàng bởi người bán"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_account.py:0
+#, python-format
+msgid ""
+"Gift message:\n"
+"%s"
+msgstr ""
+"Lời nhắn quà tặng:\n"
+"%s"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__base_marketplace_id
+msgid "Home Marketplace"
+msgstr "Trang chủ Marketplace"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__id
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_marketplace__id
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_offer__id
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_recover_order_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_account__active
+msgid ""
+"If made inactive, this account will no longer be synchronized with Amazon."
+msgstr ""
+"Nếu đặt là không hoạt động, tài khoản này sẽ không còn đồng bộ với Amazon."
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_account.py:0
+#, python-format
+msgid ""
+"If the date is set in the past, orders placed on this Amazon Account before the first synchronization of the module might be synchronized with Odoo.\n"
+"If the date is set in the future, orders placed on this Amazon Account between the previous and the new date will not be synchronized with Odoo."
+msgstr ""
+"Nếu ngày được đặt trước đó, đơn hàng đặt trong tài khoản Amazon này trước ngày đồng bộ hóa đầu tiên của phân hệ có thể được đồng bộ hóa với Odoo.\n"
+"Nếu ngày được đặt trong tương lai, đơn hàng đặt trong tài khoản Amazon này giữa ngày trước đó và ngày mới đặt sẽ được đồng bộ hóa với Odoo."
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_order_view_form
+msgid ""
+"If the sale is locked, you can not modify it anymore. However, you will "
+"still be able to invoice or deliver."
+msgstr ""
+"Bạn không thể sửa đơn hàng đã khóa. Tuy nhiên, bạn vẫn có thể xuất hóa đơn "
+"hoặc giao hàng. "
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid ""
+"If this account gained access to new marketplaces,"
+"                                         synchronize and add them to the "
+"current sync marketplaces"
+msgstr ""
+"Nếu tài khoản đã có quyền truy cập vào các marketplace mới, hãy đồng bộ và "
+"thêm chúng vào marketplace đồng bộ hiện có. "
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.picking_view_form
+msgid "In Processing by Amazon"
+msgstr "Đang được xử lý bởi Amazon"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_search
+msgid "Inactive"
+msgstr "Không hoạt động"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__is_follow_up_displayed
+msgid "Is Follow Up Displayed"
+msgstr "Follow-up được hiển thị"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__access_token
+msgid "LWA Access Token"
+msgstr "Token truy cập LWA"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__refresh_token
+msgid "LWA Refresh Token"
+msgstr "Token làm mới LWA"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__last_orders_sync
+msgid "Last Orders Sync"
+msgstr "Đồng bộ đơn hàng cuối cùng"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__write_uid
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_marketplace__write_uid
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_offer__write_uid
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_recover_order_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__write_date
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_marketplace__write_date
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_offer__write_date
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_recover_order_wizard__write_date
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối vào"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid "Link with Amazon"
+msgstr "Kết nối với Amazon"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid ""
+"Link your Amazon account with Odoo to start synchronizing your\n"
+"                                Amazon orders."
+msgstr ""
+"Liên kết tài khoản Amazon của bạn với Odoo để bắt đầu đồng bộ hóa\n"
+"                               đơn hàng Amazon."
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid "Linked Account"
+msgstr "Tài khoản liên kết"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_order_view_form
+msgid "Lock"
+msgstr "Khoá"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_offer__marketplace_id
+msgid "Marketplace"
+msgstr "Marketplace"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid "Marketplaces"
+msgstr "Marketplace"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__name
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_marketplace__name
+msgid "Name"
+msgstr "Tên"
+
+#. module: sale_amazon
+#: model:ir.model.fields.selection,name:sale_amazon.selection__amazon_marketplace__region__us-east-1
+msgid "North America"
+msgstr "Bắc Mỹ"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__offer_count
+#: model:ir.model.fields,field_description:sale_amazon.field_product_product__offer_count
+#: model:ir.model.fields,field_description:sale_amazon.field_product_template__offer_count
+msgid "Offer Count"
+msgstr "Số lượng ưu đãi"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_account.py:0
+#: code:addons/sale_amazon/models/product_product.py:0
+#: code:addons/sale_amazon/models/product_template.py:0
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__offer_ids
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_product_product_view_form
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_product_template_view_form
+#, python-format
+msgid "Offers"
+msgstr "Ưu đãi"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_account.py:0
+#, python-format
+msgid "Only available marketplaces can be selected"
+msgstr "Chỉ có thể chọn marketplace khả dụng"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__order_count
+msgid "Order Count"
+msgstr "Số lượng đơn hàng"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid "Order Follow-up"
+msgstr "Follow-up đơn hàng"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_account.py:0
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+#, python-format
+msgid "Orders"
+msgstr "Đơn hàng"
+
+#. module: sale_amazon
+#: model:ir.model.fields.selection,name:sale_amazon.selection__stock_picking__amazon_sync_status__pending
+msgid "Pending"
+msgstr "Đang chờ"
+
+#. module: sale_amazon
+#: model:ir.model.fields.selection,name:sale_amazon.selection__amazon_offer__amazon_sync_status__processing
+#: model:ir.model.fields.selection,name:sale_amazon.selection__stock_picking__amazon_sync_status__processing
+msgid "Processing"
+msgstr "Đang xử lý"
+
+#. module: sale_amazon
+#: model:ir.model,name:sale_amazon.model_product_template
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_offer__product_id
+msgid "Product"
+msgstr "Sản phẩm"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_offer__product_template_id
+msgid "Product Template"
+msgstr "Mẫu sản phẩm"
+
+#. module: sale_amazon
+#: model:ir.model,name:sale_amazon.model_product_product
+msgid "Product Variant"
+msgstr "Biến thể sản phẩm"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/stock_picking.py:0
+#, python-format
+msgid ""
+"Products delivered to Amazon customers must have their respective parts in "
+"the same package. Operations related to the product %s were not all "
+"confirmed at once."
+msgstr ""
+"Tất cả các bộ phận của sản phẩm được giao tới khách hàng Amazon phải được "
+"đóng trong cùng một kiện hàng. Các hoạt động liên quan tới sản phẩm %s đã "
+"không được xác nhận cùng lúc. "
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.recover_order_wizard_form
+msgid "Recover"
+msgstr "Phục hồi"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_account.py:0
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+#: model_terms:ir.ui.view,arch_db:sale_amazon.recover_order_wizard_form
+#, python-format
+msgid "Recover Order"
+msgstr "Phục hồi đơn hàng"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_marketplace__region
+msgid "Region"
+msgstr "Khu vực"
+
+#. module: sale_amazon
+#: model_terms:ir.actions.act_window,help:sale_amazon.list_amazon_account_action
+msgid "Register your Amazon account"
+msgstr "Đăng ký tài khoản Amazon của bạn"
+
+#. module: sale_amazon
+#: model_terms:ir.actions.act_window,help:sale_amazon.list_amazon_account_action
+msgid "Register yours to start synchronizing your orders into Odoo."
+msgstr "Hãy đăng ký tài khoản của bạn để bắt đầu đồng bộ đơn hàng vào Odoo. "
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__restricted_data_token
+msgid "Restricted Data Token"
+msgstr "Token dữ liệu hạn chế"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.picking_view_form
+msgid "Retry Amazon Sync"
+msgstr "Thử lại đồng bộ Amazon"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_offer__sku
+msgid "SKU"
+msgstr "SKU"
+
+#. module: sale_amazon
+#: model:ir.model.constraint,message:sale_amazon.constraint_amazon_offer_unique_sku
+msgid "SKU must be unique for a given account."
+msgstr "Đơn vị phân loại hàng hoá phải là duy nhất cho tài khoản nhất định. "
+
+#. module: sale_amazon
+#: model:ir.model,name:sale_amazon.model_sale_order
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
+
+#. module: sale_amazon
+#: model:ir.model,name:sale_amazon.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Dòng đơn bán hàng"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__team_id
+msgid "Sales Team"
+msgstr "Đội ngũ kinh doanh"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__user_id
+msgid "Salesperson"
+msgstr "Nhân viên kinh doanh"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.picking_view_form
+msgid "Scheduled for Amazon Synchronization"
+msgstr "Đã lên lịch đồng bộ Amazon"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid ""
+"Select the marketplace on which your seller account\n"
+"                                                was initially created."
+msgstr ""
+"Chọn marketplace mà tài khoản người bán của bạn\n"
+"                                                được tạo lúc đầu."
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_marketplace__seller_central_url
+msgid "Seller Central URL"
+msgstr "URL Seller Central"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__seller_key
+msgid "Seller Key"
+msgstr "Mã khoá của người bán"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__location_id
+msgid "Stock Location"
+msgstr "Vị trí tồn kho"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_account.py:0
+#, python-format
+msgid "Successfully updated the marketplaces available to this account!"
+msgstr "Đã cập nhật thành công các marketplace khả dụng cho tài khoản này!"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid "Sync Deliveries"
+msgstr "Đồng bộ phiếu xuất kho"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid "Sync FBM Inventory"
+msgstr "Đồng bộ tồn kho FBM"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid "Sync Feeds Status"
+msgstr "Trạng thái đồng bộ trang chủ"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__active_marketplace_ids
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_offer__active_marketplace_ids
+msgid "Sync Marketplaces"
+msgstr "Đồng bộ marketplace"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid "Sync Orders"
+msgstr "Đồng bộ đơn hàng"
+
+#. module: sale_amazon
+#: model:mail.template,subject:sale_amazon.inventory_sync_failure
+msgid "Synchronization of Amazon Stock has failed"
+msgstr "Đồng bộ tồn kho Amazon không thành công"
+
+#. module: sale_amazon
+#: model:mail.template,subject:sale_amazon.order_sync_failure
+msgid ""
+"Synchronization of Amazon order {{ ctx.get('amazon_order_ref') }} has failed"
+msgstr ""
+"Đồng bộ hóa đơn hàng Amazon {{ ctx.get('amazon_order_ref') }} không thành "
+"công"
+
+#. module: sale_amazon
+#: model:mail.template,subject:sale_amazon.picking_sync_failure
+msgid "Synchronization of delivery orders has failed"
+msgstr "Đồng bộ phiếu xuất kho không thành công"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.picking_view_form
+msgid "Synchronization with Amazon failed"
+msgstr "Đồng bộ với Amazon không thành công"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__synchronize_inventory
+msgid "Synchronize FBM Inventory"
+msgstr "Đồng bộ tồn kho FBM"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.picking_view_form
+msgid "Synchronized with Amazon"
+msgstr "Đã đồng bộ với Amazon"
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_marketplace__tax_included
+msgid "Tax Included"
+msgstr "Bao gồm thuế"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/wizards/recover_order_wizard.py:0
+#, python-format
+msgid "The Amazon order reference must be in 3-7-7 format."
+msgstr "Mã đơn hàng Amazon phải có định dạng 3-7-7."
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_account.py:0
+#, python-format
+msgid ""
+"The Amazon order with reference %(ref)s was not recovered because its status"
+" (%(status)s) is not eligible for synchronization for its fulfillment "
+"channel (%(channel)s)."
+msgstr ""
+"Không thể khôi phục đơn hàng Amazon có mã %(ref)s vì trạng thái (%(status)s)"
+" của đơn hàng này không đủ điều kiện để đồng bộ cho kênh xử lý "
+"(%(channel)s)."
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_marketplace__region
+msgid ""
+"The Amazon region of the marketplace. Please refer to the Selling Partner "
+"API documentation to find the correct region."
+msgstr ""
+"Vùng Amazon của marketplace. Vui lòng tham khảo tài liệu về API Đối tác bán "
+"hàng để tìm đúng khu vực."
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_sale_order_line__amazon_item_ref
+msgid "The Amazon-defined item reference."
+msgstr "Mã mặt hàng xác định trên Amazon"
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_marketplace__api_ref
+msgid "The Amazon-defined marketplace reference."
+msgstr "Mã marketplace xác định trên Amazon"
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_sale_order__amazon_order_ref
+msgid "The Amazon-defined order reference."
+msgstr "Mã đơn hàng xác định trên Amazon"
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_account__team_id
+msgid "The Sales Team assigned to Amazon orders for reporting"
+msgstr "Đội ngũ kinh doanh được phân công cho đơn hàng Amazon để báo cáo"
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_offer__sku
+msgid "The Stock Keeping Unit."
+msgstr "Đơn vị phân loại hàng tồn kho"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/utils.py:0 code:addons/sale_amazon/utils.py:0
+#, python-format
+msgid "The communication with the API failed."
+msgstr "Giao tiếp với API không thành công."
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/utils.py:0
+#, python-format
+msgid ""
+"The communication with the API failed.\n"
+"Error code: %s; description: %s"
+msgstr ""
+"Giao tiếp với API không thành công.\n"
+"Mã lỗi: %s; mô tả: %s"
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_res_partner__amazon_email
+#: model:ir.model.fields,help:sale_amazon.field_res_users__amazon_email
+msgid "The encrypted email of the customer. Does not forward mails."
+msgstr "Email được mã hóa của khách hàng. Không chuyển tiếp thư."
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_account__base_marketplace_id
+msgid "The home marketplace of this account; used for authentication only."
+msgstr ""
+"Trang chủ marketplace của tài khoản này. Chỉ được sử dụng cho xác thực. "
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_account__last_orders_sync
+msgid ""
+"The last synchronization date for orders placed on this account. Orders "
+"whose status has not changed since this date will not be created nor updated"
+" in Odoo."
+msgstr ""
+"Ngày đồng bộ hóa cuối cùng cho đơn hàng trong tài khoản này. Đơn hàng có "
+"trạng thái không đổi từ ngày này sẽ không được tạo hoặc cập nhật trong Odoo."
+" "
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_account__location_id
+msgid ""
+"The location of the stock managed by Amazon under the Amazon Fulfillment "
+"program."
+msgstr ""
+"Vị trí tồn kho do Amazon quản lý theo chương trình Xử lý đơn hàng bởi "
+"Amazon."
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_account__refresh_token
+msgid "The long-lived token that can be exchanged for a new access token."
+msgstr ""
+"Token tồn tại trong thời gian dài có thể được đổi lấy token truy cập mới."
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_offer__marketplace_id
+msgid "The marketplace of this offer."
+msgstr "Marketplace của ưu đãi này"
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_account__available_marketplace_ids
+msgid "The marketplaces this account has access to."
+msgstr "Marketplace mà tài khoản này có quyền truy cập."
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_account__active_marketplace_ids
+#: model:ir.model.fields,help:sale_amazon.field_amazon_offer__active_marketplace_ids
+msgid "The marketplaces this account sells on."
+msgstr "Marketplace mà tài khoản này bán hàng."
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__aws_credentials_expiry
+msgid "The moment at which the AWS credentials become invalid."
+msgstr "Thời điểm thông tin đăng nhập AWS trở nên không hợp lệ."
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__restricted_data_token_expiry
+msgid "The moment at which the Restricted Data Token becomes invalid."
+msgstr "Thời điểm Token dữ liệu hạn chế trở nên không hợp lệ."
+
+#. module: sale_amazon
+#: model:ir.model.fields,field_description:sale_amazon.field_amazon_account__access_token_expiry
+msgid "The moment at which the token becomes invalid."
+msgstr "Thời điểm token trở nên không hợp lệ."
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/sale_order.py:0
+#, python-format
+msgid ""
+"The order has been canceled by the Amazon customer while someproducts have "
+"already been delivered. Please create a return for this order to adjust the "
+"stock."
+msgstr ""
+"Đơn đặt hàng đã bị hủy bởi khách hàng Amazon trong khi một số sản phẩm đã "
+"được giao. Vui lòng tạo một yêu cầu trả hàng cho đơn đặt hàng này để điều "
+"chỉnh tồn kho."
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_account.py:0
+#, python-format
+msgid "The order was not found on this account's marketplaces."
+msgstr "Không tìm thấy đơn hàng trên marketplace của tài khoản này."
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_account.py:0
+#, python-format
+msgid "The provided reference does not match any Amazon order."
+msgstr "Mã tham chiếu đã cung cấp không khớp với đơn hàng Amazon nào."
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_recover_order_wizard__amazon_order_ref
+msgid "The reference to the Amazon order to recover, in 3-7-7 format"
+msgstr "Mã tham chiếu đơn hàng Amazon cần khôi phục, có định dạng 3-7-7"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/stock_picking.py:0
+#, python-format
+msgid ""
+"The sales order of this delivery order is not linked to an Amazon account."
+msgstr ""
+"Đơn bán hàng của phiếu xuất kho này không liên kết với một tài khoản Amazon "
+"nào."
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_offer__account_id
+msgid "The seller account used to manage this product."
+msgstr "Tài khoản người bán được sử dụng để quản lý sản phẩm này."
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_account__aws_access_key
+msgid "The short-lived key used to identify the assumed ARN role on AWS."
+msgstr ""
+"Khóa tồn tại trong thời gian ngắn được sử dụng để xác định vai trò ARN giả "
+"định trên AWS."
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_account__aws_secret_key
+msgid ""
+"The short-lived key used to verify the access to the assumed ARN role on "
+"AWS."
+msgstr ""
+"Khóa tồn tại trong thời gian ngắn được sử dụng để xác minh quyền đăng nhập "
+"vào vai trò ARN giả định trên AWS."
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_account__restricted_data_token
+msgid ""
+"The short-lived token used instead of the LWA Access Token to access "
+"restricted data"
+msgstr ""
+"Token tồn tại trong thời gian ngắn được sử dụng thay cho Token truy cập LWA "
+"để truy cập dữ liệu hạn chế"
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_account__access_token
+msgid "The short-lived token used to query Amazon API on behalf of a seller."
+msgstr ""
+"Token tồn tại trong thời gian ngắn được sử dụng để truy vấn API Amazon thay "
+"mặt người bán."
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_account__aws_session_token
+msgid ""
+"The short-lived token used to query the SP-API with the assumed ARN role on "
+"AWS."
+msgstr ""
+"Token tồn tại trong thời gian ngắn được sử dụng để truy vấn SP-API với vai "
+"trò ARN giả định trên AWS."
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_stock_picking__amazon_sync_status
+msgid ""
+"The synchronization status of the delivery order to Amazon:\n"
+"- Pending: The delivery order has been confirmed and will soon be synchronized.\n"
+"- Processing: The delivery details have been sent and are being processed.\n"
+"- Done: The delivery details have been processed.\n"
+"- Error: The synchronization of the delivery order failed."
+msgstr ""
+"Trạng thái đồng bộ của phiếu xuất kho với Amazon:\n"
+"- Đang chờ: Phiếu xuất kho đã được xác nhận và sẽ sớm được đồng bộ.\n"
+"- Đang xử lý: Chi tiết xuất kho đã được gửi đi và đang được xử lý.\n"
+"- Hoàn tất: Chi tiết xuất kho đã được xử lý.\n"
+"- Lỗi: Đồng bộ phiếu xuất kho không thành công."
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_offer__amazon_sync_status
+msgid ""
+"The synchronization status of the product's stock level to Amazon:\n"
+"- Processing: The stock level has been sent and is being processed.\n"
+"- Done: The stock level has been processed.\n"
+"- Error: The synchronization of the stock level failed."
+msgstr ""
+"Trạng thái đồng bộ tồn kho sản phẩm với Amazon:\n"
+"- Đang xử lý: Tồn kho đã được gửi đi và đang được xử lý.\n"
+"- Hoàn tất: Tồn kho đã được xử lý.\n"
+"- Lỗi: Đồng bộ tồn kho không thành công."
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_account.py:0
+#, python-format
+msgid ""
+"The synchronization with Amazon failed. Amazon gave us this information "
+"about the problem:"
+msgstr ""
+"Đồng bộ với Amazon không thành công. Amazon gửi thông tin về vấn đề như sau:"
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_account__name
+msgid "The user-defined name of the account."
+msgstr "Tên tài khoản do người dùng xác định."
+
+#. module: sale_amazon
+#: model:ir.model.constraint,message:sale_amazon.constraint_amazon_marketplace_unique_api_ref
+msgid "There can only exist one marketplace for a given API Identifier."
+msgstr "Chỉ có thể tồn tại một sàn giao dịch cho Định danh API đã cung cấp. "
+
+#. module: sale_amazon
+#: model:ir.model.constraint,message:sale_amazon.constraint_sale_order_unique_amazon_order_ref
+msgid ""
+"There can only exist one sale order for a given Amazon Order Reference."
+msgstr "Chỉ được phép tồn tại một đơn bán hàng cho một Mã đơn hàng Amazon. "
+
+#. module: sale_amazon
+#: model:ir.model.constraint,message:sale_amazon.constraint_sale_order_line_unique_amazon_item_ref
+msgid ""
+"There can only exist one sale order line for a given Amazon Item Reference."
+msgstr ""
+"Chỉ được phép tồn tại một dòng đơn bán hàng cho một Mã mặt hàng Amazon. "
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid ""
+"This action will disconnect your account with Amazon and"
+"                                          cannot be undone. Are you sure you"
+" want to proceed?"
+msgstr ""
+"Hành động này sẽ ngắt kết nối tài khoản của bạn với Amazon và không thể hoàn"
+" tác. Bạn có muốn tiếp tục không?"
+
+#. module: sale_amazon
+#: model:ir.model,name:sale_amazon.model_stock_picking
+msgid "Transfer"
+msgstr "Điều chuyển"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid "Unlink account"
+msgstr "Huỷ liên kết tài khoản"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid "Unlinked Account"
+msgstr "Tài khoản đã huỷ liên kết"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid "Update Available Marketplaces"
+msgstr "Cập nhật marketplace hiện có"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_offer_view_tree
+msgid "View on Seller Central"
+msgstr "Xem trong Seller Central"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_account.py:0
+#, python-format
+msgid "Warning"
+msgstr "Cảnh báo"
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_account__synchronize_inventory
+msgid ""
+"Whether the available quantities of FBM products linked to this account are "
+"synchronized with Amazon."
+msgstr ""
+"Số lượng sản phẩm FBM có sẵn liên kết với tài khoản này có được đồng bộ với "
+"Amazon hay không."
+
+#. module: sale_amazon
+#: model:ir.model.fields,help:sale_amazon.field_amazon_marketplace__tax_included
+msgid "Whether the price includes the tax amount or not."
+msgstr "Liệu giá có bao gồm số tiền thuế hay không."
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/utils.py:0
+#, python-format
+msgid "You first need to authorize the Amazon account %s."
+msgstr "Trước tiên, bạn cần ủy quyền cho tài khoản Amazon %s."
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/utils.py:0
+#, python-format
+msgid ""
+"You first need to set the marketplaces to synchronize for the Amazon account"
+" %s."
+msgstr ""
+"Trước tiên, bạn cần thiết lập các marketplace để đồng bộ hóa cho tài khoản "
+"Amazon %s."
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_account.py:0
+#, python-format
+msgid ""
+"You reached the maximum number of requests for this operation; please try "
+"again later."
+msgstr ""
+"Bạn đã đạt đến số lượng yêu cầu tối đa cho thao tác này; vui lòng thử lại "
+"sau."
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid "Your Amazon account is linked with Odoo."
+msgstr "Tài khoản Amazon của bạn đã được liên kết với Odoo."
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_account.py:0
+#, python-format
+msgid ""
+"[%s] %s\n"
+"Condition: %s - %s"
+msgstr ""
+"[%s] %s\n"
+"Điều kiện: %s - %s"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_account.py:0
+#, python-format
+msgid "[%s] Delivery Charges for %s"
+msgstr "[%s] Phí vận chuyển cho %s"
+
+#. module: sale_amazon
+#. odoo-python
+#: code:addons/sale_amazon/models/amazon_account.py:0
+#, python-format
+msgid "[%s] Gift Wrapping Charges for %s"
+msgstr "[%s] Phí gói quà cho %s"
+
+#. module: sale_amazon
+#: model_terms:ir.ui.view,arch_db:sale_amazon.amazon_account_view_form
+msgid "e.g. American Market"
+msgstr "ví dụ: Thị trường Mỹ"

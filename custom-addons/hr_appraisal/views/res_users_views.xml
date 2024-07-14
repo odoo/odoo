@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <!-- User preferences -->
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">res.users.preferences.view.form.inherit.appraisal</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_last_appraisal"
+                    class="oe_stat_button" invisible="not last_appraisal_id"
+                    icon="fa-sitemap"
+                    type="object">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="last_appraisal_date" readonly="1"/>
+                        </span>
+                        <span class="o_stat_text">
+                            Last Appraisal
+                        </span>
+                    </div>
+                </button>
+                <field name="last_appraisal_id" invisible="1"/>
+            </xpath>
+            <header position="inside">
+                <field name="employee_ids" invisible="1"/>
+                <button name="action_send_appraisal_request"
+                    string="Request Appraisal"
+                    type="object"
+                    data-hotkey="g"
+                    class="btn btn-primary"/>
+            </header>
+    </field>
+    </record>
+</odoo>

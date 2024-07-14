@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web_studio.StudioDynamicPlaceholderPopover" t-inherit="web.DynamicPlaceholderPopover" t-inherit-mode="primary">
+        <xpath expr="//ModelFieldSelectorPopover" position="attributes">
+            <attribute name="followRelations">!props.showOnlyX2ManyFields</attribute>
+        </xpath>
+    </t>
+
+</templates>

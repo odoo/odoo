@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ie_bs" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="country_id" ref="base.ie"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_ie_bs_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_ie_bs_A" model="account.report.line">
+                <field name="name">A. Fixed assets</field>
+                <field name="code">l10n_ie_A</field>
+                <field name="foldable" eval="True"/>
+                <field name="aggregation_formula">l10n_ie_A_I.balance + l10n_ie_A_II.balance + l10n_ie_A_III.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_ie_bs_A_I" model="account.report.line">
+                        <field name="name">I. Intangible assets</field>
+                        <field name="code">l10n_ie_A_I</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">l10n_ie_A_I_1.balance + l10n_ie_A_I_2.balance + l10n_ie_A_I_3.balance + l10n_ie_A_I_4.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_ie_bs_A_I_1" model="account.report.line">
+                                <field name="name">1. Development costs</field>
+                                <field name="code">l10n_ie_A_I_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">100</field>
+                            </record>
+                            <record id="l10n_ie_bs_A_I_2" model="account.report.line">
+                                <field name="name">2. Concessions, patents, licences, trade marks and similar rights and
+                                    assets
+                                </field>
+                                <field name="code">l10n_ie_A_I_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">101</field>
+                            </record>
+                            <record id="l10n_ie_bs_A_I_3" model="account.report.line">
+                                <field name="name">3. Goodwill</field>
+                                <field name="code">l10n_ie_A_I_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">102</field>
+                            </record>
+                            <record id="l10n_ie_bs_A_I_4" model="account.report.line">
+                                <field name="name">4. Payments on account</field>
+                                <field name="code">l10n_ie_A_I_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">103</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ie_bs_A_II" model="account.report.line">
+                        <field name="name">II. Tangible assets</field>
+                        <field name="code">l10n_ie_A_II</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">l10n_ie_A_II_1.balance + l10n_ie_A_II_2.balance + l10n_ie_A_II_3.balance + l10n_ie_A_II_4.balance + l10n_ie_A_II_5.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_ie_bs_A_II_1" model="account.report.line">
+                                <field name="name">1. Investment property</field>
+                                <field name="code">l10n_ie_A_II_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">110</field>
+                            </record>
+                            <record id="l10n_ie_bs_A_II_2" model="account.report.line">
+                                <field name="name">2. Land and buildings</field>
+                                <field name="code">l10n_ie_A_II_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">111</field>
+                            </record>
+                            <record id="l10n_ie_bs_A_II_3" model="account.report.line">
+                                <field name="name">3. Plant and machinery</field>
+                                <field name="code">l10n_ie_A_II_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">112</field>
+                            </record>
+                            <record id="l10n_ie_bs_A_II_4" model="account.report.line">
+                                <field name="name">4. Fixtures, fittings, tools and equipment</field>
+                                <field name="code">l10n_ie_A_II_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">113</field>
+                            </record>
+                            <record id="l10n_ie_bs_A_II_5" model="account.report.line">
+                                <field name="name">5. Payments on account and assets in course of construction</field>
+                                <field name="code">l10n_ie_A_II_5</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">114</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ie_bs_A_III" model="account.report.line">
+                        <field name="name">III. Financial assets</field>
+                        <field name="code">l10n_ie_A_III</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">l10n_ie_A_III_1.balance + l10n_ie_A_III_2.balance + l10n_ie_A_III_3.balance + l10n_ie_A_III_4.balance + l10n_ie_A_III_5.balance + l10n_ie_A_III_6.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_ie_bs_A_III_1" model="account.report.line">
+                                <field name="name">1. Shares in group undertakings</field>
+                                <field name="code">l10n_ie_A_III_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">120</field>
+                            </record>
+                            <record id="l10n_ie_bs_A_III_2" model="account.report.line">
+                                <field name="name">2. Loans to group undertakings</field>
+                                <field name="code">l10n_ie_A_III_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">121</field>
+                            </record>
+                            <record id="l10n_ie_bs_A_III_3" model="account.report.line">
+                                <field name="name">3. Participating interests</field>
+                                <field name="code">l10n_ie_A_III_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">122</field>
+                            </record>
+                            <record id="l10n_ie_bs_A_III_4" model="account.report.line">
+                                <field name="name">4. Loans to undertakings in which the company has a participating interest</field>
+                                <field name="code">l10n_ie_A_III_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">123</field>
+                            </record>
+                            <record id="l10n_ie_bs_A_III_5" model="account.report.line">
+                                <field name="name">5. Other investments other than loans</field>
+                                <field name="code">l10n_ie_A_III_5</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">124</field>
+                            </record>
+                            <record id="l10n_ie_bs_A_III_6" model="account.report.line">
+                                <field name="name">6. Other loans</field>
+                                <field name="code">l10n_ie_A_III_6</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">125</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_ie_bs_B" model="account.report.line">
+                <field name="name">B. Current assets</field>
+                <field name="code">l10n_ie_B</field>
+                <field name="foldable" eval="True"/>
+                <field name="aggregation_formula">l10n_ie_B_I.balance + l10n_ie_B_II.balance + l10n_ie_B_III.balance + l10n_ie_B_IV.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_ie_bs_B_I" model="account.report.line">
+                        <field name="name">I. Stocks</field>
+                        <field name="code">l10n_ie_B_I</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">l10n_ie_B_I_1.balance + l10n_ie_B_I_2.balance + l10n_ie_B_I_3.balance + l10n_ie_B_I_4.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_ie_bs_B_I_1" model="account.report.line">
+                                <field name="name">1. Raw materials and consumables</field>
+                                <field name="code">l10n_ie_B_I_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">200</field>
+                            </record>
+                            <record id="l10n_ie_bs_B_I_2" model="account.report.line">
+                                <field name="name">2. Work in progress</field>
+                                <field name="code">l10n_ie_B_I_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">201</field>
+                            </record>
+                            <record id="l10n_ie_bs_B_I_3" model="account.report.line">
+                                <field name="name">3. Finished goods and goods for resale</field>
+                                <field name="code">l10n_ie_B_I_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">202</field>
+                            </record>
+                            <record id="l10n_ie_bs_B_I_4" model="account.report.line">
+                                <field name="name">4. Payments on account</field>
+                                <field name="code">l10n_ie_B_I_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">203</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ie_bs_B_II" model="account.report.line">
+                        <field name="name">II. Debtors</field>
+                        <field name="code">l10n_ie_B_II</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">l10n_ie_B_II_1.balance + l10n_ie_B_II_2.balance + l10n_ie_B_II_3.balance + l10n_ie_B_II_4.balance + l10n_ie_B_II_5.balance + l10n_ie_B_II_6.balance + l10n_ie_B_II_7.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_ie_bs_B_II_1" model="account.report.line">
+                                <field name="name">1. Trade debtors</field>
+                                <field name="code">l10n_ie_B_II_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">210\(2105)</field>
+                            </record>
+                            <record id="l10n_ie_bs_B_II_2" model="account.report.line">
+                                <field name="name">2. Amounts owed by group undertakings</field>
+                                <field name="code">l10n_ie_B_II_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">211</field>
+                            </record>
+                            <record id="l10n_ie_bs_B_II_3" model="account.report.line">
+                                <field name="name">3. Amounts owed by undertakings in which the company has a participating interest</field>
+                                <field name="code">l10n_ie_B_II_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">212</field>
+                            </record>
+                            <record id="l10n_ie_bs_B_II_4" model="account.report.line">
+                                <field name="name">4. Other debtors</field>
+                                <field name="code">l10n_ie_B_II_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">213</field>
+                            </record>
+                            <record id="l10n_ie_bs_B_II_5" model="account.report.line">
+                                <field name="name">5. Called up share capital not paid</field>
+                                <field name="code">l10n_ie_B_II_5</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">214</field>
+                            </record>
+                            <record id="l10n_ie_bs_B_II_6" model="account.report.line">
+                                <field name="name">6. Prepayments</field>
+                                <field name="code">l10n_ie_B_II_6</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">215</field>
+                            </record>
+                            <record id="l10n_ie_bs_B_II_7" model="account.report.line">
+                                <field name="name">7. Accrued income</field>
+                                <field name="code">l10n_ie_B_II_7</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">216</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ie_bs_B_III" model="account.report.line">
+                        <field name="name">III. Investments</field>
+                        <field name="code">l10n_ie_B_III</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">l10n_ie_B_III_1.balance + l10n_ie_B_III_2.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_ie_bs_B_III_1" model="account.report.line">
+                                <field name="name">1. Shares in group undertakings</field>
+                                <field name="code">l10n_ie_B_III_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">220</field>
+                            </record>
+                            <record id="l10n_ie_bs_B_III_2" model="account.report.line">
+                                <field name="name">2. Other investments</field>
+                                <field name="code">l10n_ie_B_III_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">221</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ie_bs_B_IV" model="account.report.line">
+                        <field name="name">IV. Cash at bank and in hand</field>
+                        <field name="code">l10n_ie_B_IV</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">23</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_ie_bs_C" model="account.report.line">
+                <field name="name">C. Creditors: amounts falling due within one year</field>
+                <field name="code">l10n_ie_C</field>
+                <field name="foldable" eval="True"/>
+                <field name="aggregation_formula">l10n_ie_C_1.balance + l10n_ie_C_2.balance + l10n_ie_C_3.balance + l10n_ie_C_4.balance + l10n_ie_C_5.balance + l10n_ie_C_6.balance + l10n_ie_C_7.balance + l10n_ie_C_8.balance + l10n_ie_C_9.balance + l10n_ie_C_10.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_ie_bs_C_1" model="account.report.line">
+                        <field name="name">1. Debenture loans</field>
+                        <field name="code">l10n_ie_C_1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-30</field>
+                    </record>
+                    <record id="l10n_ie_bs_C_2" model="account.report.line">
+                        <field name="name">2. Amounts owed to credit institutions</field>
+                        <field name="code">l10n_ie_C_2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-31</field>
+                    </record>
+                    <record id="l10n_ie_bs_C_3" model="account.report.line">
+                        <field name="name">3. Called-up share capital presented as a liability</field>
+                        <field name="code">l10n_ie_C_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-32</field>
+                    </record>
+                    <record id="l10n_ie_bs_C_4" model="account.report.line">
+                        <field name="name">4. Payments received on account</field>
+                        <field name="code">l10n_ie_C_4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-33</field>
+                    </record>
+                    <record id="l10n_ie_bs_C_5" model="account.report.line">
+                        <field name="name">5. Trade creditors</field>
+                        <field name="code">l10n_ie_C_5</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-2105 - 34</field>
+                    </record>
+                    <record id="l10n_ie_bs_C_6" model="account.report.line">
+                        <field name="name">6. Bills of exchange payable</field>
+                        <field name="code">l10n_ie_C_6</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-35</field>
+                    </record>
+                    <record id="l10n_ie_bs_C_7" model="account.report.line">
+                        <field name="name">7. Amounts owed to group undertakings</field>
+                        <field name="code">l10n_ie_C_7</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-36</field>
+                    </record>
+                    <record id="l10n_ie_bs_C_8" model="account.report.line">
+                        <field name="name">8. Amounts owed to undertakings with which the company is linked by virtue of
+                            participating interests
+                        </field>
+                        <field name="code">l10n_ie_C_8</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-37</field>
+                    </record>
+                    <record id="l10n_ie_bs_C_9" model="account.report.line">
+                        <field name="name">9. Other creditors including tax and social insurance</field>
+                        <field name="code">l10n_ie_C_9</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-38</field>
+                    </record>
+                    <record id="l10n_ie_bs_C_10" model="account.report.line">
+                        <field name="name">10. Deferred income</field>
+                        <field name="code">l10n_ie_C_10</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-39</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_ie_bs_D" model="account.report.line">
+                <field name="name">D. Net current assets (liabilities)</field>
+                <field name="code">l10n_ie_D</field>
+                <field name="aggregation_formula">l10n_ie_B.balance - l10n_ie_C.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="l10n_ie_bs_E" model="account.report.line">
+                <field name="name">E. Total assets less current liabilities</field>
+                <field name="code">l10n_ie_E</field>
+                <field name="aggregation_formula">l10n_ie_A.balance + l10n_ie_B.balance - l10n_ie_C.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="l10n_ie_bs_F" model="account.report.line">
+                <field name="name">F. Creditors: amounts falling due after more than one year</field>
+                <field name="code">l10n_ie_F</field>
+                <field name="foldable" eval="True"/>
+                <field name="aggregation_formula">l10n_ie_F_1.balance + l10n_ie_F_2.balance + l10n_ie_F_3.balance + l10n_ie_F_4.balance + l10n_ie_F_5.balance + l10n_ie_F_6.balance + l10n_ie_F_7.balance + l10n_ie_F_8.balance + l10n_ie_F_9.balance + l10n_ie_F_10.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_ie_bs_F_1" model="account.report.line">
+                        <field name="name">1. Debenture loans</field>
+                        <field name="code">l10n_ie_F_1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-40</field>
+                    </record>
+                    <record id="l10n_ie_bs_F_2" model="account.report.line">
+                        <field name="name">2. Amounts owed to credit institutions</field>
+                        <field name="code">l10n_ie_F_2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-41</field>
+                    </record>
+                    <record id="l10n_ie_bs_F_3" model="account.report.line">
+                        <field name="name">3. Called-up share capital presented as a liability</field>
+                        <field name="code">l10n_ie_F_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-42</field>
+                    </record>
+                    <record id="l10n_ie_bs_F_4" model="account.report.line">
+                        <field name="name">4. Payments received on account</field>
+                        <field name="code">l10n_ie_F_4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-43</field>
+                    </record>
+                    <record id="l10n_ie_bs_F_5" model="account.report.line">
+                        <field name="name">5. Trade creditors</field>
+                        <field name="code">l10n_ie_F_5</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-44</field>
+                    </record>
+                    <record id="l10n_ie_bs_F_6" model="account.report.line">
+                        <field name="name">6. Bills of exchange payable</field>
+                        <field name="code">l10n_ie_F_6</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-45</field>
+                    </record>
+                    <record id="l10n_ie_bs_F_7" model="account.report.line">
+                        <field name="name">7. Amounts owed to group undertakings</field>
+                        <field name="code">l10n_ie_F_7</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-46</field>
+                    </record>
+                    <record id="l10n_ie_bs_F_8" model="account.report.line">
+                        <field name="name">8. Amounts owed to undertakings with which the company is linked by virtue of participating interests</field>
+                        <field name="code">l10n_ie_F_8</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-47</field>
+                    </record>
+                    <record id="l10n_ie_bs_F_9" model="account.report.line">
+                        <field name="name">9. Other creditors including tax and social insurance</field>
+                        <field name="code">l10n_ie_F_9</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-48</field>
+                    </record>
+                    <record id="l10n_ie_bs_F_10" model="account.report.line">
+                        <field name="name">10. Deferred income</field>
+                        <field name="code">l10n_ie_F_10</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-49</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_ie_bs_G" model="account.report.line">
+                <field name="name">G. Provisions for liabilities</field>
+                <field name="code">l10n_ie_G</field>
+                <field name="foldable" eval="True"/>
+                <field name="aggregation_formula">l10n_ie_G_1.balance + l10n_ie_G_2.balance + l10n_ie_G_3.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_ie_bs_G_1" model="account.report.line">
+                        <field name="name">1. Retirement benefit and similar obligations</field>
+                        <field name="code">l10n_ie_G_1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-500</field>
+                    </record>
+                    <record id="l10n_ie_bs_G_2" model="account.report.line">
+                        <field name="name">2. Taxation, including deferred taxation</field>
+                        <field name="code">l10n_ie_G_2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-501</field>
+                    </record>
+                    <record id="l10n_ie_bs_G_3" model="account.report.line">
+                        <field name="name">3. Other provisions for liabilities</field>
+                        <field name="code">l10n_ie_G_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-502</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_ie_bs_H" model="account.report.line">
+                <field name="name">H. Capital and reserves</field>
+                <field name="code">l10n_ie_H</field>
+                <field name="foldable" eval="True"/>
+                <field name="aggregation_formula">l10n_ie_H_I.balance + l10n_ie_H_II.balance + l10n_ie_H_III.balance + l10n_ie_H_IV.balance + l10n_ie_H_V.balance + l10n_ie_H_VI.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_ie_bs_H_I" model="account.report.line">
+                        <field name="name">I. Called-up share capital presented as equity</field>
+                        <field name="code">l10n_ie_H_I</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-510</field>
+                    </record>
+                    <record id="l10n_ie_bs_H_II" model="account.report.line">
+                        <field name="name">II. Share premium account</field>
+                        <field name="code">l10n_ie_H_II</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-511</field>
+                    </record>
+                    <record id="l10n_ie_bs_H_III" model="account.report.line">
+                        <field name="name">III. Revaluation reserve</field>
+                        <field name="code">l10n_ie_H_III</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-512</field>
+                    </record>
+                    <record id="l10n_ie_bs_H_IV" model="account.report.line">
+                        <field name="name">IV. Other reserves</field>
+                        <field name="code">l10n_ie_H_IV</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="aggregation_formula">l10n_ie_H_IV_1.balance + l10n_ie_H_IV_2.balance + l10n_ie_H_IV_3.balance + l10n_ie_H_IV_4.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_ie_bs_H_IV_1" model="account.report.line">
+                                <field name="name">1. Other undenominated capital</field>
+                                <field name="code">l10n_ie_H_IV_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-5130</field>
+                            </record>
+                            <record id="l10n_ie_bs_H_IV_2" model="account.report.line">
+                                <field name="name">2. Reserve for own shares held</field>
+                                <field name="code">l10n_ie_H_IV_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-5131</field>
+                            </record>
+                            <record id="l10n_ie_bs_H_IV_3" model="account.report.line">
+                                <field name="name">3. Reserves provided for by the constitution</field>
+                                <field name="code">l10n_ie_H_IV_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-5132</field>
+                            </record>
+                            <record id="l10n_ie_bs_H_IV_4" model="account.report.line">
+                                <field name="name">4. Other reserves including the fair value reserve (specified as necessary)</field>
+                                <field name="code">l10n_ie_H_IV_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-5133</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ie_bs_H_V" model="account.report.line">
+                        <field name="name">V. Profit or loss brought forward</field>
+                        <field name="code">l10n_ie_H_V</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_ie_bs_H_V_profit_loss" model="account.report.expression">
+                                <field name="label">profit_loss</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ie_18.balance</field>
+                                <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                            <record id="l10n_ie_bs_H_V_accounts" model="account.report.expression">
+                                <field name="label">accounts</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-514 - 515</field>
+                            </record>
+                            <record id="l10n_ie_bs_H_V_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ie_H_V.profit_loss + l10n_ie_H_V.accounts</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ie_bs_H_VI" model="account.report.line">
+                        <field name="name">VI. Profit or loss for the financial year</field>
+                        <field name="code">l10n_ie_H_VI</field>
+                        <field name="action_id" ref="l10n_ie_pl_action"/>
+                        <field name="expression_ids">
+                            <record id="l10n_ie_bs_H_VI_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ie_18.balance</field>
+                                <field name="date_scope">from_fiscalyear</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_ie_bs_assets_total" model="account.report.line">
+                <field name="name">Total assets</field>
+                <field name="code">l10n_ie_assets_total</field>
+                <field name="foldable" eval="True"/>
+                <field name="aggregation_formula">l10n_ie_A.balance + l10n_ie_B.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="l10n_ie_bs_liabilities_total" model="account.report.line">
+                <field name="name">Total liabilities + equity</field>
+                <field name="code">l10n_ie_liabilities_total</field>
+                <field name="foldable" eval="True"/>
+                <field name="aggregation_formula">l10n_ie_C.balance + l10n_ie_F.balance + l10n_ie_G.balance + l10n_ie_H.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+        </field>
+    </record>
+</odoo>

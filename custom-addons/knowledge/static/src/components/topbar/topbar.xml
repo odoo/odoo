@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="knowledge.KnowledgeTopbar">
+        <div class="o_knowledge_header d-flex flex-wrap gap-1 flex-column justify-content-end flex-sm-row align-items-sm-center border-bottom d-print-none bg-view px-0 py-2 ps-sm-3 pe-sm-2">
+            <div class="d-flex flex-grow-1 min-w-0 gap-1 px-2 px-sm-0 pt-2 pt-sm-0">
+                <a role="button" class="d-md-none btn btn-light align-self-start px-2 py-1" t-on-click="() => this.env.toggleAsideMobile()">
+                    <i class="fa fa-lg fa-bars" title="Toggle aside menu"/>
+                </a>
+                <!-- Breadcrumbs -->
+                <ol class="breadcrumb align-items-center min-w-0" t-if="this.breadcrumbs.length > 1 or this.props.record.resId" role="navigation">
+                    <t t-foreach="this.breadcrumbs.slice(0, -1)" t-as="breadcrumb" t-key="breadcrumb.jsId">
+                        <!-- Add back hotkey on penultimate breadcrumb item -->
+                        <t t-set="isPenultimate" t-value="breadcrumb_index === this.breadcrumbs.length - 2"/>
+                        <li class="breadcrumb-item d-flex align-items-center min-w-0 text-nowrap overflow-hidden"
+                            t-att-data-hotkey="isPenultimate and 'b'" t-att-class="{ o_back_button: isPenultimate}" t-on-click.prevent="() => this.actionService.restore(breadcrumb.jsId)">
+                            <a class="text-truncate" href="#">
+                                <t t-out="breadcrumb.name"/>
+                            </a>
+                        </li>
+                    </t>
+                    <li t-if="this.props.record.resId" class="breadcrumb-item d-flex align-items-center active min-w-0 text-nowrap overflow-hidden">
+                        <KnowledgeIcon t-if="props.record.data.active" record="props.record" iconClasses="'me-1'"
+                            readonly="props.record.data.is_locked || !props.record.data.user_can_write"/>
+                        <div t-if="!this.props.record.data.user_can_write || this.props.record.data.is_locked" class="text-truncate mx-1">
+                            <t t-if="this.props.record.data.name" t-out="this.props.record.data.name" />
+                            <t t-else="">Untitled</t>
+                        </div>
+                        <div t-else=""
+                            t-on-input="ev => this.env._resizeNameInput(ev.target.value)"
+                            t-on-change="ev => this.env.renameArticle(ev.target.value)"
+                            t-on-click="ev => this._onNameClick(ev)"
+                            class="o_breadcrumb_article_name_container position-relative text-truncate mx-1">
+                            <!-- span forces the input to match the length of its value -->
+                            <span class="pe-2" t-att-title="this.props.record.data.name" t-out="this.props.record.data.name"/>
+                            <div class="o_field_widget o_required_modifier o_field_char o_breadcrumb_article_name mb-0">
+                                <input t-if="!(props.record.data.is_locked || !props.record.data.user_can_write || !props.record.data.active || !props.record.resId)" id="name" class="o_input" type="text" autocomplete="off"
+                                    t-att-value="props.record.data.name" placeholder="Untitled"/>
+                                <span t-else="">
+                                    <t t-out="props.record.data.name"/>
+                                </span>
+                            </div>
+                        </div>
+                        <i class="fa fa-fw fa-lock" title="This article is locked" t-if="this.props.record.data.is_locked" />
+                    </li>
+                    <t t-if="props.record.resId and props.record.data.active and !props.record.data.is_locked and props.record.data.user_can_write">
+                        <KnowledgeFormStatusIndicator model="props.record.model" save="env.save" discard="env.discard"/>
+                    </t>
+                </ol>
+            </div>
+            <!-- Buttons -->
+            <div class="d-flex gap-1 flex-wrap justify-content-end">
+                <!-- Icon and Cover buttons -->
+                <div class="d-flex gap-1 o_knowledge_add_buttons" t-if="props.record.resId and props.record.data.active and !props.record.data.is_locked and props.record.data.user_can_write">
+                    <button class="btn btn-light text-nowrap o_knowledge_add_icon" t-if="!props.record.data.icon"
+                        t-on-mousedown.prevent="addIcon">
+                        <i class="fa fa-fw fs-6 fa-smile-o me-1" title="Add icon"/>
+                        <span class="d-none d-lg-inline">Add icon</span>
+                        <span class="d-lg-none">Icon</span>
+                    </button>
+                    <button class="btn btn-light text-nowrap o_knowledge_add_cover" t-if="!props.record.data.cover_image_id and isInternalUser"
+                        t-on-mousedown.prevent="addCover">
+                        <i class="fa fa-fw fs-6 fa-picture-o me-1" title="Add cover"/>
+                        <span class="d-none d-lg-inline">Add cover</span>
+                        <span class="d-lg-none">Cover</span>
+                    </button>
+                    <span t-if="!props.record.data.parent_id and isInternalUser"
+                       class="btn btn-light text-nowrap text-muted o_knowledge_add_properties"
+                       title="Properties are fields that can only be added on articles that have a parent.">
+                        <i class="fa fa-fw fs-6 fa-cogs me-1"/>
+                        <span class="d-none d-lg-inline">Add Properties</span>
+                        <span class="d-lg-none">Properties</span>
+                    </span>
+                    <button t-elif="!state.addingProperty and !props.record.data.article_properties.length and isInternalUser" t-on-click="addProperties"
+                        class="btn btn-light text-nowrap o_knowledge_add_properties">
+                        <i class="fa fa-fw fs-6 fa-cogs me-1" title="Add Properties"/>
+                        <span class="d-none d-lg-inline">Add Properties</span>
+                        <span class="d-lg-none">Properties</span>
+                    </button>
+                </div>
+                <div class="d-flex gap-1">
+                    <a role="button" t-on-click="() => this.env.createArticle('private')" class="btn btn-light btn-create text-nowrap" data-hotkey="n">
+                        <i class="fa fa-fw fs-6 fa-plus-circle me-1"/>New
+                    </a>
+                    <div class="o-dropdown dropdown o-dropdown--no-caret" t-if="props.record.resId and props.record.data.active">
+                        <a t-ref="sharePanel_button" role="button" class="btn btn-light btn-share dropdown-toggle" id="dropdown_share_panel" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-hotkey="shift+s">
+                            <i class="fa fa-fw fs-6 fa-share-alt me-1"/>
+                            <t t-if="isInternalUser">Share</t>
+                            <t t-else="">Members</t>
+                        </a>
+                        <div role="menu" t-on-click.stop="" aria-labelledby="dropdown_share_panel" t-attf-class="o_knowledge_share_panel dropdown-menu user-select-none">
+                            <PermissionPanel t-if="state.displaySharePanel and props.record.resId and props.record.data.active" record="props.record"/>
+                        </div>
+                    </div>
+                    <a role="button" class="btn btn-light o_knowledge_toggle_favorite" t-on-click="env.toggleFavorite" t-if="props.record.resId" data-hotkey="t" t-att-title="props.record.data.is_user_favorite ? removeFavoriteLabel : addFavoriteLabel">
+                        <i class="fa fa-fw fs-6 fa-star" t-if="props.record.data.is_user_favorite"/>
+                        <i class="fa fa-fw fs-6 fa-star-o" t-if="!props.record.data.is_user_favorite"/>
+                    </a>
+                    <a t-ref="btn_chatter" t-if="props.record.resId and isInternalUser" role="button"
+                        t-attf-class="btn btn-light btn-chatter #{state.displayChatter ? 'active' : ''}" data-hotkey="d" t-on-click="toggleChatter" title="Toggle chatter">
+                        <i class="fa fa-fw fs-6 fa-comments"/>
+                    </a>
+                    <a t-ref="btn_history"
+                       t-if="props.record.resId and isInternalUser and props.record.data.user_can_write"
+                       role="button"
+                       t-attf-class="btn btn-light btn-history #{state.displayHistory ? 'active' : ''}"
+                       data-hotkey="h"
+                       t-on-click="openHistory"
+                       title="Open history">
+                        <i class="fa fa-fw fs-6 fa-history"/>
+                    </a>
+                    <a t-ref="btn_properties" t-if="state.addingProperty or props.record.resId and props.record.data.article_properties.length and isInternalUser" role="button" t-attf-class="btn btn-light btn-properties #{state.displayPropertyPanel ? 'active' : ''}" data-hotkey="d" title="Show Properties" t-on-click="toggleProperties">
+                        <i class="fa fa-fw fs-6 fa-cogs"/>
+                    </a>
+                    <a t-ref="btn_comments" t-if="props.record.resId and state.commentsActive" role="button"
+                        t-attf-class="btn btn-light btn-comments #{state.displayCommentsPanel ? 'active' : ''}" t-on-click="toggleComments">
+                        <i class="fa fa-fw fs-6 fa-commenting" title="Open comments panel"/>
+                    </a>
+                    <div class="o-dropdown dropdown o-dropdown--no-caret" t-if="props.record.resId">
+                        <a role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" id="dropdown_tools_panel" aria-haspopup="true" aria-expanded="false" data-hotkey="p" title="More actions" t-ref="optionsBtn">
+                            <i class="fa fa-fw fs-6 fa-ellipsis-v"/>
+                        </a>
+                        <div class="o_knowledge_more_options_panel dropdown-menu" role="menu" aria-labelledby="dropdown_tools_panel">
+                            <div>
+                                <button t-if="props.record.data.user_can_write and props.record.data.active and !props.record.data.is_article_item and isInternalUser"
+                                    class="dropdown-item btn-move" t-on-click="onMoveArticleClick">
+                                    <i class="me-2 fa fa-fw fa-lg fa-angle-double-right"/> Move To
+                                </button>
+                                <button class="dropdown-item btn-lock" t-on-click="() => this.setLockStatus(true)"
+                                        t-if="props.record.data.user_can_write and !props.record.data.is_locked and props.record.data.active">
+                                    <i class="me-2 fa fa-fw fa-lg fa-lock"/> Lock Content
+                                </button>
+                                <button class="dropdown-item btn-lock" t-on-click="() => this.setLockStatus(false)"
+                                    t-if="props.record.data.user_can_write and props.record.data.is_locked and props.record.data.active">
+                                    <i class="me-2 fa fa-fw fa-lg fa-unlock"/> Unlock
+                                </button>
+                                <button class="dropdown-item" t-on-click="unarchiveArticle"
+                                    t-if="props.record.data.to_delete and props.record.data.user_can_write
+                                          and (isInternalUser or props.record.data.category == 'private')">
+                                    <i class="me-2 fa fa-fw fa-lg fa-trash-o"/> Restore from Trash
+                                </button>
+                                <button class="dropdown-item" t-on-click="unarchiveArticle"
+                                        t-if="!props.record.data.to_delete and !props.record.data.active">
+                                    <i class="me-2 fa fa-fw fa-lg fa-archive"/> Unarchive
+                                </button>
+                                <button class="dropdown-item" t-on-click="this.cloneArticle">
+                                    <i class="me-2 fa fa-fw fa-lg fa-copy"/> Create a Copy
+                                </button>
+                                <button class="dropdown-item"
+                                    title="Article items are not showed in the left-side menu&#10;but are shown in inserted kanban/list views"
+                                    t-if="props.record.data.user_can_write and !props.record.data.is_article_item and props.record.data.parent_id and props.record.data.active"
+                                    t-on-click="() => this.setIsArticleItem(true)">
+                                    <i class="me-2 fa fa-fw fa-lg fa-tasks"/> Convert into Article Item
+                                </button>
+                                <button class="dropdown-item"
+                                    t-if="props.record.data.user_can_write and props.record.data.is_article_item and !props.record.data.has_item_parent"
+                                    t-on-click="() => this.setIsArticleItem(false)">
+                                    <i class="me-2 fa fa-fw fa-lg fa-sitemap"/> Convert into Article
+                                </button>
+                                <button class="dropdown-item" t-on-click="this.exportToPdf">
+                                    <i class="me-2 fa fa-fw fa-lg fa-download"/> Export
+                                </button>
+                                <button class="dropdown-item" t-on-click="deleteArticle"
+                                    t-if="props.record.data.user_can_write and props.record.data.active
+                                          and (isInternalUser or props.record.data.category == 'private')">
+                                    <i class="me-2 fa fa-fw fa-lg fa-trash"/> Send to Trash
+                                </button>
+                                <div class="dropdown-divider" t-if="props.record.data.user_can_write and props.record.data.active"/>
+                                <div class="dropdown-item user-select-none d-inline-flex align-items-start" t-if="props.record.data.user_can_write and props.record.data.active"
+                                    t-on-click.stop="() => this.props.record.update({full_width: !props.record.data.full_width})">
+                                    <div class="pe-3">
+                                        <i class="me-2 oi oi-fw oi-large oi-arrows-h"/> Full Width
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" id="full_width_input" type="checkbox" role="switch" t-att-checked="props.record.data.full_width"/>
+                                    </div>
+                                </div>
+                                <div class="dropdown-divider" t-if="props.record.data.last_edition_uid or props.record.data.last_edition_date"/>
+                            </div>
+                            <div class="dropdown-item-text ps-2" t-if="props.record.data.last_edition_uid">
+                                <div class="d-flex align-items-center py-1">
+                                    <span class="o_m2o_avatar" t-if="isInternalUser">
+                                        <img class="o_knowledge_more_options_panel_image rounded" t-if="props.record.data.last_edition_uid"
+                                            t-attf-src="/web/image?model=res.users&amp;field=avatar_128&amp;id={{ props.record.data.last_edition_uid[0] }}"
+                                            t-on-click="event => this._onMemberAvatarClick(event, props.record.data.last_edition_uid[0])"
+                                            t-att-title="this.props.record.data.last_edition_uid[1]"/>
+                                    </span>
+                                    <i t-else="" class="ms-3 me-1 fa fa-2x fa-user"/>
+                                    <div class="d-flex flex-column ps-1">
+                                        <div class="d-inline-flex lh-sm">
+                                            <span class="ps-1 pe-1 text-nowrap">
+                                                Last Edited
+                                            </span>
+                                            <span class="text-muted opacity-75 pe-1">·</span>
+                                            <span class="text-muted text-nowrap opacity-75" t-out="this.state.editionDate" t-att-title="this.formatDateTime(this.props.record.data.last_edition_date)"/>
+                                        </div>
+                                        <span class="ps-1 pe-1">
+                                            <t t-out="this.props.record.data.last_edition_uid[1]"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center py-1">
+                                    <span class="o_m2o_avatar" t-if="isInternalUser">
+                                        <img class="o_knowledge_more_options_panel_image rounded" t-if="props.record.data.create_uid"
+                                            t-attf-src="/web/image?model=res.users&amp;field=avatar_128&amp;id={{ props.record.data.create_uid[0] }}"
+                                            t-on-click="event => this._onMemberAvatarClick(event, props.record.data.create_uid[0])"
+                                            t-att-title="this.props.record.data.create_uid[1]"/>
+                                    </span>
+                                    <i t-else="" class="ms-3 me-1 fa fa-2x fa-user"/>
+                                    <div class="d-flex flex-column ps-1">
+                                        <div class="d-inline-flex lh-sm">
+                                            <span class="ps-1 pe-1 text-nowrap">
+                                                Created
+                                            </span>
+                                            <span class="text-muted opacity-75 pe-1">·</span>
+                                            <span class="text-muted text-nowrap opacity-75" t-out="this.state.createDate" t-att-title="this.formatDateTime(this.props.record.data.create_date)"/>
+
+                                        </div>
+                                        <span class="ps-1 pe-1">
+                                            <t t-out="this.props.record.data.create_uid[1]"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

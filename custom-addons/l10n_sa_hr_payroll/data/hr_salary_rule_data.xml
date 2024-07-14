@@ -1,0 +1,210 @@
+<odoo>
+    <data>
+        <!--   Saudi Employee Rules     -->
+        <record id="ksa_saudi_housing_allowance_salary_rule" model="hr.salary.rule">
+            <field name="name">Housing Allowance</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">HOUALLOW</field>
+            <field name="sequence">5</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.l10n_sa_housing_allowance</field>
+            <field name="struct_id" ref="l10n_sa_hr_payroll.ksa_saudi_employee_payroll_structure"/>
+        </record>
+        <record id="ksa_saudi_transportation_allowance_salary_rule" model="hr.salary.rule">
+            <field name="name">Transportation Allowance</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">TRAALLOW</field>
+            <field name="sequence">5</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.l10n_sa_transportation_allowance</field>
+            <field name="struct_id" ref="l10n_sa_hr_payroll.ksa_saudi_employee_payroll_structure"/>
+        </record>
+        <record id="ksa_saudi_other_allowances_salary_rule" model="hr.salary.rule">
+            <field name="name">Other Allowances</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">OTALLOW</field>
+            <field name="sequence">5</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.l10n_sa_other_allowances</field>
+            <field name="struct_id" ref="l10n_sa_hr_payroll.ksa_saudi_employee_payroll_structure"/>
+        </record>
+        <record id="ksa_saudi_social_insurance_contribution" model="hr.salary.rule">
+            <field name="name">Social Insurance Contribution</field>
+            <field name="category_id" ref="hr_payroll.COMP"/>
+            <field name="code">SIC</field>
+            <field name="sequence">5</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = (contract.wage + contract.l10n_sa_housing_allowance) * -0.1
+            </field>
+            <field name="struct_id" ref="l10n_sa_hr_payroll.ksa_saudi_employee_payroll_structure"/>
+        </record>
+        <record id="ksa_saudi_unpaid_leave" model="hr.salary.rule">
+            <field name="name">Unpaid Leave</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="code">UNPAID</field>
+            <field name="sequence">5</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = 'LEAVE90' in worked_days and worked_days['LEAVE90'].number_of_days and payslip.sum_worked_hours and contract.resource_calendar_id.hours_per_day
+            </field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = -(worked_days['LEAVE90'].number_of_days * (contract.wage + contract.l10n_sa_transportation_allowance + contract.l10n_sa_housing_allowance + contract.l10n_sa_other_allowances) / (payslip.sum_worked_hours / contract.resource_calendar_id.hours_per_day))
+            </field>
+            <field name="struct_id" ref="l10n_sa_hr_payroll.ksa_saudi_employee_payroll_structure"/>
+        </record>
+        <record id="ksa_saudi_overtime" model="hr.salary.rule">
+            <field name="name">Overtime</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">OT</field>
+            <field name="sequence">5</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = 'OT' in worked_days and worked_days['OT'].number_of_hours and contract.resource_calendar_id.hours_per_day
+            </field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = 1.5 * worked_days['OT'].number_of_hours * (contract.wage + contract.l10n_sa_housing_allowance + contract.l10n_sa_transportation_allowance + contract.l10n_sa_other_allowances)/((payslip.date_to - payslip.date_from).days+1)/contract.resource_calendar_id.hours_per_day
+            </field>
+            <field name="struct_id" ref="l10n_sa_hr_payroll.ksa_saudi_employee_payroll_structure"/>
+        </record>
+        <record id="ksa_saudi_end_of_service_salary_rule" model="hr.salary.rule">
+            <field name="name">Saudi End of Service Benefit</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">EOSB</field>
+            <field name="sequence">6</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = not employee.active and employee.departure_reason_id</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = 0
+start_date = contract.first_contract_date
+end_date = contract.date_end
+difference = relativedelta(end_date, start_date)
+total_days = difference.years * 360 + difference.months * 30 + difference.days
+compensation = contract.wage + contract.l10n_sa_housing_allowance + contract.l10n_sa_transportation_allowance + contract.l10n_sa_other_allowances
+if employee.departure_reason_id in [contract.env.ref('hr.departure_fired'), contract.env.ref('hr.departure_resigned')]:
+    if employee.departure_reason_id in [contract.env.ref('hr.departure_fired')]:
+        if 360 &lt;= total_days &lt;= 5 * 360:
+            result = compensation / 2 * total_days / 360
+        elif 5*360 &lt; total_days:
+            result = (compensation / 2 * 5 * 360 + compensation * (total_days - 5 * 360)) / 360
+    else:
+        if 2 * 360 &lt;= total_days &lt;= 5 * 360:
+            result = compensation / 6 * total_days / 360
+        elif 5 * 360 &lt; total_days &lt; 10 * 360:
+            result = (compensation / 3 * 5 * 360 + compensation * 2 / 3 * (total_days - 5 * 360)) / 360
+        elif 10 * 360 &lt;= total_days:
+            result = (compensation / 2 * 5 * 360 + compensation * (total_days - 5 * 360)) / 360
+result = payslip.company_id.currency_id.round(result)
+            </field>
+            <field name="struct_id" ref="l10n_sa_hr_payroll.ksa_saudi_employee_payroll_structure"/>
+        </record>
+        <record id="ksa_saudi_end_of_service_provision_salary_rule" model="hr.salary.rule">
+            <field name="name">End of Service Provision</field>
+            <field name="category_id" ref="hr_payroll.COMP"/>
+            <field name="code">EOSP</field>
+            <field name="appears_on_payslip">False</field>
+            <field name="sequence">90</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = employee.active</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = (contract.l10n_sa_number_of_days / 12) * ((contract.wage + contract.l10n_sa_housing_allowance + contract.l10n_sa_transportation_allowance + contract.l10n_sa_other_allowances)/ 30)
+            </field>
+            <field name="struct_id" ref="l10n_sa_hr_payroll.ksa_saudi_employee_payroll_structure"/>
+        </record>
+        <!--   Expat Employee Rules     -->
+        <record id="ksa_expat_housing_allowance_salary_rule" model="hr.salary.rule">
+            <field name="name">Housing Allowance</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">HOUALLOW</field>
+            <field name="sequence">5</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.l10n_sa_housing_allowance</field>
+            <field name="struct_id" ref="l10n_sa_hr_payroll.ksa_expat_employee_payroll_structure"/>
+        </record>
+        <record id="ksa_expat_transportation_allowance_salary_rule" model="hr.salary.rule">
+            <field name="name">Transportation Allowance</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">TRAALLOW</field>
+            <field name="sequence">5</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.l10n_sa_transportation_allowance</field>
+            <field name="struct_id" ref="l10n_sa_hr_payroll.ksa_saudi_employee_payroll_structure"/>
+        </record>
+        <record id="ksa_expat_other_allowances_salary_rule" model="hr.salary.rule">
+            <field name="name">Other Allowances</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">OTALLOW</field>
+            <field name="sequence">5</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.l10n_sa_other_allowances</field>
+            <field name="struct_id" ref="l10n_sa_hr_payroll.ksa_expat_employee_payroll_structure"/>
+        </record>
+        <record id="ksa_expat_unpaid_leave" model="hr.salary.rule">
+            <field name="name">Unpaid Leave</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="code">UNPAID</field>
+            <field name="sequence">5</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = 'LEAVE90' in worked_days and worked_days['LEAVE90'].number_of_days and payslip.sum_worked_hours and contract.resource_calendar_id.hours_per_day
+            </field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = -(worked_days['LEAVE90'].number_of_days * (contract.wage + contract.l10n_sa_transportation_allowance + contract.l10n_sa_housing_allowance + contract.l10n_sa_other_allowances) / payslip.sum_worked_hours / contract.resource_calendar_id.hours_per_day)
+            </field>
+            <field name="struct_id" ref="l10n_sa_hr_payroll.ksa_expat_employee_payroll_structure"/>
+        </record>
+        <record id="ksa_expat_overtime" model="hr.salary.rule">
+            <field name="name">Overtime</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="code">OT</field>
+            <field name="sequence">5</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = 'OT' in worked_days and worked_days['OT'].number_of_hours and contract.resource_calendar_id.hours_per_day
+            </field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = 1.5 * worked_days['OT'].number_of_hours * (contract.wage + contract.l10n_sa_housing_allowance + contract.l10n_sa_transportation_allowance + contract.l10n_sa_other_allowances)/((payslip.date_to - payslip.date_from).days+1)/contract.resource_calendar_id.hours_per_day
+            </field>
+            <field name="struct_id" ref="l10n_sa_hr_payroll.ksa_expat_employee_payroll_structure"/>
+        </record>
+            <record id="ksa_expat_end_of_service_salary_rule" model="hr.salary.rule">
+                <field name="name">Expat End of Service Benefit</field>
+                <field name="category_id" ref="hr_payroll.ALW"/>
+                <field name="code">EOSB</field>
+                <field name="sequence">6</field>
+                <field name="condition_select">python</field>
+                <field name="condition_python">result = not employee.active and employee.departure_reason_id in [contract.env.ref('hr.departure_fired'), contract.env.ref('hr.departure_resigned')]</field>
+                <field name="amount_select">code</field>
+                <field name="amount_python_compute">
+result = 0
+start_date = contract.first_contract_date
+end_date = contract.date_end
+difference = relativedelta(end_date, start_date)
+total_days = difference.years * 360 + difference.months * 30 + difference.days
+compensation = contract.wage + contract.l10n_sa_housing_allowance + contract.l10n_sa_transportation_allowance + contract.l10n_sa_other_allowances
+if total_days &lt; 360:
+    result = 0
+elif total_days &lt;= 5 * 360:
+    result = compensation / 2 * total_days / 360
+else:
+    result = (compensation / 2 * 5 * 360 + compensation * (total_days - 5 * 360)) / 360
+result = payslip.company_id.currency_id.round(result)
+                </field>
+                <field name="struct_id" ref="l10n_sa_hr_payroll.ksa_expat_employee_payroll_structure"/>
+            </record>
+        <record id="ksa_expat_end_of_service_provision_salary_rule" model="hr.salary.rule">
+            <field name="name">End of Service Provision</field>
+            <field name="category_id" ref="hr_payroll.COMP"/>
+            <field name="code">EOSP</field>
+            <field name="sequence">90</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = employee.active</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = (contract.l10n_sa_number_of_days / 12) * ((contract.wage + contract.l10n_sa_housing_allowance + contract.l10n_sa_transportation_allowance + contract.l10n_sa_other_allowances)/ 30)
+            </field>
+            <field name="struct_id" ref="l10n_sa_hr_payroll.ksa_expat_employee_payroll_structure"/>
+        </record>
+    </data>
+</odoo>

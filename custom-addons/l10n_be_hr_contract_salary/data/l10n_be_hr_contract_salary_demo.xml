@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_department_rdbe" model="hr.department">
+        <field name="name">RD BE</field>
+        <field name="company_id" ref="l10n_be_hr_payroll.res_company_be"/>
+    </record>
+
+    <record id="job_developer_belgium" model="hr.job">
+        <field name="name">Junior Developer BE</field>
+        <field name="department_id" ref="hr_department_rdbe"/>
+        <field name="no_of_recruitment">5</field>
+        <field name="company_id" ref="l10n_be_hr_payroll.res_company_be"/>
+    </record>
+
+    <record id="employee_max" model="hr.employee">
+        <field name="name">Max Durand</field>
+        <field name="job_id" ref="job_developer_belgium"/>
+        <field name="country_id" ref="base.be"/>
+        <field name="company_id" ref="l10n_be_hr_payroll.res_company_be"/>
+        <field name="image_1920" type="base64" file="hr_contract_salary/static/img/hr_employee_max_durand.jpg"/>
+        <field name="gender">male</field>
+    </record>
+
+    <record id="res_partner_laurie_poiret" model="res.partner">
+        <field name="name">Laurie Poiret</field>
+        <field name="street">58 rue des Wallons</field>
+        <field name="city">Louvain-la-Neuve</field>
+        <field name="zip">1348</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="phone">+0032476543210</field>
+        <field name="email">laurie.poiret@example.com</field>
+        <field name="company_id" ref="l10n_be_hr_payroll.res_company_be"/>
+    </record>
+
+    <record id="user_laurie_poiret" model="res.users">
+        <field name="partner_id" ref="l10n_be_hr_contract_salary.res_partner_laurie_poiret"/>
+        <field name="login">lauriepoiret@example.com</field>
+        <field name="password">lauriepoiret</field>
+        <field name="signature" type="html"><span>--<br/>+L. Poiret</span></field>
+        <field name="company_ids" eval="[(4, ref('l10n_be_hr_payroll.res_company_be'))]"/>
+        <field name="company_id" ref="l10n_be_hr_payroll.res_company_be"/>
+        <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+        <field name="image_1920" type="base64" file="hr_contract_salary/static/img/hr_employe_laurie_poiret.png"/>
+    </record>
+
+    <record id="res_partner_laurie_poiret_work_address" model="res.partner">
+        <field name="name">Belgian Offices</field>
+        <field name="street">85 rue des Flamands</field>
+        <field name="city">Louvain</field>
+        <field name="zip">8431</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="company_id" ref="l10n_be_hr_payroll.res_company_be"/>
+    </record>
+
+    <record id="res_partner_bank_account_laurie_poiret" model="res.partner.bank">
+        <field name="acc_number">BE10561132778404</field>
+        <field name="bank_id" ref="base.bank_ing"/>
+        <field name="partner_id" ref="l10n_be_hr_contract_salary.res_partner_laurie_poiret"/>
+        <field name="company_id" ref="l10n_be_hr_payroll.res_company_be"/>
+        <field name="allow_out_payment" eval="True"/>
+    </record>
+
+    <record id="hr_employee_laurie_poiret" model="hr.employee">
+        <field name="name">Laurie Poiret (lap)</field>
+        <field name="work_contact_id" ref="res_partner_laurie_poiret"/>
+        <field name="gender">female</field>
+        <field name="marital">single</field>
+        <field name="job_title">Software Developer</field>
+        <field name="private_street">58 rue des Wallons</field>
+        <field name="private_city">Louvain-la-Neuve</field>
+        <field name="private_zip">1348</field>
+        <field name="private_country_id" ref="base.be"/>
+        <field name="private_phone">+0032476543210</field>
+        <field name="private_email">laurie.poiret@example.com</field>
+        <field name="address_id" ref="l10n_be_hr_contract_salary.res_partner_laurie_poiret_work_address"/>
+        <field name="emergency_contact">Marc Poiret</field>
+        <field name="emergency_phone">+0032498765432</field>
+        <field name="birthday">1991-07-28</field>
+        <field name="km_home_work">75</field>
+        <field name="place_of_birth">Brussels</field>
+        <field name="country_of_birth" ref="base.be"/>
+        <field name="certificate">master</field>
+        <field name="study_field">Civil Engineering</field>
+        <field name="study_school">Université Catholique de Louvain-la-Neuve</field>
+        <field name="parent_id" ref="l10n_be_hr_contract_salary.employee_max"/>
+        <field name="country_id" ref="base.be"/>
+        <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+        <field name="identification_id">91-07-28-458-80</field>
+        <field name="niss">91111111192</field>
+        <field name="bank_account_id" ref="l10n_be_hr_contract_salary.res_partner_bank_account_laurie_poiret"/>
+        <field name="image_1920" type="base64" file="hr_contract_salary/static/img/hr_employe_laurie_poiret.png"/>
+        <field name="company_id" ref="l10n_be_hr_payroll.res_company_be"/>
+        <field name="user_id" ref="l10n_be_hr_contract_salary.user_laurie_poiret"/>
+    </record>
+
+    <record id="fleet.model_corsa" model="fleet.vehicle.model">
+        <field name="can_be_requested" eval="True"/>
+        <field name="default_car_value">18000</field>
+        <field name="default_co2">88</field>
+        <field name="default_fuel_type">diesel</field>
+        <field name="default_recurring_cost_amount_depreciated">450.00</field>
+    </record>
+
+    <record id="ir_property_can_request_corsa_belgian_company" model="ir.property">
+        <field name="name">can_be_requested</field>
+        <field name="fields_id" search="[
+            ('model', '=', 'fleet.vehicle.model'),
+            ('name', '=', 'can_be_requested')]"/>
+        <field name="res_id" model="fleet.vehicle" eval="'fleet.vehicle.model,' + str(obj().env.ref('fleet.model_corsa').id)"/>
+        <field name="type">boolean</field>
+        <field name="value" eval="True"/>
+        <field name="company_id" ref="l10n_be_hr_payroll.res_company_be"/>
+    </record>
+
+    <record id="fleet_vehicle_model_category_family_car" model="fleet.vehicle.model.category">
+        <field name="name">Small Family Car</field>
+    </record>
+
+    <record id="fleet.model_a3" model="fleet.vehicle.model">
+        <field name="category_id" ref="l10n_be_hr_contract_salary.fleet_vehicle_model_category_family_car"/>
+    </record>
+
+    <record id="fleet_vehicle_audi_a3_laurie_poiret" model="fleet.vehicle">
+        <field name="model_id" ref="fleet.model_a3"/>
+        <field name="license_plate">1-JFC-095</field>
+        <field name="acquisition_date" eval="time.strftime('2020-01-01')"/>
+        <field name="co2">88</field>
+        <field name="driver_employee_id" ref="hr_employee_laurie_poiret"/>
+        <field name="car_value">38000</field>
+        <field name="company_id" ref="l10n_be_hr_payroll.res_company_be"/>
+        <field name="transmission">manual</field>
+    </record>
+
+    <record id="fleet_vehicle_log_contract_audi_a3_laurie_poiret" model="fleet.vehicle.log.contract">
+        <field name="recurring_cost_amount_depreciated">450.0</field>
+        <field name="state">open</field>
+        <field name="vehicle_id" ref="fleet_vehicle_audi_a3_laurie_poiret"/>
+    </record>
+
+    <record id="fleet_vehicle_brand_eddy_merckx" model="fleet.vehicle.model.brand">
+        <field name="name">Eddy Merckx</field>
+        <field name="image_128" type="base64" file="l10n_be_hr_contract_salary/static/img/brand-eddy-merckx.jpg"/>
+    </record>
+
+    <record id="fleet_vehicle_model_san_remo" model="fleet.vehicle.model">
+        <field name="name">SanRemo76</field>
+        <field name="brand_id" ref="fleet_vehicle_brand_eddy_merckx"/>
+        <field name="vehicle_type">bike</field>
+        <field name="can_be_requested" eval="True"/>
+        <field name="default_car_value">1000</field>
+        <field name="default_recurring_cost_amount_depreciated">25</field>
+    </record>
+
+    <record id="ir_property_can_request_bike_belgian_company" model="ir.property">
+        <field name="name">can_be_requested</field>
+        <field name="fields_id" search="[
+            ('model', '=', 'fleet.vehicle.model'),
+            ('name', '=', 'can_be_requested')]"/>
+        <field name="res_id" model="fleet.vehicle" eval="'fleet.vehicle.model,' + str(obj().env.ref('l10n_be_hr_contract_salary.fleet_vehicle_model_san_remo').id)"/>
+        <field name="type">boolean</field>
+        <field name="value" eval="True"/>
+        <field name="company_id" ref="l10n_be_hr_payroll.res_company_be"/>
+    </record>
+
+    <record id="fleet_vehicle_bike_laurie_poiret" model="fleet.vehicle">
+        <field name="model_id" ref="fleet_vehicle_model_san_remo"/>
+        <field name="driver_employee_id" ref="hr_employee_laurie_poiret"/>
+        <field name="car_value">1000</field>
+        <field name="company_id" ref="l10n_be_hr_payroll.res_company_be"/>
+    </record>
+
+    <record id="hr_contract_cdi_experienced_developer" model="hr.contract">
+        <field name="name">CDI - Experienced Developer (BE)</field>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="job_id" ref="l10n_be_hr_contract_salary.job_developer_belgium"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="wage">2650</field>
+        <field name="wage_on_signature">2650</field>
+        <field name="commission_on_target">0.0</field>
+        <field name="transport_mode_car" eval="True"/>
+        <field name="new_car" eval="True"/>
+        <field name="new_car_model_id" ref="fleet.model_corsa"/>
+        <field name="ip_wage_rate">25</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="sign_template_id" ref="hr_contract_salary.sign_template_cdi_developer"/>
+        <field name="contract_update_template_id" ref="hr_contract_salary.sign_template_cdi_developer"/>
+        <field name="company_id" ref="l10n_be_hr_payroll.res_company_be"/>
+        <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+    </record>
+
+    <record id="l10n_be_hr_contract_salary.job_developer_belgium" model="hr.job">
+        <field name="default_contract_id" ref="l10n_be_hr_contract_salary.hr_contract_cdi_experienced_developer"/>
+    </record>
+
+    <record id="hr_contract_cdi_laurie_poiret_previous" model="hr.contract">
+        <field name="name">CDI - Laurie Poiret - Experienced Developer</field>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="employee_id" ref="hr_employee_laurie_poiret"/>
+        <field name="job_id" ref="l10n_be_hr_contract_salary.job_developer_belgium"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="wage_on_signature">2500</field>
+        <field name="wage">2500</field>
+        <field name="commission_on_target">0.0</field>
+        <field name="transport_mode_car" eval="True"/>
+        <field name="new_car" eval="False"/>
+        <field name="car_id" ref="fleet_vehicle_audi_a3_laurie_poiret"/>
+        <field name="transport_mode_bike" eval="True"/>
+        <field name="bike_id" ref="fleet_vehicle_bike_laurie_poiret"/>
+        <field name="state">close</field>
+        <field name="ip_wage_rate">25</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="default_contract_id" ref="l10n_be_hr_contract_salary.hr_contract_cdi_experienced_developer"/>
+        <field name="sign_template_id" ref="hr_contract_salary.sign_template_cdi_developer"/>
+        <field name="contract_update_template_id" ref="hr_contract_salary.sign_template_cdi_developer"/>
+        <field name="company_id" ref="l10n_be_hr_payroll.res_company_be"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-2, month=1, day=1))"/>
+        <field name="date_end" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-2))"/>
+        <field name="resource_calendar_id" model="resource.calendar" eval="obj().search([('company_id', '=', obj().env.ref('l10n_be_hr_payroll.res_company_be').id)], limit=1)"/>
+        <field name="rd_percentage">100</field>
+    </record>
+
+    <record id="hr_contract_cdi_laurie_poiret" model="hr.contract">
+        <field name="name">CDI - Laurie Poiret - Experienced Developer</field>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="employee_id" ref="hr_employee_laurie_poiret"/>
+        <field name="job_id" ref="l10n_be_hr_contract_salary.job_developer_belgium"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="wage">2650</field>
+        <field name="wage_on_signature">2650</field>
+        <field name="commission_on_target">0.0</field>
+        <field name="transport_mode_car" eval="True"/>
+        <field name="new_car" eval="False"/>
+        <field name="car_id" ref="fleet_vehicle_audi_a3_laurie_poiret"/>
+        <field name="transport_mode_bike" eval="True"/>
+        <field name="bike_id" ref="fleet_vehicle_bike_laurie_poiret"/>
+        <field name="state">open</field>
+        <field name="ip_wage_rate">25</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="default_contract_id" ref="l10n_be_hr_contract_salary.hr_contract_cdi_experienced_developer"/>
+        <field name="sign_template_id" ref="hr_contract_salary.sign_template_cdi_developer"/>
+        <field name="contract_update_template_id" ref="hr_contract_salary.sign_template_cdi_developer"/>
+        <field name="company_id" ref="l10n_be_hr_payroll.res_company_be"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-1))"/>
+        <field name="resource_calendar_id" model="resource.calendar" eval="obj().search([('company_id', '=', obj().env.ref('l10n_be_hr_payroll.res_company_be').id)], limit=1)"/>
+        <field name="rd_percentage">100</field>
+    </record>
+
+    <record id="hr_employee_laurie_poiret" model="hr.employee">
+        <field name="contract_id" ref="l10n_be_hr_contract_salary.hr_contract_cdi_laurie_poiret"/>
+    </record>
+
+    <record id="base.partner_demo" model="res.partner">
+        <field name="phone">+0032 81 00 10</field>
+    </record>
+
+</odoo>

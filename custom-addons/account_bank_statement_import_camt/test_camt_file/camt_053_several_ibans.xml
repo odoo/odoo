@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.04">
+  <BkToCstmrStmt>
+    <GrpHdr>
+      <MsgId>2514988305.2019-05-23</MsgId>
+      <CreDtTm>2019-05-23T15:27:15.66+02:00</CreDtTm>
+    </GrpHdr>
+    <Stmt>
+      <Id>2514988305.2019-05-23</Id>
+      <CreDtTm>2019-05-23T15:27:15.66+02:00</CreDtTm>
+      <Acct>
+        <Id>
+          <IBAN>BE86 6635 9439 7150</IBAN>  <!-- This IBAN is valid but the bank does not exists -->
+        </Id>
+      </Acct>
+      <Bal>
+        <Tp>
+          <CdOrPrtry>
+            <Cd>OPBD</Cd>
+          </CdOrPrtry>
+        </Tp>
+        <Amt Ccy="USD">1000.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt>
+          <Dt>2019-05-22</Dt>
+        </Dt>
+      </Bal>
+      <Bal>
+        <Tp>
+          <CdOrPrtry>
+            <Cd>CLBD</Cd>
+          </CdOrPrtry>
+        </Tp>
+        <Amt Ccy="USD">1600.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt>
+          <Dt>2019-05-23</Dt>
+        </Dt>
+      </Bal>
+      <Ntry>
+        <Amt Ccy="USD">600.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BkTxCd>
+          <Prtry>
+            <Cd>ABCD</Cd>
+          </Prtry>
+        </BkTxCd>
+      </Ntry>
+    </Stmt>
+
+    <Stmt>
+      <Id>2514988305.2019-05-23</Id>
+      <CreDtTm>2019-05-23T15:27:15.66+02:00</CreDtTm>
+      <Acct>
+        <Id>
+          <IBAN>BE79 5390 0754 6933</IBAN>  <!-- This IBAN is valid but the bank does not exists -->
+        </Id>
+      </Acct>
+      <Bal>
+        <Tp>
+          <CdOrPrtry>
+            <Cd>OPBD</Cd>
+          </CdOrPrtry>
+        </Tp>
+        <Amt Ccy="USD">100.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt>
+          <Dt>2019-05-22</Dt>
+        </Dt>
+      </Bal>
+      <Bal>
+        <Tp>
+          <CdOrPrtry>
+            <Cd>CLBD</Cd>
+          </CdOrPrtry>
+        </Tp>
+        <Amt Ccy="USD">150.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt>
+          <Dt>2019-05-23</Dt>
+        </Dt>
+      </Bal>
+      <Ntry>
+        <Amt Ccy="USD">50.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BkTxCd>
+          <Prtry>
+            <Cd>ABCD</Cd>
+          </Prtry>
+        </BkTxCd>
+      </Ntry>
+    </Stmt>
+  </BkToCstmrStmt>
+</Document>

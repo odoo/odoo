@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.MapNewViewDialog" >
+  <Dialog size="'md'" title="title">
+    <div class="form-text text-muted">Select the contact field to use to get the coordinates of your records.</div>
+    <div class="o_web_studio_select mt-4">
+        <label for="res_partner">Contact Field</label>
+        <select name="res_partner" class="o_input" t-model="fieldsChoice.res_partner">
+            <option t-foreach="partnerFields" t-as="field" t-att-value="field.name" t-key="field.name">
+                <t t-esc="field.string"/><span t-if="env.debug"> (<t t-esc="field.name"/>)</span>
+            </option>
+        </select>
+    </div>
+    <t t-set-slot="footer">
+      <button class="btn btn-primary" t-on-click="_confirm">
+        Activate View
+      </button>
+      <button class="btn btn-secondary" t-on-click="_cancel">
+        Cancel
+      </button>
+    </t>
+  </Dialog>
+</t>
+</templates>

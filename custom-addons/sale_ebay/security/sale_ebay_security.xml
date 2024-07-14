@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="crm_rule_all_salesteam" model="ir.rule">
+        <field name="name">All Salesteam</field>
+        <field ref="sales_team.model_crm_team" name="model_id"/>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+
+</odoo>

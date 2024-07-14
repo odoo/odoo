@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payroll_hr_work_entry_view_form_inherit" model="ir.ui.view">
+        <field name="name">payroll.hr.work.entry.view.form.inherit</field>
+        <field name="model">hr.work.entry</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_work_entry_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="leave_state" invisible="1"/>
+                <button string="Refuse Time Off" name="action_refuse_leave" type="object" invisible="state != 'conflict' or not leave_id"/>
+                <button string="Approve Time Off" name="action_approve_leave" type="object" invisible="state != 'conflict' or not leave_id or leave_state == 'validate'"/>
+            </xpath>
+            <xpath expr="//field[@name='work_entry_type_id']" position="after">
+                <field name="leave_id" invisible="not leave_id"/>
+                <field name="contract_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="payroll_hr_work_entry_view_form_inherit_contract" model="ir.ui.view">
+      <field name="name">payroll.hr.work.entry.view.form.inherit.contract</field>
+      <field name="model">hr.work.entry</field>
+      <field name="inherit_id" ref="hr_work_entry_contract.hr_work_entry_contract_view_form_inherit"/>
+      <field name="arch" type="xml">
+        <xpath expr="//div[@name='work_entry_undefined']" position="after">
+          <div invisible="not work_entry_type_id">
+            <div class="alert alert-warning" role="alert" invisible="not leave_id">
+              This work entry cannot be validated. There is a leave to approve (or refuse) at the same time.
+            </div>
+            <div class="alert alert-warning" role="alert" invisible="leave_id">
+                This work entry cannot be validated. It is conflicting with at least one work entry. <br/>
+                  Two work entries of the same employee cannot overlap at the same time.
+              </div>
+            </div>
+          </xpath>
+        </field>
+      </record>
+
+    <record id="payroll_leave_hr_work_entry_type_view_form_inherit" model="ir.ui.view">
+        <field name="name">payroll.leave.hr.work.entry.type.view.form.inherit</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_work_entry_type_view_form"/>
+        <field name="arch" type="xml">
+            <group name="time_off" position="inside">
+                <field name="leave_type_ids" widget="many2many_tags" invisible="not is_leave"/>
+            </group>
+        </field>
+    </record>
+
+</odoo>

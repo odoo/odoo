@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- /file template -->
+    <t t-name="knowledge.FileBehavior">
+        <t t-set="send_as_message">Send as Message</t>
+        <t t-set="use_as_attachment">Use as Attachment</t>
+        <t t-set="download">Download</t>
+        <div class="d-flex justify-content-between flex-wrap w-100">
+            <div class="d-flex flex-grow-1">
+                <div class="o_knowledge_file_image d-flex align-items-center">
+                    <a class="o_image" t-att-title="state.fileModel.filename" t-att-data-mimetype="state.fileModel.mimetype"
+                        t-att-href="state.fileModel.downloadUrl" t-on-click="onClickFileImage"
+                    />
+                </div>
+                <div class="d-block ps-2 text-break flex-grow-1">
+                    <div t-attf-class="o_knowledge_file_name_container #{ state.editFileName ? 'd-none' : '' }"
+                        data-oe-protected="false" t-ref="fileNameRef" t-att-tabindex="!this.props.readonly ? '-1' : undefined"
+                        t-on-focus="props.readonly ? () => {} : onFocusFileName"/>
+                    <div data-oe-transient-content="true">
+                        <input t-if="!props.readonly" t-attf-class="rounded border-0 p-0 #{ state.editFileName ? '' : 'd-none'}"
+                            t-ref="nameInput" type="text" maxLength="100" t-att-placeholder="state.fileModel.filename"
+                            t-on-blur="onBlurNameInput" t-on-input.stop="" t-on-keydown="onKeydownNameInput"/>
+                    </div>
+                    <div class="d-flex flex-wrap">
+                        <div t-if="state.fileModel.extension" class="o_knowledge_file_extension text-uppercase small"
+                            t-out="state.fileModel.extension"/>
+                        <div class="flex-grow-1 d-flex justify-content-end">
+                            <t t-set="sendAsMessageLabel">Send as Message</t>
+                            <t t-set="useAsAttachmentLabel">Use as Attachment</t>
+                            <t t-set="downloadLabel">Download</t>
+                            <BehaviorToolbar>
+                                <t t-set-slot="buttons">
+                                    <BehaviorToolbarButton
+                                        hidden="!targetRecordInfo?.canPostMessages"
+                                        icon="'fa-envelope'"
+                                        label="sendAsMessageLabel"
+                                        onClick.bind="onClickAttachToMessage"
+                                    />
+                                    <BehaviorToolbarButton
+                                        hidden="!targetRecordInfo?.canAttachFiles"
+                                        icon="'fa-paperclip'"
+                                        label="useAsAttachmentLabel"
+                                        onClick.bind="onClickUseAsAttachment"
+                                    />
+                                    <BehaviorToolbarButton
+                                        icon="'fa-download'"
+                                        label="downloadLabel"
+                                        onClick.bind="onClickDownload"
+                                    />
+                                </t>
+                            </BehaviorToolbar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="knowledge.FileBehaviorFileName">
+        <div class="d-flex">
+            <span class="o_knowledge_file_name" t-out="fileName"/>
+            <i class="fa fa-pencil mx-1 invisible align-items-center d-inline-flex"/>
+        </div>
+    </t>
+</templates>

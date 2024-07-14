@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="invoice_form_inherit_account_intrastat" model="ir.ui.view">
+            <field name="name">account.move.form.inherit.account.intrastat</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='fiscal_position_id']" position="after">
+                    <field name="intrastat_country_id"
+                           invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')"
+                           readonly="state in ['cancel', 'posted']"
+                           help="Arrival country"
+                           options="{'no_create': True}"/>
+                    <field name="intrastat_transport_mode_id"
+                           invisible="not intrastat_country_id or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')"
+                           readonly="state != 'draft'"
+                           context="{'search_view_ref': 'account_intrastat.view_intrastat_code_restricted_type_search',
+                           'form_view_ref': 'account_intrastat.view_intrastat_code_restricted_type_form',
+                           'default_type': 'transport'}"/>
+                </xpath>
+                <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='quantity']" position="before">
+                    <field name="intrastat_transaction_id"
+                           string="Intrastat"
+                           optional="hide"
+                           context="{
+                                'search_view_ref': 'account_intrastat.view_intrastat_code_restricted_type_search',
+                                'form_view_ref': 'account_intrastat.view_intrastat_code_restricted_type_form',
+                                'default_type': 'transaction'}"
+                           domain="[
+                               ('type', '=', 'transaction'),
+                               '|',
+                               ('expiry_date', '&gt;', parent.date or context_today().strftime('%Y-%m-%d')),
+                               ('expiry_date', '=', None),
+                               '|',
+                               ('start_date', '&lt;=', parent.date or context_today().strftime('%Y-%m-%d')),
+                               ('start_date', '=', None)
+                           ]"
+                    />
+                </xpath>
+                <xpath expr="//field[@name='invoice_line_ids']/form//field[@name='discount']" position="after">
+                    <field name="intrastat_transaction_id"
+                           string="Intrastat"
+                           context="{
+                            'search_view_ref': 'account_intrastat.view_intrastat_code_restricted_type_search',
+                            'form_view_ref': 'account_intrastat.view_intrastat_code_restricted_type_form',
+                            'default_type': 'transaction'}"
+                           domain="[
+                               ('type', '=', 'transaction'),
+                               '|',
+                               ('expiry_date', '&gt;', parent.date or context_today().strftime('%Y-%m-%d')),
+                               ('expiry_date', '=', None),
+                               '|',
+                               ('start_date', '&lt;=', parent.date or context_today().strftime('%Y-%m-%d')),
+                               ('start_date', '=', None)
+                           ]"
+                    />
+                </xpath>
+                <xpath expr="//field[@name='line_ids']//field[@name='account_id']" position="before">
+                    <field name="intrastat_transaction_id" column_invisible="True"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="invoice_line_be_intrastat_data_form" model="ir.ui.view">
+            <field name="name">account.move.form.inherit.account.be.intrastat</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_line_ids']//field[@name='quantity']" position="before">
+                    <field name="intrastat_product_origin_country_id"
+                        optional="hide"
+                        options="{'no_create': True}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="voip_call_tree_view" model="ir.ui.view">
+        <field name="name">VoIP Calls Tree View</field>
+        <field name="model">voip.call</field>
+        <field name="arch" type="xml">
+            <tree string="Calls" editable="top">
+                <field name="display_name"/>
+                <field name="phone_number"/>
+                <field name="direction"/>
+                <field name="state"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="user_id"/>
+                <field name="partner_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="voip_call_view" model="ir.actions.act_window">
+        <field name="name">Calls</field>
+        <field name="res_model">voip.call</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="voip_call_tree_view"/>
+        <field name="domain">[]</field>
+    </record>
+
+    <menuitem id="menu_voip_call_view"
+        name="Voip / Calls"
+        parent="base.menu_custom"
+        action="voip_call_view"/>
+</odoo>

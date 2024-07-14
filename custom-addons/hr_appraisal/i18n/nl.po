@@ -1,0 +1,2214 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_appraisal
+# 
+# Translators:
+# Martin Trigaux, 2023
+# Wil Odoo, 2023
+# Jolien De Paepe, 2024
+# Manon Rondou, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2024\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "%(user)s decided, as %(role)s, to publish the employee's feedback"
+msgstr ""
+"%(user)s heeft besloten, als %(role)s, om de feedback van de werknemer te "
+"publiceren"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "%s's Goals"
+msgstr "Doelstellingen van %s"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "1 Meeting"
+msgstr "1 afspraak"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_goal__progression__100
+msgid "100%"
+msgstr "100%"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_goal__progression__025
+msgid "25%"
+msgstr "25%"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__module_hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "360 Feedback"
+msgstr "360 Feedback"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_goal__progression__050
+msgid "50%"
+msgstr "50%"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_goal__progression__075
+msgid "75%"
+msgstr "75%"
+
+#. module: hr_appraisal
+#: model:mail.template,body_html:hr_appraisal.mail_template_appraisal_confirm
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        An appraisal of <t t-out=\"ctx.get('employee_to_name', 'employee')\">employee</t> has been confirmed.\n"
+"                        <br><br>\n"
+"                        Please schedule an appraisal date together.\n"
+"                        <br><br>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    View Appraisal\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Een evaluatie van <t t-out=\"ctx.get('employee_to_name', 'employee')\">werknemer</t> is bevestigd.\n"
+"                        <br><br>\n"
+"                        Laten we samen een datum voor de evaluatie inplannen.\n"
+"                        <br><br>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    Bekijk evaluatie\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+
+#. module: hr_appraisal
+#: model:mail.template,body_html:hr_appraisal.mail_template_appraisal_request_from_employee
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Dear <t t-out=\"ctx.get('employee_to_name', 'employee')\">employee</t>,\n"
+"                        <br>\n"
+"                        <t t-out=\"ctx.get('author_name', '')\">Addison Olson</t> (<t t-out=\"ctx.get('author_mail', '')\">addison.olson28@example.com</t>) wishes an appraisal.\n"
+"                        <t t-if=\"ctx.get('user_body')\">\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; background-color: #F1F1F1;\">\n"
+"                                <t t-out=\"ctx.get('user_body')\">Annual appraisal.</t>\n"
+"                            </div>\n"
+"                        </t>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\" margin: auto; background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    View Appraisal\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Beste <t t-out=\"ctx.get('employee_to_name', 'employee')\">werknemer</t>,\n"
+"                        <br>\n"
+"                        <t t-out=\"ctx.get('author_name', '')\">Addison Olson</t> (<t t-out=\"ctx.get('author_mail', '')\">addison.olson28@example.com</t>) wenst een evaluatie.\n"
+"                        <t t-if=\"ctx.get('user_body')\">\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; background-color: #F1F1F1;\">\n"
+"                                <t t-out=\"ctx.get('user_body')\">Jaarlijkse evaluatie.</t>\n"
+"                            </div>\n"
+"                        </t>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\" margin: auto; background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    Bekijk evaluatie\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+
+#. module: hr_appraisal
+#: model:mail.template,body_html:hr_appraisal.mail_template_appraisal_request
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Dear <t t-out=\"ctx.get('employee_to_name', 'employee')\">employee</t>,\n"
+"                        <br>\n"
+"                        An appraisal has been requested by <t t-out=\"ctx.get('author_name', '')\">Addison Olson</t>\n"
+"                        <br>\n"
+"                        (<t t-out=\"ctx.get('author_mail', '')\">addison.olson28@example.com</t>).\n"
+"                        <t t-if=\"ctx.get('user_body')\">\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; background-color: #F1F1F1;\">\n"
+"                                <t t-out=\"ctx.get('user_body')\">Annual appraisal.</t>\n"
+"                            </div>\n"
+"                        </t>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\" margin: auto; background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    View Appraisal\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                        <br>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Beste <t t-out=\"ctx.get('employee_to_name', 'employee')\">werknemer</t>,\n"
+"                        <br>\n"
+"                        Een evaluatie is aangevraagd door <t t-out=\"ctx.get('author_name', '')\">Addison Olson</t>\n"
+"                        <br>\n"
+"                        (<t t-out=\"ctx.get('author_mail', '')\">addison.olson28@example.com</t>).\n"
+"                        <t t-if=\"ctx.get('user_body')\">\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; background-color: #F1F1F1;\">\n"
+"                                <t t-out=\"ctx.get('user_body')\">Jaarlijkse evaluatie.</t>\n"
+"                            </div>\n"
+"                        </t>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\" margin: auto; background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    Bekijk evaluatie\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                        <br>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>\n"
+"                Describe something that made you proud, a piece of work positive for\n"
+"                the company.\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                Beschrijf iets waar je trots op bent, een positief resultaat voor\n"
+"                het bedrijf.\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>\n"
+"                Did you face new difficulties? Did you confront yourself to new\n"
+"                obstacles?\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                Heb je nieuwe problemen ontmoet? Heb je het hoofd geboden aan nieuwe\n"
+"                obstakels?\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>\n"
+"                Every job has strong points, what are, in your opinion, the tasks that\n"
+"                you enjoy the most/the least?\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                Elke functie heeft sterke kanten. Wat zijn volgens jou de taken die\n"
+"                je het liefst/minst lief doet?\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<em>\n"
+"                From a manager point of view, how could you help the employee to\n"
+"                overcome their weaknesses?\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                Vanuit een manager oogpunt, hoe kan je de werknemer helpen om\n"
+"                zijn/haar zwakte te overwinnen?\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>\n"
+"                How can the company help you with your need and objectives in order\n"
+"                for you to reach your goals and look for the best collaboration.\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                Hoe kan het bedrijf je helpen met je behoeften en doelstellingen zodat je\n"
+"                je doelen kan halen en het beste kan halen uit de samenwerking.\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<em>\n"
+"                How do you see the employee in the future, do your vision follow the\n"
+"                employee's desire?\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                Hoe zie je de werknemer in de toekomst, laat je visie toe om de werknemer's\n"
+"                wensen na te leven?\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<em>\n"
+"                Some achievements comforting you in their strengths to face job's\n"
+"                issues.\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"Sommige prestaties troosten je in hun kracht om de problemen van het werk aan te pakken.</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Autonomy</em>"
+msgstr "<em>Autonomie</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>Culture/Behavior:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-1\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+msgstr ""
+"<em>Cultuur/Gedrag:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-1\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Do you need rapid answer to the current situation?</em>"
+msgstr "<em>Heb je een snel antwoord nodig omtrent de huidige situatie?</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "<em>Give an example of long-term objective (&gt; 6 months)</em>"
+msgstr ""
+"<em>Geef een voorbeeld van een langetermijndoelstelling (&gt; 6 "
+"maanden)</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "<em>Give an example of short-term objective (&lt; 6 months)</em>"
+msgstr ""
+"<em>Geef een voorbeeld van een kortetermijndoelstelling (&lt; 6 "
+"maanden)</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>Internal Communication:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-2\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+msgstr ""
+"<em>Interne communicatie:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-2\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>Job's content:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-3\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+msgstr ""
+"<em>Inhoud van de functie:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-3\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Pro-activity</em>"
+msgstr "<em>Pro-activiteit</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>Remuneration:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-5\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+msgstr ""
+"<em>Salaris:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-5\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Stress Resistance</em>"
+msgstr "<em>Stressbestendigheid</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Teamwork</em>"
+msgstr "<em>Teamwork</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Time Management</em>"
+msgstr "<em>Tijdbeheer</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>Work organization:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-4\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+msgstr ""
+"<em>Werkorganisatie:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-4\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_employee_base.py:0
+#, python-format
+msgid ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                            Schedule an appraisal\n"
+"                        </p><p>\n"
+"                            Plan appraisals with your colleagues, collect and discuss feedback.\n"
+"                        </p>"
+msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                            Plan een evaluatie\n"
+"                        </p><p>\n"
+"                            Plan evaluaties met je collega's, verzamel en bespreek feedback.\n"
+"                        </p>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_kanban
+msgid "<span class=\"bg-info\">Ready</span>"
+msgstr "<span class=\"bg-info\">Klaar</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_kanban
+msgid "<span class=\"bg-success\">Done</span>"
+msgstr "<span class=\"bg-success\">Gedaan</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_users_view_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                            Last Appraisal\n"
+"                        </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                           Laatste evaluatie\n"
+"                        </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "<span class=\"o_stat_text\">Appraisals</span>"
+msgstr "<span class=\"o_stat_text\">Evaluaties</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "<span class=\"o_stat_text\">Goals</span>"
+msgstr "<span class=\"o_stat_text\">Doelen</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_kanban
+msgid "<span class=\"text-bg-danger\">Canceled</span>"
+msgstr "<span class=\"text-bg-danger\">Geannuleerd</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_kanban
+msgid "<span class=\"text-bg-success\">Done</span>"
+msgstr "<span class=\"text-bg-success\">Gereed</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid ""
+"<span class=\"text-end\" invisible=\"employee_feedback_published\">Not Visible to Manager</span>\n"
+"                                            <span class=\"text-end\" invisible=\"not employee_feedback_published or state == 'new'\">Visible to Manager</span>\n"
+"                                            <span class=\"text-end\" invisible=\"not employee_feedback_published or state != 'new'\">Visible &amp; Editable by Manager</span>"
+msgstr ""
+"<span class=\"text-end\" invisible=\"employee_feedback_published\">Niet zichtbaar voor manager</span>\n"
+"                                            Zichtbaar voor manager</span>\n"
+"                                            Zichtbaar &amp; Bewerkbaar door manager</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid ""
+"<span class=\"text-end\" invisible=\"manager_feedback_published or not can_see_manager_publish\">Not Visible to Employee</span>\n"
+"                                            <span class=\"text-end\" invisible=\"not manager_feedback_published or not can_see_manager_publish\">Visible to Employee</span>"
+msgstr ""
+"<span class=\"text-end\" invisible=\"manager_feedback_published or not can_see_manager_publish\">Niet zichtbaar voor werknemer</span>\n"
+"                                            Zichtbaar voor werknemer</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Evaluation\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Beoordeling\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Feedback\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Feedback\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Improvements\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Verbeteringen\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                My feelings\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Mijn gevoel\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                My future\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Mijn toekomst\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                My work\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Mijn werk\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_kanban
+msgid "<strong><span>Meeting: </span></strong>"
+msgstr "<strong><span>Afspraak: </span></strong>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_report_view_gantt
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_view_gantt
+msgid "<strong>Date — </strong>"
+msgstr "<strong>Datum — </strong>"
+
+#. module: hr_appraisal
+#: model:ir.model.constraint,message:hr_appraisal.constraint_hr_appraisal_goal_tag_name_uniq
+msgid "A tag with the same name already exists."
+msgstr "Er bestaat al een label met dezelfde naam."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_needaction
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_needaction
+msgid "Action Needed"
+msgstr "Actie gevraagd"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__active
+msgid "Active"
+msgstr "Actief"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_ids
+msgid "Activities"
+msgstr "Activiteiten"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_exception_decoration
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Activiteit uitzondering decoratie"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_state
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_state
+msgid "Activity State"
+msgstr "Activiteitsfase"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_type_icon
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Activiteitensoort icoon"
+
+#. module: hr_appraisal
+#: model_terms:ir.actions.act_window,help:hr_appraisal.hr_appraisal_goal_tag_action
+msgid "Add a new tag"
+msgstr "Voeg een nieuw label toe"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.request_appraisal_view_form
+msgid "Add existing contacts..."
+msgstr "Voeg bestaande contacten toe..."
+
+#. module: hr_appraisal
+#: model:res.groups,name:hr_appraisal.group_hr_appraisal_manager
+msgid "Administrator"
+msgstr "Beheerder"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.hr_appraisal_action
+#: model:ir.actions.act_window,name:hr_appraisal.open_view_hr_appraisal_tree2
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__appraisal_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__appraisal_id
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_view_activity
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_tree
+msgid "Appraisal"
+msgstr "Evaluatie"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.action_appraisal_report_all
+#: model:ir.ui.menu,name:hr_appraisal.menu_appraisal_analysis_report
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_report_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_report_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_graph
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_pivot
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Appraisal Analysis"
+msgstr "Evaluatie-analyse"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_appraisal_note
+msgid "Appraisal Assessment Note"
+msgstr "Beoordelingsnotitie evaluatie"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__appraisal_confirm_mail_template
+msgid "Appraisal Confirm Mail Template"
+msgstr "E-mailsjabloon voor evaluatie bevestigen"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_appraisal_count
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__appraisal_count
+msgid "Appraisal Count"
+msgstr "Aantal evaluaties"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__date_close
+msgid "Appraisal Date"
+msgstr "Datum evaluatie"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__employee_id
+msgid "Appraisal Employee"
+msgstr "Evaluatie werknemer"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__appraisal_employee_feedback_template
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__appraisal_employee_feedback_template
+msgid "Appraisal Employee Feedback Template"
+msgstr "Feedbacksjabloon evaluatie werknemers"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal Form to Fill"
+msgstr "Evaluatieformulier om in te vullen"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_appraisal_goal
+msgid "Appraisal Goal"
+msgstr "Doelstelling evaluatie"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_appraisal_goal_tag
+msgid "Appraisal Goal Tags"
+msgstr "Labels doelstelling evaluatie"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__appraisal_manager_feedback_template
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__appraisal_manager_feedback_template
+msgid "Appraisal Manager Feedback Template"
+msgstr "Feedbacksjabloon evaluatie manager"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal Officer"
+msgstr "Evaluatieverantwoordelijke"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__appraisal_plan_posted
+msgid "Appraisal Plan Posted"
+msgstr "Evaluatieplan geplaatst"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_department__appraisal_properties_definition
+msgid "Appraisal Properties"
+msgstr "Eigenschappen evaluatie"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal Request"
+msgstr "Aanvraag evaluatie"
+
+#. module: hr_appraisal
+#: model:mail.template,subject:hr_appraisal.mail_template_appraisal_request
+msgid "Appraisal Requested"
+msgstr "Evaluatie aangevraagd"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_report__state__pending
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Appraisal Sent"
+msgstr "Evaluatie verzonden"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_appraisal_report
+msgid "Appraisal Statistics"
+msgstr "Statistieken evaluatie"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_department_view_form
+msgid "Appraisal Templates"
+msgstr "Evaluatiesjablonen"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal for %s to fill"
+msgstr "Evaluatie voor %s om in te vullen"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal of %s"
+msgstr "Evaluatie van %s"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal to fill"
+msgstr "Evaluatie om in te vullen"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.hr_appraisal_action_from_department
+msgid "Appraisal to start"
+msgstr "Te starten evaluatie"
+
+#. module: hr_appraisal
+#: model:ir.actions.server,name:hr_appraisal.ir_cron_scheduler_appraisal_ir_actions_server
+msgid "Appraisal: Run employee appraisal"
+msgstr "Evaluatie: voer werknemersevaluatie uit"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.open_view_hr_appraisal_tree
+#: model:ir.ui.menu,name:hr_appraisal.menu_hr_appraisal_root
+#: model:ir.ui.menu,name:hr_appraisal.menu_open_view_hr_appraisal_tree
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_departure_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Appraisals"
+msgstr "Evaluaties"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Appraisals Plans"
+msgstr "Evaluatieplannen"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_department__appraisals_to_process_count
+msgid "Appraisals to Process"
+msgstr "Te verwerken evaluaties"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Archived"
+msgstr "Gearchiveerd"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Ask to fill a survey to other employees"
+msgstr "Vraag aan andere werknemers om een enquête in te vullen"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__assessment_note_ids
+msgid "Assessment Note"
+msgstr "Beoordelingsnotitie"
+
+#. module: hr_appraisal
+#: model_terms:ir.actions.act_window,help:hr_appraisal.action_hr_appraisal_goal
+msgid ""
+"Assign Goals to motivate your Employees and keep track of their objectives "
+"between Appraisals."
+msgstr ""
+"Wijs doelstellingen toe om je werknemers te motiveren en houd hun doelen bij"
+" tussen Evaluaties."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_attachment_count
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_attachment_count
+msgid "Attachment Count"
+msgstr "Aantal bijlagen"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__author_id
+msgid "Author"
+msgstr "Auteur"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__appraisal_plan
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__appraisal_plan
+msgid "Automatically Generate Appraisals"
+msgstr "Automatisch evaluaties genereren"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Automatically generate appraisals"
+msgstr "Automatisch evaluaties genereren"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__avatar_1920
+msgid "Avatar"
+msgstr "Avatar"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__avatar_128
+msgid "Avatar 128"
+msgstr "Avatar 128"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "Basis werknemer"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__body_has_template_value
+msgid "Body content is the same as the template"
+msgstr "De inhoud is hetzelfde als de sjabloon"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_calendar_event
+msgid "Calendar Event"
+msgstr "Agenda gebeurtenis"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__can_edit_body
+msgid "Can Edit Body"
+msgstr "Kan tekst bewerken"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__can_see_employee_publish
+msgid "Can See Employee Publish"
+msgstr "Kan zien wat de werknemer heeft gepubliceerd"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__can_see_manager_publish
+msgid "Can See Manager Publish"
+msgstr "Kan zien wat de manager heeft gepubliceerd"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.request_appraisal_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Cancel"
+msgstr "Annuleren"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_departure_wizard__cancel_appraisal
+msgid "Cancel Future Appraisals"
+msgstr "Toekomstige evaluaties annuleren"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_departure_wizard__cancel_appraisal
+msgid "Cancel all appraisal after contract end date."
+msgstr "Annuleer alle evaluaties na de einddatum van het contract."
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal__state__cancel
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_report__state__cancel
+msgid "Cancelled"
+msgstr "Geannuleerd"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__color
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__color
+msgid "Color"
+msgstr "Kleur"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_res_company
+msgid "Companies"
+msgstr "Bedrijven"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__company_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__company_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__company_id
+msgid "Company"
+msgstr "Bedrijf"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.request_appraisal_view_form
+msgid "Compose Email"
+msgstr "E-mail opstellen"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie instellingen"
+
+#. module: hr_appraisal
+#: model:ir.ui.menu,name:hr_appraisal.menu_hr_appraisal_configuration
+msgid "Configuration"
+msgstr "Configuratie"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Configure General Feedback Template"
+msgstr "Algemene feedbacksjablonen configureren"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Confirm"
+msgstr "Bevestigen"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal__state__pending
+msgid "Confirmed"
+msgstr "Bevestigd"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__body
+msgid "Contents"
+msgstr "Inhoud"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__create_date
+msgid "Create Date"
+msgstr "Aanmaakdatum"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__duration_first_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__duration_first_appraisal
+msgid "Create a first Appraisal after"
+msgstr "Maak een eerste evaluatie na"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__duration_next_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__duration_next_appraisal
+msgid "Create a second Appraisal after"
+msgstr "Maak een tweede evaluatie na"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__duration_after_recruitment
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__duration_after_recruitment
+msgid "Create an Appraisal after recruitment"
+msgstr "Maak een evaluatie na werving"
+
+#. module: hr_appraisal
+#: model_terms:ir.actions.act_window,help:hr_appraisal.action_hr_appraisal_goal
+msgid "Create new goals"
+msgstr "Nieuwe doelen maken"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__create_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__create_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__create_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__create_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__create_uid
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__create_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__create_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__create_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__create_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__create_date
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Creation Date"
+msgstr "Aanmaakdatum"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_department__custom_appraisal_templates
+msgid "Custom Appraisal Templates"
+msgstr "Aangepaste evaluatiesjablonen"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Date"
+msgstr "Datum"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__date_close
+msgid ""
+"Date of the appraisal, automatically updated when the appraisal is Done or "
+"Cancelled."
+msgstr ""
+"Datum van de evaluatie, automatisch bijgewerkt wanneer de evaluatie is "
+"voltooid of geannuleerd."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__deadline
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__deadline
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_search
+msgid "Deadline"
+msgstr "Deadline"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_view_activity
+msgid "Deadline:"
+msgstr "Deadline:"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal_goal.py:0
+#, python-format
+msgid "Deadline: %s"
+msgstr "Deadline: %s"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_kanban
+msgid "Delete"
+msgstr "Verwijderen"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_department
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__department_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__department_id
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Department"
+msgstr "Afdeling"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr "Vertrek wizard"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__description
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_form
+msgid "Description"
+msgstr "Omschrijving"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__display_name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__display_name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__display_name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__display_name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__display_name
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__display_name
+msgid "Display Name"
+msgstr "Schermnaam"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal__state__done
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_report__state__done
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Done"
+msgstr "Afgehandeld"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_employee
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__employee_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_department_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Employee"
+msgstr "Werknemer"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_appraisal
+msgid "Employee Appraisal"
+msgstr "Werknemersevaluatie"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_autocomplete_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__employee_autocomplete_ids
+msgid "Employee Autocomplete"
+msgstr "Werknemer automatisch aanvullen"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_feedback
+msgid "Employee Feedback"
+msgstr "Feedback van werknemer"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_feedback_published
+msgid "Employee Feedback Published"
+msgstr "Feedback van werknemers gepubliceerd"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_feedback_template
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_department__employee_feedback_template
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Employee Feedback Template"
+msgstr "Sjabloon voor feedback van werknemers"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__name
+msgid "Employee Name"
+msgstr "Naam werknemer"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_user_id
+msgid "Employee User"
+msgstr "Werknemer gebruiker"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Employee's Feedback"
+msgstr "Feedback van werknemer"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.action_hr_appraisal_note
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__assessment_note_ids
+#: model:ir.ui.menu,name:hr_appraisal.menu_hr_appraisal_note
+msgid "Evaluation Scale"
+msgstr "Evaluatieschaal"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/res_company.py:0
+#, python-format
+msgid "Exceeds expectations"
+msgstr "Overtreft verwachtingen"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Extended Filters..."
+msgstr "Uitgebreide filters..."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Feedback Templates"
+msgstr "Feedback-sjablonen"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Fill appraisal for %s"
+msgstr "Evaluatie invullen voor %s"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__date_final_interview
+msgid "Final Interview"
+msgstr "Eindgesprek"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Final Interview Date"
+msgstr "Finale interview datum"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__assessment_note
+msgid "Final Rating"
+msgstr "Eindbeoordeling"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_follower_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_follower_ids
+msgid "Followers"
+msgstr "Volgers"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_partner_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Volgers (Relaties)"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__activity_type_icon
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome icoon bijv. fa-tasks"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Future Activities"
+msgstr "Toekomstige activiteiten"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"Give one positive achievement that convinced you of the employee's\n"
+"            value."
+msgstr ""
+"Geef één positieve verwezenlijking die je heeft overtuigd van de werknemer's\n"
+"waarde."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_form
+msgid "Goal"
+msgstr "Doel"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.hr_appraisal_goal_tag_action
+msgid "Goal Tags"
+msgstr "Labels doelstellingen"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.action_hr_appraisal_goal
+#: model:ir.ui.menu,name:hr_appraisal.menu_hr_appraisal_goal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_graph
+msgid "Goals"
+msgstr "Doelen"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Group By"
+msgstr "Groeperen op"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Group by..."
+msgstr "Groeperen op..."
+
+#. module: hr_appraisal
+#: model:mail.template,name:hr_appraisal.mail_template_appraisal_confirm
+msgid "HR: Appraisal Confirmation"
+msgstr "HR: Bevestiging evaluatie"
+
+#. module: hr_appraisal
+#: model:mail.template,name:hr_appraisal.mail_template_appraisal_request_from_employee
+msgid "HR: Employee Appraisal Request"
+msgstr "HR: Verzoek om evaluatie van werknemers"
+
+#. module: hr_appraisal
+#: model:mail.template,name:hr_appraisal.mail_template_appraisal_request
+msgid "HR: Manager appraisal request"
+msgstr "HR: Verzoek om evaluatie van manager"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__has_message
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__has_message
+msgid "Has Message"
+msgstr "Heeft bericht"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "How could the employee improve?"
+msgstr "Hoe zou de werknemer zich kunnen verbeteren?"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "How do I feel about my own..."
+msgstr "Wat denk ik over mijn eigen..."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "How do I feel about the company..."
+msgstr "Wat denk ik over het bedrijf..."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__id
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_exception_icon
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_exception_icon
+msgid "Icon"
+msgstr "Icoon"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__activity_exception_icon
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Icoon om uitzondering op activiteit aan te geven."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__message_needaction
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__message_has_error
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__message_has_sms_error
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__message_has_error
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Indien aangevinkt hebben sommige berichten een leveringsfout."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__image_1920
+msgid "Image"
+msgstr "Afbeelding"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__image_128
+msgid "Image 128"
+msgstr "Afbeelding 128"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "In progress Evaluations"
+msgstr "Beoordelingen in behandeling"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__final_interview
+msgid "Interview"
+msgstr "Gesprek"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__is_mail_template_editor
+msgid "Is Editor"
+msgstr "Is bewerker"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_is_follower
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_is_follower
+msgid "Is Follower"
+msgstr "Is een volger"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__is_manager
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__is_manager
+msgid "Is Manager"
+msgstr "Is manager"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__lang
+msgid "Language"
+msgstr "Taal"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__last_appraisal_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__last_appraisal_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_base__last_appraisal_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_public__last_appraisal_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_users__last_appraisal_id
+msgid "Last Appraisal"
+msgstr "Laatste evaluatie"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__last_appraisal_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__last_appraisal_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_users__last_appraisal_date
+msgid "Last Appraisal Date"
+msgstr "Datum laatste evaluatie"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Last Meeting"
+msgstr "Laatste afspraak"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__write_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__write_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__write_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__write_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__write_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__write_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__write_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__write_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_search
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Late"
+msgstr "Te laat"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Late Activities"
+msgstr "Te late activiteiten"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"Long term (&gt; 6 months) career discussion, where does the employee\n"
+"            wants to go, how to help them reach this path?"
+msgstr ""
+"Langetermijngesprek (&gt; 6 maanden) over de carrière, wat wil de werknemer\n"
+"            bereiken, hoe kan je hem helpen dit pad te bewandelen?"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__template_id
+msgid "Mail Template"
+msgstr "E-mailsjabloon"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__manager_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__manager_id
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_department_view_form
+#, python-format
+msgid "Manager"
+msgstr "Manager"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Manager Assessment will show here"
+msgstr "De managerbeoordeling wordt hier weergegeven"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__manager_feedback
+msgid "Manager Feedback"
+msgstr "Feedback van manager"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__manager_feedback_published
+msgid "Manager Feedback Published"
+msgstr "Managerfeedback gepubliceerd"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__manager_feedback_template
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_department__manager_feedback_template
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Manager Feedback Template"
+msgstr "Sjabloon voor feedback van manager"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__manager_user_ids
+msgid "Manager Users"
+msgstr "Manager gebruikers"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Manager's Feedback"
+msgstr "Feedback van de manager"
+
+#. module: hr_appraisal
+#: model:ir.actions.server,name:hr_appraisal.action_mark_as_done
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Mark as Done"
+msgstr "Markeren als gereed"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__meeting_count_display
+msgid "Meeting Count"
+msgstr "Aantal afspraken"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__meeting_ids
+msgid "Meetings"
+msgstr "Afspraken"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/res_company.py:0
+#, python-format
+msgid "Meets expectations"
+msgstr "Voldoet aan de verwachtingen"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_has_error
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_has_error
+msgid "Message Delivery error"
+msgstr "Bericht afleverfout"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_ids
+msgid "Messages"
+msgstr "Berichten"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__my_activity_date_deadline
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Mijn activiteit deadline"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.hr_appraisal_action_my
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "My Appraisals"
+msgstr "Mijn evaluaties"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_search
+msgid "My Goals"
+msgstr "Mijn doelen"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__name
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_tree
+msgid "Name"
+msgstr "Naam"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/res_company.py:0
+#, python-format
+msgid "Needs improvement"
+msgstr "Moet worden verbeterd"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Volgende activiteitenafspraak"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_date_deadline
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Volgende activiteit deadline"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_summary
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_summary
+msgid "Next Activity Summary"
+msgstr "Volgende activiteit overzicht"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_type_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_type_id
+msgid "Next Activity Type"
+msgstr "Volgende activiteit type"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_view_search
+msgid "Next Appraisal"
+msgstr "Volgende evaluatie"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__next_appraisal_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_public__next_appraisal_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_users__next_appraisal_date
+msgid "Next Appraisal Date"
+msgstr "Datum volgende evaluatie"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Next Meeting"
+msgstr "Volgende afspraak"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "No Meeting"
+msgstr "Geen afspraak"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Note"
+msgstr "Notitie"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_needaction_counter
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Aantal acties"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_has_error_counter
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_has_error_counter
+msgid "Number of errors"
+msgstr "Aantal fouten"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__message_needaction_counter
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Aantal berichten die actie vereisen"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__message_has_error_counter
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Aantal berichten met leveringsfout"
+
+#. module: hr_appraisal
+#: model:res.groups,name:hr_appraisal.group_hr_appraisal_user
+msgid "Officer: Access all appraisals"
+msgstr "Functionaris: Toegang tot alle evaluaties"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_view_form
+msgid "Ongoing"
+msgstr "Lopend"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__ongoing_appraisal_count
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_public__ongoing_appraisal_count
+msgid "Ongoing Appraisal Count"
+msgstr "Aantal lopende evaluaties"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal_goal.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Bewerking niet ondersteund"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_request_appraisal__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"Optionele vertaaltaal (ISO-code) om te selecteren bij het verzenden van een "
+"e-mail. Indien niet ingesteld, wordt de Engelse versie gebruikt. Dit moet "
+"meestal een placeholder zijn die de juiste taal biedt, bijv. {{ "
+"object.partner_id.lang }}."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__parent_user_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_base__parent_user_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_public__parent_user_id
+msgid "Parent User"
+msgstr "Bovenliggende gebruiker"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_search
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "People I Manage"
+msgstr "Mensen | Beheer"
+
+#. module: hr_appraisal
+#: model_terms:ir.actions.act_window,help:hr_appraisal.open_view_hr_appraisal_tree
+msgid "Plan appraisals with your colleagues, collect and discuss feedback."
+msgstr "Plan evaluaties met je collega's, verzamel en bespreek feedback."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Previous Appraisals"
+msgstr "Vorige evaluaties"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__note
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Private Note"
+msgstr "Privé notitie"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Private note (only accessible to people set as managers)"
+msgstr ""
+"Privénotitie (alleen toegankelijk voor mensen die zijn ingesteld als "
+"manager)"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__progression
+msgid "Progress"
+msgstr "Voortgang"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__appraisal_properties
+msgid "Properties"
+msgstr "Eigenschappen"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_employee_public
+msgid "Public Employee"
+msgstr "Openbare werknemer"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__rating_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__rating_ids
+msgid "Ratings"
+msgstr "Beoordelingen"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__recipient_ids
+msgid "Recipients"
+msgstr "Ontvangers"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__related_partner_id
+msgid "Related Partner"
+msgstr "Gerelateerde relatie"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__employee_user_id
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__manager_user_id
+#: model:ir.model.fields,help:hr_appraisal.field_hr_employee__parent_user_id
+#: model:ir.model.fields,help:hr_appraisal.field_hr_employee_base__parent_user_id
+msgid "Related user name for the resource to manage its access."
+msgstr ""
+"Gekoppelde gebruikersnaam voor de resource om zijn toegang te beheren."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__render_model
+msgid "Rendering Model"
+msgstr "Weergavemodel"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Reopen"
+msgstr "Heropenen"
+
+#. module: hr_appraisal
+#: model:ir.ui.menu,name:hr_appraisal.menu_hr_appraisal_report
+msgid "Reporting"
+msgstr "Rapportages"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_users_view_form
+msgid "Request Appraisal"
+msgstr "Evaluatie aanvragen"
+
+#. module: hr_appraisal
+#: model:ir.actions.server,name:hr_appraisal.action_create_multi_appraisals
+msgid "Request Appraisals"
+msgstr "Taxaties aanvragen"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_request_appraisal
+msgid "Request an Appraisal"
+msgstr "Vraag een evaluatie"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_user_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_user_id
+msgid "Responsible User"
+msgstr "Verantwoordelijke gebruiker"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_has_sms_error
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS fout bij versturen"
+
+#. module: hr_appraisal
+#: model_terms:ir.actions.act_window,help:hr_appraisal.open_view_hr_appraisal_tree
+msgid "Schedule an appraisal"
+msgstr "Plan een evaluatie"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Search Appraisal"
+msgstr "Zoek een evaluatie"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Self Assessment will show here"
+msgstr "De zelfbeoordeling wordt hier weergegeven"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.request_appraisal_view_form
+msgid "Send"
+msgstr "Verzenden"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Send by email"
+msgstr "Verzenden per e-mail"
+
+#. module: hr_appraisal
+#: model:mail.template,description:hr_appraisal.mail_template_appraisal_confirm
+msgid ""
+"Sent automatically to both employee and manager when appraisal is confirmed"
+msgstr ""
+"Wordt automatisch verzonden naar zowel werknemer als manager wanneer de "
+"evaluatie is bevestigd"
+
+#. module: hr_appraisal
+#: model:mail.template,description:hr_appraisal.mail_template_appraisal_request_from_employee
+msgid ""
+"Sent manually to the employee by the manager who wants to do an appraisal"
+msgstr ""
+"Handmatig verzonden naar de werknemer door de manager die een evaluatie wil "
+"doen"
+
+#. module: hr_appraisal
+#: model:mail.template,description:hr_appraisal.mail_template_appraisal_request
+msgid "Sent manually to the manager by the employee who wants an appraisal"
+msgstr ""
+"Handmatig naar de manager gestuurd door de werknemer die een evaluatie wil"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__sequence
+msgid "Sequence"
+msgstr "Reeks"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.hr_appraisal_config_settings_action
+#: model:ir.ui.menu,name:hr_appraisal.hr_appraisal_menu_configuration
+msgid "Settings"
+msgstr "Instellingen"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "Short term (6-months) actions / decisions / objectives"
+msgstr "Kortetermijnacties / beslissingen / doelen (6 maanden)"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__show_employee_feedback_full
+msgid "Show Employee Feedback Full"
+msgstr "Toon werknemersfeedback volledig"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__show_manager_feedback_full
+msgid "Show Manager Feedback Full"
+msgstr "Toon managerfeedback volledig"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Show all records which has next action date is before today"
+msgstr "Toon alle records welke een actiedatum voor vandaag hebben"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__state
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__state
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Status"
+msgstr "Status"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__activity_state
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status gebaseerd op activiteiten\n"
+"Te laat: Datum is al gepasseerd\n"
+"Vandaag: Activiteit datum is vandaag\n"
+"Gepland: Toekomstige activiteiten."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/res_company.py:0
+#, python-format
+msgid "Strongly Exceed Expectations"
+msgstr "Overtreft de verwachtingen sterk"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__subject
+msgid "Subject"
+msgstr "Onderwerp"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.request_appraisal_view_form
+msgid "Subject..."
+msgstr "Onderwerp..."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Such grouping is not allowed."
+msgstr "Deze groepering is niet toegestaan."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__tag_ids
+#: model:ir.ui.menu,name:hr_appraisal.menu_config_goal_tags
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_tag_view_tree
+msgid "Tags"
+msgstr "Labels"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid ""
+"Thanks to your Appraisal Plan, without any new manual Appraisal, the new "
+"Appraisal will be automatically created on %s."
+msgstr ""
+"Dankzij het evaluatieplan, zonder nieuwe handmatige evaluatie, wordt de "
+"nieuwe evaluatie automatisch gemaakt op %s."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "The appraisal's status has been set to Done by %s"
+msgstr "De status van de evaluatie is ingesteld op Gereed door %s"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__note
+msgid "The content of this note is not visible by the Employee."
+msgstr "De inhoud van deze notitie is niet zichtbaar voor de Werknemer."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__last_appraisal_date
+#: model:ir.model.fields,help:hr_appraisal.field_hr_employee__last_appraisal_date
+#: model:ir.model.fields,help:hr_appraisal.field_res_users__last_appraisal_date
+msgid "The date of the last appraisal"
+msgstr "Datum van de laatste evaluatie"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_employee__next_appraisal_date
+#: model:ir.model.fields,help:hr_appraisal.field_res_users__next_appraisal_date
+msgid ""
+"The date of the next appraisal is computed by the appraisal plan's dates "
+"(first appraisal + periodicity)."
+msgstr ""
+"De datum van de volgende evaluatie wordt berekend door de data van het "
+"evaluatieplan (eerste evaluatie + frequentie)."
+
+#. module: hr_appraisal
+#: model:ir.model.constraint,message:hr_appraisal.constraint_res_company_positif_number_months
+msgid "The duration time must be bigger or equal to 1 month."
+msgstr "De duur moet groter zijn dan of gelijk zijn aan 1 maand."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid ""
+"The employee %s arrived %s months ago. The appraisal is created and you can "
+"fill it here."
+msgstr ""
+"De werknemer %s is %s maanden geleden in dienst getreden. De evaluatie is "
+"aangemaakt en je kan deze hier invullen."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "The employee feedback cannot be changed by managers."
+msgstr ""
+"De feedback van de werknemers kan niet worden gewijzigd door managers."
+
+#. module: hr_appraisal
+#. odoo-javascript
+#: code:addons/hr_appraisal/static/src/fields/boolean_confirm.js:0
+#, python-format
+msgid ""
+"The employee's feedback will be published without their consent. Do you "
+"really want to publish it? This action will be logged in the chatter."
+msgstr ""
+"De feedback van de werknemer wordt zonder diens toestemming gepubliceerd. "
+"Wil je het echt publiceren? Deze actie wordt geregistreerd in de chatter."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid ""
+"The last appraisal of %s was %s months ago. The appraisal is created and you"
+" can fill it here."
+msgstr ""
+"De laatste evaluatie van %s was %s maanden geleden. De evaluatie is gemaakt "
+"en kan hier worden ingevuld."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "The manager feedback cannot be changed by an employee."
+msgstr "De managerfeedback kan niet door een werknemer worden gewijzigd."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__assessment_note
+msgid "This field is not visible to the Employee."
+msgstr "Dit veld is niet zichtbaar voor de werknemer."
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal__state__new
+msgid "To Confirm"
+msgstr "Te bevestigen"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "To Do"
+msgstr "Te doen"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_report__state__new
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "To Start"
+msgstr "Te starten"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Today Activities"
+msgstr "Activiteiten van vandaag"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__activity_exception_decoration
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Type van de geregistreerde uitzonderingsactiviteit."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__uncomplete_goals_count
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__uncomplete_goals_count
+msgid "Uncomplete Goals Count"
+msgstr "Aantal onvoltooide doelen"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Unpublished"
+msgstr "Niet gepubliceerd"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_view_search
+msgid "Upcoming Appraisals"
+msgstr "Aankomende evaluaties"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_res_users
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__manager_user_id
+msgid "User"
+msgstr "Gebruiker"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__user_body
+msgid "User Contents"
+msgstr "Gebruikersinhoud"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__waiting_feedback
+msgid "Waiting Feedback from Employee/Managers"
+msgstr "Wachten op feedback van werknemer/managers"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__website_message_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__website_message_ids
+msgid "Website Messages"
+msgstr "Websiteberichten"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__website_message_ids
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__website_message_ids
+msgid "Website communication history"
+msgstr "Website communicatie geschiedenis"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "What are my best achievement(s) since my last appraisal?"
+msgstr "Wat zijn mijn beste verwezenlijkingen sinds mijn laatste evaluatie?"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"What are my short and long-term goals with the company, and for my\n"
+"            career?"
+msgstr ""
+"Wat zijn mijn korte- en langetermijndoelstellingen binnen het bedrijf, en voor mijn\n"
+"carrière?"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"What has been the most challenging aspect of my work this past year and\n"
+"            why?"
+msgstr ""
+"Wat was het meest uitdagende aspect van mijn werk dit afgelopen jaar en\n"
+"waarom?"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "What would I need to improve my work?"
+msgstr "Wat heb ik nodig om mijn werk te verbeteren?"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid ""
+"When the Appraisals plan is saved, it will overwrite all empty Next "
+"Appraisal Dates for every employee."
+msgstr ""
+"Wanneer het beoordelingsplan wordt opgeslagen, worden alle lege volgende "
+"beoordelingsdata voor elke medewerker overschreven."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "Which parts of my job do I most / least enjoy?"
+msgstr "Welke aspecten van mijn functie doe ik het liefst / minst graag?"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid ""
+"You arrived %s months ago. Your appraisal is created and you can fill it "
+"here."
+msgstr ""
+"Je bent %s maanden geleden in dienst getreden. Je evaluatie is aangemaakt en"
+" je kan deze hier invullen."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "You cannot delete appraisal which is not in draft or canceled state"
+msgstr ""
+"Je kunt een evaluatie enkel verwijderen indien in fase concept of "
+"geannuleerd"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_employee.py:0
+#, python-format
+msgid "You cannot set 'Next Appraisal Date' in the past."
+msgstr "Je kan de 'Datum volgende evaluatie' niet in het verleden instellen."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Your Appraisal has been completed"
+msgstr "Je evaluatie is voltooid"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid ""
+"Your last appraisal was %s months ago. Your appraisal is created and you can"
+" fill it here."
+msgstr ""
+"Je laatste evaluatie was %s maanden geleden. Je evaluatie is aangemaakt en "
+"je kan deze hier invullen."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "e.g. John Doe"
+msgstr "b.v. John Doe"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_form
+msgid "e.g. Present yourself to your new team"
+msgstr "Bijv. Presenteer jezelf aan je nieuwe team"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "months after recruitment, then after"
+msgstr "maanden na werving, daarna na"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "months, then every"
+msgstr "maanden, daarna elke"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "months."
+msgstr "maanden."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_kanban
+msgid "oe_kanban_text_red"
+msgstr "oe_kanban_text_red"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "once published"
+msgstr "als deze zijn gepubliceerd"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_view_activity
+msgid "text-danger"
+msgstr "text-danger"
+
+#. module: hr_appraisal
+#: model:mail.template,subject:hr_appraisal.mail_template_appraisal_request_from_employee
+msgid ""
+"{{ hasattr(object, 'name') and object.name or '' }} requests an Appraisal"
+msgstr ""
+"{{ hasattr(object, 'name') and object.name or '' }} vraagt een evaluatie aan"
+
+#. module: hr_appraisal
+#: model:mail.template,subject:hr_appraisal.mail_template_appraisal_confirm
+msgid "{{ object.employee_id.name }}: Appraisal Confirmed"
+msgstr "{{ object.employee_id.name }}: evaluatie bevestigd"

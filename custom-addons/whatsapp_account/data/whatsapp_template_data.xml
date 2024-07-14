@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<odoo noupdate="1">
+    <record id="whatsapp_template_payment_receipt" model="whatsapp.template">
+        <field name="name">Payment Receipt</field>
+        <field name="template_name">payment_receipt</field>
+        <field name="lang_code">en</field>
+        <field name="template_type">utility</field>
+        <field name="header_type">document</field>
+        <field name="report_id" ref="account.action_report_payment_receipt"/>
+        <field name="footer_text">Write 'stop' to stop receiving messages</field>
+        <field name="phone_field">partner_id.mobile</field>
+        <field name="model_id" ref="account.model_account_payment"/>
+        <field name="body">Dear {{1}},
+
+Here is your payment receipt *{{2}}* from *{{3}}* amounting to *{{4}}{{5}}*.
+
+Thank you for your payment.
+
+Best Regards
+        </field>
+        <field name="variable_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {
+            'name': '{{1}}',
+            'demo_value': 'Azure Interior',
+            'line_type': 'body',
+            'field_type': 'field',
+            'field_name': 'partner_id'
+        }),
+        (0, 0, {
+            'name': '{{2}}',
+            'demo_value': 'BNK1/2023/06/001',
+            'line_type': 'body',
+            'field_type': 'field',
+            'field_name': 'name'
+        }),
+        (0, 0, {
+            'name': '{{3}}',
+            'demo_value': 'My Company',
+            'line_type': 'body',
+            'field_type': 'field',
+            'field_name': 'company_id'
+        }),
+        (0, 0, {
+            'name': '{{4}}',
+            'demo_value': '$',
+            'line_type': 'body',
+            'field_type': 'field',
+            'field_name': 'currency_id.symbol'
+        }),
+        (0, 0, {
+            'name': '{{5}}',
+            'demo_value': '4000',
+            'line_type': 'body',
+            'field_type': 'field',
+            'field_name': 'amount'
+        })
+        ]" />
+    </record>
+
+    <record id="whatsapp_template_invoice" model="whatsapp.template">
+        <field name="name">Invoice</field>
+        <field name="template_name">invoice</field>
+        <field name="lang_code">en</field>
+        <field name="template_type">utility</field>
+        <field name="header_type">document</field>
+        <field name="report_id" ref="account.account_invoices"/>
+        <field name="footer_text">Write 'stop' to stop receiving messages</field>
+        <field name="phone_field">partner_id.mobile</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="body">Dear {{1}},
+
+Here is your invoice *{{2}}* from *{{3}}* for a total of *{{4}}{{5}}*.
+To review your invoice or , pay online: {{6}}
+
+Thank you
+        </field>
+        <field name="variable_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {
+            'name': '{{1}}',
+            'demo_value': 'Azure Interior',
+            'line_type': 'body',
+            'field_type': 'field',
+            'field_name': 'partner_id'
+        }),
+        (0, 0, {
+            'name': '{{2}}',
+            'demo_value': 'INV/2022/00001',
+            'line_type': 'body',
+            'field_type': 'field',
+            'field_name': 'name'
+        }),
+        (0, 0, {
+            'name': '{{3}}',
+            'demo_value': 'My Company',
+            'line_type': 'body',
+            'field_type': 'field',
+            'field_name': 'company_id'
+        }),
+        (0, 0, {
+            'name': '{{4}}',
+            'demo_value': '$',
+            'line_type': 'body',
+            'field_type': 'field',
+            'field_name': 'currency_id.symbol'
+        }),
+        (0, 0, {
+            'name': '{{5}}',
+            'demo_value': '1000',
+            'line_type': 'body',
+            'field_type': 'field',
+            'field_name': 'amount_total'
+        }),
+        (0, 0, {
+            'name': '{{6}}',
+            'demo_value': 'https://..',
+            'line_type': 'body',
+            'field_type': 'portal_url',
+        })
+        ]" />
+    </record>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_mx_edi_stock.partner_mx_transporte_operador" model="res.partner">
+        <field name="l10n_mx_edi_locality_id" ref="l10n_mx_edi_extended.res_locality_mx_coa_23"/>
+        <field name="city_id" ref="l10n_mx_edi_extended.res_city_mx_coa_004"/>
+        <field name="l10n_mx_edi_colony_code">0347</field>
+    </record>
+
+    <record id="base.main_partner" model="res.partner">
+        <field name="l10n_mx_edi_locality_id" ref="l10n_mx_edi_extended.res_locality_mx_son_04"/>
+        <field name="city_id" ref="l10n_mx_edi_extended.res_city_mx_son_018"/>
+    </record>
+
+    <record id="l10n_mx.partner_demo_company_mx" model="res.partner">
+        <field name="city_id" ref="l10n_mx_edi_extended.res_city_mx_que_014"/>
+    </record>
+</odoo>

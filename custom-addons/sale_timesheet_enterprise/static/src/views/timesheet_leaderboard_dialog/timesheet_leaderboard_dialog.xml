@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="sale_timesheet_enterprise.TimesheetLeaderboardDialog">
+        <Dialog size="xl" footer="false" header="true" t-on-keyup.stop="onKeyUp">
+            <t t-set-slot="header">
+                <div class="d-flex align-items-center justify-content-between flex w-100">
+                    <button class="btn btn-secondary dropdown-toggle fs-5" t-esc="getTitle(state.type)" type="button" id="type" data-bs-toggle="dropdown" aria-expanded="false"/>
+                    <ul class="dropdown-menu" aria-labelledby="type">
+                        <li class="dropdown-item" t-on-click="() => this.changeType('billing_rate')" t-esc="getTitle('billing_rate')"/>
+                        <li class="dropdown-item" t-on-click="() => this.changeType('total_time')" t-esc="getTitle('total_time')"/>
+                    </ul>
+                    <div t-on-click="props.close" type="button" class="btn-close" aria-label="Close"/>
+                </div>
+            </t>
+            <div class="container px-0">
+                <div class="row">
+                    <div class="col">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fs-3 fw-bolder text-center" t-esc="currentFormattedDate"/>
+                            <div class="btn-group">
+                                <button class="btn btn-secondary" t-on-click="goLastMonth">
+                                    <i class="oi oi-chevron-left"/>
+                                </button>
+                                <button class="btn btn-secondary" t-on-click="goCurrentMonth">
+                                    This month
+                                </button>
+                                <button class="btn btn-secondary" t-on-click="goNextMonth">
+                                    <i class="oi oi-chevron-right"/>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row mx-0 mt-3 mb-2 py-3 gap-3 gap-sm-0 rounded bg-100">
+                            <t t-if="state.leaderboard.length &gt; 0">
+                                <t t-foreach="state.leaderboard.slice(0, 3)" t-as="employee" t-key="employee_index">
+                                    <div class="col-12 col-sm-4 mx-sm-auto">
+                                        <Many2OneAvatarRankField
+                                            size="'medium'"
+                                            rank="employee_index + 1"
+                                            id="employee.id"
+                                        />
+                                        <div class="d-flex flex-column align-items-center">
+                                            <span class="text-center fs-4 fw-bolder mt-1" t-esc="employee.name"/>
+                                            <span class="small text-center">
+                                                <t t-if="state.type === 'billing_rate'" t-esc="getBillingRateText(state.leaderboard[employee_index])"/>
+                                                <t t-else="" t-esc="getTotalTimeText(state.leaderboard[employee_index])"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <t t-foreach="[1, 2, 3]" t-as="employee" t-key="employee">
+                                    <div class="col-12 col-sm-4 mx-sm-auto">
+                                        <Many2OneAvatarRankField
+                                            size="'medium'"
+                                            rank="employee"
+                                        />
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+                        <div t-attf-class="o_leaderboard_modal_table {{ state.current_employee.index &gt; 9 ? 'o_table_height_extra' : '' }} px-1" t-if="state.leaderboard.length > 2">
+                            <table class="table table-borderless table-striped table-sm mb-0 overflow-auto">
+                                <tbody class="align-middle o_table_height_extra">
+                                    <tr t-foreach="state.leaderboard.slice(3, displayLimit)" t-as="employee" t-key="employee_index" t-attf-class="{{ employee.id === state.current_employee.id ? 'fw-bolder' : '' }}">
+                                        <Many2OneAvatarRankField
+                                            size="'small'"
+                                            rank="employee_index + 4"
+                                            id="employee.id"
+                                        />
+                                        <td t-esc="employee.name"/>
+                                        <td class="text-end small">
+                                            <t t-if="state.type === 'billing_rate'" t-esc="getBillingRateText(state.leaderboard[employee_index + 3])"/>
+                                            <t t-else="" t-esc="getTotalTimeText(state.leaderboard[employee_index + 3])"/>
+                                        </td>
+                                    </tr>
+                                    <t t-if="state.current_employee.index &gt; 9 and !this.state.showAll">
+                                        <tr>
+                                            <td colspan="4" class="text-start text-muted">
+                                                <span class="ps-1">···</span>
+                                            </td>
+                                        </tr>
+                                        <tr t-attf-class="{{ 'employee.id == state.currentEmployee.id' ? 'fw-bolder' : '' }}">
+                                            <Many2OneAvatarRankField
+                                                    rank="state.current_employee.index + 1"
+                                                    id="state.current_employee.id"
+                                            />
+                                            <td t-esc="state.current_employee.name"/>
+                                            <td class="text-end small">
+                                                <t t-if="state.type === 'billing_rate'" t-esc="getBillingRateText(state.current_employee)"/>
+                                                <t t-else="" t-esc="getTotalTimeText(state.current_employee)"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                        <span t-if="state.leaderboard.length &gt; 9" class="btn btn-secondary w-100 my-2 mb-lg-0 mt-lg-2" t-on-click="() => state.showAll = !state.showAll">
+                            <t t-if="state.showAll">Show less</t>
+                            <t t-else="">Show more</t>
+                        </span>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="o_timesheet_leaderboard_tip h-100 d-flex flex-column justify-content-center align-items-center p-4 rounded bg-gradient">
+                            <span class="text-uppercase text-muted fw-bolder">Tip of the day</span>
+                            <span class="pt-4 fs-2 text-break text-center fst-italic" t-esc="this.tip"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+
+</templates>

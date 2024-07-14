@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="whatsapp_pos.ReceiptScreen" t-inherit="point_of_sale.ReceiptScreen" t-inherit-mode="extension">
+        <xpath expr="//form[hasclass('send-email')]" position="after">
+            <form t-if="this.pos.config.whatsapp_enabled" t-on-submit.prevent="onSendWhatsapp" class="mt-4 send-whatsapp">
+                <div class="input-whatsapp">
+                    <input type="tel" placeholder="WhatsApp Receipt" t-on-input="onInputWhatsapp" t-att-value="whatsappState.inputWhatsapp"/>
+                    <button class="send" t-att-class="{ highlight: !whatsappState.whatsappButtonDisabled and is_valid_mobile }" type="submit">
+                        <i class="fa" t-att-class="whatsappState.isSending ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-whatsapp'" aria-hidden="true" />
+                    </button>
+                </div>
+            </form>
+        </xpath>
+        <xpath expr="//div[hasclass('notice')]" position="after">
+            <div t-if="this.pos.config.whatsapp_enabled" class="whatsapp-notice">
+                <div t-if="whatsappState.whatsappSuccessful !== null" t-att-class="whatsappState.whatsappSuccessful ? 'successful' : 'failed'">
+                    <t t-esc="whatsappState.whatsappNotice"/>
+                </div>
+                <div class="send-whatsapp-info" t-if="currentOrder.is_to_invoice()">
+                    (Both will be sent by WhatsApp)
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="planning_slot_report_view_pivot" model="ir.ui.view">
+        <field name="name">planning.slot.report.pivot</field>
+        <field name="model">planning.analysis.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Planning Analysis" sample="1" disable_linking="True">
+                <field name="start_datetime" interval="month" type="row"/>
+                <field name="allocated_hours" type="measure" widget="float_time"/>
+                <field name="working_days_count" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="planning_slot_report_view_graph" model="ir.ui.view">
+        <field name="name">planning.slot.report.graph</field>
+        <field name="model">planning.analysis.report</field>
+        <field name="arch" type="xml">
+            <graph string="Planning Analysis" sample="1" order="desc" disable_linking="True">
+                <field name="start_datetime" interval="month"/>
+                <field name="resource_id"/>
+                <field name="allocated_hours" type="measure" widget="float_time"/>
+                <field name="working_days_count" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="planning_analysis_report_view_search" model="ir.ui.view">
+        <field name="name">planning.slot.report.search</field>
+        <field name="model">planning.analysis.report</field>
+        <field name="mode">primary</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="planning_view_search_base"/>
+        <field name="arch" type="xml">
+            <search position="attributes"/>
+        </field>
+    </record>
+
+    <record id="planning_report_action_analysis" model="ir.actions.act_window">
+        <field name="name">Planning Analysis</field>
+        <field name="res_model">planning.analysis.report</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="search_view_id" ref="planning.planning_analysis_report_view_search"></field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data yet!
+            </p><p>
+                Analyze the allocation of your resources across roles, projects, and sales orders, and estimate future needs.
+            </p>
+        </field>
+    </record>
+
+    <record id="planning_slot_report_action_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="planning_slot_report_view_pivot"/>
+        <field name="act_window_id" ref="planning_report_action_analysis"/>
+    </record>
+    <record id="planning_slot_report_action_view_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="planning_slot_report_view_graph"/>
+        <field name="act_window_id" ref="planning_report_action_analysis"/>
+    </record>
+
+    <menuitem
+        id="planning_menu_reporting"
+        name="Reporting"
+        parent="planning_menu_root"
+        sequence="40"
+        groups="planning.group_planning_user"/>
+
+    <menuitem
+        id="planning_menu_planning_analysis"
+        name="Planning Analysis"
+        action="planning_report_action_analysis"
+        sequence="10" parent="planning_menu_reporting"
+        groups="planning.group_planning_user"/>
+
+</odoo>

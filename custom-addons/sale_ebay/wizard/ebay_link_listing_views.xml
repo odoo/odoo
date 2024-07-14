@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Wizzard to link existing listing with existing product -->
+    <record id="ebay_link_listing_view" model="ir.ui.view">
+      <field name="name">ebay.link.listing.form</field>
+      <field name="model">ebay.link.listing</field>
+      <field name="arch" type="xml">
+        <form string="Link Existing Listing">
+          <group>
+            <field name="ebay_id"/>
+          </group>
+          <footer>
+            <button name="link_listing" type="object" string="Link with eBay Listing" class="oe_highlight" data-hotkey="q"/>
+            <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="x" />
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_ebay_link_listing" model="ir.actions.act_window">
+      <field name="name">Link with Existing eBay Listing</field>
+      <field name="res_model">ebay.link.listing</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="ebay_link_listing_view"/>
+      <field name="target">new</field>
+    </record>
+</odoo>

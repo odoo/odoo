@@ -1,0 +1,133 @@
+// = Main Navbar
+// ============================================================================
+.o_main_navbar {
+    --NavBar-entry-color--active: #{$o-component-active-color};
+    --NavBar-entry-borderColor-active: #{$o-component-active-border};
+    --NavBar-entry-backgroundColor--active: #{$o-component-active-bg};
+    --NavBar-entry-backgroundColor--hover: #{$o-gray-200};
+    --NavBar-entry-backgroundColor--focus: #{$o-gray-200};
+
+    --Dropdown_menu-margin-y: #{map-get($spacers, 1)};
+
+    .o_menu_toggle {
+        --NavBar-entry-padding-left: #{$o-horizontal-padding};
+        --NavBar-entry-padding-right: #{$o-horizontal-padding * .5};
+
+        @extend %-main-navbar-entry-base;
+        @extend %-main-navbar-entry-spacing;
+        color: var(--NavBar-menuToggle-color, #{$o-brand-odoo});
+
+        rect, g {
+            transform-origin: 0 50%;
+        }
+
+        // Define a local mixin to handle the toggle state
+        // --------------------------------------------------------------------
+        @mixin o_main_navbar_toggler_toggled() {
+            rect {
+                width: 6px;
+                height: 3px;
+
+                &:first-child {
+                    transform: translate(12%,0) #{"/* rtl:translate(-6%, 0) */"};
+                    rx: 1;
+                }
+            }
+
+            #o_menu_toggle_row_0 {
+                transform:  scale3d(.5, 1, 1) translate(0, 45%) skewY(-22deg) #{"/* rtl:scale3d(.5, 1, 1) translate(0, 41%) skewY(22deg) */"};
+
+                + g rect {
+                    width: 0;
+                    height: 0;
+                }
+            }
+
+            #o_menu_toggle_row_2 {
+                transform:  scale3d(.5, 1, 1) translate(0, -37%) skewY(22deg) #{"/* rtl:scale3d(.5, 1, 1) translate(0, -35%) skewY(-22deg) */"};
+            }
+        }
+
+        &.o_menu_toggle_back {
+            @include o_main_navbar_toggler_toggled();
+            transform: translateX(25%) rotateY(-180deg);
+        }
+
+        // Animate on large screen without 'reduced-motion' only.
+        // --------------------------------------------------------------------
+        @include media-breakpoint-up(lg) {
+            &.hasImage:not(.o_menu_toggle_back) {
+                .o_menu_toggle_icon {
+                    opacity: 0;
+                }
+
+                &:hover {
+                    .o_menu_toggle_icon {
+                        opacity: 1;
+                    }
+
+                    .o_menu_brand_icon {
+                        opacity: 0;
+                    }
+                }
+            }
+
+            @media screen and (prefers-reduced-motion: no-preference) {
+                &:hover {
+                    @include o_main_navbar_toggler_toggled();
+                }
+
+                &, g {
+                    transition: all .3s;
+                }
+
+                rect {
+                    transition: all .1s;
+                }
+
+                &.hasImage:not(.o_menu_toggle_back) {
+                    transform: none;
+                    transition: none;
+
+                    .o_menu_toggle_icon, .o_menu_brand_icon, .o_menu_brand {
+                        will-change: transform;
+                        transition: all 0.1s;
+                    }
+
+                    .o_menu_toggle_icon {
+                        transform: translateX(75%);
+                    }
+
+                    &:hover {
+                        .o_menu_toggle_icon {
+                            transform: translateX(25%);
+                            transition: all .4s;
+                        }
+
+                        .o_menu_brand_icon {
+                            transform: rotateY(-90deg);
+                            transition: all .2s;
+                        }
+
+                        .o_menu_brand {
+                            transform: translateX(-#{map-get($spacers, 2)});
+                            transition: all .4s;
+                        }
+                    }
+                }
+            }
+
+            .o_menu_brand_icon {
+                width: calc(var(--o-navbar-height) - #{$o-navbar-padding-v * 2} + #{map-get($spacers, 1)});
+                object-fit: cover;
+            }
+        }
+    }
+}
+
+// Ensuring SuperUser Design menu is not compressed in Enterprise
+// ============================================================================
+body.o_is_superuser .o_menu_systray {
+    border-image-outset: map-get($border-widths, 5);
+}
+

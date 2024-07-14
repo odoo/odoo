@@ -1,0 +1,236 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_disallowed_expenses
+# 
+# Translators:
+# Wil Odoo, 2023
+# Junko Augias, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Junko Augias, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_disallowed_expenses
+#: model:ir.model,name:account_disallowed_expenses.model_account_account
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__account_ids
+msgid "Account"
+msgstr "勘定科目"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__active
+msgid "Active"
+msgstr "有効化"
+
+#. module: account_disallowed_expenses
+#: model_terms:ir.actions.act_window,help:account_disallowed_expenses.action_account_disallowed_expenses_category_list
+msgid "Add a Disallowed Expenses Category"
+msgstr "損金不算入の費用カテゴリを追加する"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__category_id
+msgid "Category"
+msgstr "カテゴリー"
+
+#. module: account_disallowed_expenses
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_disallowed_expenses_category_form
+msgid "Category Name"
+msgstr "カテゴリ名"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__code
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_disallowed_expenses_category_form
+msgid "Code"
+msgstr "コード"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__company_id
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__company_id
+msgid "Company"
+msgstr "会社"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__create_uid
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__create_date
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__current_rate
+msgid "Current Rate"
+msgstr "現在レート"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__rate
+msgid "Disallowed %"
+msgstr "損金不算入%"
+
+#. module: account_disallowed_expenses
+#: model:account.report.column,name:account_disallowed_expenses.disallowed_expenses_report_disallowed_amount
+msgid "Disallowed Amount"
+msgstr "損金不算入額"
+
+#. module: account_disallowed_expenses
+#: model:ir.ui.menu,name:account_disallowed_expenses.menu_action_account_report_de
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_form
+msgid "Disallowed Expenses"
+msgstr "損金不算入費用"
+
+#. module: account_disallowed_expenses
+#: model:ir.actions.act_window,name:account_disallowed_expenses.action_account_disallowed_expenses_category_list
+#: model:ir.ui.menu,name:account_disallowed_expenses.menu_action_account_disallowed_expenses_category_list
+msgid "Disallowed Expenses Categories"
+msgstr "損金不算入費用カテゴリ"
+
+#. module: account_disallowed_expenses
+#: model:ir.model,name:account_disallowed_expenses.model_account_disallowed_expenses_category
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_account__disallowed_expenses_category_id
+msgid "Disallowed Expenses Category"
+msgstr "損金不算入費用カテゴリ"
+
+#. module: account_disallowed_expenses
+#: model:ir.model,name:account_disallowed_expenses.model_account_disallowed_expenses_report_handler
+msgid "Disallowed Expenses Custom Handler"
+msgstr "損金不算入費用カテゴリカスタムハンドラ"
+
+#. module: account_disallowed_expenses
+#: model:ir.model,name:account_disallowed_expenses.model_account_disallowed_expenses_rate
+msgid "Disallowed Expenses Rate"
+msgstr "損金不算入費用レート"
+
+#. module: account_disallowed_expenses
+#: model:account.report,name:account_disallowed_expenses.disallowed_expenses_report
+#: model:ir.actions.client,name:account_disallowed_expenses.action_account_report_de
+msgid "Disallowed Expenses Report"
+msgstr "損金不算入費用レポート"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.constraint,message:account_disallowed_expenses.constraint_account_disallowed_expenses_category_unique_code
+msgid "Disallowed expenses category code should be unique."
+msgstr "損金不算入費用のカテゴリコードは、一意でなければなりません。"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__display_name
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: account_disallowed_expenses
+#. odoo-python
+#: code:addons/account_disallowed_expenses/report/account_disallowed_expenses_report.py:0
+#, python-format
+msgid "General Ledger"
+msgstr "総勘定元帳"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__id
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_disallowed_expenses
+#. odoo-python
+#: code:addons/account_disallowed_expenses/report/account_disallowed_expenses_report.py:0
+#, python-format
+msgid "Journal Items"
+msgstr "仕訳項目"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__write_uid
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__write_date
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__name
+msgid "Name"
+msgstr "名称"
+
+#. module: account_disallowed_expenses
+#. odoo-python
+#: code:addons/account_disallowed_expenses/models/account_disallowed_expenses.py:0
+#, python-format
+msgid "No Rate"
+msgstr "レートなし"
+
+#. module: account_disallowed_expenses
+#: model:account.report.column,name:account_disallowed_expenses.disallowed_expenses_report_rate
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__rate_ids
+msgid "Rate"
+msgstr "レート"
+
+#. module: account_disallowed_expenses
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_disallowed_expenses_category_form
+msgid "Rates"
+msgstr "レート"
+
+#. module: account_disallowed_expenses
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_disallowed_expenses_category_form
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_disallowed_expenses_category_tree
+msgid "Related Account(s)"
+msgstr "関連勘定科目"
+
+#. module: account_disallowed_expenses
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_disallowed_expenses_category_tree
+msgid "Set Rates"
+msgstr "レートを設定"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,help:account_disallowed_expenses.field_account_disallowed_expenses_category__active
+msgid "Set active to false to hide the category without removing it."
+msgstr "カテゴリーを削除せずに非表示にするには、有効をfalseに設定します。"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__date_from
+msgid "Start Date"
+msgstr "開始日"
+
+#. module: account_disallowed_expenses
+#. odoo-javascript
+#: code:addons/account_disallowed_expenses/static/src/components/disallowed_expenses_report/warnings.xml:0
+#, python-format
+msgid "There are multiple disallowed expenses rates in this period"
+msgstr "この期間には、複数の損金不算入費用レートがあります。"
+
+#. module: account_disallowed_expenses
+#. odoo-python
+#: code:addons/account_disallowed_expenses/report/account_disallowed_expenses_report.py:0
+#, python-format
+msgid "Total"
+msgstr "合計"
+
+#. module: account_disallowed_expenses
+#: model:account.report.column,name:account_disallowed_expenses.disallowed_expenses_report_total_amount
+msgid "Total Amount"
+msgstr "合計金額"
+
+#. module: account_disallowed_expenses
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_disallowed_expenses_category_form
+msgid "e.g. 1201"
+msgstr "e.g. 1201"
+
+#. module: account_disallowed_expenses
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_disallowed_expenses_category_form
+msgid "e.g. Non-Deductible Tax"
+msgstr "e.g. 控除対象外税金"

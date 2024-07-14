@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="l10n_mx_edi.report_invoice_document">
+        <!-- Add new column on invoice lines: Customs Numbers -->
+        <xpath expr="//table[@name='invoice_line_table']/tbody//tr[1]//td[1]" position="inside">
+            <t t-set="custom_numbers" t-value="line._l10n_mx_edi_get_custom_numbers()"/>
+            <t t-if="custom_numbers">
+                <br/>Customs:
+                <ul>
+                    <t t-foreach="custom_numbers" t-as="custom_number">
+                        <li>
+                            <span t-out="custom_number"/>
+                        </li>
+                    </t>
+                </ul>
+            </t>
+        </xpath>
+
+        <!-- Add new columns on invoice lines: Tariff Fraction, Customs Qty, Customs Unit -->
+        <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[last()]" position="after">
+            <th t-if="o.l10n_mx_edi_external_trade">Tariff Fraction</th>
+            <th t-if="o.l10n_mx_edi_external_trade">Customs Qty</th>
+            <th t-if="o.l10n_mx_edi_external_trade">Customs Unit</th>
+        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']/tbody//tr[1]//td[last()]" position="after">
+            <td t-if="o.l10n_mx_edi_external_trade" class="text-end">
+                <span t-field="line.product_id.l10n_mx_edi_tariff_fraction_id.code"/>
+            </td>
+            <td t-if="o.l10n_mx_edi_external_trade" class="text-end">
+                <span t-field="line.l10n_mx_edi_qty_umt"/>
+            </td>
+            <td t-if="o.l10n_mx_edi_external_trade">
+                <span t-field="line.l10n_mx_edi_umt_aduana_id.name"/>
+            </td>
+        </xpath>
+
+        <!-- External Trade stuff -->
+        <xpath expr="//div[@name='comment']" position="before">
+            <div t-if="o.l10n_mx_edi_external_trade">
+                <div class="row">
+                    <div class="col-12">
+                        <div align="center">
+                            <span>
+                                <strong>External Trade</strong>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-sm text-center mt4 mb4" align="center" style="font-size:10px">
+                            <thead>
+                                <tr style="background-color:grey; color:white;">
+                                    <th class="text-center">Operation Type</th>
+                                    <th class="text-center">Certificate Key</th>
+                                    <th class="text-center">Certificate Source</th>
+                                    <th class="text-center"
+                                        t-if="cfdi_values['ext_trade_nb_certificate_origin'] == '1'">Number
+                                        Certificate Source
+                                    </th>
+                                    <th class="text-center">Subdivision</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span t-out="cfdi_values['ext_trade_operation_type']"/>
+                                    </td>
+                                    <td>
+                                        <span t-out="cfdi_values['ext_trade_certificate_key']"/>
+                                    </td>
+                                    <td>
+                                        <span t-out="cfdi_values['ext_trade_certificate_source']"/>
+                                    </td>
+                                    <td t-if="cfdi_values['ext_trade_nb_certificate_origin'] == '1'">
+                                        <span t-out="cfdi_values['ext_trade_certificate_origin']"/>
+                                    </td>
+                                    <td>
+                                        <span t-out="cfdi_values['ext_trade_subdivision']"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-sm text-center mt4 mb4" align="center" style="font-size:10px">
+                            <thead>
+                                <tr style="background-color:grey; color:white;">
+                                    <th class="text-center" t-if="cfdi_values['ext_trade_nb_reliable_exporter']">
+                                        Number of Reliable Exporter
+                                    </th>
+                                    <th class="text-center">Incoterm</th>
+                                    <th class="text-center">Rate USD</th>
+                                    <th class="text-center">Total USD</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td t-if="cfdi_values['ext_trade_nb_reliable_exporter']">
+                                        <span t-out="cfdi_values['ext_trade_nb_reliable_exporter']"/>
+                                    </td>
+                                    <td>
+                                        <span t-out="cfdi_values['ext_trade_incoterm']"/>
+                                    </td>
+                                    <td>
+                                        <span t-out="cfdi_values['ext_trade_rate_usd']"/>
+                                    </td>
+                                    <td>
+                                        <span t-out="cfdi_values['ext_trade_total_usd']"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

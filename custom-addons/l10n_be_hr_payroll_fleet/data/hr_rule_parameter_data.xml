@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="rule_parameter_health_indice_reference" model="hr.rule.parameter">
+            <field name="name">Health Indice Reference</field>
+            <field name="code">health_indice_reference</field>
+            <field name="country_id" ref="base.be"/>
+        </record>
+        <record id="rule_parameter_value_health_indice_reference" model="hr.rule.parameter.value">
+            <field name="parameter_value">114.08</field>
+            <field name="rule_parameter_id" ref="rule_parameter_health_indice_reference"/>
+            <field name="date_from" eval="datetime(2004, 9, 1).date()"/>
+        </record>
+
+        <record id="rule_parameter_health_indice" model="hr.rule.parameter">
+            <field name="name">Health Indice</field>
+            <field name="code">health_indice</field>
+            <field name="country_id" ref="base.be"/>
+        </record>
+        <record id="rule_parameter_value_health_indice_2018" model="hr.rule.parameter.value">
+            <field name="parameter_value">144.97</field>
+            <field name="rule_parameter_id" ref="rule_parameter_health_indice"/>
+            <field name="date_from" eval="datetime(2018, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_health_indice_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">147.73</field>
+            <field name="rule_parameter_id" ref="rule_parameter_health_indice"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_health_indice_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">149.19</field>
+            <field name="rule_parameter_id" ref="rule_parameter_health_indice"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_health_indice_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">150.84</field>
+            <field name="rule_parameter_id" ref="rule_parameter_health_indice"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_health_indice_2022" model="hr.rule.parameter.value">
+            <field name="parameter_value">154.29</field>
+            <field name="rule_parameter_id" ref="rule_parameter_health_indice"/>
+            <field name="date_from" eval="datetime(2022, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_health_indice_2023" model="hr.rule.parameter.value">
+            <field name="parameter_value">171.64</field>
+            <field name="rule_parameter_id" ref="rule_parameter_health_indice"/>
+            <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        </record>
+
+        <record id="rule_parameter_fuel_coefficient" model="hr.rule.parameter">
+            <field name="name">Fuel Coefficients</field>
+            <field name="code">fuel_coefficient</field>
+            <field name="country_id" ref="base.be"/>
+        </record>
+        <record id="rule_parameter_value_fuel_coefficient_2016" model="hr.rule.parameter.value">
+            <field name="parameter_value">{'diesel': 600, 'gasoline': 768, 'lpg': 990, 'electric': 0, 'full_hybrid': 600}</field>
+            <field name="rule_parameter_id" ref="rule_parameter_fuel_coefficient"/>
+            <field name="date_from" eval="datetime(2016, 1, 1).date()"/>
+        </record>
+
+        <record id="rule_parameter_co2_fee_min" model="hr.rule.parameter">
+            <field name="name">CO2 Fee Minimum Amount</field>
+            <field name="code">co2_fee_min</field>
+            <field name="country_id" ref="base.be"/>
+        </record>
+        <record id="rule_parameter_value_co2_fee_min_2011" model="hr.rule.parameter.value">
+            <field name="parameter_value">20.83</field>
+            <field name="rule_parameter_id" ref="rule_parameter_co2_fee_min"/>
+            <field name="date_from" eval="datetime(2011, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_co2_fee_min_2022" model="hr.rule.parameter.value">
+            <field name="parameter_value">28.17</field>
+            <field name="rule_parameter_id" ref="rule_parameter_co2_fee_min"/>
+            <field name="date_from" eval="datetime(2022, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_co2_fee_min_2023" model="hr.rule.parameter.value">
+            <field name="parameter_value">31.34</field>
+            <field name="rule_parameter_id" ref="rule_parameter_co2_fee_min"/>
+            <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        </record>
+
+        <record id="rule_parameter_co2_reference_petrol_lpg" model="hr.rule.parameter">
+            <field name="name">CO2 Reference Emission</field>
+            <field name="code">co2_reference_petrol_lpg</field>
+            <field name="country_id" ref="base.be"/>
+        </record>
+        <record id="rule_parameter_value_co2_reference_petrol_lpg_2018" model="hr.rule.parameter.value">
+            <field name="parameter_value">105</field>
+            <field name="rule_parameter_id" ref="rule_parameter_co2_reference_petrol_lpg"/>
+            <field name="date_from" eval="datetime(2018, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_co2_reference_petrol_lpg_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">107</field>
+            <field name="rule_parameter_id" ref="rule_parameter_co2_reference_petrol_lpg"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_co2_reference_petrol_lpg_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">111</field>
+            <field name="rule_parameter_id" ref="rule_parameter_co2_reference_petrol_lpg"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_co2_reference_petrol_lpg_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">102</field>
+            <field name="rule_parameter_id" ref="rule_parameter_co2_reference_petrol_lpg"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_co2_reference_petrol_lpg_2022" model="hr.rule.parameter.value">
+            <field name="parameter_value">91</field>
+            <field name="rule_parameter_id" ref="rule_parameter_co2_reference_petrol_lpg"/>
+            <field name="date_from" eval="datetime(2022, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_co2_reference_petrol_lpg_2023" model="hr.rule.parameter.value">
+            <field name="parameter_value">82</field>
+            <field name="rule_parameter_id" ref="rule_parameter_co2_reference_petrol_lpg"/>
+            <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        </record>
+
+        <record id="rule_parameter_co2_reference_diesel" model="hr.rule.parameter">
+            <field name="name">CO2 Reference Emission</field>
+            <field name="code">co2_reference_diesel</field>
+            <field name="country_id" ref="base.be"/>
+        </record>
+        <record id="rule_parameter_value_co2_reference_diesel_2018" model="hr.rule.parameter.value">
+            <field name="parameter_value">86</field>
+            <field name="rule_parameter_id" ref="rule_parameter_co2_reference_diesel"/>
+            <field name="date_from" eval="datetime(2018, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_co2_reference_diesel_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">88</field>
+            <field name="rule_parameter_id" ref="rule_parameter_co2_reference_diesel"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_co2_reference_diesel_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">91</field>
+            <field name="rule_parameter_id" ref="rule_parameter_co2_reference_diesel"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_co2_reference_diesel_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">84</field>
+            <field name="rule_parameter_id" ref="rule_parameter_co2_reference_diesel"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_co2_reference_diesel_2022" model="hr.rule.parameter.value">
+            <field name="parameter_value">75</field>
+            <field name="rule_parameter_id" ref="rule_parameter_co2_reference_diesel"/>
+            <field name="date_from" eval="datetime(2022, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_co2_reference_diesel_2023" model="hr.rule.parameter.value">
+            <field name="parameter_value">67</field>
+            <field name="rule_parameter_id" ref="rule_parameter_co2_reference_diesel"/>
+            <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        </record>
+
+        <record id="rule_parameter_min_car_atn" model="hr.rule.parameter">
+            <field name="name">Minimum annual car ATN</field>
+            <field name="code">min_car_atn</field>
+            <field name="country_id" ref="base.be"/>
+        </record>
+        <record id="rule_parameter_value_min_car_atn_2018" model="hr.rule.parameter.value">
+            <field name="parameter_value">1280</field>
+            <field name="rule_parameter_id" ref="rule_parameter_min_car_atn"/>
+            <field name="date_from" eval="datetime(2018, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_min_car_atn_2019" model="hr.rule.parameter.value">
+            <field name="parameter_value">1310</field>
+            <field name="rule_parameter_id" ref="rule_parameter_min_car_atn"/>
+            <field name="date_from" eval="datetime(2019, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_min_car_atn_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">1340</field>
+            <field name="rule_parameter_id" ref="rule_parameter_min_car_atn"/>
+            <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_min_car_atn_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">1360</field>
+            <field name="rule_parameter_id" ref="rule_parameter_min_car_atn"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_min_car_atn_2022" model="hr.rule.parameter.value">
+            <field name="parameter_value">1370</field>
+            <field name="rule_parameter_id" ref="rule_parameter_min_car_atn"/>
+            <field name="date_from" eval="datetime(2022, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_min_car_atn_2023" model="hr.rule.parameter.value">
+            <field name="parameter_value">1400</field>
+            <field name="rule_parameter_id" ref="rule_parameter_min_car_atn"/>
+            <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+        </record>
+        <record id="rule_parameter_value_min_car_atn_2024" model="hr.rule.parameter.value">
+            <field name="parameter_value">1540</field>
+            <field name="rule_parameter_id" ref="rule_parameter_min_car_atn"/>
+            <field name="date_from" eval="datetime(2024, 1, 1).date()"/>
+        </record>
+
+        <record id="rule_parameter_tax_deduction_fuel_coefficients" model="hr.rule.parameter">
+            <field name="name">Tax deduction coefficients</field>
+            <field name="code">tax_deduction_fuel_coefficients</field>
+            <field name="country_id" ref="base.be"/>
+        </record>
+        <record id="rule_parameter_tax_deduction_fuel_2020" model="hr.rule.parameter.value">
+            <field name="parameter_value">{'diesel': 1, 'gasoline': 0.95, 'full_hybrid': 0.95, 'lpg': 0.90}</field>
+            <field name="rule_parameter_id" ref="rule_parameter_tax_deduction_fuel_coefficients"/>
+            <field name="date_from" eval="datetime(2019, 11, 1).date()"/>
+        </record>
+        <record id="rule_parameter_tax_deduction_fuel_2021" model="hr.rule.parameter.value">
+            <field name="parameter_value">{
+                'diesel': 1, 'gasoline': 0.95,
+                'full_hybrid': 0.95,
+                'plug_in_hybrid_diesel': 1, 'plug_in_hybrid_gasoline': 0.95,
+                'cng': 0.95, 'lpg': 0.95, 'hydrogen': 0.95,
+                'cng_hp_lower_bound': 12, 'cng_low': 0.9}</field>
+            <field name="rule_parameter_id" ref="rule_parameter_tax_deduction_fuel_coefficients"/>
+            <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+        </record>
+    </data>
+</odoo>

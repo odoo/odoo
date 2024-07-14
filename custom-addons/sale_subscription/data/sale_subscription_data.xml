@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+    <!-- Standard Closing Reason -->
+    <record id="close_reason_1" model="sale.order.close.reason">
+        <field name="name">Subscription is too expensive</field>
+    </record>
+    <record id="close_reason_2" model="sale.order.close.reason">
+        <field name="name">Subscription does not meet my requirements</field>
+    </record>
+    <record id="close_reason_3" model="sale.order.close.reason">
+        <field name="name">Subscription reached its end date</field>
+        <field name="visible_in_portal" eval="False"/>
+    </record>
+    <record id="close_reason_cancel" model="sale.order.close.reason">
+        <field name="name">Cancelled</field>
+    </record>
+    <record id="close_reason_4" model="sale.order.close.reason">
+        <field name="name">I don't use it</field>
+    </record>
+    <record id="close_reason_5" model="sale.order.close.reason">
+        <field name="name">Other</field>
+    </record>
+
+    <data noupdate="1">
+        <!-- Protected close reasons -->
+        <record id="close_reason_renew" model="sale.order.close.reason">
+            <field name="name">The subscription was renewed with a new plan</field>
+            <field name="visible_in_portal" eval="False"/>
+            <field name="is_protected" eval="True"/>
+        </record>
+
+        <record id="close_reason_end_of_contract" model="sale.order.close.reason">
+            <field name="name">End of contract</field>
+            <field name="visible_in_portal" eval="False"/>
+            <field name="is_protected" eval="True"/>
+        </record>
+
+        <record id="close_reason_auto_close_limit_reached" model="sale.order.close.reason">
+            <field name="name">Automatic renewal failed</field>
+            <field name="visible_in_portal" eval="False"/>
+            <field name="is_protected" eval="True"/>
+        </record>
+
+        <record id="close_reason_unpaid_subscription" model="sale.order.close.reason">
+            <field name="name">Unpaid subscription</field>
+            <field name="visible_in_portal" eval="False"/>
+            <field name="is_protected" eval="True"/>
+        </record>
+
+        <record id="close_reason_unknown" model="sale.order.close.reason">
+            <field name="name">Unknown</field>
+            <field name="visible_in_portal" eval="False"/>
+            <field name="is_protected" eval="True"/>
+        </record>
+
+        <!-- Subtypes -->
+        <record id="subtype_state_change" model="mail.message.subtype">
+            <field name="name">State Change</field>
+            <field name="res_model">sale.order</field>
+            <field name="default" eval="True"/>
+            <field name="internal" eval="True"/>
+            <field name="description">Subscription state has changed</field>
+        </record>
+
+        <!-- Cron jobs -->
+        <record model="ir.cron" id="account_analytic_cron">
+            <field name="name">Sale Subscription: subscriptions expiration</field>
+            <field name="model_id" ref="sale_subscription.model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_subscription_expiration()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="(datetime.now() + timedelta(minutes=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="doall" eval="False"/>
+        </record>
+
+        <record model="ir.cron" id="account_analytic_cron_for_invoice">
+            <field name="name">Sale Subscription: generate recurring invoices and payments</field>
+            <field name="model_id" ref="sale_subscription.model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_recurring_create_invoice()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="(datetime.now() + timedelta(minutes=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="ir_cron_sale_subscription_update_kpi" model="ir.cron">
+            <field name="name">Sale Subscription: Update KPI</field>
+            <field name="model_id" ref="sale_subscription.model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_update_kpi()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="(datetime.now() + timedelta(minutes=9)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <!-- Subscription Plan -->
+        <record id="subscription_plan_month" model="sale.subscription.plan" forcecreate="0">
+            <field name="name">Monthly</field>
+            <field name="billing_period_value">1</field>
+            <field name="billing_period_unit">month</field>
+        </record>
+
+        <record id="subscription_plan_year" model="sale.subscription.plan" forcecreate="0">
+            <field name="name">Yearly</field>
+            <field name="billing_period_value">1</field>
+            <field name="billing_period_unit">year</field>
+        </record>
+
+    </data>
+
+</odoo>

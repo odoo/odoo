@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sources
+        https://www.ato.gov.au/
+        https://oac.chris21.com/OAC_ichrisp/Help/ichrisUG/646250.htm
+    -->
+    <!-- Extra Pay Rule for inputs -->
+    <record id="l10n_au_extra_pay_structure_15" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+        <field name="name">Extra Pay</field>
+        <field name="code">GROSS.COMMISSION</field>
+        <field name="sequence">99</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'EXTRA' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['EXTRA'].amount
+result_name = inputs['EXTRA'].name
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_whm"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+    <!-- Include Extra Pay in NET -->
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_au_hr_payroll.hr_payroll_structure_au_whm')),
+            ('code', '=', 'NET')]"/>
+        <value eval="{
+            'amount_python_compute': &quot;result = categories['BASIC'] + categories['ALW'] + categories['DED'] + result_rules['GROSS.COMMISSION']['total']&quot;
+        }"/>
+    </function>
+
+    <!-- Schedule 15 - Tax table for working holiday makers -->
+    <record id="l10n_au_withholding_whm_structure_15" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_withholding"/>
+        <field name="name">PAYG Withholding</field>
+        <field name="code">WITHHOLD</field>
+        <field name="sequence">100</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rates = payslip._rule_parameter("l10n_au_whm")
+prev_rate = [0, 0, 0, 0]
+for idx, rate in enumerate(rates):
+    if rate[1] == 'inf' or categories['GROSS'] &lt;= rate[1]:
+        if idx &gt; 0:
+            prev_rate = rates[idx - 1]
+        break
+result = prev_rate[2] + (floor(categories['GROSS']) - rate[0]) * (rate[3] / 100)
+result = -round(result)
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_whm"/>
+    </record>
+
+    <!-- Only Total will reflect on Net as a DED category-->
+    <record id="l10n_au_withholding_net_structure_15" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_net_withholding"/>
+        <field name="name">Total Withholding Amount</field>
+        <field name="code">WITHHOLD.TOTAL</field>
+        <field name="sequence">160</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['WITHHOLD'] + min(-categories['WITHHOLD'], categories["WITHHOLD.OFFSET"])
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_whm"/>
+    </record>
+
+    <record id="l10n_au_super_contribution_structure_15" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_super_contribution"/>
+        <field name="name">Super Guarantee</field>
+        <field name="code">SUPER</field>
+        <field name="sequence">300</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip._rule_parameter("l10n_au_withholding_super")
+result = categories['GROSS'] * rate/100 + contract.l10n_au_salary_sacrifice_superannuation
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_whm"/>
+    </record>
+
+</odoo>

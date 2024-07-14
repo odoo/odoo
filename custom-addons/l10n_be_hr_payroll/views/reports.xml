@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="action_report_double_holiday_13th_month" model="ir.actions.report">
+            <field name="name">Payslip Double Holidays / 13th Month</field>
+            <field name="model">hr.payslip</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_be_hr_payroll.report_double_holiday_13th_month</field>
+            <field name="report_file">l10n_be_hr_payroll.report_double_holiday_13th_month</field>
+            <field name="print_report_name">'Payslip - %s' % (object.employee_id.name)</field>
+            <field name="binding_model_id" ref="model_hr_payslip"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_report_termination_fees" model="ir.actions.report">
+            <field name="name">Termination</field>
+            <field name="model">hr.payslip</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_be_hr_payroll.report_termination_fees</field>
+            <field name="report_file">l10n_be_hr_payroll.report_termination_fees</field>
+            <field name="print_report_name">'Termination - %s' % (object.employee_id.name)</field>
+            <field name="binding_model_id" ref="model_hr_payslip"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_report_termination_holidays_n" model="ir.actions.report">
+            <field name="name">Termination Holidays Current Year</field>
+            <field name="model">hr.payslip</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_be_hr_payroll.report_termination_holidays_n</field>
+            <field name="report_file">l10n_be_hr_payroll.report_termination_holidays</field>
+            <field name="print_report_name">'Termination Holidays N - %s' % (object.employee_id.name)</field>
+            <field name="binding_model_id" ref="model_hr_payslip"/>
+            <field name="binding_type">report</field>
+            <field name="print_report_name">'Holiday Attest (Year N) - %s' % (object.employee_id.name)</field>
+        </record>
+
+        <record id="action_report_termination_holidays_n1" model="ir.actions.report">
+            <field name="name">Termination Holidays Previous Year</field>
+            <field name="model">hr.payslip</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_be_hr_payroll.report_termination_holidays_n1</field>
+            <field name="report_file">l10n_be_hr_payroll.report_termination_holidays</field>
+            <field name="print_report_name">'Termination Holidays N-1 - %s' % (object.employee_id.name)</field>
+            <field name="binding_model_id" ref="model_hr_payslip"/>
+            <field name="binding_type">report</field>
+            <field name="print_report_name">'Holiday Attest (Year N-1) - %s' % (object.employee_id.name)</field>
+        </record>
+
+        <record id="action_report_individual_account" model="ir.actions.report">
+            <field name="name">Individual Account</field>
+            <field name="model">hr.employee</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_be_hr_payroll.report_individual_account</field>
+            <field name="report_file">l10n_be_hr_payroll.report_individual_account</field>
+            <field name="print_report_name">(object._get_report_base_filename())</field>
+            <field name="binding_model_id" ref="model_hr_employee"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_report_employee_281_10" model="ir.actions.report">
+            <field name="name">281.10 PDF</field>
+            <field name="model">hr.employee</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_be_hr_payroll.report_281_10</field>
+            <field name="report_file">l10n_be_hr_payroll.report_281_10</field>
+        </record>
+
+        <record id="action_report_employee_281_45" model="ir.actions.report">
+            <field name="name">281.45 PDF</field>
+            <field name="model">hr.employee</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_be_hr_payroll.report_281_45</field>
+            <field name="report_file">l10n_be_hr_payroll.report_281_45</field>
+        </record>
+
+        <record id="action_report_individual_account" model="ir.actions.report">
+            <field name="paperformat_id" ref="l10n_be_hr_payroll.paperformat_individual_account"/>
+            <field name="binding_model_id" eval="False"/>
+        </record>
+
+        <record id="action_report_ip_273S" model="ir.actions.report">
+            <field name="name">273S PDF</field>
+            <field name="model">l10n_be.273s</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_be_hr_payroll.report_273S</field>
+            <field name="report_file">l10n_be_hr_payroll.report_273S</field>
+        </record>
+
+        <record id="action_report_employee_274_10" model="ir.actions.report">
+            <field name="name">274.10 PDF</field>
+            <field name="model">l10n_be.274_xx</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_be_hr_payroll.report_274_10</field>
+            <field name="report_file">l10n_be_hr_payroll.report_274_10</field>
+        </record>
+
+        <record id="action_report_social_balance" model="ir.actions.report">
+            <field name="name">Social Balance Sheet</field>
+            <field name="model">l10n.be.social.balance.sheet</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_be_hr_payroll.report_social_balance</field>
+            <field name="report_file">l10n_be_hr_payroll.report_social_balance</field>
+        </record>
+
+        <record id="action_report_social_security_certificate" model="ir.actions.report">
+            <field name="name">Social Security Certificate</field>
+            <field name="model">l10n.be.social.security.certificate</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_be_hr_payroll.report_social_security_certificate</field>
+            <field name="report_file">l10n_be_hr_payroll.report_social_security_certificate</field>
+        </record>
+
+        <record id="action_report_dmfa" model="ir.actions.report">
+            <field name="name">DmfA</field>
+            <field name="model">l10n_be.dmfa</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_be_hr_payroll.dmfa_pdf_report</field>
+            <field name="report_file">l10n_be_hr_payroll.dmfa_pdf_report</field>
+        </record>
+
+</odoo>

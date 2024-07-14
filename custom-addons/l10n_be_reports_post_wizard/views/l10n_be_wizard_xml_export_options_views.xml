@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record id="view_account_financial_report_export" model="ir.ui.view">
+            <field name="name">l10n_be_reports_post_wizard.view_account_financial_report_export</field>
+            <field name="model">l10n_be_reports.periodic.vat.xml.export</field>
+            <field name="inherit_id" ref="l10n_be_reports.view_account_financial_report_export"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form/div" position="replace">
+                    <div>Posting this entry will generate an XML export; please choose option(s)</div>
+                </xpath>
+                <button name="print_xml" position="attributes">
+                    <attribute name="name">action_resume_post</attribute>
+                    <attribute name="string">Post Tax Entry</attribute>
+                </button>
+            </field>
+        </record>
+
+    </data>
+</odoo>

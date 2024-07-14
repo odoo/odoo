@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="spreadsheet_edition.ListingDetailsSidePanel" class="o-listing-details-side-panel">
+        <t t-set="def" t-value="listDefinition"/>
+        <div class="o_side_panel_section">
+            <div class="o_side_panel_title">List Name</div>
+            <EditableName name="env.model.getters.getListName(props.listId)"
+                          displayName="env.model.getters.getListDisplayName(props.listId)"
+                          onChanged.bind="onNameChanged"/>
+        </div>
+        <div class="o_side_panel_section">
+            <div class="o_side_panel_title">Model</div>
+            <div class="o_model_name"><t t-esc="def.modelDisplayName"/> (<t t-esc="def.model"/>)</div>
+        </div>
+        <div class="o_side_panel_section">
+            <div class="o_side_panel_title">Domain</div>
+            <DomainSelector resModel="def.model" domain="def.domain" t-key="'list_' + def.id"/>
+            <div class="btn btn-link o_edit_domain" t-on-click="openDomainEdition">
+                <i class="oi oi-arrow-right me-1"/>Edit domain
+            </div>
+        </div>
+        <div class="o_side_panel_section">
+            <div class="o_side_panel_title" t-if="def.orderBy.length !== 0">Sorting</div>
+            <t t-foreach="def.orderBy" t-as="sort" t-key="sort_index">
+                <div t-esc="formatSort(sort)"/>
+            </t>
+            <div class="o_pivot_last_update"><i>Last updated at <t t-esc="getLastUpdate()"/></i></div>
+            <div class="btn btn-link o_refresh_list" t-on-click="refresh"><i class="oi oi-arrow-right me-1"/>Refresh values</div><br/>
+        </div>
+    </div>
+</templates>

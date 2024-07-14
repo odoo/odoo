@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportAmlIrFilters">
+        <Dropdown togglerClass="'btn btn-secondary'">
+            <t t-set-slot="toggler">
+                <i class="fa fa-star me-1"/>Filters: <t t-esc="selectedAmlIrFilters"/>
+            </t>
+
+            <t t-foreach="controller.options.aml_ir_filters" t-as="aml_ir_filter" t-key="aml_ir_filter_index">
+                <DropdownItem
+                    class="{ 'selected': aml_ir_filter.selected }"
+                    onSelected="() => this.toggleFilter('aml_ir_filters.' + aml_ir_filter_index + '.selected')"
+                >
+                    <t t-esc="aml_ir_filter.name"/>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

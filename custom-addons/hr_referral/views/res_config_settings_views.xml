@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view__form" model="ir.ui.view">
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Referrals" string="Referrals" name="hr_referral" groups="hr.group_hr_manager">
+                    <block title="Background">
+                        <setting string="Background Image">
+                            <div class="mt16" style="min-height: 200px;">
+                                <field name="hr_referral_background" widget="image"/>
+                            </div>
+                            <button name="restore_default_referral_background" type="object" string="Restore Default" icon="oi-arrow-right" class="ms-4 btn-link" />
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_hr_referral_configuration" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'hr_referral', 'bin_size': False}</field>
+    </record>
+
+    <menuitem id="hr_referral_menu_configuration"
+        name="Settings"
+        parent="menu_hr_referral_configuration"
+        sequence="0"
+        action="action_hr_referral_configuration"
+        groups="hr_recruitment.group_hr_recruitment_manager"/>
+</odoo>

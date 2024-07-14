@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="project_enterprise.GanttPopover" t-inherit="web_gantt.GanttPopover" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('popover-footer')]/button" position="after">
+            <button class="btn btn-sm btn-secondary ms-1" t-on-click="onClickUnschedule">
+                Unschedule
+            </button>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="sign.SignKanbanController" t-inherit="web.KanbanView" t-inherit-mode="primary">
+        <xpath expr="//Layout" position="inside">
+            <t t-set-slot="control-panel-create-button">
+                <t t-call="sign.SignViews.buttons"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

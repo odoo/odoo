@@ -1,0 +1,763 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* data_merge
+# 
+# Translators:
+# Wil Odoo, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (копія)"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_group.py:0
+#, python-format
+msgid "%s - Similarity: %s%%"
+msgstr "%s - Схожість: %s%%"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid "%s records have been merged"
+msgstr "%s записи об'єднано"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid ""
+"' deduplication rule.<br/>\n"
+"You can merge them"
+msgstr ""
+"' правило вилучення дублікатів.<br/>\n"
+"Ви можете об'єднати їх"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "<span class=\"me-1\">Every</span>"
+msgstr "<span class=\"me-1\">Кожен</span>"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "<span class=\"oe_inline\">%</span>"
+msgstr "<span class=\"oe_inline\">%</span>"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "<span invisible=\"not custom_merge_method\">Model specific</span>"
+msgstr "<span invisible=\"not custom_merge_method\">Специфічна модель</span>"
+
+#. module: data_merge
+#: model:ir.model.constraint,message:data_merge.constraint_data_merge_rule_uniq_model_id_field_id
+msgid "A field can only appear once!"
+msgstr "Поле може з'являтися лише раз!"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__active
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__active
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__active
+msgid "Active"
+msgstr "Активно"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__removal_mode__archive
+msgid "Archive"
+msgstr "Архів"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_model_view_search
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Archived"
+msgstr "Заархівовано"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid ""
+"Are you sure that you want to merge the selected records in their respective"
+" group?"
+msgstr ""
+"Ви впевнені, що хочете об'єднати обрані записи у їх відповідній групі?"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid "Are you sure that you want to merge these records?"
+msgstr "Ви впевнені, що хочете об'єднати ці записи?"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__merge_mode__automatic
+msgid "Automatic"
+msgstr "Автоматичний"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_ir_model__is_merge_enabled
+#: model_terms:ir.ui.view,arch_db:data_merge.ir_model_view_search
+msgid "Can Be Merged"
+msgstr "Можна об'єднати"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_rule.py:0
+#, python-format
+msgid "Case/Accent Insensitive Match"
+msgstr "Співставити регістр/невиразне виділення"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__company_id
+msgid "Company"
+msgstr "Компанія"
+
+#. module: data_merge
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record_notification
+msgid "Configure rules to identify duplicate records"
+msgstr "Налаштуйте правила, щоби визначити записи дублікатів"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_res_partner
+msgid "Contact"
+msgstr "Контакт"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_ir_model__ref_merge_ir_act_server_id
+msgid ""
+"Contextual menu action that redirects to the deduplicate view of data_merge."
+msgstr ""
+"Дія контекстного меню, яка переспрямовує до перегляду дедублікатів "
+"data_merge."
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_create_uid
+msgid "Created By"
+msgstr "Створено"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_create_date
+msgid "Created On"
+msgstr "Створено на"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__create_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__create_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__create_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__create_uid
+msgid "Created by"
+msgstr "Створив"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__create_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__create_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__create_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__create_date
+msgid "Created on"
+msgstr "Створено"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__mix_by_company
+msgid "Cross-Company"
+msgstr "Крос-компанія"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__custom_merge_method
+msgid "Custom Merge Method"
+msgstr "Метод кастомного злиття"
+
+#. module: data_merge
+#: model:ir.actions.server,name:data_merge.ir_cron_cleanup_ir_actions_server
+msgid "Data Merge: Cleanup Records"
+msgstr "Об'єднання даних: Записи очищення"
+
+#. module: data_merge
+#: model:ir.actions.server,name:data_merge.ir_cron_find_duplicates_ir_actions_server
+msgid "Data Merge: Find Duplicate Records"
+msgstr "Об'єднання даних: Знайти записи дублікатів"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__notify_frequency_period__days
+msgid "Days"
+msgstr "Дні"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+#, python-format
+msgid "Deduplicate"
+msgstr "Дублікат"
+
+#. module: data_merge
+#: model:ir.ui.menu,name:data_merge.menu_data_merge_config_rules_deduplication
+#: model:ir.ui.menu,name:data_merge.menu_data_merge_group
+msgid "Deduplication"
+msgstr "Дублювання"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_group
+msgid "Deduplication Group"
+msgstr "Група дублювання"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_model
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__model_id
+msgid "Deduplication Model"
+msgstr "Модель дублювання"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_record
+msgid "Deduplication Record"
+msgstr "Запис дублювання"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_rule
+msgid "Deduplication Rule"
+msgstr "Правило дублювання"
+
+#. module: data_merge
+#: model:ir.actions.act_window,name:data_merge.action_data_merge_config
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__rule_ids
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "Deduplication Rules"
+msgstr "Правила дублювання"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "Deduplication is forbidden on the model: %s"
+msgstr "У моделі заборонено дедуплікацію: %s"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__removal_mode__delete
+msgid "Delete"
+msgstr "Видалити"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__differences
+msgid "Differences"
+msgstr "Різниці"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_record__differences
+msgid "Differences with the master record"
+msgstr "Різниця з основним записом"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.ir_model_view_form
+msgid "Disable Merge"
+msgstr "Вимкнути об’єднання"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_list
+msgid "Discard"
+msgstr "Відмінити"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Discarded"
+msgstr "Відмінено"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__display_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__display_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__display_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__display_name
+msgid "Display Name"
+msgstr "Назва для відображення"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__divergent_fields
+msgid "Divergent Fields"
+msgstr "Дивергентні поля"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__domain
+msgid "Domain"
+msgstr "Домен"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__removal_mode
+msgid "Duplicate Removal"
+msgstr "Вилучення дублікату"
+
+#. module: data_merge
+#: model:ir.actions.act_window,name:data_merge.action_data_merge_record
+#: model:ir.actions.act_window,name:data_merge.action_data_merge_record_notification
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "Duplicates"
+msgstr "Дублікат"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "Duplicates to Merge"
+msgstr "Дублікати для об'єднання"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__create_threshold
+msgid ""
+"Duplicates with a similarity below this threshold will not be suggested"
+msgstr "Дублікати із подібністю нижче цього порогу не пропонуватимуться"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.ir_model_view_form
+msgid "Enable Merge"
+msgstr "Увімкнути об’єднання"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_rule.py:0
+#, python-format
+msgid "Exact Match"
+msgstr "Точне співставлення"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__field_values
+msgid "Field Values"
+msgstr "Значення поля"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_ir_model__hide_merge_action
+msgid "Hide merge action button"
+msgstr "Сховати кнопку дії об'єднання"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid "I've identified"
+msgstr "Я вже ідентифікував"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__id
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_list
+msgid "ID"
+msgstr "ID"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_ir_model__is_merge_enabled
+msgid ""
+"If True, the generic data merge tool is available in the contextual menu of "
+"this model."
+msgstr ""
+"Якщо значення True, загальний інструмент об’єднання даних доступний у "
+"контекстному меню цієї моделі."
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__is_contextual_merge_action
+msgid ""
+"If True, this record is used for contextual menu action \"Merge\" on the "
+"target model."
+msgstr ""
+"Якщо True, цей запис використовується для дії контекстного меню «Об’єднати» "
+"на цільовій моделі."
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_ir_model__hide_merge_action
+msgid ""
+"If the model already has a custom merge method, the class attribute `_merge_disabled` is set to true on\n"
+"             that model and the generic data merge action should not be available on that model."
+msgstr ""
+"Якщо в моделі вже є користувацький метод злиття, атрибут класу `_merge_disabled` має значення true в\n"
+" цій моделі, і загальна дія злиття даних не повинна бути доступна для цієї моделі."
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__is_deleted
+msgid "Is Deleted"
+msgstr "Видалено"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__is_discarded
+msgid "Is Discarded"
+msgstr "Відмінено"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__is_master
+msgid "Is Master"
+msgstr "Основний"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__last_notification
+msgid "Last Notification"
+msgstr "Останнє сповіщення"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__write_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__write_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__write_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__write_uid
+msgid "Last Updated by"
+msgstr "Востаннє оновив"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__write_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__write_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__write_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__write_date
+msgid "Last Updated on"
+msgstr "Останнє оновлення"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_record__used_in
+msgid "List of other models referencing this record"
+msgstr "Список інших моделей з посиланням на цей запис"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__notify_user_ids
+msgid "List of users to notify when there are new records to merge"
+msgstr ""
+"Список користувачів для їх сповіщення, коли будуть нові записи для "
+"об'єднання"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__merge_mode__manual
+msgid "Manual"
+msgstr "Вручну"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "Manual Selection - %s"
+msgstr "Ручний вибір - %s"
+
+#. module: data_merge
+#. odoo-javascript
+#. odoo-python
+#: code:addons/data_merge/models/ir_model.py:0
+#: code:addons/data_merge/static/src/views/data_merge_list_view.xml:0
+#: model:ir.actions.server,name:data_merge.merge_action_crm_lost_reason
+#: model:ir.actions.server,name:data_merge.merge_action_crm_tag
+#: model:ir.actions.server,name:data_merge.merge_action_helpdesk_tag
+#: model:ir.actions.server,name:data_merge.merge_action_helpdesk_ticket
+#: model:ir.actions.server,name:data_merge.merge_action_project_tags
+#: model:ir.actions.server,name:data_merge.merge_action_project_task
+#: model:ir.actions.server,name:data_merge.merge_action_res_country
+#: model:ir.actions.server,name:data_merge.merge_action_res_country_state
+#: model:ir.actions.server,name:data_merge.merge_action_res_partner_category
+#: model:ir.actions.server,name:data_merge.merge_action_res_partner_industry
+#: model:ir.actions.server,name:data_merge.merge_action_res_partner_title
+#: model:ir.actions.server,name:data_merge.merge_action_utm_campaign
+#: model:ir.actions.server,name:data_merge.merge_action_utm_medium
+#: model:ir.actions.server,name:data_merge.merge_action_utm_source
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_list
+#, python-format
+msgid "Merge"
+msgstr "З’єднати"
+
+#. module: data_merge
+#: model:ir.ui.menu,name:data_merge.ir_model_menu_merge_action_manager
+msgid "Merge Action Manager"
+msgstr "Менеджер дії об'єднання"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__match_mode
+msgid "Merge If"
+msgstr "Об'єднати, якщо"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__merge_mode
+msgid "Merge Mode"
+msgstr "Режим об'єднання"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_ir_model__ref_merge_ir_act_server_id
+msgid "Merge Server Action"
+msgstr "Дія об'єднання на сервері"
+
+#. module: data_merge
+#: model:ir.actions.act_window,name:data_merge.ir_model_action_merge
+msgid "Merge action Manager"
+msgstr "Менеджер дії об'єднання"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__is_contextual_merge_action
+msgid "Merge action attached"
+msgstr "Прикріплення дії об'єднання"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "Missing required PostgreSQL extension: unaccent"
+msgstr "Відсутнє обов’язкове розширення PostgreSQL: без акценту"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__res_model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__res_model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__res_model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__res_model_id
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Model"
+msgstr "Модель"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__res_model_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__res_model_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__res_model_name
+msgid "Model Name"
+msgstr "Назва моделі"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_ir_model
+msgid "Models"
+msgstr "Моделі"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__notify_frequency_period__months
+msgid "Months"
+msgstr "Місяці"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__name
+msgid "Name"
+msgstr "Ім'я"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record_notification
+#, python-format
+msgid "No duplicates found"
+msgstr "Не знайдено дублікатів"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__notify_frequency
+msgid "Notify"
+msgstr "Повідомити"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__notify_frequency_period
+msgid "Notify Frequency Period"
+msgstr "Сповіщати періодично"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__notify_user_ids
+msgid "Notify Users"
+msgstr "Сповістити користувачів"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "Query Failed."
+msgstr "Помилка запиту."
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__record_ids
+msgid "Record"
+msgstr "Запис"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__group_id
+msgid "Record Group"
+msgstr "Група запису"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__res_id
+msgid "Record ID"
+msgstr "ID запису"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Records"
+msgstr "Записи"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__records_to_merge_count
+msgid "Records To Merge Count"
+msgstr "Підрахунок записів для об'єднання"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__domain
+msgid "Records eligible for the deduplication process"
+msgstr "Записи, придатні для процесу дедуплікації"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "Records must be of the same model"
+msgstr "Записи мають бути тієї ж моделі"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__merge_threshold
+msgid ""
+"Records with a similarity percentage above this threshold will be "
+"automatically merged"
+msgstr ""
+"Записи із відсотком схожості вище цього порогу будуть автоматично об’єднані"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Rule"
+msgstr "Правило"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "Select a model to configure deduplication rules"
+msgstr "Оберіть модель, щоб налаштувати правила вилучення дублікатів"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__sequence
+msgid "Sequence"
+msgstr "Послідовність"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__similarity
+msgid "Similarity %"
+msgstr "Схожість %"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__merge_threshold
+msgid "Similarity Threshold"
+msgstr "Поріг схожості"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_group__similarity
+msgid ""
+"Similarity coefficient based on the amount of text fields exactly in common."
+msgstr "Коефіцієнт схожості на основі суми точно схожих текстових полів."
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__rule_ids
+msgid "Suggest to merge records matching at least one of these rules"
+msgstr ""
+"Пропонуємо об'єднати співставлені записи принаймні за одним із цих правил"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__create_threshold
+msgid "Suggestion Threshold"
+msgstr "Поріг пропозиції"
+
+#. module: data_merge
+#: model:ir.model.constraint,message:data_merge.constraint_data_merge_model_check_notif_freq
+msgid "The notification frequency should be greater than 0"
+msgstr "Період сповіщень повинен бути більше 0."
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "The referenced record does not exist"
+msgstr "Запис, на який посилається, не існує"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid "The selected records have been merged"
+msgstr "Вибрані записи об'єднані"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "The target model does not exists."
+msgstr "Цільова модель не існує."
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "There is not referenced record"
+msgstr "Немає записів, що посилаються"
+
+#. module: data_merge
+#: model:ir.model.constraint,message:data_merge.constraint_data_merge_model_uniq_name
+msgid "This name is already taken"
+msgstr "Цю назву уже взяли"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__field_id
+msgid "Unique ID Field"
+msgstr "Унікальне поле ID"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.xml:0
+#, python-format
+msgid "Unselect"
+msgstr "Не обрано"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_write_uid
+msgid "Updated By"
+msgstr "Оновлено"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_write_date
+msgid "Updated On"
+msgstr "Оновлено"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__used_in
+msgid "Used In"
+msgstr "Використано в"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__notify_frequency_period__weeks
+msgid "Weeks"
+msgstr "Тижні"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__mix_by_company
+msgid "When enabled, duplicates across different companies will be suggested"
+msgstr "Коли буде включено, дублікати різних компаній будуть запропоновані"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "You must select at least two %s in order to merge them."
+msgstr "Ви повинні вибрати принаймні два %s, щоби об'єднати їх ."
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid "duplicate records with the '"
+msgstr "записи дублікатів з '"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid "here"
+msgstr "тут"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_merged
+msgid "merged into"
+msgstr "об'єднано в"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_main
+msgid "merged into this one"
+msgstr "об'єднано у цей"

@@ -1,0 +1,484 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_auto_transfer
+# 
+# Translators:
+# JanaAvalah, 2023
+# Rivo Zängov <eraser@eraser.ee>, 2023
+# Aveli Kannel <aveli@avalah.ee>, 2023
+# Eneli Õigus <enelioigus@gmail.com>, 2023
+# Piia Paurson <piia@avalah.ee>, 2023
+# Triine Aavik <triine@avalah.ee>, 2023
+# Arma Gedonsky <armagedonsky@hot.ee>, 2023
+# Andre Roomet <andreroomet@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Patrick-Jordan Kiudorv, 2023
+# Egon Raamat <egon@avalah.ee>, 2023
+# Leaanika Randmets, 2023
+# Anna, 2023
+# Kärt Villako, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Kärt Villako, 2024\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "<span> to </span>"
+msgstr "<span> kuni </span>"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Konto tabeli mall"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_transfer_model
+msgid "Account Transfer Model"
+msgstr "Konto Ülekande Mudel"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_transfer_model_line
+msgid "Account Transfer Model Line"
+msgstr "Konto Ülekande Mudelijoon"
+
+#. module: account_auto_transfer
+#: model:ir.actions.server,name:account_auto_transfer.ir_cron_auto_transfer_ir_actions_server
+msgid "Account automatic transfers: Perform transfers"
+msgstr ""
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Activate"
+msgstr "Aktiveeri"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,help:account_auto_transfer.field_account_transfer_model_line__analytic_account_ids
+msgid ""
+"Adds a condition to only transfer the sum of the lines from the origin "
+"accounts that match these analytic accounts to the destination account"
+msgstr ""
+"Lisab tingimuse üle kanda vaid nende ridade summa, mille korral algsete "
+"kontode analüütilised kontod sobivad sihtkonto omadega"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,help:account_auto_transfer.field_account_transfer_model_line__partner_ids
+msgid ""
+"Adds a condition to only transfer the sum of the lines from the origin "
+"accounts that match these partners to the destination account"
+msgstr ""
+"Lisab tingimuse üle kanda vaid nende ridade summa, mille korral algsete "
+"kontode partnerid sobivad sihtkonto omadega"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__analytic_account_ids
+msgid "Analytic Filter"
+msgstr "Analüütiline Filter"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Automated Transfer"
+msgstr "Automatiseeritud Siire"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (%s%% from account %s)"
+msgstr "Automaatne ülekanne (%s%% kontolt%s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (-%s%%)"
+msgstr "Automaatne ülekanne (-%s%%)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid ""
+"Automatic Transfer (entries with analytic account(s): %s and partner(s): %s)"
+msgstr ""
+"Automaatne ülekanne (kanded analüütilise konto(de)ga: %s ja partneri(te)ga: "
+"%s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (entries with analytic account(s): %s)"
+msgstr "Automaatne ülekanne (analüütilise konto(de) kanded: %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (entries with partner(s): %s)"
+msgstr "Automaatne ülekanne (kanded partneri(te)ga): %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid ""
+"Automatic Transfer (from account %s with analytic account(s): %s and "
+"partner(s): %s)"
+msgstr ""
+"Automaatne ülekanne (kontolt %s analüütilise konto(de)ga %s ja "
+"partneri(te)ga: %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (from account %s with analytic account(s): %s)"
+msgstr "Automaatne ülekanne (kontolt %s analüütilise konto(de)ga: %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (from account %s with partner(s): %s)"
+msgstr "Automaatne ülekanne (kontolt%s partneri(te)ga: %s)"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "Automatic Transfer (to account %s)"
+msgstr "Automaatne ülekanne (kontole %s)"
+
+#. module: account_auto_transfer
+#: model:ir.actions.act_window,name:account_auto_transfer.transfer_model_action
+#: model:ir.ui.menu,name:account_auto_transfer.menu_auto_transfer
+msgid "Automatic Transfers"
+msgstr "Automaatsed siirded"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__company_id
+msgid "Company"
+msgstr "Ettevõte"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,help:account_auto_transfer.field_account_transfer_model__company_id
+msgid "Company related to this journal"
+msgstr "Ettevõte mis on antud registriga seotud"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Compute Transfer"
+msgstr "Arvuta"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__create_uid
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__create_uid
+msgid "Created by"
+msgstr "Loodud (kelle poolt?)"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__create_date
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__create_date
+msgid "Created on"
+msgstr "Loodud"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Description"
+msgstr "Kirjeldus"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__account_id
+msgid "Destination Account"
+msgstr "Sihtkoha konto"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__line_ids
+msgid "Destination Accounts"
+msgstr "Sihtkoha Kontod"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__journal_id
+msgid "Destination Journal"
+msgstr "Sihtkoha Artikkel"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Disable"
+msgstr "Keela"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__state__disabled
+msgid "Disabled"
+msgstr "Mustand"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__display_name
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__display_name
+msgid "Display Name"
+msgstr "Kuvatav nimi"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__frequency
+msgid "Frequency"
+msgstr "Sagedus"
+
+#. module: account_auto_transfer
+#: model:ir.actions.act_window,name:account_auto_transfer.generated_transfers_action
+msgid "Generated Entries"
+msgstr "Loodud kirjed"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__move_ids
+msgid "Generated Moves"
+msgstr "Loodud siirded"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__id
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/demo/account_demo.py:0
+#, python-format
+msgid "IFRS Automatic Transfers"
+msgstr "IFRS Automaatsed siirded"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Journal"
+msgstr "Andmik"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_move
+msgid "Journal Entry"
+msgstr "Andmiku kanne"
+
+#. module: account_auto_transfer
+#: model:ir.model,name:account_auto_transfer.model_account_move_line
+msgid "Journal Item"
+msgstr "Andmiku kanderida"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__write_uid
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__write_uid
+msgid "Last Updated by"
+msgstr "Viimati uuendatud"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__write_date
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__write_date
+msgid "Last Updated on"
+msgstr "Viimati uuendatud"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__frequency__month
+msgid "Monthly"
+msgstr "Igakuine"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/demo/account_demo.py:0
+#, python-format
+msgid "Monthly IFRS rent expense transfer"
+msgstr ""
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__move_ids_count
+msgid "Move Ids Count"
+msgstr "Kande ID-de arv"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Move Model"
+msgstr "Kande mudel"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_tree
+msgid "Move Models"
+msgstr "Kande mudelid"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__name
+msgid "Name"
+msgstr "Nimi"
+
+#. module: account_auto_transfer
+#: model:ir.model.constraint,message:account_auto_transfer.constraint_account_transfer_model_line_unique_account_by_transfer_model
+msgid "Only one account occurrence by transfer model"
+msgstr "Ainult ühe konto esinemine ülekandemudeli järgi. "
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__account_ids
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Origin Accounts"
+msgstr "Algkontod"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_bank_statement_line__transfer_model_id
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_move__transfer_model_id
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_payment__transfer_model_id
+msgid "Originating Model"
+msgstr "Päritolumudel"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__partner_ids
+msgid "Partner Filter"
+msgstr "Partneri filter"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__percent
+msgid "Percent"
+msgstr "Protsent"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Percent (%)"
+msgstr "Protsent (%)"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__percent_is_readonly
+msgid "Percent Is Readonly"
+msgstr "Protsent on ainult loetav. "
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,help:account_auto_transfer.field_account_transfer_model_line__percent
+msgid ""
+"Percentage of the sum of lines from the origin accounts will be transferred "
+"to the destination account"
+msgstr "Algokonto ridade summa protsent kantakse sihtkoha kontole. "
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Period"
+msgstr "Periood"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__frequency__quarter
+msgid "Quarterly"
+msgstr "Kvartaalselt"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__state__in_progress
+msgid "Running"
+msgstr "Pidev"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__sequence
+msgid "Sequence"
+msgstr "Jada"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__date_start
+msgid "Start Date"
+msgstr "Alguskuupäev"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__state
+msgid "State"
+msgstr "Staatus"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__date_stop
+msgid "Stop Date"
+msgstr "Lõpetamise kuupäev"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "The analytic filter %s is duplicated"
+msgstr "Analüütiline filter %s on dubleeritud. "
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid ""
+"The partner filter %s in combination with the analytic filter %s is "
+"duplicated"
+msgstr "Partneri filter %s koos analüütilise filtriga %s dubleeritakse. "
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "The partner filter %s is duplicated"
+msgstr "Partneri filter %s on dubleeritud. "
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid "The total percentage (%s) should be less or equal to 100!"
+msgstr "Koguprotsent (%s) peaks olema väiksem või võrdne 100-ga!"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model__total_percent
+msgid "Total Percent"
+msgstr "Protsent kokku"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields,field_description:account_auto_transfer.field_account_transfer_model_line__transfer_model_id
+msgid "Transfer Model"
+msgstr "Ülekande mudel"
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "Transfers"
+msgstr "Siirded"
+
+#. module: account_auto_transfer
+#: model:ir.model.fields.selection,name:account_auto_transfer.selection__account_transfer_model__frequency__year
+msgid "Yearly"
+msgstr "Aastane"
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/demo/account_demo.py:0
+#, python-format
+msgid "Yearly liabilites auto transfers"
+msgstr ""
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid ""
+"You cannot delete an automatic transfer that has draft moves attached "
+"('%s'). Please delete them before deleting this transfer."
+msgstr ""
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/transfer_model.py:0
+#, python-format
+msgid ""
+"You cannot delete an automatic transfer that has posted moves attached "
+"('%s')."
+msgstr ""
+
+#. module: account_auto_transfer
+#. odoo-python
+#: code:addons/account_auto_transfer/models/account_move_line.py:0
+#, python-format
+msgid "You cannot set Tax on Automatic Transfer's entries."
+msgstr "Te ei saa automaatse siirde kannetel maksusid seadistada."
+
+#. module: account_auto_transfer
+#: model_terms:ir.ui.view,arch_db:account_auto_transfer.view_transfer_model_form
+msgid "e.g. Monthly Expense Transfer"
+msgstr "nt. igakuine kulude ülekanne"

@@ -1,0 +1,138 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_inter_company_rules
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: account_inter_company_rules
+#. odoo-python
+#: code:addons/account_inter_company_rules/models/account_move.py:0
+#, python-format
+msgid "%s Invoice: %s"
+msgstr "%s Faktura: %s"
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_account_move_send
+msgid "Account Move Send"
+msgstr "Przeniesienie konta Wyślij"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_bank_statement_line__auto_generated
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_move__auto_generated
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_payment__auto_generated
+msgid "Auto Generated Document"
+msgstr "Automatycznie wygenerowany dokument"
+
+#. module: account_inter_company_rules
+#. odoo-python
+#: code:addons/account_inter_company_rules/models/account_move.py:0
+#, python-format
+msgid "Automatically generated from %(origin)s of company %(company)s."
+msgstr "Automatycznie wygenerowane z %(origin)s firmy %(company)s."
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_res_company
+msgid "Companies"
+msgstr "Firmy"
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ustawienia konfiguracji"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_company__intercompany_user_id
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_config_settings__intercompany_user_id
+msgid "Create as"
+msgstr "Utwórz jako"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields.selection,name:account_inter_company_rules.selection__res_company__rule_type__not_synchronize
+msgid "Do not synchronize"
+msgstr "Nie synchronizuj"
+
+#. module: account_inter_company_rules
+#. odoo-python
+#: code:addons/account_inter_company_rules/models/res_company.py:0
+#: code:addons/account_inter_company_rules/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Generate a bill/invoice when a company confirms an invoice/bill for %s. The "
+"new bill/invoice will be created in the first Purchase/Sales Journal of the "
+"Journals list view."
+msgstr ""
+
+#. module: account_inter_company_rules
+#: model_terms:ir.ui.view,arch_db:account_inter_company_rules.view_company_inter_change_inherit_form
+msgid "Inter-Company Transactions"
+msgstr "Transakcje międzyfirmowe"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_company__intercompany_transaction_message
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_config_settings__intercompany_transaction_message
+msgid "Intercompany Transaction Message"
+msgstr "Komunikat o transakcji międzyfirmowej"
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_account_move
+msgid "Journal Entry"
+msgstr "Zapis dziennika"
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_account_move_line
+msgid "Journal Item"
+msgstr "Pozycja zapisu"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,help:account_inter_company_rules.field_res_company__intercompany_user_id
+#: model:ir.model.fields,help:account_inter_company_rules.field_res_config_settings__intercompany_user_id
+msgid ""
+"Responsible user for creation of documents triggered by intercompany rules."
+msgstr ""
+"Komunikat o transakcji międzyfirmowej Odpowiedzialny użytkownik za tworzenie"
+" dokumentów uruchamianych przez reguły międzyfirmowe."
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_company__rule_type
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_config_settings__rule_type
+msgid "Rule"
+msgstr "Reguła"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_config_settings__rules_company_id
+msgid "Select Company"
+msgstr "Wybierz firmę"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,help:account_inter_company_rules.field_res_company__rule_type
+#: model:ir.model.fields,help:account_inter_company_rules.field_res_config_settings__rule_type
+msgid "Select the type to setup inter company rules in selected company."
+msgstr ""
+"Wybierz typ, aby skonfigurować reguły międzyfirmowe w wybranej firmie."
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_bank_statement_line__auto_invoice_id
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_move__auto_invoice_id
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_payment__auto_invoice_id
+msgid "Source Invoice"
+msgstr "Faktura źródłowa"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields.selection,name:account_inter_company_rules.selection__res_company__rule_type__invoice_and_refund
+msgid "Synchronize invoices/bills"
+msgstr "Synchronizuj faktury sprzedaży/zakupu"

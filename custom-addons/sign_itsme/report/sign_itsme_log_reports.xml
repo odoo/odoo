@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="sign_itsme.sign_request_logs_user" inherit_id="sign.sign_request_logs_user">
+        <xpath expr="//th[@id='participants_phone']" position="after">
+            <t t-set='has_itsme_validation' t-value="o.sudo().request_item_ids.filtered(lambda i: i.itsme_validation_hash)"/>
+            <th t-if="has_itsme_validation" class="text-start">
+                Name
+            </th>
+        </xpath>
+        <xpath expr="//td[hasclass('participant_sms_validation')]" position="after">
+            <td t-if="has_itsme_validation">
+                <t t-if="sri.itsme_signer_name">
+                    <span>
+                        <t t-out="sri.itsme_signer_name"/>
+                        <t t-if="sri.itsme_signer_birthdate" groups="sign.group_sign_manager">
+                            (<t t-out="format_date(sri.env, sri.itsme_signer_birthdate)"/>)
+                        </t>
+                    </span>
+                </t>
+            </td>
+        </xpath>
+        <xpath expr="//div[hasclass('sms_footnote')]" position="after">
+            <div class="text-muted" t-if="has_itsme_validation">
+                <small>Name: The signatory has provided this identity through itsme®</small>
+            </div>
+        </xpath>
+    </template>
+</odoo>

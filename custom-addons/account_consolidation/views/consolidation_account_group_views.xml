@@ -1,0 +1,88 @@
+<odoo>
+    <data>
+        <record id="consolidation_group_tree" model="ir.ui.view">
+            <field name="name">consolidation.group.tree</field>
+            <field name="model">consolidation.group</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree string="Account Groups">
+                    <field name="sequence" widget="handle"/>
+                    <field name="display_name" string="Account Group"/>
+                    <field name="invert_sign" widget="boolean_toggle" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="consolidation_group_form" model="ir.ui.view">
+            <field name="name">consolidation.group.form</field>
+            <field name="model">consolidation.group</field>
+            <field name="arch" type="xml">
+                <form string="Account">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Group Name"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Profit and Loss"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="chart_id" invisible="context.get('default_chart_id', False)"
+                                       options="{'no_quick_create': True}"/>
+                                <field name="show_on_dashboard"/>
+                                <field name="invert_sign"/>
+                                <field name="sign" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="parent_id" invisible="not chart_id"
+                                       domain="[('chart_id', '=', chart_id), ('id', '!=', id)]"
+                                       context="{'default_chart_id': chart_id, 'from_section': True}"/>
+                                <field name="sequence" groups="base.group_no_one"/>
+                            </group>
+                        </group>
+                        <notebook invisible="context.get('from_section', False)">
+                            <page string="Consolidation Accounts" name="accounts" invisible="context.get('from_account', False)">
+                                <field name="account_ids" domain="[('chart_id', '=', chart_id)]"
+                                       widget="many2many"
+                                       context="{'default_chart_id':chart_id, 'default_group_id': id}">
+                                    <tree string="Consolidation Account">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Subgroups" name="children">
+                                <field name="child_ids" domain="[('chart_id', '=', chart_id)]"
+                                       context="{'default_chart_id':chart_id}">
+                                    <tree string="Account Groups">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="consolidation_group_search" model="ir.ui.view">
+            <field name="name">consolidation.group.search</field>
+            <field name="model">consolidation.group</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field string="Consolidation" name="chart_id"/>
+                    <filter name="group_parent_id" string="Parent" context="{'group_by': 'parent_id'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="consolidation_group_action" model="ir.actions.act_window">
+            <field name="name">Account Groups</field>
+            <field name="res_model">consolidation.group</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="consolidation_group_search"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,932 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data auto_sequence="1">
+    <record id="l10n_si_pl" model="account.report">
+        <field name="name">Profit and loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.si"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_si_pl_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_si_pl_1" model="account.report.line">
+                <field name="name">1. Net sales revenue</field>
+                <field name="code">si_pl_1</field>
+                <field name="aggregation_formula">si_pl_1_I.balance + si_pl_1_II.balance + si_pl_1_III.balance</field>
+                <field name="children_ids">
+                    <record id="l10n_si_pl_1_I" model="account.report.line">
+                        <field name="name">I. Net domestic sales revenue</field>
+                        <field name="code">si_pl_1_I</field>
+                        <field name="aggregation_formula">si_pl_1_I_1.balance + si_pl_1_I_2.balance + si_pl_1_I_3.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_si_pl_1_I_1" model="account.report.line">
+                                <field name="name">1. Net income from the sale of products and services other than rents</field>
+                                <field name="code">si_pl_1_I_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-760</field>
+                            </record>
+                            <record id="l10n_si_pl_1_I_2" model="account.report.line">
+                                <field name="name">2. Net rental income</field>
+                                <field name="code">si_pl_1_I_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-765</field>
+                            </record>
+                            <record id="l10n_si_pl_1_I_3" model="account.report.line">
+                                <field name="name">3. Net sales of goods and materials</field>
+                                <field name="code">si_pl_1_I_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-762</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_si_pl_1_II" model="account.report.line">
+                        <field name="name">II. Net sales revenue inside the EU market</field>
+                        <field name="code">si_pl_1_II</field>
+                        <field name="aggregation_formula">si_pl_1_II_1.balance + si_pl_1_II_2.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_si_pl_1_II_1" model="account.report.line">
+                                <field name="name">1. Net sales of products and services</field>
+                                <field name="code">si_pl_1_II_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-7611</field>
+                            </record>
+                            <record id="l10n_si_pl_1_II_2" model="account.report.line">
+                                <field name="name">1. Net sales of products and services</field>
+                                <field name="code">si_pl_1_II_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-7631</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_si_pl_1_III" model="account.report.line">
+                        <field name="name">III. Net sales revenue outside the EU market</field>
+                        <field name="code">si_pl_1_III</field>
+                        <field name="aggregation_formula">si_pl_1_III_1.balance + si_pl_1_III_2.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_si_pl_1_III_1" model="account.report.line">
+                                <field name="name">1. Net sales of products and services</field>
+                                <field name="code">si_pl_1_III_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-7612 - 7610</field>
+                            </record>
+                            <record id="l10n_si_pl_1_III_2" model="account.report.line">
+                                <field name="name">2. Net sales of goods and materials</field>
+                                <field name="code">si_pl_1_III_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-7632 - 7630</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_si_pl_2" model="account.report.line">
+                <field name="name">2. Increase in the value of stocks of products and work in progress</field>
+                <field name="code">si_pl_2</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_si_pl_2_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="[('account_id.code','=like','721%')]"/>
+                        <field name="subformula">-sum_if_neg</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_si_pl_3" model="account.report.line">
+                <field name="name">3. Decrease in the value of stocks of products and work in progress</field>
+                <field name="code">si_pl_3</field>
+                <field name="hierarchy_level" eval="1"/>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_si_pl_3_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="[('account_id.code','=like','721%')]"/>
+                        <field name="subformula">sum_if_pos</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_si_pl_4" model="account.report.line">
+                <field name="name">4. Own capital products and own services</field>
+                <field name="code">si_pl_4</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-79</field>
+            </record>
+            <record id="l10n_si_pl_5" model="account.report.line">
+                <field name="name">5. Subsidies, grants, revenues, compensations and other revenues related to business effects</field>
+                <field name="code">si_pl_5</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-768</field>
+            </record>
+            <record id="l10n_si_pl_6" model="account.report.line">
+                <field name="name">6. Other operating income</field>
+                <field name="code">si_pl_6</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-764 - 767 - 766 - 999002 - 769</field>
+            </record>
+            <record id="l10n_si_pl_7" model="account.report.line">
+                <field name="name">7. Operating income</field>
+                <field name="code">si_pl_7</field>
+                <field name="aggregation_formula">si_pl_1.balance + si_pl_2.balance - si_pl_3.balance + si_pl_4.balance + si_pl_5.balance + si_pl_6.balance</field>
+            </record>
+            <record id="l10n_si_pl_8" model="account.report.line">
+                <field name="name">8. Operating expenses</field>
+                <field name="code">si_pl_8</field>
+                <field name="aggregation_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_si_pl_8_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">si_pl_8_I.balance + si_pl_8_II.balance + si_pl_8_III.balance + si_pl_8_IV.balance</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_si_pl_8_I" model="account.report.line">
+                        <field name="name">I. Costs of goods, materials and services</field>
+                        <field name="code">si_pl_8_I</field>
+                        <field name="aggregation_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_si_pl_8_I_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">si_pl_8_I_1.balance + si_pl_8_I_2.balance + si_pl_8_I_3.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_si_pl_8_I_1" model="account.report.line">
+                                <field name="name">1. Cost of goods and materials sold</field>
+                                <field name="code">si_pl_8_I_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_8_I_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">700 + 701 + 702 + 710 + 711 + 712</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_pl_8_I_2" model="account.report.line">
+                                <field name="name">2. Cost of materials used</field>
+                                <field name="code">si_pl_8_I_2</field>
+                                <field name="aggregation_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_8_I_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">si_pl_8_I_2_a.balance + si_pl_8_I_2_b.balance + si_pl_8_I_2_c.balance</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_si_pl_8_I_2_a" model="account.report.line">
+                                        <field name="name">a) material costs</field>
+                                        <field name="code">si_pl_8_I_2_a</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_si_pl_8_I_2_a_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">400 + 401 + 403 + 404 + 405</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_si_pl_8_I_2_b" model="account.report.line">
+                                        <field name="name">b) energy costs</field>
+                                        <field name="code">si_pl_8_I_2_b</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_si_pl_8_I_2_b_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">402</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_si_pl_8_I_2_c" model="account.report.line">
+                                        <field name="name">c) other material costs</field>
+                                        <field name="code">si_pl_8_I_2_c</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_si_pl_8_I_2_c_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">406 + 407</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_pl_8_I_3" model="account.report.line">
+                                <field name="name">3. Costs of services</field>
+                                <field name="code">si_pl_8_I_3</field>
+                                <field name="aggregation_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_8_I_3_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">
+                                            si_pl_8_I_3_a.balance +
+                                            si_pl_8_I_3_b.balance +
+                                            si_pl_8_I_3_c.balance +
+                                            si_pl_8_I_3_d.balance
+                                        </field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_si_pl_8_I_3_a" model="account.report.line">
+                                        <field name="name">a) transport services</field>
+                                        <field name="code">si_pl_8_I_3_a</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_si_pl_8_I_3_a_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">411</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_si_pl_8_I_3_b" model="account.report.line">
+                                        <field name="name">b) rents</field>
+                                        <field name="code">si_pl_8_I_3_b</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_si_pl_8_I_3_b_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">413</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_si_pl_8_I_3_c" model="account.report.line">
+                                        <field name="name">c) reimbursement of work-related expenses to employees</field>
+                                        <field name="code">si_pl_8_I_3_c</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_si_pl_8_I_3_c_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">414</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_si_pl_8_I_3_d" model="account.report.line">
+                                        <field name="name">d) other costs of services</field>
+                                        <field name="code">si_pl_8_I_3_d</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula" eval="False"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_si_pl_8_I_3_d_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">410 + 412 + 415 + 416 + 417 + 418 + 419</field>
+                                                <field name="green_on_positive" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_si_pl_8_II" model="account.report.line">
+                        <field name="name">II. Labor costs</field>
+                        <field name="code">si_pl_8_II</field>
+                        <field name="aggregation_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_si_pl_8_II_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">si_pl_8_II_1.balance + si_pl_8_II_2.balance + si_pl_8_II_3.balance + si_pl_8_II_4.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_si_pl_8_II_1" model="account.report.line">
+                                <field name="name">1. Wage costs</field>
+                                <field name="code">si_pl_8_II_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_8_II_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">470 + 471 + 473</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_pl_8_II_2" model="account.report.line">
+                                <field name="name">2. Costs of pension insurance</field>
+                                <field name="code">si_pl_8_II_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_8_II_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">472</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_pl_8_II_3" model="account.report.line">
+                                <field name="name">3. Costs of other social insurance</field>
+                                <field name="code">si_pl_8_II_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_8_II_3_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">474 + 475</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_pl_8_II_4" model="account.report.line">
+                                <field name="name">4. Other labor costs</field>
+                                <field name="code">si_pl_8_II_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_8_II_4_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">476 + 477 + 478 + 479</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_si_pl_8_III" model="account.report.line">
+                        <field name="name">III. Write-offs</field>
+                        <field name="code">si_pl_8_III</field>
+                        <field name="aggregation_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_si_pl_8_III_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">si_pl_8_III_1.balance + si_pl_8_III_2.balance + si_pl_8_III_3.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_si_pl_8_III_1" model="account.report.line">
+                                <field name="name">1. Depreciation</field>
+                                <field name="code">si_pl_8_III_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_8_III_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">43</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_pl_8_III_2" model="account.report.line">
+                                <field name="name"> 2. Revaluation operating expenses for intangible assets and property, plant and equipment</field>
+                                <field name="code">si_pl_8_III_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_8_III_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">720</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_pl_8_III_3" model="account.report.line">
+                                <field name="name">3. Revaluation operating expenses for current assets</field>
+                                <field name="code">si_pl_8_III_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_8_III_3_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">722 + 723 + 724</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_si_pl_8_IV" model="account.report.line">
+                        <field name="name">IV. Other operating expenses</field>
+                        <field name="code">si_pl_8_IV</field>
+                        <field name="aggregation_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_si_pl_8_IV_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">si_pl_8_IV_1.balance + si_pl_8_IV_2.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_si_pl_8_IV_1" model="account.report.line">
+                                <field name="name">1. Reservations</field>
+                                <field name="code">si_pl_8_IV_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_8_IV_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">44</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_pl_8_IV_2" model="account.report.line">
+                                <field name="name">2. Other costs</field>
+                                <field name="code">si_pl_8_IV_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_8_IV_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">45 + 48 + 49 + 703 + 704 + 713 + 714 + 999001</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_si_pl_9" model="account.report.line">
+                <field name="name">9. Operating profit</field>
+                <field name="code">si_pl_9</field>
+                <field name="expression_ids">
+                    <record id="l10n_si_pl_9_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">si_pl_7.balance - si_pl_8.balance</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_si_pl_10" model="account.report.line">
+                <field name="name">10. Operating losses</field>
+                <field name="code">si_pl_10</field>
+                <field name="expression_ids">
+                    <record id="l10n_si_pl_10_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">-si_pl_7.balance + si_pl_8.balance</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_si_pl_11" model="account.report.line">
+                <field name="name">11. Financial revenue</field>
+                <field name="code">si_pl_11</field>
+                <field name="aggregation_formula">si_pl_11_I.balance + si_pl_11_II.balance + si_pl_11_III.balance</field>
+                <field name="children_ids">
+                    <record id="l10n_si_pl_11_details" model="account.report.line">
+                        <field name="name">Financial income from interest (already taken into account in II. And III.)</field>
+                        <field name="code">si_pl_11_details</field>
+                        <field name="aggregation_formula">si_pl_11_II.balance + si_pl_11_III.balance</field>
+                    </record>
+                    <record id="l10n_si_pl_11_I" model="account.report.line">
+                        <field name="name">I. Financial income from shares</field>
+                        <field name="code">si_pl_11_I</field>
+                        <field name="aggregation_formula">si_pl_11_I_1.balance + si_pl_11_I_2.balance + si_pl_11_I_3.balance + si_pl_11_I_4.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_si_pl_11_I_1" model="account.report.line">
+                                <field name="name">1. Financial revenues from shares in group companies</field>
+                                <field name="code">si_pl_11_I_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-770</field>
+                            </record>
+                            <record id="l10n_si_pl_11_I_2" model="account.report.line">
+                                <field name="name">2. Financial income from shares in associated companies</field>
+                                <field name="code">si_pl_11_I_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-771</field>
+                            </record>
+                            <record id="l10n_si_pl_11_I_3" model="account.report.line">
+                                <field name="name">3. Financial income from shares in other companies</field>
+                                <field name="code">si_pl_11_I_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-772</field>
+                            </record>
+                            <record id="l10n_si_pl_11_I_4" model="account.report.line">
+                                <field name="name">4. Financial income from other investments</field>
+                                <field name="code">si_pl_11_I_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-773</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_si_pl_11_II" model="account.report.line">
+                        <field name="name">II. Financial income from loans</field>
+                        <field name="code">si_pl_11_II</field>
+                        <field name="aggregation_formula">si_pl_11_II_1.balance + si_pl_11_II_2.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_si_pl_11_II_1" model="account.report.line">
+                                <field name="name">1. Financial income from loans granted to group companies</field>
+                                <field name="code">si_pl_11_II_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-774</field>
+                            </record>
+                            <record id="l10n_si_pl_11_II_2" model="account.report.line">
+                                <field name="name">2. Financial income from loans granted to others</field>
+                                <field name="code">si_pl_11_II_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-775</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_si_pl_11_III" model="account.report.line">
+                        <field name="name">III. Financial revenues from operating receivables</field>
+                        <field name="code">si_pl_11_III</field>
+                        <field name="aggregation_formula">si_pl_11_III_1.balance + si_pl_11_III_2.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_si_pl_11_III_1" model="account.report.line">
+                                <field name="name">1. Financial revenues from operating receivables from group companies</field>
+                                <field name="code">si_pl_11_III_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-776</field>
+                            </record>
+                            <record id="l10n_si_pl_11_III_2" model="account.report.line">
+                                <field name="name">2. Financial revenues from operating receivables from others</field>
+                                <field name="code">si_pl_11_III_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-778 - 779 - 777</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_si_pl_12" model="account.report.line">
+                <field name="name">12. Financial expenses</field>
+                <field name="code">si_pl_12</field>
+                <field name="aggregation_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_si_pl_12_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">si_pl_12_I.balance + si_pl_12_II.balance + si_pl_12_III.balance</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_si_pl_12_details" model="account.report.line">
+                        <field name="name">Financial interest expenses (already taken into account in II. And III.)</field>
+                        <field name="code">si_pl_12_details</field>
+                        <field name="aggregation_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_si_pl_12_details_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">si_pl_12_II.balance + si_pl_12_III.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_si_pl_12_I" model="account.report.line">
+                        <field name="name">I. Financial expenses from impairment and write-offs of financial investments</field>
+                        <field name="code">si_pl_12_I</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_si_pl_12_I_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">747 + 748 + 749</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_si_pl_12_II" model="account.report.line">
+                        <field name="name">II. Financial expenses from financial liabilities</field>
+                        <field name="code">si_pl_12_II</field>
+                        <field name="aggregation_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_si_pl_12_II_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">si_pl_12_II_1.balance + si_pl_12_II_2.balance + si_pl_12_II_3.balance + si_pl_12_II_4.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_si_pl_12_II_1" model="account.report.line">
+                                <field name="name">1. Financial expenses from loans received from group companies</field>
+                                <field name="code">si_pl_12_II_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_12_II_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">740</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_pl_12_II_2" model="account.report.line">
+                                <field name="name">2. Financial expenses from loans received from banks</field>
+                                <field name="code">si_pl_12_II_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_12_II_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">741</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_pl_12_II_3" model="account.report.line">
+                                <field name="name">3. Financial expenses from issued bonds</field>
+                                <field name="code">si_pl_12_II_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_12_II_3_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">742</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_pl_12_II_4" model="account.report.line">
+                                <field name="name">4. Financial expenses from other financial liabilities</field>
+                                <field name="code">si_pl_12_II_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_12_II_4_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">743</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_si_pl_12_III" model="account.report.line">
+                        <field name="name">III. Financial expenses from operating liabilities</field>
+                        <field name="code">si_pl_12_III</field>
+                        <field name="aggregation_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_si_pl_12_III_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">si_pl_12_III_1.balance + si_pl_12_III_2.balance + si_pl_12_III_3.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_si_pl_12_III_1" model="account.report.line">
+                                <field name="name">1. Financial expenses from operating liabilities to group companies</field>
+                                <field name="code">si_pl_12_III_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_12_III_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">744</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_pl_12_III_2" model="account.report.line">
+                                <field name="name">2. Financial expenses from trade payables and bill of exchange liabilities</field>
+                                <field name="code">si_pl_12_III_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_12_III_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">745</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_pl_12_III_3" model="account.report.line">
+                                <field name="name">3. Financial expenses from other operating liabilities</field>
+                                <field name="code">si_pl_12_III_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_pl_12_III_3_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">746</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_si_pl_13" model="account.report.line">
+                <field name="name">13. Other revenue</field>
+                <field name="code">si_pl_13</field>
+                <field name="aggregation_formula">si_pl_13_I.balance + si_pl_13_II.balance</field>
+                <field name="children_ids">
+                    <record id="l10n_si_pl_13_I" model="account.report.line">
+                        <field name="name">I. Subsidies, grants and similar revenues not related to business performance</field>
+                        <field name="code">si_pl_13_I</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-785</field>
+                    </record>
+                    <record id="l10n_si_pl_13_II" model="account.report.line">
+                        <field name="name">II. Other income</field>
+                        <field name="code">si_pl_13_II</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-786 - 781 - 780 - 787 - 789 - 784 - 788</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_si_pl_14" model="account.report.line">
+                <field name="name">14. Other expenditure</field>
+                <field name="code">si_pl_14</field>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_si_pl_14_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">75</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_si_pl_15" model="account.report.line">
+                <field name="name">15. Total profit</field>
+                <field name="code">si_pl_15</field>
+                <field name="aggregation_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_ssi_pl_15_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">si_pl_9.balance - si_pl_10.balance + si_pl_11.balance - si_pl_12.balance + si_pl_13.balance - si_pl_14.balance</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_ssi_pl_16" model="account.report.line">
+                <field name="name">16. Total loss</field>
+                <field name="code">si_pl_16</field>
+                <field name="expression_ids">
+                    <record id="l10n_ssi_pl_16_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">-si_pl_9.balance + si_pl_10.balance - si_pl_11.balance + si_pl_12.balance - si_pl_13.balance + si_pl_14.balance</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_si_pl_17" model="account.report.line">
+                <field name="name">17. Profit tax</field>
+                <field name="code">si_pl_17</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_si_pl_17_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">810 + 812</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_si_pl_18" model="account.report.line">
+                <field name="name">18. Deferred taxes</field>
+                <field name="code">si_pl_18</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_si_pl_18_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">813</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_si_pl_19" model="account.report.line">
+                <field name="name">19. Net profit for the period</field>
+                <field name="code">si_pl_19</field>
+                <field name="expression_ids">
+                    <record id="l10n_si_pl_19_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">si_pl_15.balance - si_pl_16.balance - si_pl_17.balance - si_pl_18.balance</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_si_pl_20" model="account.report.line">
+                <field name="name">20. Net loss for the period</field>
+                <field name="code">si_pl_20</field>
+                <field name="expression_ids">
+                    <record id="l10n_si_pl_20_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">-si_pl_15.balance + si_pl_16.balance + si_pl_17.balance + si_pl_18.balance</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</data>
+<data>
+    <record id="action_account_report_si_pl" model="ir.actions.client">
+        <field name="name">Profit and loss</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('l10n_si_pl')}"/>
+    </record>
+    <record id="l10n_si_balance_sheet_liabilities_a_VII" model="account.report.line">
+        <field name="action_id" ref="action_account_report_si_pl"/>
+    </record>
+</data>
+</odoo>

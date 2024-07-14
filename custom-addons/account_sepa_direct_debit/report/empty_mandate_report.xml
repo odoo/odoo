@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sdd_mandate_form_report_main" model="ir.actions.report">
+            <field name="name">Mandate form</field>
+            <field name="model">sdd.mandate</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account_sepa_direct_debit.sdd_mandate_form_report</field>
+            <field name="report_file">account_sepa_direct_debit.sdd_mandate_form_report</field>
+            <field name="attachment_use">True</field>
+            <field name="binding_model_id" ref="model_sdd_mandate"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <template id="account_sepa_direct_debit.sdd_mandate_form_report">
+            <div class="oe_structure"></div>
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="account_sepa_direct_debit.sdd_mandate_form_document" t-lang="o.partner_id.lang"/>
+                </t>
+            </t>
+        </template>
+
+        <template id="account_sepa_direct_debit.sdd_mandate_form_document">
+            <div class="oe_structure"></div>
+            <t t-call="web.external_layout">
+                <t t-call="account_sepa_direct_debit.sdd_mandate_form"/>
+            </t>
+        </template>
+
+        <template id="account_sepa_direct_debit.sdd_mandate_form">
+            <t t-if="o.sdd_scheme == 'CORE'">
+                <h1>SEPA Direct Debit Mandate</h1>
+            </t>
+            <t t-if="o.sdd_scheme == 'B2B'">
+                <h1>SEPA Business-to-Business Direct Debit Mandate</h1>
+            </t>
+
+            <p>
+                By signing this mandate form, you authorise (A) <span t-out="o.company_id.name">Odoo PVT LTD</span> to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with the instructions from <span t-out="o.company_id.name">Odoo PVT LTD</span>.
+                <t t-if="o.sdd_scheme == 'CORE'">
+                    As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. Your rights are explained in a statement that you can obtain from your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited.
+                </t>
+                <t t-if="o.sdd_scheme == 'B2B'">
+                    This mandate is only intended for business-to-business transactions. You are not entitled to a refund from your bank after your account has been debited, but you are entitled to request your bank not to debit your account up until the day on which the payment is due. 
+                </t>
+            </p>
+            
+            <span>
+                <strong>Mandate identifier:</strong> <span t-out="o.name">SEPA1234</span>
+            </span>
+            <br/>
+
+            <div class="oe_structure"></div>
+            <h2>Creditor</h2>
+            <div class="row mb-2">
+                <div class="col-6">
+                    <p><span t-out="o.company_id.name">Odoo PVT LTD</span></p>
+                    <span t-field="o.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'>SEPA-CUST-001</span>
+                </div>
+                <div class="col-6">
+                    <p><strong>Creditor identifier:</strong> <span t-out="o.company_id.sdd_creditor_identifier">CREDIT-1234</span></p>
+                </div>
+            </div>
+            <br/>
+
+            <div class="oe_structure"></div>
+            <h2>Debtor</h2>
+            <div>
+                <div class="row">
+                    <div class="col-6">
+                        <p><span t-out="o.partner_id.name">Marc Demo</span></p>
+
+                        <t t-if="not o.partner_id.street and not o.partner_id.street2 or not o.partner_id.city or not o.partner_id.zip or not o.partner_id.country_id">
+                            <p><strong>Address:</strong></p>
+                            <t t-if="not o.partner_id.street and not o.partner_id.street2">
+                                <p>.........................................................</p>
+                                <p>.........................................................</p>
+                            </t>
+                            <span t-if="o.partner_id.street" t-out="o.partner_id.street">Rue de la Loi, 16</span>
+                            <span t-if="o.partner_id.street2" t-out="o.partner_id.street2">Building C</span>
+
+                            <p>
+                                <strong>City: </strong>
+                                <span t-if="o.partner_id.city" t-out="o.partner_id.city">Antwerp</span>
+                                <span t-else="">......................................</span>
+                            </p>
+                            <p>
+                                <strong>Zip: </strong>
+                                <span t-if="o.partner_id.zip" t-out="o.partner_id.zip">380055</span>
+                                <span t-else="">......................................</span>
+                            </p>
+                            <p>
+                                <strong>Country: </strong>
+                                <span t-if="o.partner_id.country_id.name" t-out="o.partner_id.country_id.name">Belgium</span>
+                                <span t-else="">......................................</span>
+                            </p>
+                        </t>
+                        <span t-else="" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'>123456789</span>
+                    </div>
+                    <div class="col-6">
+                        <p><strong>IBAN:</strong> <span t-if="not o.partner_bank_id.acc_number">......................................</span><span t-else="" t-out="o.partner_bank_id.acc_number">3956012345678</span></p>
+                        <p><strong>Phone:</strong> <span t-if="not o.partner_id.phone">......................................</span><span t-else="" t-out="o.partner_id.phone">123456789</span></p>
+                        <p><strong>Email:</strong> <span t-if="not o.partner_id.email">......................................</span><span t-else="" t-out="o.partner_id.email">Demo@email.com</span></p>
+                        <p><strong>Identification code<span t-if="not o.debtor_id_code"> (if applicable)</span>:</strong></p>
+                        <p t-if="not o.debtor_id_code">.........................................................</p>
+                        <p t-else=""><span t-out="o.debtor_id_code">DEBT1234</span></p>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="oe_structure"></div>
+            <h2>Validity</h2>
+            <p>
+                The mandate will only be used to pay invoices into the
+                specified time range. If no end date is specified,
+                you will have to contact us to stop its use.
+            </p>
+            <div class="oe_structure"></div>
+            <div class="row">
+                <div class="col-6">
+                <p><strong>Transaction type:</strong> recurrent</p>
+                </div>
+                <div class="col-6">
+                    <p><strong>Start date:</strong> <span t-if="not o.start_date">......................................</span><span t-else="" t-out="o.start_date" t-options="{'widget': 'date'}">2023-08-10</span></p>
+                    <p><strong>End date<span t-if="not o.end_date"> (optional)</span>:</strong> <span t-if="not o.end_date">......................................</span><span t-else="" t-out="o.end_date" t-options="{'widget': 'date'}">2023-09-10</span></p>
+                </div>
+            </div>
+            <br/>
+
+            <h2>Signature</h2>
+            <div class="oe_structure"></div>
+            <div id="signature" class="row">
+                <div class="col-6">
+                <p><strong>Name of the reference party:</strong> ......................................</p>
+                <p><strong>Signature:</strong></p>
+                </div>
+                <div class="col-6">
+                <p><strong>Date and place of signature:</strong> ......................................</p>
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

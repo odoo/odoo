@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_account_followup_followup_line_tree" model="ir.ui.view">
+        <field name="name">account_followup.followup.line.tree</field>
+        <field name="model">account_followup.followup.line</field>
+        <field name="arch" type="xml">
+            <tree string="Follow-up Steps" >
+                <field name="name"/>
+                <field name="delay"/>
+                <field name="send_email"/>
+                <field name="send_sms"/>
+                <field name="auto_execute"/>
+                <field name="activity_type_id" string="Activity"/>
+                <field name="company_id"  groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_account_followup_followup_line_form" model="ir.ui.view">
+        <field name="name">account_followup.followup.line.form</field>
+        <field name="model">account_followup.followup.line</field>
+        <field name="arch" type="xml">
+            <form string="Follow-up Steps">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. First Reminder Email"/></h1>
+                    </div>
+                    <div class="oe_inline">
+                        Remind <field name="delay" class="oe_inline"/> days after due date<label for="delay" string=""/>
+                    </div>
+                    <notebook>
+                        <page string="Notification" name="notification">
+                            <group col="3">
+                                <group string="Actions" name="actions" colspan="2" col="3">
+                                    <group colspan="1">
+                                        <field name="send_email"/>
+                                        <field name="send_sms"/>
+                                    </group>
+                                    <group colspan="2">
+                                        <field name="mail_template_id" string="Content Template" invisible="not send_email"/>
+                                        <field name="sms_template_id" invisible="not send_sms"/>
+                                    </group>
+                                </group>
+                                <group string="Options" name="options" colspan="1">
+                                    <field name="auto_execute"/>
+                                    <field name="join_invoices" invisible="not send_email"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Activity" name="activity">
+                            <group>
+                                <group name="options">
+                                    <field name="create_activity"/>
+                                    <field name="activity_default_responsible_type"
+                                           invisible="not create_activity"/>
+                                </group>
+                                <group name="notes" invisible="not create_activity">
+                                    <field name="activity_type_id" required="create_activity"/>
+                                    <field name="activity_summary" required="create_activity"/>
+                                </group>
+                                <field name="activity_note" nolabel="1" placeholder="Activity Notes"
+                                       invisible="not create_activity"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_account_followup_line_filter" model="ir.ui.view">
+        <field name="name">account.followup.line.select</field>
+        <field name="model">account_followup.followup.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Follow-up">
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter string="Automatic" name="auto" domain="[('auto_execute', '=', True)]"/>
+                <filter string="Manual" name="manual" domain="[('auto_execute', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_account_followup_line_definition_form" model="ir.actions.act_window">
+        <field name="name">Follow-up Levels</field>
+        <field name="res_model">account_followup.followup.line</field>
+        <field name="search_view_id" ref="view_account_followup_line_filter"/>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Define follow-up levels and their related actions
+          </p><p>
+            For each step, specify the actions to be taken and delay in days. It is
+            possible to use print and e-mail templates to send specific messages to
+            the customer.
+          </p>
+      </field>
+    </record>
+
+    <menuitem action="action_account_followup_line_definition_form" id="account_followup_menu" parent="account.account_invoicing_menu" name="Follow-up Levels" groups="account.group_account_manager" sequence="2"/>
+
+</odoo>

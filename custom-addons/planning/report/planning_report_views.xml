@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="report_planning_slot" model="ir.actions.report">
+        <field name="name">Planning</field>
+        <field name="model">planning.slot</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">planning.slot_report</field>
+        <field name="report_file">planning.slot_report</field>
+        <field name="print_report_name">'Planning'</field>
+        <field name="binding_model_id" ref="model_planning_slot"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

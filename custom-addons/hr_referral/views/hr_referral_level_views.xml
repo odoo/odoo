@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_hr_referral_level_form">
+        <field name="name">hr.referral.level.form</field>
+        <field name="model">hr.referral.level</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group name="name_details">
+                            <field name="name"/>
+                        </group>
+                        <group name="requirements">
+                            <label for="points" string="Requirements"/>
+                            <div>
+                                <field name="points" nolabel="1" class="oe_inline"/>
+                                <span class="ml8">Points</span>
+                            </div>
+                        </group>
+                    </group>
+                    <group name="image">
+                        <field name="image" widget="image" nolabel="0"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_hr_referral_level_tree">
+        <field name="name">hr.referral.level.tree</field>
+        <field name="model">hr.referral.level</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="image" widget='image' class="oe_avatar o_referral_img"/>
+                <field name="name"/>
+                <field name="points"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_hr_referral_level_configuration">
+        <field name="name">Levels</field>
+        <field name="res_model">hr.referral.level</field>
+        <field name="view_mode">tree,form</field>
+        <field name="groups_id" eval="[(4, ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new level
+            </p>
+        </field>
+    </record>
+
+    <menuitem parent="menu_hr_referral_configuration" id="menu_hr_referral_level_configuration" action="action_hr_referral_level_configuration" sequence="3" groups="hr_recruitment.group_hr_recruitment_manager"/>
+
+</odoo>

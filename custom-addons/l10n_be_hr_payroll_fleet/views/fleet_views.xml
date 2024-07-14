@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_vehicle_view_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="priority" eval="25"/>
+        <field name="arch" type="xml">
+            <group name="fiscality_first_group" position="inside">
+                <field name="atn" widget="monetary" invisible="country_code != 'BE' or vehicle_type != 'car'"/>
+                <label for="co2_fee" invisible="country_code != 'BE' or vehicle_type != 'car'"/>
+                <div class="o_row o_hr_narrow_field" invisible="country_code != 'BE' or vehicle_type != 'car'">
+                    <field name="co2_fee" widget="monetary"/>
+                    <span> / month</span>
+                </div>
+            </group>
+            <field name="horsepower_tax" position="after">
+                <label for="tax_deduction" invisible="country_code != 'BE'"/>
+                <div col="1" class="o_hr_narrow_field o_row" name="tax_deduction_div">
+                    <field name="tax_deduction" widget="percentage" invisible="country_code != 'BE'"/>
+                </div>
+            </field>
+            <xpath expr="//field[@name='residual_value']" position="after">
+                <label for="total_depreciated_cost" invisible="country_code != 'BE'"/>
+                <div class="o_row o_hr_narrow_field" invisible="country_code != 'BE'">
+                    <field name="total_depreciated_cost" nolabel="1" widget="monetary"/>
+                    <span>/ month</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_log_contract_view_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.log.contract.form</field>
+        <field name="model">fleet.vehicle.log.contract</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_log_contract_view_form"/>
+        <field name="arch" type="xml">
+            <field name="date" position="before">
+                <field name="recurring_cost_amount_depreciated" widget="monetary" class="w-25"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_model_view_tree" model="ir.ui.view">
+        <field name="name">fleet.vehicle.model.tree</field>
+        <field name="model">fleet.vehicle.model</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_model_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="can_be_requested" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_model_view_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.model.form</field>
+        <field name="model">fleet.vehicle.model</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_model_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='vehicle_information']" position="after">
+                <group string="Salary">
+                    <field name="can_be_requested"/>
+                    <label for="default_car_value"/>
+                    <div class="o_row">
+                        <field name="default_car_value" nolabel="1"/>
+                    </div>
+                    <label for="co2_fee" invisible="vehicle_type != 'car'"/>
+                    <div class="o_row" invisible="vehicle_type != 'car'">
+                        <field name="co2_fee" nolabel="1"/>
+                        <span> / month</span>
+                    </div>
+                    <label for="default_recurring_cost_amount_depreciated"/>
+                    <div class="o_row">
+                        <field name="default_recurring_cost_amount_depreciated" nolabel="1"/>
+                        <span> / month</span>
+                    </div>
+                    <label for="default_total_depreciated_cost"/>
+                    <div class="o_row">
+                        <field name="default_total_depreciated_cost" nolabel="1"/>
+                        <span> / month</span>
+                    </div>
+                    <field name="current_country_code" invisible="1"/>
+                    <label for="default_atn" invisible="vehicle_type != 'car' or current_country_code != 'BE'"/>
+                    <div class="o_row" invisible="vehicle_type != 'car' or current_country_code != 'BE'">
+                        <field name="default_atn" nolabel="1"/>
+                        <span> / month</span>
+                    </div>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='horsepower_tax']" position="after">
+                <field name="tax_deduction" widget="percentage"/>
+            </xpath>
+            <xpath expr="//field[@name='electric_assistance']" position="after">
+                <field name="tax_deduction" widget="percentage"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_model_view_search" model="ir.ui.view">
+        <field name="name">fleet.vehicle.model.search</field>
+        <field name="model">fleet.vehicle.model</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_model_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='brand_id']" position="after">
+                <filter name="filter_can_be_requested" string="Can Be Requested" domain="[('can_be_requested', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

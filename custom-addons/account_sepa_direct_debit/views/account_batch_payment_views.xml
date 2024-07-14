@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_batch_payment_form_inherit" model="ir.ui.view">
+            <field name="name">sdd.account.batch.payment.form.inherit</field>
+            <field name="model">account.batch.payment</field>
+            <field name="inherit_id" ref="account_batch_payment.view_batch_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="sdd_required_collection_date" invisible="payment_method_code not in ('sdd', 'sepa_direct_debit')" readonly="state != 'draft'" required="payment_method_code in ('sdd', 'sepa_direct_debit')"/>
+                    <field name="sdd_batch_booking" string="Batch Booking" invisible="payment_method_code not in ('sdd', 'sepa_direct_debit')"/>
+                    <field name="sdd_scheme" invisible="payment_method_code not in ('sdd', 'sepa_direct_debit')" readonly="state != 'draft'" required="payment_method_code in ('sdd', 'sepa_direct_debit')"/>
+                </xpath>
+                <field name="payment_method_name" position="after">
+                    <field name="sdd_mandate_scheme" optional="hide"/>
+                </field>
+                <field name="payment_ids" position="attributes">
+                    <attribute name="domain">
+                ['|', ('payment_method_id.code', 'not in', ('sdd', 'sepa_direct_debit')), ('sdd_mandate_id.sdd_scheme', '=', sdd_scheme), ('batch_payment_id', '=', False), ('state', 'not in', ['reconciled', 'cancelled']), ('payment_method_id', '=', payment_method_id), ('journal_id', '=', journal_id), ('payment_type','=',batch_type), ('is_move_sent', '=', False)]
+                    </attribute>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

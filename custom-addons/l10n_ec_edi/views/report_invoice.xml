@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main template for invoice reports -->
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+        <!-- Replace the h2 header to include legally required data & barcode-->
+        <xpath expr="//h2" position="replace">
+            <t t-call="l10n_ec_edi.report_invoice_header"/>
+        </xpath>
+
+        <!-- Remove the partner address -->
+        <xpath expr="//div[@name='address_not_same_as_shipping']" position="replace">
+            <div name="address_not_same_as_shipping"/>
+        </xpath>
+        <xpath expr="//div[@name='address_same_as_shipping']" position="replace">
+            <div name="address_same_as_shipping"/>
+        </xpath>
+        <xpath expr="//div[@name='no_shipping']" position="replace">
+            <div name="no_shipping"/>
+        </xpath>
+
+        <!-- Add a few extra items to Informations (and rename a field) -->
+        <xpath expr="//div[@id='informations']/*" position="before">
+            <div class="col-auto col-3 mw-100 mb-2" name="partner_name">
+                <strong>Partner:</strong>
+                <p class="m-0">
+                    <t t-esc="o.partner_id.name"/>
+                    <div t-if="o.partner_id.vat">
+                        <t t-if="o.partner_id.l10n_latam_identification_type_id" t-out="o.partner_id.l10n_latam_identification_type_id.name" id="inv_tax_id_label"/>
+                        <t t-else="">RUC/Cédula</t>: <span t-field="o.partner_id.vat"/>
+                    </div>
+                    <div>
+                        <t t-out="o.partner_id.street"/>
+                    </div>
+                </p>
+            </div>
+            <div class="col-auto col-3 mw-100 mb-2" t-if="o.reversed_entry_id" name="modified_document">
+                <strong>Modified document:</strong>
+                <p class="m-0" t-esc="o.reversed_entry_id.l10n_latam_document_number or o.reversed_entry_id.name"/>
+            </div>
+            <div class="col-auto col-3 mw-100 mb-2" t-if="o.reversed_entry_id" name="issue_date_modified_document">
+                <strong>Original Issue Date:</strong>
+                <p class="m-0" t-field="o.reversed_entry_id.invoice_date"/>
+            </div>
+        </xpath>
+        <xpath t-if="o.move_type in ('out_refund', 'in_refund') or o.l10n_latam_document_type_id.internal_type == 'debit_note'"
+            expr="//div[@id='informations']/div[@name='reference']/strong" position="replace">
+            <strong>Reason for Modification:</strong>
+        </xpath>
+
+        <!-- Add column to the invoice lines table -->
+        <xpath expr="//table[@name='invoice_line_table']/thead/tr[1]/th[1]" position="before">
+            <th name="th_description" class="text-start">
+                <span>Principal Code</span>
+            </th>
+        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']/tbody//tr[1]//td[1]" position="before">
+            <td>
+                <span t-esc="line.product_id.barcode or line.product_id.default_code or ''"/>
+            </td>
+        </xpath>
+
+        <!-- Add a table for payment methods and additional info -->
+        <xpath expr="//div[@id='payment_term']" position="after">
+            <t t-if="o.l10n_latam_document_type_id and o.l10n_latam_internal_type != 'credit_note'">
+                <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'}">
+                    <table class="table table-sm table-borderless" style="page-break-inside: avoid">
+                        <thead>
+                            <tr>
+                                <th class="text-center" colspan="2">Payment Methods</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td t-esc="o.l10n_ec_sri_payment_id.name"/>
+                                <td class="text-end">
+                                    <span t-esc="sum(d['payment_total'] for d in o._l10n_ec_get_payment_data())"
+                                        t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+
+            <t t-set="additional_info" t-value="o._l10n_ec_get_invoice_additional_info()"/>
+            <t t-call="l10n_ec_edi.report_invoice_additional_info"/>
+        </xpath>
+
+        <!-- Removes useless fields -->
+        <xpath expr="//p[@name='payment_communication']" position="attributes">
+            <attribute name="t-if">not o.l10n_latam_document_type_id</attribute>
+        </xpath>
+        <xpath expr="//span[@name='payment_term']" position="attributes">
+            <attribute name="t-if">not o.l10n_latam_document_type_id</attribute>
+        </xpath>
+        <xpath expr="//p[@name='note']" position="attributes">
+            <attribute name="t-if">not o.l10n_latam_document_type_id</attribute>
+        </xpath>
+    </template>
+
+    <!-- Legally required data & barcode (re-used by withhold report) -->
+    <template id="report_invoice_header">
+        <table class="table table-borderless w-100 m-1">
+            <tr>
+                <td class="pe-1" style="width: 30%">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td class="text-center p-1">
+                                <h4 style="letter-spacing: 2px;">
+                                    <span t-field="o.company_id.l10n_ec_legal_name"/>
+                                </h4>
+                                <div style="font-size: 12px;">
+                                    <strong>
+                                        <t t-if="o.company_id.partner_id.l10n_latam_identification_type_id" t-esc="o.company_id.partner_id.l10n_latam_identification_type_id.name" id="inv_tax_id_label"/>
+                                        <t t-else="">RUC/Cédula</t>:
+                                    </strong>
+                                    <span t-field="o.company_id.partner_id.vat"/>
+                                    <br/>
+                                    <t t-if="o.journal_id.l10n_ec_emission">
+                                        <strong>Branch Office address: </strong>
+                                        <span t-esc="o.journal_id.l10n_ec_emission_address_id._display_address()"/>
+                                        <br/>
+                                    </t>
+                                    <t t-if="o.company_id.l10n_ec_special_taxpayer_number">
+                                        <strong>Special Taxpayer Number: </strong>
+                                        <span t-field="o.company_id.l10n_ec_special_taxpayer_number"/>
+                                        <br/>
+                                    </t>
+                                    <strong>Environment: </strong>
+                                    <t t-if="o.company_id.l10n_ec_production_env">Production</t>
+                                    <t t-else="">Testing</t>
+                                    <br/>
+                                    <strong>Emission: </strong>Normal
+                                    <br/>
+                                    <strong>Obliged to keep accounting: </strong>
+                                    <t t-if="o.company_id.l10n_ec_forced_accounting">Yes</t>
+                                    <t t-else="">No</t>
+                                    <br/>
+                                    <t t-if="o.company_id.l10n_ec_withhold_agent_number">
+                                        <strong>Withhold Agent Resolution No.: </strong>
+                                        <span t-field="o.company_id.l10n_ec_withhold_agent_number"/>
+                                        <br/>
+                                    </t>
+                                    <t t-if="o.company_id.l10n_ec_regime == 'rimpe'">
+                                        RIMPE Contributor Type
+                                        <br/>
+                                    </t>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="p-1" style="width: 70%">
+                    <table class="table table-condensed m-1">
+                        <tr>
+                            <td class="text-center border-top-0 p-1">
+                                <h4 style="letter-spacing: 2px;">
+                                    <t t-if="o.l10n_latam_document_type_id" t-esc="o.l10n_latam_document_type_id.report_name or o.l10n_latam_document_type_id.name"/>
+                                    <t t-elif="o._l10n_ec_is_withholding()">Withhold Receipt</t>
+                                    <br/>
+                                    <span t-esc="o.l10n_latam_document_number or o.name"/>
+                                </h4>
+                                <t t-if="o.l10n_ec_authorization_number">
+                                    <div class="text-center" style="font-size: 12px">
+                                        <strong>Authorization No.: <span t-field="o.l10n_ec_authorization_number"/></strong>
+                                    </div>
+                                    <div class="text-justify">
+                                        <img style="width:100%; height:15.5mm;"
+                                            t-att-src="'/report/barcode/Code128/' + o.l10n_ec_authorization_number"
+                                            alt="Missing barcode for authorization number"
+                                        />
+                                    </div>
+                                    <div class="text-center" style="font-size: 12px">
+                                        <strong>Access Key: <span t-field="o.l10n_ec_authorization_number"/></strong>
+                                    </div>
+                                </t>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </template>
+
+    <!-- Additional info (re-used by withhold report) -->
+    <template id="report_invoice_additional_info">
+        <t t-if="additional_info">
+            <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'}">
+                <table class="table table-sm table-borderless" style="page-break-inside: avoid">
+                    <thead>
+                        <tr>
+                            <th class="text-center" colspan="2">Additional Information</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="additional_info.items()" t-as="item">
+                            <tr t-if="item[1]">
+                                <td>
+                                    <span t-esc="str(item[0])"/>
+                                </td>
+                                <td>
+                                    <span t-esc="str(item[1])"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_ec_edi.report_invoice_document'"
+               t-call="l10n_ec_edi.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,37 @@
+<odoo>
+    <t t-name="spreadsheet_edition.OdooLineChartConfigPanel"
+        t-inherit="spreadsheet_edition.CommonOdooChartConfigPanel"
+        t-inherit-mode="primary"
+    >
+        <xpath expr="//div[hasclass('o-section')][1]" position="before">
+            <div class="o-section pt-0">
+                <label>
+                    <div class="o_checkbox">
+                        <input
+                            type="checkbox"
+                            name="stackedBar"
+                            t-att-checked="props.definition.stacked"
+                            t-on-change="onUpdateStacked"
+                            class="align-middle"
+                        />
+                        Stacked linechart
+                    </div>
+                </label>
+            </div>
+            <div class="o-section pt-0">
+                <label>
+                    <div class="o_checkbox">
+                        <input
+                            type="checkbox"
+                            name="cumulative"
+                            t-att-checked="props.definition.cumulative"
+                            t-on-change="onUpdateCumulative"
+                            class="align-middle"
+                        />
+                        Cumulative data
+                    </div>
+                </label>
+            </div>
+        </xpath>
+    </t>
+</odoo>

@@ -1,0 +1,971 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* frontdesk
+# 
+# Translators:
+# Martin Trigaux, 2023
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_visitor.py:0
+#, python-format
+msgid " Check-In: %s"
+msgstr "تسجيل الحضور: %s "
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_visitor.py:0
+#, python-format
+msgid " Check-In: %s to meet %s"
+msgstr "تسجيل الحضور: %s لمقابلة %s "
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_visitor.py:0
+#, python-format
+msgid "%(name)s just checked-in. Requested Drink: %(drink)s."
+msgstr "%(name)s قام بتسجيل حضوره للتو. قام بطلب: %(drink)s. "
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_visitor.py:0
+#, python-format
+msgid "%s just checked-in."
+msgstr "%s قام بتسجيل حضوره للتو. "
+
+#. module: frontdesk
+#: model:mail.template,body_html:frontdesk.frontdesk_mail_template
+msgid ""
+"<div>\n"
+"                    <p>Hello <t t-if=\"ctx.get('host_name')\"><t t-out=\"ctx.get('host_name')\"></t>, </t><b><t t-out=\"object.name\"></t></b> <t t-if=\"object.phone\">(<t t-out=\"object.phone\"></t>)</t><t t-if=\"object.company\">, coming from <t t-out=\"object.company\"></t></t> is asking to meet you at <t t-out=\"object.station_id.name\"></t>. Please let them know you'll be there shortly.\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"                    <p>مرحباً <t t-if=\"ctx.get('host_name')\"><t t-out=\"ctx.get('host_name')\"></t>، </t><b><t t-out=\"object.name\"></t></b> <t t-if=\"object.phone\">(<t t-out=\"object.phone\"></t>)</t><t t-if=\"object.company\">، القادم من <t t-out=\"object.company\"></t></t> يطلب منك مقابلته عند <t t-out=\"object.station_id.name\"></t>. يرجى إعلامه بأنك ستكون هناك عما قريب.\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__active
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__active
+msgid "Active"
+msgstr "نشط"
+
+#. module: frontdesk
+#: model:ir.actions.client,name:frontdesk.frontdesk_visitor_action_configure_properties_field
+msgid "Add Properties"
+msgstr "إضافة الخصائص "
+
+#. module: frontdesk
+#: model:res.groups,name:frontdesk.frontdesk_group_administrator
+msgid "Administrator"
+msgstr "المدير "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Allow visitor to select a drink during registration"
+msgstr "السماح للزائر باختيار مشروب أثناء التسجيل "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Allows the visitor to pick the host of the meeting from the list"
+msgstr "يتيح للزائر اختيار مضيف الاجتماع من القائمة "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Archived"
+msgstr "مؤرشف"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/quick_check_in/quick_check_in.xml:0
+#, python-format
+msgid "Are you one of these people?"
+msgstr "أأنت واحد من هؤلاء الأشخاص؟ "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__authenticate_guest
+msgid "Authenticate Guest"
+msgstr "مصادقة الضيف "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/navbar/navbar.xml:0
+#, python-format
+msgid "Back"
+msgstr "العودة"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+msgid "By Responsible"
+msgstr "حسب المسؤول "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+msgid "Cancel"
+msgstr "إلغاء"
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_visitor__state__canceled
+msgid "Canceled"
+msgstr "تم الإلغاء "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__check_in
+#, python-format
+msgid "Check In"
+msgstr "تسجيل الحضور"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__check_out
+msgid "Check Out"
+msgstr "تسجيل الخروج"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/welcome_page/welcome_page.xml:0
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+#, python-format
+msgid "Check in"
+msgstr "تسجيل الحضور"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "Check out"
+msgstr "تسجيل الخروج "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "CheckIn"
+msgstr "تسجيل الحضور "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "CheckIn Station"
+msgstr "محطة تسجيل الحضور "
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_visitor__state__checked_in
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Checked-In"
+msgstr "تم تسجيل الحضور"
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_visitor__state__checked_out
+msgid "Checked-Out"
+msgstr "تم تسجيل الخروج"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Checked-out"
+msgstr "تم تسجيل الخروج"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "Checkout"
+msgstr "الدفع والخروج "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/end_page/end_page.xml:0
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "Close"
+msgstr "إغلاق"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__company_id
+msgid "Company"
+msgstr "الشركة "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/navbar/navbar.xml:0
+#, python-format
+msgid "Company Logo"
+msgstr "شعار الشركة "
+
+#. module: frontdesk
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_config
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "Configuration"
+msgstr "التهيئة "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Configure Drinks"
+msgstr "تهيئة المشروبات "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/host_page/host_page.xml:0
+#, python-format
+msgid "Confirm"
+msgstr "تأكيد"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__create_uid
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__create_uid
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__create_date
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__create_date
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__create_date
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__theme__dark
+msgid "Dark"
+msgstr "غامق "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Date"
+msgstr "التاريخ"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__description
+msgid "Description"
+msgstr "الوصف"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__display_name
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__display_name
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__display_name
+msgid "Display Name"
+msgstr "اسم العرض "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "Do you want something to drink?"
+msgstr "أترغب في مشروب؟ "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__drink_ids
+msgid "Drink"
+msgstr "مشروب "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__drink_image
+msgid "Drink Image"
+msgstr "صورة المشروب "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_drink_view_form
+msgid "Drink Name"
+msgstr "اسم المشروب "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__served
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "Drink Served"
+msgstr "تم تقديم المشروب "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/drink_page/drink_page.xml:0
+#, python-format
+msgid "Drink image"
+msgstr "صورة المشروب "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Drink to Serve"
+msgstr "المشروب المراد تقديمه "
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_drink
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_drinks_report
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__drink_ids
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_drinks_config
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_report_drinks
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_drink_report_view_graph
+msgid "Drinks"
+msgstr "المشروبات "
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_open_drink_to_serve_visitor
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__drink_to_serve
+msgid "Drinks to Serve"
+msgstr "المشروبات المراد تقديمها "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "Drinks to serve"
+msgstr "المشروبات المراد تقديمها "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__duration
+msgid "Duration"
+msgstr "المدة"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+msgid "E.g. What's your Name"
+msgstr "مثال: ما هو اسمك؟ "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__ask_email
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__email
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__mail_template_id
+msgid "Email Template"
+msgstr "قالب البريد الإلكتروني"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+msgid "Favorite"
+msgstr "المفضلة "
+
+#. module: frontdesk
+#: model:ir.model,name:frontdesk.model_frontdesk_frontdesk
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_root
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Frontdesk"
+msgstr "مكتب الاستقبال "
+
+#. module: frontdesk
+#: model:ir.model,name:frontdesk.model_frontdesk_drink
+msgid "Frontdesk Drink"
+msgstr "مشروب مكتب الاستقبال "
+
+#. module: frontdesk
+#: model:mail.template,name:frontdesk.frontdesk_mail_template
+msgid "Frontdesk Email Template"
+msgstr "قالب البريد الإلكتروني لمكتب الاستقبال "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__name
+msgid "Frontdesk Name"
+msgstr "اسم مكتب الاستقبال "
+
+#. module: frontdesk
+#: model:sms.template,name:frontdesk.frontdesk_sms_template
+msgid "Frontdesk SMS Template"
+msgstr "قالب الرسائل النصية القصيرة لمكتب الاستقبال "
+
+#. module: frontdesk
+#: model:ir.model,name:frontdesk.model_frontdesk_visitor
+msgid "Frontdesk Visitors"
+msgstr "زوار مكتب الاستقبال "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Group By"
+msgstr "تجميع حسب"
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_open_guest_on_site_visitor
+msgid "Guest On Site"
+msgstr "زائر في الموقع "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__guest_on_site
+msgid "Guests On Site"
+msgstr "زوار في الموقع "
+
+#. module: frontdesk
+#: model:sms.template,body:frontdesk.frontdesk_sms_template
+msgid ""
+"Hello, Your visitor {{ object.name }} {{ '(%s)' % object.phone if "
+"object.phone else '' }} {{ '(%s)' % object.company if object.company else ''"
+" }} wants to meet you at {{ object.station_id.name }}. Please let them know "
+"you'll be there shortly."
+msgstr ""
+"مرحباً، زائرك {{ object.name }} {{ '(%s)' % object.phone if object.phone "
+"else '' }} {{ '(%s)' % object.company if object.company else '' }} يرغب في "
+"ملاقاتك في {{ object.station_id.name }}. يرجى إخبارهم بأنك ستكون هناك عما "
+"قريب. "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "Host"
+msgstr "المضيف "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__host_ids
+msgid "Host Name"
+msgstr "اسم المضيف "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__host_selection
+msgid "Host Selection"
+msgstr "خيار المضيف "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/drink_page/drink_page.xml:0
+#, python-format
+msgid "How can we delight you?"
+msgstr "كيف يمكننا إسعادك؟ "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__id
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__id
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__image
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_drink_view_kanban
+msgid "Image"
+msgstr "صورة"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__is_favorite
+msgid "Is Favorite"
+msgstr "مفضل "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "Kiosk"
+msgstr "كشك "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__kiosk_url
+msgid "Kiosk URL"
+msgstr "رابط URL للكشك "
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_frontdesk.py:0
+#, python-format
+msgid "Last Check-In: %s hours ago"
+msgstr "آخر تسجيل للحضور: قبل %s ساعات "
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_frontdesk.py:0
+#, python-format
+msgid "Last Check-In: %s minutes ago"
+msgstr "آخر تسجيل للحضور: قبل %s دقائق "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__write_uid
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__write_uid
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__write_date
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__write_date
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__latest_check_in
+msgid "Latest Check In"
+msgstr "آخر تسجيل للحضور "
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__theme__light
+msgid "Light"
+msgstr "فاتح "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/host_page/many2one/many2one.js:0
+#, python-format
+msgid "Loading..."
+msgstr "جار التحميل..."
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__message
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_form
+msgid "Message"
+msgstr "الرسالة"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+msgid "My Station"
+msgstr "محطتي "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__name
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__name
+msgid "Name"
+msgstr "الاسم"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "No, thank you"
+msgstr "لا، شكراً "
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_company__none
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_email__none
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_phone__none
+msgid "None"
+msgstr "لا شيء"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/drink_page/drink_page.xml:0
+#, python-format
+msgid "Nothing, thanks."
+msgstr "لا شيء، شكراً "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__notify_sms
+msgid "Notify by SMS"
+msgstr "الإخطار عن طريق الرسائل النصية القصيرة "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__notify_discuss
+msgid "Notify by discuss"
+msgstr "الإخطار عن طريق تطبيق المناقشة "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__notify_email
+msgid "Notify by email"
+msgstr "الإخطار عن طريق البريد الإلكتروني "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Notify the host on guest arrival"
+msgstr "إخطار المضيف بوصول الضيف "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__drink_offer
+msgid "Offer Drinks"
+msgstr "تقديم المشروبات "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "On Site"
+msgstr "في الموقع "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "Open Desk"
+msgstr "فتح المكتب "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Open Kiosk"
+msgstr "فتح الكشك "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Open host chat window when guest arrives"
+msgstr "فتح نافذة دردشة المضيف عند وصول الضيف "
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_company__optional
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_email__optional
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_phone__optional
+msgid "Optional"
+msgstr "اختياري "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Options"
+msgstr "الخيارات"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__ask_company
+msgid "Organization"
+msgstr "التنظيم "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__pending
+msgid "Pending"
+msgstr "قيد الانتظار "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__notify_user_ids
+msgid "People to Notify"
+msgstr "الأشخاص الذين يتوجب إخطارهم "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__ask_phone
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__phone
+msgid "Phone"
+msgstr "رقم الهاتف"
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_open_planned_visitor
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_visitor__state__planned
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Planned"
+msgstr "المخطط له "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/end_page/end_page.xml:0
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "Please have a seat."
+msgstr "تفضل بالجلوس. "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_qr_expired
+msgid "Please rescan it."
+msgstr "يرجى إعادة المسح. "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__visitor_properties
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_tree
+msgid "Properties"
+msgstr "الخصائص "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/welcome_page/welcome_page.xml:0
+#, python-format
+msgid "QR Code"
+msgstr "QR Code"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_qr_expired
+msgid "QR Code Expired."
+msgstr "انتهت صلاحية رمز QR. "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/quick_check_in/quick_check_in.xml:0
+#, python-format
+msgid "Quick Check In"
+msgstr "تسجيل الحضور السريع "
+
+#. module: frontdesk
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_report
+msgid "Reporting"
+msgstr "إعداد التقارير "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Request additional information upon registering"
+msgstr "طلب المزيد من المعلومات عند التسجيل "
+
+#. module: frontdesk
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_company__required
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_email__required
+#: model:ir.model.fields.selection,name:frontdesk.selection__frontdesk_frontdesk__ask_phone__required
+msgid "Required"
+msgstr "مطلوب"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+msgid "Responsible"
+msgstr "المسؤول "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__responsible_ids
+msgid "Responsibles"
+msgstr "المسؤولون "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__sms_template_id
+msgid "SMS Template"
+msgstr "قالب الرسائل النصية القصيرة "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__access_token
+msgid "Security Token"
+msgstr "رمز الحماية"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Select the color of the Desk"
+msgstr "اختر لون المكتب "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__self_check_in
+msgid "Self Check-In"
+msgstr "تسجيل الحضور الذاتي "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Send an SMS to the host on guest arrival"
+msgstr "أرسل رسالة نصية قصيرة إلى المضيف بوصول الضيف "
+
+#. module: frontdesk
+#: model:mail.template,description:frontdesk.frontdesk_mail_template
+msgid "Sent to hosts on guest arrival"
+msgstr "يتم إرسالها إلى المضيفين عند وصول الضيف "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_drink__sequence
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_drink_view_form
+msgid "Sequence"
+msgstr "تسلسل "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Show a QR code on the welcome screen to check-in from mobile"
+msgstr "أظهر رمز QR على شاشة الترحيب لتسجيل الحضور من الهاتف المحمول "
+
+#. module: frontdesk
+#: model:ir.model.fields,help:frontdesk.field_frontdesk_frontdesk__self_check_in
+msgid ""
+"Shows a QR code in the interface, for guests to check in from their mobile "
+"phone."
+msgstr ""
+"يقوم بعرض رمز QR في الواجهة، ليتمكن الضيوف من تسجيل الحضور من هواتفهم "
+"المحمولة. "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Side Message"
+msgstr "رسالة جانبية "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__station_id
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Station"
+msgstr "محطة "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_search
+msgid "Station Name"
+msgstr "اسم المحطة "
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_open_station_visitor
+msgid "Station Visitors"
+msgstr "زوار المحطة "
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_frontdesk_tree
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_stations
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_stations_config
+msgid "Stations"
+msgstr "المحطات "
+
+#. module: frontdesk
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_station_report
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+msgid "Statistics"
+msgstr "الإحصائيات"
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__state
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Status"
+msgstr "الحالة"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/end_page/end_page.xml:0
+#, python-format
+msgid "Thank you for registering!"
+msgstr "شكراً لتسجيلك! "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__theme
+msgid "Theme"
+msgstr "السمة "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Today"
+msgstr "اليوم "
+
+#. module: frontdesk
+#: model:res.groups,name:frontdesk.frontdesk_group_user
+msgid "User"
+msgstr "المستخدم"
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_search
+msgid "Visitor"
+msgstr "زائر "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_visitor__company
+msgid "Visitor Company"
+msgstr "شركة الزائر "
+
+#. module: frontdesk
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__visitor_properties_definition
+msgid "Visitor Properties"
+msgstr "خصائص الزوار "
+
+#. module: frontdesk
+#. odoo-python
+#: code:addons/frontdesk/models/frontdesk_frontdesk.py:0
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_visitor
+#: model:ir.actions.act_window,name:frontdesk.action_frontdesk_visitors_report
+#: model:ir.model.fields,field_description:frontdesk.field_frontdesk_frontdesk__visitor_ids
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_report_visitors
+#: model:ir.ui.menu,name:frontdesk.frontdesk_menu_visitors
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_kanban
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_station_report_view_graph
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_report_view_graph
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_graph
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_visitor_view_pivot
+#, python-format
+msgid "Visitors"
+msgstr "الزائرين "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/welcome_page/welcome_page.xml:0
+#, python-format
+msgid "Welcome"
+msgstr "مرحبًا بك"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/navbar/navbar.xml:0
+#, python-format
+msgid "Who are you visiting?"
+msgstr "من تزور؟ "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/navbar/navbar.xml:0
+#, python-format
+msgid "Who are you?"
+msgstr "من أنت؟ "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_frontdesk_view_form
+msgid "Write message..."
+msgstr "اكتب رسالة... "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "Yes, please"
+msgstr "نعم رجاءً "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "You have been registered!"
+msgstr "لقد تم تسجيلك! "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "Your Company"
+msgstr "شركتك "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "Your Email"
+msgstr "بريدك الإلكتروني "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "Your Name"
+msgstr "اسمك"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "Your Phone Number"
+msgstr "رقم هاتفك "
+
+#. module: frontdesk
+#: model:mail.template,subject:frontdesk.frontdesk_mail_template
+msgid "Your Visitor {{ object.name }} Requested To Meet You"
+msgstr "زائرك {{ object.name }} طلب مقابلتك "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/end_page/end_page.xml:0
+#, python-format
+msgid "Your drink is on the way."
+msgstr "مشروبك في الطريق "
+
+#. module: frontdesk
+#: model_terms:ir.ui.view,arch_db:frontdesk.frontdesk_drink_view_form
+msgid "e.g. Coca-Cola"
+msgstr "مثال: كوكاكولا "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "e.g. John Doe"
+msgstr "مثل: محمد محمود"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "e.g. My Company"
+msgstr "مثال: شركتي "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/visitor_form/visitor_form.xml:0
+#, python-format
+msgid "e.g. john@company.com"
+msgstr "مثال: john@company.com "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/end_page/end_page.xml:0
+#, python-format
+msgid "has been informed."
+msgstr "تم إعلامه. "
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/welcome_page/welcome_page.xml:0
+#, python-format
+msgid "to"
+msgstr "إلى"
+
+#. module: frontdesk
+#. odoo-javascript
+#: code:addons/frontdesk/static/src/register_page/register_page.xml:0
+#, python-format
+msgid "will get back to you."
+msgstr "سيتواصل معك. "

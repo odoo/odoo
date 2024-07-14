@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="ir_model_view_form" model="ir.ui.view">
+        <field name="name">ir.model.view.form.inherit.data.merge</field>
+        <field name="model">ir.model</field>
+        <field name="inherit_id" ref="base.view_model_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="hide_merge_action" invisible="1"/>
+                <field name="is_merge_enabled" invisible="1"/>
+                <button string="Enable Merge" name="action_merge_contextual_enable"
+                        type="object" class="btn btn-primary"
+                        invisible="hide_merge_action or is_merge_enabled"/>
+                <button string="Disable Merge" name="action_merge_contextual_disable" type="object"
+                        invisible="hide_merge_action or not is_merge_enabled"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ir_model_view_tree" model="ir.ui.view">
+        <field name="name">ir.model.view.tree.inherit.data.merge</field>
+        <field name="model">ir.model</field>
+        <field name="inherit_id" ref="base.view_model_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='transient']" position="after">
+                <field name="is_merge_enabled"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ir_model_view_search" model="ir.ui.view">
+        <field name="name">ir.model.view.search.inherit.data.merge</field>
+        <field name="model">ir.model</field>
+        <field name="inherit_id" ref="base.view_model_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='transient']" position="after">
+                <filter name="merge_action_enabled" string="Can Be Merged"
+                    domain="[('ref_merge_ir_act_server_id', '!=', False)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ir_model_action_merge" model="ir.actions.act_window">
+        <field name="name">Merge action Manager</field>
+        <field name="res_model">ir.model</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="base.view_model_search"/>
+        <field name="view_id" ref="base.view_model_tree"/>
+        <field name="domain" eval="[]"/>
+    </record>
+
+    <menuitem id="ir_model_menu_merge_action_manager"
+              name="Merge Action Manager"
+              parent="data_recycle.menu_data_cleaning_config"
+              action="ir_model_action_merge"
+              sequence="1"
+              groups="base.group_no_one"/>
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="documents_spreadsheet.share_page" name="Multiple Documents Share with Spreadsheets" inherit_id="documents.share_workspace_page">
+    <xpath expr="//article" position="before">
+        <t t-set="isSpreadsheet" t-value="document.mimetype == 'application/o-spreadsheet'"/>
+    </xpath>
+    <xpath expr="//h6[hasclass('o_card_title')]" position="replace">
+        <!-- Replace title url with url to open the spreadsheet -->
+        <h6 t-if="isSpreadsheet" class="o_card_title mt0 mb4">
+            <t t-set="open_url" t-value="'/document/spreadsheet/share/' + share_id + '/' + token + '/' + str(document.id)"/>
+            <a t-att-href="open_url" target="new" t-attf-title="#{'Download '}#{document.name}" t-esc="document.name"/>
+        </h6>
+        <t t-else="">$0</t>
+    </xpath>
+    <xpath expr="//figure" position="inside">
+        <div t-if="isSpreadsheet" class="o_image_preview" t-attf-style="background-image:url(/document/thumbnail/#{share_id}/#{token}/#{document.id})"/>
+    </xpath>
+</template>
+
+</odoo>

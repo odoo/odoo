@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="social.StreamPostCommentsOriginalPost" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('o_social_original_post_author_image')]" position="inside">
+            <img t-if="originalPost.media_type.raw_value == 'youtube'"
+                t-attf-src="/web/image/social.account/{{ originalPost.account_id.raw_value }}/image/48x48" alt="Author Image" class="rounded"/>
+        </xpath>
+        <xpath expr="//div[@name='o_social_original_post_message_body']" position="before">
+            <div t-if="originalPost.media_type.raw_value === 'youtube'" class="pt-2 pb-3">
+                <div class="fw-bold pb-3" t-esc="originalPost.link_title.value"/>
+                <div class="w-100 ratio ratio-16x9 bg-200">
+                    <iframe
+                        t-attf-src="https://www.youtube.com/embed/{{ originalPost.youtube_video_id.raw_value }}?origin={{ window.document.location.host }}&amp;rel=0"
+                        frameborder="0" allowfullscreen="1"/>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_social_comments_modal_original_post_content')]" position="inside">
+            <div t-if="originalPost.media_type.raw_value === 'youtube'" class="o_social_original_post_youtube_stats d-flex pt-2">
+                <div class="o_social_subtle_btn_disabled ps-2">
+                    <i class="fa fa-thumbs-o-up me-1" title="Likes"/>
+                    <b t-esc="originalPost.youtube_likes_count.value"/>
+                </div>
+                <div class="o_social_subtle_btn_disabled ps-2">
+                    <b t-esc="originalPost.youtube_comments_count.value"/>
+                    Comments
+                </div>
+                <div class="o_social_subtle_btn_disabled ps-3 fw-bold ms-auto">
+                    Views
+                    <t t-esc="originalPost.youtube_views_count.value"/>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-name="social_youtube.YoutubeUploadField">
+        <t t-if="props.readonly">
+            <div class="o_social_youtube_field">
+                <span type="text" class="o_social_youtube_upload_filename"
+                    t-att-class="{'d-none': !this.props.record.data[this.props.name]}"
+                    t-out="this.props.record.data[this.props.name]"/>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="o_field_widget o_field_binary_file o_social_youtube_field o_social_youtube_field" aria-atomic="true">
+                <input type="text" class="o_input o_social_youtube_upload_filename"
+                    t-att-class="{'d-none': !this.props.record.data[this.props.name]}"
+                    readonly="readonly"
+                    t-att-name="this.props.name"
+                    t-att-value="this.props.record.data[this.props.name]"/>
+                <div class="o_social_youtube_upload_bar w-100 position-relative"
+                    t-att-class="{'d-none': !this.state.uploading}">
+                    <div class="position-absolute fw-bold w-100 h-100 text-center">
+                        <span class="fa fa-spin fa-spinner me-1"></span>
+                        <span class="o_social_youtube_upload_text" t-out="this.state.socialYoutubeText"/>
+                    </div>
+                    <div class="o_social_youtube_upload_progress h-100"
+                        t-attf-style="width: {{this.state.uploadProgress}}%;"/>
+                </div>
+                <button type="button"
+                    class="btn btn-primary o_select_file_button"
+                    t-att-class="{'d-none': this.state.uploading || this.props.record.data[this.props.name]}"
+                    t-on-click="_onUploadClick"
+                    title="Select">Upload Video</button>
+                <button type="button"
+                    class="btn btn-secondary fa fa-trash-o o_clear_file_button"
+                    t-att-class="{'d-none': !this.props.record.data[this.props.name]}"
+                    title="Clear"
+                    aria-label="Clear"
+                    t-on-click="this._onClearClick"/>
+
+                <div class="o_hidden_input_file" aria-atomic="true" >
+                    <form method="post"
+                        enctype="multipart/form-data"
+                        class="o_form_binary_form o_social_youtube_upload_form">
+                        <input type="file" class="o_input_file" name="file" accept="video/*"
+                            t-ref="fileInput"
+                            t-on-change="this._onFileChanged"/>
+                    </form>
+                </div>
+            </div>
+            <div class="alert alert-danger fw-bold w-100 h-100 mt-2 text-center"
+                t-out="state.uploadErrorMessage" t-if="state.uploadErrorMessage"/>
+        </t>
+    </t>
+</templates>

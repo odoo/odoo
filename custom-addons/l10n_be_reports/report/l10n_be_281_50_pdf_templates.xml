@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="report_281_50_pdf">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <t t-set="form" t-value="o"/>
+                        <div class="page">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row border border-dark border-bottom-0">
+                                        <div class="col-12">
+                                            <p class="text-center fw-bold">
+                                                FORM N° 281.50 (commissions, brokerage, etc) - YEAR <span t-out="form.reference_year"/>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row border border-dark border-bottom-0">
+                                        <div class="col-12" style="padding-top: 1%; padding-bottom: 1%;">
+                                            <p class="text-start">
+                                                1. N° <t t-out="form.official_id"/>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row border border-dark border-bottom-0">
+                                        <div class="col-6 border-end border-dark" style="padding-top: 1%; padding-bottom: 1%;">
+                                            <p class="text-start">
+                                                2. Name (or denomination) and address of the debtor of the income:
+                                            </p>
+                                            <br/>
+                                            <p class="text-start border border-dark" style="padding-left: 2%">
+                                                <span t-out="form.form_325_id.sender_name"/> <!-- Company name -->
+                                                <br/>
+                                                <span t-out="form.form_325_id.sender_address"/> <!-- Company Address -->
+                                                <br/>
+                                                <span t-out="form.form_325_id.sender_zip"/> <span t-out="form.form_325_id.sender_city"/> <!-- Company ZIP & City -->
+                                            </p>
+                                            <br/>
+                                            <p class="text-start">
+                                                Enterprise N°: <span t-out="form.income_debtor_bce_number"/>
+                                            </p>
+                                        </div>
+                                        <div class="col-6" style="padding-top: 1%; padding-bottom: 1%;">
+                                            <p class="text-start">
+                                                Lastname, Firstname (or denomination) and address of the recipient of the income:
+                                            </p>
+                                            <br/>
+                                            <p class="text-start border border-dark" style="padding-left: 2%">
+                                                <span t-out="form.partner_name"/> <!-- Partner name -->
+                                                <br/>
+                                                <span t-out="form.partner_address"/> <!-- Partner Address -->
+                                                <br/>
+                                                <span t-out="form.partner_zip"/>
+                                                <span t-out="form.partner_city"/> <!-- Partner ZIP & City -->
+                                                <br/>
+                                                <span t-out="form.country_id.name"/> <!-- Partner Country name -->
+                                            </p>
+                                            <br/>
+                                            <p class="text-start" t-if="not form.partner_is_natural_person">
+                                                Enterprise N°:
+                                                <span t-out="form.partner_bce_number"/>
+                                            </p>
+                                            <p class="text-start" t-if="form.partner_is_natural_person">
+                                                Profession:
+                                                <span t-out="form.partner_job_position"/>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row border border-dark border-bottom-0">
+                                        <div class="col-8 border-end border-dark" style="padding-top: 1%; padding-bottom: 1%;">
+                                            <p class="text-start">
+                                                3. Nature
+                                            </p>
+                                        </div>
+                                        <div class="col-4" style="padding-top: 1%; padding-bottom: 1%;">
+                                            <p class="text-center">
+                                                Amount
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row border border-dark border-bottom-0">
+                                        <div class="col-8 border-end border-dark" style="padding-top: 1%; padding-bottom: 1%;">
+                                            <p class="text-start">
+                                                a) Commissions, brokerage, commercial discounts, etc:
+                                                <br/>
+                                                b) Fees or vacations:
+                                                <br/>
+                                                c) Benefits in kind (nature : ................)
+                                                <br/>
+                                                d) Expenses incurred on behalf of the beneficiary:
+                                                <br/>
+                                                e) Total (see also in sections f and g below):
+                                            </p>
+                                        </div>
+                                        <div class="col-4" style="padding-top: 1%; padding-bottom: 1%;">
+                                            <p class="text-end">
+                                                <span t-out="form.commissions" t-options="{'widget': 'float', 'precision': 2}"/>
+                                                <br/>
+                                                <span t-out="form.fees" t-options="{'widget': 'float', 'precision': 2}"/>
+                                                <br/>
+                                                <span t-out="form.atn" t-options="{'widget': 'float', 'precision': 2}"/>
+                                                <br/>
+                                                <span t-out="form.exposed_expenses" t-options="{'widget': 'float', 'precision': 2}"/>
+                                                <br/>
+                                                <span t-out="form.total_remuneration" t-options="{'widget': 'float', 'precision': 2}"/>
+                                                <br/>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row border border-dark border-bottom-0">
+                                        <div class="col-8" style="padding-top: 1%; padding-bottom: 1%;">
+                                            f) Enter here, if applicable, the amount included in item e
+                                            above relates to compensation paid to:
+                                            <br/>
+                                            - athletes for their sports performances:
+                                            <br/>
+                                            - trainers, coaches and accompaniers for their activity for the
+                                            benefit of the athletes:
+                                        </div>
+                                        <div class="col-4" style="padding-top: 1%; padding-bottom: 1%;">
+                                            <p class="text-end">
+                                                <br/><br/>
+                                                <!-- irrelevant: sport remuneration -->
+                                                0.00
+                                                <br/><br/>
+                                                <!-- irrelevant: manager remuneration -->
+                                                0.00
+                                                <br/><br/>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row border border-dark border-bottom-0">
+                                        <div class="col-8" style="padding-top: 1%; padding-bottom: 1%;">
+                                            <p class="text-start">
+                                                g) If the amount indicated in item e above does not coincide with
+                                                the amount actually paid in <span t-out="form.reference_year"/>,
+                                                enter the amount actually paid in <span t-out="form.reference_year"/>
+                                                (including amounts that are related to other taxable periods):
+                                            </p>
+                                        </div>
+                                        <div class="col-4" style="padding-top: 1%; padding-bottom: 1%;">
+                                            <p class="text-end">
+                                                <t t-if="form.paid_amount == 0">NIL</t>
+                                                <t t-elif="form.paid_amount == form.total_remuneration">0.00</t>
+                                                <t t-else=""><span t-out="form.paid_amount" t-options="{'widget': 'float', 'precision': 2}"/></t>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row border border-dark">
+                                        <div class="col-12" style="padding-top: 1%; padding-bottom: 1%;">
+                                            <p class="text-start">
+                                                4. Comments:
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_lu_employees_atn_transport" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_lu_hr_payroll.hr_salary_rule_category_bik_transport"/>
+        <field name="name">Benefit in Kind (Transportation)(DEPRECATED)</field>
+        <field name="code">BIK_TRANSPORT</field>
+        <field name="sequence">5</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = False</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+# Deprecated rule. Instead we use l10n_lu_employees_atn_transport_without_VAT
+result = 0
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_atn_transport_without_VAT" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_lu_hr_payroll.hr_salary_rule_category_bik"/>
+        <field name="name">Benefit in Kind (Transportation) without VAT</field>
+        <field name="code">BIK_TRANSPORT_NO_VAT</field>
+        <field name="sequence">5</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = 1/(1 + payslip._rule_parameter('l10n_vat_rate'))
+result = contract.l10n_lu_atn_transport
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_atn_transport_VAT" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_lu_hr_payroll.hr_salary_rule_category_bik"/>
+        <field name="name">Benefit in Kind (Transportation) VAT</field>
+        <field name="code">BIK_TRANSPORT_VAT</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = 1 - (1/(1 + payslip._rule_parameter('l10n_vat_rate')))
+result = contract.l10n_lu_atn_transport
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_gross_tmp" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_lu_hr_payroll.hr_salary_rule_category_gross_tmp"/>
+        <field name="name">Temporary Gross</field>
+        <field name="code">T_GROSS</field>
+        <field name="sequence">15</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="amount_python_compute">
+result = categories['BASIC'] + categories['BIK']
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_gross_meal_vouchers" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="name">Meal Vouchers</field>
+        <field name="code">MEAL_VOUCHERS</field>
+        <field name="sequence">20</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.l10n_lu_meal_voucher_amount)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if 'WORK100' not in worked_days:
+    result_qty = 0
+elif worked_days['WORK100'].number_of_days >= 18:
+    result_qty = 18
+else:
+    total_number_of_days = sum(payslip.worked_days_line_ids.mapped('number_of_days'))
+    result_qty = int(18 * worked_days['WORK100'].number_of_days / total_number_of_days)
+result = 2.8
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary')),
+            ('code', '=', 'GROSS')]"/>
+        <value eval="{
+            'amount_python_compute': &quot;result = result_rules['T_GROSS']['total'] + result_rules['MEAL_VOUCHERS']['total']&quot;}"/>
+    </function>
+
+    <record id="l10n_lu_employees_health_fund" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Health Fund</field>
+        <field name="code">HEALTH_FUND</field>
+        <field name="sequence">105</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['T_GROSS']['total']
+result_rate = payslip._rule_parameter('l10n_lu_health_fund_tax')
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_cash_sickness_fund" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Cash Sickness Fund</field>
+        <field name="code">SICK_FUND</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">BASIC</field>
+        <field name="amount_percentage">-0.25</field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_retirement_fund" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Retirement Fund</field>
+        <field name="code">RETIREMENT_FUND</field>
+        <field name="sequence">115</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['T_GROSS']['total']
+result_rate = payslip._rule_parameter('l10n_lu_retirement_fund_tax')
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_dependency_insurance" model="hr.salary.rule">
+    <field name="category_id" ref="hr_payroll.DED"/>
+    <field name="name">Dependency Insurance</field>
+    <field name="code">DEP_INS</field>
+    <field name="sequence">120</field>
+    <field name="condition_select">none</field>
+    <field name="amount_select">code</field>
+    <field name="amount_python_compute">
+min_social_pay = payslip._rule_parameter('l10n_lu_min_social_pay')
+result = -0.014 * (contract.wage + categories['BIK'] - min_social_pay/4)
+    </field>
+    <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+</record>
+
+    <record id="l10n_lu_employees_taxes_total" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_lu_hr_payroll.hr_salary_rule_category_taxes_data"/>
+        <field name="name">Total Taxes</field>
+        <field name="code">TAXES_TOTAL</field>
+        <field name="sequence">125</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -(result_rules['HEALTH_FUND']['total'] + result_rules['SICK_FUND']['total'] + result_rules['RETIREMENT_FUND']['total'])
+</field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_transport_fees" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Transport Fees</field>
+        <field name="code">TRANS_FEES</field>
+        <field name="sequence">130</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = contract.employee_id.l10n_lu_travel_expense
+</field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_total_allowance" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_lu_hr_payroll.hr_salary_rule_category_total_allowance"/>
+        <field name="name">Total Allowances</field>
+        <field name="code">ALW_TOTAL</field>
+        <field name="sequence">135</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = - result_rules['TRANS_FEES']['total']
+</field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_taxable_amount" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_lu_hr_payroll.hr_salary_rule_category_taxable_amount"/>
+        <field name="name">Taxable Amount</field>
+        <field name="code">TAXABLE</field>
+        <field name="sequence">140</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = GROSS - result_rules['TAXES_TOTAL']['total'] + result_rules['ALW_TOTAL']['total'] + result_rules['DEP_INS']['total']
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_withholding_taxes" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Withholding Taxes</field>
+        <field name="code">TAXES</field>
+        <field name="sequence">140</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = payslip._get_lux_tax(localdict)
+</field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_cissm" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">CISSM</field>
+        <field name="code">CISSM</field>
+        <field name="sequence">143</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+fte_monthly_wage = result_rules['GROSS']['total'] / contract.work_time_rate if contract.work_time_rate else 0
+max_amount = payslip._rule_parameter('l10n_lu_cissm_max_amount')
+lower_bound = payslip._rule_parameter('l10n_lu_cissm_lower_bound')
+middle_bound = payslip._rule_parameter('l10n_lu_cissm_middle_bound')
+upper_bound = payslip._rule_parameter('l10n_lu_cissm_upper_bound')
+if lower_bound &lt;= fte_monthly_wage &lt; middle_bound:
+    cissm = max_amount
+elif middle_bound &lt;= fte_monthly_wage &lt; upper_bound:
+    cissm = (max_amount / (upper_bound - middle_bound)) * (upper_bound - fte_monthly_wage)
+else:
+    cissm = 0
+result = cissm * contract.work_time_rate
+</field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_employee_tax_credit" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Employee Tax Credit</field>
+        <field name="code">TAX_CREDIT</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+def find_rates(x, rates):
+    for low, high, base, to_substruct, multiplier in rates:
+        if low &lt;= x &lt;= float(high):
+            return base, to_substruct, multiplier
+
+yearly_salary = GROSS * 12
+if yearly_salary:
+    tax_credit_bracket = payslip._rule_parameter('l10n_tax_credit')
+    base, to_substruct, multiplier = find_rates(yearly_salary, tax_credit_bracket)
+    result = (base + (yearly_salary + to_substruct) * multiplier) / 12
+else:
+    result = 0
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_gratification" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_gratification"/>
+        <field name="name">Basic Gratification</field>
+        <field name="sequence">160</field>
+        <field name="code">BASIC_GRATIFICATION</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'GRATIFICATION' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['GRATIFICATION'].amount
+result_name = inputs['GRATIFICATION'].name
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_gratification_health_fund" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_gratification"/>
+        <field name="name">Gratification Health Fund</field>
+        <field name="code">GRAT_HEALTH_FUND</field>
+        <field name="sequence">161</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'GRATIFICATION' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['BASIC_GRATIFICATION']['total']
+result_rate = payslip._rule_parameter('l10n_lu_health_fund_tax')
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_gratification_retirement_fund" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_gratification"/>
+        <field name="name">Gratification Retirement Fund</field>
+        <field name="code">GRAT_RETIREMENT_FUND</field>
+        <field name="sequence">162</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'GRATIFICATION' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['BASIC_GRATIFICATION']['total']
+result_rate = payslip._rule_parameter('l10n_lu_retirement_fund_tax')
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_gratification_gross_gratification" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_gratification"/>
+        <field name="name">Gross Gratification</field>
+        <field name="code">GROSS_GRATIFICATION</field>
+        <field name="sequence">163</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'GRATIFICATION' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['BASIC_GRATIFICATION']['total'] + result_rules['GRAT_HEALTH_FUND']['total'] + result_rules['GRAT_RETIREMENT_FUND']['total']
+result -= result % 5
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_gratification_tax_on_non_period_revenue" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_gratification"/>
+        <field name="name">Tax On Non Period Revenue</field>
+        <field name="code">TAX_ON_NON_PERIOD_REVENUE</field>
+        <field name="sequence">164</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'GRATIFICATION' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+# Source: https://impotsdirects.public.lu/fr/baremes.html#Ex
+def get_tax(taxable_amount):
+    def _find_rate(x, rates):
+        for low, high, rate, adjustment in rates:
+            if low &lt;= x &lt;= high:
+                return rate, adjustment
+        return 0, 0
+
+    if employee.l10n_lu_tax_classification:
+        rates = payslip._rule_parameter(f'l10n_lu_withholding_annual_taxes_{employee.l10n_lu_tax_classification}')
+        threshold, threshold_adjustment = payslip._rule_parameter(f'l10n_lu_withholding_annual_taxes_threshold_{employee.l10n_lu_tax_classification}')
+    else:
+        return 0.0
+
+    rate, adjustment = _find_rate(taxable_amount, rates)
+    tax_amount = taxable_amount * rate - adjustment
+    tax_amount -= tax_amount % 1
+    if taxable_amount &lt;= threshold:
+        tax_amount *= 1.07
+    else:
+        tax_amount += tax_amount * 0.09 - threshold_adjustment
+    tax_amount -= tax_amount % 1
+
+    if tax_amount &lt; 12:
+        return 0.0
+    return tax_amount
+
+def get_l10n_lu_grat_tax(annual_salary, gratification):
+    if gratification == 0:
+        return 0
+
+    salary = (annual_salary // 1200) * 1200
+    grat = (gratification // 200) * 200
+    if grat &lt; 200:
+        grat = 50
+
+    tax_rao = get_tax(salary)
+    tax_rao_grat = get_tax(salary + grat)
+
+    diff = tax_rao_grat - tax_rao
+    if not float_compare(diff, 0.0, precision_digits=2):
+        return 0.0
+
+    if salary > 60000 or grat >= 5600:
+        return -diff
+
+    rate = diff / grat
+    rate -= rate % 0.005
+    rate = rate if rate >= 0.01 else 0.0
+
+    tax = rate * gratification
+    tax -= tax % 0.1
+    return -tax
+
+
+annual_salary = contract.wage * 12
+result = get_l10n_lu_grat_tax(annual_salary, result_rules['GROSS_GRATIFICATION']['total'])
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_gratification_net_gratification" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_net_gratification"/>
+        <field name="name">Net Gratification</field>
+        <field name="code">NET_GRATIFICATION</field>
+        <field name="sequence">165</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'GRATIFICATION' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['GROSS_GRATIFICATION']['total'] + result_rules['TAX_ON_NON_PERIOD_REVENUE']['total']
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary')),
+            ('code', '=', 'NET')]"/>
+        <value eval="{
+            'amount_python_compute': &quot;result = categories['BASIC'] + categories['ALW'] + categories['DED']&quot;, 'appears_on_employee_cost_dashboard': True}"/>
+    </function>
+
+    <record id="l10n_lu_employees_gross_meal_vouchers_2" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_lu_hr_payroll.hr_salary_rule_category_ded_net"/>
+        <field name="name">Meal Vouchers</field>
+        <field name="code">MEAL_VOUCHERS.2</field>
+        <field name="sequence">205</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.l10n_lu_meal_voucher_amount)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = result_rules['MEAL_VOUCHERS']['quantity']
+result = -result_rules['MEAL_VOUCHERS']['amount']
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_atn_transport_without_VAT_2" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_lu_hr_payroll.hr_salary_rule_category_ded_net"/>
+        <field name="name">Benefit in Kind (Transportation) without VAT</field>
+        <field name="code">BIK_TRANSPORT_NO_VAT.2</field>
+        <field name="sequence">210</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = result_rules['BIK_TRANSPORT_NO_VAT']['quantity']
+result = -result_rules['BIK_TRANSPORT_NO_VAT']['total']
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_atn_transport_VAT_2" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_lu_hr_payroll.hr_salary_rule_category_ded_net"/>
+        <field name="name">Benefit in Kind (Transportation) VAT</field>
+        <field name="code">BIK_TRANSPORT_VAT.2</field>
+        <field name="sequence">215</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = result_rules['BIK_TRANSPORT_VAT']['quantity']
+result = -result_rules['BIK_TRANSPORT_VAT']['total']
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_benefit_various_2" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_lu_hr_payroll.hr_salary_rule_category_ded_net"/>
+        <field name="name">Benefit in Kind (Various)</field>
+        <field name="code">BIK_VARIOUS.2</field>
+        <field name="sequence">218</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -result_rules['BIK_VARIOUS']['total']
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+
+    <record id="l10n_lu_employees_net_to_pay" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_net_to_pay"/>
+        <field name="name">Net To Pay</field>
+        <field name="code">NET_TO_PAY</field>
+        <field name="sequence">220</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['NET']['total'] + categories['DED_NET']
+        </field>
+        <field name="struct_id" ref="l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary"/>
+    </record>
+</odoo>

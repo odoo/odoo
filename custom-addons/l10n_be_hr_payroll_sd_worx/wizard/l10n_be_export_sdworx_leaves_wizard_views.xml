@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_export_sdworx_leaves_wizard_view_form" model="ir.ui.view">
+          <field name="name">l10n_be.export.sdworx.leaves.wizard.form</field>
+          <field name="model">l10n_be.export.sdworx.leaves.wizard</field>
+          <field name="arch" type="xml">
+            <form string="Export Employee Leaves for SD Worx">
+                <group>
+                    <group>
+                        <field name="reference_year"/>
+                        <field name="reference_month"/>
+                        <field name="export_filename" invisible="1"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="leave_ids">
+                        <tree>
+                            <field name="employee_id" widget="many2one_avatar_user" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
+                            <field name="holiday_status_id" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
+                            <field name="name" optional="hide"/>
+                            <field name="date_from" optional="show" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
+                            <field name="date_to" optional="show" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
+                            <field name="number_of_days"/>
+                            <field name="state" column_invisible="True"/>
+                        </tree>
+                    </field>
+                    <group invisible="not export_file">
+                        <field name="export_file" readonly="1" filename="export_filename"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_generate_export_file" type="object" string="Generate Export File" class="oe_highlight" invisible="export_file"/>
+                    <button name="action_generate_export_file" type="object" string="Generate Export File" invisible="not export_file"/>
+                    <button string="CANCEL" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+          </field>
+    </record>
+
+    <record id="l10n_be_export_sdworx_leaves_wizard_action" model="ir.actions.act_window">
+        <field name="name">Export Work Entries to SDWorx</field>
+        <field name="res_model">l10n_be.export.sdworx.leaves.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="l10n_be_export_sdworx_leaves_wizard_view_form"/>
+        <field name="binding_model_id" eval="False"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_be_export_sdworx_leaves_wizard"
+        name="Export Work Entries to SDWorx"
+        action="l10n_be_export_sdworx_leaves_wizard_action"
+        parent="l10n_be_hr_payroll.menu_reporting_l10n_be"
+        sequence="25"
+    />
+
+</odoo>

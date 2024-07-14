@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Adds a button to CRM leads Kanban view cards that deletes or creates
+         call activity from the related record -->
+    <record id="lead_button_call_kanban_view" model="ir.ui.view">
+        <field name="name">crm.lead.view.kanban.inherit.voip</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@widget='kanban_activity']" position="after">
+                <field name="phone" invisible="1"/>
+                <field name="mobile" invisible="1"/>
+                <field name="has_call_in_queue" widget="call_queue_switch" invisible="not phone and not mobile"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

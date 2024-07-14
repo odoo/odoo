@@ -1,0 +1,876 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* social_youtube
+# 
+# Translators:
+# Miku Laitinen <miku.laitinen@gmail.com>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Jesse Järvi <me@jessejarvi.net>, 2023
+# Martin Trigaux, 2023
+# Mikko Salmela <salmemik@gmail.com>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:47+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_account__youtube_upload_playlist_id
+msgid ""
+"'Uploads' Playlist ID provided by the YouTube API, this should never be set "
+"manually."
+msgstr ""
+"'Uploads' YouTube API:n tarjoama soittolistan ID, tätä ei pitäisi koskaan "
+"asettaa manuaalisesti."
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.youtube_preview
+msgid "123 Views •"
+msgstr "123 katselua -"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_stream_post_view_kanban
+msgid "<i class=\"fa fa-thumbs-o-up me-1\" title=\"Likes\"/>"
+msgstr "<i class=\"fa fa-thumbs-o-up me-1\" title=\"Tykkäykset\"/>"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.youtube_preview
+msgid "<span class=\"fw-bold\">Your YouTube Channel</span>"
+msgstr "<span class=\"fw-bold\">YouTube-kanavasi</span>"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid ""
+"<span>These are stored up to 30 days and refreshed often to provide you an accurate depiction of reality. </span>\n"
+"                        <span>To delete these from Odoo, simply delete this account.</span>"
+msgstr ""
+"<span>Nämä tallennetaan jopa 30 päivän ajaksi ja päivitetään usein, jotta saat tarkan kuvan todellisuudesta. </span>\n"
+"                        <span>Jos haluat poistaa nämä Odoosta, poista tämä tili.</span>"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "Access to your account can be revoked at any time from"
+msgstr "Tilisi käyttöoikeus voidaan peruuttaa milloin tahansa osoitteesta"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_account__youtube_access_token
+msgid ""
+"Access token provided by the YouTube API, this should never be set manually."
+msgstr ""
+"YouTuben API:n tarjoama käyttöoikeustunniste, jota ei saa koskaan asettaa "
+"manuaalisesti."
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__account_id
+msgid "Account"
+msgstr "Tili"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_live_post.py:0
+#: code:addons/social_youtube/models/social_stream_post.py:0
+#, python-format
+msgid "An error occurred."
+msgstr "Käsittelyssä tapahtui virhe."
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "Auth endpoint did not provide a refresh token. Please try again."
+msgstr "Auth-päätepiste ei antanut päivitystunnusta. Yritä uudelleen."
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_stream_post_view_kanban
+#, python-format
+msgid "Author Image"
+msgstr "Tekijän kuva"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_revoke_youtube_view_form
+msgid "Cancel"
+msgstr "Peruuta"
+
+#. module: social_youtube
+#: model:social.stream.type,name:social_youtube.stream_type_youtube_channel_videos
+msgid "Channel"
+msgstr "Kanava"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#, python-format
+msgid "Clear"
+msgstr "Pyyhi"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_stream_post_view_kanban
+#, python-format
+msgid "Comments"
+msgstr "Kommentit"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_stream_post.py:0
+#, python-format
+msgid ""
+"Comments are marked as 'disabled' for this video. It could have been set as "
+"'private'."
+msgstr ""
+"Kommentit on merkitty tämän videon kohdalla 'poistettu käytöstä'. Se olisi "
+"voinut olla asetettu 'yksityiseksi'."
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_res_config_settings
+msgid "Config Settings"
+msgstr "Asetukset"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Confirmation"
+msgstr "Vahvistus"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_live_post__youtube_video_id
+#: model:ir.model.fields,help:social_youtube.field_social_post__youtube_video_id
+msgid "Contains the ID of the video as returned by the YouTube API"
+msgstr "Sisältää videon ID:n, jonka YouTube API palauttaa"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_post__youtube_video_category_id
+msgid "Contains the ID of the video category as returned by the YouTube API"
+msgstr "Sisältää YouTube API:n palauttaman videoluokan ID:n"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/wizard/social_account_revoke_youtube.py:0
+#, python-format
+msgid ""
+"Could not revoke your account.\n"
+"Error: %s"
+msgstr ""
+"Tiliäsi ei voitu peruuttaa.\n"
+"Virhe: %s"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "Description cannot exceed 5000 characters."
+msgstr "Kuvaus voi olla enintään 5000 merkkiä."
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "Description should not contain > or < symbol."
+msgstr "Kuvaus ei saa sisältää >- tai <-symbolia."
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Do you also want to remove the video from your YouTube account?"
+msgstr "Haluatko myös poistaa videon YouTube-tililtäsi?"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Draft Video"
+msgstr "Videon luonnos"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_account__youtube_token_expiration_date
+msgid ""
+"Expiration date of the Access Token provided by the YouTube API, this should"
+" never be set manually."
+msgstr ""
+"YouTube API:n tarjoaman pääsytunnisteen viimeinen voimassaolopäivä, tätä ei "
+"saa koskaan asettaa manuaalisesti."
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account__youtube_access_token
+msgid "Google Access Token"
+msgstr "Googlen pääsytunniste"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "Google Privacy Policy"
+msgstr "Googlen tietosuojakäytäntö"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account__youtube_refresh_token
+msgid "Google Refresh Token"
+msgstr "Google virkistyspoletti"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__id
+msgid "ID"
+msgstr "ID"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#, python-format
+msgid "Likes"
+msgstr "Tykkäykset"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_media__media_type
+msgid "Media Type"
+msgstr "Median tyyppi"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "No"
+msgstr "Ei"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.res_config_settings_view_form
+msgid "OAuth Client ID"
+msgstr "OAuth-asiakkaan tunnus"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.res_config_settings_view_form
+msgid "OAuth Client Secret"
+msgstr "OAuth-asiakkaan salaisuus"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_revoke_youtube_view_form
+msgid ""
+"Odoo will lose access to your YouTube account\n"
+"                        and delete all its related data from your database."
+msgstr ""
+"Odoo menettää pääsyn YouTube-tiliisi\n"
+"                        ja poistaa kaikki siihen liittyvät tiedot tietokannastasi."
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_post__youtube_video_privacy
+msgid "Once posted, set the video as Public/Private/Unlisted"
+msgstr ""
+"Kun video on julkaistu, aseta se julkiseksi/yksityiseksi/luetteloimattomaksi"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid ""
+"Our YouTube Social application uses YouTube API Services.\n"
+"                        By using it, you implicitly agree to the:"
+msgstr ""
+"YouTube Social -sovelluksemme käyttää YouTube API -palveluita.\n"
+"                        Käyttämällä sitä hyväksyt ehdot:"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+#, python-format
+msgid "Please select a single YouTube account at a time."
+msgstr "Valitse yksi YouTube-tili kerrallaan."
+
+#. module: social_youtube
+#: model:ir.model.fields.selection,name:social_youtube.selection__social_post__youtube_video_privacy__private
+msgid "Private"
+msgstr "Yksityinen"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Processing..."
+msgstr "Prosessoidaan..."
+
+#. module: social_youtube
+#: model:ir.model.fields.selection,name:social_youtube.selection__social_post__youtube_video_privacy__public
+msgid "Public"
+msgstr "Julkinen"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "Read More about YouTube Channel"
+msgstr "Lue lisää YouTube-kanavasta"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "Reason:"
+msgstr "Syy:"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_account__youtube_refresh_token
+msgid ""
+"Refresh token provided by the YouTube API, this should never be set "
+"manually."
+msgstr ""
+"YouTube API:n tarjoama päivitystunniste, jota ei koskaan pidä asettaa "
+"manuaalisesti."
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "Revoke"
+msgstr "Peruuta valtuutus"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_revoke_youtube_view_form
+msgid "Revoke & Delete"
+msgstr "Peruuta ja poista"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_account.py:0
+#, python-format
+msgid "Revoke Account"
+msgstr "Tilin peruuttaminen"
+
+#. module: social_youtube
+#: model:ir.actions.act_window,name:social_youtube.social_account_revoke_youtube_action
+#: model:ir.model,name:social_youtube.model_social_account_revoke_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_revoke_youtube_view_form
+msgid "Revoke YouTube Account"
+msgstr "Peruuta YouTube-tili"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_account.py:0
+#, python-format
+msgid "Revoking access tokens is currently limited to YouTube accounts only."
+msgstr "Pääsykoodien peruuttaminen koskee tällä hetkellä vain YouTube-tilejä."
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#, python-format
+msgid "Select"
+msgstr "Valitse"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_accounts_other_count
+msgid "Selected Other Accounts"
+msgstr "Valitut muut tilit"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_accounts_count
+msgid "Selected YouTube Accounts"
+msgstr "Valitut YouTube-tilit"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_post__youtube_video
+msgid ""
+"Simply holds the filename of the video as the video itself is uploaded "
+"directly to YouTube"
+msgstr ""
+"Pitää vain videon tiedostonimen, koska itse video ladataan suoraan YouTubeen"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_account
+msgid "Social Account"
+msgstr "Sosiaalisen median tili"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_live_post
+msgid "Social Live Post"
+msgstr "Sosiaalisen median live-julkaisu"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_media
+msgid "Social Media"
+msgstr "Sosiaalinen media"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_post
+msgid "Social Post"
+msgstr "Sosiaalisen median julkaisu"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_post_template
+msgid "Social Post Template"
+msgstr "Sosiaalisen median julkaisun malli"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_stream
+msgid "Social Stream"
+msgstr "Sosiaalinen media"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_stream_post
+msgid "Social Stream Post"
+msgstr "Sosiaalisen median suoratoiston julkaisu"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "The 'message' field is required for post ID %s"
+msgstr "Viesti-kenttä vaaditaan viestin ID:lle %s"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "The selected video exceeds the maximum allowed size of %s."
+msgstr "Valittu video ylittää sallitun enimmäiskoon %s."
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_media.py:0
+#, python-format
+msgid ""
+"The url that this service requested returned an error. Please contact the "
+"author of the app."
+msgstr ""
+"Tämän palvelun pyytämä url-osoite palautti virheen. Ota yhteyttä sovelluksen"
+" tekijään."
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_live_post.py:0
+#, python-format
+msgid "The video you are trying to publish has been deleted from YouTube."
+msgstr "Video, jota yrität julkaista, on poistettu YouTubesta."
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "There is no channel linked with this YouTube account."
+msgstr "Tähän YouTube-tiliin ei liity kanavaa."
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "Title cannot exceed 100 characters."
+msgstr "Otsikko saa olla enintään 100 merkkiä pitkä."
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "Title should not contain > or < symbol."
+msgstr "Otsikko ei saa sisältää >- tai <-symbolia."
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid ""
+"To provide our application services, note that we store the following data "
+"from your YouTube account:"
+msgstr ""
+"Huomaa, että sovelluspalvelujemme tarjoamiseksi tallennamme YouTube-"
+"tililtäsi seuraavat tiedot:"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account__youtube_token_expiration_date
+msgid "Token expiration date"
+msgstr "Pääsytunnisteen viimeinen voimassaolopäivä"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "Unauthorized. Please contact your administrator."
+msgstr "Luvaton. Ota yhteyttä ylläpitäjään."
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/wizard/social_account_revoke_youtube.py:0
+#, python-format
+msgid "Unknown"
+msgstr "Tuntematon"
+
+#. module: social_youtube
+#: model:ir.model.fields.selection,name:social_youtube.selection__social_post__youtube_video_privacy__unlisted
+msgid "Unlisted"
+msgstr "Ei listatut"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#, python-format
+msgid "Upload Video"
+msgstr "Lataa video"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Upload failed. Please try again."
+msgstr "Lataus epäonnistui. Yritä uudelleen."
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Uploading... %s%"
+msgstr "Ladataan... %s%"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Uploading... 0%"
+msgstr "Ladataan... 0%"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_res_config_settings__youtube_use_own_account
+msgid "Use your own YouTube Account"
+msgstr "Käytä omaa YouTube-tiliäsi"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_media__media_type
+msgid ""
+"Used to make comparisons when we need to restrict some features to a "
+"specific media ('facebook', 'twitter', ...)."
+msgstr ""
+"Käytetään vertailujen tekemiseen, kun joitakin ominaisuuksia on rajoitettava"
+" tiettyyn mediaan ('facebook', 'twitter', ...)."
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "Video"
+msgstr "Video"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+msgid "Video Description"
+msgstr "Videon kuvaus"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_video_privacy
+msgid "Video Privacy"
+msgstr "Videon yksityisyys"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+msgid "Video Title"
+msgstr "Videon nimi"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Video Upload"
+msgstr "Videon lataus"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_stream_post.py:0
+#, python-format
+msgid "Video not found. It could have been removed from Youtube."
+msgstr "Videota ei löydy. Se on saatettu poistaa Youtubesta."
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_stream_post_view_kanban
+#, python-format
+msgid "Views"
+msgstr "Näkymät"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Yes, delete it"
+msgstr "Kyllä, poista se"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "You cannot use '>' or '<' in both title and description."
+msgstr "Et voi käyttää '>' tai '<' sekä otsikossa että kuvauksessa."
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_media.py:0
+#, python-format
+msgid "You don't have an active subscription. Please buy one here: %s"
+msgstr "Sinulla ei ole aktiivista tilausta. Osta se täältä: %s"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "You have to upload a video when posting on YouTube."
+msgstr "Sinun on ladattava video, kun julkaiset videon YouTubessa."
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "You need to give your video a description."
+msgstr "Sinun on annettava videolle kuvaus."
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "You need to give your video a title."
+msgstr "Sinun on annettava videolle otsikko."
+
+#. module: social_youtube
+#: model:ir.model.fields.selection,name:social_youtube.selection__social_media__media_type__youtube
+#: model:social.media,name:social_youtube.social_media_youtube
+msgid "YouTube"
+msgstr "YouTube"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_access_token
+msgid "YouTube Access Token"
+msgstr "YouTube-pääsytunniste"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_video_category_id
+msgid "YouTube Category Id"
+msgstr "YouTube-kategorian tunnus"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account__youtube_channel_id
+msgid "YouTube Channel ID"
+msgstr "YouTube-kanavan tunnus"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_account__youtube_channel_id
+msgid ""
+"YouTube Channel ID provided by the YouTube API, this should never be set "
+"manually."
+msgstr ""
+"YouTube-kanavan tunniste, jonka YouTube API tarjoaa, tätä ei saa koskaan "
+"asettaa manuaalisesti."
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/stream_post_kanban_record.js:0
+#, python-format
+msgid "YouTube Comments"
+msgstr "YouTube-kommentit"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_comments_count
+msgid "YouTube Comments Count"
+msgstr "YouTube-kommenttien määrä"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.res_config_settings_view_form
+msgid "YouTube Developer Account"
+msgstr "YouTube-kehittäjätili"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_dislikes_count
+msgid "YouTube Dislikes"
+msgstr "YouTube-inhoamiset"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_likes_count
+msgid "YouTube Likes"
+msgstr "YouTube-tykkäykset"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_likes_ratio
+msgid "YouTube Likes Ratio"
+msgstr "YouTube-tykkäysten suhde"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_res_config_settings__youtube_oauth_client_id
+msgid "YouTube OAuth Client ID"
+msgstr "YouTuben OAuth-asiakastunnus"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_res_config_settings__youtube_oauth_client_secret
+msgid "YouTube OAuth Client Secret"
+msgstr "YouTube OAuth -asiakkaan salaisuus"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+msgid "YouTube Options"
+msgstr "YouTube-vaihtoehdot"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.youtube_preview
+msgid "YouTube Placeholder"
+msgstr "YouTube-paikanvaraaja"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_preview
+msgid "YouTube Preview"
+msgstr "YouTube-esikatselu"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "YouTube Terms of Service (ToS)"
+msgstr "YouTuben käyttöehdot (ToS)"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_kanban
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_stream_post_view_kanban
+msgid "YouTube Thumbnail"
+msgstr "YouTube pikkukuva"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_thumbnail_url
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_thumbnail_url
+msgid "YouTube Thumbnail Url"
+msgstr "YouTube pikkukuvan URL"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account__youtube_upload_playlist_id
+msgid "YouTube Upload Playlist ID"
+msgstr "YouTube Upload Playlist ID"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_video
+msgid "YouTube Video"
+msgstr "YouTube-video"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_description
+msgid "YouTube Video Description"
+msgstr "YouTube-videon kuvaus"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_video_id
+msgid "YouTube Video ID"
+msgstr "YouTube videon tunnus"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_live_post__youtube_video_id
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_video_id
+msgid "YouTube Video Id"
+msgstr "YouTube-videon ID"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_title
+msgid "YouTube Video Title"
+msgstr "YouTube-videon otsikko"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_video_url
+msgid "YouTube Video Url"
+msgstr "YouTube Video URL"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_views_count
+msgid "YouTube Views"
+msgstr "YouTube-katselut"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "YouTube did not provide a valid access token or it may have expired."
+msgstr ""
+"YouTube ei ole antanut voimassa olevaa käyttöoikeuskoodia tai sen "
+"voimassaolo on saattanut päättyä."
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "YouTube did not provide a valid authorization code."
+msgstr "YouTube ei antanut voimassa olevaa valtuutuskoodia."
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "Your channel name and picture"
+msgstr "Kanavasi nimi ja kuva"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Your description cannot exceed 5000 characters."
+msgstr "Kuvaus saa olla enintään 5000 merkkiä pitkä."
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Your title cannot exceed 100 characters."
+msgstr "Otsikko ei saa ylittää 100 merkkiä."
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_live_post.py:0
+#, python-format
+msgid "Your video is missing a correct title or description."
+msgstr "Videostasi puuttuu oikea otsikko tai kuvaus."
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid ""
+"Your videos metadata including title and view counts (but never the video "
+"itself)"
+msgstr ""
+"Videoidesi metatiedot, mukaan lukien otsikko ja katselukerrat (mutta ei "
+"koskaan itse videota)"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+msgid ""
+"e.g. Engage your entire community with a single app! "
+"https://www.odoo.com/trial"
+msgstr ""
+"esim. Ota koko yhteisösi mukaan yhdellä sovelluksella! "
+"https://www.odoo.com/trial"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+msgid "e.g. Odoo Social Tutorial"
+msgstr "esim. Odoo Social Tutorial"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "the Google Third-party app account access panel"
+msgstr "Googlen kolmannen osapuolen sovellustilin käyttöpaneeli"

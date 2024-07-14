@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.rule" id="account_281_50_form_rule">
+        <field name="name">Form 281.50 company rule</field>
+        <field name="model_id" ref="model_l10n_be_form_281_50"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record model="ir.rule" id="account_325_form_rule">
+        <field name="name">Form 325 company rule</field>
+        <field name="model_id" ref="model_l10n_be_form_325"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

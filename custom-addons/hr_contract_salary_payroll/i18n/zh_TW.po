@@ -1,0 +1,140 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_contract_salary_payroll
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_contract_salary_payroll
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.salary_package_sidebar_payroll
+msgid ""
+"<option value=\"100\" selected=\"1\">Full Time</option>\n"
+"                <option value=\"90\">9/10</option>\n"
+"                <option value=\"80\">4/5</option>\n"
+"                <option value=\"60\">3/5</option>\n"
+"                <option value=\"50\">Half Time</option>\n"
+"                <option value=\"40\">2/5</option>\n"
+"                <option value=\"20\">1/5</option>"
+msgstr ""
+"<option value=\"100\" selected=\"1\">全職</option>\n"
+"                <option value=\"90\">9/10</option>\n"
+"                <option value=\"80\">4/5</option>\n"
+"                <option value=\"60\">3/5</option>\n"
+"                <option value=\"50\">半職</option>\n"
+"                <option value=\"40\">2/5</option>\n"
+"                <option value=\"20\">1/5</option>"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_resume__code
+msgid "Code"
+msgstr "程式碼"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.ui.menu,name:hr_contract_salary_payroll.menu_hr_payroll_configuration_contract
+msgid "Contracts"
+msgstr "合約"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.ui.menu,name:hr_contract_salary_payroll.hr_payroll_menu_contract_type
+msgid "Employment Types"
+msgstr "聘用類型"
+
+#. module: hr_contract_salary_payroll
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_resume_view_search_inherit
+msgid "Impacts Monthly Total"
+msgstr "每月影響總數"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model.fields.selection,name:hr_contract_salary_payroll.selection__hr_contract_salary_resume__value_type__payslip
+msgid "Payslip Value"
+msgstr "薪資單"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model,name:hr_contract_salary_payroll.model_hr_payslip_worked_days
+msgid "Payslip Worked Days"
+msgstr "薪資單的工作天數"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model.fields,help:hr_contract_salary_payroll.field_hr_contract_salary_resume__value_type
+msgid ""
+"Pick how the value of the information is computed:\n"
+"Fixed value: Set a determined value static for all links\n"
+"Contract value: Get the value from a field on the contract record\n"
+"Payslip value: Get the value from a field on the payslip record\n"
+"Sum of Benefits value: You can pick in all benefits and compute a sum of them\n"
+"Monthly Total: The information will be a total of all the informations in the category Monthly Benefits"
+msgstr ""
+"選擇計算資料值的方式：\n"
+"固定值：為所有連結設定一個固定值\n"
+"合約：從合約記錄欄位中獲取值\n"
+"工資單：從工資單記錄欄位中獲取值\n"
+"福利總和值：你可選擇所有福利並計算總值\n"
+"每月總額：每月福利類別中所有資料的總值"
+
+#. module: hr_contract_salary_payroll
+#. odoo-javascript
+#: code:addons/hr_contract_salary_payroll/static/src/xml/brut2net_modal.xml:0
+#, python-format
+msgid ""
+"Please note that this information may be inaccurate and should be used for "
+"reference only."
+msgstr "請注意, 這項資訊可能不正確, 應該只被當成參考."
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model,name:hr_contract_salary_payroll.model_hr_contract_salary_resume
+msgid "Salary Package Resume"
+msgstr "薪資待遇"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.ui.menu,name:hr_contract_salary_payroll.hr_payroll_menu_contract_templates
+msgid "Templates"
+msgstr "範本"
+
+#. module: hr_contract_salary_payroll
+#. odoo-javascript
+#: code:addons/hr_contract_salary_payroll/static/src/xml/brut2net_modal.xml:0
+#, python-format
+msgid "The amounts are calculated  based on a full time permanent contract."
+msgstr "金額是根據全職永久合約來計算的."
+
+#. module: hr_contract_salary_payroll
+#. odoo-javascript
+#: code:addons/hr_contract_salary_payroll/static/src/xml/brut2net_modal.xml:0
+#, python-format
+msgid ""
+"There is no defined payroll structure for your contract. Please contact a "
+"responsible for more information."
+msgstr "你的合約沒有規範薪資結構, 請聯絡負責人洽詢更多資訊."
+
+#. module: hr_contract_salary_payroll
+#. odoo-python
+#: code:addons/hr_contract_salary_payroll/controllers/main.py:0
+#, python-format
+msgid ""
+"This is the gross calculated for the current month with a total of %s hours."
+msgstr "這是目前月份（總時數 %s 小時）計算得出的總額。"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_resume__value_type
+msgid "Value Type"
+msgstr "金額類型"
+
+#. module: hr_contract_salary_payroll
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.salary_package_sidebar_payroll
+msgid "Working Schedule"
+msgstr "工作安排"

@@ -1,0 +1,107 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* appointment_hr_recruitment
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,body_html:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <h2>Congratulations!</h2>\n"
+"            <div style=\"font-size: 13px;\">\n"
+"                Your application is really interesting and we'd like to plan an interview with you.<br>\n"
+"                Can you please use the button below to schedule it with one of our recruiters?\n"
+"                <br><br>\n"
+"            </div>\n"
+"            <a t-att-href=\"env['ir.config_parameter'].sudo().get_param('web.base.url') + '/book/interview'\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Plan my interview</a>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <h2>축하합니다!</h2>\n"
+"            <div style=\"font-size: 13px;\">\n"
+"                보내주신 지원서를 잘 검토하였으며 다음 면접 일정을 안내해드리고자 합니다.<br>\n"
+"                하기 버튼을 클릭하여 저희 채용 담당자와 일정을 잡아주시길 부탁드리겠습니다.\n"
+"                <br><br>\n"
+"            </div>\n"
+"            <a t-att-href=\"env['ir.config_parameter'].sudo().get_param('web.base.url') + '/book/interview'\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">면접 일정 잡기</a>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
+
+#. module: appointment_hr_recruitment
+#: model:ir.model.fields,field_description:appointment_hr_recruitment.field_appointment_invite__applicant_id
+#: model:ir.model.fields,field_description:appointment_hr_recruitment.field_calendar_event__applicant_id
+msgid "Applicant"
+msgstr "지원자"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model,name:appointment_hr_recruitment.model_appointment_invite
+msgid "Appointment Invite"
+msgstr "약속 초대"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model,name:appointment_hr_recruitment.model_appointment_type
+msgid "Appointment Type"
+msgstr "약속 유형"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model,name:appointment_hr_recruitment.model_calendar_event
+msgid "Calendar Event"
+msgstr "행사 일정표"
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,subject:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid ""
+"Can we plan an interview together for your {{ (object.job_id.name + ' ') or "
+"'' }}application?"
+msgstr "{{ (object.job_id.name + ' ') or '' }} 지원서에 대한 면접 일정을 함께 계획할 수 있습니까?"
+
+#. module: appointment_hr_recruitment
+#: model:appointment.type,name:appointment_hr_recruitment.appointment_type_interviews
+msgid "Interviews availabilities"
+msgstr "면접 가능 여부"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model.fields,help:appointment_hr_recruitment.field_appointment_invite__applicant_id
+#: model:ir.model.fields,help:appointment_hr_recruitment.field_calendar_event__applicant_id
+msgid ""
+"Link an applicant to the appointment invite created.\n"
+"Used when creating an invitation from the Meeting action in the applicant form view."
+msgstr ""
+"생성된 일정 초대에 지원자를 연결시킵니다.\n"
+"지원자 양식 화면의 회의 작업에서 초대 항목을 만들 때 사용합니다."
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,name:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid "Recruitment: Schedule interview"
+msgstr "채용: 면접 일정 잡기"
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,description:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid ""
+"Send this email when you want to schedule an interview with a candidate"
+msgstr "지원자와 면접 일정을 잡으시려면 이 이메일을 전송하세요."

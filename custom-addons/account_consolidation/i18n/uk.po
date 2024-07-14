@@ -1,0 +1,1590 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_consolidation
+# 
+# Translators:
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__account_ids_count
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__chart_account_ids_count
+msgid "# Accounts"
+msgstr "К-сть рахунків"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__group_ids_count
+msgid "# Groups"
+msgstr "К-сть груп"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__journal_ids_count
+msgid "# Journals"
+msgstr "К-сть журналів"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__period_ids_count
+msgid "# Periods"
+msgstr "К-сть періодів"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "% Control"
+msgstr "% контролю"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "% Ownership"
+msgstr "% власності"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/builder/abstract.py:0
+#, python-format
+msgid "%s (%s Currency Conversion Method)"
+msgstr "%s (%s Метод конвертації валюти)"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_period.py:0
+#, python-format
+msgid "%s Consolidated Accounting"
+msgstr "%s Консолідований облік"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "(Re)Compute"
+msgstr "(Пере)розрахувати"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "(Re)compute"
+msgstr "(Пере)розрахувати"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#, python-format
+msgid ") and the consolidated company ("
+msgstr ") і консолідована компанія ("
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#, python-format
+msgid ") have different currencies and the company is consolidated at"
+msgstr ") мають різні валюти, і компанія консолідована на"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#, python-format
+msgid ") have different currencies."
+msgstr ") мають різні валюти."
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/header.xml:0
+#, python-format
+msgid "/ End Rate: 1"
+msgstr "/ Кінцева ставка: 1"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+msgid "<span class=\"o_form_label oe_inline\">%</span>"
+msgstr "<span class=\"o_form_label oe_inline\">%</span>"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "<span class=\"o_stat_text\">Consolidated Balance</span>"
+msgstr "<span class=\"o_stat_text\">Консолідований баланс</span>"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "<span class=\"o_stat_text\">Edit</span>"
+msgstr "<span class=\"o_stat_text\">Редагувати</span>"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "<span role=\"separator\">Actions</span>"
+msgstr "<span role=\"separator\">Дії</span>"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "<span role=\"separator\">View</span>"
+msgstr "<span role=\"separator\">Переглянути</span>"
+
+#. module: account_consolidation
+#: model:ir.model.constraint,message:account_consolidation.constraint_consolidation_account_code_uniq
+msgid ""
+"A consolidation account with the same code already exists in this "
+"consolidation."
+msgstr ""
+"Консолідований рахунок з тим самим кодом вже існує у цій консолідації."
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid ""
+"A journal entry should only be linked to a company period OR to a analysis "
+"period of another consolidation!"
+msgstr ""
+"Запис у журналі має бути пов’язаний лише з періодом компанії АБО з періодом "
+"аналізу іншої консолідації!"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_account_account
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__line_ids
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "Account"
+msgstr "Рахунок"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_res_company__account_consolidation_currency_is_different
+msgid "Account Consolidation Currency Is Different"
+msgstr "Валюта консолідованого рахунку різна"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding,name:account_consolidation.onboarding_onboarding_account_consolidation_dashboard
+msgid "Account Consolidation Dashboard Onboarding"
+msgstr "Інформаційна панель консолідації рахунків"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_tree
+msgid "Account Group"
+msgstr "Група рахунків"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_group_action
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__group_ids
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration_account_sections
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_tree
+msgid "Account Groups"
+msgstr "Групи рахуків"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.account_mapping_action
+#: model:ir.actions.act_window,name:account_consolidation.account_mapping_from_period_action
+msgid "Account Mapping"
+msgstr "Співставлення рахунків"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_coa.py:0
+#, python-format
+msgid "Account Mapping: %(chart)s"
+msgstr "Співставлення рахунків: %(chart)s"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/res_company.py:0
+#, python-format
+msgid "Account Mapping: %(company)s"
+msgstr "Співставлення рахунків: %(company)s"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_period.py:0
+#, python-format
+msgid "Account Mapping: %s (for %s)"
+msgstr "Співставлення рахунків: %s (для %s)"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+msgid "Account Name"
+msgstr "Назва рахунку"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.account_mapping_search
+msgid "Account with Entries"
+msgstr "Рахунок із записами"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__account_ids
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Accounts"
+msgstr "Рахунки"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_res_company__consolidation_color
+msgid "Accounts color"
+msgstr "Колір рахунків"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_needaction
+msgid "Action Needed"
+msgstr "Необхідна дія"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Active"
+msgstr "Активно"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/views/trial_balance_grid/trial_balance_grid_controller.js:0
+#: code:addons/account_consolidation/static/src/views/trial_balance_grid/trial_balance_grid_controller.xml:0
+#, python-format
+msgid "Add a column"
+msgstr "Додати колонку"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+msgid "Additional Information"
+msgstr "Додаткова інформація"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Advanced Consolidation"
+msgstr "Розширена консолідація"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.account_mapping_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_search_mapping
+msgid "Already Mapped"
+msgstr "Вже співставлено"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__amount
+msgid "Amount"
+msgstr "Сума"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_coa.py:0
+#, python-format
+msgid ""
+"An account group can only have accounts or other groups children but not "
+"both!"
+msgstr ""
+"Група рахунків може мати лише дочірні рахунки або інші групи, але не обидва!"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__period_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Analysis Period"
+msgstr "Період аналізу"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__using_period_id
+msgid "Analysis Period Using This"
+msgstr "Період аналізу, використовуючи цей"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.analysis_period_config_action
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__period_ids
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_tree
+msgid "Analysis Periods"
+msgstr "Періоди аналізу"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,title:account_consolidation.onboarding_onboarding_step_create_consolidation_period
+msgid "Analysis period"
+msgstr "Період аналізу"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,done_text:account_consolidation.onboarding_onboarding_step_create_consolidation_period
+msgid "Analysis period created!"
+msgstr "Період аналізу створено!"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form_onboarding
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form_onboarding
+msgid "Apply"
+msgstr "Застосувати"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_attachment_count
+msgid "Attachment Count"
+msgstr "Підрахунок прикріплення"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_search
+msgid "Auto-generated"
+msgstr "Автоматичне створення"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__auto_generated
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__auto_generated
+msgid "Automatically Generated"
+msgstr "Створено автоматично"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__currency_rate_avg
+msgid "Average Currency Rate"
+msgstr "Середній курс валют"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_account__currency_mode__avg
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+msgid "Average Rate"
+msgstr "Середній курс"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/header.xml:0
+#, python-format
+msgid "Avg Rate: 1"
+msgstr "Сер. ставка: 1"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__balance
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+msgid "Balance"
+msgstr "Баланс"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form_onboarding
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form_onboarding
+msgid "Cancel"
+msgstr "Скасувати"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__chart_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__chart_id
+msgid "Chart"
+msgstr "План"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,title:account_consolidation.onboarding_onboarding_step_setup_ccoa
+msgid "Chart of Accounts"
+msgstr "План рахунків"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "Chart of accounts"
+msgstr "План рахунків"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,done_text:account_consolidation.onboarding_onboarding_step_setup_ccoa
+msgid "Chart of accounts set!"
+msgstr "План рахунків встановлено!"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_tree
+msgid "Charts"
+msgstr "Плани"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__child_ids
+msgid "Children"
+msgstr "Дочірній"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Close"
+msgstr "Закрити"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "Close period"
+msgstr "Закрити період"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_period__state__closed
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Closed"
+msgstr "Закрито"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_account__currency_mode__end
+msgid "Closing Rate"
+msgstr "Курс закриття"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__code
+msgid "Code"
+msgstr "Код"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_account_account__consolidation_color
+msgid "Color"
+msgstr "Колір"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__color
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__color
+msgid "Color Index"
+msgstr "Індекс кольору"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_res_company
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__company_ids
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__company_ids
+msgid "Companies"
+msgstr "Компанії"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__company_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__company_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.trial_balance_grid_search
+msgid "Company"
+msgstr "Компанія"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__currency_company_id
+msgid "Company Currency"
+msgstr "Валюта компанії"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__company_name
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Company Name"
+msgstr "Назва компанії"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__company_period_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+msgid "Company Period"
+msgstr "Період компанії"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_company_period_action
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__company_period_ids
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration_company_periods
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Company Periods"
+msgstr "Періоди компанії"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__company_unmapped_accounts_counts
+msgid "Company Unmapped Accounts Counts"
+msgstr "Підрахунок неспівставлених рахунків компанії"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/filters/filters.xml:0
+#, python-format
+msgid "Comparison:"
+msgstr "Порівняння:"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__composed_period_id
+msgid "Composed Analysis Period"
+msgstr "Створений період аналізу"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__composed_chart_currency_id
+msgid "Composed Consolidation Currency"
+msgstr "Створена валюта консолідації"
+
+#. module: account_consolidation
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration
+msgid "Configuration"
+msgstr "Налаштування"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/header.xml:0
+#, python-format
+msgid "Conso Rate:"
+msgstr "Ставка консол-ії:"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__account_id
+msgid "Consolidated Account"
+msgstr "Консолідований рахунок"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.account_mapping_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+msgid "Consolidated Accounts"
+msgstr "Консолідовані рахунки"
+
+#. module: account_consolidation
+#: model:account.report,name:account_consolidation.consolidated_balance_report
+#: model:ir.actions.client,name:account_consolidation.trial_balance_report_action
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "Consolidated Balance"
+msgstr "Консолідований баланс"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Consolidated Companies"
+msgstr "Консолідовані компанії"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__parents_ids
+msgid "Consolidated In"
+msgstr "Консолідовано в"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__used_in_ids
+msgid "Consolidated in"
+msgstr "Консолідовано в"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_chart_action
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_chart_action_onboarding
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__chart_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__chart_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__chart_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__chart_id
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration_charts
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Consolidation"
+msgstr "Консолідація"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_account_account__consolidation_account_ids
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__account_ids
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "Consolidation Account"
+msgstr "Консолідований рахунок"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_account_account__consolidation_account_chart_filtered_ids
+msgid "Consolidation Account Chart Filtered"
+msgstr "Відфільтрований план консолідації рахунку"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_account_action
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__using_ids
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__account_ids
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration_accounts
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "Consolidation Accounts"
+msgstr "Консолідовані рахунки"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Consolidation Chart"
+msgstr "План консолідації"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_company_period
+msgid "Consolidation Company Period"
+msgstr "Період консолідації компанії"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__currency_chart_id
+msgid "Consolidation Currency"
+msgstr "Валюта консолідації"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.Consolidation_journal_line_action
+msgid "Consolidation Entries"
+msgstr "Записи консолідації"
+
+#. module: account_consolidation
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_operations_consolidation_entries
+msgid "Consolidation Entry"
+msgstr "Запис консолідації"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_group
+msgid "Consolidation Group"
+msgstr "Група консолідації"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_tree
+msgid "Consolidation Items"
+msgstr "Елементи консолідації"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_journal
+msgid "Consolidation Journal"
+msgstr "Журнал консолідації"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_account_move_line__consolidation_journal_line_ids
+msgid "Consolidation Journal Line"
+msgstr "Рядок журналу консолідації"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__consolidation_method
+msgid "Consolidation Method"
+msgstr "Метод консолідації"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__chart_name
+msgid "Consolidation Name"
+msgstr "Назва консолідації"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_period
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__composition_id
+msgid "Consolidation Period"
+msgstr "Період консолідації"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_period_composition
+msgid "Consolidation Period Composition"
+msgstr "Створення періоду консолідації"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_rate
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__rate_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__rate_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__rate_consolidation
+msgid "Consolidation Rate"
+msgstr "Ставка консолідації"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Consolidation Rate (%)"
+msgstr "Ставка консолідації (%)"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_account
+msgid "Consolidation account"
+msgstr "Консолідований рахунок"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_chart
+msgid "Consolidation chart"
+msgstr "План консолідації"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__line_ids
+msgid "Consolidation items"
+msgstr "Елементи консолідації"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_journal_line
+msgid "Consolidation journal line"
+msgstr "Рядок журналу консолідації"
+
+#. module: account_consolidation
+#: model:res.groups,name:account_consolidation.group_consolidation_user
+msgid "Consolidation user"
+msgstr "Користувач консолідації"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,button_text:account_consolidation.onboarding_onboarding_step_create_consolidation_period
+msgid "Create"
+msgstr "Створити"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_period_action_onboarding
+msgid "Create First Period"
+msgstr "Створіть перший період"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,description:account_consolidation.onboarding_onboarding_step_create_consolidation_period
+msgid "Create your first analysis period & set the currency rates."
+msgstr "Створіть свій перший період аналізу та встановіть курси валют."
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__create_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__create_uid
+msgid "Created by"
+msgstr "Створив"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__create_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__create_date
+msgid "Created on"
+msgstr "Створено"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__currencies_are_different
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__currencies_are_different
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__currencies_are_different
+msgid "Currencies Are Different"
+msgstr "Валюта різна"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Currency"
+msgstr "Валюта"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__currency_amount
+msgid "Currency Amount"
+msgstr "Сума валюти"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__currency_mode
+msgid "Currency Conversion Method"
+msgstr "Метод конвертації валюти"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__currency_rate
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+msgid "Currency Rate"
+msgstr "Курс валюти"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period_composition__currency_rate
+msgid "Currency rate from composed chart currency to using chart currency"
+msgstr "Курс валюти зі створеної валюти плану для використання валюти плану"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_period_action
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_home
+msgid "Dashboard"
+msgstr "Дашборд"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__dashboard_sections
+msgid "Dashboard Sections"
+msgstr "Секції панелі приладів"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_tree
+msgid "Date"
+msgstr "Дата"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,button_text:account_consolidation.onboarding_onboarding_step_setup_consolidation
+msgid "Define"
+msgstr "Визначити"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,description:account_consolidation.onboarding_onboarding_step_setup_consolidation
+msgid ""
+"Define the companies that should be consolidated & the target currency."
+msgstr "Визначте компанії, які слід консолідувати, і цільову валюту."
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__note
+msgid "Description"
+msgstr "Опис"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__display_dates
+msgid "Display Dates"
+msgstr "Відображати дати"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__display_name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__display_name
+msgid "Display Name"
+msgstr "Назва для відображення"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_period__state__draft
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Draft"
+msgstr "Чернетка"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#, python-format
+msgid "Edit"
+msgstr "Редагувати"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#, python-format
+msgid "Edit %s"
+msgstr "Редагувати %s"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__currency_rate_end
+msgid "End Currency Rate"
+msgstr "Кінцевий курс валюти"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__date_company_end
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__date_analysis_end
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__date_end
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "End Date"
+msgstr "Кінцева дата"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+msgid "End Rate"
+msgstr "Кінцева ставка"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_company_period__consolidation_method__equity
+msgid "Equity"
+msgstr "Капітал"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__exclude_journal_ids
+msgid "Exclude Journals"
+msgstr "Виключити журнали"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__filtered_used_in_ids
+msgid "Filtered Used In"
+msgstr "Фільтр використовується в"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_follower_ids
+msgid "Followers"
+msgstr "Підписники"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Підписники (Партнери)"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__full_name
+msgid "Full Name"
+msgstr "Повна назва"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_company_period__consolidation_method__full
+msgid "Full consolidation"
+msgstr "Повна консолідація"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__group_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__group_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.trial_balance_grid_search
+msgid "Group"
+msgstr "Група"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "Group Name"
+msgstr "Назва групи"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Groups"
+msgstr "Групи"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__has_message
+msgid "Has Message"
+msgstr "Є повідомлення"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid "Hierarchy and Subtotals"
+msgstr "Ієрархія та підсумок"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_account__currency_mode__hist
+msgid "Historical Rate"
+msgstr "Історія курсу"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Historical Rates"
+msgstr "Історія курсу"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/res_company.py:0
+#, python-format
+msgid "Historical Rates: %(company)s"
+msgstr "Історичні ставки: %(company)s"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_company_period__currency_rate_avg
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_company_period__currency_rate_end
+msgid ""
+"How many units of company currency is needed to get 1 unit of chart currency"
+msgstr ""
+"Скільки одиниць валюти компанії потрібно, щоб отримати 1 одиницю валюти "
+"плану"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Якщо позначено, то нові повідомлення будуть потребувати вашої уваги."
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__message_has_error
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Якщо позначено, деякі повідомлення мають помилку доставки."
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "In The Future"
+msgstr "В майбутньому"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "In The Past"
+msgstr "В минулому"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__invert_sign
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__invert_sign
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__invert_sign
+msgid "Invert Balance Sign"
+msgstr "Знак інвертації балансу"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_is_follower
+msgid "Is Follower"
+msgstr "Стежить"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__journal_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_form
+msgid "Journal"
+msgstr "Журнал"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_account_move_line
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_form
+msgid "Journal Item"
+msgstr "Елемент журналу"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.view_account_move_line_filter
+msgid "Journal Items"
+msgstr "Елементи журналу"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__line_ids
+msgid "Journal lines"
+msgstr "Рядки журналу"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_journal_action
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__journal_ids
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "Journals"
+msgstr "Журнали"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/filters/filters.xml:0
+#, python-format
+msgid "Journals:"
+msgstr "Журнали:"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__write_uid
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__write_uid
+msgid "Last Updated by"
+msgstr "Востаннє оновив"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__write_date
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__write_date
+msgid "Last Updated on"
+msgstr "Останнє оновлення"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_search
+msgid "Manually Created"
+msgstr "Створено вручну"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Map Accounts"
+msgstr "Співставити рахунки"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_tree
+msgid "Mapped Accounts"
+msgstr "Співставлені рахунки"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_search_mapping
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_tree_mapping
+msgid "Mapped In"
+msgstr "Співставлено в"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_has_error
+msgid "Message Delivery error"
+msgstr "Помилка доставлення повідомлення"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_ids
+msgid "Messages"
+msgstr "Повідомлення"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__move_line_ids
+msgid "Move Line"
+msgstr "Рядок переміщень"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__name
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__name
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_tree
+msgid "Name"
+msgstr "Ім'я"
+
+#. module: account_consolidation
+#: model_terms:ir.actions.act_window,help:account_consolidation.account_mapping_action
+msgid ""
+"No accounts have been found. Make sure you have installed a chart of account"
+" for this company or that you have access right to see the accounts of this "
+"company."
+msgstr ""
+"Рахунків не знайдено. Переконайтеся, що ви встановили план рахунків для цієї"
+" компанії або у вас є право доступу для перегляду рахунків цієї компанії."
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.account_mapping_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_search_mapping
+msgid "Not Mapped"
+msgstr "Не співставлено"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_company_period__consolidation_method__none
+msgid "Not consolidated"
+msgstr "Не консолідовано"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Кількість дій"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_has_error_counter
+msgid "Number of errors"
+msgstr "Кількість помилок"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Кількість повідомлень, які вимагають дії"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Кількість повідомлень з помилковою дставкою"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_onboarding_onboarding
+msgid "Onboarding"
+msgstr "Залучення"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,step_image_alt:account_consolidation.onboarding_onboarding_step_create_consolidation_period
+msgid "Onboarding Analysis period"
+msgstr "Періоду аналізу адаптації"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,step_image_alt:account_consolidation.onboarding_onboarding_step_setup_ccoa
+msgid "Onboarding Chart of Accounts"
+msgstr "Адаптивний план рахунків"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_onboarding_onboarding_step
+msgid "Onboarding Step"
+msgstr "Крок залучення"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,step_image_alt:account_consolidation.onboarding_onboarding_step_setup_consolidation
+msgid "Onboarding The Scope of Consolidation"
+msgstr "Обсяг консолідації адаптацї"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid ""
+"Only one entry by account should be created for a generated journal entry!"
+msgstr ""
+"Для створеного запису журналу має бути створено лише один запис за рахунком!"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Only the periods containing today"
+msgstr "Лише сьогоднішні періоди"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Only the periods in the future"
+msgstr "Періоди лише в майбутньому"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Only the periods in the past"
+msgstr "Періоди лише в минулому"
+
+#. module: account_consolidation
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_operations
+msgid "Operations"
+msgstr "Операції"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__originating_currency_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__journal_originating_currency_id
+msgid "Originating Currency"
+msgstr "Похідна валюта"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#, python-format
+msgid "PDF"
+msgstr "PDF"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__parent_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_search
+msgid "Parent"
+msgstr "Батьківський"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__parent_path
+msgid "Parent Path"
+msgstr "Батьківський шлях"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__period_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__period_id
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Period"
+msgstr "Період"
+
+#. module: account_consolidation
+#: model:ir.ui.menu,name:account_consolidation.menu_consolidation_configuration_analysis_periods
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Periods"
+msgstr "Періоди"
+
+#. module: account_consolidation
+#: model:ir.model.fields.selection,name:account_consolidation.selection__consolidation_company_period__consolidation_method__proportional
+msgid "Proportional consolidation"
+msgstr "Пропорційна консолідація"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__rate
+msgid "Rate"
+msgstr "Ставка"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__rate_control
+msgid "Rate Control"
+msgstr "Контроль ставки"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__rate_ownership
+msgid "Rate Ownership"
+msgstr "Власність ставки"
+
+#. module: account_consolidation
+#: model:ir.actions.act_window,name:account_consolidation.consolidation_rate_action
+msgid "Rate Ranges"
+msgstr "Діапазон ставки"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__rating_ids
+msgid "Ratings"
+msgstr "Оцінювання"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_kanban
+msgid "Reopen period"
+msgstr "Відновити період"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Reset To Draft"
+msgstr "Зробити чернеткою"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Review Chart Of Accounts"
+msgstr "Переглянути план рахунків"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Помилка доставки SMS"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,done_text:account_consolidation.onboarding_onboarding_step_setup_consolidation
+msgid "Scope of Consolidation defined!"
+msgstr "Обсяг консолідації визначено!"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__sequence
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__sequence
+msgid "Sequence"
+msgstr "Послідовність"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+msgid "Settings"
+msgstr "Налаштування"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,button_text:account_consolidation.onboarding_onboarding_step_setup_ccoa
+msgid "Setup"
+msgstr "Встановлення"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,description:account_consolidation.onboarding_onboarding_step_setup_ccoa
+msgid ""
+"Setup your consolidated accounts and their currency conversion method.\n"
+"                Then map them with the companies accounts."
+msgstr ""
+"Встановіть ваші рахунки консолідації та їхній метод конвертації валюти.\n"
+"                Потім співставте їх з рахунками компанії."
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_company_period__rate_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_company_period__rate_control
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_company_period__rate_ownership
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period_composition__rate_consolidation
+msgid "Should be between 0 and 100 %"
+msgstr "Має бути між 0 та 100 %"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__show_on_dashboard
+msgid "Show On Dashboard"
+msgstr "Показати на панелі приладів"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/consolidation_report/filters/filter_extra_options.xml:0
+#, python-format
+msgid "Show Zero Balance Accounts"
+msgstr "Показати рахунки з нульовим балансом"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__sign
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__sign
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_group__sign
+msgid "Sign"
+msgstr "Підписати"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_company_period__date_company_begin
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__date_analysis_begin
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_rate__date_start
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "Start Date"
+msgstr "Початкова дата"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__state
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__state
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_search
+msgid "State"
+msgstr "Статус"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid "Sub-consolidated Chart"
+msgstr "Підконсолідований план"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_account__linked_chart_ids
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__children_ids
+msgid "Sub-consolidations"
+msgstr "Підконсолідації"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Sub-consolidations Periods"
+msgstr "Періоди підконсолідації"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_form
+msgid "Sub-consolidations periods"
+msgstr "Періоди підконсолідації"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "Subgroups"
+msgstr "Підгрупи"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#, python-format
+msgid "Take into account that the consolidation ("
+msgstr "Візьміть до уваги, що консолідація ("
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/move_line_list/move_line_list.xml:0
+#, python-format
+msgid "Take into account that this company is consolidated at"
+msgstr "Візьміть до уваги, що ця компанія консолідована на"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_chart__currency_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal__currency_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_journal_line__chart_currency_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__chart_currency_id
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period_composition__using_chart_currency_id
+msgid "Target Currency"
+msgstr "Цільова валюта"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_period.py:0
+#, python-format
+msgid ""
+"The Composed Analysis Period must be different from the Analysis Period"
+msgstr "Складений період аналізу повинен відрізнятися від періоду аналізу"
+
+#. module: account_consolidation
+#: model:onboarding.onboarding.step,title:account_consolidation.onboarding_onboarding_step_setup_consolidation
+msgid "The Scope of Consolidation"
+msgstr "Область консолідації валюти"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_company_period_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_period_composition_form
+msgid ""
+"The rate used for the consolidation (basically this rate will multiply the "
+"sum of everything"
+msgstr ""
+"Ставка, що використовується для консолідації (в основному ця ставка "
+"помножить суму всього"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+msgid "This journal has been automatically generated on"
+msgstr "Цей журнал автоматично створено на"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/builder/abstract.py:0
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_tree
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_tree
+#, python-format
+msgid "Total"
+msgstr "Разом"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_line_search
+#: model_terms:ir.ui.view,arch_db:account_consolidation.view_trial_balance_report_graph
+#: model_terms:ir.ui.view,arch_db:account_consolidation.view_trial_balance_report_grid
+#, python-format
+msgid "Trial Balance"
+msgstr "Оборотно-сальдова відомість"
+
+#. module: account_consolidation
+#: model:ir.model,name:account_consolidation.model_consolidation_trial_balance_report_handler
+msgid "Trial Balance Custom Handler"
+msgstr "Кастомний' обробник пробного балансу"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_period.py:0
+#, python-format
+msgid "Trial Balance: %s"
+msgstr "Оборотно-сальдова відомість: %s"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.trial_balance_grid_search
+msgid "Trial balance"
+msgstr "Оборотно-сальдова відомість"
+
+#. module: account_consolidation
+#: model:ir.model.constraint,message:account_consolidation.constraint_consolidation_period_composition__unique_composition
+msgid ""
+"Two compositions of the same analysis period by the same analysis period "
+"cannot be created"
+msgstr "Два створення одного періоду аналізу не можуть бути створені"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_journal_form
+msgid "Update"
+msgstr "Оновити"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__used_in_composition_ids
+msgid "Used In Composition"
+msgstr "Використовується у створенні"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_chart__color
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__color
+msgid "Used in the kanban view"
+msgstr "Використовується у вигляді канбану"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__using_composition_ids
+msgid "Using Composition"
+msgstr "Використовуючи створення"
+
+#. module: account_consolidation
+#: model:ir.model.fields,field_description:account_consolidation.field_consolidation_period__website_message_ids
+msgid "Website Messages"
+msgstr "Повідомлення з веб-сайту"
+
+#. module: account_consolidation
+#: model:ir.model.fields,help:account_consolidation.field_consolidation_period__website_message_ids
+msgid "Website communication history"
+msgstr "Історія бесіди на сайті"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid ""
+"When setting a period on a consolidation journal, the selected consolidation"
+" chart for the journal cannot be different from the one of the chosen "
+"period."
+msgstr ""
+"Під час встановлення періоду в журналі консолідації обраний план "
+"консолідації для журналу не може відрізнятися від обраного періоду."
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#: code:addons/account_consolidation/report/trial_balance.py:0
+#, python-format
+msgid "XLSX"
+msgstr "XLSX"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_chart_form
+msgid ""
+"You can here define complex consolidations based on other sub-"
+"consolidations, as part of a whole scheme"
+msgstr ""
+"Ви можете тут визначити комплексну консолідацію на основі інших "
+"підконсолідацій, як частину цілої схеми"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid "You can't delete an auto-generated journal entry."
+msgstr "Ви не можете видалити автоматично створений запис журналу."
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid "You can't edit an auto-generated journal entry."
+msgstr "Ви не можете редагувати автоматично створений запис журналу."
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/models/consolidation_journal.py:0
+#, python-format
+msgid "You cannot add journals to a closed period!"
+msgstr "Не можна додавати журнали до закритого періоду!"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_group_form
+msgid "e.g. Profit and Loss"
+msgstr "напр. Доходи та витрати"
+
+#. module: account_consolidation
+#: model_terms:ir.ui.view,arch_db:account_consolidation.consolidation_account_form
+msgid "e.g. Revenue"
+msgstr "напр. Прибуток"
+
+#. module: account_consolidation
+#. odoo-python
+#: code:addons/account_consolidation/report/builder/comparison.py:0
+#, python-format
+msgid "n/a"
+msgstr "немає"
+
+#. module: account_consolidation
+#. odoo-javascript
+#: code:addons/account_consolidation/static/src/components/dashboard_widget/dashboard_widget.xml:0
+#, python-format
+msgid "unmapped accounts"
+msgstr "неспівставлені рахунки"

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="worksheet_page">
+            <div class="page">
+                <h1 class="mt-4 mb-4">
+                    Quality Check: <span t-field="doc.name">QC-00123</span>
+                    <span style="float:right" t-field="doc.quality_state">Passed</span>
+                </h1>
+                <div class="oe_structure"></div>
+                <t name="origin">
+                    <div name="picking" t-if="doc.picking_id">
+                        <strong>Transfer: </strong>
+                        <span t-field="doc.picking_id.display_name">Transfer-987</span>
+                    </div>
+                    <div class="oe_structure"></div>
+                </t>
+                <div>
+                    <strong>Product: </strong>
+                    <span t-field="doc.product_id.display_name">Laptop XYZ</span>
+                </div>
+                <div class="oe_structure"></div>
+                <div name="lot" t-if="doc.lot_id">
+                    <strong>Lot/Serial Number: </strong>
+                    <span t-field="doc.lot_id.display_name">LT-00045</span>
+                </div>
+                <div class="oe_structure"></div>
+                <div t-if="doc.user_id">
+                    <strong>Tested by: </strong>
+                    <span t-field="doc.user_id.display_name">John Doe</span>
+                </div>
+                <div class="oe_structure"></div>
+                <div t-if="doc.control_date">
+                    <strong>Tested on: </strong>
+                    <span t-field="doc.control_date">2023-08-15</span>
+                </div>
+                <div>
+                    <strong>Test Type: </strong>
+                    <span t-field="doc.test_type_id.display_name">Visual Check</span>
+                </div>
+                <div t-if="doc.additional_note">
+                    <strong>Notes: </strong>
+                    <span t-field="doc.additional_note">All parameters passed.</span>
+                </div>
+                <div class="oe_structure"></div>
+                <t name="qc_content">
+                    <div t-if="doc.test_type == 'measure'">
+                        <hr/>
+                        <div>
+                            <strong>Measure: </strong>
+                            <span t-field="doc.measure">15.3 cm</span>
+                        </div>
+                        <div t-if="doc.warning_message">
+                            <strong>Warning: </strong>
+                            <span t-field="doc.warning_message">Value near threshold.</span>
+                        </div>
+                    </div>
+                    <div class="oe_structure"></div>
+                    <div t-if="doc.test_type == 'picture' and doc.picture">
+                        <hr/>
+                        <img width="750" t-attf-src="#{image_data_uri(doc.picture)}" alt="Quality Check Picture"/>
+                    </div>
+                </t>
+                <div class="oe_structure"></div>
+            </div>
+        </template>
+
+        <template id="quality_worksheet">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <t t-call="quality_control.worksheet_page" t-lang="doc.partner_id.lang"/>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="quality_worksheet_internal">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.internal_layout">
+                        <t t-call="quality_control.worksheet_page"/>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

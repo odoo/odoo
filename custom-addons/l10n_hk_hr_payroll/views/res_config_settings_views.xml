@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_hk_hr_payroll</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_payroll.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='hr_payroll_accountant']" position="inside">
+                <div class="col-lg-6 col-12 o_setting_box">
+                    <div class="o_setting_left_pane">
+                        <field name="l10n_hk_autopay"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="l10n_hk_autopay" string="Payroll HSBC Autopay"/>
+                        <div class="text-muted">
+                            Create HSBC payment
+                        </div>
+                        <div class="content-group" invisible="not l10n_hk_autopay">
+                            <div class="row mt16 ms-2">
+                                <label for="l10n_hk_autopay_type" class="col-md-6 p-0 m-0 o_light_label"></label>
+                                <field name="l10n_hk_autopay_type" class="col-lg-6 p-0" required="l10n_hk_autopay" />
+                                <label for="l10n_hk_autopay_partner_bank_id" string="Bank Account" class="col-md-6 p-0 m-0 o_light_label"></label>
+                                <field name="l10n_hk_autopay_partner_bank_id" class="col-lg-6 p-0" required="l10n_hk_autopay" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//block[@id='hr_payroll_accountant']" position="after">
+                <block title="Hong Kong Localization" id="l10n_hk_hr_payroll">
+                    <setting id="company_information" string="Company Information" help="Official Company Information" company_dependent="1">
+                        <div class="mt16 content-group">
+                            <div class="row ms-2">
+                                <label for="l10n_hk_employer_name" class="col-md-6 p-0 m-0"/>
+                                <field name="l10n_hk_employer_name" class="col-md-6 p-0"/>
+                            </div>
+                            <div class="row ms-2">
+                                <label for="l10n_hk_employer_file_number" class="col-md-6 p-0 m-0"/>
+                                <field name="l10n_hk_employer_file_number" class="col-md-6 p-0"/>
+                            </div>
+                            <div class="row ms-2">
+                                <label for="l10n_hk_manulife_mpf_scheme" class="col-md-6 p-0 m-0"/>
+                                <field name="l10n_hk_manulife_mpf_scheme" class="col-md-6 p-0"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="advantages" string="Advantages" help="Configure Default Values for Hong Kong Advantages">
+                        <div name="default_advantages" class="mt16 content-group">
+                            <div class="row ms-2">
+                                <label for="default_l10n_hk_internet" class="col-md-7 p-0 m-0"/>
+                                <div class="col-md-5 p-0">
+                                    <field name="default_l10n_hk_internet" nolabel="1"/>
+                                    <span>HKD / month</span>
+                                </div>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

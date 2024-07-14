@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="spreadsheet_edition.FilterEditorLabel">
+        <div class="o_side_panel_title">Label</div>
+        <div t-att-class="props.inputClass" class="o_required_modifier">
+            <input
+                type="text"
+                class="o_input o_global_filter_label"
+                t-att-value="props.label"
+                t-on-change="props.setLabel"
+                t-ref="labelInput"
+                t-att-placeholder="props.placeholder"/>
+        </div>
+    </t>
+
+    <t t-name="spreadsheet_edition.FilterEditorButtons">
+        <button t-if="onDelete" t-on-click="onDelete" class="o-button o_global_filter_delete text-danger">Remove</button>
+        <button t-on-click="onCancel" class="o-button o_global_filter_cancel">Cancel</button>
+        <button t-on-click="onSave" class="o-button o_global_filter_save">Save</button>
+    </t>
+
+    <t t-name="spreadsheet_edition.FilterEditorFieldMatching">
+        <div class="text-muted">
+            Match this filter to a field for each data source
+        </div>
+
+        <div t-foreach="props.fieldMatchings"
+                t-as="object"
+                t-key="object_index"
+                t-att-class="object.fieldMatch.chain ? '' : 'o_missing_field'"
+                class="o_spreadsheet_field_matching o_required_field">
+            <div>
+                <span class="fw-medium" t-esc="object.name"/>
+                <span class="o_spreadsheet_model_technical_name text-muted"> (<t t-esc="object.tag"/>)</span>
+            </div>
+            <div class="d-flex justify-content-between">
+                <div t-att-class="props.wrongFieldMatchings.includes(object_index) ? 'o_field_invalid' : ''"
+                    class="d-flex flex-column justify-content-end w-50 flex-grow-1"
+                    name="field-match"
+                >
+                    <ModelFieldSelector
+                            path="getModelField(object.fieldMatch)"
+                            resModel="object.model()"
+                            readonly="false"
+                            allowEmpty="true"
+                            isDebugMode="!!env.debug"
+                            update="(path, fieldInfo) => props.selectField(object_index, path, fieldInfo.fieldDef)"
+                            filter.bind="props.filterModelFieldSelectorField"
+                            t-key="object_index"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

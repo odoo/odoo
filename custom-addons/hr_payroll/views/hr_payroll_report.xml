@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="action_report_payslip" model="ir.actions.report">
+            <field name="name">Payslip</field>
+            <field name="model">hr.payslip</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hr_payroll.report_payslip_lang</field>
+            <field name="report_file">hr_payroll.report_payslip_lang</field>
+            <field name="print_report_name">'Payslip - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_hr_payslip"/>
+            <field name="binding_type">report</field>
+            <!-- Erase fields to avoid double PDF posting -->
+            <field name="attachment"></field>
+            <field name="attachment_use" eval="False"/>
+        </record>
+        <record id="action_report_register" model="ir.actions.report">
+            <field name="name">Contribution Registers</field>
+            <field name="model">hr.payslip.line</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hr_payroll.contribution_register</field>
+            <field name="report_file">hr_payroll.contribution_register</field>
+            <field name="binding_model_id" ref="model_hr_payslip_line"/>
+            <field name="binding_type">report</field>
+        </record>
+</odoo>

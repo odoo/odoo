@@ -1,0 +1,175 @@
+<odoo>
+    <data>
+        <record id="consolidation_account_tree" model="ir.ui.view">
+            <field name="name">consolidation.account.tree</field>
+            <field name="model">consolidation.account</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree string="Accounts">
+                    <field name="sequence" widget="handle"/>
+                    <field name="full_name" string="Name"/>
+                    <field name="chart_id" string="Consolidation"
+                           column_invisible="context.get('search_default_chart_id', False)"/>
+                    <field name="currency_mode"/>
+                    <field name="group_id" domain="[('chart_id', '=', chart_id)]"
+                           context="{'default_chart_id': chart_id, 'from_account': True}"/>
+                    <field name="account_ids" widget="many2many_tags"
+                           options="{'color_field': 'consolidation_color'}" string="Mapped Accounts" 
+                           column_invisible="context.get('from_conso_account', False)"/>
+                    <field name="using_ids" widget="many2many_tags" optional="hide"
+                           groups="base.group_no_one" column_invisible="context.get('from_conso_account', False)"/>
+                    <field name="invert_sign" widget="boolean_toggle" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="consolidation_account_tree_onboarding" model="ir.ui.view">
+            <field name="name">consolidation.account.tree.onboarding</field>
+            <field name="model">consolidation.account</field>
+            <field name="inherit_id" ref="consolidation_account_tree"/>
+            <field name="mode">primary</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree/field[@name='full_name']" position="replace">
+                    <field name="name"/>
+                </xpath>
+                <tree position="attributes">
+                    <attribute name="editable">bottom</attribute>
+                </tree>
+            </field>
+        </record>
+
+        <record id="consolidation_account_form" model="ir.ui.view">
+            <field name="name">consolidation.account.form</field>
+            <field name="model">consolidation.account</field>
+            <field name="arch" type="xml">
+                <form string="Consolidation Account">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Account Name"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Revenue" class="oe_inline"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group name="configuration">
+                                <field name="chart_id" string="Consolidation"
+                                       options="{'no_quick_create': True}"
+                                       invisible="context.get('default_chart_id', False)"/>
+                                <field name="currency_mode"/>
+                                <field name="invert_sign"/>
+                                <field name="sign" invisible="1"/>
+                            </group>
+                            <group name="display">
+                                <field name="code"/>
+                                <field name="group_id" domain="[('chart_id', '=', chart_id)]"
+                                       context="{'default_chart_id': chart_id, 'from_account': True}"/>
+                                <field name="sequence" groups="base.group_no_one"/>
+                            </group>
+                        </group>
+                        <!-- ACCOUNTS -->
+                        <field name="company_ids" invisible="1"/>
+                        <!-- // READ-->
+                        <separator name="accounts" string="Accounts"
+                                   invisible="context.get('from_mapping', False) or not account_ids" class="oe_read_only"/>
+                        <field name="account_ids"
+                               invisible="context.get('from_mapping', False) or not account_ids"
+                               domain="[('company_id', 'in', company_ids)]" class="oe_read_only">
+                            <tree edit="false">
+                                <field name="company_id"/>
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                        <!-- // EDIT -->
+                        <separator name="accounts" string="Accounts"
+                                   invisible="context.get('from_mapping', False) or not chart_id" class="oe_edit_only"/>
+                        <field name="account_ids"
+                               context="{'no_mapping':True}" invisible="context.get('from_mapping', False) or not chart_id"
+                               domain="[('company_id', 'in', company_ids)]" class="oe_edit_only">
+                            <tree edit="false">
+                                <field name="company_id"/>
+                                <field name="name"/>
+                            </tree>
+                        </field>
+
+                        <!-- CONSO ACCOUNTS -->
+                        <!-- // READ -->
+                        <field name="linked_chart_ids" invisible="1"/>
+                        <separator class="oe_read_only" name="consolidated_accounts" string="Consolidated Accounts"
+                                   invisible="context.get('from_mapping', False) or not using_ids"/>
+                        <field class="oe_read_only" name="using_ids"
+                               invisible="not chart_id or not linked_chart_ids">
+                            <tree>
+                                <field name="chart_id"/>
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                        <!-- // EDIT -->
+                        <separator class="oe_edit_only" name="consolidated_accounts" string="Consolidated Accounts"
+                                   invisible="context.get('from_mapping', False) or not chart_id"/>
+                        <field class="oe_edit_only" name="using_ids" options="{'no_create': True}"
+                               context="{'from_conso_account':True}"
+                               domain="[('id', '!=', id), ('chart_id', 'in', linked_chart_ids)]"
+                               invisible="context.get('from_mapping', False) or not chart_id" widget="many2many">
+                            <tree edit="false">
+                                <field name="chart_id"/>
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="consolidation_account_search" model="ir.ui.view">
+            <field name="name">consolidation.account.search</field>
+            <field name="model">consolidation.account</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="chart_id"/>
+                    <field name="currency_mode"/>
+                    <filter name="group_section_id" string="Group" context="{'group_by': 'group_id'}"/>
+                    <filter name="group_chart_id" string="Consolidation" context="{'group_by': 'chart_id'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="consolidation_account_search_mapping" model="ir.ui.view">
+            <field name="name">consolidation.account.search.mapping</field>
+            <field name="model">consolidation.account</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="used_in_ids" string="Mapped In"/>
+                    <filter string="Already Mapped" name="already_mapped"
+                            domain="[('filtered_used_in_ids', '!=', False)]"/>
+                    <filter string="Not Mapped" name="not_mapped"
+                            domain="[('filtered_used_in_ids', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="consolidation_account_action" model="ir.actions.act_window">
+            <field name="name">Consolidation Accounts</field>
+            <field name="res_model">consolidation.account</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="consolidation_account_search"/>
+        </record>
+
+        <record id="consolidation_account_tree_mapping" model="ir.ui.view">
+            <field name="name">consolidation.account.tree.mapping</field>
+            <field name="model">consolidation.account</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" create="false">
+                    <field name="name" readonly="1"/>
+                    <field name="filtered_used_in_ids"
+                           string="Mapped In"
+                           context="{'from_mapping': True, 'default_chart_id': context.get('chart_id')}"
+                           domain="[('chart_id','=', context.get('chart_id'))]"
+                           widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

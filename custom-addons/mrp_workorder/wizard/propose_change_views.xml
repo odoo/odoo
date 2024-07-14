@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_propose_change_wizard" model="ir.ui.view">
+        <field name="name">workorder_propose_change</field>
+        <field name="model">propose.change</field>
+        <field name="arch" type="xml">
+            <form string="Propose Change">
+                <group>
+                    <group>
+                        <field name="change_type" invisible="1"/>
+                        <field name="step_id" invisible="1"/>
+                        <field name="title" invisible="change_type != 'update_step'"/>
+                        <field name="note" invisible="change_type != 'update_step'"/>
+                        <field name="comment" invisible="change_type == 'set_picture'"/>
+                        <field name="picture" invisible="change_type != 'set_picture'" widget="image"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="process" class="btn btn-primary" type="object" string="Propose Change" data-hotkey="q"/>
+                    <button string="Discard" class="btn-default btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

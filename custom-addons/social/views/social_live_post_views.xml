@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="social_live_post_view_form" model="ir.ui.view">
+        <field name="name">social.live.post.view.form</field>
+        <field name="model">social.live.post</field>
+        <field name="arch" type="xml">
+            <form string="Social Post">
+                <header>
+                    <button name="action_retry_post" string="Retry" type="object" class="oe_highlight" invisible="state != 'failed'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group name="social_live_post_global">
+                            <field name="account_id" options="{'no_open': True}" />
+                            <field name="failure_reason" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</data>
+</odoo>

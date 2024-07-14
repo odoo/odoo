@@ -1,0 +1,27 @@
+.o_knowledge_permission_panel {
+    .text-muted {
+        font-size: 0.85rem;
+    }
+    .o_permission {
+        cursor: pointer;
+        &:disabled {
+            cursor: not-allowed;
+            &.o_knowledge_share_partner {
+                background-image: none;
+            }
+        }
+    }
+}
+
+@media (hover: hover) { // Devices supporting hover
+    .o_knowledge_permission_panel {
+        .o_delete {
+            display: none;
+        }
+        div:hover {
+            .o_delete {
+                display: inline;
+            }
+        }
+    }
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">view.employee.form.inherit.hr.employee.billable.time.target</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <group name="application_group" position="inside">
+                <label for="billable_time_target" groups="hr_timesheet.group_hr_timesheet_approver"/>
+                <div name="billable_time_target" groups="hr_timesheet.group_hr_timesheet_approver">
+                    <field name="billable_time_target" class="oe_inline" widget="timesheet_uom_no_toggle"/>
+                </div>
+            </group>
+        </field>
+    </record>
+</odoo>

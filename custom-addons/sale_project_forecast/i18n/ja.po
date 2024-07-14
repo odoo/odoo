@@ -1,0 +1,65 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_project_forecast
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:12+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,help:sale_project_forecast.field_product_product__planning_enabled
+#: model:ir.model.fields,help:sale_project_forecast.field_product_template__planning_enabled
+msgid ""
+"If enabled, a shift will automatically be generated for the selected role "
+"when confirming the Sales Order. Only employees with this role will "
+"automatically be assigned shifts for Sales Orders containing this service."
+msgstr ""
+"有効にすると、販売オーダを確認する際に、選択された役割のシフトが自動的に生成されます。この役割を持つ従業員のみ、このサービスを含む販売オーダのシフトが自動的に割り当てられます。"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,field_description:sale_project_forecast.field_product_product__planning_enabled
+#: model:ir.model.fields,field_description:sale_project_forecast.field_product_template__planning_enabled
+msgid "Plan Services"
+msgstr "サービス計画"
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_planning_slot
+msgid "Planning Shift"
+msgstr "計画シフト"
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_product_template
+msgid "Product"
+msgstr "プロダクト"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,field_description:sale_project_forecast.field_planning_slot__sale_line_id
+msgid "Sales Order Item"
+msgstr "販売オーダ項目"
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "販売オーダ明細"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,help:sale_project_forecast.field_planning_slot__sale_line_id
+msgid ""
+"Sales order item for which this shift will be performed. When sales orders "
+"are automatically planned, the remaining hours of the sales order item, as "
+"well as the role defined on the service, are taken into account."
+msgstr ""
+"このシフトが実行される販売オーダ項目。販売オーダが自動的に計画される場合、販売オーダ項目の残り時間とサービス上で定義された役割が考慮されます。"

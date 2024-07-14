@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="knowledge.ArticleFormView" t-inherit="web.FormView">
+
+        <xpath expr="//Layout" position="attributes">
+            <attribute name="className" add="'o_knowledge_form_view d-flex border-top'" separator="+"/>
+        </xpath>
+
+        <xpath expr="//t[@archInfo='archInfo']" position="before">
+            <KnowledgeSidebar record="model.root" />
+        </xpath>
+
+        <xpath expr="//t[@archInfo='archInfo']" position="after">
+            <div class="o_knowledge_backdrop cursor-pointer" t-on-click="() => this.toggleAsideMobile()"/>
+        </xpath>
+
+        <xpath expr="//t[@archInfo='archInfo']" position="attributes">
+            <attribute name="class" add="'p-0 d-flex flex-column flex-grow-1 min-w-0 mw-100'" />
+        </xpath>
+
+    </t>
+</templates>

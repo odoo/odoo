@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_task_view_gantt_inherit_sale_timesheet" model="ir.ui.view">
+        <field name="name">project.task.gantt.inherit.sale.timesheet</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_enterprise.project_task_view_gantt"/>
+        <field name="arch" type="xml">
+            <xpath expr="//gantt" position="attributes">
+                <attribute name="progress_bar" separator="," add="sale_line_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- TODO: [XBO] Remove me when the gantt view will be in OWL -->
+    <record id="project_task_view_form_in_gantt_inherit" model="ir.ui.view">
+        <field name="name">project.task.view.form.in.gantt.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project_enterprise.project_task_view_form_in_gantt"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='timesheet_ids']" position="attributes">
+                <attribute name="widget">so_line_one2many</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

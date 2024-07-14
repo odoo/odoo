@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="documents.DocumentsListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="attributes">
+            <attribute name="class">o_list_renderer o_documents_view o_renderer_with_searchpanel overflow-auto position-relative</attribute>
+            <attribute name="t-on-keydown">onGlobalKeydown</attribute>
+            <attribute name="t-on-click">onGlobalClick</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="after">
+            <t t-if="!env.inDialog">
+                <DocumentsInspector t-props="getDocumentsInspectorProps()"/>
+            </t>
+        </xpath>
+        <table position="before">
+            <DocumentsDropZone parentRoot="root"/>
+            <DocumentsFileViewer parentRoot="root" t-props="getDocumentsAttachmentViewerProps()"/>
+            <FileUploadProgressContainer fileUploads="this.documentUploads" Component="constructor.components.FileUploadProgressDataRow" shouldDisplay="(upload) => !upload.data.get('document_id')"/>
+        </table>
+        <t t-call="web.ActionHelper" position="replace">
+            <t t-if="showNoContentHelper">
+                <DocumentsActionHelper noContentHelp="props.noContentHelp"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="documents.DocumentsListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow" t-inherit-mode="primary">
+        <xpath expr="//tr[hasclass('o_data_row')]" position="attributes">
+            <attribute name="draggable">true</attribute>
+            <attribute name="t-on-dragstart.stop">(ev) => record.onDragStart(ev)</attribute>
+            <attribute name="t-on-click.stop.prevent.synthetic">(ev) => record.onRecordClick(ev)</attribute>
+        </xpath>
+        <xpath expr="//td[hasclass('o_list_record_selector')]" position="attributes">
+            <attribute name="t-on-click.stop">(ev) => record.onRecordClick(ev)</attribute>
+        </xpath>
+        <CheckBox position="replace">
+            <DocumentsListRendererCheckBox disabled="!!props.list.editedRecord or props.list.model.useSampleModel" value="record.selected" onChange.bind="(ev) => record.onRecordClick(ev, {isKeepSelection: true})"/>
+        </CheckBox>
+    </t>
+
+    <t t-name="documents.DocumentsListRendererCheckBox">
+        <div class="form-check" t-att-class="props.className" t-ref="root">
+            <input
+                t-att-id="props.id or id"
+                type="checkbox"
+                class="form-check-input"
+                t-att-disabled="props.disabled"
+                t-att-checked="props.value"
+                t-att-name="props.name"
+            />
+            <label t-att-for="props.id or id" class="form-check-label">
+                <t t-slot="default"/>
+            </label>
+        </div>
+    </t>
+</templates>

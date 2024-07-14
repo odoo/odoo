@@ -1,0 +1,125 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_event_track_social
+# 
+# Translators:
+# Algo Kärp <algokarp@gmail.com>, 2023
+# JanaAvalah, 2023
+# Andre Roomet <andreroomet@gmail.com>, 2023
+# Anna, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:22+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Anna, 2023\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_event_track_social
+#: model_terms:ir.ui.view,arch_db:website_event_track_social.event_track_view_form
+msgid "<span invisible=\"not push_reminder\">minutes before start</span>"
+msgstr "<span invisible=\"not push_reminder\">minutit enne algust</span>"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,help:website_event_track_social.field_event_track__push_reminder
+msgid ""
+"Check this if you want to send a push notification reminder to everyone that"
+" has favorited this track."
+msgstr ""
+"Check this if you want to send a push notification reminder to everyone that"
+" has favorited this track."
+
+#. module: website_event_track_social
+#: model_terms:ir.ui.view,arch_db:website_event_track_social.event_track_view_form
+msgid "Edit Push Reminder"
+msgstr "Edit Push Reminder"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_event_track__firebase_enable_push_notifications
+msgid "Enable Web Push Notifications"
+msgstr "Märguanded (näita veebilehel)"
+
+#. module: website_event_track_social
+#: model:ir.model,name:website_event_track_social.model_event_track
+msgid "Event Track"
+msgstr "Sündmuste jälgimine"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,help:website_event_track_social.field_event_track__push_reminder_delay
+msgid ""
+"How many minutes before the start of the talk do you want to send the "
+"reminder?"
+msgstr "Mitu minutit enne kõne algust soovite meeldetuletuse saata?"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_social_post__event_track_id
+msgid "Linked Event Track"
+msgstr "Seotud sündmuse jälgimisega"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_website_visitor__event_track_push_enabled_ids
+msgid "Push Enabled Tracks"
+msgstr "Push Enabled Tracks"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_event_track__push_reminder
+#: model_terms:ir.ui.view,arch_db:website_event_track_social.event_track_view_form
+msgid "Push Reminder"
+msgstr "Push Reminder"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_event_track__push_reminder_delay
+msgid "Push Reminder Delay"
+msgstr "Push Reminder Delay"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,field_description:website_event_track_social.field_event_track__push_reminder_posts
+msgid "Push Reminders"
+msgstr "Push Reminders"
+
+#. module: website_event_track_social
+#: model:ir.model,name:website_event_track_social.model_social_post
+msgid "Social Post"
+msgstr "Sotsiaalmeedia postitus"
+
+#. module: website_event_track_social
+#. odoo-python
+#: code:addons/website_event_track_social/models/event_track.py:0
+#, python-format
+msgid "There are no push reminders associated with this track"
+msgstr "There are no push reminders associated with this track"
+
+#. module: website_event_track_social
+#: model:ir.model.fields,help:website_event_track_social.field_website_visitor__event_track_push_enabled_ids
+msgid ""
+"Tracks that are 'default favorited' can be blacklisted and the visitor is "
+"removed from push reminders."
+msgstr ""
+"Tracks that are 'default favorited' can be blacklisted and the visitor is "
+"removed from push reminders."
+
+#. module: website_event_track_social
+#: model:ir.model,name:website_event_track_social.model_website_visitor
+msgid "Website Visitor"
+msgstr "Veebilehe Külastaja"
+
+#. module: website_event_track_social
+#. odoo-python
+#: code:addons/website_event_track_social/models/event_track.py:0
+#, python-format
+msgid "Your favorite track '%s' will start in %s minutes!"
+msgstr "Teie lemmik jälgimine '%s' algab %s mõne minuti pärast!"
+
+#. module: website_event_track_social
+#. odoo-python
+#: code:addons/website_event_track_social/models/event_track.py:0
+#, python-format
+msgid "Your track is about to start!"
+msgstr "Teie jälgimine on kohe algamas!"

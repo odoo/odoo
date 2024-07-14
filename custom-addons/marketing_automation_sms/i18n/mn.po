@@ -1,0 +1,215 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* marketing_automation_sms
+#
+# Translators:
+# tserendavaa tsogtoo <tseegii011929@gmail.com>, 2022
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2022
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-16 16:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:47+0000\n"
+"Last-Translator: Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2022\n"
+"Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
+"Language: mn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_campaign__mailing_sms_count
+msgid "# SMS Mailings"
+msgstr ""
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid "<i class=\"fa fa-exclamation-circle\"/> Bounced after"
+msgstr ""
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid "<i class=\"fa fa-hand-pointer-o\"/> Clicked after"
+msgstr "<i class=\"fa fa-hand-pointer-o\"/> Дарсны дараа"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid "<i class=\"fa fa-hand-pointer-o\"/> Not clicked within"
+msgstr ""
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid "<i class=\"fa fa-pie-chart\"/> Details"
+msgstr "<i class=\"fa fa-pie-chart\"/> Дэлэнгэрэнгүй"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid ""
+"<i data-trigger-type=\"sms_click\" class=\"fa fa-hand-pointer-o o_ma_text_processed o_add_child_activity text-success\" title=\"Clicked\" role=\"img\" aria-label=\"Clicked\"/>\n"
+"                    <i data-trigger-type=\"sms_not_click\" class=\"fa fa-hand-pointer-o o_ma_text_rejected o_add_child_activity text-danger\" title=\"Not Clicked\" role=\"img\" aria-label=\"Not Clicked\"/>\n"
+"                    <i data-trigger-type=\"sms_bounce\" class=\"fa fa fa-exclamation-circle o_ma_text_rejected o_add_child_activity text-danger\" title=\"Bounced\" role=\"img\" aria-label=\"Bounced\"/>"
+msgstr ""
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_activity__activity_type
+msgid "Activity Type"
+msgstr "Ажилбарын төрөл"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid "Bounced"
+msgstr "Эзэндээ хүрээгүй"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid "Clicked"
+msgstr "Дарсан"
+
+#. module: marketing_automation_sms
+#. odoo-python
+#: code:addons/marketing_automation_sms/models/marketing_activity.py:0
+#, python-format
+msgid "Exception in SMS Marketing: %s"
+msgstr ""
+
+#. module: marketing_automation_sms
+#: model:ir.model,name:marketing_automation_sms.model_mailing_trace
+msgid "Mailing Statistics"
+msgstr "Мэйлийн статистик"
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_activity__mass_mailing_id_mailing_type
+msgid "Mailing Type"
+msgstr ""
+
+#. module: marketing_automation_sms
+#: model:ir.model,name:marketing_automation_sms.model_marketing_activity
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_sms_composer__marketing_activity_id
+msgid "Marketing Activity"
+msgstr "Маркетинг ажилбар"
+
+#. module: marketing_automation_sms
+#: model:ir.actions.act_window,name:marketing_automation_sms.mail_mass_mailing_action_marketing_automation_sms
+msgid "Marketing Automation SMS"
+msgstr "МСЖ Маркетингийн Автоматжуулалт "
+
+#. module: marketing_automation_sms
+#: model:ir.model,name:marketing_automation_sms.model_marketing_campaign
+msgid "Marketing Campaign"
+msgstr "Маркетингийн Аян"
+
+#. module: marketing_automation_sms
+#: model:ir.model,name:marketing_automation_sms.model_marketing_trace
+msgid "Marketing Trace"
+msgstr "Маркетинг ул мөр"
+
+#. module: marketing_automation_sms
+#: model:ir.model,name:marketing_automation_sms.model_mailing_mailing
+msgid "Mass Mailing"
+msgstr "Масс имэйл илгээх"
+
+#. module: marketing_automation_sms
+#. odoo-python
+#: code:addons/marketing_automation_sms/models/marketing_trace.py:0
+#, python-format
+msgid "Parent activity SMS bounced"
+msgstr ""
+
+#. module: marketing_automation_sms
+#. odoo-python
+#: code:addons/marketing_automation_sms/models/marketing_trace.py:0
+#, python-format
+msgid "Parent activity SMS clicked"
+msgstr ""
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields.selection,name:marketing_automation_sms.selection__marketing_activity__activity_type__sms
+#: model:ir.model.fields.selection,name:marketing_automation_sms.selection__marketing_activity__mass_mailing_id_mailing_type__sms
+#: model:ir.model.fields.selection,name:marketing_automation_sms.selection__marketing_activity__trigger_category__sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_tree
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_participant_view_form
+msgid "SMS"
+msgstr "Мессеж"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.mailing_mailing_view_form_marketing_activity
+msgid "SMS Content"
+msgstr "Мессеж Агууллага"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.mailing_mailing_view_form_marketing_activity
+msgid "SMS Options"
+msgstr "МСЖ сонголтууд"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid "SMS Sent"
+msgstr "Илгээгдсэн МСЖ"
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_activity_view_form
+msgid "SMS Template"
+msgstr "Загвар МСЖ"
+
+#. module: marketing_automation_sms
+#. odoo-python
+#: code:addons/marketing_automation_sms/models/marketing_activity.py:0
+#, python-format
+msgid "SMS canceled"
+msgstr ""
+
+#. module: marketing_automation_sms
+#. odoo-python
+#: code:addons/marketing_automation_sms/models/mailing_trace.py:0
+#: code:addons/marketing_automation_sms/models/marketing_activity.py:0
+#, python-format
+msgid "SMS failed"
+msgstr "Бүтэлгүйтсэн МСЖ"
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields.selection,name:marketing_automation_sms.selection__marketing_activity__trigger_type__sms_bounce
+msgid "SMS: bounced"
+msgstr ""
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields.selection,name:marketing_automation_sms.selection__marketing_activity__trigger_type__sms_click
+msgid "SMS: clicked"
+msgstr ""
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields.selection,name:marketing_automation_sms.selection__marketing_activity__trigger_type__sms_not_click
+msgid "SMS: not clicked"
+msgstr ""
+
+#. module: marketing_automation_sms
+#: model:ir.model,name:marketing_automation_sms.model_sms_composer
+msgid "Send SMS Wizard"
+msgstr ""
+
+#. module: marketing_automation_sms
+#: model_terms:ir.ui.view,arch_db:marketing_automation_sms.marketing_campaign_view_form
+msgid "Sent"
+msgstr "Илгээгдсэн"
+
+#. module: marketing_automation_sms
+#. odoo-python
+#: code:addons/marketing_automation_sms/models/marketing_activity.py:0
+#, python-format
+msgid "To use this feature you should be an administrator or belong to the marketing automation group."
+msgstr ""
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_activity__trigger_category
+msgid "Trigger Category"
+msgstr ""
+
+#. module: marketing_automation_sms
+#: model:ir.model.fields,field_description:marketing_automation_sms.field_marketing_activity__trigger_type
+msgid "Trigger Type"
+msgstr "Гол төрөл"

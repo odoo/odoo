@@ -1,0 +1,173 @@
+<odoo>
+    <data>
+        <record model="ir.actions.server" id="action_account_reports_customer_statements_do_followup">
+            <field name="name">Process Automatic Follow-ups</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="binding_model_id" ref="model_res_partner" />
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.action_manually_process_automatic_followups()
+            </field>
+        </record>
+
+        <record id="customer_statements_form_view" model="ir.ui.view">
+            <field name="name">customer.statements.followup</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <form create="false" delete="false">
+                    <header>
+                        <button string="Follow up" name="%(manual_reminder_action)d"
+                                type="action" class="button btn-primary" invisible="followup_status != 'in_need_of_action'"/>
+                        <button string="Follow up" name="%(manual_reminder_action)d"
+                                type="action" class="button btn-secondary" invisible="followup_status == 'in_need_of_action'"/>
+                        <button string="Reconcile" name="action_open_unreconciled_partner"
+                                class="btn btn-secondary" type="object"/>
+                        <field name="followup_line_id" widget="statusbar" options="{'clickable': '1'}"/>
+                    </header>
+                    <sheet>
+                        <field name="followup_status" invisible="1"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="get_formview_action"
+                                    icon="fa-user">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Customer</span>
+                                </div>
+                            </button>
+                            <button class="oe_stat_button" type="object" name="action_view_unpaid_invoices"
+                                    icon="fa-pencil-square-o">
+                                <field string="Invoices" name="unpaid_invoices_count" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="In need of action"
+                                bg_color="text-bg-danger"
+                                invisible="followup_status != 'in_need_of_action'"/>
+                        <widget name="web_ribbon" title="With overdue invoices"
+                                bg_color="text-bg-warning"
+                                invisible="followup_status != 'with_overdue_invoices'"/>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="True" required="True" class="oe_inline"/> <small><field name="trust" widget="followup_trust_widget" class="oe_inline"/></small></h1>
+                        </div>
+                        <group name="schedule">
+                            <group>
+                                <field name="followup_reminder_type" widget="radio" options="{'horizontal': true}"/>
+                                <field name="followup_responsible_id"/>
+                            </group>
+                            <group>
+                                <field name="followup_next_action_date"/>
+                            </group>
+                        </group>
+                        <field name="unreconciled_aml_ids">
+                            <tree create="false" delete="false" editable="bottom" default_order="date_maturity asc" no_open="true">
+                                <field name="currency_id" column_invisible="True"/>
+                                <field name="invoice_date" string="Date"/>
+                                <field name="move_name" string="Reference" widget="open_move_widget"/>
+                                <field name="date_maturity" widget="remaining_days"/>
+                                <field name="invoice_origin" optional="show"/>
+                                <field name="expected_pay_date" widget="date" optional="show"/>
+                                <field name="blocked" string="Exclude from Follow-ups" optional="show" widget="boolean_toggle"/>
+                                <field name="amount_residual_currency" string="Residual Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="amount_currency" string="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}" optional="hide"/>
+                            </tree>
+                        </field>
+                        <group class="oe_invoice_lines_tab">
+                            <group class="oe_subtotal_footer">
+                                <field name="currency_id" invisible="1"/>
+                                <field name="total_due" style="font-weight: bold; font-size: 1.2em;" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="total_overdue" style="font-weight: bold; font-size: 1.2em;" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="customer_statements_tree_view" model="ir.ui.view">
+            <field name="name">customer.statements.tree</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <tree string="Follow-up Reports Tree View" create="false" import="false" delete="false" sample="1">
+                    <field name="currency_id" column_invisible="True"/>
+                    <field name="name"/>
+                    <field name="followup_responsible_id" widget="many2one_avatar_user"/>
+                    <field name="user_id" widget="many2one_avatar_user" optional="hide"/>
+                    <field name="followup_reminder_type"/>
+                    <field name="followup_status" widget="badge"
+                           decoration-danger="followup_status == 'in_need_of_action'"
+                           decoration-warning="followup_status == 'with_overdue_invoices'"
+                           decoration-info="followup_status == 'no_action_needed'"/>
+                    <field name="followup_next_action_date" optional="show" widget="remaining_days"/>
+                    <field name="followup_line_id"/>
+                    <field name="total_due" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total"/>
+                    <field name="total_overdue" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="activity_ids" widget="list_activity"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="customer_statements_search_view" model="ir.ui.view">
+            <field name="name">customer.statements.search</field>
+            <field name="model">res.partner</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="followup_responsible_id"/>
+                    <field name="followup_line_id"/>
+                    <field name="followup_status"/>
+                    <filter string="Assigned to me"
+                            name="filter_assigned_to_me"
+                            domain="['|', ('followup_responsible_id', '=', uid), ('user_id', '=', uid)]">
+                    </filter>
+                    <separator/>
+                    <filter string="Automatic"
+                            name="filter_include_automatic"
+                            domain="[('followup_reminder_type', '=', 'automatic')]"/>
+                    <filter string="Manual"
+                            name="filter_exclude_automatic"
+                            domain="[('followup_reminder_type', '=', 'manual')]"/>
+                    <separator/>
+                    <filter string="Overdue Invoices"
+                            name="filter_with_overdue_invoices"
+                            domain="[('followup_status', 'in', ('in_need_of_action', 'with_overdue_invoices'))]"/>
+                    <filter string="In need of action"
+                            name="filter_in_need_of_action"
+                            domain="[('followup_status', '=', 'in_need_of_action')]"/>
+                    <separator/>
+                    <group expand="0" name="group_by" string="Group By">
+                        <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}" />
+                        <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_view_list_customer_statements" model="ir.actions.act_window">
+            <field name="name">Follow-up Reports</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="customer_statements_search_view"/>
+            <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('customer_statements_tree_view')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('customer_statements_form_view')})]"/>
+            <field name="domain">['|', ('parent_id', '=', False), ('is_company', '=', True), ('customer_rank', '>', 0)]</field>
+            <field name="context">{'search_default_filter_with_overdue_invoices': 1, 'res_partner_search_mode': 'customer'}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                No follow-up to send!
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="customer_statements_menu" name="Follow-up Reports" parent="account.menu_finance_receivables" groups="account.group_account_invoice"
+                action="action_view_list_customer_statements" sequence="20"/>
+
+    </data>
+</odoo>

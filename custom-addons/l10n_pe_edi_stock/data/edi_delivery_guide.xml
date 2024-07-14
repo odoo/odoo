@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="sunat_guiaremision">
+            <DespatchAdvice xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+                xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns="urn:oasis:names:specification:ubl:schema:xsd:DespatchAdvice-2"
+                t-translation="off">
+                <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+                <cbc:CustomizationID>2.0</cbc:CustomizationID>
+                <cbc:ID t-out='document_number'/>
+                <cbc:IssueDate t-out='date_issue'/>
+                <cbc:IssueTime t-out='time_issue'/>
+                <cbc:DespatchAdviceTypeCode
+                    listAgencyName="PE:SUNAT"
+                    listName="Tipo de Documento"
+                    listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo01">09</cbc:DespatchAdviceTypeCode>
+                <cbc:Note t-if="l10n_pe_edi_observation" t-out='l10n_pe_edi_observation[:250]'/>
+                <cac:AdditionalDocumentReference t-if="record.l10n_pe_edi_reason_for_transfer and record.l10n_pe_edi_related_document_type">
+                    <cbc:ID t-if="record.l10n_pe_edi_document_number"><t t-out="record.l10n_pe_edi_document_number"/></cbc:ID>
+                    <cbc:DocumentTypeCode
+                        listAgencyName="PE:SUNAT"
+                        listName="Documento relacionado al transporte"
+                        listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo61"><t t-out="record.l10n_pe_edi_related_document_type"/></cbc:DocumentTypeCode>
+                    <cbc:DocumentType><t t-out="related_document"/></cbc:DocumentType>
+                    <cac:IssuerParty t-if="record.l10n_pe_edi_related_document_type in ('01', '03', '04', '09', '12', '48')">
+                        <cac:PartyIdentification>
+                            <cbc:ID t-att-schemeID="record.company_id.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code"
+                                schemeName="Documento de Identidad"
+                                schemeAgencyName="PE:SUNAT"
+                                schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo06"><t t-out='record.company_id.vat'/></cbc:ID>
+                        </cac:PartyIdentification>
+                    </cac:IssuerParty>
+                </cac:AdditionalDocumentReference>
+                <cac:DespatchSupplierParty>
+                    <cac:Party>
+                        <cac:PartyIdentification>
+                            <cbc:ID t-att-schemeID="record.company_id.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code"
+                                schemeName="Documento de Identidad"
+                                schemeAgencyName="PE:SUNAT"
+                                schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo06"><t t-out='record.company_id.vat'/></cbc:ID>
+                        </cac:PartyIdentification>
+                        <cac:PartyLegalEntity>
+                            <cbc:RegistrationName><t t-out='record.company_id.name'/></cbc:RegistrationName>
+                        </cac:PartyLegalEntity>
+                    </cac:Party>
+                </cac:DespatchSupplierParty>
+                <cac:DeliveryCustomerParty>
+                    <cac:Party>
+                        <cac:PartyIdentification>
+                            <cbc:ID t-att-schemeID="record.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code"
+                                schemeName="Documento de Identidad"
+                                schemeAgencyName="PE:SUNAT"
+                                schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo06"><t t-out='record.partner_id.vat'/></cbc:ID>
+                        </cac:PartyIdentification>
+                        <cac:PartyLegalEntity>
+                            <cbc:RegistrationName><t t-out='record.partner_id.commercial_partner_id.name'/></cbc:RegistrationName>
+                        </cac:PartyLegalEntity>
+                    </cac:Party>
+                </cac:DeliveryCustomerParty>
+                <cac:BuyerCustomerParty t-if="record.l10n_pe_edi_reason_for_transfer in ('03', '13')">
+                    <cac:Party>
+                        <cac:PartyIdentification>
+                            <cbc:ID t-att-schemeID="record.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code"
+                                schemeName="Documento de Identidad"
+                                schemeAgencyName="PE:SUNAT"
+                                schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo06"><t t-out='record.partner_id.vat'/></cbc:ID>
+                        </cac:PartyIdentification>
+                        <cac:PartyLegalEntity>
+                            <cbc:RegistrationName><t t-out='record.partner_id.commercial_partner_id.name'/></cbc:RegistrationName>
+                        </cac:PartyLegalEntity>
+                    </cac:Party>
+                </cac:BuyerCustomerParty>
+                <cac:Shipment>
+                    <cbc:ID>SUNAT_Envio</cbc:ID>
+                    <cbc:HandlingCode listAgencyName="PE:SUNAT"
+                        listName="Motivo de traslado"
+                        listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo20"><t t-out='record.l10n_pe_edi_reason_for_transfer'/></cbc:HandlingCode>
+                    <cbc:HandlingInstructions><t t-out='reason_for_transfer'/></cbc:HandlingInstructions>
+                    <cbc:GrossWeightMeasure t-att-unitCode="weight_uom.l10n_pe_edi_measure_unit_code"><t t-out='format_float(record.weight, 3)'/></cbc:GrossWeightMeasure>
+                    <cbc:SpecialInstructions t-if="record.l10n_pe_edi_vehicle_id.is_m1l">SUNAT_Envio_IndicadorTrasladoVehiculoM1L</cbc:SpecialInstructions>
+                    <cac:ShipmentStage>
+                        <cbc:TransportModeCode listName="Modalidad de traslado"
+                            listAgencyName="PE:SUNAT"
+                            listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo18"><t t-out='record.l10n_pe_edi_transport_type'/></cbc:TransportModeCode>
+                        <cac:TransitPeriod>
+                            <cbc:StartDate t-out='format_date(record.l10n_pe_edi_departure_start_date)'/>
+                        </cac:TransitPeriod>
+                        <cac:CarrierParty>
+                            <cac:PartyIdentification t-if="record.l10n_pe_edi_transport_type == '01'">
+                                <cbc:ID t-att-schemeID="record.l10n_pe_edi_operator_id.l10n_latam_identification_type_id.l10n_pe_vat_code"
+                                    schemeName="Documento de Identidad"
+                                    schemeAgencyName="PE:SUNAT"
+                                    schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo06"><t t-out='record.l10n_pe_edi_operator_id.vat'/></cbc:ID>
+                           </cac:PartyIdentification>
+                           <cac:PartyLegalEntity>
+                               <cbc:RegistrationName t-if="record.l10n_pe_edi_transport_type == '01'"><t t-out='record.l10n_pe_edi_operator_id.name'/></cbc:RegistrationName>
+                               <cbc:CompanyID><t t-out='record.l10n_pe_edi_operator_id.l10n_pe_edi_mtc_number'/></cbc:CompanyID>
+                           </cac:PartyLegalEntity>
+                               <cac:AgentParty>
+                                    <cac:PartyLegalEntity>
+                                        <cbc:CompanyID
+                                            t-att-schemeID="record.l10n_pe_edi_operator_id.l10n_pe_edi_authorization_issuing_entity"
+                                            schemeName="Entidad Autorizadora"
+                                            schemeAgencyName="PE:SUNAT"
+                                            schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogoD37"><t t-out='record.l10n_pe_edi_operator_id.l10n_pe_edi_authorization_number'/></cbc:CompanyID>
+                                    </cac:PartyLegalEntity>
+                               </cac:AgentParty>
+                        </cac:CarrierParty>
+                        <cac:DriverPerson t-if="record.l10n_pe_edi_transport_type == '02' and not record.l10n_pe_edi_vehicle_id.is_m1l">
+                            <cbc:ID t-att-schemeID="record.l10n_pe_edi_operator_id.l10n_latam_identification_type_id.l10n_pe_vat_code"
+                                schemeName="Documento de Identidad"
+                                schemeAgencyName="PE:SUNAT"
+                                schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo06"><t t-out='record.l10n_pe_edi_operator_id.vat'/></cbc:ID>
+                            <cbc:FirstName><t t-out='record.l10n_pe_edi_operator_id.name'/></cbc:FirstName>
+                            <cbc:FamilyName><t t-out='record.l10n_pe_edi_operator_id.name'/></cbc:FamilyName>
+                            <cbc:JobTitle>Principal</cbc:JobTitle>
+                            <cac:IdentityDocumentReference t-if="record.l10n_pe_edi_operator_id.l10n_pe_edi_operator_license">
+                                <cbc:ID><t t-out='record.l10n_pe_edi_operator_id.l10n_pe_edi_operator_license'/></cbc:ID>
+                            </cac:IdentityDocumentReference>
+                        </cac:DriverPerson>
+                    </cac:ShipmentStage>
+                    <cac:Delivery>
+                        <cac:DeliveryAddress>
+                            <cbc:ID schemeName="Ubigeos"
+                                schemeAgencyName="PE:INEI"><t t-out="record.partner_id.l10n_pe_district.code"/></cbc:ID>
+                            <t t-if="record.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code == '6'">
+                                <cbc:AddressTypeCode
+                                    t-att-listID="record.partner_id.vat"
+                                    listAgencyName="PE:SUNAT"
+                                    listName="Establecimientos anexos">0</cbc:AddressTypeCode>
+                            </t>
+                            <cac:AddressLine>
+                                <cbc:Line><t t-out="'%s %s %s %s' % (record.partner_id.street or '', record.partner_id.l10n_pe_district.name or '', record.partner_id.city or '', record.partner_id.state_id.name or '')"/></cbc:Line>
+                            </cac:AddressLine>
+                        </cac:DeliveryAddress>
+                        <cac:Despatch>
+                            <cac:DespatchAddress>
+                                <cbc:ID schemeName="Ubigeos"
+                                    schemeAgencyName="PE:INEI"><t t-out="warehouse_address.l10n_pe_district.code"/></cbc:ID>
+                                <cbc:AddressTypeCode t-att-listID="warehouse_address.vat"
+                                    listAgencyName="PE:SUNAT"
+                                    listName="Establecimientos anexos">0</cbc:AddressTypeCode>
+                                <cac:AddressLine>
+                                    <cbc:Line><t t-out="'%s %s %s %s' % (warehouse_address.street or '', warehouse_address.l10n_pe_district.name or '', warehouse_address.city or '', warehouse_address.state_id.name or '')"/></cbc:Line>
+                                </cac:AddressLine>
+                            </cac:DespatchAddress>
+                        </cac:Despatch>
+                    </cac:Delivery>
+                    <cac:TransportHandlingUnit>
+                        <cac:TransportEquipment t-if="record.l10n_pe_edi_transport_type == '02' and record.l10n_pe_edi_vehicle_id">
+                            <cbc:ID><t t-out="record.l10n_pe_edi_vehicle_id.license_plate"/></cbc:ID>
+                            <cac:ShipmentDocumentReference>
+                                <cbc:ID t-att-schemeID="record.l10n_pe_edi_vehicle_id.authorization_issuing_entity"
+                                    schemeName="Entidad Autorizadora"
+                                    schemeAgencyName="PE:SUNAT"><t t-out='record.l10n_pe_edi_vehicle_id.authorization_issuing_entity_number'/></cbc:ID>
+                            </cac:ShipmentDocumentReference>
+                        </cac:TransportEquipment>
+                    </cac:TransportHandlingUnit>
+                </cac:Shipment>
+                <t t-foreach="moves" t-as="move">
+                    <cac:DespatchLine>
+                        <cbc:ID t-out="move_index + 1"/>
+                        <cbc:DeliveredQuantity t-att-unitCode="move.product_uom.l10n_pe_edi_measure_unit_code"
+                            unitCodeListID="UN/ECE rec 20"
+                            unitCodeListAgencyName="United Nations Economic Commission for Europe"><t t-out='format_float(move.quantity, 10)'/></cbc:DeliveredQuantity>
+                        <cac:OrderLineReference>
+                            <cbc:LineID t-out="move_index + 1"/>
+                        </cac:OrderLineReference>
+                        <cac:Item>
+                            <cbc:Description t-out="move.product_id.name[:250]"/>
+                            <cac:SellersItemIdentification t-if="move.product_id.barcode or move.product_id.default_code">
+                                <cbc:ID t-out="move.product_id.barcode or move.product_id.default_code"/>
+                            </cac:SellersItemIdentification>
+                            <cac:CommodityClassification>
+                                <cbc:ItemClassificationCode listID="UNSPSC"
+                                    listAgencyName="GS1 US"
+                                    listName="Item Classification"><t t-out='move.product_id.unspsc_code_id.code'/></cbc:ItemClassificationCode>
+                            </cac:CommodityClassification>
+                            <cac:AdditionalItemProperty>
+                                <cbc:Name>Indicador de bien regulado por SUNAT</cbc:Name>
+                                <cbc:NameCode listAgencyName="PE:SUNAT"
+                                    listName="Propiedad del item"
+                                    listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo55"><t t-out='move.product_id.barcode or move.product_id.default_code'/></cbc:NameCode>
+                                <cbc:Value>0</cbc:Value>
+                            </cac:AdditionalItemProperty>
+                            <cac:AdditionalItemProperty t-if="move.product_id.l10n_pe_edi_tariff_fraction">
+                                <cbc:Name>Subpartida nacional</cbc:Name>
+                                <cbc:NameCode listAgencyName="PE:SUNAT"
+                                    listName="Propiedad del item"
+                                    listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo55">7020</cbc:NameCode>
+                                <cbc:Value><t t-out="move.product_id.l10n_pe_edi_tariff_fraction"/></cbc:Value>
+                            </cac:AdditionalItemProperty>
+                        </cac:Item>
+                    </cac:DespatchLine>
+                </t>
+            </DespatchAdvice>
+        </template>
+    </data>
+</odoo>

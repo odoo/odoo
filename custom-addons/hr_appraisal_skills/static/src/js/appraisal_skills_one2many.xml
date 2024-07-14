@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="hr_appraisal_skills.AppraisalSkillsListRenderer" t-inherit-mode="primary" t-inherit="hr_skills.SkillsListRenderer">
+        <xpath expr="//table" position="attributes">
+            <attribute name="t-attf-class" add="{{ props.showSampleData ? 'o_appraisal_blur' : '' }}" separator=" "/>
+        </xpath>
+
+        <xpath expr="//thead" position="attributes">
+            <attribute name="style"/>
+        </xpath>
+
+        <xpath expr="//div[@name='skills_available']//button" position="replace">
+            <button t-on-click="props.onAdd" class="btn btn-secondary btn-sm" role="button" t-if="isEditable">
+                Add new skills
+            </button>
+        </xpath>
+
+        <xpath expr="//div[@name='skills_header']" position="replace"/>
+    </t>
+
+    <t t-name="hr_appraisal_skills.AppraisalSkillsListRenderer.Rows" t-inherit-mode="primary" t-inherit="hr_skills.SkillsListRenderer.Rows">
+        <xpath expr="//t[@t-as='skill_group']" position="after">
+            <t t-if="props.showSampleData">
+                <t t-foreach="sampleRecords" t-as="record" t-key="record_index">
+                    <tr class="o_skill_sample_row">
+                        <td><span class="o_skill_sample_text" t-attf-style="width: {{record.skill}};"/></td>
+                        <td><span class="o_skill_sample_text" t-attf-style="width: {{record.level}};"/></td>
+                        <td><span class="o_skill_sample_progress" t-attf-style="width: {{record.progress}};"/></td>
+                        <td><span class="o_skill_sample_text" t-attf-style="width: {{record.justification}};"/></td>
+                    </tr>
+                </t>
+            </t>
+        </xpath>
+    </t>
+</templates>

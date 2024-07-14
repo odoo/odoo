@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.DocumentsActivityRenderer">
+        <div class="o_activity_view o_documents_view h-100 w-100 d-flex" t-ref="root">
+            <div class="flex-grow-1 overflow-auto">
+                <t t-if="!props.activityTypes.length" t-call="web.NoContentHelper"/>
+                <table t-else="" class="table table-bordered mb-5 bg-view o_activity_view_table flex-grow-1">
+                    <t t-call="mail.ActivityViewHeader"/>
+                    <t t-call="mail.ActivityViewBody"/>
+                    <t t-call="mail.ActivityViewFooter"/>
+                </table>
+                <DocumentsFileViewer parentRoot="root" t-props="getDocumentsAttachmentViewerProps()"/>
+            </div>
+            <DocumentsInspector t-props="getDocumentsInspectorProps()"/>
+        </div>
+    </t>
+</templates>

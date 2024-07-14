@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="account_assembly_hours" model="account.analytic.account">
+            <field name="code">ASML - HOUR</field>
+            <field name="name">Costing Account For Hours of Assembly.</field>
+            <field name="plan_id" ref="analytic.analytic_plan_internal"/>
+
+        </record>
+
+        <record id="account_assembly_cycle" model="account.analytic.account">
+            <field name="code">ASML - Cycle</field>
+            <field name="name">Costing Account For Cycle of Assembly.</field>
+            <field name="plan_id" ref="analytic.analytic_plan_internal"/>
+        </record>
+
+        <!-- Resource: mrp.workcenter -->
+
+        <record id="mrp.mrp_workcenter_3" model="mrp.workcenter">
+            <field name="costs_hour">85.25</field>
+        </record>
+
+        <record id="mrp.mrp_workcenter_3" model="mrp.workcenter">
+            <field name="costs_hour">34.59</field>
+        </record>
+
+        <record id="mrp.mrp_workcenter_1" model="mrp.workcenter">
+            <field name="costs_hour">20</field>
+        </record>
+
+        <record id="mrp.mrp_workcenter_2" model="mrp.workcenter">
+            <field name="costs_hour">70.30</field>
+        </record>
+
+</odoo>

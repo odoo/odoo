@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="exception_approval_request_canceled"
+    name="Message: Alert on purchase orders when cancel an Approval Request may modify the wanted quantities.">
+    <div>
+        <p>
+            Exception occurred: the Approval Request
+            <t t-foreach="approval_requests" t-as="approval_request">
+                <a href="#" data-oe-model="approval.request" t-att-data-oe-id="approval_request.id">
+                    <t t-esc="approval_request.name"/>
+                </a>
+            </t> has been canceled.
+            Manual actions may be needed.
+        </p>
+        <div class="mt16">
+            <p>Exception(s):</p>
+            <ul>
+                <li t-foreach="product_lines" t-as="line">
+                    <a href="#" data-oe-model="approval.request" t-att-data-oe-id="line.approval_request_id.id">
+                        <t t-esc="line.approval_request_id.name"/>
+                    </a>:
+                    <t t-esc="line.po_uom_qty"/>
+                    <t t-esc="line.product_uom_category_id.name"/> of
+                    <t t-esc="line.product_id.name"/> cancelled
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>
+</odoo>

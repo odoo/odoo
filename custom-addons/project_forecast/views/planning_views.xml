@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- planning.slot views -->
+    <record id="planning_slot_view_tree" model="ir.ui.view">
+        <field name="name">planning.slot.tree</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='role_id']" position="after">
+                <field name="project_id" optional="show" options="{'no_open': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="planning_slot_view_form" model="ir.ui.view">
+        <field name="name">planning.slot.form</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='role_id']" position="after">
+                <field name="project_id" groups="!project.group_project_user" options="{'no_open': True}"/>
+                <field name="project_id" groups="project.group_project_user"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="planning_slot_view_calendar" model="ir.ui.view">
+        <field name="name">planning.slot.calendar</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_calendar"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='role_id']" position="after">
+                <field name="project_id" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="planning_view_kanban" model="ir.ui.view">
+        <field name="name">planning.slot.form</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_kanban"/>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <xpath expr="/kanban" position="inside">
+                <field name="project_id"/>
+            </xpath>
+            <xpath expr="//t[@name='role']" position="after">
+                <div class="o_kanban_record_title mb-2">
+                    <field name="project_id"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="planning_slot_view_search" model="ir.ui.view">
+        <field name="name">planning.slot.search</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_search_base"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='role_id']" position="after">
+                <field name="project_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='my_role']" position="after">
+                <filter string="My Projects" name="my_project" domain="[('project_id.user_id','=', uid)]" groups="project.group_project_user"/>
+            </xpath>
+            <xpath expr="//filter[@name='group_by_role']" position="after">
+                <filter name="group_by_project" string="Project" context="{'group_by': 'project_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--  overridden gantt view for project forecast with custom JS class  -->
+    <record id="planning_view_gantt" model="ir.ui.view">
+        <field name="name">planning.slot.gantt</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_gantt"/>
+        <field name="mode">extension</field>
+        <field name="arch" type="xml">
+            <xpath expr="/gantt" position="attributes">
+                <attribute name="js_class">forecast_gantt</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="planning_view_form_in_gantt_inherit_project_forecast" model="ir.ui.view">
+        <field name="name">planning.slot.form.gantt</field>
+        <field name="model">planning.slot</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="planning.planning_view_form_in_gantt"/>
+        <field name="arch" type="xml">
+            <xpath expr="//footer/button[@name='action_self_unassign']" position="replace"/>
+        </field>
+    </record>
+
+    <record id="planning_view_gantt_inherit" model="ir.ui.view">
+        <field name="name">planning.slot.gantt</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning_view_gantt"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="/gantt" position="attributes">
+                <attribute name="form_view_id">%(planning_view_form_in_gantt_inherit_project_forecast)d</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="planning_view_gantt_group_by_project" model="ir.ui.view">
+        <field name="name">planning.slot.gantt.inherit.project.project.forecast</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_gantt"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="/gantt" position="attributes">
+                <attribute name="default_group_by">project_id</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="planning_action_schedule_by_project_pivot_inherit" model="ir.ui.view">
+        <field name="name">planning.action.schedule.project.view.pivot.inherit</field>
+        <field name="inherit_id" ref="planning.planning_view_pivot"/>
+        <field name="model">planning.slot</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='start_datetime']" position="replace">
+                <field name="project_id" type="row"/>
+            </xpath>
+            <field name="resource_id" position="replace"/>
+        </field>
+    </record>
+
+    <record id="planning_action_schedule_by_project_graph_inherit" model="ir.ui.view">
+        <field name="name">planning.action.schedule.project.view.graph.inherit</field>
+        <field name="inherit_id" ref="planning.planning_action_schedule_by_resource_view_graph_inherit"/>
+        <field name="model">planning.slot</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='resource_id']" position="before">
+                <field name="project_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- actions -->
+    <record id="planning_action_schedule_by_project" model="ir.actions.act_window">
+        <field name="name">Schedule by Project</field>
+        <field name="res_model">planning.slot</field>
+        <field name="view_mode">gantt,calendar,tree,form,kanban,pivot,graph</field>
+        <field name="context">{
+            'planning_groupby_project': True,
+            'planning_expand_resource': 1, 'planning_expand_role': 1, 'planning_expand_project': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No shifts found. Let's create one!
+            </p><p>
+                Schedule your human and material resources across roles, projects and sales orders.
+            </p>
+        </field>
+    </record>
+
+        <record id="planning_action_schedule_by_project_view_gantt" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">gantt</field>
+            <field name="view_id" ref="planning_view_gantt_group_by_project"/>
+            <field name="act_window_id" ref="planning_action_schedule_by_project"/>
+        </record>
+
+        <record id="planning_action_schedule_by_project_view_calendar" model="ir.actions.act_window.view">
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="planning.planning_view_calendar"/>
+            <field name="act_window_id" ref="planning_action_schedule_by_project"/>
+        </record>
+
+        <record id="planning_action_schedule_by_project_view_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="planning.planning_view_tree"/>
+            <field name="act_window_id" ref="planning_action_schedule_by_project"/>
+        </record>
+
+        <record id="planning_action_schedule_by_project_view_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="30"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="planning.planning_view_kanban"/>
+            <field name="act_window_id" ref="planning_action_schedule_by_project"/>
+        </record>
+
+        <record id="planning_action_schedule_by_project_view_pivot" model="ir.actions.act_window.view">
+            <field name="sequence" eval="40"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="planning_action_schedule_by_project_pivot_inherit"/>
+            <field name="act_window_id" ref="planning_action_schedule_by_project"/>
+        </record>
+
+        <record id="planning_action_schedule_by_project_view_graph" model="ir.actions.act_window.view">
+            <field name="sequence" eval="50"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="planning_action_schedule_by_project_graph_inherit"/>
+            <field name="act_window_id" ref="planning_action_schedule_by_project"/>
+        </record>
+
+        <record id="project_forecast_action_schedule_by_employee" model="ir.actions.act_window">
+            <field name="name">Schedule by Resource</field>
+            <field name="res_model">planning.slot</field>
+            <field name="view_mode">gantt,calendar,tree,form,kanban,pivot,graph</field>
+            <field name="view_id" ref="project_forecast.planning_view_gantt"/>
+            <field name="context">{
+                'planning_expand_resource': 1, 'planning_expand_role': 1,
+                'planning_expand_project': 1,
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No shifts found. Let's create one!
+                </p><p>
+                    Schedule your human and material resources across roles, projects and sales orders.
+                </p>
+            </field>
+        </record>
+
+        <record id="project_forecast_action_schedule_by_employee_view_gantt" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">gantt</field>
+            <field name="view_id" ref="planning_view_gantt"/>
+            <field name="act_window_id" ref="project_forecast_action_schedule_by_employee"/>
+        </record>
+
+        <record id="project_forecast_action_schedule_by_employee_view_calendar" model="ir.actions.act_window.view">
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="planning.planning_view_calendar"/>
+            <field name="act_window_id" ref="project_forecast_action_schedule_by_employee"/>
+        </record>
+
+        <record id="project_forecast_action_schedule_by_employee_view_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="planning.planning_view_tree"/>
+            <field name="act_window_id" ref="project_forecast_action_schedule_by_employee"/>
+        </record>
+
+        <record id="project_forecast_action_schedule_by_employee_view_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="30"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="planning.planning_view_kanban"/>
+            <field name="act_window_id" ref="project_forecast_action_schedule_by_employee"/>
+        </record>
+
+        <record id="project_forecast_action_schedule_by_employee_view_pivot" model="ir.actions.act_window.view">
+            <field name="sequence" eval="40"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="planning.planning_action_schedule_by_resource_view_pivot_inherit"/>
+            <field name="act_window_id" ref="project_forecast_action_schedule_by_employee"/>
+        </record>
+
+        <record id="project_forecast_action_schedule_by_employee_view_graph" model="ir.actions.act_window.view">
+            <field name="sequence" eval="50"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="planning.planning_action_schedule_by_resource_view_graph_inherit"/>
+            <field name="act_window_id" ref="project_forecast_action_schedule_by_employee"/>
+        </record>
+
+    <!-- Override action contexts to allow group_expand to apply for project_id and task_id -->
+    <record id="planning.planning_action_my_calendar" model="ir.actions.act_window">
+        <field name="context">{
+            'search_default_my_shifts': 1, 'search_default_open_shifts': 1, 'search_default_unwanted_shifts': 1,
+            'planning_expand_resource': 1, 'planning_expand_role': 1, 'planning_expand_project': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No shifts found. Let's create one!
+            </p><p>
+                Find here your planning. Assign yourself open shifts that match your roles, or indicate your unavailability.
+            </p>
+        </field>
+    </record>
+
+    <record id="planning.planning_action_schedule_by_resource" model="ir.actions.act_window">
+        <field name="context">{
+            'planning_expand_resource': 1, 'planning_expand_role': 1,
+            'planning_expand_project': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No shifts found. Let's create one!
+            </p><p>
+                Schedule your human and material resources across roles, projects and sales orders.
+            </p>
+        </field>
+    </record>
+
+    <record id="planning.planning_action_schedule_by_role" model="ir.actions.act_window">
+        <field name="context">{
+            'planning_groupby_role': True, 'planning_expand_resource': 1,
+            'planning_expand_role': 1, 'planning_expand_project': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No shifts found. Let's create one!
+            </p><p>
+                Schedule your human and material resources across roles, projects and sales orders.
+            </p>
+        </field>
+    </record>
+
+    <!-- menus -->
+    <menuitem
+        id="planning_menu_schedule_by_project"
+        name="By Project"
+        sequence="30"
+        parent="planning.planning_menu_schedule"
+        action="planning_action_schedule_by_project"/>
+
+    <!--  override of the schedule by resource menu entry to take into account the option
+          project_forecast_display_allocated_time  -->
+        <menuitem
+            id="planning.planning_menu_schedule_by_resource"
+            name="By Resource"
+            sequence="10"
+            parent="planning.planning_menu_schedule"
+            action="project_forecast_action_schedule_by_employee"/>
+</odoo>

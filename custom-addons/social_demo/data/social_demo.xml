@@ -1,0 +1,163 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+<data noupdate="1">
+    <!-- COMMON DEMO DATA -->
+
+    <record id="res_partner_1" model="res.partner">
+        <field name="name">Wood Corner</field>
+        <field name="is_company">1</field>
+        <field name="image_1920" type="base64" file="base/static/img/res_partner_1-image.png"/>
+    </record>
+
+    <record id="res_partner_2" model="res.partner">
+        <field name="name">Deco Addict</field>
+        <field name="is_company">1</field>
+        <field name="image_1920" type="base64" file="base/static/img/res_partner_2-image.png"/>
+    </record>
+    <record id="res_partner_3" model="res.partner">
+        <field name="name">Gemini Furniture</field>
+        <field name="is_company">1</field>
+        <field name="image_1920" type="base64" file="base/static/img/res_partner_3-image.png"/>
+    </record>
+    <record id="res_partner_4" model="res.partner">
+        <field name="name">Ready Mat</field>
+        <field name="is_company">1</field>
+        <field name="image_1920" type="base64" file="base/static/img/res_partner_4-image.png"/>
+    </record>
+    <record id="res_partner_10" model="res.partner">
+        <field name="name">The Jackson Group</field>
+        <field name="is_company">1</field>
+        <field name="image_1920" type="base64" file="base/static/img/res_partner_10-image.jpg"/>
+    </record>
+
+    <record id="product_product_4" model="product.product">
+        <field name="name">Desk</field>
+        <field name="image_1920" type="base64" file="product/static/img/table02.jpg"/>
+    </record>
+    <record id="product_product_4b" model="product.product">
+        <field name="name">Desk Variant B</field>
+        <field name="image_1920" type="base64" file="product/static/img/table04.jpg"/>
+    </record>
+    <record id="product_product_4c" model="product.product">
+        <field name="name">Desk Variant C</field>
+        <field name="image_1920" type="base64" file="product/static/img/table03.jpg"/>
+    </record>
+    <record id="product_product_4d" model="product.product">
+        <field name="name">Desk Variant D</field>
+        <field name="image_1920" type="base64" file="product/static/img/table01.jpg"/>
+    </record>
+
+    <record id="social_utm_campaign" model="utm.campaign">
+        <field name="name">Social Campaign</field>
+        <field name="user_id" ref="base.user_admin" />
+    </record>
+
+    <!-- BASE ACCOUNTS FOR EVERY MEDIA -->
+
+    <record id="social_account_facebook" model="social.account">
+        <field name="name">My Company</field>
+        <field name="audience">1836</field>
+        <field name="audience_trend">15</field>
+        <field name="engagement">18736</field>
+        <field name="engagement_trend">4</field>
+        <field name="stories">5672</field>
+        <field name="stories_trend">-3</field>
+        <field name="has_trends" eval="True" />
+        <field name="image" type="base64" file="base/static/img/res_partner_2-image.png"/>
+        <field name="media_id" ref="social_facebook.social_media_facebook"/>
+    </record>
+
+    <record id="social_account_twitter" model="social.account">
+        <field name="name">My Company</field>
+        <field name="audience">1336</field>
+        <field name="engagement">24358</field>
+        <field name="stories">7834</field>
+        <field name="image" type="base64" file="base/static/img/res_partner_2-image.png"/>
+        <field name="media_id" ref="social_twitter.social_media_twitter"/>
+    </record>
+
+    <record id="social_account_linkedin" model="social.account">
+        <field name="name">My Company</field>
+        <field name="audience">1337</field>
+        <field name="audience_trend">15</field>
+        <field name="engagement">7713</field>
+        <field name="engagement_trend">35</field>
+        <field name="stories">31337</field>
+        <field name="stories_trend">7</field>
+        <field name="has_trends" eval="True" />
+        <field name="media_id" ref="social_linkedin.social_media_linkedin"/>
+        <field name="linkedin_account_urn">urn:li:organization:31337</field>
+    </record>
+
+    <record id="social_account_youtube" model="social.account">
+        <field name="name">My Company</field>
+        <field name="image" type="base64" file="base/static/img/res_partner_2-image.png"/>
+        <field name="has_trends" eval="False" />
+        <field name="media_id" ref="social_youtube.social_media_youtube"/>
+        <field name="linkedin_account_urn">urn:li:organization:31337</field>
+    </record>
+
+    <record id="social_account_instagram" model="social.account">
+        <field name="name">My Company</field>
+        <field name="audience">1487</field>
+        <field name="audience_trend">12</field>
+        <field name="engagement">14781</field>
+        <field name="engagement_trend">6</field>
+        <field name="stories">-1</field>
+        <field name="stories_trend">-1</field>
+        <field name="has_trends" eval="True" />
+        <field name="image" type="base64" file="base/static/img/res_partner_2-image.png"/>
+        <field name="media_id" ref="social_instagram.social_media_instagram"/>
+    </record>
+
+    <!-- GLOBAL POSTS -->
+
+    <record id="social_post_global" model="social.post">
+        <field name="message">Our new product has been released 🎉 Check it out!</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="published_date" eval="time.strftime('%Y-01-05 08:00:00')"/>
+        <field name="state">posted</field>
+        <field name="account_ids" eval="[(6, 0, [ref('social_demo.social_account_facebook'), ref('social_demo.social_account_twitter'), ref('social_demo.social_account_linkedin')])]" />
+    </record>
+
+    <record id="social_post_global_2_image_1" model="ir.attachment">
+        <field name="name">Table Model 1</field>
+        <field name="datas" type="base64" file="social_demo/static/img/table01.jpg"/>
+        <field name="mimetype">image/jpeg</field>
+    </record>
+
+    <record id="social_post_global_2_image_2" model="ir.attachment">
+        <field name="name">Table Model 2</field>
+        <field name="datas" type="base64" file="product/static/img/table02.jpg"/>
+        <field name="mimetype">image/png</field>
+    </record>
+
+    <record id="social_post_global_2_image_3" model="ir.attachment">
+        <field name="name">Table Model 3</field>
+        <field name="datas" type="base64" file="product/static/img/table03.jpg"/>
+        <field name="mimetype">image/png</field>
+    </record>
+
+    <record id="social_post_global_2" model="social.post">
+        <field name="message">Get 20% out of your purchases on https://mycompany.com/shop
+Better run to our website while it lasts 🏃</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="published_date" eval="time.strftime('%Y-01-07 09:00:00')"/>
+        <field name="state">posted</field>
+        <field name="utm_campaign_id" ref="social_utm_campaign" />
+        <field name="account_ids" eval="[(6, 0, [ref('social_demo.social_account_facebook'), ref('social_demo.social_account_twitter'), ref('social_demo.social_account_linkedin'), ref('social_demo.social_account_instagram')])]" />
+        <field name="image_ids" eval="[(6, 0, [ref('social_demo.social_post_global_2_image_1'), ref('social_demo.social_post_global_2_image_2'), ref('social_demo.social_post_global_2_image_3')])]"/>
+    </record>
+
+    <record id="social_post_global_3" model="social.post">
+        <field name="message">We are glad to announce a new product for this year! 🍾</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="published_date" eval="time.strftime('%Y-01-10 09:00:00')"/>
+        <field name="state">posted</field>
+        <field name="utm_campaign_id" ref="social_utm_campaign" />
+        <field name="youtube_title">Happy New Year!</field>
+        <field name="youtube_video_id">m5FAPOdqWUc</field>
+        <field name="account_ids" eval="[(6, 0, [ref('social_demo.social_account_facebook'), ref('social_demo.social_account_twitter'), ref('social_demo.social_account_linkedin'), ref('social_demo.social_account_youtube')])]" />
+    </record>
+</data>
+</odoo>

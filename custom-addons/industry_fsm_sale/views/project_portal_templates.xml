@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="worksheet_time_and_material">
+        <t t-set="order" t-value="doc.sale_order_id"/>
+        <t t-set="final_subtotal" t-value="0"/>
+        <t t-set="final_tax" t-value="0"/>
+        <t t-set="final_total" t-value="0"/>
+        <t t-set="amount_due" t-value="0"/>
+        <t t-set="is_any_total_discount_line" t-value="False"/>
+        <t t-foreach="order.order_line" t-as="line">
+            <t t-set="is_task" t-value="line == doc.sale_line_id"/>
+            <t t-set="use_qty_delivered" t-value="is_task and line.product_id.service_policy != 'ordered_prepaid'"/>
+            <t t-if="use_qty_delivered">
+                <t t-set="final_subtotal" t-value="final_subtotal + line.delivered_price_subtotal"/>
+                <t t-set="final_tax" t-value="final_tax + line.delivered_price_tax"/>
+                <t t-set="amount_due" t-value="amount_due + line.delivered_price_total - sum(line.invoice_lines.mapped('price_total'))"/>
+                <t t-set="is_any_total_discount_line" t-value="is_any_total_discount_line or (line.discount and line.price_unit != 0 and line.delivered_price_total == 0)"/>
+            </t>
+            <t t-else="">
+                <t t-set="final_subtotal" t-value="final_subtotal + line.price_subtotal"/>
+                <t t-set="final_tax" t-value="final_tax + line.price_tax"/>
+                <t t-set="amount_due" t-value="amount_due + line.price_total - sum(line.invoice_lines.mapped('price_total'))"/>
+                <t t-set="is_any_total_discount_line" t-value="is_any_total_discount_line or (line.discount and line.price_unit != 0 and line.price_total == 0)"/>
+            </t>
+        </t>
+        <t t-set="display_discount" t-value="any(line.discount for line in order.order_line)"/>
+        <t t-if="doc.allow_billable and order and (final_subtotal != 0 or is_any_total_discount_line)">
+            <div>
+                <table class="table table-sm o_main_table">
+                    <thead>
+                        <tr>
+                            <th class="text-start">Product</th>
+                            <th class="text-end">Quantity</th>
+                            <th t-if="final_subtotal != 0 or is_any_total_discount_line" class="text-end">Unit Price</th>
+                            <th t-if="final_tax" class="text-end">Taxes</th>
+                            <th t-if="display_discount" class="text-end" groups="product.group_discount_per_so_line">
+                                <span>Disc.%</span>
+                            </th>
+                            <th class="text-end">
+                                <span t-if="final_subtotal != 0 or is_any_total_discount_line">Amount</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="sale_tbody">
+
+                        <t t-set="current_subtotal" t-value="0"/>
+
+                        <t t-foreach="order.order_line" t-as="line">
+                            <t t-set="is_task" t-value="line == doc.sale_line_id"/>
+                            <t t-set="use_qty_delivered" t-value="is_task and line.product_id.service_policy != 'ordered_prepaid'"/>
+                            <t t-if="use_qty_delivered">
+                                <t t-set="is_total_discount" t-value="line.discount and line.price_unit != 0 and line.delivered_price_total == 0"/>
+                            </t>
+                            <t t-else="">
+                                <t t-set="is_total_discount" t-value="line.discount and line.price_unit != 0 and line.price_total == 0"/>
+                            </t>
+                            <t t-if="(is_task and line.delivered_price_total > 0) or ((not use_qty_delivered and line.price_total > 0)) or (not is_task and line.price_total > 0) or is_total_discount">
+                                <t t-if="use_qty_delivered">
+                                    <t t-set="current_subtotal" t-value="current_subtotal + line.delivered_price_subtotal"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
+                                </t>
+
+                                <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''" t-att-style="'background-color: #F1F1F1;' if line_index % 2 == 0 else ''">
+                                    <t t-if="not line.display_type and not line.is_downpayment">
+                                        <td><span t-field="line.name"/></td>
+                                        <td class="text-end">
+                                            <span t-if="use_qty_delivered" t-field="line.qty_delivered"/>
+                                            <span t-else="" t-field="line.product_uom_qty"/>
+                                            <span t-field="line.product_uom" groups="uom.group_uom"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-options='{"widget": "monetary"}' t-if="(is_task and line.delivered_price_total != 0) or (not use_qty_delivered and line.price_total != 0) or (not is_task and line.price_total != 0) or is_total_discount" t-field="line.price_unit"/>
+                                        </td>
+                                        <td t-if="final_tax" class="text-end">
+                                            <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_id))"/>
+                                        </td>
+                                        <td t-if="display_discount" class="text-end" groups="product.group_discount_per_so_line">
+                                            <span t-field="line.discount"/>
+                                        </td>
+                                        <td class="text-end o_price_total">
+                                            <t t-if="use_qty_delivered">
+                                                <span t-if="line.delivered_price_subtotal != 0 or is_total_discount" t-field="line.delivered_price_subtotal"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span t-if="line.price_subtotal != 0 or is_total_discount" t-field="line.price_subtotal"/>
+                                            </t>
+                                        </td>
+                                    </t>
+                                    <t t-if="line.display_type == 'line_section'">
+                                        <td colspan="99">
+                                            <span t-field="line.name"/>
+                                        </td>
+                                        <t t-set="current_section" t-value="line"/>
+                                        <t t-set="current_subtotal" t-value="0"/>
+                                    </t>
+                                    <t t-if="line.display_type == 'line_note'">
+                                        <td colspan="99">
+                                            <span t-field="line.name"/>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                            <t t-if="current_section and (line_last or doc.sale_order_id.order_line[line_index+1].display_type == 'line_section')">
+                                <tr class="is-subtotal text-end">
+                                    <td colspan="99">
+                                        <strong class="mr16">Subtotal</strong>
+                                        <span
+                                            t-esc="current_subtotal"
+                                            t-options='{"widget": "monetary", "display_currency": doc.sale_order_id.currency_id}'
+                                        />
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="container_subtotal" name="so_total_summary">
+                <div id="total" class="row justify-content-end" name="total">
+                    <div t-attf-class="#{'col-6' if report_type == 'pdf' else 'col-auto'}">
+                        <table t-if="final_subtotal != 0 or is_any_total_discount_line" class="table table-sm">
+                            <tr t-if="final_tax" class="border-black o_subtotal" style="">
+                                <td><strong>Untaxed amount</strong></td>
+                                <td class="text-end">
+                                    <span t-esc="final_subtotal" t-options='{"widget": "monetary", "display_currency": doc.sale_order_id.currency_id}'/>
+                                </td>
+                            </tr>
+                            <tr t-if="final_tax">
+                                <td><strong>Taxes</strong></td>
+                                <td class="text-end">
+                                    <span t-esc="final_tax" t-options='{"widget": "monetary", "display_currency": doc.sale_order_id.currency_id}'/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total</strong></td>
+                                <td class="text-end">
+                                    <span t-esc="final_subtotal + final_tax" t-options='{"widget": "monetary", "display_currency": doc.sale_order_id.currency_id}'/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Amount Due: </strong></td>
+                                <td class="text-end">
+                                    <span t-esc="amount_due" t-options='{"widget": "monetary", "display_currency": doc.sale_order_id.currency_id}'/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_my_task_inherit" inherit_id="project.portal_my_task">
+        <xpath expr="//div[@name='amount_due']" position="attributes">
+            <attribute name="t-if">(task.sale_line_id.untaxed_amount_to_invoice &gt; 0) and not task._show_time_and_material()</attribute>
+        </xpath>
+    </template>
+
+    <template id="portal_my_task" inherit_id="hr_timesheet.portal_my_task">
+        <xpath expr="//li[@id='nav-header']" position="after">
+            <li t-if="task._show_time_and_material()" class="nav-item">
+                <a class="nav-link p-0" href="#time_and_material">
+                    Time &amp; Material
+                </a>
+            </li>
+        </xpath>
+        <xpath expr="//div[@id='card_body']/div[@t-if='timesheets and allow_timesheets']" position="before">
+            <div class="container" t-if="task._show_time_and_material()">
+                <hr class="mt-4 mb-4"/>
+                <h5 id="time_and_material" class="mt-2 mb-2" data-anchor="true">Time &amp; Material</h5>
+                <t t-set="doc" t-value="task"/>
+                <t t-call="industry_fsm_sale.worksheet_time_and_material"/>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

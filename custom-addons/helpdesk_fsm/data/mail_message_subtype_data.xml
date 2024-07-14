@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Mail Message Subtypes -->
+    <record id="mt_ticket_task_done" model="mail.message.subtype">
+        <field name="name">Task Done</field>
+        <field name="sequence">19</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="default" eval="False"/>
+        <field name="internal" eval="True"/>
+        <field name="description">Task Done</field>
+    </record>
+    <record id="mt_ticket_task_canceled" model="mail.message.subtype">
+        <field name="name">Task Canceled</field>
+        <field name="sequence">19</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="default" eval="False"/>
+        <field name="internal" eval="True"/>
+        <field name="description">Task Canceled</field>
+    </record>
+    <record id="mt_team_ticket_task_done" model="mail.message.subtype">
+        <field name="name">Task Done</field>
+        <field name="sequence">14</field>
+        <field name="res_model">helpdesk.team</field>
+        <field name="default" eval="False"/>
+        <field name="internal" eval="True"/>
+        <field name="parent_id" ref="mt_ticket_task_done"/>
+        <field name="description">Task Done</field>
+        <field name="relation_field">team_id</field>
+    </record>
+</odoo>

@@ -1,0 +1,119 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* helpdesk_account
+# 
+# Translators:
+# Martin Trigaux, 2023
+# Tamás Németh <ntomasz81@gmail.com>, 2023
+# gezza <geza.nagy@oregional.hu>, 2023
+# krnkris, 2023
+# Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023\n"
+"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: helpdesk_account
+#: model:ir.model,name:helpdesk_account.model_account_move_reversal
+msgid "Account Move Reversal"
+msgstr "Könyvelési visszafordított mozgás "
+
+#. module: helpdesk_account
+#. odoo-python
+#: code:addons/helpdesk_account/controllers/portal.py:0
+#, python-format
+msgid "Credit Note"
+msgstr "Jóváírás"
+
+#. module: helpdesk_account
+#. odoo-python
+#: code:addons/helpdesk_account/controllers/portal.py:0
+#: code:addons/helpdesk_account/models/helpdesk_ticket.py:0
+#: model:ir.model.fields,field_description:helpdesk_account.field_helpdesk_ticket__invoice_ids
+#: model_terms:ir.ui.view,arch_db:helpdesk_account.helpdesk_ticket_view_form_inherit_helpdesk_invoicing
+#, python-format
+msgid "Credit Notes"
+msgstr "Jóváírások"
+
+#. module: helpdesk_account
+#: model:ir.model.fields,field_description:helpdesk_account.field_helpdesk_ticket__invoices_count
+msgid "Credit Notes Count"
+msgstr ""
+
+#. module: helpdesk_account
+#: model:ir.model,name:helpdesk_account.model_helpdesk_ticket
+#: model:ir.model.fields,field_description:helpdesk_account.field_account_move_reversal__helpdesk_ticket_id
+msgid "Helpdesk Ticket"
+msgstr "Ügyfélszolgálati hibajegy"
+
+#. module: helpdesk_account
+#. odoo-python
+#: code:addons/helpdesk_account/wizard/account_move_reversal.py:0
+#, python-format
+msgid "Helpdesk Ticket #%s"
+msgstr "Ügyfélszolgálati hibajegy #%s"
+
+#. module: helpdesk_account
+#: model_terms:ir.ui.view,arch_db:helpdesk_account.view_account_move_reversal_inherit_helpdesk_account
+msgid "Invoices to Refund"
+msgstr ""
+
+#. module: helpdesk_account
+#: model:ir.model,name:helpdesk_account.model_account_move
+msgid "Journal Entry"
+msgstr "Könyvelési tétel"
+
+#. module: helpdesk_account
+#: model:ir.model.fields,field_description:helpdesk_account.field_account_move_reversal__move_ids
+msgid "Move"
+msgstr "Mozgás"
+
+#. module: helpdesk_account
+#: model:ir.actions.act_window,name:helpdesk_account.helpdesk_ticket_action_refund
+#: model_terms:ir.ui.view,arch_db:helpdesk_account.helpdesk_ticket_view_form_inherit_helpdesk_invoicing
+msgid "Refund"
+msgstr "Visszatérítés"
+
+#. module: helpdesk_account
+#. odoo-python
+#: code:addons/helpdesk_account/models/account_move.py:0
+#, python-format
+msgid "Refund %(status)s"
+msgstr ""
+
+#. module: helpdesk_account
+#: model:mail.message.subtype,name:helpdesk_account.mt_ticket_refund_created
+msgid "Refund Created"
+msgstr ""
+
+#. module: helpdesk_account
+#. odoo-python
+#: code:addons/helpdesk_account/wizard/account_move_reversal.py:0
+#, python-format
+msgid "Refund created"
+msgstr ""
+
+#. module: helpdesk_account
+#: model:ir.model.fields,field_description:helpdesk_account.field_account_move_reversal__helpdesk_sale_order_id
+msgid "Sales Order"
+msgstr "Megrendelések"
+
+#. module: helpdesk_account
+#: model:ir.model.fields,field_description:helpdesk_account.field_account_move_reversal__suitable_move_ids
+msgid "Suitable Move"
+msgstr ""
+
+#. module: helpdesk_account
+#: model:ir.model.fields,field_description:helpdesk_account.field_account_move_reversal__suitable_sale_order_ids
+msgid "Suitable Sale Order"
+msgstr ""

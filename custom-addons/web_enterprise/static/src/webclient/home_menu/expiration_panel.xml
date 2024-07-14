@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="DatabaseExpirationPanel">
+    <div role="alert"
+        class="database_expiration_panel alert o-hidden-ios text-center mt-4"
+        t-attf-class="alert-{{alertType}}"
+        >
+        <!-- t-translation="off" should be on next a element below -->
+        <a t-if="subscription.daysLeft &gt; 0" href="#" class="oe_instance_hide_panel float-end alert-link" t-on-click.prevent="() => subscription.hideWarning()" aria-label="Dismiss">×</a>
+        <span t-if="!subscription.lastRequestStatus" class="oe_instance_register">
+            <t t-if="!subscription.hasInstalledApps">You will be able to register your database once you have installed your first app.</t>
+            <t t-else="">
+                <t t-esc="expirationMessage"/>
+                <t t-if="subscription.warningType === 'admin'">
+                    <t t-if="subscription.unregistered">
+                        <a class="oe_instance_register_show alert-link text-decoration-underline" href="#" t-on-click.prevent="showRegistrationForm">Register your subscription</a>
+                        or
+                        <a class="oe_instance_buy alert-link text-decoration-underline" href="#" t-on-click.prevent="() => subscription.buy()">buy a subscription</a>.
+                    </t>
+                    <t t-if="subscription.expirationReason === 'renewal'">
+                        <a class="oe_instance_renew" href="#" t-on-click.prevent="() => subscription.renew()">Renew your subscription </a>
+                        <a class="check_enterprise_status alert-link text-decoration-underline" href="#"
+                            title="Refresh subscription status"
+                            aria-label="Refresh subscription status"
+                            t-on-click.prevent="() => subscription.checkStatus()"
+                            >
+                            <i class="fa fa-refresh mx-1"/>
+                        </a>
+                    </t>
+                    <t t-elif="subscription.expirationReason === 'upsell'">You have more users or more apps installed than your subscription allows.<br/>
+                        <a class="oe_instance_upsell alert-link text-decoration-underline" href="#" t-on-click.prevent="() => subscription.upsell()">Upgrade your subscription </a>
+                        <a class="check_enterprise_status alert-link text-decoration-underline" href="#"
+                            title="Refresh subscription status"
+                            aria-label="Refresh subscription status"
+                            t-on-click.prevent="() => subscription.checkStatus()"
+                            >
+                            <i class="fa fa-refresh mx-1"/>
+                        </a>
+                    </t>
+                </t>
+                <t t-elif="subscription.warningType === 'user'">Log in as an administrator to correct the issue.</t>
+            </t>
+        </span>
+        <span t-if="subscription.lastRequestStatus === 'success'" class="oe_instance_register oe_instance_success">Thank you, your registration was successful! Your database is valid until <span><t t-esc="subscription.formattedExpirationDate"/></span>.</span>
+        <span t-elif="subscription.lastRequestStatus === 'update'" class="oe_instance_register oe_subscription_updated">Your subscription was updated and is valid until <span><t t-esc="subscription.formattedExpirationDate"/></span>.</span>
+        <span t-elif="subscription.lastRequestStatus === 'error'" class="oe_instance_register oe_instance_error">Something went wrong while registering your database. You can try again or contact <a class="alert-link text-decoration-underline" href="https://www.odoo.com/help" target="_blank">Odoo Support</a>.</span>
+        <span t-elif="subscription.lastRequestStatus === 'link'" class="oe_instance_register oe_database_already_linked">
+            Your subscription is already linked to a database.<br/>
+            <span t-if="subscription.linkedEmail" class="oe_contract_email_block">
+                <a href="#" class="oe_contract_send_mail alert-link text-decoration-underline" t-on-click.prevent="() => subscription.sendUnlinkEmail()">Send an email</a> to the subscription owner to confirm the change, enter a new code or <a class="oe_instance_buy" href="#" t-on-click.prevent="() => subscription.buy()">buy a subscription.</a>
+                <p t-if="subscription.mailDeliveryStatus === 'ongoing'">Sending the instructions by email ...</p>
+                <p t-elif="subscription.mailDeliveryStatus === 'success'">The instructions to unlink your subscription from the previous database(s) have been sent</p>
+                <p t-elif="subscription.mailDeliveryStatus === 'fail'">Unable to send the instructions by email, please contact the <a href="https://www.odoo.com/help" target="_blank">Odoo Support</a><br/>
+                    Error reason: <t t-esc="subscription.mailDeliveryStatusError"/>
+                </p>
+            </span>
+            <span t-else="">Contact your sales representative to help you to unlink your previous database</span>
+        </span>
+        <Transition visible="state.displayRegisterForm and subscription.lastRequestStatus !== 'success'" t-slot-scope="transition" leaveDuration="400" name="'o-vertical-slide'">
+            <form class="oe_instance_register oe_instance_register_form d-flex flex-wrap align-items-center overflow-hidden justify-content-center mt-4" t-att-class="transition.className">
+                <label for="enterprise_code">Subscription Code: </label>
+                <input type="text" class="o_input w-auto mx-2 mb-2 mb-sm-0" t-ref="input"
+                    placeholder="Paste code here"
+                    title="Your subscription code"
+                    />
+                <button class="btn btn-primary" t-on-click.prevent="onCodeSubmit"><t t-esc="buttonText"/></button>
+            </form>
+        </Transition>
+    </div>
+</t>
+
+</templates>

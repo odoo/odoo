@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="paperformat_check_ca" model="report.paperformat">
+            <field name="name">CA check Letter</field>
+            <field name="default" eval="False" />
+            <field name="format">Letter</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="action_print_check_top" model="ir.actions.report">
+            <field name="name">Print check (Top)</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_ca_check_printing.print_check_top</field>
+            <field name="report_file">l10n_ca_check_printing.print_check_top</field>
+            <field name="print_report_name">'check Top - %s' % (object.partner_id.name or '',)</field>
+            <field name="paperformat_id" ref="l10n_ca_check_printing.paperformat_check_ca"/>
+            <field name="attachment">'check_'+(object.partner_id.name)+'_'+(object.name)+'_top.pdf'</field>
+            <field name="attachment_use">True</field>
+        </record>
+
+        <record id="action_print_check_middle" model="ir.actions.report">
+            <field name="name">Print check (Middle)</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_ca_check_printing.print_check_middle</field>
+            <field name="report_file">l10n_ca_check_printing.print_check_middle</field>
+            <field name="print_report_name">'check Middle - %s' % (object.partner_id.name or '',)</field>
+            <field name="paperformat_id" ref="l10n_ca_check_printing.paperformat_check_ca"/>
+            <field name="attachment">'check_'+(object.partner_id.name)+'_'+(object.name)+'_middle.pdf'</field>
+            <field name="attachment_use">True</field>
+        </record>
+
+        <record id="action_print_check_bottom" model="ir.actions.report">
+            <field name="name">Print check (Bottom)</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_ca_check_printing.print_check_bottom</field>
+            <field name="report_file">l10n_ca_check_printing.print_check_bottom</field>
+            <field name="print_report_name">'check Bottom - %s' % (object.partner_id.name or '',)</field>
+            <field name="paperformat_id" ref="l10n_ca_check_printing.paperformat_check_ca"/>
+            <field name="attachment">'check_'+(object.partner_id.name)+'_'+(object.name)+'_bottom.pdf'</field>
+            <field name="attachment_use">True</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_sharing_project_task_inherit_view_form" model="ir.ui.view">
+        <field name="name">project.sharing.project.task.view.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_form"/>
+        <field name="priority">800</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <div class="text-center alert alert-primary" role="alert" invisible="not warning_message or warning_message == ''">
+                    <field name="warning_message"/>
+                </div>
+            </xpath>
+            <field name="is_fsm" position="after">
+                <field name="allow_material" invisible="1"/>
+            </field>
+            <xpath expr="//button[@name='action_project_sharing_view_parent_task']" position="before">
+                <button class="oe_stat_button pe-none" name="action_fsm_view_material" type="object" icon="fa-cart-plus" special="cancel"
+                        invisible="not partner_id or not allow_material or material_line_product_count == 0">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="material_line_product_count" nolabel="1" class="me-1"/>
+                            <span>Products</span>
+                        </span>
+                        <field name="material_line_total_price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="currency_id" invisible="True"/>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_project_sharing_view_invoices" type="object" class="oe_stat_button" icon="fa-pencil-square-o"
+                        invisible="not allow_billable or portal_invoice_count == 0">
+                    <field name="portal_invoice_count" widget="statinfo" string="Invoices"/>
+                </button>
+                <field name="allow_quotations" invisible="1" />
+                <button name="action_project_sharing_view_quotations"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-dollar"
+                    invisible="not allow_quotations or portal_quotation_count == 0">
+                    <field string="Quotations" name="portal_quotation_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            <field name="partner_id" position="after">
+                <field name="is_fsm" invisible="1"/>
+            </field>
+            <field name="partner_id" position="attributes">
+                <attribute name="invisible">not allow_billable and not is_fsm</attribute>
+                <attribute name="required">is_fsm</attribute>
+            </field>
+            <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="attributes">
+                <attribute name="column_invisible">not parent.allow_billable and not parent.is_fsm</attribute>
+                <attribute name="invisible">not allow_billable and not is_fsm</attribute>
+                <attribute name="required">is_fsm</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

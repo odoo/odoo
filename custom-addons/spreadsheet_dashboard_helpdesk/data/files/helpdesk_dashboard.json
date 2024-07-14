@@ -1,0 +1,1415 @@
+{
+    "version": 12,
+    "sheets": [
+        {
+            "id": "sheet1",
+            "name": "Dashboard",
+            "colNumber": 7,
+            "rowNumber": 44,
+            "rows": {
+                "6": {
+                    "size": 40
+                },
+                "18": {
+                    "size": 40
+                },
+                "19": {
+                    "size": 40
+                },
+                "31": {
+                    "size": 40
+                },
+                "32": {
+                    "size": 40
+                }
+            },
+            "cols": {
+                "0": {
+                    "size": 275
+                },
+                "1": {
+                    "size": 100
+                },
+                "2": {
+                    "size": 100
+                },
+                "3": {
+                    "size": 50
+                },
+                "4": {
+                    "size": 275
+                },
+                "5": {
+                    "size": 100
+                },
+                "6": {
+                    "size": 100
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A7": {
+                    "style": 1,
+                    "content": "[Tickets by Stage](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"stage_id\",\"team_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"stage_id\",\"team_id\"]},\"modelName\":\"helpdesk.ticket.report.analysis\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"cohort\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tickets by Stage\"})",
+                    "border": 1
+                },
+                "A19": {
+                    "style": 1,
+                    "content": "[Top Teams](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"team_id\",\"!=\",false]],\"context\":{\"group_by\":[\"team_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"team_id\"]},\"modelName\":\"helpdesk.ticket.report.analysis\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"cohort\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Teams\"})",
+                    "border": 1
+                },
+                "A20": {
+                    "style": 2,
+                    "content": "=_t(\"Team\")",
+                    "border": 2
+                },
+                "A21": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#team_id\",1)"
+                },
+                "A22": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#team_id\",2)"
+                },
+                "A23": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#team_id\",3)"
+                },
+                "A24": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#team_id\",4)"
+                },
+                "A25": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#team_id\",5)"
+                },
+                "A26": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#team_id\",6)"
+                },
+                "A27": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#team_id\",7)"
+                },
+                "A28": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#team_id\",8)"
+                },
+                "A29": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#team_id\",9)"
+                },
+                "A30": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#team_id\",10)"
+                },
+                "A32": {
+                    "style": 1,
+                    "content": "[Top Ticket Types](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"ticket_type_id\",\"!=\",false]],\"context\":{\"group_by\":[\"ticket_type_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"ticket_type_id\"]},\"modelName\":\"helpdesk.ticket.report.analysis\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"cohort\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Ticket Types\"})",
+                    "border": 1
+                },
+                "A33": {
+                    "style": 2,
+                    "content": "=_t(\"Ticket Type\")",
+                    "border": 2
+                },
+                "A34": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#ticket_type_id\",1)"
+                },
+                "A35": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#ticket_type_id\",2)"
+                },
+                "A36": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#ticket_type_id\",3)"
+                },
+                "A37": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#ticket_type_id\",4)"
+                },
+                "A38": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#ticket_type_id\",5)"
+                },
+                "A39": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#ticket_type_id\",6)"
+                },
+                "A40": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#ticket_type_id\",7)"
+                },
+                "A41": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#ticket_type_id\",8)"
+                },
+                "A42": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#ticket_type_id\",9)"
+                },
+                "A43": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#ticket_type_id\",10)"
+                },
+                "B7": {
+                    "style": 5,
+                    "border": 1
+                },
+                "B19": {
+                    "style": 5,
+                    "border": 1
+                },
+                "B20": {
+                    "style": 2,
+                    "border": 2
+                },
+                "B21": {
+                    "style": 6
+                },
+                "B23": {
+                    "style": 6
+                },
+                "B25": {
+                    "style": 6
+                },
+                "B27": {
+                    "style": 6
+                },
+                "B29": {
+                    "style": 6
+                },
+                "B32": {
+                    "style": 5,
+                    "border": 1
+                },
+                "B33": {
+                    "style": 2,
+                    "border": 2
+                },
+                "B34": {
+                    "style": 6
+                },
+                "B36": {
+                    "style": 6
+                },
+                "B38": {
+                    "style": 6
+                },
+                "B40": {
+                    "style": 6
+                },
+                "B42": {
+                    "style": 6
+                },
+                "C7": {
+                    "style": 5,
+                    "border": 1
+                },
+                "C19": {
+                    "style": 5,
+                    "border": 1
+                },
+                "C20": {
+                    "style": 7,
+                    "content": "=_t(\"Tickets\")",
+                    "border": 2
+                },
+                "C21": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#team_id\",1)"
+                },
+                "C22": {
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#team_id\",2)"
+                },
+                "C23": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#team_id\",3)"
+                },
+                "C24": {
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#team_id\",4)"
+                },
+                "C25": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#team_id\",5)"
+                },
+                "C26": {
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#team_id\",6)"
+                },
+                "C27": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#team_id\",7)"
+                },
+                "C28": {
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#team_id\",8)"
+                },
+                "C29": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#team_id\",9)"
+                },
+                "C30": {
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#team_id\",10)"
+                },
+                "C32": {
+                    "style": 5,
+                    "border": 1
+                },
+                "C33": {
+                    "style": 7,
+                    "content": "=_t(\"Tickets\")",
+                    "border": 2
+                },
+                "C34": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#ticket_type_id\",1)"
+                },
+                "C35": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#ticket_type_id\",2)"
+                },
+                "C36": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#ticket_type_id\",3)"
+                },
+                "C37": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#ticket_type_id\",4)"
+                },
+                "C38": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#ticket_type_id\",5)"
+                },
+                "C39": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#ticket_type_id\",6)"
+                },
+                "C40": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#ticket_type_id\",7)"
+                },
+                "C41": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#ticket_type_id\",8)"
+                },
+                "C42": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#ticket_type_id\",9)"
+                },
+                "C43": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#ticket_type_id\",10)"
+                },
+                "E7": {
+                    "style": 1,
+                    "content": "[Tickets by Type](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"ticket_type_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"pie\",\"graph_groupbys\":[\"ticket_type_id\"]},\"modelName\":\"helpdesk.ticket.report.analysis\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"cohort\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Tickets by Type\"})",
+                    "border": 1
+                },
+                "E19": {
+                    "style": 1,
+                    "content": "[Top Assignees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"user_id\",\"!=\",false]],\"context\":{\"group_by\":[\"user_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"user_id\"]},\"modelName\":\"helpdesk.ticket.report.analysis\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"cohort\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Agents\"})",
+                    "border": 1
+                },
+                "E20": {
+                    "style": 2,
+                    "content": "=_t(\"Agent\")",
+                    "border": 2
+                },
+                "E21": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",1)"
+                },
+                "E22": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",2)"
+                },
+                "E23": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",3)"
+                },
+                "E24": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",4)"
+                },
+                "E25": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",5)"
+                },
+                "E26": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",6)"
+                },
+                "E27": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",7)"
+                },
+                "E28": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",8)"
+                },
+                "E29": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",9)"
+                },
+                "E30": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#user_id\",10)"
+                },
+                "E32": {
+                    "style": 1,
+                    "content": "[Top Customers](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"partner_id\",\"!=\",false]],\"context\":{\"group_by\":[\"partner_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"helpdesk.ticket.report.analysis\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"cohort\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Customers\"})",
+                    "border": 1
+                },
+                "E33": {
+                    "style": 2,
+                    "content": "=_t(\"Customer\")",
+                    "border": 2
+                },
+                "E34": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",1)"
+                },
+                "E35": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",2)"
+                },
+                "E36": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",3)"
+                },
+                "E37": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",4)"
+                },
+                "E38": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",5)"
+                },
+                "E39": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",6)"
+                },
+                "E40": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",7)"
+                },
+                "E41": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",8)"
+                },
+                "E42": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",9)"
+                },
+                "E43": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#partner_id\",10)"
+                },
+                "F7": {
+                    "style": 5,
+                    "border": 1
+                },
+                "F19": {
+                    "style": 5,
+                    "border": 1
+                },
+                "F20": {
+                    "style": 2,
+                    "border": 2
+                },
+                "F21": {
+                    "style": 6
+                },
+                "F23": {
+                    "style": 6
+                },
+                "F25": {
+                    "style": 6
+                },
+                "F27": {
+                    "style": 6
+                },
+                "F29": {
+                    "style": 6
+                },
+                "F32": {
+                    "style": 5,
+                    "border": 1
+                },
+                "F33": {
+                    "style": 2,
+                    "border": 2
+                },
+                "F34": {
+                    "style": 6
+                },
+                "F36": {
+                    "style": 6
+                },
+                "F38": {
+                    "style": 6
+                },
+                "F40": {
+                    "style": 6
+                },
+                "F42": {
+                    "style": 6
+                },
+                "G7": {
+                    "style": 5,
+                    "border": 1
+                },
+                "G19": {
+                    "style": 5,
+                    "border": 1
+                },
+                "G20": {
+                    "style": 7,
+                    "content": "=_t(\"Tickets\")",
+                    "border": 2
+                },
+                "G21": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",1)"
+                },
+                "G22": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",2)"
+                },
+                "G23": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",3)"
+                },
+                "G24": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",4)"
+                },
+                "G25": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",5)"
+                },
+                "G26": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",6)"
+                },
+                "G27": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",7)"
+                },
+                "G28": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",8)"
+                },
+                "G29": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",9)"
+                },
+                "G30": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#user_id\",10)"
+                },
+                "G32": {
+                    "style": 5,
+                    "border": 1
+                },
+                "G33": {
+                    "style": 7,
+                    "content": "=_t(\"Tickets\")",
+                    "border": 2
+                },
+                "G34": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#partner_id\",1)"
+                },
+                "G35": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#partner_id\",2)"
+                },
+                "G36": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#partner_id\",3)"
+                },
+                "G37": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#partner_id\",4)"
+                },
+                "G38": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#partner_id\",5)"
+                },
+                "G39": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#partner_id\",6)"
+                },
+                "G40": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#partner_id\",7)"
+                },
+                "G41": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#partner_id\",8)"
+                },
+                "G42": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#partner_id\",9)"
+                },
+                "G43": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#partner_id\",10)"
+                },
+                "A8": {
+                    "border": 2
+                },
+                "B8": {
+                    "border": 2
+                },
+                "C8": {
+                    "border": 2
+                },
+                "E8": {
+                    "border": 2
+                },
+                "F8": {
+                    "border": 2
+                },
+                "G8": {
+                    "border": 2
+                }
+            },
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "f16a9ed2-bf56-4fcd-9fa7-262c3be1e441",
+                    "x": 0,
+                    "y": 178,
+                    "width": 475,
+                    "height": 230,
+                    "tag": "chart",
+                    "data": {
+                        "title": "",
+                        "background": "#FFFFFF",
+                        "legendPosition": "top",
+                        "metaData": {
+                            "groupBy": [
+                                "stage_id",
+                                "team_id"
+                            ],
+                            "measure": "__count",
+                            "order": null,
+                            "resModel": "helpdesk.ticket.report.analysis"
+                        },
+                        "searchParams": {
+                            "comparison": null,
+                            "context": {},
+                            "domain": [],
+                            "groupBy": [
+                                "stage_id",
+                                "team_id"
+                            ],
+                            "orderBy": []
+                        },
+                        "type": "odoo_bar",
+                        "verticalAxisPosition": "left",
+                        "stacked": true
+                    }
+                },
+                {
+                    "id": "7c83311f-28a2-47b3-b27c-4ff69ad74d38",
+                    "x": 525,
+                    "y": 178,
+                    "width": 475,
+                    "height": 230,
+                    "tag": "chart",
+                    "data": {
+                        "title": "",
+                        "background": "#FFFFFF",
+                        "legendPosition": "top",
+                        "metaData": {
+                            "groupBy": [
+                                "ticket_type_id"
+                            ],
+                            "measure": "__count",
+                            "order": null,
+                            "resModel": "helpdesk.ticket.report.analysis"
+                        },
+                        "searchParams": {
+                            "comparison": null,
+                            "context": {},
+                            "domain": [],
+                            "groupBy": [
+                                "ticket_type_id"
+                            ],
+                            "orderBy": []
+                        },
+                        "type": "odoo_pie"
+                    }
+                },
+                {
+                    "id": "7aacba02-73fb-4e18-99f9-c31017cab6da",
+                    "x": 202,
+                    "y": 0,
+                    "width": 192,
+                    "height": 120,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": "Rating",
+                        "type": "scorecard",
+                        "background": "",
+                        "baseline": "Data!E6",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D6"
+                    }
+                },
+                {
+                    "id": "c2b71e9b-5f66-41fb-ad81-d63814f07780",
+                    "x": 0,
+                    "y": 0,
+                    "width": 192,
+                    "height": 120,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": "Tickets",
+                        "type": "scorecard",
+                        "background": "",
+                        "baseline": "Data!E2",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D2"
+                    }
+                },
+                {
+                    "id": "2bff6c94-6e18-4af9-b46a-ab1c8ac8f7e0",
+                    "x": 404,
+                    "y": 0,
+                    "width": 192,
+                    "height": 120,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "text",
+                        "title": "Time to Assign",
+                        "type": "scorecard",
+                        "background": "",
+                        "baseline": "Data!E3",
+                        "baselineDescr": "last period",
+                        "keyValue": "Data!D3"
+                    }
+                },
+                {
+                    "id": "26af76da-e3c1-4696-8167-1b33773591e2",
+                    "x": 606,
+                    "y": 0,
+                    "width": 192,
+                    "height": 120,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "text",
+                        "title": "Time to Respond",
+                        "type": "scorecard",
+                        "background": "",
+                        "baseline": "Data!E4",
+                        "baselineDescr": "last period",
+                        "keyValue": "Data!D4"
+                    }
+                },
+                {
+                    "id": "26d60f2f-6c8f-4881-9ac5-3a4fde74699e",
+                    "x": 808,
+                    "y": 0,
+                    "width": 192,
+                    "height": 120,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "text",
+                        "title": "Time to Close",
+                        "type": "scorecard",
+                        "background": "",
+                        "baseline": "Data!E5",
+                        "baselineDescr": "last period",
+                        "keyValue": "Data!D5"
+                    }
+                }
+            ],
+            "areGridLinesVisible": true,
+            "isVisible": true
+        },
+        {
+            "id": "0f64cc65-f0df-4a80-bf23-c70033b3e60f",
+            "name": "Data",
+            "colNumber": 26,
+            "rowNumber": 108,
+            "rows": {},
+            "cols": {
+                "0": {
+                    "size": 135
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A1": {
+                    "style": 8,
+                    "content": "=_t(\"KPI\")"
+                },
+                "A2": {
+                    "style": 6,
+                    "content": "=_t(\"Tickets\")"
+                },
+                "A3": {
+                    "style": 6,
+                    "content": "=_t(\"Hours to assign\")"
+                },
+                "A4": {
+                    "style": 6,
+                    "content": "=_t(\"Hours to respond\")"
+                },
+                "A5": {
+                    "style": 6,
+                    "content": "=_t(\"Hours to close\")"
+                },
+                "A6": {
+                    "style": 6,
+                    "content": "=_t(\"Rating\")"
+                },
+                "B1": {
+                    "style": 8,
+                    "content": "=_t(\"Current\")"
+                },
+                "B2": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(5,\"__count\")"
+                },
+                "B3": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(5,\"ticket_assignation_hours\")"
+                },
+                "B4": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(5,\"avg_response_hours\")"
+                },
+                "B5": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(5,\"ticket_close_hours\")"
+                },
+                "B6": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(5,\"rating_last_value\")"
+                },
+                "C1": {
+                    "style": 8,
+                    "content": "=_t(\"Previous\")"
+                },
+                "C2": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(6,\"__count\")"
+                },
+                "C3": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(6,\"ticket_assignation_hours\")"
+                },
+                "C4": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(6,\"avg_response_hours\")"
+                },
+                "C5": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(6,\"ticket_close_hours\")"
+                },
+                "C6": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(6,\"rating_last_value\")"
+                },
+                "D1": {
+                    "style": 8,
+                    "content": "=_t(\"Current\")"
+                },
+                "D2": {
+                    "style": 6,
+                    "content": "=FORMAT.LARGE.NUMBER(B2)"
+                },
+                "D3": {
+                    "style": 6,
+                    "content": "=CONCATENATE(IFERROR(ROUND(B3)),\" hours\")"
+                },
+                "D4": {
+                    "style": 6,
+                    "content": "=CONCATENATE(IFERROR(ROUND(B4)),\" hours\")"
+                },
+                "D5": {
+                    "style": 6,
+                    "content": "=CONCATENATE(IFERROR(ROUND(B5)),\" hours\")"
+                },
+                "D6": {
+                    "style": 6,
+                    "content": "=CONCATENATE(IFERROR(ROUND(B6,1)),\"/5\")"
+                },
+                "E1": {
+                    "style": 8,
+                    "content": "=_t(\"Previous\")"
+                },
+                "E2": {
+                    "style": 6,
+                    "content": "=FORMAT.LARGE.NUMBER(C2)"
+                },
+                "E3": {
+                    "style": 6,
+                    "format": 2,
+                    "content": "=IFERROR(ROUND(C3))"
+                },
+                "E4": {
+                    "style": 6,
+                    "format": 2,
+                    "content": "=IFERROR(ROUND(C4))"
+                },
+                "E5": {
+                    "style": 6,
+                    "format": 2,
+                    "content": "=IFERROR(ROUND(C5))"
+                },
+                "E6": {
+                    "style": 6,
+                    "content": "=CONCATENATE(IFERROR(ROUND(C6,1)),\"/5\")"
+                }
+            },
+            "conditionalFormats": [],
+            "figures": [],
+            "areGridLinesVisible": true,
+            "isVisible": true
+        }
+    ],
+    "entities": {},
+    "styles": {
+        "1": {
+            "textColor": "#01666b",
+            "bold": true,
+            "fontSize": 16
+        },
+        "2": {
+            "bold": true
+        },
+        "3": {
+            "fillColor": "#f2f2f2",
+            "textColor": "#741b47"
+        },
+        "4": {
+            "textColor": "#741b47"
+        },
+        "5": {
+            "bold": true,
+            "fontSize": 16
+        },
+        "6": {
+            "fillColor": "#f2f2f2"
+        },
+        "7": {
+            "align": "right",
+            "bold": true
+        },
+        "8": {
+            "bold": true,
+            "fillColor": "#f2f2f2"
+        }
+    },
+    "formats": {
+        "1": "0",
+        "2": "#,##0"
+    },
+    "borders": {
+        "1": {
+            "bottom": [
+                "thin",
+                "#000"
+            ]
+        },
+        "2": {
+            "top": [
+                "thin",
+                "#000"
+            ]
+        }
+    },
+    "revisionId": "START_REVISION",
+    "settings": {
+        "locale": {
+            "name": "English (US)",
+            "code": "en_US",
+            "thousandsSeparator": ",",
+            "decimalSeparator": ".",
+            "dateFormat": "mm/dd/yyyy",
+            "timeFormat": "hh:mm:ss",
+            "formulaArgSeparator": ","
+        }
+    },
+    "chartOdooMenusReferences": {
+        "f16a9ed2-bf56-4fcd-9fa7-262c3be1e441": "helpdesk.menu_helpdesk_root",
+        "7c83311f-28a2-47b3-b27c-4ff69ad74d38": "helpdesk.menu_helpdesk_root",
+        "c2b71e9b-5f66-41fb-ad81-d63814f07780": "helpdesk.helpdesk_ticket_menu_all",
+        "7aacba02-73fb-4e18-99f9-c31017cab6da": "helpdesk.helpdesk_ticket_report_menu_ratings",
+        "2bff6c94-6e18-4af9-b46a-ab1c8ac8f7e0": "helpdesk.helpdesk_ticket_report_menu",
+        "26af76da-e3c1-4696-8167-1b33773591e2": "helpdesk.helpdesk_ticket_report_menu",
+        "26d60f2f-6c8f-4881-9ac5-3a4fde74699e": "helpdesk.helpdesk_ticket_report_menu"
+    },
+    "odooVersion": 4,
+    "lists": {},
+    "listNextId": 1,
+    "pivots": {
+        "1": {
+            "colGroupBys": [],
+            "context": {},
+            "domain": [
+                [
+                    "team_id",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "1",
+            "measures": [
+                {
+                    "field": "__count"
+                }
+            ],
+            "model": "helpdesk.ticket.report.analysis",
+            "rowGroupBys": [
+                "team_id"
+            ],
+            "name": "Ticket Analysis by Team",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "__count",
+                "order": "desc"
+            }
+        },
+        "2": {
+            "colGroupBys": [],
+            "context": {},
+            "domain": [
+                [
+                    "user_id",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "2",
+            "measures": [
+                {
+                    "field": "__count"
+                }
+            ],
+            "model": "helpdesk.ticket.report.analysis",
+            "rowGroupBys": [
+                "user_id"
+            ],
+            "name": "Ticket Analysis by Assigned To",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "__count",
+                "order": "desc"
+            }
+        },
+        "3": {
+            "colGroupBys": [],
+            "context": {},
+            "domain": [
+                [
+                    "ticket_type_id",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "3",
+            "measures": [
+                {
+                    "field": "__count"
+                }
+            ],
+            "model": "helpdesk.ticket.report.analysis",
+            "rowGroupBys": [
+                "ticket_type_id"
+            ],
+            "name": "Ticket Analysis by Ticket Type",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "__count",
+                "order": "desc"
+            }
+        },
+        "4": {
+            "colGroupBys": [],
+            "context": {},
+            "domain": [
+                [
+                    "partner_id",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "4",
+            "measures": [
+                {
+                    "field": "__count"
+                }
+            ],
+            "model": "helpdesk.ticket.report.analysis",
+            "rowGroupBys": [
+                "partner_id"
+            ],
+            "name": "Ticket Analysis by Customer",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "__count",
+                "order": "desc"
+            }
+        },
+        "5": {
+            "colGroupBys": [],
+            "context": {
+                "params": {
+                    "action": 658,
+                    "model": "helpdesk.ticket.report.analysis",
+                    "view_type": "pivot",
+                    "menu_id": 471,
+                    "cids": 1
+                }
+            },
+            "domain": [],
+            "id": "5",
+            "measures": [
+                {
+                    "field": "__count"
+                },
+                {
+                    "field": "ticket_assignation_hours"
+                },
+                {
+                    "field": "avg_response_hours"
+                },
+                {
+                    "field": "ticket_close_hours"
+                },
+                {
+                    "field": "rating_last_value"
+                }
+            ],
+            "model": "helpdesk.ticket.report.analysis",
+            "rowGroupBys": [],
+            "name": "stats - current",
+            "sortedColumn": null
+        },
+        "6": {
+            "colGroupBys": [],
+            "context": {
+                "params": {
+                    "action": 658,
+                    "model": "helpdesk.ticket.report.analysis",
+                    "view_type": "pivot",
+                    "menu_id": 471,
+                    "cids": 1
+                }
+            },
+            "domain": [],
+            "id": "6",
+            "measures": [
+                {
+                    "field": "__count"
+                },
+                {
+                    "field": "ticket_assignation_hours"
+                },
+                {
+                    "field": "avg_response_hours"
+                },
+                {
+                    "field": "ticket_close_hours"
+                },
+                {
+                    "field": "rating_last_value"
+                }
+            ],
+            "model": "helpdesk.ticket.report.analysis",
+            "rowGroupBys": [],
+            "name": "stats - previous",
+            "sortedColumn": null
+        }
+    },
+    "pivotNextId": 7,
+    "globalFilters": [
+        {
+            "id": "9c37c741-1bb5-439a-b93d-d5443a9544be",
+            "type": "date",
+            "label": "Period",
+            "defaultValue": "last_month",
+            "rangeType": "relative",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "create_date",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "2": {
+                    "field": "create_date",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "3": {
+                    "field": "create_date",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "4": {
+                    "field": "create_date",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "5": {
+                    "field": "create_date",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "6": {
+                    "field": "create_date",
+                    "type": "datetime",
+                    "offset": -1
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "7c83311f-28a2-47b3-b27c-4ff69ad74d38": {
+                    "field": "create_date",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "f16a9ed2-bf56-4fcd-9fa7-262c3be1e441": {
+                    "field": "create_date",
+                    "type": "datetime",
+                    "offset": 0
+                }
+            }
+        },
+        {
+            "id": "32224750-df4d-496b-94d1-113aeb0a922a",
+            "type": "relation",
+            "label": "Team",
+            "modelName": "helpdesk.team",
+            "defaultValue": [],
+            "defaultValueDisplayNames": [],
+            "rangeType": "year",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "team_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "team_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "team_id",
+                    "type": "many2one"
+                },
+                "4": {
+                    "field": "team_id",
+                    "type": "many2one"
+                },
+                "5": {
+                    "field": "team_id",
+                    "type": "many2one"
+                },
+                "6": {
+                    "field": "team_id",
+                    "type": "many2one"
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "f16a9ed2-bf56-4fcd-9fa7-262c3be1e441": {
+                    "field": "team_id",
+                    "type": "many2one"
+                },
+                "7c83311f-28a2-47b3-b27c-4ff69ad74d38": {
+                    "field": "team_id",
+                    "type": "many2one"
+                }
+            }
+        },
+        {
+            "id": "6bd364fc-ce70-461b-81fb-1e9cfbc0fb48",
+            "type": "relation",
+            "label": "Agent",
+            "modelName": "res.users",
+            "defaultValue": [],
+            "defaultValueDisplayNames": [],
+            "rangeType": "year",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "user_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "user_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "user_id",
+                    "type": "many2one"
+                },
+                "4": {
+                    "field": "user_id",
+                    "type": "many2one"
+                },
+                "5": {
+                    "field": "user_id",
+                    "type": "many2one"
+                },
+                "6": {
+                    "field": "user_id",
+                    "type": "many2one"
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "f16a9ed2-bf56-4fcd-9fa7-262c3be1e441": {
+                    "field": "user_id",
+                    "type": "many2one"
+                },
+                "7c83311f-28a2-47b3-b27c-4ff69ad74d38": {
+                    "field": "user_id",
+                    "type": "many2one"
+                }
+            }
+        },
+        {
+            "id": "6cfea52a-55aa-4c5e-8068-a087b0432cc4",
+            "type": "relation",
+            "label": "Ticket Type",
+            "modelName": "helpdesk.ticket.type",
+            "defaultValue": [],
+            "defaultValueDisplayNames": [],
+            "rangeType": "year",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "ticket_type_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "ticket_type_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "ticket_type_id",
+                    "type": "many2one"
+                },
+                "4": {
+                    "field": "ticket_type_id",
+                    "type": "many2one"
+                },
+                "5": {
+                    "field": "ticket_type_id",
+                    "type": "many2one"
+                },
+                "6": {
+                    "field": "ticket_type_id",
+                    "type": "many2one"
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "f16a9ed2-bf56-4fcd-9fa7-262c3be1e441": {
+                    "field": "ticket_type_id",
+                    "type": "many2one"
+                },
+                "7c83311f-28a2-47b3-b27c-4ff69ad74d38": {
+                    "field": "ticket_type_id",
+                    "type": "many2one"
+                }
+            }
+        },
+        {
+            "id": "cc4e1afb-103a-4a2d-a95a-a2cffb4ec225",
+            "type": "relation",
+            "label": "Customer",
+            "modelName": "res.partner",
+            "defaultValue": [],
+            "defaultValueDisplayNames": [],
+            "rangeType": "year",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "partner_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "partner_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "partner_id",
+                    "type": "many2one"
+                },
+                "4": {
+                    "field": "partner_id",
+                    "type": "many2one"
+                },
+                "5": {
+                    "field": "partner_id",
+                    "type": "many2one"
+                },
+                "6": {
+                    "field": "partner_id",
+                    "type": "many2one"
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "f16a9ed2-bf56-4fcd-9fa7-262c3be1e441": {
+                    "field": "partner_id",
+                    "type": "many2one"
+                },
+                "7c83311f-28a2-47b3-b27c-4ff69ad74d38": {
+                    "field": "partner_id",
+                    "type": "many2one"
+                }
+            }
+        }
+    ]
+}

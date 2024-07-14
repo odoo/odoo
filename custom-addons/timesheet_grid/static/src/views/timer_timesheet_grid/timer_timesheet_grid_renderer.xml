@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="timesheet_grid.TimerGridRenderer" t-inherit="web_grid.Renderer">
+        <xpath expr="//div[hasclass('o_grid_renderer')]" position="before">
+            <div t-if="showTimer" class="d-md-flex justify-content-end bg-view border-bottom position-sticky z-index-1 start-0">
+                <GridTimesheetTimerHeader
+                    model="props.model"
+                    resId="timerState.timesheet?.id"
+                    addTimeMode="timerState.addTimeMode"
+                    timerRunning="timerState.timerRunning"
+                    headerReadonly="timerState.headerReadonly"
+                    stepTimer="props.model.data.stepTimer"
+                    updateTimesheet.bind="updateTimesheet"
+                    onTimerStarted.bind="onTimerStarted"
+                    onTimerStopped.bind="onTimerStopped"
+                    onTimerUnlinked.bind="onTimerUnlinked"
+                />
+            </div>
+        </xpath>
+        <xpath expr="//t[@t-call='web_grid.Header']" position="attributes">
+            <attribute name="t-call">timesheet_grid.TimerGridHeader</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='web_grid.Section']" position="attributes">
+            <attribute name="t-call">timesheet_grid.TimerGridSection</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='web_grid.Row']" position="attributes">
+            <attribute name="t-call">timesheet_grid.TimerGridRow</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='web_grid.AddLine']" position="attributes">
+            <attribute name="t-call">timesheet_grid.TimerGridAddLine</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='web_grid.Footer']" position="attributes">
+            <attribute name="t-call">timesheet_grid.TimerGridFooter</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='web_grid.barChart']" position="attributes">
+            <attribute name="t-call">timesheet_grid.TimerGridTotal</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="timesheet_grid.TimerGridHeader" t-inherit="web_grid.Header">
+        <xpath expr="//div[hasclass('o_grid_column_title')]" position="before">
+            <div t-if="showTimerButton"
+                 class="o_grid_column_timer_button o_grid_navigation_wrap position-md-sticky top-0 border-bottom bg-100"
+                 t-attf-style="grid-row: {{rowsGap}}; grid-column: 1;"
+            />
+        </xpath>
+    </t>
+
+    <t t-name="timesheet_grid.TimerGridSection" t-inherit="web_grid.Section">
+        <xpath expr="//t[@name='section']/div" position="before">
+            <div t-if="showTimerButton"
+                 class="o_grid_section o_grid_section_timer_button"
+                 t-attf-style="grid-row: {{rowPosition}}; grid-column: 1;"
+            />
+        </xpath>
+    </t>
+
+    <t t-name="timesheet_grid.TimerGridRow" t-inherit="web_grid.Row">
+        <xpath expr="//div[@name='row']" position="before">
+            <div t-if="showTimerButton"
+                class="o_grid_row o_grid_row_timer o_grid_highlightable position-relative d-flex align-items-center ps-3 py-1"
+                t-att-class="{'bg-view' : isEven}"
+                t-att-data-row="row.id"
+                t-att-data-grid-row="rowPosition"
+                t-att-data-grid-column="1"
+                t-attf-style="grid-row: {{rowPosition}}; grid-column: 1;"
+            >
+                <div class="o_grid_cell_overlay position-absolute top-0 start-0 w-100 h-100 bg-700"/>
+                <GridTimerButtonCell
+                    row="row"
+                    hotKey="props.model.data.keyBindingPerRowId[row.id]"
+                    addTimeMode="timerState.addTimeMode"
+                    hovered="hoverTimerButtonsState[row.id]"
+                    timerRunning="timerState.timerRunningRowId === row.id"
+                    onTimerClick.bind="onTimerClick"
+                />
+            </div>
+        </xpath>
+    </t>
+
+    <t t-name="timesheet_grid.TimerGridAddLine" t-inherit="web_grid.AddLine">
+        <xpath expr="//div[@t-if='props.createInline']" position="before">
+            <div t-if="showTimerButton"
+                 class="o_grid_row o_grid_row_timer"
+                 t-att-class="{'bg-view' : isEven}"
+                 t-attf-style="grid-row: {{rowPosition}}; grid-column: 1;"
+            />
+        </xpath>
+    </t>
+
+    <t t-name="timesheet_grid.TimerGridFooter" t-inherit="web_grid.Footer">
+        <xpath expr="//t/div" position="before">
+            <div t-if="showTimerButton"
+                 t-attf-style="grid-row: {{rowPosition}}; grid-column: 1;"
+                 t-att-class="{'bg-view': isEven}"
+            />
+        </xpath>
+        <xpath expr="//div[hasclass('o_grid_bar_chart_total_title')]/span" position="attributes">
+            <attribute name="t-att-class">{
+                'text-success' : column.grandTotal === column._dataPoint.data.workingHours.daily[column.value],
+                'text-danger' : (column.grandTotal lt column._dataPoint.data.workingHours.daily[column.value]) or (getUnavailableClass(column) === 'o_grid_unavailable' and column.grandTotal gt 0),
+                'text-warning' : column.grandTotal gt column._dataPoint.data.workingHours.daily[column.value],
+            }</attribute>
+        </xpath>
+    </t>
+    <t t-name="timesheet_grid.TimerGridTotal" t-inherit="web_grid.barChart">
+        <xpath expr="//t/div" position="before">
+            <div t-if="showTimerButton"
+                 t-attf-style="grid-row: {{rowPosition + 1}}; grid-column: 1;"
+                 t-att-class="{'bg-view': isEven}"
+            />
+        </xpath>
+        <xpath expr="//div[hasclass('o_grid_bar_chart_total_pill')]" position="after">
+            <span t-if="column.grandTotal !== column.model.data.workingHours.daily[column.value]"
+                   class="o_grid_bar_chart_overtime position-absolute top-50 start-50 translate-middle px-2 rounded-pill bg-white fw-bolder transition-base"
+                   t-att-class="getDailyOvertime(column) &lt; 0 ? 'text-danger':'text-warning'"
+                   title="Daily overtime"> <t t-esc="formatDailyOvertime(column)"/>
+            </span>
+        </xpath>
+        <xpath expr="//div[hasclass('o_grid_row_total') and hasclass('o_grid_column_total')]/div" position="inside">
+            <t t-set="weeklyOvertime" t-value="getWeeklyOvertime()"/>
+            <span t-if="weeklyOvertime !== 0"
+                   class="o_grid_bar_chart_overtime position-absolute top-50 start-50 translate-middle px-2 rounded-pill bg-white fw-bolder transition-base"
+                   t-att-class="weeklyOvertime > 0 ? 'text-warning':'text-danger'"
+                   title="Weekly overtime">
+                <t t-esc="formatWeeklyOvertime(weeklyOvertime)"/>
+            </span>
+        </xpath>
+    </t>
+</templates>

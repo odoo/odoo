@@ -1,0 +1,3930 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* appointment
+# 
+# Translators:
+# Sari Mäyrä <sari.mayra@sv-oy.fi>, 2023
+# Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2023
+# Melina Mäntylä <melina.mantyla@web-veistamo.fi>, 2023
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2023
+# Miku Laitinen <miku.laitinen@gmail.com>, 2023
+# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2023
+# Johanna Valkonen <miujohanna@gmail.com>, 2023
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2023
+# Kimmo Lehtonen <leban@netzionale.com>, 2023
+# Jussi Lehto <jussi@gulfeo.com>, 2023
+# Tommi Rintala <tommi.rintala@gmail.com>, 2023
+# Miika Nissi <miika.nissi@tawasta.fi>, 2023
+# Erno Iipponen <erno.iipponen@web-veistamo.fi>, 2023
+# Joakim Weckman, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid " (copy)"
+msgstr " (kopio)"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_booking_line.py:0
+#, python-format
+msgid "\"%(resource_name_list)s\" cannot be used for \"%(appointment_type_name)s\""
+msgstr ""
+"\"%(resource_name_list)s\" ei voi käyttää kohteeseen "
+"\"%(appointment_type_name)s\""
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__appointment_count
+msgid "# Appointments"
+msgstr "# Tapaamiset"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__appointment_count_report
+msgid "# Appointments in the last 30 days"
+msgstr "# Tapaamiset viimeisen 30 päivänä aikana"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__calendar_event_count
+msgid "# Bookings"
+msgstr "# Varaukset"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__appointment_invite_count
+msgid "# Invitation Links"
+msgstr "# Kutsulinkit"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__suggested_resource_count
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__resource_count
+msgid "# Resources"
+msgstr "# Resurssit"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__suggested_staff_user_count
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__staff_user_count
+msgid "# Staff Users"
+msgstr "# Henkilökunnan käyttäjät"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_calendar
+msgid "#{day['today_cls'] and 'Today' or ''}"
+msgstr "#{päivänä['today_cls'] and 'Tänään' or ''}"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "%(appointment_name)s with %(partner_name)s"
+msgstr "%(appointment_name)s kanssa %(partner_name)s"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid "%(attendee_name)s - %(appointment_name)s Booking"
+msgstr "%(attendee_name)s - %(appointment_name)s Varaus"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_resource.py:0
+#, python-format
+msgid "%(original_name)s (copy)"
+msgstr "%(original_name)s (kopio)"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid "%s - Let's meet"
+msgstr "%s - Tavataan"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "(Total:"
+msgstr "(Yhteensä:"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/calendar.py:0
+#, python-format
+msgid ", All Day"
+msgstr ", Koko päivä"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_svg.xml:0
+#, python-format
+msgid ""
+".stgrey0{fill:#E3E3E3}\n"
+"                .stgrey1{fill:#F2F2F2}"
+msgstr ""
+".stgrey0{fill:#E3E3E3}\n"
+"                .stgrey1{fill:#F2F2F2}"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid ""
+"<br/>\n"
+"                                        <span>Duration</span>"
+msgstr ""
+"<br/>\n"
+"                                        <span>Kesto</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid ""
+"<br/>\n"
+"                                    <span>(Last 30 Days)</span>"
+msgstr ""
+"<br/>\n"
+"                                    <span>(Viimeiset 30 päivää)</span>"
+
+#. module: appointment
+#: model:mail.template,body_html:appointment.attendee_invitation_mail_template
+msgid ""
+"<div>\n"
+"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"></t>\n"
+"    <t t-set=\"customer\" t-value=\" object.event_id.find_partner_customer()\"></t>\n"
+"    <t t-set=\"target_responsible\" t-value=\"object.partner_id == object.event_id.partner_id\"></t>\n"
+"    <t t-set=\"target_customer\" t-value=\"object.partner_id == customer\"></t>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
+"\n"
+"    <p>\n"
+"        Hello <t t-out=\"object.common_name or ''\">Wood Corner</t>,<br><br>\n"
+"\n"
+"        <t t-if=\"target_customer\">\n"
+"            Your appointment <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</strong> <t t-if=\"object.event_id.appointment_type_id.category != 'custom' and object.event_id.appointment_type_id.schedule_based_on == 'users'\"> with <t t-out=\"object.event_id.user_id.name or ''\">Ready Mat</t></t> has been booked.\n"
+"            <t t-if=\"object.state != 'accepted' and object.event_id.appointment_type_id.schedule_based_on == 'resources' and object.event_id.appointment_type_id.resource_manual_confirmation\">\n"
+"                You will receive a mail of confirmation with more details when your appointment will be confirmed.\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-elif=\"target_responsible\">\n"
+"            <t t-if=\"customer\">\n"
+"                <t t-out=\"customer.name or ''\"></t> scheduled the following appointment <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</strong> with you.\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Your appointment <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</strong> has been booked.\n"
+"            </t>\n"
+"        </t>\n"
+"    </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <t t-if=\"object.state != 'accepted'\">\n"
+"            <a t-attf-href=\"/calendar/meeting/accept?token={{object.access_token}}&amp;id={{object.event_id.id}}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                Accept</a>\n"
+"            <a t-attf-href=\"/calendar/meeting/decline?token={{object.access_token}}&amp;id={{object.event_id.id}}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                Decline</a>\n"
+"        </t>\n"
+"        <a t-attf-href=\"/calendar/meeting/view?token={{object.access_token}}&amp;id={{object.event_id.id}}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\"><t t-out=\"'Reschedule' if target_customer else 'View'\">View</t></a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"            <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''\">Tuesday</t>\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''\">May 2021</t>\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold ; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                <t t-if=\"not object.event_id.allday\">\n"
+"                    <div>\n"
+"                        <t t-out=\"format_time(time=object.event_id.start, tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''\">11:00 AM</t>\n"
+"                    </div>\n"
+"                    <t t-if=\"object.mail_tz\">\n"
+"                        <div style=\"font-size: 10px; font-weight: normal\">\n"
+"                            (<t t-out=\"object.mail_tz or ''\">Europe/Brussels</t>)\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </t>\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"></td>\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>Details of the event</strong></p>\n"
+"            <ul>\n"
+"                <li>Appointment Type: <t t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</t></li>\n"
+"                <t t-if=\"object.event_id.location\">\n"
+"                    <li>Location: <t t-out=\"object.event_id.location or ''\">Bruxelles</t>\n"
+"                        (<a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}\">View Map</a>)\n"
+"                    </li>\n"
+"                </t>\n"
+"                <t t-if=\"recurrent\">\n"
+"                    <li>When: <t t-out=\"object.recurrence_id.name or ''\">Every 1 Weeks, for 3 events</t></li>\n"
+"                </t>\n"
+"                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
+"                    <li>Duration: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
+"                </t>\n"
+"                <li>Attendees\n"
+"                <ul>\n"
+"                    <li t-foreach=\"object.event_id.attendee_ids\" t-as=\"attendee\">\n"
+"                        <div t-attf-style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};\"> </div>\n"
+"                        <t t-if=\"attendee.common_name != object.common_name\">\n"
+"                            <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <span style=\"margin-left:5px\">You</span>\n"
+"                        </t>\n"
+"                    </li>\n"
+"                </ul></li>\n"
+"                <li t-if=\"object.event_id.appointment_type_id.resource_manage_capacity\">\n"
+"                    For: <t t-out=\"object.event_id.resource_total_capacity_reserved\"></t> people\n"
+"                </li>\n"
+"                <li t-if=\"object.event_id.appointment_type_id.assign_method != 'time_auto_assign'\">\n"
+"                    Resources\n"
+"                    <ul>\n"
+"                        <li t-foreach=\"object.event_id.appointment_resource_ids\" t-as=\"resource\">\n"
+"                            <span style=\"margin-left:5px\" t-out=\"resource.name or ''\">Table 1</span>\n"
+"                        </li>\n"
+"                    </ul>\n"
+"                </li>\n"
+"                <t t-if=\"object.event_id.videocall_location\">\n"
+"                    <li>\n"
+"                        How to Join:\n"
+"                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\"> Join with Odoo Discuss</t>\n"
+"                        <t t-else=\"\"> Join at</t><br>\n"
+"                        <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                    </li>\n"
+"                </t>\n"
+"                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
+"                    <li>Description of the event:\n"
+"                    <t t-out=\"object.event_id.description\">Internal meeting for discussion for new pricing for product and services.</t></li>\n"
+"                </t>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br>\n"
+"    Thank you,\n"
+"    <t t-if=\"object.event_id.user_id.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"   <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"></t>\n"
+"    <t t-set=\"customer\" t-value=\" object.event_id.find_partner_customer()\"></t>\n"
+"   <t t-set=\"target_responsible\" t-value=\"object.partner_id == object.event_id.partner_id\"></t>\n"
+"    <t t-set=\"target_customer\" t-value=\"object.partner_id == customer\"></t>\n"
+"   <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
+"\n"
+"   <p>\n"
+"        Hei <t t-out=\"object.common_name or ''\">Wood Corner</t>,<br><br>\n"
+"\n"
+"       <t t-if=\"target_customer\">\n"
+"            Tapaamisesi <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Varaa demo</strong> <t t-if=\"object.event_id.appointment_type_id.category != 'custom' and object.event_id.appointment_type_id.schedule_based_on == 'users'\"> henkilön <t t-out=\"object.event_id.user_id.name or ''\">Ready Mat</t></t> kanssa on varattu.\n"
+"           <t t-if=\"object.state != 'accepted' and object.event_id.appointment_type_id.schedule_based_on == 'resources' and object.event_id.appointment_type_id.resource_manual_confirmation\">\n"
+"                Saat vahvistusviestin, jossa on lisätietoja, kun tapaamisesi vahvistetaan.\n"
+"           </t>\n"
+"       </t>\n"
+"       <t t-elif=\"target_responsible\">\n"
+"           <t t-if=\"customer\">\n"
+"                <t t-out=\"customer.name or ''\"></t> aikataulutettu seuraava tapaaminen <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Ajanvarauksella Demo</strong> kanssasi.\n"
+"           </t>\n"
+"           <t t-else=\"\">\n"
+"                Tapaamisesi <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Varaa demo</strong> on varattu.\n"
+"           </t>\n"
+"       </t>\n"
+"   </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <t t-if=\"object.state != 'accepted'\">\n"
+"            <a t-attf-href=\"/calendar/meeting/accept?token={{object.access_token}}&amp;id={{object.event_id.id}}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                Hyväksy</a>\n"
+"            <a t-attf-href=\"/calendar/meeting/decline?token={{object.access_token}}&amp;id={{object.event_id.id}}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                Hylkää</a>\n"
+"        </t>\n"
+"        <a t-attf-href=\"/calendar/meeting/view?token={{object.access_token}}&amp;id={{object.event_id.id}}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\"><t t-out=\"'Reschedule' if target_customer else 'View'\">Näytä</t></a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"            <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''\">Tiistai</t>\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''\">Toukokuu 2021</t>\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold ; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                <t t-if=\"not object.event_id.allday\">\n"
+"                    <div>\n"
+"                        <t t-out=\"format_time(time=object.event_id.start, tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''\">11:00 AM</t>\n"
+"                    </div>\n"
+"                    <t t-if=\"object.mail_tz\">\n"
+"                        <div style=\"font-size: 10px; font-weight: normal\">\n"
+"                           <t t-out=\"object.mail_tz or ''\">(Eurooppa/Bryssel</t>)\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </t>\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"></td>\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>Tapahtuman yksityiskohdat</strong></p>\n"
+"            <ul>\n"
+"                <li>Nimitystyyppi: <t t-out=\"object.event_id.appointment_type_id.name or ''\">Ajanvaraus: Ajanvaraus Demo</t></li>\n"
+"                <t t-if=\"object.event_id.location\">\n"
+"                    <li>Sijainti: <t t-out=\"object.event_id.location or ''\">Bryssel</t>\n"
+"                       <a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}\">(Näytä kartta</a>)\n"
+"                    </li>\n"
+"                </t>\n"
+"                <t t-if=\"recurrent\">\n"
+"                    <li>Milloin: <t t-out=\"object.recurrence_id.name or ''\">Joka 1 viikko, 3 tapahtumaa</t></li>\n"
+"                </t>\n"
+"                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
+"                    <li>Kesto: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
+"                </t>\n"
+"                <li>Osallistujat\n"
+"                <ul>\n"
+"                    <li t-foreach=\"object.event_id.attendee_ids\" t-as=\"attendee\">\n"
+"                        <div t-attf-style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};\"> </div>\n"
+"                        <t t-if=\"attendee.common_name != object.common_name\">\n"
+"                            <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <span style=\"margin-left:5px\">Sinä</span>\n"
+"                        </t>\n"
+"                    </li>\n"
+"                </ul></li>\n"
+"                <li t-if=\"object.event_id.appointment_type_id.resource_manage_capacity\">\n"
+"                    For: <t t-out=\"object.event_id.resource_total_capacity_reserved\"></t> ihmiset\n"
+"                </li>\n"
+"                <li t-if=\"object.event_id.appointment_type_id.assign_method != 'time_auto_assign'\">\n"
+"                    Resurssit\n"
+"                    <ul>\n"
+"                        <li t-foreach=\"object.event_id.appointment_resource_ids\" t-as=\"resource\">\n"
+"                            <span style=\"margin-left:5px\" t-out=\"resource.name or ''\">Taulukko 1</span>\n"
+"                        </li>\n"
+"                    </ul>\n"
+"                </li>\n"
+"                <t t-if=\"object.event_id.videocall_location\">\n"
+"                    <li>\n"
+"                        Miten liittyä:\n"
+"                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\"> Liity Odoo Discussin avulla</t>\n"
+"                        <t t-else=\"\"> Liity osoitteessa</t><br>\n"
+"                       <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                    </li>\n"
+"                </t>\n"
+"                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
+"                    <li>Kuvaus tapahtumasta:\n"
+"                   <t t-out=\"object.event_id.description\">Sisäinen kokous, jossa keskustellaan tuotteiden ja palveluiden uudesta hinnoittelusta.</t></li>\n"
+"                </t>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"   <br>\n"
+"    Kiitos,\n"
+"    <t t-if=\"object.event_id.user_id.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"            "
+
+#. module: appointment
+#: model:mail.template,body_html:appointment.appointment_booked_mail_template
+msgid ""
+"<div>\n"
+"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"></t>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or ctx.get('mail_tz')\"></t>\n"
+"    <p>\n"
+"    Appointment booked for <t t-out=\"object.appointment_type_id.name or ''\">Technical Demo</t>\n"
+"    <t t-if=\"object.appointment_type_id.category != 'custom' and object.appointment_type_id.schedule_based_on == 'users'\"> with <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t></t>.\n"
+"    </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/join?token={{ object.access_token }}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Join</a>\n"
+"        <a t-attf-href=\"/web?#id={{ object.id }}&amp;view_type=form&amp;model=calendar.event\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            View</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"            <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"                <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format=&quot;EEEE&quot;, lang_code=object.env.lang) or ''\">Wednesday</t>\n"
+"                </div>\n"
+"                <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format=&quot;d&quot;, lang_code=object.env.lang) or ''\">1</t>\n"
+"                </div>\n"
+"                <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format=&quot;MMMM y&quot;, lang_code=object.env.lang) or ''\">January 2020</t>\n"
+"                </div>\n"
+"                <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                    <t t-if=\"not object.allday\">\n"
+"                        <div>\n"
+"                            <t t-out=\"format_time(time=object.start, tz=mail_tz, time_format=&quot;short&quot;, lang_code=object.env.lang) or ''\">8:00</t>\n"
+"                        </div>\n"
+"                        <t t-if=\"mail_tz\">\n"
+"                            <div style=\"font-size: 10px; font-weight: normal;\">\n"
+"                                (<t t-out=\"mail_tz\"></t>)\n"
+"                            </div>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </div>\n"
+"            </td>\n"
+"            <td width=\"20px;\"></td>\n"
+"            <td style=\"padding-top: 5px;\">\n"
+"                <p><strong>Details of the event</strong></p>\n"
+"                <ul>\n"
+"                    <li t-if=\"object.location\">Location: <t t-out=\"object.location or ''\">Bruxelles</t>\n"
+"                        (<a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{ object.location }}\">View Map</a>)\n"
+"                    </li>\n"
+"                    <li t-if=\"recurrent\">When: <t t-out=\"object.recurrence_id.name or ''\">Every 1 Weeks, for 3 events</t></li>\n"
+"                    <li t-if=\"not object.allday and object.duration\">Duration: <t t-out=\"('%dH%02d' % (object.duration,round(object.duration*60)%60)) or ''\">0H30</t></li>\n"
+"                    <li>Attendees\n"
+"                    <ul>\n"
+"                        <li t-foreach=\"object.attendee_ids\" t-as=\"attendee\">\n"
+"                            <div t-attf-style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};\"> </div>\n"
+"                            <t t-if=\"attendee.common_name\">\n"
+"                                <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                <span style=\"margin-left:5px\">You</span>\n"
+"                            </t>\n"
+"                        </li>\n"
+"                    </ul></li>\n"
+"                    <li t-if=\"object.appointment_type_id.resource_manage_capacity\">\n"
+"                        For: <t t-out=\"object.resource_total_capacity_reserved\"></t> people\n"
+"                    </li>\n"
+"                    <li t-if=\"object.appointment_type_id.assign_method != 'time_auto_assign'\">\n"
+"                        Resources\n"
+"                        <ul>\n"
+"                            <li t-foreach=\"object.appointment_resource_ids\" t-as=\"resource\">\n"
+"                                <span style=\"margin-left:5px\" t-out=\"resource.name or ''\">Table 1</span>\n"
+"                            </li>\n"
+"                        </ul>\n"
+"                    </li>\n"
+"                    <li t-if=\"object.videocall_redirection\">\n"
+"                        How to Join:\n"
+"                        <t t-if=\"object.videocall_source == 'discuss'\"> Join with Odoo Discuss</t>\n"
+"                        <t t-else=\"\"> Join at</t><br>\n"
+"                        <a t-attf-href=\"{{ object.videocall_redirection }}\" target=\"_blank\" t-out=\"object.videocall_redirection or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                    </li>\n"
+"                </ul>\n"
+"                <t t-if=\"not is_html_empty(object.description)\">\n"
+"                    <li>Description of the event:\n"
+"                    <t t-out=\"object.description\"></t></li>\n"
+"                </t>\n"
+"            </td>\n"
+"    </tr></table>\n"
+"</div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"></t>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or ctx.get('mail_tz')\"></t>\n"
+"    <p>\n"
+"    Varattu aika <t t-out=\"object.appointment_type_id.name or ''\">teknistä esittelyä</t>varten\n"
+"    <t t-if=\"object.appointment_type_id.category != 'custom' and object.appointment_type_id.schedule_based_on == 'users'\"> <t t-out=\"object.partner_id.name or ''\">brandon Freemanin</t> kanssa</t>.\n"
+"    </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/join?token={{ object.access_token }}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Liity</a>\n"
+"        <a t-attf-href=\"/web?#id={{ object.id }}&amp;view_type=form&amp;model=calendar.event\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Näytä</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"            <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"                <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format=&quot;EEEE&quot;, lang_code=object.env.lang) or ''\">Keskiviikko</t>\n"
+"                </div>\n"
+"                <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format=&quot;d&quot;, lang_code=object.env.lang) or ''\">1</t>\n"
+"                </div>\n"
+"                <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format=&quot;MMMM y&quot;, lang_code=object.env.lang) or ''\">Tammikuu 2020</t>\n"
+"                </div>\n"
+"                <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                    <t t-if=\"not object.allday\">\n"
+"                        <div>\n"
+"                            <t t-out=\"format_time(time=object.start, tz=mail_tz, time_format=&quot;short&quot;, lang_code=object.env.lang) or ''\">8:00</t>\n"
+"                        </div>\n"
+"                        <t t-if=\"mail_tz\">\n"
+"                            <div style=\"font-size: 10px; font-weight: normal;\">\n"
+"                                (<t t-out=\"mail_tz\"></t>)\n"
+"                            </div>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </div>\n"
+"            </td>\n"
+"            <td width=\"20px;\"></td>\n"
+"            <td style=\"padding-top: 5px;\">\n"
+"                <p><strong>Tapahtuman yksityiskohdat</strong></p>\n"
+"                <ul>\n"
+"                    <li t-if=\"object.location\">Sijainti: <t t-out=\"object.location or ''\">Bruxelles</t>\n"
+"                       <a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{ object.location }}\">(Näytä kartta</a>)\n"
+"                    </li>\n"
+"                    <li t-if=\"recurrent\">Milloin: <t t-out=\"object.recurrence_id.name or ''\">Joka 1 viikko, 3 tapahtumaa</t></li>\n"
+"                    <li t-if=\"not object.allday and object.duration\">Kesto: <t t-out=\"('%dH%02d' % (object.duration,round(object.duration*60)%60)) or ''\">0H30</t></li>\n"
+"                    <li>Osallistujat\n"
+"                    <ul>\n"
+"                        <li t-foreach=\"object.attendee_ids\" t-as=\"attendee\">\n"
+"                            <div t-attf-style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};\"> </div>\n"
+"                            <t t-if=\"attendee.common_name\">\n"
+"                                <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                <span style=\"margin-left:5px\">Sinä</span>\n"
+"                            </t>\n"
+"                        </li>\n"
+"                    </ul></li>\n"
+"                    <li t-if=\"object.appointment_type_id.resource_manage_capacity\">\n"
+"                        For: <t t-out=\"object.resource_total_capacity_reserved\"></t> ihmiset\n"
+"                    </li>\n"
+"                    <li t-if=\"object.appointment_type_id.assign_method != 'time_auto_assign'\">\n"
+"                        Resurssit\n"
+"                        <ul>\n"
+"                            <li t-foreach=\"object.appointment_resource_ids\" t-as=\"resource\">\n"
+"                                <span style=\"margin-left:5px\" t-out=\"resource.name or ''\">Taulukko 1</span>\n"
+"                            </li>\n"
+"                        </ul>\n"
+"                    </li>\n"
+"                    <li t-if=\"object.videocall_redirection\">\n"
+"                        Miten liittyä:\n"
+"                        <t t-if=\"object.videocall_source == 'discuss'\"> Liity Odoo Discussin avulla</t>\n"
+"                        <t t-else=\"\"> Liity osoitteessa</t><br>\n"
+"                       <a t-attf-href=\"{{ object.videocall_redirection }}\" target=\"_blank\" t-out=\"object.videocall_redirection or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                    </li>\n"
+"                </ul>\n"
+"                <t t-if=\"not is_html_empty(object.description)\">\n"
+"                    <li>Kuvaus tapahtumasta:\n"
+"                   <t t-out=\"object.description\"></t></li>\n"
+"                </t>\n"
+"            </td>\n"
+"    </tr></table>\n"
+"</div>\n"
+"            "
+
+#. module: appointment
+#: model:mail.template,body_html:appointment.appointment_canceled_mail_template
+msgid ""
+"<div>\n"
+"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"></t>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or ctx.get('mail_tz')\"></t>\n"
+"    <p>\n"
+"    The appointment for <t t-out=\"object.appointment_type_id.name or ''\">Technical Demo</t> <t t-if=\"object.appointment_type_id.category != 'custom' and object.appointment_type_id.schedule_based_on == 'users'\"> with <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t></t> has been canceled.\n"
+"    </p>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"            <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"                <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz, dt_format=&quot;EEEE&quot;, lang_code=object.env.lang) or ''\">Wednesday</t>\n"
+"                </div>\n"
+"                <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                    <t t-out=\"str(object.start.day) or ''\">1</t>\n"
+"                </div>\n"
+"                <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz, dt_format=&quot;MMMM y&quot;, lang_code=object.env.lang) or ''\">January 2020</t>\n"
+"                </div>\n"
+"                <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                    <t t-if=\"not object.allday\">\n"
+"                        <div><t t-out=\"format_time(time=object.start, tz=mail_tz, time_format=&quot;short&quot;, lang_code=object.env.lang) or ''\">8:00</t></div>\n"
+"                        <t t-if=\"mail_tz\">\n"
+"                            <div style=\"font-size: 10px; font-weight: normal;\">\n"
+"                                (<t t-out=\"mail_tz\"></t>)\n"
+"                            </div>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </div>\n"
+"            </td>\n"
+"            <td width=\"20px;\"></td>\n"
+"            <td style=\"padding-top: 5px;\">\n"
+"                <del>\n"
+"                    <p><strong>Details of the event</strong></p>\n"
+"                    <ul>\n"
+"                            <li t-if=\"object.location\">Location: <t t-out=\"object.location or ''\">Bruxelles</t>\n"
+"                                (<a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{ object.location }}\">View Map</a>)\n"
+"                            </li>\n"
+"                            <li t-if=\"recurrent\">When: <t t-out=\"object.recurrence_id.name or ''\">Every 1 Weeks, for 3 events</t></li>\n"
+"                            <li t-if=\"not object.allday and object.duration\">Duration: <t t-out=\"('%dH%02d' % (object.duration,round(object.duration*60)%60)) or ''\">0H30</t></li>\n"
+"                        <li>Attendees\n"
+"                        <ul t-foreach=\"object.attendee_ids\" t-as=\"attendee\">\n"
+"                            <li>\n"
+"                                <div t-attf-style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};\"> </div>\n"
+"                                <t t-if=\"attendee.common_name\">\n"
+"                                    <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\"></span>\n"
+"                                </t>\n"
+"                                <t t-else=\"\">\n"
+"                                    <span style=\"margin-left:5px\">You</span>\n"
+"                                </t>\n"
+"                            </li>\n"
+"                        </ul></li>\n"
+"                        <li t-if=\"object.videocall_location\">\n"
+"                            How to Join:\n"
+"                            <t t-if=\"object.get_base_url() in object.videocall_location\"> Join with Odoo Discuss</t>\n"
+"                            <t t-else=\"\"> Join at</t><br>\n"
+"                            <a t-attf-href=\"{{ object.videocall_location }}\" target=\"_blank\" t-out=\"object.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                        </li>\n"
+"                    </ul>\n"
+"                    <t t-if=\"not is_html_empty(object.description)\">\n"
+"                        <li>Description of the event:\n"
+"                        <t t-out=\"object.description\"></t></li>\n"
+"                    </t>\n"
+"                </del>\n"
+"            </td>\n"
+"    </tr></table>\n"
+"</div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"></t>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or ctx.get('mail_tz')\"></t>\n"
+"    <p>\n"
+"   <t t-out=\"object.appointment_type_id.name or ''\">Teknisen demon</t> tapaaminen <t t-if=\"object.appointment_type_id.category != 'custom' and object.appointment_type_id.schedule_based_on == 'users'\"> <t t-out=\"object.partner_id.name or ''\">Brandon Freemanin</t> kanssa</t> on peruttu.\n"
+"    </p>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"            <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"                <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz, dt_format=&quot;EEEE&quot;, lang_code=object.env.lang) or ''\">Keskiviikko</t>\n"
+"                </div>\n"
+"                <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                    <t t-out=\"str(object.start.day) or ''\">1</t>\n"
+"                </div>\n"
+"                <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz, dt_format=&quot;MMMM y&quot;, lang_code=object.env.lang) or ''\">Tammikuu 2020</t>\n"
+"                </div>\n"
+"                <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                    <t t-if=\"not object.allday\">\n"
+"                        <div><t t-out=\"format_time(time=object.start, tz=mail_tz, time_format=&quot;short&quot;, lang_code=object.env.lang) or ''\">8:00</t></div>\n"
+"                        <t t-if=\"mail_tz\">\n"
+"                            <div style=\"font-size: 10px; font-weight: normal;\">\n"
+"                                (<t t-out=\"mail_tz\"></t>)\n"
+"                            </div>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </div>\n"
+"            </td>\n"
+"            <td width=\"20px;\"></td>\n"
+"            <td style=\"padding-top: 5px;\">\n"
+"                <del>\n"
+"                    <p><strong>Tapahtuman yksityiskohdat</strong></p>\n"
+"                    <ul>\n"
+"                            <li t-if=\"object.location\">Sijainti: <t t-out=\"object.location or ''\">Bruxelles</t>\n"
+"                               <a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{ object.location }}\">(Näytä kartta</a>)\n"
+"                            </li>\n"
+"                            <li t-if=\"recurrent\">Milloin: <t t-out=\"object.recurrence_id.name or ''\">Joka 1 viikko, 3 tapahtumaa</t></li>\n"
+"                            <li t-if=\"not object.allday and object.duration\">Kesto: <t t-out=\"('%dH%02d' % (object.duration,round(object.duration*60)%60)) or ''\">0H30</t></li>\n"
+"                        <li>Osallistujat\n"
+"                        <ul t-foreach=\"object.attendee_ids\" t-as=\"attendee\">\n"
+"                            <li>\n"
+"                                <div t-attf-style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};\"> </div>\n"
+"                                <t t-if=\"attendee.common_name\">\n"
+"                                    <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\"></span>\n"
+"                                </t>\n"
+"                                <t t-else=\"\">\n"
+"                                    <span style=\"margin-left:5px\">Sinä</span>\n"
+"                                </t>\n"
+"                            </li>\n"
+"                        </ul></li>\n"
+"                        <li t-if=\"object.videocall_location\">\n"
+"                            Miten liittyä:\n"
+"                            <t t-if=\"object.get_base_url() in object.videocall_location\"> Liity Odoo Discussin avulla</t>\n"
+"                            <t t-else=\"\"> Liity osoitteessa</t><br>\n"
+"                           <a t-attf-href=\"{{ object.videocall_location }}\" target=\"_blank\" t-out=\"object.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                        </li>\n"
+"                    </ul>\n"
+"                    <t t-if=\"not is_html_empty(object.description)\">\n"
+"                        <li>Kuvaus tapahtumasta:\n"
+"                       <t t-out=\"object.description\"></t></li>\n"
+"                    </t>\n"
+"                </del>\n"
+"            </td>\n"
+"    </tr></table>\n"
+"</div>\n"
+"            "
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form
+msgid "<i class=\"fa fa-info-circle\" title=\"Info\"/>"
+msgstr "<i class=\"fa fa-info-circle\" title=\"Info\"/>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid ""
+"<i class=\"fa fa-pencil me-2\" role=\"img\" aria-label=\"Edit\" "
+"title=\"Create custom questions in backend\"/>Add Custom Questions"
+msgstr ""
+"<i class=\"fa fa-pencil me-2\" role=\"img\" aria-label=\"Edit\" "
+"title=\"Create custom questions in backend\"/>Lisää mukautettuja kysymyksiä"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "<i class=\"fa fa-plus me-1\"/> Add Guests"
+msgstr "<i class=\"fa fa-plus me-1\"/> Lisää vieraita"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "<i class=\"fa fa-plus me-1\"/>Add Guests"
+msgstr "<i class=\"fa fa-plus me-1\"/>Lisää vieraita"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_meeting_details
+msgid ""
+"<i class=\"fa fa-video-camera fa-fw me-2 mt-1 text-muted\"/>\n"
+"                <span class=\"o_not_editable\">Online</span>"
+msgstr ""
+"<i class=\"fa fa-video-camera fa-fw me-2 mt-1 text-muted\"/>\n"
+"                <span class=\"o_not_editable\">Online</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form
+msgid ""
+"<i class=\"fa fa-warning me-2\"/>\n"
+"                    <span invisible=\"schedule_based_on != 'users'\">Impossible to share a link for an appointment type that has no user assigned.</span>\n"
+"                    <span invisible=\"schedule_based_on != 'resources'\">Impossible to share a link for an appointment type that has no resource assigned.</span>"
+msgstr ""
+"<i class=\"fa fa-warning me-2\"/>\n"
+"                    <span invisible=\"schedule_based_on != 'users'\">Mahdotonta jakaa linkkiä tapaamistyypille, jolle ei ole määritetty käyttäjää.</span>\n"
+"                    <span invisible=\"schedule_based_on != 'resources'\">Mahdotonta jakaa linkkiä ajanvaraustyypille, jolle ei ole määritetty resurssia.</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form
+msgid ""
+"<i class=\"fa fa-warning me-2\"/>\n"
+"                    <span invisible=\"schedule_based_on != 'users'\">You need to be part of an appointment type to be able to share a personal link.</span>\n"
+"                    <span invisible=\"schedule_based_on != 'resources'\">You can't create a personal link for an appointment type based on resources.</span>"
+msgstr ""
+"<i class=\"fa fa-warning me-2\"/>\n"
+"                    <span invisible=\"schedule_based_on != 'users'\">Henkilökohtaisen linkin jakaminen edellyttää, että olet osa tapaamistyyppiä.</span>\n"
+"                    <span invisible=\"schedule_based_on != 'resources'\">Et voi luoda henkilökohtaista linkkiä resursseihin perustuvalle tapaamistyypille.</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_meeting_date
+msgid "<small class=\"text-uppercase text-muted\">Date &amp; time</small>"
+msgstr ""
+"<small class=\"text-uppercase text-muted\">Päivämäärä ja kellonaika</small>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_meeting_details
+msgid "<small class=\"text-uppercase text-muted\">Meeting details</small>"
+msgstr ""
+"<small class=\"text-uppercase text-muted\">Kokouksen yksityiskohdat</small>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "<span class=\"d-block\">Scheduled</span>"
+msgstr "<span class=\"d-block\">Aikataulutettu</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "<span class=\"fa fa-globe\"/> Preview"
+msgstr "<span class=\"fa fa-globe\"/> Esikatselu"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "<span class=\"fa fa-pencil\"/> Edit"
+msgstr "<span class=\"fa fa-pencil\"/> Muokkaa"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "<span class=\"fa fa-share-alt\"/> Share"
+msgstr "<span class=\"fa fa-share-alt\"/> Jaa"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "<span class=\"fa fa-trash\"/> Delete"
+msgstr "<span class=\"fa fa-trash\"/> Poista"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid ""
+"<span class=\"px-2\" invisible=\"start_datetime or category == "
+"'anytime'\">or</span>"
+msgstr ""
+"<span class=\"px-2\" invisible=\"start_datetime or category == "
+"'anytime'\">tai</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "<span class=\"text-bg-danger\">Archived</span>"
+msgstr "<span class=\"text-bg-danger\">Arkistoitu</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "<span> hours</span>"
+msgstr "<span> tuntia</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "<span>Online</span>"
+msgstr "<span>Online</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid ""
+"<span>You are scheduling a booking outside the available hours of</span>"
+msgstr ""
+"<span>Yrität varata ajan käytettävissä olevien aukioloaikojen "
+"ulkopuolella</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "<span>people</span>"
+msgstr "<span>ihmiset</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"<strong>Appointment canceled!</strong>\n"
+"                                            You can schedule another appointment from here."
+msgstr ""
+"<strong>Tapaaminen peruttu!</strong>\n"
+"                                            Voit varata uuden ajan täältä."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"<strong>Appointment failed!</strong>\n"
+"                                            The selected timeslot is not available anymore.\n"
+"                                            Someone has booked the same time slot a few\n"
+"                                            seconds before you."
+msgstr ""
+"<strong>Ajanvaraus epäonnistui!</strong>\n"
+"                                            Valittu aikaväli ei ole enää käytettävissä.\n"
+"                                            Joku on varannut saman aikavarauksen muutaman\n"
+"                                            sekuntia ennen sinua."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"<strong>Appointment failed!</strong>\n"
+"                                            The selected timeslot is not available.\n"
+"                                            It appears you already have another meeting with us at that date."
+msgstr ""
+"<strong>Ajanvaraus epäonnistui!</strong>\n"
+"                                            Valittu aikaväli ei ole käytettävissä.\n"
+"                                            Näyttää siltä, että sinulla on jo toinen tapaaminen kanssamme kyseisenä ajankohtana."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "<strong>Booked for: </strong>"
+msgstr "<strong>Varattu: </strong>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "<strong>Contact Information</strong>"
+msgstr "<strong>Yhteystiedot</strong>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "<strong>Email: </strong>"
+msgstr "<strong>Sähköposti: </strong>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "<strong>Name: </strong>"
+msgstr "<strong>Nimi: </strong>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "<strong>Phone: </strong>"
+msgstr "<strong>Puhelin: </strong>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "<strong>Start Date: </strong>"
+msgstr "<strong>Aloituspäivä: </strong>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "<strong>Stop Date: </strong>"
+msgstr "<strong>Lopetuspäivä: </strong>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "<strong>Type: </strong>"
+msgstr "<strong> Tyyppi: </strong>"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid "A %s appointment type shouldn't be limited by datetimes."
+msgstr "%s-aikataulutyyppiä ei pitäisi rajoittaa päivämäärillä."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/calendar_view.py:0
+#, python-format
+msgid ""
+"A list of slots information is needed to create a custom appointment type"
+msgstr ""
+"Mukautetun tapaamistyypin luomiseen tarvitaan luettelo mahdollisista ajoista"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid ""
+"A punctual appointment type should be limited between a start and end "
+"datetime."
+msgstr ""
+"Täsmällinen tapaaminen on rajattava alkamis- ja päättymisajankohdan välille."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__access_token
+msgid "Access Token"
+msgstr "Pääsytunniste"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/kanban/kanban_record.xml:0
+#, python-format
+msgid "Action"
+msgstr "Toiminto"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_needaction
+msgid "Action Needed"
+msgstr "Vaatii toimenpiteitä"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__active
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__active
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__active
+msgid "Active"
+msgstr "Aktiivinen"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/gantt/gantt_renderer.js:0
+#: code:addons/appointment/static/src/views/gantt/gantt_renderer.xml:0
+#: code:addons/appointment/static/src/views/list/list_renderer.js:0
+#: code:addons/appointment/static/src/views/list/list_renderer.xml:0
+#, python-format
+msgid "Add Closing Day(s)"
+msgstr "Lisää päätöspäivät"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Add Guests"
+msgstr "Lisää vieraita"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_meeting_user
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated_card
+msgid "Add a function here..."
+msgstr "Lisää toiminto tänne..."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_meeting_user
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated_card
+msgid "Add a resource description here..."
+msgstr "Lisää resurssikuvaus tähän..."
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/js/wysiwyg.js:0
+#, python-format
+msgid "Add a specific appointment"
+msgstr "Lisää määrätty tapaaminen"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid "Add an intro message here..."
+msgstr "Lisää esittelyviesti tänne..."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "Add more details about you"
+msgstr "Lisää lisätietoja sinusta"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_manage_leaves
+msgid "Add or remove leaves from appointments"
+msgstr "Lisää tai poista vapaita tapaamisista"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Add to Google Agenda"
+msgstr "Lisää Google Agendaan"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Add to iCal/Outlook"
+msgstr "Add to iCal:iin tai Outlookiin"
+
+#. module: appointment
+#: model:res.groups,name:appointment.group_appointment_manager
+msgid "Administrator"
+msgstr "Ylläpitäjä"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "All"
+msgstr "Kaikki"
+
+#. module: appointment
+#: model:ir.actions.act_window,name:appointment.calendar_event_action_report_all
+#: model:ir.ui.menu,name:appointment.menu_schedule_report_all_events
+msgid "All Appointments"
+msgstr "Kaikki tapaamiset"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__allday
+#, python-format
+msgid "All day"
+msgstr "Koko päivä"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Allow Cancelling"
+msgstr "Salli peruutukset"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__allow_guests
+msgid "Allow Guests"
+msgstr "Salli vieraat"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__country_ids
+msgid "Allowed Countries"
+msgstr "Sallitut maat"
+
+#. module: appointment
+#: model:ir.model.constraint,message:appointment.constraint_appointment_answer_input_value_check
+msgid "An answer input must either have a text value or a predefined answer."
+msgstr ""
+"Vastaussyötteellä on oltava joko tekstiarvo tai ennalta määritetty vastaus."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/calendar_view.py:0
+#, python-format
+msgid "An appointment type is needed to get the link."
+msgstr "Jotta linkki voidaan luoda, tarvitaan ajanvaraustyyppi."
+
+#. module: appointment
+#: model:ir.model.constraint,message:appointment.constraint_calendar_event_check_resource_and_appointment_type
+msgid "An event cannot book resources without an appointment type."
+msgstr "Tapahtuma ei voi varata resursseja ilman ajanvaraustyyppiä."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_slot.py:0
+#, python-format
+msgid "An unique type slot should have a start and end datetime"
+msgstr "Yksilöllisellä aikaikkunalla tulee olla alkamis- ja lopetusaika"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__name
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_view_form
+msgid "Answer"
+msgstr "Vastaus"
+
+#. module: appointment
+#: model:ir.actions.act_window,name:appointment.appointment_answer_input_action_from_question
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_graph
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_pivot
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_tree
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Answer Breakdown"
+msgstr "Vastausten erittely"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_form
+msgid "Answer Input"
+msgstr "Vastauksen syöte"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Answers"
+msgstr "Vastaukset"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__category__anytime
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+#, python-format
+msgid "Any Time"
+msgstr "Milloin tahansa"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_invite__resources_choice__all_assigned_resources
+msgid "Any User/Resource"
+msgstr "Mikä tahansa käyttäjä/resurssi"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid "Anytime appointment types should only have one user but got %s users"
+msgstr ""
+"Ajanvaraustyypeillä pitäisi olla vain yksi käyttäjä, mutta käyttäjiä on %s"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/js/wysiwyg.js:0
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__appointment_type_id
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_type_id
+#, python-format
+msgid "Appointment"
+msgstr "Ajanvaraus"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_answer_input
+msgid "Appointment Answer Inputs"
+msgstr "Ajanvarauksen vastauksen syötteet"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_answer_input_ids
+msgid "Appointment Answers"
+msgstr "Ajanvarauksen vastaukset"
+
+#. module: appointment
+#: model:mail.message.subtype,description:appointment.mt_calendar_event_booked
+#: model:mail.message.subtype,name:appointment.mt_appointment_type_booked
+#: model:mail.message.subtype,name:appointment.mt_calendar_event_booked
+msgid "Appointment Booked"
+msgstr "Tapaaminen vahvistettu"
+
+#. module: appointment
+#: model:mail.template,subject:appointment.appointment_booked_mail_template
+msgid "Appointment Booked: {{ object.appointment_type_id.name }}"
+msgstr "Tapaaminen vahvistettu: {{ object.appointment_type_id.name }}"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_booking_line
+msgid "Appointment Booking Line"
+msgstr "Ajanvarausrivi"
+
+#. module: appointment
+#: model:mail.message.subtype,description:appointment.mt_calendar_event_canceled
+#: model:mail.message.subtype,name:appointment.mt_appointment_type_canceled
+#: model:mail.message.subtype,name:appointment.mt_calendar_event_canceled
+msgid "Appointment Canceled"
+msgstr "Tapaaminen peruttu"
+
+#. module: appointment
+#: model:mail.template,subject:appointment.appointment_canceled_mail_template
+msgid "Appointment Canceled: {{ object.appointment_type_id.name }}"
+msgstr "Tapaaminen peruttu: {{ object.appointment_type_id.name }}"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form
+msgid "Appointment Details"
+msgstr "Ajanvarauksen yksityiskohdat"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__appointment_duration_formatted
+msgid "Appointment Duration Formatted "
+msgstr "Ajanvarauksen kesto muotoiltu "
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__appointment_duration_formatted
+msgid "Appointment Duration formatted in words"
+msgstr "Ajanvarauksen kesto muotoiltu sanoina"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid "Appointment Duration should be higher than 0.00."
+msgstr "Nimityksen keston tulisi olla suurempi kuin 0,00."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_invite_id
+msgid "Appointment Invitation"
+msgstr "Ajanvarauksen kutsu"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_search
+msgid "Appointment Invitation Links"
+msgstr "Ajanvarauksen kutsun linkit"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_tree_invitation
+msgid "Appointment Invitations"
+msgstr "Tapaamisten kutsut"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_invite
+msgid "Appointment Invite"
+msgstr "Ajanvarauksen kutsu"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__meeting_ids
+msgid "Appointment Meetings"
+msgstr "Ajanvarauksen tapaamiset"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_appointments
+msgid "Appointment Name"
+msgstr "Tapaamisen nimi"
+
+#. module: appointment
+#: model:onboarding.onboarding,name:appointment.onboarding_onboarding_appointment
+msgid "Appointment Onboarding"
+msgstr "Ajanvarauksen alkuopastus"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_answer
+msgid "Appointment Question Answers"
+msgstr "Ajanvarauksen kysymyksien vastaukset"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_question
+msgid "Appointment Questions"
+msgstr "Ajanvarauksen kysymykset"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_resource
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__appointment_resource_id
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__name
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_resource_id
+msgid "Appointment Resource"
+msgstr "Varauksen resurssi"
+
+#. module: appointment
+#: model:ir.actions.server,name:appointment.resource_calendar_leaves_action_show_appointment_resources
+msgid "Appointment Resource Leaves"
+msgstr "Varaus Resurssi Lomat"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__resource_ids
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_resource_ids
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_search
+msgid "Appointment Resources"
+msgstr "Varauksen Resurssit"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_resource_action
+msgid ""
+"Appointment Resources are the places or equipment people can book\n"
+"                (e.g. Tables, Tennis Courts, Meeting Rooms, ...)"
+msgstr ""
+"Ajanvarausresurssit ovat paikkoja tai laitteita, joita ihmiset voivat varata\n"
+"                (esim. pöydät, tenniskentät, kokoushuoneet, ...)"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__name
+msgid "Appointment Title"
+msgstr "Ajanvarauksen otsikko"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_type
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__appointment_type_id
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__appointment_type_id
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__appointment_type_id
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__appointment_type_id
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_search
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_tree
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_search
+msgid "Appointment Type"
+msgstr "Tapaamisen tyyppi"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__appointment_type_ids
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "Appointment Types"
+msgstr "Tapaamisen tyypit"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "Appointment canceled"
+msgstr "Varaus peruttu"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "Appointment canceled by: %(partners)s"
+msgstr "Ajanvaraus peruttu. Peruja: %(partners)s"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "Appointment re-booked"
+msgstr "Nimitys varattu uudelleen"
+
+#. module: appointment
+#: model:mail.template,name:appointment.appointment_booked_mail_template
+msgid "Appointment: Appointment Booked"
+msgstr "Ajanvaraus: Ajanvaraus varattu"
+
+#. module: appointment
+#: model:mail.template,name:appointment.appointment_canceled_mail_template
+msgid "Appointment: Appointment Canceled"
+msgstr "Ajanvaraus: Ajanvaraus peruttu"
+
+#. module: appointment
+#: model:mail.template,name:appointment.attendee_invitation_mail_template
+msgid "Appointment: Attendee Invitation"
+msgstr "Nimitys: Osallistujan kutsu"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_slot
+msgid "Appointment: Time Slot"
+msgstr "Varaus: ajanjakso"
+
+#. module: appointment
+#: model:ir.actions.act_window,name:appointment.appointment_type_action
+#: model:ir.actions.act_window,name:appointment.calendar_event_action_appointment_reporting
+#: model:ir.ui.menu,name:appointment.appointment_menu_calendar
+#: model:ir.ui.menu,name:appointment.appointment_type_menu
+#: model:ir.ui.menu,name:appointment.main_menu_appointments
+#: model:ir.ui.menu,name:appointment.menu_schedule_report_all
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_graph
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_pivot
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_search
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_appointments
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_home_appointment
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_home_menu_appointment
+msgid "Appointments"
+msgstr "Tapaamiset"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_appointments
+msgid "Appointments by"
+msgstr "Ajanvarausten tekijät"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_search
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "Archived"
+msgstr "Arkistoitu"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__resources_choice
+msgid "Assign to"
+msgstr "Vastuuta"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__assign_method
+msgid "Assignment Method"
+msgstr "Vastuutustapa"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_slot.py:0
+#, python-format
+msgid ""
+"At least one slot duration is shorter than the meeting duration (%s hours)"
+msgstr "Ainakin yksi aika on lyhyempi kuin kokouksen kesto (%s tuntia)"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_attachment_count
+msgid "Attachment Count"
+msgstr "Liitteiden määrä"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__partner_ids
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Attendees"
+msgstr "Osallistujat"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_attended
+msgid "Attendees Arrived"
+msgstr "Saapuneet osallistujat"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__slot_ids
+msgid "Availabilities"
+msgstr "Saatavuudet"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__schedule_based_on
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__schedule_based_on
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_type_schedule_based_on
+msgid "Availability on"
+msgstr "Saatavuus aikana"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__answer_ids
+msgid "Available Answers"
+msgstr "Saatavilla olevat vastaukset"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_search
+msgid "Available In"
+msgstr "Suunnitelma on saatavilla"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__appointment_type_ids
+msgid "Available in"
+msgstr "Suunnitelma on saatavilla"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__avatar_1920
+msgid "Avatar"
+msgstr "Avatar"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__avatar_1024
+msgid "Avatar 1024"
+msgstr "Avatar 1024"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__avatar_128
+msgid "Avatar 128"
+msgstr "Avatar 128"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__avatar_256
+msgid "Avatar 256"
+msgstr "Avatar 256"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__avatar_512
+msgid "Avatar 512"
+msgstr "Avatar 512"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Back to edit mode"
+msgstr "Takaisin muokkaustilaan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__base_book_url
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__base_book_url
+msgid "Base Link URL"
+msgstr "Peruslinkin URL"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__calendar_event_ids
+msgid "Booked Appointments"
+msgstr "Varatut tapaamiset"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_tree_booking
+msgid "Booked by"
+msgstr "Varaaja"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__calendar_event_id
+msgid "Booking"
+msgstr "Varaus"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "Booking Details"
+msgstr "Varauksen tiedot"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__event_stop
+msgid "Booking End"
+msgstr "Varaus päättyy"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__booking_line_ids
+msgid "Booking Lines"
+msgstr "Varausrivit"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Booking Name"
+msgstr "Varauksen nimi"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__event_start
+msgid "Booking Start"
+msgstr "Varaus alkaa"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Bookings"
+msgstr "Varaukset"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_partner_ids
+msgid "CC to"
+msgstr "Sähköposti cc"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_calendar_attendee
+msgid "Calendar Attendee Information"
+msgstr "Osallistujan tiedot kalenterissa"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_calendar_event
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__calendar_event_id
+msgid "Calendar Event"
+msgstr "Kalenteritapahtuma"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_manage_leaves_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_onboarding_link_view_form
+msgid "Cancel"
+msgstr "Peruuta"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__min_cancellation_hours
+msgid "Cancel Before (hours)"
+msgstr "Peruuta ennen (tunnit)"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Cancel/Reschedule"
+msgstr "Peru tai uudelleenaikatauluta"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__canceled_mail_template_id
+msgid "Cancelation Email"
+msgstr "Peruutussähköposti"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__capacity
+msgid "Capacity"
+msgstr "Kapasiteetti"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__resource_manual_confirmation_percentage
+msgid "Capacity Percentage"
+msgstr "Kapasiteetin prosenttiosuus"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__capacity_reserved
+msgid "Capacity Reserved"
+msgstr "Kapasiteetti varattu"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__capacity_used
+msgid "Capacity Used"
+msgstr "Käytetty kapasiteetti"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_booking_line__capacity_reserved
+msgid "Capacity reserved by the user"
+msgstr "Käyttäjän varaama kapasiteetti"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_booking_line__capacity_used
+msgid "Capacity that will be used based on the capacity and resource selected"
+msgstr ""
+"Kapasiteetti, jota käytetään valitun kapasiteetin ja resurssin perusteella"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__category
+msgid "Category"
+msgstr "Kategoria"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_question__question_type__checkbox
+msgid "Checkboxes (multiple answers)"
+msgstr "Monivalinta (useita vastauksia)"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointments_list_layout
+msgid "Choose your appointment"
+msgstr "Valitse tapaaminen"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__company_id
+msgid "Company"
+msgstr "Yritys"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__disable_save_button
+msgid "Computes if alert is present"
+msgstr "Laskee, onko hälytys läsnä"
+
+#. module: appointment
+#: model:ir.ui.menu,name:appointment.appointment_menu_config
+msgid "Configuration"
+msgstr "Asetukset"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,button_text:appointment.appointment_onboarding_create_appointment_type_step
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid "Configure"
+msgstr "Konfiguroi"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_invite_action
+msgid ""
+"Configure links that allow booking appointments with custom settings<br>\n"
+"                (e.g. a specific user only, a list of appointment types, ...)"
+msgstr ""
+"Määritä linkit, jotka mahdollistavat tapaamisten varaamisen mukautetuilla asetuksilla<br>\n"
+"                (esim. vain tietty käyttäjä, luettelo ajanvaraustyypeistä, ...)"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_resources.xml:0
+#, python-format
+msgid "Confirm"
+msgstr "Vahvista"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "Confirm Appointment"
+msgstr "Vahvista tapaaminen"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/gantt/gantt_popover.xml:0
+#, python-format
+msgid "Confirm Check-In"
+msgstr "Vahvista sisäänkirjautuminen"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__booked_mail_template_id
+msgid "Confirmation Email"
+msgstr "Vahvistussähköposti"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_confirmation
+msgid "Confirmation Message"
+msgstr "Vahvistusviesti"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Confirmed"
+msgstr "Vahvistettu"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,button_text:appointment.appointment_onboarding_configure_calendar_provider_step
+msgid "Connect"
+msgstr "Yhdistä"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/onboarding_onboarding_step.py:0
+#, python-format
+msgid "Connect your Calendar"
+msgstr "Yhdistä kalenterisi"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,title:appointment.appointment_onboarding_configure_calendar_provider_step
+msgid "Connect your calendar"
+msgstr "Yhdistä kalenterisi"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_res_partner
+msgid "Contact"
+msgstr "Kontakti"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "Contact Details:"
+msgstr "Yhteystiedot:"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__message_partner_ids
+msgid ""
+"Contacts that need to be notified whenever a new appointment is booked or "
+"canceled,                                                  regardless of "
+"whether they attend or not"
+msgstr ""
+"Yhteyshenkilöt, joille on ilmoitettava aina, kun uusi aika on varattu tai "
+"peruttu,                                                   riippumatta siitä"
+" osallistuvatko he vai eivät"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointments_list_layout
+msgid "Continue <span class=\"oi oi-arrow-right\"/>"
+msgstr "Jatka <span class=\"oi oi-arrow-right\"/>"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.js:0
+#, python-format
+msgid "Copied!"
+msgstr "Kopioitu!"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/components/appointment_invite/appointment_invite_copy_close.xml:0
+#: code:addons/appointment/static/src/components/appointment_onboarding/appointment_onboarding_invite_buttons.xml:0
+#, python-format
+msgid "Copy Link & Close"
+msgstr "Kopioi linkki & sulje"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_manage_leaves_view_form
+msgid "Create Closing Day(s)"
+msgstr "Luo päätöspäivät"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_resource_action
+msgid "Create an Appointment Resource"
+msgstr "Luo ajanvarausresurssi"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_type_action_custom
+msgid ""
+"Create invites on the fly from your calendar and share them with anyone by "
+"using the Share Availabilities button."
+msgstr ""
+"Luo kutsuja lennossa kalenteristasi ja jaa ne kenelle tahansa Jaa avoimet "
+"ajat -painikkeella."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/onboarding_onboarding_step.py:0
+#, python-format
+msgid "Create your first Appointment"
+msgstr "Luo ensimmäinen tapaaminen"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__category__custom
+msgid "Custom"
+msgstr "Mukautettu"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#, python-format
+msgid "Custom Link"
+msgstr "Muokattu linkki"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__partner_id
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_search
+msgid "Customer"
+msgstr "Asiakas"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL APPOINTMENTS"
+msgstr ""
+"PUDOTA RAKENNUSPALIKAT TÄNNE, JOTTA NE OVAT KÄYTETTÄVISSÄ KAIKISSA "
+"TAPAAMISISSA"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_appointments
+#, python-format
+msgid "Date"
+msgstr "Päivämäärä"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Date &amp; time"
+msgstr "Päivä aika&amp; "
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_manage_leaves_view_form
+msgid "Dates"
+msgstr "Päivämäärät"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Declined"
+msgstr "Hylätty"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid "Default slots cannot be applied to the %s appointment type category."
+msgstr "Oletusaikoja ei voi soveltaa tapaamistyyppiluokkaan %s."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_slot__slot_type
+msgid ""
+"Defines the type of slot. The recurring slot is the default type which is used for\n"
+"        appointment type that are used recurringly in type like medical appointment.\n"
+"        The one shot type is only used when an user create a custom appointment type for a client by\n"
+"        defining non-recurring time slot (e.g. 10th of April 2021 from 10 to 11 am) from its calendar."
+msgstr ""
+"Määrittää korttipaikan tyypin. Toistuva paikka on oletustyyppi, jota käytetään\n"
+"         tapaamistyyppiin, kuten esimerkiksi säännöllisiin käynteihin lääkärin vastaanotolla.\n"
+"         Kerta-tyyppiä käytetään vain, kun käyttäjä luo mukautetun tapaamistyypin asiakkaalle\n"
+"         määrittelemällä kalenteristaan ​​kertaluonteisen aikavälin (esim. 10. huhtikuuta 2021 klo 10-11)."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__event_videocall_source
+msgid ""
+"Defines the type of video call link that will be used for the generated "
+"events. Keep it empty to prevent generating meeting url."
+msgstr ""
+"Määrittää videopuhelulinkin tyypin, jota käytetään luotujen tapahtumien "
+"yhteydessä. Pidä tyhjänä, jos haluat estää kokouksen url-osoitteen luomisen."
+
+#. module: appointment
+#: model:appointment.type,name:appointment.appointment_type_dental_care
+msgid "Dental Care"
+msgstr "Hampaiden hoito"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__description
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_form
+msgid "Description"
+msgstr "Kuvaus"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__destination_resource_ids
+msgid "Destination combination"
+msgstr "Määränpään yhdistelmä"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Details"
+msgstr "Tiedot"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_slot__allday
+msgid ""
+"Determine if the slot englobe the whole day, mainly used for unique slot "
+"type"
+msgstr ""
+"Määritä, kattaako ajanvaraus koko päivän. Tätä käytetään pääasiassa "
+"yksilölliselle aikatyypille"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form_insert_link
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+#, python-format
+msgid "Discard"
+msgstr "Hylkää"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__avatars_display
+msgid "Display the Users'/Resources' picture on the Website."
+msgstr "Käyttäjien/resurssien kuvan näyttäminen verkkosivustolla."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__resource_manual_confirmation
+msgid ""
+"Do not automatically accept meetings created from the appointment once the total capacity\n"
+"            reserved for a slot exceeds the percentage chosen. The appointment is still considered as reserved for\n"
+"            the slots availability."
+msgstr ""
+"Älä hyväksy automaattisesti tapaamisista luotuja kokouksia, kun kokonaiskapasiteetti on täyttynyt\n"
+"            varattu määrä ylittää valitun prosenttiosuuden. Ajanvarausta pidetään edelleen varattuna\n"
+"            käytettävissä olevien aikavälien osalta."
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_question__question_type__select
+msgid "Dropdown (one answer)"
+msgstr "Alasvetovalikko (yksi vastaus)"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__duration
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__appointment_duration
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Duration"
+msgstr "Kesto"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "Email*"
+msgstr "Sähköposti*"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "Email: %(email)s"
+msgstr "Sähköposti: %(email)s"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/appointment.py:0
+#, python-format
+msgid "Email: %s"
+msgstr "Sähköposti: %s"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__leave_end_dt
+msgid "End Date"
+msgstr "Päättymispäivä"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__end_datetime
+msgid "End Datetime"
+msgstr "Loppupäivämäärä"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_slot__end_datetime
+msgid "End datetime for unique slot type management"
+msgstr "Päättymisaika, jota käyteään yksilöllisen paikkatyypin hallintaan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__end_hour
+msgid "Ending Hour"
+msgstr "Lopetustunti"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_calendar_alarm
+msgid "Event Alarm"
+msgstr "Tapahtuman hälytys"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "Event Details"
+msgstr "Tapahtuman tiedot"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Every"
+msgstr "Joka"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Extra Comments..."
+msgstr "Lisäkommentit..."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Extra Message on Confirmation"
+msgstr "Vahvistuksen lisäviesti"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__message_confirmation
+msgid "Extra information provided once the appointment is booked."
+msgstr "Lisätieto, jota käytetään, kun tapaaminen on varattu."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_home_appointment
+msgid "Follow, reschedule or cancel your appointments"
+msgstr "Seuraa, siirrä tai peruuta tapaamisia"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_follower_ids
+msgid "Followers"
+msgstr "Seuraajat"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "For"
+msgstr "Kohde"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__weekday__5
+msgid "Friday"
+msgstr "Perjantai"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__start_datetime
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "From"
+msgstr "Alkaa"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__avatars_display
+msgid "Front-End Display"
+msgstr "Front-end -näyttö"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "Full name*"
+msgstr "Koko nimi*"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#, python-format
+msgid "Get Share Link"
+msgstr "Jaa linkki"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/onboarding_onboarding_step.py:0
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_onboarding_link_view_form
+#, python-format
+msgid "Get Your Link"
+msgstr "Hae linkkisi"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_onboarding_link
+msgid "Get a link to an appointment type during the onboarding"
+msgstr "Hae linkki tapaamistyyppiin perehdyttämisen aikana"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_invite__suggested_staff_user_ids
+msgid ""
+"Get the users linked to the appointment type selected to apply a domain on "
+"the users that can be selected"
+msgstr ""
+"Linkitä käyttäjät valittuun tapaamistyyppiin, jotta voit käyttää "
+"toimialuetta valittavissa oleville käyttäjille"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,title:appointment.appointment_onboarding_preview_invite_step
+msgid "Get your link"
+msgstr "Hae linkkisi"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Google Agenda"
+msgstr "Google Agenda"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_search
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_search
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "Group By"
+msgstr "Ryhmittely"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "Guest usage is limited to 10 customers for performance reason."
+msgstr "Vieraskäyttö on rajoitettu 10 asiakkaaseen suorituskyvyn vuoksi."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "Guests"
+msgstr "Vieraat"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP-reititys"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__has_message
+msgid "Has Message"
+msgstr "Sisältää viestin"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "How to join"
+msgstr "Miten liittyä"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__assign_method
+msgid ""
+"How users and resources will be assigned to meetings customers book on your "
+"website."
+msgstr ""
+"Miten käyttäjät ja resurssit osoitetaan kokouksiin, jotka asiakkaat varaavat"
+" verkkosivustollasi."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__id
+msgid "ID"
+msgstr "ID"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jos valittu, uudet viestit vaativat huomiotasi."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__message_has_error
+#: model:ir.model.fields,help:appointment.field_appointment_type__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "If empty, Odoo will not send emails"
+msgstr "Jos tyhjä, Odoo ei lähetä sähköposteja"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_slot__restrict_to_resource_ids
+msgid ""
+"If empty, all resources are considered to be available.\n"
+"If set, only the selected resources will be taken into account for this slot."
+msgstr ""
+"Jos tyhjä, kaikkien resurssien katsotaan olevan käytettävissä.\n"
+"Jos asetettu, vain valitut resurssit otetaan huomioon tässä lähtö- ja saapumisajassa."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_slot__restrict_to_user_ids
+msgid ""
+"If empty, all users are considered to be available.\n"
+"If set, only the selected users will be taken into account for this slot."
+msgstr ""
+"Jos tyhjä, kaikkien käyttäjien katsotaan olevan käytettävissä.\n"
+"Jos asetettu, vain valitut käyttäjät otetaan huomioon tässä ajassa."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "If empty, the meeting is considered as taking place online"
+msgstr "Jos tämä kenttä on tyhjä, kokouksen katsotaan tapahtuneen verkossa"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__canceled_mail_template_id
+msgid ""
+"If set an email will be sent to the customer when the appointment is "
+"canceled."
+msgstr ""
+"Jos asetettu, asiakkaalle lähetetään sähköpostiviesti, kun tapaaminen "
+"peruutetaan."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__booked_mail_template_id
+msgid ""
+"If set an email will be sent to the customer when the appointment is "
+"confirmed."
+msgstr ""
+"Jos se on asetettu, asiakkaalle lähetetään sähköpostiviesti, kun tapaaminen "
+"on vahvistettu."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_resource__active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
+"Jos aktiivisen kentän arvo on epätosi (false), voit piilottaa resurssin "
+"poistamatta sitä."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_booking_line__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the event "
+"alarm information without removing it."
+msgstr ""
+"Jos aktiivinen-kentän arvoksi asetetaan false, voit piilottaa "
+"tapahtumahälytystiedot poistamatta niitä."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__image_1920
+msgid "Image"
+msgstr "Kuva"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__image_1024
+msgid "Image 1024"
+msgstr "Kuva 1024"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__image_128
+msgid "Image 128"
+msgstr "Kuva 128"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__image_256
+msgid "Image 256"
+msgstr "Kuva 256"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__image_512
+msgid "Image 512"
+msgstr "Kuva 512"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/js/wysiwyg.js:0
+#, python-format
+msgid "Insert Appointment Link"
+msgstr "Lisää tapaamisen linkki"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form_insert_link
+msgid "Insert link"
+msgstr "Lisää linkki"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_intro
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Introduction Message"
+msgstr "Esittelyviesti"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/js/appointment_form.js:0
+#: code:addons/appointment/static/src/js/appointment_validation.js:0
+#, python-format
+msgid "Invalid Email"
+msgstr "Virheellinen sähköpostiosoite"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__appointment_invite_ids
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_tree
+msgid "Invitation Links"
+msgstr "Kutsulinkit"
+
+#. module: appointment
+#: model:mail.template,description:appointment.attendee_invitation_mail_template
+msgid "Invitation email to new attendees of an appointment"
+msgstr "Kutsusähköposti uusille osallistujille tapaamiseen"
+
+#. module: appointment
+#: model:mail.template,subject:appointment.attendee_invitation_mail_template
+msgid "Invitation to {{ object.event_id.name }}"
+msgstr "Kutsu {{ object.event_id.name }}"
+
+#. module: appointment
+#: model:ir.actions.act_window,name:appointment.appointment_type_action_custom
+#: model:ir.ui.menu,name:appointment.menu_appointment_type_custom
+msgid "Invitations"
+msgstr "Kutsut"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_is_follower
+msgid "Is Follower"
+msgstr "On seuraaja"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__is_published
+msgid "Is Published"
+msgstr "On julkaistu"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid ""
+"It's too late to cancel online, please contact the attendees another way if "
+"you really can't make it."
+msgstr ""
+"On liian myöhäistä perua, ota yhteyttä osallistujiin toisella tapaa jos et "
+"pysty osallistumaan. "
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Join at"
+msgstr "Liity"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Join with Odoo Discuss"
+msgstr "Liity Odoo Discussilla"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__country_ids
+msgid ""
+"Keep empty to allow visitors from any country, otherwise you only allow "
+"visitors from selected countries"
+msgstr ""
+"Pidä tyhjänä salliaksesi vierailijat mistä tahansa maasta, muutoin sallit "
+"pääsyn ainoastaan valituista maista."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__allow_guests
+msgid "Let attendees invite guests when registering a meeting."
+msgstr "Anna osallistujien kutsua vieraita, kun he rekisteröivät kokouksen."
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#, python-format
+msgid "Link Copied in your clipboard!"
+msgstr "Linkki kopioitu leikepöydälle!"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form
+msgid "Link Generator"
+msgstr "Linkin luoja"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__book_url
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form
+msgid "Link URL"
+msgstr "Linkin URL"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/components/appointment_invite/appointment_invite_copy_close.js:0
+#: code:addons/appointment/static/src/components/appointment_onboarding/appointment_onboarding_invite_buttons.js:0
+#, python-format
+msgid "Link copied to clipboard!"
+msgstr "Linkki kopioitu leikepöydälle!"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__linked_resource_ids
+msgid "Linked Resource"
+msgstr "Linkitetty resurssi"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_resource__linked_resource_ids
+msgid "List of resources that can be combined to handle a bigger demand."
+msgstr ""
+"Luettelo resursseista, joita voidaan yhdistää suuremman kysynnän "
+"käsittelemiseksi."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__location_id
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Location"
+msgstr "Sijainti"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__location
+msgid "Location formatted"
+msgstr "Sijainnin muotoilu"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__location
+msgid "Location formatted for one line uses"
+msgstr "Sijainti muotoiltu verkkokäyttäjille"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,done_text:appointment.appointment_onboarding_create_appointment_type_step
+msgid "Looks great!"
+msgstr "Näyttää hyvältä!"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_resources.xml:0
+#, python-format
+msgid "Make your choice"
+msgstr "Tee valintasi"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__resource_manage_capacity
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_type_manage_capacity
+msgid "Manage Capacities"
+msgstr "Hallitse kapasiteettia"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__resource_manage_capacity
+#: model:ir.model.fields,help:appointment.field_calendar_event__appointment_type_manage_capacity
+msgid ""
+"Manage the maximum amount of people a resource can handle (e.g. Table for 6 "
+"persons, ...)"
+msgstr ""
+"Hallitse resurssin käsiteltävien henkilöiden enimmäismäärää (esim. pöytä 6 "
+"henkilölle, ...)"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__resource_manual_confirmation
+msgid "Manual Confirmation"
+msgstr "Manuaalinen vahvistus"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Max in"
+msgstr "Enimmäismäärä"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_resource__capacity
+msgid ""
+"Maximum amount of people for this resource (e.g. Table for 6 persons, ...)"
+msgstr "Tämän resurssin enimmäishenkilömäärä (esim. Pöytä 6 hengelle, ...)"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_invite__resources_choice__current_user
+msgid "Me (only with Users)"
+msgstr "Minä (vain käyttäjien kanssa)"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/onboarding_onboarding_step.py:0
+#: code:addons/appointment/models/onboarding_onboarding_step.py:0
+#, python-format
+msgid "Meet With Me"
+msgstr "Tapaaminen kanssani"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__videocall_redirection
+msgid "Meeting redirection URL"
+msgstr "Kokouksen uudelleenohjauksen URL-osoite"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "Meetings"
+msgstr "Tapaamiset"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_has_error
+msgid "Message Delivery error"
+msgstr "Ongelma viestin toimituksessa"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Message from the Organizer"
+msgstr "Järjestäjän viesti"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_ids
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Messages"
+msgstr "Viestit"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Min"
+msgstr "Minimi"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__weekday__1
+msgid "Monday"
+msgstr "Maanantai"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "More Options"
+msgstr "Lisää valintoja"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_question__question_type__text
+msgid "Multi-line text"
+msgstr "Monirivinen teksti"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "My Appointments"
+msgstr "Omat tapaamiseni"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_search
+msgid "My Links"
+msgstr "Omat linkkini"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "Name"
+msgstr "Nimi"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/js/wysiwyg.js:0
+#: code:addons/appointment/static/src/js/wysiwyg.js:0
+#, python-format
+msgid "Navigation"
+msgstr "Navigaatio"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_alarm__default_for_new_appointment_type
+msgid "New Appointments Default"
+msgstr "Uusien tapaamisten oletusarvo"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_answer_input_action_from_question
+msgid "No Answers yet!"
+msgstr "Ei vastauksia vielä!"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_type_action
+msgid "No Appointment Configured"
+msgstr "Tapaamisia ei ole määritetty"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.calendar_event_action_view_bookings_resources
+#: model_terms:ir.actions.act_window,help:appointment.calendar_event_action_view_bookings_users
+msgid "No Appointment or Resource were found."
+msgstr "Varausta tai resurssia ei löytynyt."
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_type_action_custom
+msgid "No Custom Availabilities Shared!"
+msgstr "Ei jaettuja mukautettuja vapaita aikoja!"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__avatars_display__hide
+msgid "No Picture"
+msgstr "Ei kuvaa"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_invite_action
+msgid "No Shared Links yet!"
+msgstr "Ei jaettuja linkkejä vielä!"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__appointment_type_info_msg
+msgid "No User Assigned Message"
+msgstr "Ei viestiä käyttäjän vastuuttamisesta"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.calendar_event_action_appointment_reporting
+#: model_terms:ir.actions.act_window,help:appointment.calendar_event_action_report_all
+msgid "No data yet!"
+msgstr "Ei vielä tietoja!"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "None"
+msgstr "Ei mitään"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_calendar_event__alarm_ids
+msgid "Notifications sent to all attendees to remind of the meeting."
+msgstr "Ilmoitus tapaamisesta lähetetty kaikille osanottajille."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Toimenpiteiden määrä"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_has_error_counter
+msgid "Number of errors"
+msgstr "Virheiden määrä"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Toimenpiteitä vaativien viestien määrä"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Toimitusvirheellisten viestien määrä"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid "Number of people"
+msgstr "Henkilömäärä"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__event_videocall_source__discuss
+msgid "Odoo Discuss"
+msgstr "Odoo Discuss"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_onboarding_onboarding
+msgid "Onboarding"
+msgstr "Perehdytys"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,step_image_alt:appointment.appointment_onboarding_configure_calendar_provider_step
+msgid "Onboarding Connect your calendar"
+msgstr "Perehdyttäminen Yhdistä kalenterisi"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,step_image_alt:appointment.appointment_onboarding_preview_invite_step
+msgid "Onboarding Get your link"
+msgstr "Perehdyttäminen Hanki linkki"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,step_image_alt:appointment.appointment_onboarding_create_appointment_type_step
+msgid "Onboarding Set Your Availabilities"
+msgstr "Perehdyttäminen Määritä saatavuutesi"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_onboarding_onboarding_step
+msgid "Onboarding Step"
+msgstr "Perehdytyksen askel"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__slot_type__unique
+msgid "One Shot"
+msgstr "Yhden kerran"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form
+msgid ""
+"Only letters, numbers, underscores and dashes are allowed in your links."
+msgstr ""
+"Vain kirjaimet, numerot, alaviivat ja väliviivat ovat sallittuja linkeissä."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_invite.py:0
+#, python-format
+msgid ""
+"Only letters, numbers, underscores and dashes are allowed in your links. You"
+" need to adapt %s."
+msgstr ""
+"Vain kirjaimet, numerot, alaviivat ja väliviivat ovat sallittuja linkeissä. "
+"Sinun on mukautettava %s."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid "Only one anytime appointment type is allowed for a specific user."
+msgstr ""
+"Vain yksi milloin-tahansa tapaamistyyppi on sallittu tietylle käyttäjälle."
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#, python-format
+msgid "Open"
+msgstr "Avoin"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_form
+msgid "Opening Hours"
+msgstr "Aukioloajat"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_meeting_user
+msgid "Operator"
+msgstr "Operaattori"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Options"
+msgstr "Vaihtoehdot"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__user_id
+msgid "Organizer"
+msgstr "Järjestäjä"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "Our first availability is"
+msgstr "Ensimmäinen vapaa aika on"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Outlook"
+msgstr "Outlook"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "Past"
+msgstr "Mennyt"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_booker_id
+msgid "Person who is booking the appointment"
+msgstr "Henkilö, joka varaa tapaamisen"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "Phone number*"
+msgstr "Puhelinnumero*"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "Phone: %(phone)s"
+msgstr "Puhelin: %(phone)s"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/appointment.py:0
+#, python-format
+msgid "Phone: %s"
+msgstr "Puhelinnumero: %s"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__assign_method__resource_time
+msgid "Pick User/Resource then Time"
+msgstr "Valitse käyttäjä/resurssi ja sitten aika"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_manage_leaves_view_form
+msgid "Pick a Work Schedule..."
+msgstr "Valitse työaikataulu..."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_form
+msgid "Pick a schedule to restrict openings"
+msgstr "Valitse aikataulu aukkojen rajoittamiseksi"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#, python-format
+msgid "Pick your availabilities"
+msgstr "Valitse käytettävyytesi"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__placeholder
+msgid "Placeholder"
+msgstr "Paikanpitäjä"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid "Please, select another date."
+msgstr "Valitse toinen päivä."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__suggested_resource_ids
+msgid "Possible resources"
+msgstr "Mahdolliset resurssit"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__suggested_staff_user_ids
+msgid "Possible users"
+msgstr "Mahdolliset käyttäjät"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/components/appointment_onboarding/appointment_onboarding_invite_buttons.xml:0
+#: model:onboarding.onboarding.step,button_text:appointment.appointment_onboarding_preview_invite_step
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#, python-format
+msgid "Preview"
+msgstr "Esikatselu"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__category__punctual
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "Punctual"
+msgstr "Täsmällinen"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__question_id
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__question_id
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__name
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_search
+msgid "Question"
+msgstr "Kysymys"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__question_type
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__question_type
+msgid "Question Type"
+msgstr "Kysymyksen tyyppi"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__question_ids
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Questions"
+msgstr "Kysymykset"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_question__question_type__radio
+msgid "Radio (one answer)"
+msgstr "Radio (yksi vastaus)"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__rating_ids
+msgid "Ratings"
+msgstr "Arviointi"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__reason
+msgid "Reason"
+msgstr "Syy"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__slot_type__recurring
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__category__recurring
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "Recurring"
+msgstr "Toistuva"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__redirect_url
+msgid "Redirect URL"
+msgstr "Edelleenohjattava URL"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__reminder_ids
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__alarm_ids
+#: model:ir.ui.menu,name:appointment.menu_appointment_reminders
+msgid "Reminders"
+msgstr "Muistutukset"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Remove"
+msgstr "Poista"
+
+#. module: appointment
+#: model:ir.ui.menu,name:appointment.menu_schedule_report
+#: model:ir.ui.menu,name:appointment.reporting_menu_calendar
+msgid "Reporting"
+msgstr "Raportointi"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__question_required
+msgid "Required Answer"
+msgstr "Tarvittava vastaus"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__resource_id
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Resource"
+msgstr "Resurssi"
+
+#. module: appointment
+#: model:ir.actions.act_window,name:appointment.calendar_event_action_view_bookings_resources
+#: model:ir.actions.server,name:appointment.calendar_event_action_all_resources_bookings
+msgid "Resource Bookings"
+msgstr "Resurssivaraukset"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__calendar_id
+msgid "Resource Calendar"
+msgstr "Resurssikalenteri"
+
+#. module: appointment
+#: model:ir.ui.menu,name:appointment.menu_appointment_resource_leaves
+msgid "Resource Leaves"
+msgstr "Resurssivapaat"
+
+#. module: appointment
+#: model:ir.actions.act_window,name:appointment.appointment_resource_action
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__resource_ids
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__resource_ids
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__schedule_based_on__resources
+#: model:ir.ui.menu,name:appointment.menu_appointment_resource
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_tree
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_tree_invitation
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "Resources"
+msgstr "Resurssit"
+
+#. module: appointment
+#: model:ir.ui.menu,name:appointment.menu_appointment_schedule_resource_booking
+msgid "Resources Bookings"
+msgstr "Resurssien varaukset"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__resources_on_leave
+msgid "Resources intersecting with leave time"
+msgstr "Loma-ajan kanssa risteävät resurssit"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "Responsible"
+msgstr "Vastuuhenkilö"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_tree
+msgid "Restrict to Resource"
+msgstr "Rajoita resurssiin"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__restrict_to_resource_ids
+msgid "Restrict to Resources"
+msgstr "Rajoita resursseja"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_tree
+msgid "Restrict to User"
+msgstr "Rajoita käyttäjälle"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__restrict_to_user_ids
+msgid "Restrict to Users"
+msgstr "Rajoita käyttäjille"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_manage_leaves_view_form
+msgid "Restrict to specific Resources"
+msgstr "Rajoita tiettyihin resursseihin"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "SCHEDULED"
+msgstr "AIKATAULUTETTU"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Tekstiviestin toimitusvirhe"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__weekday__6
+msgid "Saturday"
+msgstr "Lauantai"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Save"
+msgstr "Tallenna"
+
+#. module: appointment
+#: model:ir.ui.menu,name:appointment.menu_appointment_schedule_resources
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Schedule"
+msgstr "Aikatauluta"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__schedule_based_on
+msgid "Schedule Based On"
+msgstr "Aikataulu perustuu"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/js/wysiwyg.js:0
+#, python-format
+msgid "Schedule an Appointment"
+msgstr "Aikatauluta tapaaminen"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.calendar_event_action_appointment_reporting
+#: model_terms:ir.actions.act_window,help:appointment.calendar_event_action_report_all
+msgid "Schedule appointments to get statistics"
+msgstr "Aikatauluta tapaamiset nähdäksesi tilastoja"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__min_schedule_hours
+msgid "Schedule before (hours)"
+msgstr "Aikatauluta ennen (tunteja)"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__max_schedule_days
+msgid "Schedule not after (days)"
+msgstr "Älä aikatuluta jälkeen (päiviä)"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Scheduling"
+msgstr "Aikataulutus"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "Search in All"
+msgstr "Etsi kaikista"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "Search in Description"
+msgstr "Hae kuvauksesta"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "Search in Name"
+msgstr "Hae nimestä"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "Search in Responsible"
+msgstr "Hae vastuullisesta"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#, python-format
+msgid "Select Dates"
+msgstr "Valitse päivät"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__assign_method__time_resource
+msgid "Select Time then User/Resource"
+msgstr "Valitse Aika ja sitten Käyttäjä/Resurssi"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__assign_method__time_auto_assign
+msgid "Select Time then auto-assign"
+msgstr "Valitse Aika ja määritä sitten automaattisesti"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid "Select a date &amp; time"
+msgstr "Valitse päivämäärä &amp; aika"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_slots.xml:0
+#, python-format
+msgid "Select a time"
+msgstr "Valitse aika"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Select attendees..."
+msgstr "Valitse osallistujat..."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__value_answer_id
+msgid "Selected Answer"
+msgstr "Valittu vastaus"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__appointment_type_count
+msgid "Selected Appointments Count"
+msgstr "Valittujen vastausten määrä"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_search
+msgid "Selection Questions"
+msgstr "Valinnan kysymys"
+
+#. module: appointment
+#: model:mail.template,description:appointment.appointment_canceled_mail_template
+msgid "Sent to all attendees when an appointment is cancelled"
+msgstr "Lähetä kaikille osallistujille, kun tapaaminen perutaan"
+
+#. module: appointment
+#: model:mail.template,description:appointment.appointment_booked_mail_template
+msgid "Sent to followers of an appointment type when a meeting is booked"
+msgstr "Lähetetään tapaamistyypin seuraajille, kun tapaaminen on varattu"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__sequence
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__sequence
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__sequence
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__sequence
+msgid "Sequence"
+msgstr "Järjestys"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,title:appointment.appointment_onboarding_create_appointment_type_step
+msgid "Set your availabilities"
+msgstr "Aseta käytettävissä olevat aikasi"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_tree
+msgid "Share"
+msgstr "Jaa"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#, python-format
+msgid "Share Appointment Link"
+msgstr "Jaa tapaamisen linkki"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#, python-format
+msgid "Share Availabilities"
+msgstr "Jaa saatavuudet"
+
+#. module: appointment
+#. odoo-javascript
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.js:0
+#, python-format
+msgid "Share Link"
+msgstr "Jaa linkki"
+
+#. module: appointment
+#: model:ir.actions.act_window,name:appointment.appointment_invite_action
+#: model:ir.ui.menu,name:appointment.menu_appointment_invite
+msgid "Share Links"
+msgstr "Jaa linkit"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_type_action
+msgid ""
+"Share calendar link allowing people to book meetings with you, your team or "
+"a resource."
+msgstr ""
+"Jaa kalenterilinkki, jonka avulla ihmiset voivat varata tapaamisia sinun, "
+"tiimisi tai resurssin kanssa."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_onboarding_link_view_form
+msgid ""
+"Share this link to let people book meetings with you, your team or a "
+"resource."
+msgstr ""
+"Jaa tämä linkki, jotta ihmiset voivat varata tapaamisia sinun, tiimisi tai "
+"resurssin kanssa."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__shareable
+msgid "Shareable"
+msgstr "Jaettavissa"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Shared Links"
+msgstr "Jaetut linkit"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__short_code
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__short_code
+msgid "Short Code"
+msgstr "Lyhyt koodi"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__short_code_format_warning
+msgid "Short Code Format Warning"
+msgstr "Lyhyen koodin muotoilun varoitus"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__short_code_unique_warning
+msgid "Short Code Unique Warning"
+msgstr "Lyhyen koodin yksilöllinen varotus"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__avatars_display__show
+msgid "Show Pictures"
+msgstr "Näytä kuvia"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_question__question_type__char
+msgid "Single line text"
+msgstr "Yksirivinen teksti"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__slot_type
+msgid "Slot type"
+msgstr "Aikatyyppi"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__message_intro
+msgid "Small description of the appointment type."
+msgstr "Lyhyt kuvaus tapaamistyypistä."
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "Sorry,"
+msgstr "Pahoittelut,"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "Sorry, it is no longer possible to schedule an appointment."
+msgstr "Valitettavasti ajanvaraus ei ole enää mahdollista."
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "Sorry, there is not any more availability for the asked capacity."
+msgstr "Valitettavasti pyydettyä kapasiteettia ei ole enää saatavilla."
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "Sorry, we have no availability for an appointment."
+msgstr "Pahoittelut, vapaita aikoja ei ole."
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "Sorry, we have no more slots available for this month."
+msgstr "Pahoittelut, tässä kuussa ei ole vapaita aikoja."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__source_resource_ids
+msgid "Source combination"
+msgstr "Lähdeyhdistelmä"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__appointment_resource_ids
+msgid "Specific Resources"
+msgstr "Erityiset resurssit"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_invite__resources_choice__specific_resources
+msgid "Specific Users/Resources"
+msgstr "Erityiset käyttäjät/resurssit"
+
+#. module: appointment
+#: model:ir.actions.act_window,name:appointment.calendar_event_action_view_bookings_users
+#: model:ir.actions.server,name:appointment.calendar_event_action_all_users_appointments
+#: model:ir.ui.menu,name:appointment.menu_appointment_schedule_staff_appointment
+msgid "Staff Bookings"
+msgstr "Henkilöstön varaukset"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__leave_start_dt
+msgid "Start Date"
+msgstr "Alkupäivä"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__start_datetime
+msgid "Start Datetime"
+msgstr "Aloituspäivämäärä"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_booking_line__event_start
+msgid "Start date of an event, without time for full days events"
+msgstr "Tapahtuman alkupäivä, kokopäivän tapahtumille ilman aikaa."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_slot__start_datetime
+msgid "Start datetime for unique slot type management"
+msgstr "Yksilöllisen ajan hallinnan alkuaika"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__start_hour
+msgid "Starting Hour"
+msgstr "Alkuaika"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,done_text:appointment.appointment_onboarding_configure_calendar_provider_step
+#: model:onboarding.onboarding.step,done_text:appointment.appointment_onboarding_preview_invite_step
+msgid "Step Completed!"
+msgstr "Vaihe valmis!"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_booking_line__event_stop
+msgid "Stop date of an event, without time for full days events"
+msgstr "Tapahtuman loppupäivä, kokopäivän tapahtumille ilman aikaa."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_tree_booking
+msgid "Subject"
+msgstr "Aihe"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__answer_input_ids
+msgid "Submitted Answers"
+msgstr "Lähetetyt vastaukset"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__weekday__7
+msgid "Sunday"
+msgstr "Sunnuntai"
+
+#. module: appointment
+#: model:appointment.question,name:appointment.appointment_type_dental_care_question_1
+msgid "Symptoms"
+msgstr "Oireet"
+
+#. module: appointment
+#: model:appointment.type,name:appointment.appointment_type_tennis_court
+msgid "Tennis Court"
+msgstr "Tenniskenttä"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__value_text_box
+msgid "Text Answer"
+msgstr "Tekstivastaus"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_search
+msgid "Text Questions"
+msgstr "Tekstikysymys"
+
+#. module: appointment
+#: model:ir.model.constraint,message:appointment.constraint_appointment_invite_short_code_uniq
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form
+msgid "The URL is already taken, please pick another code."
+msgstr "URL on jo käytössä. Valitse toinen."
+
+#. module: appointment
+#: model:ir.model.constraint,message:appointment.constraint_appointment_type_check_resource_manual_confirmation_percentage
+msgid "The capacity percentage should be between 0 and 100%"
+msgstr "Kapasiteettiprosentin on oltava 0-100 %"
+
+#. module: appointment
+#: model:ir.model.constraint,message:appointment.constraint_appointment_booking_line_check_capacity_reserved
+msgid "The capacity reserved should be positive."
+msgstr "Varatun kapasiteetin pitäisi olla positiivinen."
+
+#. module: appointment
+#: model:ir.model.constraint,message:appointment.constraint_appointment_booking_line_check_capacity_used
+msgid "The capacity used can not be lesser than the capacity reserved"
+msgstr "Käytetty kapasiteetti ei voi olla pienempi kuin varattu kapasiteetti"
+
+#. module: appointment
+#: model:ir.model.constraint,message:appointment.constraint_appointment_slot_check_start_and_end_hour
+msgid "The end time must be later than the start time."
+msgstr "Loppuajan täytyy olla alkuajan jälkeen."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "The event %s cannot book resources without an appointment type."
+msgstr "Tapahtuma %s ei voi varata resursseja ilman ajanvaraustyyppiä."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "The field '%s' does not exist in the targeted model"
+msgstr "Kenttä '%s' ei ole olemassa kohteena olevassa mallissa"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_invite.py:0
+#, python-format
+msgid "The following appointment type(s) have no resource assigned: %s."
+msgstr "Seuraaville ajanvaraustyypeille ei ole määritetty resursseja: %s."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_invite.py:0
+#, python-format
+msgid "The following appointment type(s) have no staff assigned: %s."
+msgstr "Seuraavilla tapaamistyypeillä ei ole varattuna henkilökuntaa: %s."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_question.py:0
+#, python-format
+msgid "The following question(s) do not have any selectable answers : %s"
+msgstr "Seuraavilla kysymyksillä ei ole valittavia vastauksia: %s"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid ""
+"The following users are in restricted slots but they are not part of the "
+"available staff: %s"
+msgstr ""
+"Seuraavat käyttäjät on aikataulutettu, mutta he eivät ole osa saatavilla "
+"olevaa henkilökuntaa: %s"
+
+#. module: appointment
+#: model:ir.model.constraint,message:appointment.constraint_appointment_resource_check_capacity
+msgid "The resource should have at least one capacity."
+msgstr "Resurssilla on oltava vähintään yksi kapasiteetti."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_resource__sequence
+msgid ""
+"The sequence dictates if the resource is going to be picked in higher priority against another resource\n"
+"        (e.g. for 2 tables of 4, the lowest sequence will be picked first)"
+msgstr ""
+"Järjestys määrää, onko resurssi valittava korkeammalla prioriteetilla toiseen resurssiin nähden\n"
+"        (esim. jos 2 pöytää on 4:stä, alhaisin järjestys valitaan ensin)"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "Their first availability is"
+msgstr "Ensimmäinen vapaa aika on"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointments_list_layout
+msgid "There is currently no appointment available"
+msgstr "Tällä hetkellä ei ole saatavilla yhtään aikaa"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_appointments
+msgid "There is no appointment linked to your account."
+msgstr "Tunnukseesi ei ole linkitetty tapaamista."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_resource__shareable
+msgid ""
+"This allows to share the resource with multiple attendee for a same time "
+"slot (e.g. a bar counter)"
+msgstr ""
+"Tämä mahdollistaa resurssin jakamisen usean osallistujan kanssa samaan "
+"aikaan (esim. baaritiski)"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"This appointment type has no availabilities because it does not have any "
+"opening hours configured"
+msgstr ""
+"Tällä tapaamistyypillä ei ole vapaita aikoja, koska sille ei ole määritetty "
+"aukioloaikoja"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"This appointment type has no availabilities because it has no resource "
+"assigned"
+msgstr ""
+"Tällä nimitystyypillä ei ole käytettävyyttä, koska sille ei ole määritetty "
+"resurssia"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"This appointment type has no availabilities because it has no resource "
+"assigned and does not have any opening hours configured"
+msgstr ""
+"Tällä ajanvaraustyypillä ei ole saatavuutta, koska sille ei ole määritetty "
+"resurssia eikä aukioloaikoja"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"This appointment type has no availabilities because it has no staff assigned"
+msgstr ""
+"Tällä tapaamistyypillä ei ole vapaita aikoja, koska sille ei ole määritetty "
+"henkilökuntaa"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"This appointment type has no availabilities because it has no staff assigned"
+" and does not have any opening hours configured"
+msgstr ""
+"Tällä tapaamistyypillä ei ole vapaita aikoja, koska sille ei ole määritetty "
+"aukioloaikoja, eikä sille ole määritelty aukioloaikoja"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_resource__tz
+msgid ""
+"This field is used in order to define in which timezone the resources will "
+"work."
+msgstr ""
+"Tätä kenttää käytetään määrittämään, missä aikavyöhykkeessä resurssit "
+"toimivat."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_edit_in_backend
+msgid "This is a preview of the customer appointment form."
+msgstr "Tämä on esikatselunäkymä asiakkaan tapaamislomakkeessa."
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__weekday__4
+msgid "Thursday"
+msgstr "Torstai"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__tz
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__appointment_tz
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "Timezone"
+msgstr "Aikavyöhyke"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__appointment_tz
+msgid "Timezone where appointment take place"
+msgstr "Tapaamisen aikavyöhyke"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid "Timezone:"
+msgstr "Aikavyöhyke:"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__end_datetime
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "To"
+msgstr "Päättyy"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__access_token
+msgid "Token"
+msgstr "Pääsytunniste"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "Total"
+msgstr "Yhteensä"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__resource_total_capacity
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_tree
+msgid "Total Capacity"
+msgstr "Kokonaiskapasiteetti"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__resource_total_capacity_reserved
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_tree_booking
+msgid "Total Capacity Reserved"
+msgstr "Varattu kokonaiskapasiteetti"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__resource_total_capacity_used
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_tree_booking
+msgid "Total Capacity Used"
+msgstr "Käytetty kokonaiskapasiteetti"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Total Reserved"
+msgstr "Yhteensä Varattu"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_appointments
+msgid "Total:"
+msgstr "Summa:"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__weekday__2
+msgid "Tuesday"
+msgstr "Tiistai"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "Type"
+msgstr "Tyyppi"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Uncertain"
+msgstr "Epävarma"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/gantt/gantt_popover.xml:0
+#, python-format
+msgid "Unconfirm Check-In"
+msgstr "Vahvistamaton sisäänkirjautuminen"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Until"
+msgstr "Kunnes"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Until (max)"
+msgstr "Saakka (enintään)"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "Upcoming"
+msgstr "Tuleva"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_calendar_alarm__default_for_new_appointment_type
+msgid "Use as default for new Appointment Types"
+msgstr "Aseta tulevien tapaamistyyppien oletusarvoksi"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__category
+msgid ""
+"Used to define this appointment type's category.\n"
+"\n"
+"        Can be one of:\n"
+"\n"
+"            - Recurring: the default category, weekly recurring slots. Accessible from the website\n"
+"\n"
+"            - Punctual: recurring slots limited between 2 datetimes. Accessible from the website\n"
+"\n"
+"            - Custom: the user will create and share to another user a custom appointment type with hand-picked time slots\n"
+"\n"
+"            - Anytime: the user will create and share to another user an appointment type covering all their time slots"
+msgstr ""
+"Käytetään tämän nimitystyypin luokan määrittelyyn.\n"
+"\n"
+"        Voi olla jokin seuraavista:\n"
+"\n"
+"            - Toistuva: oletusluokka, viikoittain toistuvat ajat. Käytettävissä verkkosivustolta\n"
+"\n"
+"            - Täsmällinen: toistuvat lähtö- ja saapumisajat, jotka on rajoitettu 2 ajankohdan välille. Käytettävissä verkkosivustolta\n"
+"\n"
+"            - Mukautettu: käyttäjä luo ja jakaa toiselle käyttäjälle mukautetun ajanvaraustyypin, jossa on käsin valittuja aikavälejä\n"
+"\n"
+"            - Anytime: käyttäjä luo ja jakaa toiselle käyttäjälle ajanvaraustyypin, joka kattaa kaikki hänen aikaväliensä"
+
+#. module: appointment
+#: model:res.groups,name:appointment.group_appointment_user
+msgid "User"
+msgstr "Käyttäjä"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__staff_user_ids
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__staff_user_ids
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__schedule_based_on__users
+msgid "Users"
+msgstr "Käyttäjät"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__event_videocall_source
+msgid "Videoconference Link"
+msgstr "Videokonferenssin linkki"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__website_message_ids
+msgid "Website Messages"
+msgstr "Verkkosivun ilmoitukset"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__website_message_ids
+msgid "Website communication history"
+msgstr "Verkkosivun viestihistoria"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__weekday__3
+msgid "Wednesday"
+msgstr "Keskiviikko"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__weekday
+msgid "Week Day"
+msgstr "Viikonpäivä"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_resource__resource_calendar_id
+msgid ""
+"If kept empty, the working schedule of the company set on the resource will "
+"be used"
+msgstr ""
+"Jos se jätetään tyhjäksi, käytetään resurssille asetetun yrityksen "
+"työaikataulua"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.staff_user_select
+msgid "With"
+msgstr "Kanssa"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,description:appointment.appointment_onboarding_configure_calendar_provider_step
+msgid "With Outlook or Google"
+msgstr "Outlookin tai Googlen kanssa"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__resource_calendar_id
+msgid "Working Hours"
+msgstr "Työtunnit"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/js/appointment_form.js:0
+#: code:addons/appointment/static/src/js/appointment_validation.js:0
+#, python-format
+msgid "You cannot invite more than 10 people"
+msgstr "Voit kutsua enintään 10 henkilöä"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_details_column
+msgid "Your Appointment"
+msgstr "Oma tapaamisesi"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid ""
+"Your appointment has been reserved! We will come back to you to confirm it."
+msgstr "Tapaamisaikasi on varattu! Palaamme asiaan ja vahvistamme sen."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Your appointment has successfully been booked!"
+msgstr "Tapaamisaikasi on onnistuneesti varattu!"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Your appointment is in less than"
+msgstr "Sinun tapaamisesi on alle"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_meeting_user
+msgid "Your choice"
+msgstr "Sinun valintasi"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "days"
+msgstr "päivää"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "e.g. \"During this meeting, we will...\""
+msgstr "esim. \"Tässä kokouksessa tarkoituksemme...\""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "e.g. \"I feel nauseous...\""
+msgstr "esim. \"Minua oksettaa...\""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "e.g. \"John Doe - Tennis Court Booking\""
+msgstr "esim. \"John Doe - Tenniskentän varaus\""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "e.g. \"Technical Demo\""
+msgstr "esim. \"Tekninen demo\""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "e.g. \"Thank you for your trust, we look forward to meeting you!\""
+msgstr "esim. \"Kiitos luottamuksestasi. Odotamme tapaamistamme innolla!\""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "e.g. \"What are your symptoms?\""
+msgstr "esim. \"Mitkä ovat oireesi?\""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "e.g. +1(605)691-3277"
+msgstr "esim. +1(605)691-3277"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_manage_leaves_view_form
+msgid "e.g. Inventory count and valuation"
+msgstr "esim. varastojen laskenta ja arviointi"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "e.g. John Smith"
+msgstr "esim. Matti Meikäläinen"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_form
+msgid "e.g. Tennis Court 1"
+msgstr "esim. Tenniskenttä 1"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid ""
+"e.g. john.doe@email.com\r\n"
+"e.g. jane.doe@example.com\r\n"
+"..."
+msgstr ""
+"esim. john.doe@email.com\r\n"
+"esim. jane.doe@example.com\r\n"
+"..."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid ""
+"e.g. john.doe@email.com \r\n"
+"e.g. jane.doe@example.com\r\n"
+"..."
+msgstr ""
+"esim. john.doe@email.com\r\n"
+"esim. jane.doe@example.com\r\n"
+"..."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "e.g. john.smith@example.com"
+msgstr "esim. john.smith@example.com"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "from"
+msgstr "alkaen"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "has no availability for an appointment."
+msgstr "ei ole aikoja varattavaksi."
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "has no more slots available for this month."
+msgstr "ei ole aikoja tässä kuussa."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "hours before"
+msgstr "tuntia ennen"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "hours from now!"
+msgstr "tunnin kuluttua!"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_meeting_details
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "people"
+msgstr "ihmiset"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "persons)"
+msgstr "henkilöt)"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "somebody"
+msgstr "joku"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,description:appointment.appointment_onboarding_create_appointment_type_step
+msgid "to automate appointments"
+msgstr "tapaamisten automatisoimiseksi"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,description:appointment.appointment_onboarding_preview_invite_step
+msgid "to schedule appointments"
+msgstr "tapaamisten aikatauluttamiseksi"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "total capacity"
+msgstr "kokonaiskapasiteetti"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "when over"
+msgstr "kun yli"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_appointments
+msgid "with"
+msgstr "kanssa"

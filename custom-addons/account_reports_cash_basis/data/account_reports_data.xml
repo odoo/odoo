@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_reports.profit_and_loss" model="account.report">
+        <field name="filter_cash_basis" eval="True"/>
+    </record>
+
+    <record id="account_reports.balance_sheet" model="account.report">
+        <field name="filter_cash_basis" eval="True"/>
+    </record>
+
+    <record id="account_reports.executive_summary" model="account.report">
+        <field name="filter_cash_basis" eval="True"/>
+    </record>
+
+    <record id="account_reports.general_ledger_report" model="account.report">
+        <field name="filter_cash_basis" eval="True"/>
+    </record>
+
+    <record id="account_reports.trial_balance_report" model="account.report">
+        <field name="filter_cash_basis" eval="True"/>
+    </record>
+
+    <template id="pdf_export_filter_extra_options_template" inherit_id="account_reports.pdf_export_filter_extra_options_template">
+        <xpath expr="//div[hasclass('col-3')]" position="attributes">
+            <attribute name='t-if'> (report.filter_show_draft and options['all_entries']) or
+                                    (report.filter_unreconciled and options['unreconciled']) or
+                                    (report.filter_cash_basis and options['report_cash_basis']) or
+                                    options.get('include_analytic_without_aml') </attribute>
+        </xpath>
+
+        <xpath expr="//div[hasclass('col-9')]//t[@name='include_analytic']" position="after">
+            <t t-if="report.filter_cash_basis and options['report_cash_basis']">
+                <t t-set="extra_options" t-value="extra_options + ['Cash Basis']"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

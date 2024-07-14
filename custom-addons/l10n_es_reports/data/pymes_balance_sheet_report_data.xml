@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="financial_report_balance_sheet_pymes" model="account.report">
+        <field name="name">Balance Sheet - SMEs</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="availability_condition">coa</field>
+        <field name="chart_template">es_pymes</field>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="country_id" ref="base.es"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="financial_report_balance_sheet_pymes_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="balance_pymes_line_10000" model="account.report.line">
+                <field name="name">TOTAL ASSETS (A + B)</field>
+                <field name="code">l10n_es_pymes_line_10000</field>
+                <field name="aggregation_formula">l10n_es_pymes_line_11000.balance + l10n_es_pymes_line_12000.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="balance_pymes_line_11000" model="account.report.line">
+                        <field name="name">A) NON-CURRENT ASSETS</field>
+                        <field name="code">l10n_es_pymes_line_11000</field>
+                        <field name="aggregation_formula">l10n_es_pymes_line_11100.balance + l10n_es_pymes_line_11200.balance + l10n_es_pymes_line_11300.balance + l10n_es_pymes_line_11400.balance + l10n_es_pymes_line_11500.balance + l10n_es_pymes_line_11600.balance + l10n_es_pymes_line_11700.balance</field>
+                        <field name="children_ids">
+                            <record id="balance_pymes_line_11100" model="account.report.line">
+                                <field name="name">I. Intangible assets</field>
+                                <field name="code">l10n_es_pymes_line_11100</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">280 + 20 + 290</field>
+                            </record>
+                            <record id="balance_pymes_line_11200" model="account.report.line">
+                                <field name="name">II. Property, plant and equipment</field>
+                                <field name="code">l10n_es_pymes_line_11200</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">21 + 281 + 23 + 291</field>
+                            </record>
+                            <record id="balance_pymes_line_11300" model="account.report.line">
+                                <field name="name">III. Investment property</field>
+                                <field name="code">l10n_es_pymes_line_11300</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">292 + 282 + 22</field>
+                            </record>
+                            <record id="balance_pymes_line_11400" model="account.report.line">
+                                <field name="name">IV. Non-current investments in group companies and associates</field>
+                                <field name="code">l10n_es_pymes_line_11400</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">2934 + 2413 + 2423 + 2944 + 2943 + 2414 + 2424 + 240\(2405) + 249\(2495) + 2954 + 2953 + 2933</field>
+                            </record>
+                            <record id="balance_pymes_line_11500" model="account.report.line">
+                                <field name="name">V. Non-current investments</field>
+                                <field name="code">l10n_es_pymes_line_11500</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">2935 + 2425 + 254 + 2945 + 2495 + 251 + 297 + 26 + 2955 + 296 + 258 + 253 + 2405 + 250 + 2415 + 298 + 259 + 255 + 252</field>
+                            </record>
+                            <record id="balance_pymes_line_11600" model="account.report.line">
+                                <field name="name">VI. Deferred tax assets</field>
+                                <field name="code">l10n_es_pymes_line_11600</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">474</field>
+                            </record>
+                            <record id="balance_pymes_line_11700" model="account.report.line">
+                                <field name="name">VII. Non-current commercial debt</field>
+                                <field name="code">l10n_es_pymes_line_11700</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">sum([('account_id.tag_ids', '=', '%(balance_sheet_11700_account)d')])</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="balance_pymes_line_12000" model="account.report.line">
+                        <field name="name">B) CURRENT ASSETS</field>
+                        <field name="code">l10n_es_pymes_line_12000</field>
+                        <field name="aggregation_formula">l10n_es_pymes_line_12200.balance + l10n_es_pymes_line_12300.balance + l10n_es_pymes_line_12400.balance + l10n_es_pymes_line_12500.balance + l10n_es_pymes_line_12600.balance + l10n_es_pymes_line_12700.balance</field>
+                        <field name="children_ids">
+                            <record id="balance_pymes_line_12200" model="account.report.line">
+                                <field name="name">I. Inventories</field>
+                                <field name="code">l10n_es_pymes_line_12200</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">33 + 34 + 407 + 30 + 39 + 36 + 35 + 32 + 31</field>
+                            </record>
+                            <record id="balance_pymes_line_12300" model="account.report.line">
+                                <field name="name">II. Trade and other receivables</field>
+                                <field name="code">l10n_es_pymes_line_12300</field>
+                                <field name="aggregation_formula">l10n_es_pymes_line_12310.balance + l10n_es_pymes_line_12370.balance + l10n_es_pymes_line_12390.balance</field>
+                                <field name="children_ids">
+                                    <record id="balance_pymes_line_12310" model="account.report.line">
+                                        <field name="name">1. Trade receivables</field>
+                                        <field name="code">l10n_es_pymes_line_12310</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">434 + 437 + 490 + 493 + 430 + 432 + 436 + 435 + 431 + 433</field>
+                                    </record>
+                                    <record id="balance_pymes_line_12370" model="account.report.line">
+                                        <field name="name">2. Receivable on called-up share capital</field>
+                                        <field name="code">l10n_es_pymes_line_12370</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">5580</field>
+                                    </record>
+                                    <record id="balance_pymes_line_12390" model="account.report.line">
+                                        <field name="name">3. Other receivables</field>
+                                        <field name="code">l10n_es_pymes_line_12390</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">471 + 472 + 44 + 460 + 544 + 470 + 473</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="balance_pymes_line_12400" model="account.report.line">
+                                <field name="name">III. Current investments in group companies and associates</field>
+                                <field name="code">l10n_es_pymes_line_12400</field>
+                                <field name="expression_ids">
+                                    <record id="balance_pymes_line_12400_sub_balances" model="account.report.expression">
+                                        <field name="label">sub_balances</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">5303 + 5393 + 5324 + 5344 + 5304 + 5934 + 5394 + 5943 + 5933 + 5313 + 5334 + 5333 + 5954 + 5354 + 5953 + 5314 + 5944 + 5323 + 5353 + 5343</field>
+                                    </record>
+                                    <record id="balance_pymes_line_12400_sub_debits" model="account.report.expression">
+                                        <field name="label">sub_debits</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="['|', ('account_id.code','=like','5523%'), ('account_id.code','=like','5524%')]"/>
+                                        <field name="subformula">sum_if_pos</field>
+                                    </record>
+                                    <record id="balance_pymes_line_12400_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_es_pymes_line_12400.sub_balances + l10n_es_pymes_line_12400.sub_debits</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="balance_pymes_line_12500" model="account.report.line">
+                                <field name="name">IV. Current financial investments</field>
+                                <field name="code">l10n_es_pymes_line_12500</field>
+                                <field name="expression_ids">
+                                    <record id="balance_pymes_line_12500_sub_balances" model="account.report.expression">
+                                        <field name="label">sub_balances</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">5955 + 547 + 543 + 5590 + 545 + 549 + 5355 + 5345 + 541 + 540 + 5395 + 565 + 546 + 5325 + 542 + 5945 + 5305 + 5315 + 596 + 598 + 566 + 5935 + 5335 + 597 + 548</field>
+                                    </record>
+                                    <record id="balance_pymes_line_12500_sub_debits" model="account.report.expression">
+                                        <field name="label">sub_debits</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="['|', ('account_id.code','=like','550%'), '|', ('account_id.code','=like','551%'), '|', ('account_id.code','=like','554%'), ('account_id.code','=like','5525%')]"/>
+                                        <field name="subformula">sum_if_pos</field>
+                                    </record>
+                                    <record id="balance_pymes_line_12500_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_es_pymes_line_12500.sub_balances + l10n_es_pymes_line_12500.sub_debits</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="balance_pymes_line_12600" model="account.report.line">
+                                <field name="name">V. Prepayments for current assets</field>
+                                <field name="code">l10n_es_pymes_line_12600</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">567 + 480</field>
+                            </record>
+                            <record id="balance_pymes_line_12700" model="account.report.line">
+                                <field name="name">VI. Cash and cash equivalents</field>
+                                <field name="code">l10n_es_pymes_line_12700</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">57</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="balance_pymes_line_30000" model="account.report.line">
+                <field name="name">TOTAL EQUITY AND LIABILITIES (A + B + C)</field>
+                <field name="code">l10n_es_pymes_line_30000</field>
+                <field name="aggregation_formula">l10n_es_pymes_line_20000.balance + l10n_es_pymes_line_31000.balance + l10n_es_pymes_line_32000.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="balance_pymes_line_20000" model="account.report.line">
+                        <field name="name">A) EQUITY</field>
+                        <field name="code">l10n_es_pymes_line_20000</field>
+                        <field name="aggregation_formula">l10n_es_pymes_line_21000.balance + l10n_es_pymes_line_22000.balance + l10n_es_pymes_line_23000.balance</field>
+                        <field name="children_ids">
+                            <record id="balance_pymes_line_21000" model="account.report.line">
+                                <field name="name">A-1) Capital and reserves without valuation adjustments</field>
+                                <field name="code">l10n_es_pymes_line_21000</field>
+                                <field name="aggregation_formula">l10n_es_pymes_line_21100.balance + l10n_es_pymes_line_21200.balance + l10n_es_pymes_line_21300.balance + l10n_es_pymes_line_21400.balance + l10n_es_pymes_line_21500.balance + l10n_es_pymes_line_21600.balance + l10n_es_pymes_line_21700.balance + l10n_es_pymes_line_21800.balance</field>
+                                <field name="children_ids">
+                                    <record id="balance_pymes_line_21100" model="account.report.line">
+                                        <field name="name">I. Capital</field>
+                                        <field name="code">l10n_es_pymes_line_21100</field>
+                                        <field name="aggregation_formula">l10n_es_pymes_line_21110.balance + l10n_es_pymes_line_21120.balance</field>
+                                        <field name="children_ids">
+                                            <record id="balance_pymes_line_21110" model="account.report.line">
+                                                <field name="name">1. Registered capital</field>
+                                                <field name="code">l10n_es_pymes_line_21110</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-100 - 101 - 102</field>
+                                            </record>
+                                            <record id="balance_pymes_line_21120" model="account.report.line">
+                                                <field name="name">2. (Uncalled capital)</field>
+                                                <field name="code">l10n_es_pymes_line_21120</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-1040 - 1030</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="balance_pymes_line_21200" model="account.report.line">
+                                        <field name="name">II. Share premium</field>
+                                        <field name="code">l10n_es_pymes_line_21200</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-110</field>
+                                    </record>
+                                    <record id="balance_pymes_line_21300" model="account.report.line">
+                                        <field name="name">III. Reserves</field>
+                                        <field name="code">l10n_es_pymes_line_21300</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-113 - 112 - 119 - 114</field>
+                                    </record>
+                                    <record id="balance_pymes_line_21400" model="account.report.line">
+                                        <field name="name">IV. (Own shares and equity holdings)</field>
+                                        <field name="code">l10n_es_pymes_line_21400</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-109 - 108</field>
+                                    </record>
+                                    <record id="balance_pymes_line_21500" model="account.report.line">
+                                        <field name="name">V. Prior periods' profit and loss</field>
+                                        <field name="code">l10n_es_pymes_line_21500</field>
+                                        <field name="expression_ids">
+                                            <record id="balance_pymes_line_21500_sub_normal" model="account.report.expression">
+                                                <field name="label">sub_normal</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-12</field>
+                                            </record>
+                                            <record id="balance_pymes_line_21500_sub_to_beginning" model="account.report.expression">
+                                                <field name="label">sub_to_beginning</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="subformula">cross_report</field>
+                                                <field name="formula">es_profit_and_loss_sum_d.balance</field>
+                                                <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                            </record>
+                                            <record id="balance_pymes_line_21500_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">l10n_es_pymes_line_21500.sub_normal + l10n_es_pymes_line_21500.sub_to_beginning</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="balance_pymes_line_21600" model="account.report.line">
+                                        <field name="name">VI. Other equity holder contributions</field>
+                                        <field name="code">l10n_es_pymes_line_21600</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-118</field>
+                                    </record>
+                                    <record id="balance_pymes_line_21700" model="account.report.line">
+                                        <field name="name">VII. Profit/loss for the period</field>
+                                        <field name="code">l10n_es_pymes_line_21700</field>
+                                        <field name="action_id" ref="account_reports.action_account_report_pl"/>
+                                        <field name="expression_ids">
+                                            <record id="balance_pymes_line_21700_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="subformula">cross_report</field>
+                                                <field name="formula">es_profit_and_loss_sum_d.balance</field>
+                                                <field name="date_scope">from_fiscalyear</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="balance_pymes_line_21800" model="account.report.line">
+                                        <field name="name">VIII. (Interim dividend)</field>
+                                        <field name="code">l10n_es_pymes_line_21800</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-557</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="balance_pymes_line_22000" model="account.report.line">
+                                <field name="name">A-2) Adjustments in equity</field>
+                                <field name="code">l10n_es_pymes_line_22000</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-137</field>
+                            </record>
+                            <record id="balance_pymes_line_23000" model="account.report.line">
+                                <field name="name">A-3) Grants, donations and bequests received</field>
+                                <field name="code">l10n_es_pymes_line_23000</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-130 - 132 - 131</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="balance_pymes_line_31000" model="account.report.line">
+                        <field name="name">B) NON-CURRENT LIABILITIES</field>
+                        <field name="code">l10n_es_pymes_line_31000</field>
+                        <field name="aggregation_formula">l10n_es_pymes_line_31100.balance + l10n_es_pymes_line_31200.balance + l10n_es_pymes_line_31300.balance + l10n_es_pymes_line_31400.balance + l10n_es_pymes_line_31500.balance + l10n_es_pymes_line_31600.balance + l10n_es_pymes_line_31700.balance</field>
+                        <field name="children_ids">
+                            <record id="balance_pymes_line_31100" model="account.report.line">
+                                <field name="name">I. Non-current provisions</field>
+                                <field name="code">l10n_es_pymes_line_31100</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-14</field>
+                            </record>
+                            <record id="balance_pymes_line_31200" model="account.report.line">
+                                <field name="name">II. Current provisions</field>
+                                <field name="code">l10n_es_pymes_line_31200</field>
+                                <field name="aggregation_formula">l10n_es_pymes_line_31220.balance + l10n_es_pymes_line_31230.balance + l10n_es_pymes_line_31290.balance</field>
+                                <field name="children_ids">
+                                    <record id="balance_pymes_line_31220" model="account.report.line">
+                                        <field name="name">1. Debt with financial institutions</field>
+                                        <field name="code">l10n_es_pymes_line_31220</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-170 - 1605</field>
+                                    </record>
+                                    <record id="balance_pymes_line_31230" model="account.report.line">
+                                        <field name="name">2. Finance lease payables</field>
+                                        <field name="code">l10n_es_pymes_line_31230</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-1625 - 174</field>
+                                    </record>
+                                    <record id="balance_pymes_line_31290" model="account.report.line">
+                                        <field name="name">3. Other non-current payables</field>
+                                        <field name="code">l10n_es_pymes_line_31290</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-175 - 179 - 177 - 180 - 173 - 185 - 176 - 172 - 1635 - 171 - 1615</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="balance_pymes_line_31300" model="account.report.line">
+                                <field name="name">III. Group companies and associates, non-current liabilities</field>
+                                <field name="code">l10n_es_pymes_line_31300</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-1613 - 1604 - 1634 - 1633 - 1624 - 1603 - 1623 - 1614</field>
+                            </record>
+                            <record id="balance_pymes_line_31400" model="account.report.line">
+                                <field name="name">IV. Deferred tax liabilities</field>
+                                <field name="code">l10n_es_pymes_line_31400</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-479</field>
+                            </record>
+                            <record id="balance_pymes_line_31500" model="account.report.line">
+                                <field name="name">V. Non-current accruals</field>
+                                <field name="code">l10n_es_pymes_line_31500</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-181</field>
+                            </record>
+                            <record id="balance_pymes_line_31600" model="account.report.line">
+                                <field name="name">VI. Non-current trade payables</field>
+                                <field name="code">l10n_es_pymes_line_31600</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">-sum([('account_id.tag_ids', '=', '%(balance_sheet_31600_account)d')])</field>
+                            </record>
+                            <record id="balance_pymes_line_31700" model="account.report.line">
+                                <field name="name">VII. Non-current debt with special characteristics</field>
+                                <field name="code">l10n_es_pymes_line_31700</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-15</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="balance_pymes_line_32000" model="account.report.line">
+                        <field name="name">C) CURRENT LIABILITIES</field>
+                        <field name="code">l10n_es_pymes_line_32000</field>
+                        <field name="aggregation_formula">l10n_es_pymes_line_32200.balance + l10n_es_pymes_line_32300.balance + l10n_es_pymes_line_32400.balance + l10n_es_pymes_line_32500.balance + l10n_es_pymes_line_32600.balance + l10n_es_pymes_line_32700.balance</field>
+                        <field name="children_ids">
+                            <record id="balance_pymes_line_32200" model="account.report.line">
+                                <field name="name">I. Current provisions</field>
+                                <field name="code">l10n_es_pymes_line_32200</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-529 - 499</field>
+                            </record>
+                            <record id="balance_pymes_line_32300" model="account.report.line">
+                                <field name="name">II. Current payables</field>
+                                <field name="code">l10n_es_pymes_line_32300</field>
+                                <field name="aggregation_formula">l10n_es_pymes_line_32320.balance + l10n_es_pymes_line_32330.balance + l10n_es_pymes_line_32390.balance</field>
+                                <field name="children_ids">
+                                    <record id="balance_pymes_line_32320" model="account.report.line">
+                                        <field name="name">1. Debt with financial institutions</field>
+                                        <field name="code">l10n_es_pymes_line_32320</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-527 - 520 - 5105</field>
+                                    </record>
+                                    <record id="balance_pymes_line_32330" model="account.report.line">
+                                        <field name="name">2. Finance lease payables</field>
+                                        <field name="code">l10n_es_pymes_line_32330</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-524 - 5125</field>
+                                    </record>
+                                    <record id="balance_pymes_line_32390" model="account.report.line">
+                                        <field name="name">3. Other current payables</field>
+                                        <field name="code">l10n_es_pymes_line_32390</field>
+                                        <field name="expression_ids">
+                                          <record id="balance_pymes_line_32390_sub_balances" model="account.report.expression">
+                                              <field name="label">sub_balances</field>
+                                              <field name="engine">account_codes</field>
+                                              <field name="formula">-560 - 5135 - 506 - 525 - 526 - 192 - 528 - 5115 - 5595 - 1044 - 561 - 500 - 509 - 1034 - 522 - 505 - 521 - 555 - 5565 - 523 - 5145 - 5585 - 190 - 194 - 5566</field>
+                                          </record>
+                                          <record id="balance_pymes_line_32390_sub_credits" model="account.report.expression">
+                                              <field name="label">sub_credits</field>
+                                              <field name="engine">domain</field>
+                                              <field name="formula" eval="['|', ('account_id.code','=like','550%'), '|', ('account_id.code','=like','551%'), '|', ('account_id.code','=like','554%'), ('account_id.code','=like','5525%')]"/>
+                                              <field name="subformula">-sum_if_neg</field>
+                                          </record>
+                                          <record id="balance_pymes_line_32390_balance" model="account.report.expression">
+                                              <field name="label">balance</field>
+                                              <field name="engine">aggregation</field>
+                                              <field name="formula">l10n_es_pymes_line_32390.sub_balances + l10n_es_pymes_line_32390.sub_credits</field>
+                                          </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="balance_pymes_line_32400" model="account.report.line">
+                                <field name="name">III. Group companies and associates, non-current liabilities</field>
+                                <field name="code">l10n_es_pymes_line_32400</field>
+                                <field name="expression_ids">
+                                    <record id="balance_pymes_line_32400_sub_balances" model="account.report.expression">
+                                        <field name="label">sub_balances</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-5114 - 5134 - 5144 - 5563 - 5113 - 5104 - 5103 - 5124 - 5564 - 5143 - 5123 - 5133</field>
+                                    </record>
+                                    <record id="balance_pymes_line_32400_sub_credits" model="account.report.expression">
+                                        <field name="label">sub_credits</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="['|', ('account_id.code','=like','5523%'), ('account_id.code','=like','5524%')]"/>
+                                        <field name="subformula">-sum_if_neg</field>
+                                    </record>
+                                    <record id="balance_pymes_line_32400_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_es_pymes_line_32400.sub_balances + l10n_es_pymes_line_32400.sub_credits</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="balance_pymes_line_32500" model="account.report.line">
+                                <field name="name">IV. Trade and other payables</field>
+                                <field name="code">l10n_es_pymes_line_32500</field>
+                                <field name="aggregation_formula">l10n_es_pymes_line_32510.balance + l10n_es_pymes_line_32580.balance</field>
+                                <field name="children_ids">
+                                    <record id="balance_pymes_line_32510" model="account.report.line">
+                                        <field name="name">1. Suppliers</field>
+                                        <field name="code">l10n_es_pymes_line_32510</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-403 - 405 - 401 - 400 - 404 - 406</field>
+                                    </record>
+                                    <record id="balance_pymes_line_32580" model="account.report.line">
+                                        <field name="name">2. Other payables</field>
+                                        <field name="code">l10n_es_pymes_line_32580</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-465 - 438 - 476 - 477 - 41 - 475</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="balance_pymes_line_32600" model="account.report.line">
+                                <field name="name">V. Prepayments for current assets</field>
+                                <field name="code">l10n_es_pymes_line_32600</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-485 - 568</field>
+                            </record>
+                            <record id="balance_pymes_line_32700" model="account.report.line">
+                                <field name="name">VI. Current debt with special characteristics</field>
+                                <field name="code">l10n_es_pymes_line_32700</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-199 - 502 - 197 - 507 - 195</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

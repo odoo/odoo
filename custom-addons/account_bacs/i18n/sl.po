@@ -1,0 +1,1062 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_bacs
+# 
+# Translators:
+# Vida Potočnik <vida.potocnik@mentis.si>, 2023
+# Tomaž Jug <tomaz@editor.si>, 2023
+# laznikd <laznik@mentis.si>, 2023
+# Grega Vavtar <grega@hbs.si>, 2023
+# Boris Kodelja <boris@hbs.si>, 2023
+# matjaz k <matjaz@mentis.si>, 2023
+# Tadej Lupšina <tadej@hbs.si>, 2023
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2023
+# Jasmina Macur <jasmina@hbs.si>, 2023
+# Martin Trigaux, 2023
+# Katja Deržič, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Katja Deržič, 2024\n"
+"Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "<span class=\"bacs-garantee-text\">The Direct Debit Guarantee</span>"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "<span class=\"float-end font-small postcode\">Postcode</span>"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid ""
+"<span class=\"float-start font-small\">To:</span>\n"
+"                            <span class=\"float-end font-small\">Bank/building society</span>"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "<span class=\"font-small\">Address</span>"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "<span class=\"font-small\">Date</span>"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "<span class=\"font-small\">signature(s)</span>"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid ""
+"<span>If an error is made in the payment of your Direct Debit, by</span>"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid ""
+"<span>If there are any changes to the amount, date or frequency of your "
+"Direct Debit</span>"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid ""
+"<span>If you receive a refund you are not entitled to, you must pay it back "
+"when</span>"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid ""
+"<span>This Guarantee is offered by all banks and building societies that "
+"accept instructions to pay Direct Debits</span>"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid ""
+"<span>You can cancel a Direct Debit at any time by simply contacting your "
+"bank or building society. Written confirmation may be required. Please also "
+"notify us.</span>"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "<span>asks you to</span>"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid ""
+"<span>bank or building society, you are entitled to a full and immediate "
+"refund of the amount paid from your bank or building society</span>"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid ""
+"<span>to collect a payment, confirmation of the amount and date will be "
+"given to you at the time of the request</span>"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid ""
+"<span>will notify you (insert number of) working days in advance of your "
+"account being debited or as otherwise agreed. If you request</span>"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.actions.act_window,help:account_bacs.account_bacs_direct_debit_instruction_tree_act
+msgid ""
+"A Direct Debit Instruction represents\n"
+"                    the authorization you receive from a customer\n"
+"                    to automatically collect money on their account."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_batch_payment.py:0
+#, python-format
+msgid "A bank account is not defined."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/bacs_direct_debit_instruction.py:0
+#, python-format
+msgid ""
+"A debtor account is required to validate a BACS Direct Debit Instruction."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__partner_bank_id
+msgid "Account of the customer to collect payments from."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__message_needaction
+msgid "Action Needed"
+msgstr "Potreben je ukrep"
+
+#. module: account_bacs
+#: model:ir.model.fields.selection,name:account_bacs.selection__bacs_ddi__state__active
+#: model_terms:ir.ui.view,arch_db:account_bacs.account_bacs_ddi_search_view
+msgid "Active"
+msgstr "Aktivno"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__activity_ids
+msgid "Activities"
+msgstr "Aktivnosti"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Izjema pri oznaki aktivnosti"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__activity_state
+msgid "Activity State"
+msgstr "Stanje aktivnosti"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikona vrste aktivnosti"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__message_attachment_count
+msgid "Attachment Count"
+msgstr "Število prilog"
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.res_config_settings_view_form
+msgid "BACS"
+msgstr ""
+
+#. module: account_bacs
+#: model:account.payment.method,name:account_bacs.payment_method_bacs_dc
+msgid "BACS Direct Credit"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.actions.act_window,name:account_bacs.account_bacs_direct_debit_instruction_tree_act
+#: model:ir.model,name:account_bacs.model_bacs_ddi
+msgid "BACS Direct Debit Instruction"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.ui.menu,name:account_bacs.account_bacs_direct_debit_customer_mandates_menu
+#: model_terms:ir.ui.view,arch_db:account_bacs.account_bacs_direct_debit_instruction_form
+msgid "BACS Direct Debit Instructions"
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/bacs_direct_debit_instruction.py:0
+#: code:addons/account_bacs/models/bacs_direct_debit_instruction.py:0
+#, python-format
+msgid ""
+"BACS Direct Debit scheme only accepts IBAN account numbers. Please select an"
+" IBAN-compliant debtor account for this BACS Direct Debit Instruction."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/bacs_direct_debit_instruction.py:0
+#: code:addons/account_bacs/models/bacs_direct_debit_instruction.py:0
+#, python-format
+msgid ""
+"BACS Direct Debit scheme only accepts UK bank accounts. Please select a UK "
+"bank account for this BACS Direct Debit Instruction."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/bacs_direct_debit_instruction.py:0
+#, python-format
+msgid ""
+"BACS Direct Debit scheme only accepts UK bank accounts. Please select a "
+"journal associated to one."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_account_batch_payment__bacs_expiry_date
+msgid "BACS Expiry Date"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_account_batch_payment__bacs_multi_mode
+#: model_terms:ir.ui.view,arch_db:account_bacs.view_batch_payment_form_inherit
+msgid "BACS Multi Mode"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_account_payment__bacs_payment_type
+msgid "BACS Payment Type"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_account_batch_payment__bacs_processing_date
+msgid "BACS Processing Date"
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/bacs_direct_debit_instruction.py:0
+#, python-format
+msgid "BACS Service User Number is not set on the company."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_account_batch_payment__bacs_submission_serial
+msgid "BACS Submission Serial"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_account_bank_statement_line__bacs_ddi_id
+#: model:ir.model.fields,field_description:account_bacs.field_account_move__bacs_ddi_id
+#: model:ir.model.fields,field_description:account_bacs.field_account_payment__bacs_ddi_id
+msgid "Bacs Ddi"
+msgstr ""
+
+#. module: account_bacs
+#: model:account.payment.method,name:account_bacs.payment_method_bacs_dd
+msgid "Bacs Direct Debit"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_account_bank_statement_line__bacs_has_usable_ddi
+#: model:ir.model.fields,field_description:account_bacs.field_account_move__bacs_has_usable_ddi
+#: model:ir.model.fields,field_description:account_bacs.field_account_payment__bacs_has_usable_ddi
+msgid "Bacs Has Usable Ddi"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model,name:account_bacs.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Bančni računi"
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "Bank/Building Society account number"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid ""
+"Banks and Building Societies may not accept Direct Debit Instructions for "
+"some types of account"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model,name:account_bacs.model_account_batch_payment
+msgid "Batch Payment"
+msgstr "Paketno plačilo"
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "Branch Sort Code"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.account_bacs_direct_debit_instruction_form
+msgid "Cancel"
+msgstr "Prekliči"
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.account_bacs_direct_debit_instruction_form
+msgid "Close"
+msgstr "Zaključi"
+
+#. module: account_bacs
+#: model:ir.model.fields.selection,name:account_bacs.selection__bacs_ddi__state__closed
+#: model_terms:ir.ui.view,arch_db:account_bacs.account_bacs_ddi_search_view
+msgid "Closed"
+msgstr "Neaktivni"
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.res_config_settings_view_form
+msgid "Collect and send payments using UK BACS Service"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.account_bacs_direct_debit_instruction_form
+msgid "Collections"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model,name:account_bacs.model_res_company
+msgid "Companies"
+msgstr "Podjetja"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__company_id
+msgid "Company"
+msgstr "Podjetje"
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__company_id
+msgid "Company for whose invoices the DDI can be used."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model,name:account_bacs.model_res_config_settings
+msgid "Config Settings"
+msgstr "Uredi nastavitve"
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_journal.py:0
+#: code:addons/account_bacs/models/account_journal.py:0
+#, python-format
+msgid "Contra total for batch is greater than 999,999,999.99."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_journal.py:0
+#: code:addons/account_bacs/models/account_journal.py:0
+#, python-format
+msgid "Contra total for date %s is greater than 999,999,999.99."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_account_payment__bacs_ddi_usable
+msgid "Could a SDD ddi be used?"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.actions.act_window,help:account_bacs.account_bacs_direct_debit_instruction_tree_act
+msgid "Create a new BACS Direct Debit Instruction."
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.sdd_account_payment_form
+msgid "Create it."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__create_uid
+msgid "Created by"
+msgstr "Ustvaril"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__create_date
+msgid "Created on"
+msgstr "Ustvarjeno"
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_journal.py:0
+#, python-format
+msgid "Credit total for batch is greater than 99,999,999,999.99."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__partner_id
+msgid "Customer"
+msgstr "Stranka"
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__partner_id
+msgid "Customer whose payments are to be managed by this DDI."
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "DDI 2 5/15"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__start_date
+msgid "Date"
+msgstr "Datum"
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_journal.py:0
+#, python-format
+msgid "Debit total for batch is greater than 99,999,999,999.99."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.actions.report,name:account_bacs.ddi_form_report_main
+msgid "Direct Debit Instruction form"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.constraint,message:account_bacs.constraint_bacs_ddi_name_unique
+msgid ""
+"Direct Debit Instruction identifier must be unique! Please choose another "
+"one."
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid ""
+"Direct Debits from the account\n"
+"                            detailed in this Instruction subject to the safeguards assured by\n"
+"                            the Direct Debit Guarantee. I understand that this Instruction\n"
+"                            may remain with"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields.selection,name:account_bacs.selection__account_payment__bacs_payment_type__dd_sub_rep
+msgid "Direct debit repeating collection in a series"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields.selection,name:account_bacs.selection__account_payment__bacs_payment_type__dd_regular
+msgid "Direct debit single collection"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields.selection,name:account_bacs.selection__account_payment__bacs_payment_type__dd_sub_fin
+msgid "Direct debit-final collection of a series"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields.selection,name:account_bacs.selection__account_payment__bacs_payment_type__dd_sub_init
+msgid "Direct debit-first collection of a series"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__display_name
+msgid "Display Name"
+msgstr "Prikazani naziv"
+
+#. module: account_bacs
+#: model:ir.model.fields.selection,name:account_bacs.selection__bacs_ddi__state__draft
+#: model_terms:ir.ui.view,arch_db:account_bacs.account_bacs_ddi_search_view
+msgid "Draft"
+msgstr "Osnutek"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__message_follower_ids
+msgid "Followers"
+msgstr "Sledilci"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Sledilci (partnerji)"
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font izjemna ikona npr. fa-tasks"
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.sdd_account_payment_form
+msgid "Good news! A valid BACS Direct Debit Instruction is available."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__has_message
+msgid "Has Message"
+msgstr "Ima sporočilo"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__partner_bank_id
+msgid "IBAN"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__activity_exception_icon
+msgid "Icon"
+msgstr "Ikona"
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikona za označevanje izjemne aktivnosti."
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__name
+msgid "Identifier"
+msgstr "Identifikator"
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__message_has_error
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Če je označeno, nekatera sporočila vsebujejo napako pri dostavi."
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "Instruction to your Bank or Building Society"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "Instruction to your Bank or Building Society to pay by Direct Debit"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__paid_invoice_ids
+#: model_terms:ir.ui.view,arch_db:account_bacs.account_bacs_direct_debit_instruction_form
+msgid "Invoices Paid"
+msgstr "Računi plačani"
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__paid_invoice_ids
+msgid "Invoices paid using this mandate."
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.account_bacs_direct_debit_instruction_form
+msgid "Invoices paid with this DDI."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__message_is_follower
+msgid "Is Follower"
+msgstr "Je sledilec"
+
+#. module: account_bacs
+#: model:ir.model,name:account_bacs.model_account_journal
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__payment_journal_id
+msgid "Journal"
+msgstr "Dnevnik"
+
+#. module: account_bacs
+#: model:ir.model,name:account_bacs.model_account_move
+msgid "Journal Entry"
+msgstr "Temeljnica"
+
+#. module: account_bacs
+#: model:ir.model,name:account_bacs.model_account_move_line
+msgid "Journal Item"
+msgstr "Postavka"
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__payment_journal_id
+msgid "Journal to use to receive BACS Direct Debit payments from this DDI."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__write_uid
+msgid "Last Updated by"
+msgstr "Zadnji posodobil"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__write_date
+msgid "Last Updated on"
+msgstr "Zadnjič posodobljeno"
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_batch_payment.py:0
+#, python-format
+msgid "Maximum amount is %.2f."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__message_has_error
+msgid "Message Delivery error"
+msgstr "Napaka pri dostavi sporočila"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__message_ids
+msgid "Messages"
+msgstr "Sporočila"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Rok dejavnosti"
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "Name and full postal address of your Bank or Building Society"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "Name(s) of Account Holder(s)"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Naslednji dogodek v koledarju aktivnosti"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Rok naslednje aktivnosti"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__activity_summary
+msgid "Next Activity Summary"
+msgstr "Povzetek naslednje aktivnosti"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tip naslednje aktivnosti"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Število aktivnosti"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__message_has_error_counter
+msgid "Number of errors"
+msgstr "Število napak"
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Število sporočil, ki zahtevajo ukrepanje"
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Število sporočil, ki niso bila pravilno dostavljena."
+
+#. module: account_bacs
+#: model_terms:ir.actions.act_window,help:account_bacs.account_bacs_direct_debit_instruction_tree_act
+msgid ""
+"Once an invoice is made\n"
+"                    in Odoo for a customer having a Direct Debit Instruction active on the invoice date,\n"
+"                    its validation will trigger its automatic payment, and you will\n"
+"                    then only have to generate a BACS Direct Debit file containing this operation\n"
+"                    and send it to your bank to effectively get paid."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_account_bank_statement_line__bacs_ddi_id
+#: model:ir.model.fields,help:account_bacs.field_account_move__bacs_ddi_id
+#: model:ir.model.fields,help:account_bacs.field_account_payment__bacs_ddi_id
+msgid ""
+"Once this invoice has been paid with BACS Direct Debit, contains the DDI "
+"that allowed the payment."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/bacs_direct_debit_instruction.py:0
+#, python-format
+msgid ""
+"Only IBAN account numbers can receive BACS Direct Debit payments. Please "
+"select a journal associated to one."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/bacs_direct_debit_instruction.py:0
+#, python-format
+msgid "Only mandates in draft state can be cancelled."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/bacs_direct_debit_instruction.py:0
+#, python-format
+msgid ""
+"Only mandates in draft state can be deleted from database when cancelled."
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.sdd_account_payment_form
+msgid "Oops! No valid BACS Direct Debit Instruction for this customer."
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.sdd_account_payment_form
+msgid "Originating BACS Direct Debit Instruction"
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/bacs_direct_debit_instruction.py:0
+#, python-format
+msgid "Paid Invoices"
+msgstr "Plačani računi"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__paid_invoices_len
+msgid "Paid Invoices Len"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model,name:account_bacs.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Načini plačila"
+
+#. module: account_bacs
+#: model:ir.model,name:account_bacs.model_account_payment
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__payment_ids
+msgid "Payments"
+msgstr "Plačila"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__payments_len
+msgid "Payments Len"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.account_bacs_direct_debit_instruction_form
+msgid "Payments generated for this DDI that have not yet been collected."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__payment_ids
+msgid "Payments generated thanks to this mandate."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_account_batch_payment__bacs_multi_mode
+msgid "Payments in batch get processed on their individual date."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/bacs_direct_debit_instruction.py:0
+#, python-format
+msgid "Payments to Collect"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "Please fill in the whole form using a ball point pen and send it to:"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "Please pay"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.account_bacs_direct_debit_instruction_form
+msgid "Print"
+msgstr "Tiskanje"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__rating_ids
+msgid "Ratings"
+msgstr "Ocene"
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "Reference"
+msgstr "Referenca"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__activity_user_id
+msgid "Responsible User"
+msgstr "Odgovorni uporabnik"
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.account_bacs_direct_debit_instruction_form
+msgid "Revoke"
+msgstr "Prekliči"
+
+#. module: account_bacs
+#: model:ir.model.fields.selection,name:account_bacs.selection__bacs_ddi__state__revoked
+msgid "Revoked"
+msgstr "Preklicano"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Napaka pri dostavi SMS "
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_res_company__bacs_sun
+#: model:ir.model.fields,field_description:account_bacs.field_res_config_settings__bacs_sun
+msgid "Service User Number"
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "Service user number"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_res_config_settings__bacs_sun
+msgid "Service user number of your company within BACS"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_res_company__bacs_sun
+msgid "Service user number of your company within BACS, given by the bank."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_batch_payment.py:0
+#, python-format
+msgid "Some payments are above the maximum amount allowed."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_batch_payment.py:0
+#, python-format
+msgid "Some payments are not in GBP."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_batch_payment.py:0
+#, python-format
+msgid "Some payments have no recipient bank account set."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__state
+msgid "State"
+msgstr "Stanje"
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status na osnovi aktivnosti\n"
+"Zapadel: Rok je že prekoračen\n"
+"Danes: Datum aktivnosti je danes\n"
+"Planirano: Bodoče aktivnosti."
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__suitable_journal_ids
+msgid "Suitable Journal"
+msgstr "Ustrezen dnevnik"
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_journal.py:0
+#, python-format
+msgid ""
+"The BACS Direct Debit Instruction associated to the payment has been revoked"
+" and cannot be used anymore."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"The account %s, of journal '%s', is not of type IBAN.\n"
+"A valid IBAN account is required to use BACS features."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"The company '%s' requires a SUN to generate BACS files. Please configure it "
+"first."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_account_batch_payment__bacs_expiry_date
+msgid "The date on which the file will expire."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_payment.py:0
+#, python-format
+msgid ""
+"The journal '%s' requires a proper IBAN account to initiate a BACS Payment. "
+"Please configure it first."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"The maximum number of BACS submissions (999) for the day has been reached."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_journal.py:0
+#, python-format
+msgid ""
+"The payment must be linked to a BACS Direct Debit Instruction in order to "
+"generate a Direct Debit File."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_batch_payment.py:0
+#, python-format
+msgid "The processing date cannot be in the past."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_account_batch_payment__bacs_processing_date
+msgid "The processing day of the BACS transaction."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_payment.py:0
+#, python-format
+msgid "The selected vendor account needs to be a valid UK IBAN"
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/res_company.py:0
+#, python-format
+msgid "The service user number must be 6 characters long."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/res_company.py:0
+#, python-format
+msgid "The service user number must be numeric."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__state
+msgid ""
+"The state this DDI is in. \n"
+"- 'draft' means that this DDI still needs to be confirmed before being usable. \n"
+"- 'active' means that this DDI can be used to pay invoices. \n"
+"- 'closed' designates a DDI that has been marked as not to use anymore without invalidating the previous transactions done with it.- 'revoked' means the DDI has been signaled as fraudulent by the customer. It cannot be used anymore, and should not ever have been. You will probably need to refund the related invoices, if any.\n"
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__name
+msgid "The unique identifier of this DDI."
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid "This guarantee should be detached and retained by the payer."
+msgstr ""
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/bacs_direct_debit_instruction.py:0
+#, python-format
+msgid ""
+"Trying to register a payment on a DDI belonging to a different partner."
+msgstr ""
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Vrsta dejavnosti izjeme na zapisu. "
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/account_move.py:0
+#, python-format
+msgid ""
+"Unable to post payment %(payment)r due to no usable DDI being available at "
+"date %(date)s for partner %(partner)r. Please create one before encoding a "
+"BACS Direct Debit payment."
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.account_bacs_direct_debit_instruction_form
+msgid "Validate"
+msgstr "Potrditev"
+
+#. module: account_bacs
+#: model:ir.model.fields,field_description:account_bacs.field_bacs_ddi__website_message_ids
+msgid "Website Messages"
+msgstr "Sporočila iz spletne strani"
+
+#. module: account_bacs
+#: model:ir.model.fields,help:account_bacs.field_bacs_ddi__website_message_ids
+msgid "Website communication history"
+msgstr "Kronologija komunikacij spletne strani"
+
+#. module: account_bacs
+#. odoo-python
+#: code:addons/account_bacs/models/res_partner_bank.py:0
+#, python-format
+msgid ""
+"You cannot delete a bank account linked to an active BACS Direct Debit "
+"Instruction."
+msgstr ""
+
+#. module: account_bacs
+#: model_terms:ir.ui.view,arch_db:account_bacs.ddi_form
+msgid ""
+"and, if so, details will be passed\n"
+"                            electronically to my Bank/Building Society."
+msgstr ""

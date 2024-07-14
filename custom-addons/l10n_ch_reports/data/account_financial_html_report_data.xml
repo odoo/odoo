@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_l10n_ch_cdr" model="account.report">
+        <field name="name">Profit And Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="country_id" ref="base.ch"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_l10n_ch_cdr_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_line_ch_3" model="account.report.line">
+                <field name="name">Operating revenue from goods and services</field>
+                <field name="code">CH_3</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_ch_3_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CH_30.balance + CH_39.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_ch_30" model="account.report.line">
+                        <field name="name">Net sales from goods and services</field>
+                        <field name="code">CH_30</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_ch_30_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-3\(39)</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_ch_39" model="account.report.line">
+                        <field name="name">Changes in inventories of unfinished and finished products and in non-invoiced services</field>
+                        <field name="code">CH_39</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_ch_39_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-39</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_ch_ebitda" model="account.report.line">
+                <field name="name">Earnings before interest, tax and depreciation and amortisation (EBITDA)</field>
+                <field name="code">CH_EBITDA</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_ch_ebitda_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CH_3.balance + CH_4.balance + CH_5.balance + CH_60.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_ch_4" model="account.report.line">
+                        <field name="name">Expenses for materials, goods and services</field>
+                        <field name="code">CH_4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_ch_4_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-4</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_ch_5" model="account.report.line">
+                        <field name="name">Staff cost</field>
+                        <field name="code">CH_5</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_ch_5_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-5</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_ch_60" model="account.report.line">
+                        <field name="name">Other operating expenses (without depreciation and financial result)</field>
+                        <field name="code">CH_60</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_ch_60_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-6\(68,69)</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_ch_ebit" model="account.report.line">
+                <field name="name">Earnings before interest and taxes (EBIT)</field>
+                <field name="code">CH_EBIT</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_ch_ebit_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CH_EBITDA.balance + CH_68.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_ch_68" model="account.report.line">
+                        <field name="name">Depreciation and valuation adjustments on capital asset items</field>
+                        <field name="code">CH_68</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_ch_68_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-68</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_ch_ebt" model="account.report.line">
+                <field name="name">Earnings before taxes (EBT)</field>
+                <field name="code">CH_EBT</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_ch_ebt_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CH_EBIT.balance + CH_69.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_ch_69" model="account.report.line">
+                        <field name="name">Financial Result</field>
+                        <field name="code">CH_69</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_ch_69_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-69</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_ch_rai" model="account.report.line">
+                <field name="name">Annual (net) profit or loss before taxes</field>
+                <field name="code">CH_RAI</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_ch_rai_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CH_EBT.balance + CH_7.balance + CH_80.balance + CH_85.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_ch_7" model="account.report.line">
+                        <field name="name">Profit and loss from non-core business</field>
+                        <field name="code">CH_7</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_ch_7_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_ch_80" model="account.report.line">
+                        <field name="name">Non-operational result</field>
+                        <field name="code">CH_80</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_ch_80_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-80 - 81</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_ch_85" model="account.report.line">
+                        <field name="name">Extraordinary, non-recurring or prior-period result</field>
+                        <field name="code">CH_85</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_ch_85_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-85</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_ch_89" model="account.report.line">
+                <field name="name">Direct Taxes</field>
+                <field name="code">CH_89</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_ch_89_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-89</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_ch_R" model="account.report.line">
+                <field name="name">Annual (net) profit or loss</field>
+                <field name="code">CH_R</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_ch_R_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CH_RAI.balance + CH_89.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="account_financial_report_l10n_ch_pl_action" model="ir.actions.client">
+        <field name="name">Profit And Loss</field>
+        <field name="context" eval="{'model': 'account.report', 'report_id': ref('account_financial_report_l10n_ch_cdr')}"/>
+        <field name="tag">account_report</field>
+    </record>
+    <record id="account_financial_report_l10n_ch_bilan" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="country_id" ref="base.ch"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_l10n_ch_bilan_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_line_ch_1" model="account.report.line">
+                <field name="name">ASSETS</field>
+                <field name="code">CH_1</field>
+                <field name="aggregation_formula">CH_10.balance + CH_14.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_ch_10" model="account.report.line">
+                        <field name="name">Current Assets</field>
+                        <field name="code">CH_10</field>
+                        <field name="aggregation_formula">CH_100.balance + CH_106.balance + CH_110.balance + CH_114.balance + CH_120.balance + CH_130.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_ch_100" model="account.report.line">
+                                <field name="name">Cash</field>
+                                <field name="code">CH_100</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">100 + 101 + 102 + 103 + 104 + 105</field>
+                            </record>
+                            <record id="account_financial_report_line_ch_106" model="account.report.line">
+                                <field name="name">Short-term assets with stock exchange price</field>
+                                <field name="code">CH_106</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">106 + 107 + 108 + 109</field>
+                            </record>
+                            <record id="account_financial_report_line_ch_110" model="account.report.line">
+                                <field name="name">Accounts receivable from goods and services</field>
+                                <field name="code">CH_110</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">110 + 111 + 112 + 113</field>
+                            </record>
+                            <record id="account_financial_report_line_ch_114" model="account.report.line">
+                                <field name="name">Other short-term receivables</field>
+                                <field name="code">CH_114</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">114 + 115 + 116 + 117 + 118 + 119</field>
+                            </record>
+                            <record id="account_financial_report_line_ch_120" model="account.report.line">
+                                <field name="name">Inventories</field>
+                                <field name="code">CH_120</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">12</field>
+                            </record>
+                            <record id="account_financial_report_line_ch_130" model="account.report.line">
+                                <field name="name">Accrued revenue and deferred expense</field>
+                                <field name="code">CH_130</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">13</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_ch_14" model="account.report.line">
+                        <field name="name">CAPITAL ASSETS</field>
+                        <field name="code">CH_14</field>
+                        <field name="aggregation_formula">CH_140.balance + CH_148.balance + CH_150.balance + CH_160.balance + CH_170.balance + CH_180.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_ch_140" model="account.report.line">
+                                <field name="name">Financial assets</field>
+                                <field name="code">CH_140</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">14\(148,149)</field>
+                            </record>
+                            <record id="account_financial_report_line_ch_148" model="account.report.line">
+                                <field name="name">Participations</field>
+                                <field name="code">CH_148</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">148 + 149</field>
+                            </record>
+                            <record id="account_financial_report_line_ch_150" model="account.report.line">
+                                <field name="name">Movable tangible assets</field>
+                                <field name="code">CH_150</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">15</field>
+                            </record>
+                            <record id="account_financial_report_line_ch_160" model="account.report.line">
+                                <field name="name">Immovable tangible assets</field>
+                                <field name="code">CH_160</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">16</field>
+                            </record>
+                            <record id="account_financial_report_line_ch_170" model="account.report.line">
+                                <field name="name">Intangible assets</field>
+                                <field name="code">CH_170</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">17</field>
+                            </record>
+                            <record id="account_financial_report_line_ch_180" model="account.report.line">
+                                <field name="name">Non-paid-in share, corporate or foundation capital</field>
+                                <field name="code">CH_180</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">18 + 19</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_line_ch_2" model="account.report.line">
+                <field name="name">LIABILITIES AND EQUITY</field>
+                <field name="code">CH_2</field>
+                <field name="aggregation_formula">CH_20.balance + CH_24.balance + CH_28.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_ch_20" model="account.report.line">
+                        <field name="name">Current Liabilities</field>
+                        <field name="code">CH_20</field>
+                        <field name="aggregation_formula">CH_200.balance + CH_210.balance + CH_220.balance + CH_230.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_ch_200" model="account.report.line">
+                                <field name="name">Accounts payable from goods and services</field>
+                                <field name="code">CH_200</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-20</field>
+                            </record>
+                            <record id="account_financial_report_line_ch_210" model="account.report.line">
+                                <field name="name">Current interest-bearing liabilities</field>
+                                <field name="code">CH_210</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-21</field>
+                            </record>
+                            <record id="account_financial_report_line_ch_220" model="account.report.line">
+                                <field name="name">Other current liabilities</field>
+                                <field name="code">CH_220</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-22</field>
+                            </record>
+                            <record id="account_financial_report_line_ch_230" model="account.report.line">
+                                <field name="name">Deferred revenue and accrued expense</field>
+                                <field name="code">CH_230</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-23</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_ch_24" model="account.report.line">
+                        <field name="name">Long-term Liabilities</field>
+                        <field name="code">CH_24</field>
+                        <field name="aggregation_formula">CH_240.balance + CH_250.balance + CH_260.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_ch_240" model="account.report.line">
+                                <field name="name">Long-term interest-bearing liabilities</field>
+                                <field name="code">CH_240</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-24</field>
+                            </record>
+                            <record id="account_financial_report_line_ch_250" model="account.report.line">
+                                <field name="name">Other long-term liabilities</field>
+                                <field name="code">CH_250</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-25</field>
+                            </record>
+                            <record id="account_financial_report_line_ch_260" model="account.report.line">
+                                <field name="name">Provisions</field>
+                                <field name="code">CH_260</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-26 - 27</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_ch_28" model="account.report.line">
+                        <field name="name">Equity</field>
+                        <field name="code">CH_28</field>
+                        <field name="aggregation_formula">CH_280.balance + CH_290.balance + CH_299.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_ch_280" model="account.report.line">
+                                <field name="name">Share, corporate or foundation capital</field>
+                                <field name="code">CH_280</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-28</field>
+                            </record>
+                            <record id="account_financial_report_line_ch_290" model="account.report.line">
+                                <field name="name">Legal capital reserves</field>
+                                <field name="code">CH_290</field>
+                                <field name="aggregation_formula">CH_290_A.balance + CH_290_B.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_ch_290_a" model="account.report.line">
+                                        <field name="name">Legal reserves</field>
+                                        <field name="code">CH_290_A</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_ch_290_a_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="date_scope">from_beginning</field>
+                                                <field name="formula">[('account_id.code', '&gt;=', '290'), ('account_id.code', '&lt;', '2991'), ('account_id.account_type', '!=', 'equity_unaffected')]</field>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_ch_290_b" model="account.report.line">
+                                        <field name="name">Previous years' unallocated profit or loss</field>
+                                        <field name="code">CH_290_B</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_ch_290_b_domain" model="account.report.expression">
+                                                <field name="label">domain</field>
+                                                <field name="engine">domain</field>
+                                                <field name="date_scope">from_beginning</field>
+                                                <field name="formula">[('account_id.account_type', '=', 'equity_unaffected')]</field>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                            <record id="account_financial_report_line_ch_290_b_cross_report" model="account.report.expression">
+                                                <field name="label">cross_report</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">CH_R.balance</field>
+                                                <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                                <field name="subformula">cross_report</field>
+                                            </record>
+                                            <record id="account_financial_report_line_ch_290_b_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">CH_290_B.domain + CH_290_B.cross_report</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_ch_299" model="account.report.line">
+                                <field name="name">Annual profit or annual loss</field>
+                                <field name="code">CH_299</field>
+                                <field name="action_id" ref="account_financial_report_l10n_ch_pl_action"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_ch_299_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">CH_R.balance</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                        <field name="subformula">cross_report</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

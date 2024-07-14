@@ -1,0 +1,701 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <data>
+        <record id="account_financial_report_bs" model="account.report">
+            <field name="name">Balance sheet</field>
+            <field name="root_report_id" ref="account_reports.balance_sheet"/>
+            <field name="filter_analytic_groupby" eval="True"/>
+            <field name="filter_unfold_all" eval="True"/>
+            <field name="filter_journals" eval="True"/>
+            <field name="filter_date_range" eval="False"/>
+            <field name="country_id" ref="base.se"/>
+            <field name="filter_multi_company">selector</field>
+            <field name="column_ids">
+                <record id="account_financial_report_bs_column" model="account.report.column">
+                    <field name="name">Balance</field>
+                    <field name="expression_label">balance</field>
+                </record>
+            </field>
+            <field name="line_ids">
+                <record id="account_financial_report_bs_A_TOTAL" model="account.report.line">
+                    <field name="name">ASSETS</field>
+                    <field name="code">SE_BS_A_TOTAL</field>
+                    <field name="aggregation_formula">SE_BS_A_10_TOTAL.balance + SE_BS_A_20_TOTAL.balance + SE_BS_A_30_TOTAL.balance</field>
+                    <field name="hierarchy_level" eval="0"/>
+                    <field name="children_ids">
+                        <record id="account_financial_report_bs_A_10_TOTAL" model="account.report.line">
+                            <field name="name">Subscribed but unpaid capital</field>
+                            <field name="code">SE_BS_A_10_TOTAL</field>
+                            <field name="groupby">account_id</field>
+                            <field name="foldable" eval="True"/>
+                            <field name="account_codes_formula">169</field>
+                        </record>
+                        <record id="account_financial_report_bs_A_20_TOTAL" model="account.report.line">
+                            <field name="name">Non-current assets</field>
+                            <field name="code">SE_BS_A_20_TOTAL</field>
+                            <field name="aggregation_formula">SE_BS_A_2010_TOTAL.balance + SE_BS_A_2020_TOTAL.balance + SE_BS_A_2030_TOTAL.balance</field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_bs_A_2010_TOTAL" model="account.report.line">
+                                    <field name="name">Intangible assets</field>
+                                    <field name="code">SE_BS_A_2010_TOTAL</field>
+                                    <field name="aggregation_formula">SE_BS_A_201010.balance + SE_BS_A_201020.balance + SE_BS_A_201030.balance + SE_BS_A_201040.balance + SE_BS_A_201050.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_A_201010" model="account.report.line">
+                                            <field name="name">Capitalized expenses for development work and similar work</field>
+                                            <field name="code">SE_BS_A_201010</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">101</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_201020" model="account.report.line">
+                                            <field name="name">Concessions, patents, licenses, trademarks and similar rights</field>
+                                            <field name="code">SE_BS_A_201020</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">103 + 105 + 102 + 104</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_201030" model="account.report.line">
+                                            <field name="name">Rental rights and similar rights</field>
+                                            <field name="code">SE_BS_A_201030</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">106</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_201040" model="account.report.line">
+                                            <field name="name">Goodwill</field>
+                                            <field name="code">SE_BS_A_201040</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">107</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_201050" model="account.report.line">
+                                            <field name="name">Advances regarding intangible non-current assets</field>
+                                            <field name="code">SE_BS_A_201050</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">108</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_A_2020_TOTAL" model="account.report.line">
+                                    <field name="name">Tangible non-current assets</field>
+                                    <field name="code">SE_BS_A_2020_TOTAL</field>
+                                    <field name="aggregation_formula">SE_BS_A_202010.balance + SE_BS_A_202020.balance + SE_BS_A_202030.balance + SE_BS_A_202040.balance + SE_BS_A_202050.balance + SE_BS_A_202060.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_A_202010" model="account.report.line">
+                                            <field name="name">Land and buildings</field>
+                                            <field name="code">SE_BS_A_202010</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">11\(112,118)</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_202020" model="account.report.line">
+                                            <field name="name">Machinery and other technical facilities</field>
+                                            <field name="code">SE_BS_A_202020</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">121</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_202030" model="account.report.line">
+                                            <field name="name">Equipment, tools and installations</field>
+                                            <field name="code">SE_BS_A_202030</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">12\(121,128,129)</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_202040" model="account.report.line">
+                                            <field name="name">Ongoing new facilities and advances regarding tangible non-current assets</field>
+                                            <field name="code">SE_BS_A_202040</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">118 + 128</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_202050" model="account.report.line">
+                                            <field name="name">Improvement leasehold</field>
+                                            <field name="code">SE_BS_A_202050</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">112</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_202060" model="account.report.line">
+                                            <field name="name">Other tangible non-current assets</field>
+                                            <field name="code">SE_BS_A_202060</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">129</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_A_2030_TOTAL" model="account.report.line">
+                                    <field name="name">Financial assets</field>
+                                    <field name="code">SE_BS_A_2030_TOTAL</field>
+                                    <field name="aggregation_formula">SE_BS_A_203010.balance + SE_BS_A_203020.balance + SE_BS_A_203030.balance + SE_BS_A_203040.balance + SE_BS_A_203050.balance + SE_BS_A_203060.balance + SE_BS_A_203070.balance + SE_BS_A_203080.balance + SE_BS_A_203090.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_A_203010" model="account.report.line">
+                                            <field name="name">Shares in group companies</field>
+                                            <field name="code">SE_BS_A_203010</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">131</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_203020" model="account.report.line">
+                                            <field name="name">Receivables from group companies</field>
+                                            <field name="code">SE_BS_A_203020</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">132</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_203030" model="account.report.line">
+                                            <field name="name">Shares in associated companies and jointly controlled companies</field>
+                                            <field name="code">SE_BS_A_203030</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">sum([('account_id.code', '=like', '133%'), ('account_id.code', '!=', '1336'), ('account_id.code', '!=', '1337')])</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_203040" model="account.report.line">
+                                            <field name="name">Receivables from associated companies and jointly controlled companies</field>
+                                            <field name="code">SE_BS_A_203040</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">sum([('account_id.code', '=like', '134%'), ('account_id.code', '!=', '1346'), ('account_id.code', '!=', '1347')])</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_203050" model="account.report.line">
+                                            <field name="name">Investments in other companies</field>
+                                            <field name="code">SE_BS_A_203050</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">sum(['|', ('account_id.code', '=', '1336'), ('account_id.code', '=', '1337')])</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_203060" model="account.report.line">
+                                            <field name="name">Receivables from other companies in which there is an ownership interest</field>
+                                            <field name="code">SE_BS_A_203060</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">sum(['|', ('account_id.code', '=', '1346'), ('account_id.code', '=', '1347')])</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_203070" model="account.report.line">
+                                            <field name="name">Other long-term securities</field>
+                                            <field name="code">SE_BS_A_203070</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">135</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_203080" model="account.report.line">
+                                            <field name="name">Loans to co-owners and others, to whom co-owners are in such a relationship as stated in ch. 1 § 3, 4 or 5 of the Swedish Companies Act (2005: 551)</field>
+                                            <field name="code">SE_BS_A_203080</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">136</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_20309" model="account.report.line">
+                                            <field name="name">Other long-term receivables</field>
+                                            <field name="code">SE_BS_A_203090</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">137 + 138</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_bs_A_30_TOTAL" model="account.report.line">
+                            <field name="name">Current assets</field>
+                            <field name="code">SE_BS_A_30_TOTAL</field>
+                            <field name="aggregation_formula">SE_BS_A_3010_TOTAL.balance + SE_BS_A_3020_TOTAL.balance + SE_BS_A_3030_TOTAL.balance + SE_BS_A_3040_TOTAL.balance</field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_bs_A_3010_TOTAL" model="account.report.line">
+                                    <field name="name">Inventories, etc.</field>
+                                    <field name="code">SE_BS_A_3010_TOTAL</field>
+                                    <field name="aggregation_formula">SE_BS_A_301010.balance + SE_BS_A_301020.balance + SE_BS_A_301030.balance + SE_BS_A_301040.balance + SE_BS_A_301050.balance + SE_BS_A_301060.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_A_301010" model="account.report.line">
+                                            <field name="name">Raw materials and consumables</field>
+                                            <field name="code">SE_BS_A_301010</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">sum(['|', ('account_id.code', '=like', '141%'), '|', ('account_id.code', '=like', '142%'), '|',('account_id.code', '=', '1430'), '|',('account_id.code', '=', '1431'), ('account_id.code', '=', '1438')])</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_301020" model="account.report.line">
+                                            <field name="name">Goods under production</field>
+                                            <field name="code">SE_BS_A_301020</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">sum(['|', ('account_id.code', '=like', '143%'), ('account_id.code', '=like', '144%'), ('account_id.code', '!=', '1430'), ('account_id.code', '!=', '1431'), ('account_id.code', '!=', '1438') ])</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_301030" model="account.report.line">
+                                            <field name="name">Finished goods and goods for sale</field>
+                                            <field name="code">SE_BS_A_301030</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">145 + 146</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_301040" model="account.report.line">
+                                            <field name="name">Ongoing work on behalf of others</field>
+                                            <field name="code">SE_BS_A_301040</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">243 + 147</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_301050" model="account.report.line">
+                                            <field name="name">Advances to suppliers</field>
+                                            <field name="code">SE_BS_A_301050</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">148</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_301060" model="account.report.line">
+                                            <field name="name">Other inventory assets</field>
+                                            <field name="code">SE_BS_A_301060</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">149</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_A_3020_TOTAL" model="account.report.line">
+                                    <field name="name">Receivables</field>
+                                    <field name="code">SE_BS_A_3020_TOTAL</field>
+                                    <field name="aggregation_formula">SE_BS_A_302010.balance + SE_BS_A_302020.balance + SE_BS_A_302030.balance + SE_BS_A_302040.balance + SE_BS_A_302050.balance + SE_BS_A_302060.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_A_302010" model="account.report.line">
+                                            <field name="name">Accounts receivable</field>
+                                            <field name="code">SE_BS_A_302010</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">15\(156,157,159)</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_302020" model="account.report.line">
+                                            <field name="name">Receivables from group companies</field>
+                                            <field name="code">SE_BS_A_302020</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">sum(['|', ('account_id.code', '=like', '156%'), '|', ('account_id.code', '=like', '166%'), ('account_id.code', '=like', '167%'), ('account_id.code', '!=', '1672'), ('account_id.code', '!=', '1673'), ])</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_302030" model="account.report.line">
+                                            <field name="name">Receivables from associated companies and jointly controlled companies</field>
+                                            <field name="code">SE_BS_A_302030</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">sum(['|', ('account_id.code', '=like', '157%'), ('account_id.code', '=', '1672'), ('account_id.code', '!=', '1573')])</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_302040" model="account.report.line">
+                                            <field name="name">Receivables from other companies in which there is an ownership interest</field>
+                                            <field name="code">SE_BS_A_302040</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">sum(['|', ('account_id.code', '=', '1573'), ('account_id.code', '=', '1673')])</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_302050" model="account.report.line">
+                                            <field name="name">Other receivables</field>
+                                            <field name="code">SE_BS_A_302050</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">16\(166,167,169) + 159</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_302060" model="account.report.line">
+                                            <field name="name">Prepayments and accrued income</field>
+                                            <field name="code">SE_BS_A_302060</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">17</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_A_3030_TOTAL" model="account.report.line">
+                                    <field name="name">Short-term investments</field>
+                                    <field name="code">SE_BS_A_3030_TOTAL</field>
+                                    <field name="aggregation_formula">SE_BS_A_303010.balance + SE_BS_A_303020.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_A_303010" model="account.report.line">
+                                            <field name="name">Shares in group companies</field>
+                                            <field name="code">SE_BS_A_303010</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">186</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_303020" model="account.report.line">
+                                            <field name="name">Other short-term investments</field>
+                                            <field name="code">SE_BS_A_303020</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="account_codes_formula">18\(186)</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_A_3040_TOTAL" model="account.report.line">
+                                            <field name="name">Cash and bank</field>
+                                            <field name="code">SE_BS_A_3040_TOTAL</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">sum([('account_id.code','=like','19%')])</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
+                <record id="account_financial_report_bs_EL_TOTAL" model="account.report.line">
+                    <field name="name">EQUITY, PROVISIONS AND LIABILITIES</field>
+                    <field name="code">SE_BS_EL_TOTAL</field>
+                    <field name="aggregation_formula">SE_BS_EL_10_TOTAL.balance + SE_BS_EL_20_TOTAL.balance + SE_BS_EL_30_TOTAL.balance + SE_BS_EL_40_TOTAL.balance</field>
+                    <field name="hierarchy_level" eval="0"/>
+                    <field name="children_ids">
+                        <record id="account_financial_report_bs_EL_10_TOTAL" model="account.report.line">
+                            <field name="name">Equity, with information on what constitutes unrestricted equity and restricted equity</field>
+                            <field name="code">SE_BS_EL_10_TOTAL</field>
+                            <field name="aggregation_formula">SE_BS_EL_101010_TOTAL.balance + SE_BS_EL_101020_TOTAL.balance + SE_BS_EL_101025_TOTAL.balance + SE_BS_EL_101030_TOTAL.balance + SE_BS_EL_101035.balance + SE_BS_EL_101040_TOTAL.balance + SE_BS_EL_101050_TOTAL.balance + SE_BS_EL_101060_TOTAL.balance + SE_BS_EL_102010_TOTAL.balance + SE_BS_EL_102020_TOTAL.balance + SE_BS_EL_102030_TOTAL.balance + SE_BS_EL_102040_TOTAL.balance</field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_bs_EL_101010_TOTAL" model="account.report.line">
+                                    <field name="name">Share Capital</field>
+                                    <field name="code">SE_BS_EL_101010_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="domain_formula">-sum([('account_id.code', '=', '2081'),])</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_101020_TOTAL" model="account.report.line">
+                                    <field name="name">Share premium funds</field>
+                                    <field name="code">SE_BS_EL_101020_TOTAL</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="aggregation_formula">SE_BS_EL_10102010.balance + SE_BS_EL_10102020.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_EL_10102010" model="account.report.line">
+                                            <field name="name">Restricted share premium fund / Stake issue</field>
+                                            <field name="code">SE_BS_EL_10102010</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">-sum([('account_id.code', '=', '2087')])</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_EL_10102020" model="account.report.line">
+                                            <field name="name">Free share premium fund</field>
+                                            <field name="code">SE_BS_EL_10102020</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">-sum([('account_id.code', '=', '2097')])</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_101025_TOTAL" model="account.report.line">
+                                    <field name="name">Paid-in and issue contributions</field>
+                                    <field name="code">SE_BS_EL_101025_TOTAL</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="aggregation_formula">SE_BS_EL_10102510.balance + SE_BS_EL_10102520.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_EL_10102510" model="account.report.line">
+                                            <field name="name">Membership efforts</field>
+                                            <field name="code">SE_BS_EL_10102510</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">-sum(['|', ('account_id.code', '=', '2083'), '|', ('account_id.code', '=', '2092'), ('account_id.code', '=', '2093')])</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_EL_10102520" model="account.report.line">
+                                            <field name="name">Publisher's contribution</field>
+                                            <field name="code">SE_BS_EL_10102520</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">-sum(['|', ('account_id.code', '=', '2084'), ('account_id.code', '=', '2094'),])</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_101030_TOTAL" model="account.report.line">
+                                    <field name="name">Revaluation fund</field>
+                                    <field name="code">SE_BS_EL_101030_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="domain_formula">-sum([('account_id.code', '=', '2085')])</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_101035" model="account.report.line">
+                                    <field name="name">Dedicated funds</field>
+                                    <field name="code">SE_BS_EL_101035</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-207</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_101040_TOTAL" model="account.report.line">
+                                    <field name="name">Other funds</field>
+                                    <field name="code">SE_BS_EL_101040_TOTAL</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="aggregation_formula">SE_BS_EL_10104010.balance + SE_BS_EL_10104030.balance + SE_BS_EL_10104040.balance + SE_BS_EL_10104050.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_EL_10104010" model="account.report.line">
+                                            <field name="name">Reserve fund</field>
+                                            <field name="code">SE_BS_EL_10104010</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">-sum([('account_id.code', '=', '2086')])</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_EL_10104030" model="account.report.line">
+                                            <field name="name">Fair value fund</field>
+                                            <field name="code">SE_BS_EL_10104030</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">-sum(['|', ('account_id.code', '=', '2066'), ('account_id.code', '=', '2096')])</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_EL_10104040" model="account.report.line">
+                                            <field name="name">Fund for development expenditure</field>
+                                            <field name="code">SE_BS_EL_10104040</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">-sum([('account_id.code', '=', '2089')])</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_EL_10104050" model="account.report.line">
+                                            <field name="name">Other</field>
+                                            <field name="code">SE_BS_EL_10104050</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="hide_if_zero" eval="True"/>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">-sum(['|', ('account_id.code', '=', '2088'), '|', ('account_id.code', '=', '2090'), ('account_id.code', '=', '2095')])</field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="account_financial_report_bs_101050_TOTAL" model="account.report.line">
+                                    <field name="name">Balanced gain or loss</field>
+                                    <field name="code">SE_BS_EL_101050_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="domain_formula">-sum(['|', ('account_id.code', '=', '2067'), '|', ('account_id.code', '=', '2068'), ('account_id.code', '=', '2091')])</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_102010_TOTAL" model="account.report.line">
+                                    <field name="name">Equity at the beginning of the financial year</field>
+                                    <field name="code">SE_BS_EL_102010_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="domain_formula">-sum(['|', ('account_id.code', '=', '2010'), '|', ('account_id.code', '=', '2020'), '|', ('account_id.code', '=', '2030'), '|', ('account_id.code', '=', '2040'), '|', ('account_id.code', '=', '2060'), '|', ('account_id.code', '=', '2080'), '|', ('account_id.code', '=', '2061'), ('account_id.code', '=' , '2098')])</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_102020_TOTAL" model="account.report.line">
+                                    <field name="name">Deposits or withdrawals during the year</field>
+                                    <field name="code">SE_BS_EL_102020_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="domain_formula">-sum(['|', ('account_id.code', '=', '2011'), '|', ('account_id.code', '=', '2021'), '|', ('account_id.code', '=', '2031'), '|', ('account_id.code', '=', '2041'), '|', ('account_id.code', '=', '2013'), '|', ('account_id.code', '=', '2017'), '|', ('account_id.code', '=', '2018'), '|', ('account_id.code', '=', '2023'), '|', ('account_id.code', '=', '2027'), '|', ('account_id.code', '=', '2028'), '|', ('account_id.code', '=', '2033'), '|', ('account_id.code', '=', '2037'), '|', ('account_id.code', '=', '2038'), '|', ('account_id.code', '=', '2043'), '|', ('account_id.code', '=', '2047'), ('account_id.code', '=', '2048'),])</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_102030_TOTAL" model="account.report.line">
+                                    <field name="name">Changes in the equity fund</field>
+                                    <field name="code">SE_BS_EL_102030_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="domain_formula">-sum([('account_id.code', '=', '2082')])</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_102040_TOTAL" model="account.report.line">
+                                    <field name="name">Changes in the fair value reserve</field>
+                                    <field name="code">SE_BS_EL_102040_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="domain_formula">-sum([('account_id.code', '=', '2065')])</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_101060_TOTAL" model="account.report.line">
+                                    <field name="name">Year-end results</field>
+                                    <field name="code">SE_BS_EL_101060_TOTAL</field>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="aggregation_formula">SE_BS_EL_10106010.balance + SE_BS_EL_10106020.balance</field>
+                                    <field name="children_ids">
+                                        <record id="account_financial_report_bs_EL_10106010" model="account.report.line">
+                                            <field name="name">Allocated year-end results</field>
+                                            <field name="code">SE_BS_EL_10106010</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="domain_formula">-sum(['|', ('account_id.code', '=', '2019'), '|', ('account_id.code', '=', '2029'), '|', ('account_id.code', '=', '2039'), '|', ('account_id.code', '=', '2049'), '|', ('account_id.code', '=', '2069'), ('account_id.code', '=', '2099') ])</field>
+                                        </record>
+                                        <record id="account_financial_report_bs_EL_10106020" model="account.report.line">
+                                            <field name="name">Unallocated year-end results</field>
+                                            <field name="code">SE_BS_EL_10106020</field>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_bs_EL_10106020_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">-4 - 6 - 3 - 8 - 5 - 7</field>
+                                                    <field name="date_scope">from_beginning</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_bs_EL_20_TOTAL" model="account.report.line">
+                            <field name="name">Untaxed reserves</field>
+                            <field name="code">SE_BS_EL_20_TOTAL</field>
+                            <field name="groupby">account_id</field>
+                            <field name="hide_if_zero" eval="True"/>
+                            <field name="foldable" eval="True"/>
+                            <field name="account_codes_formula">-21</field>
+                        </record>
+                        <record id="account_financial_report_bs_EL_30_TOTAL" model="account.report.line">
+                            <field name="name">Provisions</field>
+                            <field name="code">SE_BS_EL_30_TOTAL</field>
+                            <field name="aggregation_formula">SE_BS_EL_3010.balance + SE_BS_EL_3020.balance + SE_BS_EL_3030.balance</field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_bs_EL_3010" model="account.report.line">
+                                    <field name="name">Provisions for pensions and similar obligations</field>
+                                    <field name="code">SE_BS_EL_3010</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-221 - 223</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_3020" model="account.report.line">
+                                    <field name="name">Provisions for taxes</field>
+                                    <field name="code">SE_BS_EL_3020</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-225 - 224</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_3030" model="account.report.line">
+                                    <field name="name">Other provisions</field>
+                                    <field name="code">SE_BS_EL_3030</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-22\(221,223,224,225) - 205</field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="account_financial_report_bs_EL_40_TOTAL" model="account.report.line">
+                            <field name="name">Liabilities</field>
+                            <field name="code">SE_BS_EL_40_TOTAL</field>
+                            <field name="aggregation_formula">SE_BS_EL_4010_TOTAL.balance + SE_BS_EL_4020_TOTAL.balance + SE_BS_EL_4030_TOTAL.balance + SE_BS_EL_4040_TOTAL.balance + SE_BS_EL_4050_TOTAL.balance + SE_BS_EL_4060_TOTAL.balance + SE_BS_EL_4070_TOTAL.balance + SE_BS_EL_4080_TOTAL.balance + SE_BS_EL_4090_TOTAL.balance + SE_BS_EL_40100_TOTAL.balance + SE_BS_EL_40110_TOTAL.balance</field>
+                            <field name="children_ids">
+                                <record id="account_financial_report_bs_EL_4010_TOTAL" model="account.report.line">
+                                    <field name="name">Bond loans</field>
+                                    <field name="code">SE_BS_EL_4010_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-232 - 231</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_4020_TOTAL" model="account.report.line">
+                                    <field name="name">Liabilities to credit institutions</field>
+                                    <field name="code">SE_BS_EL_4020_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-233 - 234 - 235 - 241 - 248</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_4030_TOTAL" model="account.report.line">
+                                    <field name="name">Advances from customers</field>
+                                    <field name="code">SE_BS_EL_4030_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-242</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_4040_TOTAL" model="account.report.line">
+                                    <field name="name">Accounts payable</field>
+                                    <field name="code">SE_BS_EL_4040_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-244 - 245</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_4060_TOTAL" model="account.report.line">
+                                    <field name="name">Liabilities to Group companies</field>
+                                    <field name="code">SE_BS_EL_4060_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-286 - 246 - 236</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_4050_TOTAL" model="account.report.line">
+                                    <field name="name">Exchange liabilities</field>
+                                    <field name="code">SE_BS_EL_4050_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="domain_formula">-sum([('account_id.code', '=', '2492')])</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_4070_TOTAL" model="account.report.line">
+                                    <field name="name">Liabilities to associated companies and jointly controlled companies</field>
+                                    <field name="code">SE_BS_EL_4070_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="domain_formula">-sum(['|', ('account_id.code', '=like', '237%'), '|', ('account_id.code', '=like', '247%'), ('account_id.code', '=like', '287%'), ('account_id.code', '!=', '2373'), ('account_id.code', '!=', '2473'), ('account_id.code', '!=', '2873')])</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_4080_TOTAL" model="account.report.line">
+                                    <field name="name">Liabilities to other companies in which there is an ownership interest</field>
+                                    <field name="code">SE_BS_EL_4080_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="domain_formula">-sum(['|', ('account_id.code', '=', '2373'), '|', ('account_id.code', '=', '2473'), ('account_id.code', '=', '2873')])</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_4090_TOTAL" model="account.report.line">
+                                    <field name="name">Tax liabilities</field>
+                                    <field name="code">SE_BS_EL_4090_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-25</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_40100_TOTAL" model="account.report.line">
+                                    <field name="name">Other liabilities</field>
+                                    <field name="code">SE_BS_EL_40100_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="domain_formula">-sum(['|', ('account_id.code', '=like', '239%'), '|', ('account_id.code', '=like', '249%'), '|', ('account_id.code', '=like', '26%'), '|', ('account_id.code', '=like', '27%'), ('account_id.code', '=like', '28%'), '!', ('account_id.code', '=like', '286%'), '!', ('account_id.code', '=like', '287%'), ('account_id.code', '!=', '2492')])</field>
+                                </record>
+                                <record id="account_financial_report_bs_EL_40110_TOTAL" model="account.report.line">
+                                    <field name="name">Accrued expenses and prepaid income</field>
+                                    <field name="code">SE_BS_EL_40110_TOTAL</field>
+                                    <field name="groupby">account_id</field>
+                                    <field name="hide_if_zero" eval="True"/>
+                                    <field name="foldable" eval="True"/>
+                                    <field name="account_codes_formula">-29</field>
+                                </record>
+                            </field>
+                        </record>
+                    </field>
+                </record>
+            </field>
+        </record>
+    </data>
+</odoo>

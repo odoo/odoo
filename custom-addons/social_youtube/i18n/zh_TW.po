@@ -1,0 +1,844 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* social_youtube
+# 
+# Translators:
+# Wil Odoo, 2023
+# Pak Wai Ho, 2024
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:47+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_account__youtube_upload_playlist_id
+msgid ""
+"'Uploads' Playlist ID provided by the YouTube API, this should never be set "
+"manually."
+msgstr "「上載的影片」播放清單識別碼，是由 YouTube API 提供，不應手動設定。"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.youtube_preview
+msgid "123 Views •"
+msgstr "123 次觀看 •"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_stream_post_view_kanban
+msgid "<i class=\"fa fa-thumbs-o-up me-1\" title=\"Likes\"/>"
+msgstr "<i class=\"fa fa-thumbs-o-up me-1\" title=\"讚好\"/>"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.youtube_preview
+msgid "<span class=\"fw-bold\">Your YouTube Channel</span>"
+msgstr "<span class=\"fw-bold\">你的 YouTube 頻道</span>"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid ""
+"<span>These are stored up to 30 days and refreshed often to provide you an accurate depiction of reality. </span>\n"
+"                        <span>To delete these from Odoo, simply delete this account.</span>"
+msgstr ""
+"<span>數據最多儲存 30 天並會經常更新，以提供準確實況。</span>\n"
+"                        <span>若想從 Odoo 中刪除這些內容，只需刪除此帳戶即可。</span>"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "Access to your account can be revoked at any time from"
+msgstr "你可隨時撤銷對你帳戶的存取權限，在"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_account__youtube_access_token
+msgid ""
+"Access token provided by the YouTube API, this should never be set manually."
+msgstr "存取權杖由 YouTube API 提供，不應手動設定。"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__account_id
+msgid "Account"
+msgstr "帳戶"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_live_post.py:0
+#: code:addons/social_youtube/models/social_stream_post.py:0
+#, python-format
+msgid "An error occurred."
+msgstr "發生錯誤。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "Auth endpoint did not provide a refresh token. Please try again."
+msgstr "授權終端點未有提供更新權杖。請再試。"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_stream_post_view_kanban
+#, python-format
+msgid "Author Image"
+msgstr "作者圖片"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_revoke_youtube_view_form
+msgid "Cancel"
+msgstr "取消"
+
+#. module: social_youtube
+#: model:social.stream.type,name:social_youtube.stream_type_youtube_channel_videos
+msgid "Channel"
+msgstr "群組"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#, python-format
+msgid "Clear"
+msgstr "清除"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_stream_post_view_kanban
+#, python-format
+msgid "Comments"
+msgstr "評論"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_stream_post.py:0
+#, python-format
+msgid ""
+"Comments are marked as 'disabled' for this video. It could have been set as "
+"'private'."
+msgstr "此影片的留言功能被標記為「停用」。它可能被設為「私密」。"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Confirmation"
+msgstr "確認"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_live_post__youtube_video_id
+#: model:ir.model.fields,help:social_youtube.field_social_post__youtube_video_id
+msgid "Contains the ID of the video as returned by the YouTube API"
+msgstr "包含由 YouTube API 傳回的影片識別碼"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_post__youtube_video_category_id
+msgid "Contains the ID of the video category as returned by the YouTube API"
+msgstr "包含由 YouTube API 傳回的影片類別識別碼"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/wizard/social_account_revoke_youtube.py:0
+#, python-format
+msgid ""
+"Could not revoke your account.\n"
+"Error: %s"
+msgstr ""
+"未能撤回你的帳戶。\n"
+"錯誤：%s"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__create_uid
+msgid "Created by"
+msgstr "建立人員"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__create_date
+msgid "Created on"
+msgstr "建立於"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "Description cannot exceed 5000 characters."
+msgstr "影片描述不可超過 5,000 個字元。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "Description should not contain > or < symbol."
+msgstr "影片描述不應有 > 或 < 符號。"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Do you also want to remove the video from your YouTube account?"
+msgstr "是否也要從你的 YouTube 帳戶刪除該影片？"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Draft Video"
+msgstr "草稿影片"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_account__youtube_token_expiration_date
+msgid ""
+"Expiration date of the Access Token provided by the YouTube API, this should"
+" never be set manually."
+msgstr "存取權杖的到期日期由 YouTube API 提供，不應手動設定。"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account__youtube_access_token
+msgid "Google Access Token"
+msgstr "Google 存取權杖"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "Google Privacy Policy"
+msgstr "Google 私隱政策"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account__youtube_refresh_token
+msgid "Google Refresh Token"
+msgstr "Google 更新權杖"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__id
+msgid "ID"
+msgstr "識別號"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__write_uid
+msgid "Last Updated by"
+msgstr "最後更新者"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account_revoke_youtube__write_date
+msgid "Last Updated on"
+msgstr "最後更新於"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#, python-format
+msgid "Likes"
+msgstr "喜愛"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_media__media_type
+msgid "Media Type"
+msgstr "媒介類型"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "No"
+msgstr "否"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.res_config_settings_view_form
+msgid "OAuth Client ID"
+msgstr "OAuth 客戶端識別碼"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.res_config_settings_view_form
+msgid "OAuth Client Secret"
+msgstr "OAuth 客戶端秘密"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_revoke_youtube_view_form
+msgid ""
+"Odoo will lose access to your YouTube account\n"
+"                        and delete all its related data from your database."
+msgstr ""
+"Odoo 將會失去對你 YouTube 帳戶的存取權限，\n"
+"                        並會從你的資料庫刪除其所有相關資料。"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_post__youtube_video_privacy
+msgid "Once posted, set the video as Public/Private/Unlisted"
+msgstr "發佈後，將影片設為「公開」/「私人」/「不公開」"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid ""
+"Our YouTube Social application uses YouTube API Services.\n"
+"                        By using it, you implicitly agree to the:"
+msgstr ""
+"我們的 YouTube 社交應用程式使用 YouTube 的 API 服務。\n"
+"                        若你使用程式，即表示你同意以下項目："
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+#, python-format
+msgid "Please select a single YouTube account at a time."
+msgstr "請每次只選擇一個 YouTube 帳戶。"
+
+#. module: social_youtube
+#: model:ir.model.fields.selection,name:social_youtube.selection__social_post__youtube_video_privacy__private
+msgid "Private"
+msgstr "私人"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Processing..."
+msgstr "處理中..."
+
+#. module: social_youtube
+#: model:ir.model.fields.selection,name:social_youtube.selection__social_post__youtube_video_privacy__public
+msgid "Public"
+msgstr "公開"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "Read More about YouTube Channel"
+msgstr "了解更多關於 YouTube 頻道的資訊"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "Reason:"
+msgstr "原因："
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_account__youtube_refresh_token
+msgid ""
+"Refresh token provided by the YouTube API, this should never be set "
+"manually."
+msgstr "更新權杖由 YouTube API 提供，不應手動設定。"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "Revoke"
+msgstr "取消"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_revoke_youtube_view_form
+msgid "Revoke & Delete"
+msgstr "撤銷並刪除"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_account.py:0
+#, python-format
+msgid "Revoke Account"
+msgstr "撤回帳戶"
+
+#. module: social_youtube
+#: model:ir.actions.act_window,name:social_youtube.social_account_revoke_youtube_action
+#: model:ir.model,name:social_youtube.model_social_account_revoke_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_revoke_youtube_view_form
+msgid "Revoke YouTube Account"
+msgstr "撤回 YouTube 帳戶"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_account.py:0
+#, python-format
+msgid "Revoking access tokens is currently limited to YouTube accounts only."
+msgstr "目前只限對 YouTube 帳戶撤銷存取權杖。"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#, python-format
+msgid "Select"
+msgstr "選擇"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_accounts_other_count
+msgid "Selected Other Accounts"
+msgstr "選取的其他帳戶"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_accounts_count
+msgid "Selected YouTube Accounts"
+msgstr "所選 YouTube 帳戶"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_post__youtube_video
+msgid ""
+"Simply holds the filename of the video as the video itself is uploaded "
+"directly to YouTube"
+msgstr "只裝載影片的檔案名稱，因為影片本身會直接上載至 YouTube"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_account
+msgid "Social Account"
+msgstr "社交媒體帳號"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_live_post
+msgid "Social Live Post"
+msgstr "社交媒體實時帖文"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_media
+msgid "Social Media"
+msgstr "社交媒體"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_post
+msgid "Social Post"
+msgstr "社交帖文"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_post_template
+msgid "Social Post Template"
+msgstr "社交帖文範本"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_stream
+msgid "Social Stream"
+msgstr "社交訊息流"
+
+#. module: social_youtube
+#: model:ir.model,name:social_youtube.model_social_stream_post
+msgid "Social Stream Post"
+msgstr "社交訊息流帖文"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "The 'message' field is required for post ID %s"
+msgstr "帖文必須填寫「訊息」欄位（帖文識別碼：%s）"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "The selected video exceeds the maximum allowed size of %s."
+msgstr "選取的影片超過允許尺寸上限（%s）。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_media.py:0
+#, python-format
+msgid ""
+"The url that this service requested returned an error. Please contact the "
+"author of the app."
+msgstr "此服務發出請求的網址傳回一個錯誤。請聯絡應用程式作者。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_live_post.py:0
+#, python-format
+msgid "The video you are trying to publish has been deleted from YouTube."
+msgstr "你正嘗試發佈的影片，已從 YouTube 刪除。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "There is no channel linked with this YouTube account."
+msgstr "未有頻道連結至此 YouTube 帳戶。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "Title cannot exceed 100 characters."
+msgstr "影片標題不可超過 100 個字元。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "Title should not contain > or < symbol."
+msgstr "影片標題不應有 > 或 < 符號。"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid ""
+"To provide our application services, note that we store the following data "
+"from your YouTube account:"
+msgstr "為提供我們的應用程式服務，請注意，我們會儲存以下有關你 YouTube 帳戶的數據。"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account__youtube_token_expiration_date
+msgid "Token expiration date"
+msgstr "權杖到期日"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "Unauthorized. Please contact your administrator."
+msgstr "未獲授權。請聯絡你的管理員。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/wizard/social_account_revoke_youtube.py:0
+#, python-format
+msgid "Unknown"
+msgstr "未知"
+
+#. module: social_youtube
+#: model:ir.model.fields.selection,name:social_youtube.selection__social_post__youtube_video_privacy__unlisted
+msgid "Unlisted"
+msgstr "不公開列出"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#, python-format
+msgid "Upload Video"
+msgstr "上載影片"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Upload failed. Please try again."
+msgstr "上載失敗。請再試。"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Uploading... %s%"
+msgstr "上載中⋯ %s%"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Uploading... 0%"
+msgstr "上載中⋯ 0%"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_res_config_settings__youtube_use_own_account
+msgid "Use your own YouTube Account"
+msgstr "使用你自己的 YouTube 帳戶"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_media__media_type
+msgid ""
+"Used to make comparisons when we need to restrict some features to a "
+"specific media ('facebook', 'twitter', ...)."
+msgstr "需要將某些功能限制至指定媒介時（例如 'facebook', 'twitter' 等），可用作進行比較。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "Video"
+msgstr "影片"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+msgid "Video Description"
+msgstr "影片描述"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_video_privacy
+msgid "Video Privacy"
+msgstr "影片私隱設定"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+msgid "Video Title"
+msgstr "影片標題"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Video Upload"
+msgstr "影片上載"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_stream_post.py:0
+#, python-format
+msgid "Video not found. It could have been removed from Youtube."
+msgstr "找不到影片。可能已從 YouTube 刪除。"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/xml/social_youtube_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_stream_post_view_kanban
+#, python-format
+msgid "Views"
+msgstr "視圖"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Yes, delete it"
+msgstr "沒錯，刪除它"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "You cannot use '>' or '<' in both title and description."
+msgstr "影片標題及描述均不可使用 > 或 <。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_media.py:0
+#, python-format
+msgid "You don't have an active subscription. Please buy one here: %s"
+msgstr "您尚未訂閱。請點選連結添購：%s"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_post.py:0
+#, python-format
+msgid "You have to upload a video when posting on YouTube."
+msgstr "發佈至 YouTube 時，必須上載影片。"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "You need to give your video a description."
+msgstr "你須為影片提供描述。"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "You need to give your video a title."
+msgstr "你須為影片提供標題。"
+
+#. module: social_youtube
+#: model:ir.model.fields.selection,name:social_youtube.selection__social_media__media_type__youtube
+#: model:social.media,name:social_youtube.social_media_youtube
+msgid "YouTube"
+msgstr "YouTube"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_access_token
+msgid "YouTube Access Token"
+msgstr "YouTube 存取權杖"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_video_category_id
+msgid "YouTube Category Id"
+msgstr "YouTube 類別識別碼"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account__youtube_channel_id
+msgid "YouTube Channel ID"
+msgstr "YouTube 頻道識別碼"
+
+#. module: social_youtube
+#: model:ir.model.fields,help:social_youtube.field_social_account__youtube_channel_id
+msgid ""
+"YouTube Channel ID provided by the YouTube API, this should never be set "
+"manually."
+msgstr "YouTube 頻道識別碼是由 YouTube API 提供，不應手動設定。"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/stream_post_kanban_record.js:0
+#, python-format
+msgid "YouTube Comments"
+msgstr "YouTube 留言"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_comments_count
+msgid "YouTube Comments Count"
+msgstr "YouTube 留言數目"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.res_config_settings_view_form
+msgid "YouTube Developer Account"
+msgstr "YouTube 開發人員帳戶"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_dislikes_count
+msgid "YouTube Dislikes"
+msgstr "YouTube 不喜歡數量"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_likes_count
+msgid "YouTube Likes"
+msgstr "YouTube 讚好數量"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_likes_ratio
+msgid "YouTube Likes Ratio"
+msgstr "YouTube 點讚率"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_res_config_settings__youtube_oauth_client_id
+msgid "YouTube OAuth Client ID"
+msgstr "YouTube OAuth 客戶端識別碼"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_res_config_settings__youtube_oauth_client_secret
+msgid "YouTube OAuth Client Secret"
+msgstr "YouTube OAuth 客戶端秘密"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+msgid "YouTube Options"
+msgstr "YouTube 選項"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.youtube_preview
+msgid "YouTube Placeholder"
+msgstr "YouTube 佔位符"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_preview
+msgid "YouTube Preview"
+msgstr "YouTube 預覽"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "YouTube Terms of Service (ToS)"
+msgstr "YouTube 服務條款（ToS）"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_kanban
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_stream_post_view_kanban
+msgid "YouTube Thumbnail"
+msgstr "YouTube 縮圖"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_thumbnail_url
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_thumbnail_url
+msgid "YouTube Thumbnail Url"
+msgstr "YouTube 縮圖網址"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_account__youtube_upload_playlist_id
+msgid "YouTube Upload Playlist ID"
+msgstr "YouTube 上載播放清單識別碼"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_video
+msgid "YouTube Video"
+msgstr "YouTube 影片"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_description
+msgid "YouTube Video Description"
+msgstr "YouTube 影片描述"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_video_id
+msgid "YouTube Video ID"
+msgstr "YouTube 影片識別碼"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_live_post__youtube_video_id
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_video_id
+msgid "YouTube Video Id"
+msgstr "YouTube 影片識別碼"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_title
+msgid "YouTube Video Title"
+msgstr "YouTube 影片標題"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_post__youtube_video_url
+msgid "YouTube Video Url"
+msgstr "YouTube 影片網址"
+
+#. module: social_youtube
+#: model:ir.model.fields,field_description:social_youtube.field_social_stream_post__youtube_views_count
+msgid "YouTube Views"
+msgstr "YouTube 觀看次數"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "YouTube did not provide a valid access token or it may have expired."
+msgstr "YouTube 未有提供有效的存取權杖，或權杖可能已過期。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/controllers/main.py:0
+#, python-format
+msgid "YouTube did not provide a valid authorization code."
+msgstr "YouTube 未有提供有效的授權碼。"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "Your channel name and picture"
+msgstr "你的頻道名稱及圖片"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Your description cannot exceed 5000 characters."
+msgstr "你的影片描述不可超過 5,000 個字元。"
+
+#. module: social_youtube
+#. odoo-javascript
+#: code:addons/social_youtube/static/src/js/social_youtube_upload_field.js:0
+#, python-format
+msgid "Your title cannot exceed 100 characters."
+msgstr "你的影片標題不可超過 100 個字元。"
+
+#. module: social_youtube
+#. odoo-python
+#: code:addons/social_youtube/models/social_live_post.py:0
+#, python-format
+msgid "Your video is missing a correct title or description."
+msgstr "影片未有正確標題或描述。"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid ""
+"Your videos metadata including title and view counts (but never the video "
+"itself)"
+msgstr "影片元數據包括標題及觀看次數（但不包括影片本身）"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+msgid ""
+"e.g. Engage your entire community with a single app! "
+"https://www.odoo.com/trial"
+msgstr "例：單用一個應用程式，吸引整個社群參與！ https://www.odoo.com/trial"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_post_view_form
+msgid "e.g. Odoo Social Tutorial"
+msgstr "例：Odoo 社交媒體推廣教學"
+
+#. module: social_youtube
+#: model_terms:ir.ui.view,arch_db:social_youtube.social_account_view_form
+msgid "the Google Third-party app account access panel"
+msgstr "Google 的第三方應用程式帳戶存取面板"

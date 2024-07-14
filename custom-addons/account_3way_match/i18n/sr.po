@@ -1,0 +1,141 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_3way_match
+# 
+# Translators:
+# Uros Kalajdzic <ukalajdzic@gmail.com>, 2023
+# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023
+# Martin Trigaux, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sr\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: account_3way_match
+#: model:ir.model.fields,help:account_3way_match.field_account_bank_statement_line__release_to_pay_manual
+#: model:ir.model.fields,help:account_3way_match.field_account_move__release_to_pay_manual
+#: model:ir.model.fields,help:account_3way_match.field_account_payment__release_to_pay_manual
+msgid ""
+"  * Yes: you should pay the bill, you have received the products\n"
+"  * No, you should not pay the bill, you have not received the products\n"
+"  * Exception, there is a difference between received and billed quantities\n"
+"This status is defined automatically, but you can force it by ticking the 'Force Status' checkbox."
+msgstr ""
+"  * Da: treba da platite račun, dobili ste proizvode\n"
+"  * Ne, ne treba da platite račun, niste dobili proizvode\n"
+"  * Izuzetak, postoji razlika između primljenih i fakturisanih količina\n"
+"Ovaj status je definisan automatski, ali ga možete primorati klikom na 'Primoraj Status' checkbox."
+
+#. module: account_3way_match
+#: model_terms:ir.ui.view,arch_db:account_3way_match.account_invoice_filter_inherit_account_3way_match
+msgid "Bills in Exception"
+msgstr "Računi sa izuzetkom"
+
+#. module: account_3way_match
+#: model_terms:ir.ui.view,arch_db:account_3way_match.account_invoice_filter_inherit_account_3way_match
+msgid "Bills to Pay"
+msgstr "Računi za plaćanje"
+
+#. module: account_3way_match
+#: model_terms:ir.ui.view,arch_db:account_3way_match.account_invoice_filter_inherit_account_3way_match
+msgid "Bills to Validate"
+msgstr "Računi za odobravanje"
+
+#. module: account_3way_match
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay__exception
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay_manual__exception
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move_line__can_be_paid__exception
+msgid "Exception"
+msgstr "Izuzetak"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_bank_statement_line__force_release_to_pay
+#: model:ir.model.fields,field_description:account_3way_match.field_account_move__force_release_to_pay
+#: model:ir.model.fields,field_description:account_3way_match.field_account_payment__force_release_to_pay
+msgid "Force Status"
+msgstr "Primoraj status"
+
+#. module: account_3way_match
+#: model:ir.model.fields,help:account_3way_match.field_account_bank_statement_line__force_release_to_pay
+#: model:ir.model.fields,help:account_3way_match.field_account_move__force_release_to_pay
+#: model:ir.model.fields,help:account_3way_match.field_account_payment__force_release_to_pay
+msgid ""
+"Indicates whether the 'Should Be Paid' status is defined automatically or "
+"manually."
+msgstr ""
+"Označava da li se status „Treba platiti“ definiše automatski ili ručno."
+
+#. module: account_3way_match
+#: model:ir.model,name:account_3way_match.model_account_journal
+msgid "Journal"
+msgstr "Izveštaj"
+
+#. module: account_3way_match
+#: model:ir.model,name:account_3way_match.model_account_move
+msgid "Journal Entry"
+msgstr "Sadržaj dnevnika"
+
+#. module: account_3way_match
+#: model:ir.model,name:account_3way_match.model_account_move_line
+msgid "Journal Item"
+msgstr "Stavka izveštaja"
+
+#. module: account_3way_match
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay__no
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay_manual__no
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move_line__can_be_paid__no
+msgid "No"
+msgstr "Ne"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_bank_statement_line__release_to_pay
+#: model:ir.model.fields,field_description:account_3way_match.field_account_move__release_to_pay
+#: model:ir.model.fields,field_description:account_3way_match.field_account_payment__release_to_pay
+msgid "Release To Pay"
+msgstr "Pusti na plaćanje"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_move_line__can_be_paid
+msgid "Release to Pay"
+msgstr "Pusti na plaćanje"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_bank_statement_line__release_to_pay_manual
+#: model:ir.model.fields,field_description:account_3way_match.field_account_move__release_to_pay_manual
+#: model:ir.model.fields,field_description:account_3way_match.field_account_payment__release_to_pay_manual
+msgid "Should Be Paid"
+msgstr "Treba platiti"
+
+#. module: account_3way_match
+#: model:ir.model.fields,help:account_3way_match.field_account_bank_statement_line__release_to_pay
+#: model:ir.model.fields,help:account_3way_match.field_account_move__release_to_pay
+#: model:ir.model.fields,help:account_3way_match.field_account_payment__release_to_pay
+msgid ""
+"This field can take the following values :\n"
+"  * Yes: you should pay the bill, you have received the products\n"
+"  * No, you should not pay the bill, you have not received the products\n"
+"  * Exception, there is a difference between received and billed quantities\n"
+"This status is defined automatically, but you can force it by ticking the 'Force Status' checkbox."
+msgstr ""
+"Ovo polje može imati sledeće vrednosti :\n"
+"  * Da: treba da platite račun, dobili ste proizvode\n"
+"  * Ne, ne treba da platite račun, niste dobili proizvode\n"
+"  * Izuzetak, postoji razlika između primljenih i fakturisanih količina\n"
+"Ovaj status se definiše automatski, ali ga možete primorati klikom na 'Primoraj Status' checkbox."
+
+#. module: account_3way_match
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay__yes
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay_manual__yes
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move_line__can_be_paid__yes
+msgid "Yes"
+msgstr "Da"

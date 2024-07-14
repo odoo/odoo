@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="event_event_view_form" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.twitter.wall</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="website_event.event_event_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='event_type_id']" position="before">
+                <field name="social_menu" invisible="1"/>
+                <field name="twitter_wall_id" 
+                    required="social_menu"
+                    options="{'no_quick_create': True}"/>
+            </xpath>
+            <xpath expr="//label[@for='menu_register_cta']" position="before">
+                <label for="social_menu"/>
+                <field name="social_menu"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

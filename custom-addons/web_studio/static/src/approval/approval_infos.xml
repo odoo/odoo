@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="StudioApprovalInfos">
+    <div class="o-approval-popover" t-if="props.isPopover">
+        <div class="o-approval-popover--header">Approval</div>
+        <t t-call="StudioApprovalInfos.contents" />
+    </div>
+    <t t-else="">
+        <Dialog title="'Approval'" contentClass="'o-approval-dialog'">
+            <h3 t-if="approval.action or approval.method">
+                <strong>Action to approve:</strong> <t t-esc="approval.method ? 'method' : ''"/> <t t-esc="approval.action or approval.method"/>
+            </h3>
+            <t t-call="StudioApprovalInfos.contents" />
+            <t t-set-slot="footer" t-slot-scope="dialog">
+                <button class="btn btn-secondary" t-on-click="() => dialog.close()">
+                    <t>Close</t>
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</t>
+
+<t t-name="StudioApprovalInfos.contents">
+    <div class="o_web_studio_approval_info" t-att-data-mobile="env.isSmall">
+        <t t-if="state.rules === null">
+            <i class="fa fa-circle-o-notch fa-spin"/>
+        </t>
+        <div t-else="" t-foreach="state.rules" t-as="rule" t-key="rule.id" class="o_web_studio_approval_rule m-2">
+            <t t-set="entry" t-value="getEntry(rule.id)"/>
+            <div t-if="!getEntry(rule.id)" t-attf-class="o_web_studio_approval_no_entry d-flex flex-row align-items-center justify-content-center gap-2 ms-{{(rule.notification_order - 1)*2}}">
+                <div class="o_web_studio_approval_avatar">
+                    <img
+                        src="/web/static/img/user_menu_avatar.png"
+                        class="o_web_studio_approval_avatar rounded-circle border border-muted"/>
+                </div>
+                <div class="o_web_studio_approval_description flex-grow-1">
+                    <t t-if="rule.message" t-esc="rule.message"/>
+                    <t t-else="">Awaiting approval</t>
+                    <p class="small mb-0" t-esc="rule.group_id[1]"/>
+                </div>
+                <t t-if="rule.can_validate">
+                    <div class="o_web_studio_approval_button">
+                        <button
+                            class="btn btn-primary btn-sm btn-block o_web_approval_approve"
+                            title="Approve"
+                            t-on-click="() => this.setApproval(rule.id, true)"
+                            t-att-disabled="state.syncing || !approval.resId || approval.inStudio"
+                            >
+                            <i class="fa fa-fw fa-check"/>
+                        </button>
+                    </div>
+                    <div class="o_web_studio_approval_button">
+                        <button
+                            class="btn btn-danger btn-sm btn-block o_web_approval_reject"
+                            title="Reject"
+                            t-on-click="() => this.setApproval(rule.id, false)"
+                            t-att-disabled="state.syncing || !approval.resId || approval.inStudio"
+                            >
+                            <i class="fa fa-fw fa-times"/>
+                        </button>
+                    </div>
+                </t>
+            </div>
+            <div t-else="" t-attf-class="o_web_studio_approval_has_entry o_approval_{{getEntry(rule.id).approved?'success':'danger'}} d-flex flex-row align-items-center justify-content-center gap-2 ms-{{(rule.notification_order - 1)*2}}">
+                <div class="o_web_studio_approval_avatar">
+                    <img
+                        t-attf-src="/web/image/res.users/{{getEntry(rule.id).user_id[0]}}/avatar_128"
+                        t-attf-class="o_web_studio_approval_avatar rounded-circle border border-{{getEntry(rule.id).approved?'info':'danger'}}"
+                        t-att-title="getEntry(rule.id).user_id[1]"/>
+                </div>
+                <div class="o_web_studio_approval_description flex-grow-1" t-att-title="formatDate(getEntry(rule.id).write_date, 'DDDD')">
+                    <p>
+                        <strong t-esc="getEntry(rule.id).user_id[1]"/> <i t-if="rule.exclusive_user" class="fa fa-shield" title="This rule limits this user to a single approval for this action."/>
+                        <br/>
+                        <span class="small">
+                            <t t-if="getEntry(rule.id).approved">Approved on </t>
+                            <t t-else="">Rejected on </t>
+                            <span t-esc="formatDate(getEntry(rule.id).write_date, 'DD')"/>
+                        </span>
+                    </p>
+                </div>
+                <t t-if="rule.can_validate and getEntry(rule.id).user_id[0] === user.userId">
+                    <div class="o_web_studio_approval_button">
+                        <button
+                            class="btn btn-secondary btn-sm btn-block o_web_approval_cancel"
+                            title="Revoke"
+                            t-on-click="(ev) => this.cancelApproval(rule.id)"
+                            t-att-disabled="state.syncing || approval.inStudio"
+                            >
+                            <i class="fa fa-fw fa-undo"/>
+                        </button>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

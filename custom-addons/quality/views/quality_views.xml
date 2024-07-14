@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="quality_check_view_activity" model="ir.ui.view">
+        <field name="name">quality.check.activity</field>
+        <field name="model">quality.check</field>
+        <field name="arch" type="xml">
+            <activity string="Activity view">
+                <templates>
+                    <div t-name="activity-box" class="d-block">
+                        <field name="name" display="full" class="o_text_block o_text_bold"/>
+                        <field name="control_date" widget="date" class="d-block"/>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <!-- USED IN MRP_WORKORDER -->
+    <record id="quality_point_view_form" model="ir.ui.view">
+        <field name="name">quality.point.view.form</field>
+        <field name="model">quality.point</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <h2><field name="name" readonly="1"/></h2>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="title"/>
+                            <field name="product_ids" widget="many2many_tags"/>
+                            <field name="product_category_ids" widget="many2many_tags"/>
+                            <field name="picking_type_ids" string="Operations" widget="many2many_tags"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group>
+                            <field name="test_type" invisible="1"/>
+                            <field string="Type" name="test_type_id" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="team_id" options="{'no_open': True, 'no_create': True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Instructions" name="instructions">
+                            <field name="note" placeholder="Describe the quality check to do..."/>
+                        </page>
+                        <page string="Notes" name="Notes">
+                            <field name="reason" string="Note" placeholder="Describe why you need to perform this quality check..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                   <field name="message_follower_ids"/>
+                   <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="quality_alert_view_tree" model="ir.ui.view">
+        <field name="name">quality.alert.view.tree</field>
+        <field name="model">quality.alert</field>
+        <field name="arch" type="xml">
+            <tree sample="1">
+                <field name="name" decoration-bf="1"/>
+                <field name="product_tmpl_id" optional="show"/>
+                <field name="product_id" optional="hide"/>
+                <field name="lot_id" optional="hide" groups="stock.group_production_lot"/>
+                <field name="team_id" optional="show"/>
+                <field name="user_id" optional="show" widget='many2one_avatar_user'/>
+                <field name="tag_ids" optional="hide" widget="many2many_tags"/>
+                <field name="reason_id" optional="hide"/>
+                <field name="priority" optional="hide"/>
+                <field name="date_assign" optional="show"/>
+                <field name="partner_id" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="quality_alert_view_search" model="ir.ui.view">
+        <field name="name">quality.alert.view.search</field>
+        <field name="model">quality.alert</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Quality Alert" filter_domain="[
+                    '|', '|', '|', ('name', 'ilike', self), ('product_id', 'ilike', self), ('product_tmpl_id', 'ilike', self), ('lot_id', 'ilike', self)]"/>
+                <field name="product_id" string="Product" filter_domain="[
+                    '|', '|', ('product_id', 'ilike', self), ('product_tmpl_id', 'ilike', self), ('lot_id', 'ilike', self)]"/>
+                <field name="tag_ids"/>
+                <field name="user_id"/>
+                <filter string="My Alerts" name="myalerts" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="In Progress" name="inprogress" domain="[('stage_id.done', '=', False)]"/>
+                <filter string="Done" name="done" domain="[('stage_id.done', '=', True)]"/>
+                <separator/>
+                <filter name="filter_date_assign" date="date_assign"/>
+                <filter name="filter_date_close" date="date_close"/>
+                <separator/>
+                <filter string="Late Activities" name="activities_overdue"
+                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
+                <filter string="Today Activities" name="activities_today"
+                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Future Activities" name="activities_upcoming_all"
+                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Stage" name="groupby_stage" domain="[]" context="{'group_by': 'stage_id'}"/>
+                    <filter string="Responsible" name="groupby_user" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string="Root Cause" name="groupby_reason" domain="[]" context="{'group_by': 'reason_id'}"/>
+                    <filter string="Creation Date" name="groupby_createmonth" domain="[]" context="{'group_by': 'create_date'}"/>
+                    <filter string="Quality Team" name="groupby_team_id" domain="[]" context="{'group_by': 'team_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="quality_point_view_tree" model="ir.ui.view">
+        <field name="name">quality.point.view.tree</field>
+        <field name="model">quality.point</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name" decoration-bf="1"/>
+                <field name="title" optional="show"/>
+                <field name="product_ids" widget="many2many_tags" optional="show"/>
+                <field name="product_category_ids" widget="many2many_tags" optional="hide"/>
+                <field name="picking_type_ids" widget="many2many_tags" optional="show" string="Operations"/>
+                <field name="test_type_id" optional="show" string="Type"/>
+                <field name="team_id" optional="show"/>
+                <field name="user_id" optional="hide" widget='many2one_avatar_user'/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- js stuff -->
+    </odoo>

@@ -1,0 +1,3921 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* appointment
+# 
+# Translators:
+# Wil Odoo, 2024
+# Abe Manyo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Abe Manyo, 2024\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid " (copy)"
+msgstr "(salin)"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_booking_line.py:0
+#, python-format
+msgid "\"%(resource_name_list)s\" cannot be used for \"%(appointment_type_name)s\""
+msgstr ""
+"\"%(resource_name_list)s\" tidak dapat digunakan untuk "
+"\"%(appointment_type_name)s\""
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__appointment_count
+msgid "# Appointments"
+msgstr "# Appointment"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__appointment_count_report
+msgid "# Appointments in the last 30 days"
+msgstr "# Appointment dalam 30 hari terakhir"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__calendar_event_count
+msgid "# Bookings"
+msgstr "# Booking"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__appointment_invite_count
+msgid "# Invitation Links"
+msgstr "# Link Undangan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__suggested_resource_count
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__resource_count
+msgid "# Resources"
+msgstr "# Sumber Daya"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__suggested_staff_user_count
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__staff_user_count
+msgid "# Staff Users"
+msgstr "# User Staff"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_calendar
+msgid "#{day['today_cls'] and 'Today' or ''}"
+msgstr "#{day['today_cls'] and 'Today' or ''}"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "%(appointment_name)s with %(partner_name)s"
+msgstr "%(appointment_name)s dengan %(partner_name)s"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid "%(attendee_name)s - %(appointment_name)s Booking"
+msgstr "Booking %(attendee_name)s - %(appointment_name)s"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_resource.py:0
+#, python-format
+msgid "%(original_name)s (copy)"
+msgstr "%(original_name)s (salin)"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid "%s - Let's meet"
+msgstr "%s - Ayo bertemu"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "(Total:"
+msgstr "(Total:"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/calendar.py:0
+#, python-format
+msgid ", All Day"
+msgstr ", Seluruh Hari"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_svg.xml:0
+#, python-format
+msgid ""
+".stgrey0{fill:#E3E3E3}\n"
+"                .stgrey1{fill:#F2F2F2}"
+msgstr ""
+".stgrey0{fill:#E3E3E3}\n"
+"                .stgrey1{fill:#F2F2F2}"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid ""
+"<br/>\n"
+"                                        <span>Duration</span>"
+msgstr ""
+"<br/>\n"
+"                                        <span>Durasi</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid ""
+"<br/>\n"
+"                                    <span>(Last 30 Days)</span>"
+msgstr ""
+"<br/>\n"
+"                                    <span>(30 Hari Terakhir)</span>"
+
+#. module: appointment
+#: model:mail.template,body_html:appointment.attendee_invitation_mail_template
+msgid ""
+"<div>\n"
+"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"></t>\n"
+"    <t t-set=\"customer\" t-value=\" object.event_id.find_partner_customer()\"></t>\n"
+"    <t t-set=\"target_responsible\" t-value=\"object.partner_id == object.event_id.partner_id\"></t>\n"
+"    <t t-set=\"target_customer\" t-value=\"object.partner_id == customer\"></t>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
+"\n"
+"    <p>\n"
+"        Hello <t t-out=\"object.common_name or ''\">Wood Corner</t>,<br><br>\n"
+"\n"
+"        <t t-if=\"target_customer\">\n"
+"            Your appointment <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</strong> <t t-if=\"object.event_id.appointment_type_id.category != 'custom' and object.event_id.appointment_type_id.schedule_based_on == 'users'\"> with <t t-out=\"object.event_id.user_id.name or ''\">Ready Mat</t></t> has been booked.\n"
+"            <t t-if=\"object.state != 'accepted' and object.event_id.appointment_type_id.schedule_based_on == 'resources' and object.event_id.appointment_type_id.resource_manual_confirmation\">\n"
+"                You will receive a mail of confirmation with more details when your appointment will be confirmed.\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-elif=\"target_responsible\">\n"
+"            <t t-if=\"customer\">\n"
+"                <t t-out=\"customer.name or ''\"></t> scheduled the following appointment <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</strong> with you.\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Your appointment <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</strong> has been booked.\n"
+"            </t>\n"
+"        </t>\n"
+"    </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <t t-if=\"object.state != 'accepted'\">\n"
+"            <a t-attf-href=\"/calendar/meeting/accept?token={{object.access_token}}&amp;id={{object.event_id.id}}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                Accept</a>\n"
+"            <a t-attf-href=\"/calendar/meeting/decline?token={{object.access_token}}&amp;id={{object.event_id.id}}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                Decline</a>\n"
+"        </t>\n"
+"        <a t-attf-href=\"/calendar/meeting/view?token={{object.access_token}}&amp;id={{object.event_id.id}}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\"><t t-out=\"'Reschedule' if target_customer else 'View'\">View</t></a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"            <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''\">Tuesday</t>\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''\">May 2021</t>\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold ; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                <t t-if=\"not object.event_id.allday\">\n"
+"                    <div>\n"
+"                        <t t-out=\"format_time(time=object.event_id.start, tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''\">11:00 AM</t>\n"
+"                    </div>\n"
+"                    <t t-if=\"object.mail_tz\">\n"
+"                        <div style=\"font-size: 10px; font-weight: normal\">\n"
+"                            (<t t-out=\"object.mail_tz or ''\">Europe/Brussels</t>)\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </t>\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"></td>\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>Details of the event</strong></p>\n"
+"            <ul>\n"
+"                <li>Appointment Type: <t t-out=\"object.event_id.appointment_type_id.name or ''\">Schedule a Demo</t></li>\n"
+"                <t t-if=\"object.event_id.location\">\n"
+"                    <li>Location: <t t-out=\"object.event_id.location or ''\">Bruxelles</t>\n"
+"                        (<a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}\">View Map</a>)\n"
+"                    </li>\n"
+"                </t>\n"
+"                <t t-if=\"recurrent\">\n"
+"                    <li>When: <t t-out=\"object.recurrence_id.name or ''\">Every 1 Weeks, for 3 events</t></li>\n"
+"                </t>\n"
+"                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
+"                    <li>Duration: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
+"                </t>\n"
+"                <li>Attendees\n"
+"                <ul>\n"
+"                    <li t-foreach=\"object.event_id.attendee_ids\" t-as=\"attendee\">\n"
+"                        <div t-attf-style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};\"> </div>\n"
+"                        <t t-if=\"attendee.common_name != object.common_name\">\n"
+"                            <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <span style=\"margin-left:5px\">You</span>\n"
+"                        </t>\n"
+"                    </li>\n"
+"                </ul></li>\n"
+"                <li t-if=\"object.event_id.appointment_type_id.resource_manage_capacity\">\n"
+"                    For: <t t-out=\"object.event_id.resource_total_capacity_reserved\"></t> people\n"
+"                </li>\n"
+"                <li t-if=\"object.event_id.appointment_type_id.assign_method != 'time_auto_assign'\">\n"
+"                    Resources\n"
+"                    <ul>\n"
+"                        <li t-foreach=\"object.event_id.appointment_resource_ids\" t-as=\"resource\">\n"
+"                            <span style=\"margin-left:5px\" t-out=\"resource.name or ''\">Table 1</span>\n"
+"                        </li>\n"
+"                    </ul>\n"
+"                </li>\n"
+"                <t t-if=\"object.event_id.videocall_location\">\n"
+"                    <li>\n"
+"                        How to Join:\n"
+"                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\"> Join with Odoo Discuss</t>\n"
+"                        <t t-else=\"\"> Join at</t><br>\n"
+"                        <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                    </li>\n"
+"                </t>\n"
+"                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
+"                    <li>Description of the event:\n"
+"                    <t t-out=\"object.event_id.description\">Internal meeting for discussion for new pricing for product and services.</t></li>\n"
+"                </t>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br>\n"
+"    Thank you,\n"
+"    <t t-if=\"object.event_id.user_id.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"></t>\n"
+"    <t t-set=\"customer\" t-value=\" object.event_id.find_partner_customer()\"></t>\n"
+"    <t t-set=\"target_responsible\" t-value=\"object.partner_id == object.event_id.partner_id\"></t>\n"
+"    <t t-set=\"target_customer\" t-value=\"object.partner_id == customer\"></t>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
+"\n"
+"    <p>\n"
+"        Halo <t t-out=\"object.common_name or ''\">Wood Corner</t>,<br><br>\n"
+"\n"
+"        <t t-if=\"target_customer\">\n"
+"            Appointment Anda <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Jadwalkan Demo</strong> <t t-if=\"object.event_id.appointment_type_id.category != 'custom' and object.event_id.appointment_type_id.schedule_based_on == 'users'\"> dengan <t t-out=\"object.event_id.user_id.name or ''\">Ready Mat</t></t> telah dibook.\n"
+"            <t t-if=\"object.state != 'accepted' and object.event_id.appointment_type_id.schedule_based_on == 'resources' and object.event_id.appointment_type_id.resource_manual_confirmation\">\n"
+"                Anda akan menerima email konfirmasi dengan detail lebih lanjut saat appointment Anda akan dikonfirmasi.\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-elif=\"target_responsible\">\n"
+"            <t t-if=\"customer\">\n"
+"                <t t-out=\"customer.name or ''\"></t> menjadwalkan appointment berikut <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Jadwalkan Demo</strong> dengan Anda.\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Appointment Anda <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Jadwalkan Demo</strong> telah dibook.\n"
+"            </t>\n"
+"        </t>\n"
+"    </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <t t-if=\"object.state != 'accepted'\">\n"
+"            <a t-attf-href=\"/calendar/meeting/accept?token={{object.access_token}}&amp;id={{object.event_id.id}}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                Terima</a>\n"
+"            <a t-attf-href=\"/calendar/meeting/decline?token={{object.access_token}}&amp;id={{object.event_id.id}}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                Tolak</a>\n"
+"        </t>\n"
+"        <a t-attf-href=\"/calendar/meeting/view?token={{object.access_token}}&amp;id={{object.event_id.id}}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\"><t t-out=\"'Reschedule' if target_customer else 'View'\">Lihat</t></a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"            <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''\">Selasa</t>\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''\">Mei 2021</t>\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold ; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                <t t-if=\"not object.event_id.allday\">\n"
+"                    <div>\n"
+"                        <t t-out=\"format_time(time=object.event_id.start, tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''\">11:00 AM</t>\n"
+"                    </div>\n"
+"                    <t t-if=\"object.mail_tz\">\n"
+"                        <div style=\"font-size: 10px; font-weight: normal\">\n"
+"                            (<t t-out=\"object.mail_tz or ''\">Eropa/Brussels</t>)\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </t>\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"></td>\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>Detail acara</strong></p>\n"
+"            <ul>\n"
+"                <li>Tipe Appointment: <t t-out=\"object.event_id.appointment_type_id.name or ''\">Jadwalkan Demo</t></li>\n"
+"                <t t-if=\"object.event_id.location\">\n"
+"                    <li>Lokasi: <t t-out=\"object.event_id.location or ''\">Bruxelles</t>\n"
+"                        (<a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}\">Lihat Peta</a>)\n"
+"                    </li>\n"
+"                </t>\n"
+"                <t t-if=\"recurrent\">\n"
+"                    <li>Kapan: <t t-out=\"object.recurrence_id.name or ''\">Setiap 1 Minggu, untuk 3 acara</t></li>\n"
+"                </t>\n"
+"                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
+"                    <li>Durasi: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0J30M</t></li>\n"
+"                </t>\n"
+"                <li>Peserta\n"
+"                <ul>\n"
+"                    <li t-foreach=\"object.event_id.attendee_ids\" t-as=\"attendee\">\n"
+"                        <div t-attf-style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};\"> </div>\n"
+"                        <t t-if=\"attendee.common_name != object.common_name\">\n"
+"                            <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <span style=\"margin-left:5px\">Anda</span>\n"
+"                        </t>\n"
+"                    </li>\n"
+"                </ul></li>\n"
+"                <li t-if=\"object.event_id.appointment_type_id.resource_manage_capacity\">\n"
+"                    Untuk: <t t-out=\"object.event_id.resource_total_capacity_reserved\"></t> orang\n"
+"                </li>\n"
+"                <li t-if=\"object.event_id.appointment_type_id.assign_method != 'time_auto_assign'\">\n"
+"                    Sumber daya\n"
+"                    <ul>\n"
+"                        <li t-foreach=\"object.event_id.appointment_resource_ids\" t-as=\"resource\">\n"
+"                            <span style=\"margin-left:5px\" t-out=\"resource.name or ''\">Table 1</span>\n"
+"                        </li>\n"
+"                    </ul>\n"
+"                </li>\n"
+"                <t t-if=\"object.event_id.videocall_location\">\n"
+"                    <li>\n"
+"                        Cara Bergabung:\n"
+"                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\">  Bergabung dengan Odoo Discuss</t>\n"
+"                        <t t-else=\"\"> Bergabung di</t><br>\n"
+"                        <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                    </li>\n"
+"                </t>\n"
+"                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
+"                    <li>Keterangan acara:\n"
+"                    <t t-out=\"object.event_id.description\">Meeting internal untuk mendiskusikan harga baru untuk produk dan layanan.</t></li>\n"
+"                </t>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br>\n"
+"    Terima kasih,\n"
+"    <t t-if=\"object.event_id.user_id.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"            "
+
+#. module: appointment
+#: model:mail.template,body_html:appointment.appointment_booked_mail_template
+msgid ""
+"<div>\n"
+"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"></t>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or ctx.get('mail_tz')\"></t>\n"
+"    <p>\n"
+"    Appointment booked for <t t-out=\"object.appointment_type_id.name or ''\">Technical Demo</t>\n"
+"    <t t-if=\"object.appointment_type_id.category != 'custom' and object.appointment_type_id.schedule_based_on == 'users'\"> with <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t></t>.\n"
+"    </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/join?token={{ object.access_token }}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Join</a>\n"
+"        <a t-attf-href=\"/web?#id={{ object.id }}&amp;view_type=form&amp;model=calendar.event\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            View</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"            <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"                <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format=&quot;EEEE&quot;, lang_code=object.env.lang) or ''\">Wednesday</t>\n"
+"                </div>\n"
+"                <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format=&quot;d&quot;, lang_code=object.env.lang) or ''\">1</t>\n"
+"                </div>\n"
+"                <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format=&quot;MMMM y&quot;, lang_code=object.env.lang) or ''\">January 2020</t>\n"
+"                </div>\n"
+"                <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                    <t t-if=\"not object.allday\">\n"
+"                        <div>\n"
+"                            <t t-out=\"format_time(time=object.start, tz=mail_tz, time_format=&quot;short&quot;, lang_code=object.env.lang) or ''\">8:00</t>\n"
+"                        </div>\n"
+"                        <t t-if=\"mail_tz\">\n"
+"                            <div style=\"font-size: 10px; font-weight: normal;\">\n"
+"                                (<t t-out=\"mail_tz\"></t>)\n"
+"                            </div>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </div>\n"
+"            </td>\n"
+"            <td width=\"20px;\"></td>\n"
+"            <td style=\"padding-top: 5px;\">\n"
+"                <p><strong>Details of the event</strong></p>\n"
+"                <ul>\n"
+"                    <li t-if=\"object.location\">Location: <t t-out=\"object.location or ''\">Bruxelles</t>\n"
+"                        (<a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{ object.location }}\">View Map</a>)\n"
+"                    </li>\n"
+"                    <li t-if=\"recurrent\">When: <t t-out=\"object.recurrence_id.name or ''\">Every 1 Weeks, for 3 events</t></li>\n"
+"                    <li t-if=\"not object.allday and object.duration\">Duration: <t t-out=\"('%dH%02d' % (object.duration,round(object.duration*60)%60)) or ''\">0H30</t></li>\n"
+"                    <li>Attendees\n"
+"                    <ul>\n"
+"                        <li t-foreach=\"object.attendee_ids\" t-as=\"attendee\">\n"
+"                            <div t-attf-style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};\"> </div>\n"
+"                            <t t-if=\"attendee.common_name\">\n"
+"                                <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                <span style=\"margin-left:5px\">You</span>\n"
+"                            </t>\n"
+"                        </li>\n"
+"                    </ul></li>\n"
+"                    <li t-if=\"object.appointment_type_id.resource_manage_capacity\">\n"
+"                        For: <t t-out=\"object.resource_total_capacity_reserved\"></t> people\n"
+"                    </li>\n"
+"                    <li t-if=\"object.appointment_type_id.assign_method != 'time_auto_assign'\">\n"
+"                        Resources\n"
+"                        <ul>\n"
+"                            <li t-foreach=\"object.appointment_resource_ids\" t-as=\"resource\">\n"
+"                                <span style=\"margin-left:5px\" t-out=\"resource.name or ''\">Table 1</span>\n"
+"                            </li>\n"
+"                        </ul>\n"
+"                    </li>\n"
+"                    <li t-if=\"object.videocall_redirection\">\n"
+"                        How to Join:\n"
+"                        <t t-if=\"object.videocall_source == 'discuss'\"> Join with Odoo Discuss</t>\n"
+"                        <t t-else=\"\"> Join at</t><br>\n"
+"                        <a t-attf-href=\"{{ object.videocall_redirection }}\" target=\"_blank\" t-out=\"object.videocall_redirection or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                    </li>\n"
+"                </ul>\n"
+"                <t t-if=\"not is_html_empty(object.description)\">\n"
+"                    <li>Description of the event:\n"
+"                    <t t-out=\"object.description\"></t></li>\n"
+"                </t>\n"
+"            </td>\n"
+"    </tr></table>\n"
+"</div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"></t>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or ctx.get('mail_tz')\"></t>\n"
+"    <p>\n"
+"    Appointment dibook untuk <t t-out=\"object.appointment_type_id.name or ''\">Demo Teknis</t>\n"
+"    <t t-if=\"object.appointment_type_id.category != 'custom' and object.appointment_type_id.schedule_based_on == 'users'\"> dengan <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t></t>.\n"
+"    </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/join?token={{ object.access_token }}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Bergabung</a>\n"
+"        <a t-attf-href=\"/web?#id={{ object.id }}&amp;view_type=form&amp;model=calendar.event\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Lihat</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"            <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"                <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format=&quot;EEEE&quot;, lang_code=object.env.lang) or ''\">Rabu</t>\n"
+"                </div>\n"
+"                <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format=&quot;d&quot;, lang_code=object.env.lang) or ''\">1</t>\n"
+"                </div>\n"
+"                <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format=&quot;MMMM y&quot;, lang_code=object.env.lang) or ''\">Januari 2020</t>\n"
+"                </div>\n"
+"                <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                    <t t-if=\"not object.allday\">\n"
+"                        <div>\n"
+"                            <t t-out=\"format_time(time=object.start, tz=mail_tz, time_format=&quot;short&quot;, lang_code=object.env.lang) or ''\">8:00</t>\n"
+"                        </div>\n"
+"                        <t t-if=\"mail_tz\">\n"
+"                            <div style=\"font-size: 10px; font-weight: normal;\">\n"
+"                                (<t t-out=\"mail_tz\"></t>)\n"
+"                            </div>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </div>\n"
+"            </td>\n"
+"            <td width=\"20px;\"></td>\n"
+"            <td style=\"padding-top: 5px;\">\n"
+"                <p><strong>Detail acara</strong></p>\n"
+"                <ul>\n"
+"                    <li t-if=\"object.location\">Lokasi: <t t-out=\"object.location or ''\">Bruxelles</t>\n"
+"                        (<a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{ object.location }}\">Lihat Peta</a>)\n"
+"                    </li>\n"
+"                    <li t-if=\"recurrent\">Kapan: <t t-out=\"object.recurrence_id.name or ''\"></t>Setiap 1 Minggu, untuk 3 acara</li>\n"
+"                    <li t-if=\"not object.allday and object.duration\">Durasi: <t t-out=\"('%dH%02d' % (object.duration,round(object.duration*60)%60)) or ''\">0J30M</t></li>\n"
+"                    <li>Peserta\n"
+"                    <ul>\n"
+"                        <li t-foreach=\"object.attendee_ids\" t-as=\"attendee\">\n"
+"                            <div t-attf-style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};\"> </div>\n"
+"                            <t t-if=\"attendee.common_name\">\n"
+"                                <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                <span style=\"margin-left:5px\">Anda</span>\n"
+"                            </t>\n"
+"                        </li>\n"
+"                    </ul></li>\n"
+"                    <li t-if=\"object.appointment_type_id.resource_manage_capacity\">\n"
+"                        Untuk: <t t-out=\"object.resource_total_capacity_reserved\"></t> orang\n"
+"                    </li>\n"
+"                    <li t-if=\"object.appointment_type_id.assign_method != 'time_auto_assign'\">\n"
+"                        Sumber Daya\n"
+"                        <ul>\n"
+"                            <li t-foreach=\"object.appointment_resource_ids\" t-as=\"resource\">\n"
+"                                <span style=\"margin-left:5px\" t-out=\"resource.name or ''\">Meja 1</span>\n"
+"                            </li>\n"
+"                        </ul>\n"
+"                    </li>\n"
+"                    <li t-if=\"object.videocall_redirection\">\n"
+"                        Cara Bergabung:\n"
+"                        <t t-if=\"object.videocall_source == 'discuss'\"> Bergabung dengan Odoo Discuss</t>\n"
+"                        <t t-else=\"\"> Bergabung di</t><br>\n"
+"                        <a t-attf-href=\"{{ object.videocall_redirection }}\" target=\"_blank\" t-out=\"object.videocall_redirection or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                    </li>\n"
+"                </ul>\n"
+"                <t t-if=\"not is_html_empty(object.description)\">\n"
+"                    <li>Keterangan acara:\n"
+"                    <t t-out=\"object.description\"></t></li>\n"
+"                </t>\n"
+"            </td>\n"
+"    </tr></table>\n"
+"</div>\n"
+"            "
+
+#. module: appointment
+#: model:mail.template,body_html:appointment.appointment_canceled_mail_template
+msgid ""
+"<div>\n"
+"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"></t>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or ctx.get('mail_tz')\"></t>\n"
+"    <p>\n"
+"    The appointment for <t t-out=\"object.appointment_type_id.name or ''\">Technical Demo</t> <t t-if=\"object.appointment_type_id.category != 'custom' and object.appointment_type_id.schedule_based_on == 'users'\"> with <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t></t> has been canceled.\n"
+"    </p>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"            <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"                <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz, dt_format=&quot;EEEE&quot;, lang_code=object.env.lang) or ''\">Wednesday</t>\n"
+"                </div>\n"
+"                <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                    <t t-out=\"str(object.start.day) or ''\">1</t>\n"
+"                </div>\n"
+"                <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz, dt_format=&quot;MMMM y&quot;, lang_code=object.env.lang) or ''\">January 2020</t>\n"
+"                </div>\n"
+"                <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                    <t t-if=\"not object.allday\">\n"
+"                        <div><t t-out=\"format_time(time=object.start, tz=mail_tz, time_format=&quot;short&quot;, lang_code=object.env.lang) or ''\">8:00</t></div>\n"
+"                        <t t-if=\"mail_tz\">\n"
+"                            <div style=\"font-size: 10px; font-weight: normal;\">\n"
+"                                (<t t-out=\"mail_tz\"></t>)\n"
+"                            </div>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </div>\n"
+"            </td>\n"
+"            <td width=\"20px;\"></td>\n"
+"            <td style=\"padding-top: 5px;\">\n"
+"                <del>\n"
+"                    <p><strong>Details of the event</strong></p>\n"
+"                    <ul>\n"
+"                            <li t-if=\"object.location\">Location: <t t-out=\"object.location or ''\">Bruxelles</t>\n"
+"                                (<a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{ object.location }}\">View Map</a>)\n"
+"                            </li>\n"
+"                            <li t-if=\"recurrent\">When: <t t-out=\"object.recurrence_id.name or ''\">Every 1 Weeks, for 3 events</t></li>\n"
+"                            <li t-if=\"not object.allday and object.duration\">Duration: <t t-out=\"('%dH%02d' % (object.duration,round(object.duration*60)%60)) or ''\">0H30</t></li>\n"
+"                        <li>Attendees\n"
+"                        <ul t-foreach=\"object.attendee_ids\" t-as=\"attendee\">\n"
+"                            <li>\n"
+"                                <div t-attf-style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};\"> </div>\n"
+"                                <t t-if=\"attendee.common_name\">\n"
+"                                    <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\"></span>\n"
+"                                </t>\n"
+"                                <t t-else=\"\">\n"
+"                                    <span style=\"margin-left:5px\">You</span>\n"
+"                                </t>\n"
+"                            </li>\n"
+"                        </ul></li>\n"
+"                        <li t-if=\"object.videocall_location\">\n"
+"                            How to Join:\n"
+"                            <t t-if=\"object.get_base_url() in object.videocall_location\"> Join with Odoo Discuss</t>\n"
+"                            <t t-else=\"\"> Join at</t><br>\n"
+"                            <a t-attf-href=\"{{ object.videocall_location }}\" target=\"_blank\" t-out=\"object.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                        </li>\n"
+"                    </ul>\n"
+"                    <t t-if=\"not is_html_empty(object.description)\">\n"
+"                        <li>Description of the event:\n"
+"                        <t t-out=\"object.description\"></t></li>\n"
+"                    </t>\n"
+"                </del>\n"
+"            </td>\n"
+"    </tr></table>\n"
+"</div>\n"
+"            "
+msgstr ""
+"<div>\n"
+"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"></t>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"></t>\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or ctx.get('mail_tz')\"></t>\n"
+"    <p>\n"
+"    Appointment untuk <t t-out=\"object.appointment_type_id.name or ''\">Demo Teknis</t> <t t-if=\"object.appointment_type_id.category != 'custom' and object.appointment_type_id.schedule_based_on == 'users'\"> dengan <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t></t> telah dibatalkan.\n"
+"    </p>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"            <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"                <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz, dt_format=&quot;EEEE&quot;, lang_code=object.env.lang) or ''\">Rabu</t>\n"
+"                </div>\n"
+"                <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                    <t t-out=\"str(object.start.day) or ''\">1</t>\n"
+"                </div>\n"
+"                <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                    <t t-out=\"format_datetime(dt=object.start, tz=mail_tz, dt_format=&quot;MMMM y&quot;, lang_code=object.env.lang) or ''\">Januari 2020</t>\n"
+"                </div>\n"
+"                <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                    <t t-if=\"not object.allday\">\n"
+"                        <div><t t-out=\"format_time(time=object.start, tz=mail_tz, time_format=&quot;short&quot;, lang_code=object.env.lang) or ''\">8:00</t></div>\n"
+"                        <t t-if=\"mail_tz\">\n"
+"                            <div style=\"font-size: 10px; font-weight: normal;\">\n"
+"                                (<t t-out=\"mail_tz\"></t>)\n"
+"                            </div>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                </div>\n"
+"            </td>\n"
+"            <td width=\"20px;\"></td>\n"
+"            <td style=\"padding-top: 5px;\">\n"
+"                <del>\n"
+"                    <p><strong>Detail acara</strong></p>\n"
+"                    <ul>\n"
+"                            <li t-if=\"object.location\">Lokasi: <t t-out=\"object.location or ''\">Bruxelles</t>\n"
+"                                (<a target=\"_blank\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{ object.location }}\">Lihat Peta</a>)\n"
+"                            </li>\n"
+"                            <li t-if=\"recurrent\">Kapan: <t t-out=\"object.recurrence_id.name or ''\">Setiap 1 Minggu, untuk 3 acara</t></li>\n"
+"                            <li t-if=\"not object.allday and object.duration\">Durasi: <t t-out=\"('%dH%02d' % (object.duration,round(object.duration*60)%60)) or ''\">0J30M</t></li>\n"
+"                        <li>Peserta\n"
+"                        <ul t-foreach=\"object.attendee_ids\" t-as=\"attendee\">\n"
+"                            <li>\n"
+"                                <div t-attf-style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};\"> </div>\n"
+"                                <t t-if=\"attendee.common_name\">\n"
+"                                    <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\"></span>\n"
+"                                </t>\n"
+"                                <t t-else=\"\">\n"
+"                                    <span style=\"margin-left:5px\">Anda</span>\n"
+"                                </t>\n"
+"                            </li>\n"
+"                        </ul></li>\n"
+"                        <li t-if=\"object.videocall_location\">\n"
+"                            Cara Bergabung:\n"
+"                            <t t-if=\"object.get_base_url() in object.videocall_location\"> Bergabung dengan Odoo Discuss</t>\n"
+"                            <t t-else=\"\"> Bergabung di</t><br>\n"
+"                            <a t-attf-href=\"{{ object.videocall_location }}\" target=\"_blank\" t-out=\"object.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                        </li>\n"
+"                    </ul>\n"
+"                    <t t-if=\"not is_html_empty(object.description)\">\n"
+"                        <li>Keterangan acara:\n"
+"                        <t t-out=\"object.description\"></t></li>\n"
+"                    </t>\n"
+"                </del>\n"
+"            </td>\n"
+"    </tr></table>\n"
+"</div>\n"
+"            "
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form
+msgid "<i class=\"fa fa-info-circle\" title=\"Info\"/>"
+msgstr "<i class=\"fa fa-info-circle\" title=\"Info\"/>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid ""
+"<i class=\"fa fa-pencil me-2\" role=\"img\" aria-label=\"Edit\" "
+"title=\"Create custom questions in backend\"/>Add Custom Questions"
+msgstr ""
+"<i class=\"fa fa-pencil me-2\" role=\"img\" aria-label=\"Edit\" title=\"Buat"
+" pertanyaan kustom di backend\"/>Tambahkan Pertanyaan Kustom"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "<i class=\"fa fa-plus me-1\"/> Add Guests"
+msgstr "<i class=\"fa fa-plus me-1\"/> Tambahkan Tamu"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "<i class=\"fa fa-plus me-1\"/>Add Guests"
+msgstr "<i class=\"fa fa-plus me-1\"/>Tambahkan Tamu"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_meeting_details
+msgid ""
+"<i class=\"fa fa-video-camera fa-fw me-2 mt-1 text-muted\"/>\n"
+"                <span class=\"o_not_editable\">Online</span>"
+msgstr ""
+"<i class=\"fa fa-video-camera fa-fw me-2 mt-1 text-muted\"/>\n"
+"                <span class=\"o_not_editable\">Online</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form
+msgid ""
+"<i class=\"fa fa-warning me-2\"/>\n"
+"                    <span invisible=\"schedule_based_on != 'users'\">Impossible to share a link for an appointment type that has no user assigned.</span>\n"
+"                    <span invisible=\"schedule_based_on != 'resources'\">Impossible to share a link for an appointment type that has no resource assigned.</span>"
+msgstr ""
+"<i class=\"fa fa-warning me-2\"/>\n"
+"                    <span invisible=\"schedule_based_on != 'users'\">Mustahil untuk membagikan link untuk tipe appointment yang tidak memiliki user yang ditugaskan.</span>\n"
+"                    <span invisible=\"schedule_based_on != 'resources'\">Mustahil untuk membagikan link untuk tipe appointment yang tidak memiliki sumber daya.</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form
+msgid ""
+"<i class=\"fa fa-warning me-2\"/>\n"
+"                    <span invisible=\"schedule_based_on != 'users'\">You need to be part of an appointment type to be able to share a personal link.</span>\n"
+"                    <span invisible=\"schedule_based_on != 'resources'\">You can't create a personal link for an appointment type based on resources.</span>"
+msgstr ""
+"<i class=\"fa fa-warning me-2\"/>\n"
+"                    <span invisible=\"schedule_based_on != 'users'\">Anda harus merupakan bagian dari tipe appointment untuk dapat membagikan link pribadi.</span>\n"
+"                    <span invisible=\"schedule_based_on != 'resources'\">Anda tidak dapat membuat link pribadi untuk tipe appointment yang berdasarkan sumber daya.</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_meeting_date
+msgid "<small class=\"text-uppercase text-muted\">Date &amp; time</small>"
+msgstr "<small class=\"text-uppercase text-muted\">Tanggal &amp; waktu</small>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_meeting_details
+msgid "<small class=\"text-uppercase text-muted\">Meeting details</small>"
+msgstr "<small class=\"text-uppercase text-muted\">Detail meeting</small>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "<span class=\"d-block\">Scheduled</span>"
+msgstr "<span class=\"d-block\">Dijadwalkan</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "<span class=\"fa fa-globe\"/> Preview"
+msgstr "<span class=\"fa fa-globe\"/> Pratinjau"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "<span class=\"fa fa-pencil\"/> Edit"
+msgstr "<span class=\"fa fa-pencil\"/> Edit"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "<span class=\"fa fa-share-alt\"/> Share"
+msgstr "<span class=\"fa fa-share-alt\"/> Share"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "<span class=\"fa fa-trash\"/> Delete"
+msgstr "<span class=\"fa fa-trash\"/> Hapus"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid ""
+"<span class=\"px-2\" invisible=\"start_datetime or category == "
+"'anytime'\">or</span>"
+msgstr ""
+"<span class=\"px-2\" invisible=\"start_datetime or category == "
+"'anytime'\">atau</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "<span class=\"text-bg-danger\">Archived</span>"
+msgstr "<span class=\"text-bg-danger\">Diarsip</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "<span> hours</span>"
+msgstr "<span> jam</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "<span>Online</span>"
+msgstr "<span>Online</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid ""
+"<span>You are scheduling a booking outside the available hours of</span>"
+msgstr "<span>Anda menjadwalkan booking diluar jam yang kosong untuk</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "<span>people</span>"
+msgstr "<span>orang</span>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"<strong>Appointment canceled!</strong>\n"
+"                                            You can schedule another appointment from here."
+msgstr ""
+"<strong>Appointment dibatalkan!</strong>\n"
+"                                            Anda dapat menjadwalkan appointment lain dari sini."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"<strong>Appointment failed!</strong>\n"
+"                                            The selected timeslot is not available anymore.\n"
+"                                            Someone has booked the same time slot a few\n"
+"                                            seconds before you."
+msgstr ""
+"<strong>Appointment gagal!</strong>\n"
+"                                            Slot waktu yang diplih tidak lagi tersedia.\n"
+"                                            Seseorang telah melakukan booking untuk waktu \n"
+"                                            slot tersebut beberapa detik sebelum Anda."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"<strong>Appointment failed!</strong>\n"
+"                                            The selected timeslot is not available.\n"
+"                                            It appears you already have another meeting with us at that date."
+msgstr ""
+"<strong>Appointment gagal!</strong>\n"
+"                                            Slot waktu yang dipilih tidak tersedia.\n"
+"                                            Sepertinya Anda sudah memiliki meeting lain dengan kami pada tanggal tersebut."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "<strong>Booked for: </strong>"
+msgstr "<strong>Dibook untuk: </strong>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "<strong>Contact Information</strong>"
+msgstr "<strong>Kontak Informasi</strong>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "<strong>Email: </strong>"
+msgstr "<strong>Email: </strong>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "<strong>Name: </strong>"
+msgstr "<strong>Nama: </strong>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "<strong>Phone: </strong>"
+msgstr "<strong>Telepon: </strong>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "<strong>Start Date: </strong>"
+msgstr "<strong>Tanggal Mulai: </strong>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "<strong>Stop Date: </strong>"
+msgstr "<strong>Tanggal Berhenti: </strong>"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "<strong>Type: </strong>"
+msgstr "<strong>Tipe: </strong>"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid "A %s appointment type shouldn't be limited by datetimes."
+msgstr "Tipe appointment %s seharusnya tidak terbatas oleh tanggalwaktu."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/calendar_view.py:0
+#, python-format
+msgid ""
+"A list of slots information is needed to create a custom appointment type"
+msgstr ""
+"Daftar informasi timeslot dibutuhkan untuk membuat tipe appointment custom"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid ""
+"A punctual appointment type should be limited between a start and end "
+"datetime."
+msgstr ""
+"Tipe appointment tepat waktu harus dibatasi dengan tanggalwaktu mulai dan "
+"akhir."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__access_token
+msgid "Access Token"
+msgstr "Token Akses"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/kanban/kanban_record.xml:0
+#, python-format
+msgid "Action"
+msgstr "Tindakan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_needaction
+msgid "Action Needed"
+msgstr "Tindakan Diperluka"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__active
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__active
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__active
+msgid "Active"
+msgstr "Aktif"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/gantt/gantt_renderer.js:0
+#: code:addons/appointment/static/src/views/gantt/gantt_renderer.xml:0
+#: code:addons/appointment/static/src/views/list/list_renderer.js:0
+#: code:addons/appointment/static/src/views/list/list_renderer.xml:0
+#, python-format
+msgid "Add Closing Day(s)"
+msgstr "Tambahkan Hari Penutupan"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Add Guests"
+msgstr "Tambahkan Tamu"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_meeting_user
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated_card
+msgid "Add a function here..."
+msgstr "Tambahkan function di sini..."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_meeting_user
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated_card
+msgid "Add a resource description here..."
+msgstr "Tambahkan keterangan sumber daya di sini..."
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/js/wysiwyg.js:0
+#, python-format
+msgid "Add a specific appointment"
+msgstr "Tambahkan appointment spesifik"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid "Add an intro message here..."
+msgstr "Tambahkan Intro Anda di sini..."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "Add more details about you"
+msgstr "Tambahkan lebih banyak detail mengenai Anda"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_manage_leaves
+msgid "Add or remove leaves from appointments"
+msgstr "Tambahkan atau hapus cuti dari appointment"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Add to Google Agenda"
+msgstr "Tambahkan ke Google Agenda"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Add to iCal/Outlook"
+msgstr "Tambahkan ke iCal/Outlook"
+
+#. module: appointment
+#: model:res.groups,name:appointment.group_appointment_manager
+msgid "Administrator"
+msgstr "Administrator"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "All"
+msgstr "Semua"
+
+#. module: appointment
+#: model:ir.actions.act_window,name:appointment.calendar_event_action_report_all
+#: model:ir.ui.menu,name:appointment.menu_schedule_report_all_events
+msgid "All Appointments"
+msgstr "Semua Appointment"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__allday
+#, python-format
+msgid "All day"
+msgstr "Sepanjang hari"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Allow Cancelling"
+msgstr "Izinkan Pembatalan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__allow_guests
+msgid "Allow Guests"
+msgstr "Izinkan Tamu-Tamu"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__country_ids
+msgid "Allowed Countries"
+msgstr "Negara yang Diizinkan"
+
+#. module: appointment
+#: model:ir.model.constraint,message:appointment.constraint_appointment_answer_input_value_check
+msgid "An answer input must either have a text value or a predefined answer."
+msgstr ""
+"Input jawaban harus merupakan teks atau jawaban yang sudah ditetapkan "
+"sebelumnya."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/calendar_view.py:0
+#, python-format
+msgid "An appointment type is needed to get the link."
+msgstr "Tipe appointment dibutuhkan untuk mendapatkan link."
+
+#. module: appointment
+#: model:ir.model.constraint,message:appointment.constraint_calendar_event_check_resource_and_appointment_type
+msgid "An event cannot book resources without an appointment type."
+msgstr "Acara tidak dapat membook sumber daya tanpa tipe appointment."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_slot.py:0
+#, python-format
+msgid "An unique type slot should have a start and end datetime"
+msgstr "Tipe timeslot unik harus memiliki tanggal waktu mulai dan akhir"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__name
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_view_form
+msgid "Answer"
+msgstr "Jawaban"
+
+#. module: appointment
+#: model:ir.actions.act_window,name:appointment.appointment_answer_input_action_from_question
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_graph
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_pivot
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_tree
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Answer Breakdown"
+msgstr "Penjelasan Jawaban"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_form
+msgid "Answer Input"
+msgstr "Input Jawaban"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Answers"
+msgstr "Jawaban"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__category__anytime
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+#, python-format
+msgid "Any Time"
+msgstr "Waktu Apapun"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_invite__resources_choice__all_assigned_resources
+msgid "Any User/Resource"
+msgstr "User/Sumber Daya Apapun"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid "Anytime appointment types should only have one user but got %s users"
+msgstr ""
+"Tipe appointment kapanpun harusnya hanya memiliki satu user tapi memiliki %s"
+" user"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/js/wysiwyg.js:0
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__appointment_type_id
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_type_id
+#, python-format
+msgid "Appointment"
+msgstr "Appointment"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_answer_input
+msgid "Appointment Answer Inputs"
+msgstr "Input Jawaban Appointment"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_answer_input_ids
+msgid "Appointment Answers"
+msgstr "Jawaban Appointment"
+
+#. module: appointment
+#: model:mail.message.subtype,description:appointment.mt_calendar_event_booked
+#: model:mail.message.subtype,name:appointment.mt_appointment_type_booked
+#: model:mail.message.subtype,name:appointment.mt_calendar_event_booked
+msgid "Appointment Booked"
+msgstr "Appointment Dibooking"
+
+#. module: appointment
+#: model:mail.template,subject:appointment.appointment_booked_mail_template
+msgid "Appointment Booked: {{ object.appointment_type_id.name }}"
+msgstr "Appointment Dibooking: {{ object.appointment_type_id.name }}"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_booking_line
+msgid "Appointment Booking Line"
+msgstr "Baris Booking Appointment"
+
+#. module: appointment
+#: model:mail.message.subtype,description:appointment.mt_calendar_event_canceled
+#: model:mail.message.subtype,name:appointment.mt_appointment_type_canceled
+#: model:mail.message.subtype,name:appointment.mt_calendar_event_canceled
+msgid "Appointment Canceled"
+msgstr "Appointment Dibatalkan"
+
+#. module: appointment
+#: model:mail.template,subject:appointment.appointment_canceled_mail_template
+msgid "Appointment Canceled: {{ object.appointment_type_id.name }}"
+msgstr "Appointment Dibatalkan: {{ object.appointment_type_id.name }}"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form
+msgid "Appointment Details"
+msgstr "Detail Appointmen"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__appointment_duration_formatted
+msgid "Appointment Duration Formatted "
+msgstr "Durasi Appointment Diformat"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__appointment_duration_formatted
+msgid "Appointment Duration formatted in words"
+msgstr "Durasi Appointment diformat dalam kata"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid "Appointment Duration should be higher than 0.00."
+msgstr "Durasi Appointment harus lebih dari 0.00."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_invite_id
+msgid "Appointment Invitation"
+msgstr "Undangan Appointment"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_search
+msgid "Appointment Invitation Links"
+msgstr "Link Undangan Appointment"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_tree_invitation
+msgid "Appointment Invitations"
+msgstr "Undangan Appointment"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_invite
+msgid "Appointment Invite"
+msgstr "Undang Appointment"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__meeting_ids
+msgid "Appointment Meetings"
+msgstr "Meeting Appointment"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_appointments
+msgid "Appointment Name"
+msgstr "Nama Appointment"
+
+#. module: appointment
+#: model:onboarding.onboarding,name:appointment.onboarding_onboarding_appointment
+msgid "Appointment Onboarding"
+msgstr "Onboarding Appointment"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_answer
+msgid "Appointment Question Answers"
+msgstr "Jawaban Pertanyaan Appointment"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_question
+msgid "Appointment Questions"
+msgstr "Pertanyaan-Pertanyaan Appointment"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_resource
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__appointment_resource_id
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__name
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_resource_id
+msgid "Appointment Resource"
+msgstr "Sumber Daya Appointment"
+
+#. module: appointment
+#: model:ir.actions.server,name:appointment.resource_calendar_leaves_action_show_appointment_resources
+msgid "Appointment Resource Leaves"
+msgstr "Appointment Sumber Daya Cuti"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__resource_ids
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_resource_ids
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_search
+msgid "Appointment Resources"
+msgstr "Sumber Daya Appointment"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_resource_action
+msgid ""
+"Appointment Resources are the places or equipment people can book\n"
+"                (e.g. Tables, Tennis Courts, Meeting Rooms, ...)"
+msgstr ""
+"Sumber Daya Appointment adalah tempat atau peralatan yang orang dapat book\n"
+"                (contohnya Meja, Lapangan Tenis, Ruangan Meeting, ...)"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__name
+msgid "Appointment Title"
+msgstr "Judul Appointment"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_type
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__appointment_type_id
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__appointment_type_id
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__appointment_type_id
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__appointment_type_id
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_search
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_tree
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_search
+msgid "Appointment Type"
+msgstr "Jenis Appointment"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__appointment_type_ids
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "Appointment Types"
+msgstr "Tipe-Tipe Appointment"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "Appointment canceled"
+msgstr "Appointment dibatalkan"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "Appointment canceled by: %(partners)s"
+msgstr "Appointment dibatalkan oleh: %(partners)s"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "Appointment re-booked"
+msgstr "Appointment dibook ulang"
+
+#. module: appointment
+#: model:mail.template,name:appointment.appointment_booked_mail_template
+msgid "Appointment: Appointment Booked"
+msgstr "Appointment: Appointment Dibook"
+
+#. module: appointment
+#: model:mail.template,name:appointment.appointment_canceled_mail_template
+msgid "Appointment: Appointment Canceled"
+msgstr "Appointment: Appointment Dibatalkan"
+
+#. module: appointment
+#: model:mail.template,name:appointment.attendee_invitation_mail_template
+msgid "Appointment: Attendee Invitation"
+msgstr "Appointment: Undangan Peserta"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_slot
+msgid "Appointment: Time Slot"
+msgstr "Appointment: Slot Waktu"
+
+#. module: appointment
+#: model:ir.actions.act_window,name:appointment.appointment_type_action
+#: model:ir.actions.act_window,name:appointment.calendar_event_action_appointment_reporting
+#: model:ir.ui.menu,name:appointment.appointment_menu_calendar
+#: model:ir.ui.menu,name:appointment.appointment_type_menu
+#: model:ir.ui.menu,name:appointment.main_menu_appointments
+#: model:ir.ui.menu,name:appointment.menu_schedule_report_all
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_graph
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_pivot
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_search
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_appointments
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_home_appointment
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_home_menu_appointment
+msgid "Appointments"
+msgstr "Appointment"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_appointments
+msgid "Appointments by"
+msgstr "Appointment oleh"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_search
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "Archived"
+msgstr "Diarsipkan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__resources_choice
+msgid "Assign to"
+msgstr "Ditetapkan ke"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__assign_method
+msgid "Assignment Method"
+msgstr "Metode penugasan"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_slot.py:0
+#, python-format
+msgid ""
+"At least one slot duration is shorter than the meeting duration (%s hours)"
+msgstr ""
+"Setidaknya durasi satu timeslot lebih pendek dari durasi meeting (%s jam) "
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_attachment_count
+msgid "Attachment Count"
+msgstr "Hitungan Lampiran"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__partner_ids
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Attendees"
+msgstr "Peserta"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_attended
+msgid "Attendees Arrived"
+msgstr "Peserta Tiba"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__slot_ids
+msgid "Availabilities"
+msgstr "Ketersediaan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__schedule_based_on
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__schedule_based_on
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_type_schedule_based_on
+msgid "Availability on"
+msgstr "Ketersediaan pada"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__answer_ids
+msgid "Available Answers"
+msgstr "Jawaban yang Tersedia"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_search
+msgid "Available In"
+msgstr "Tersedia Dalam"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__appointment_type_ids
+msgid "Available in"
+msgstr "Tersedia dalam"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__avatar_1920
+msgid "Avatar"
+msgstr "Avatar"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__avatar_1024
+msgid "Avatar 1024"
+msgstr "Avatar 1024"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__avatar_128
+msgid "Avatar 128"
+msgstr "Avatar 128"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__avatar_256
+msgid "Avatar 256"
+msgstr "Avatar 256"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__avatar_512
+msgid "Avatar 512"
+msgstr "Avatar 512"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Back to edit mode"
+msgstr "Kembali ke mode edit"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__base_book_url
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__base_book_url
+msgid "Base Link URL"
+msgstr "Base Link URL"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__calendar_event_ids
+msgid "Booked Appointments"
+msgstr "Appointment yang Dibook"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_tree_booking
+msgid "Booked by"
+msgstr "Dibook oleh"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__calendar_event_id
+msgid "Booking"
+msgstr "Booking"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "Booking Details"
+msgstr "Detail Booking"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__event_stop
+msgid "Booking End"
+msgstr "Booking Berakhir"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__booking_line_ids
+msgid "Booking Lines"
+msgstr "Baris Booking"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Booking Name"
+msgstr "Nama Booking"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__event_start
+msgid "Booking Start"
+msgstr "Booking Mulai"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Bookings"
+msgstr "Booking-Booking"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_partner_ids
+msgid "CC to"
+msgstr "CC ke"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_calendar_attendee
+msgid "Calendar Attendee Information"
+msgstr "Informasi Kalender Peserta"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_calendar_event
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__calendar_event_id
+msgid "Calendar Event"
+msgstr "Acara Kalender"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_manage_leaves_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_onboarding_link_view_form
+msgid "Cancel"
+msgstr "Batal"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__min_cancellation_hours
+msgid "Cancel Before (hours)"
+msgstr "Batalkan Sebelum (jam)"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Cancel/Reschedule"
+msgstr "Batalkan/Jadwalkan Ulang"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__canceled_mail_template_id
+msgid "Cancelation Email"
+msgstr "Email Pembatalan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__capacity
+msgid "Capacity"
+msgstr "Kapasitas"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__resource_manual_confirmation_percentage
+msgid "Capacity Percentage"
+msgstr "Persentase Kapasitas"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__capacity_reserved
+msgid "Capacity Reserved"
+msgstr "Kapasitas Cadangan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__capacity_used
+msgid "Capacity Used"
+msgstr "Kapasitas Digunakan"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_booking_line__capacity_reserved
+msgid "Capacity reserved by the user"
+msgstr "Kapasitas dicadangkan oleh user"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_booking_line__capacity_used
+msgid "Capacity that will be used based on the capacity and resource selected"
+msgstr ""
+"Kapasitas yang akan digunakan berdasarkan kapasitas dan sumber daya yang "
+"dipilih"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__category
+msgid "Category"
+msgstr "Kategori"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_question__question_type__checkbox
+msgid "Checkboxes (multiple answers)"
+msgstr "Kotak centang (lebih dari satu jawaban)"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointments_list_layout
+msgid "Choose your appointment"
+msgstr "Pilih appointment Anda"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__company_id
+msgid "Company"
+msgstr "Perusahaan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__disable_save_button
+msgid "Computes if alert is present"
+msgstr "Menghitung bila ada peringatan "
+
+#. module: appointment
+#: model:ir.ui.menu,name:appointment.appointment_menu_config
+msgid "Configuration"
+msgstr "Konfigurasi"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,button_text:appointment.appointment_onboarding_create_appointment_type_step
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid "Configure"
+msgstr "Konfigurasi"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_invite_action
+msgid ""
+"Configure links that allow booking appointments with custom settings<br>\n"
+"                (e.g. a specific user only, a list of appointment types, ...)"
+msgstr ""
+"Konfigurasikan link yang mengizinkan booking appointment dengan pengaturan kustom<br>\n"
+"                (misalnya hanya hanya pengguna tertentu, daftar tipe appointment, ...)"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_resources.xml:0
+#, python-format
+msgid "Confirm"
+msgstr "Konfirmasi"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "Confirm Appointment"
+msgstr "Konfirmasi Appointment"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/gantt/gantt_popover.xml:0
+#, python-format
+msgid "Confirm Check-In"
+msgstr "Konfirmasi Check-In"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__booked_mail_template_id
+msgid "Confirmation Email"
+msgstr "Email Konfirmasi"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_confirmation
+msgid "Confirmation Message"
+msgstr "Pesan Konfirmasi"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Confirmed"
+msgstr "Dikonfirmasi"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,button_text:appointment.appointment_onboarding_configure_calendar_provider_step
+msgid "Connect"
+msgstr "Connect"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/onboarding_onboarding_step.py:0
+#, python-format
+msgid "Connect your Calendar"
+msgstr "Hubungkan Kalender Anda"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,title:appointment.appointment_onboarding_configure_calendar_provider_step
+msgid "Connect your calendar"
+msgstr "Hubungkan kalender Anda"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_res_partner
+msgid "Contact"
+msgstr "Kontak"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "Contact Details:"
+msgstr "Detail Kontak:"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__message_partner_ids
+msgid ""
+"Contacts that need to be notified whenever a new appointment is booked or "
+"canceled,                                                  regardless of "
+"whether they attend or not"
+msgstr ""
+"Kontak yang harus diberitahu setiap kali appointment baru dibooking atau "
+"dibatalkan,                                                  terlepas dari "
+"apakah mereka bergabung atau tidak"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointments_list_layout
+msgid "Continue <span class=\"oi oi-arrow-right\"/>"
+msgstr "Lanjutkan <span class=\"oi oi-arrow-right\"/>"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.js:0
+#, python-format
+msgid "Copied!"
+msgstr "Disalin!"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/components/appointment_invite/appointment_invite_copy_close.xml:0
+#: code:addons/appointment/static/src/components/appointment_onboarding/appointment_onboarding_invite_buttons.xml:0
+#, python-format
+msgid "Copy Link & Close"
+msgstr "Salin Link & Tutup"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_manage_leaves_view_form
+msgid "Create Closing Day(s)"
+msgstr "Buat Hari Penutupan"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_resource_action
+msgid "Create an Appointment Resource"
+msgstr "Buat Sumber Daya Appointment"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_type_action_custom
+msgid ""
+"Create invites on the fly from your calendar and share them with anyone by "
+"using the Share Availabilities button."
+msgstr ""
+"Buat undangan dengan cepat dari kalender Anda dan bagikan mereka dengan "
+"siapapun juga dengan menggunakan tombol Bagikan Ketersediaan."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/onboarding_onboarding_step.py:0
+#, python-format
+msgid "Create your first Appointment"
+msgstr "Buat Appointment pertama Anda"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__create_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__create_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__category__custom
+msgid "Custom"
+msgstr "Khusus"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#, python-format
+msgid "Custom Link"
+msgstr "Custom Link"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__partner_id
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_search
+msgid "Customer"
+msgstr "Pelanggan"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL APPOINTMENTS"
+msgstr ""
+"LEPAS BLOK PENYUSUN DI SINI UNTUK MEMBUAT MEREKA TERSEDIA DI SEMUA "
+"APPOINTMENT"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_appointments
+#, python-format
+msgid "Date"
+msgstr "Tanggal"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Date &amp; time"
+msgstr "Tanggal &amp; waktu"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_manage_leaves_view_form
+msgid "Dates"
+msgstr "Tanggal"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Declined"
+msgstr "Ditolak"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid "Default slots cannot be applied to the %s appointment type category."
+msgstr ""
+"Timeslot default tidak dapat ditetapkan ke kategori tipe appointment %s."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_slot__slot_type
+msgid ""
+"Defines the type of slot. The recurring slot is the default type which is used for\n"
+"        appointment type that are used recurringly in type like medical appointment.\n"
+"        The one shot type is only used when an user create a custom appointment type for a client by\n"
+"        defining non-recurring time slot (e.g. 10th of April 2021 from 10 to 11 am) from its calendar."
+msgstr ""
+"Mendefinisikan tipe timeslot. Timeslot berulang adalah tipe default yang digunakan untuk\n"
+"        tipe appointment yang digunakan secara berkala di tipe seperti appointment medis.\n"
+"        Tipe one shot hanya digunakan saat user membuat tipe appointment kustom untuk klien dengan\n"
+"        menetapkan timeslot yang tidak berulang (contoh 10 April 2021 dari jam 10 sampai 11) dari kalender."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__event_videocall_source
+msgid ""
+"Defines the type of video call link that will be used for the generated "
+"events. Keep it empty to prevent generating meeting url."
+msgstr ""
+"Mendefinisikan tipe link video call yang akan digunakan untuk acara yang "
+"dibuat. Biarkan kosong untuk mencegah pembuatan url meeting."
+
+#. module: appointment
+#: model:appointment.type,name:appointment.appointment_type_dental_care
+msgid "Dental Care"
+msgstr "Perawatan Gigi"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__description
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_form
+msgid "Description"
+msgstr "Deskripsi"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__destination_resource_ids
+msgid "Destination combination"
+msgstr "Kombinasi tujuan"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Details"
+msgstr "Perincian"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_slot__allday
+msgid ""
+"Determine if the slot englobe the whole day, mainly used for unique slot "
+"type"
+msgstr ""
+"Tentukan apabila timeslot mencakup seluruh hari, digunakan untuk tipe "
+"timeslot unik"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form_insert_link
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+#, python-format
+msgid "Discard"
+msgstr "Buang"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__display_name
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__avatars_display
+msgid "Display the Users'/Resources' picture on the Website."
+msgstr "Tampilkan gambar Users'/Resources' pada Website."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__resource_manual_confirmation
+msgid ""
+"Do not automatically accept meetings created from the appointment once the total capacity\n"
+"            reserved for a slot exceeds the percentage chosen. The appointment is still considered as reserved for\n"
+"            the slots availability."
+msgstr ""
+"Jangan secara otomatis menerima meeting yang dibuat dari appopintment setelah kapasitas total\n"
+"            yang dicadangkan untuk timeslot melebihi persentase yang dipilih. Appointment masih dianggap dicadangkan untuk\n"
+"            ketersediaan timeslot."
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_question__question_type__select
+msgid "Dropdown (one answer)"
+msgstr "Dropdown (satu jawaban)"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__duration
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__appointment_duration
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Duration"
+msgstr "Durasi"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "Email*"
+msgstr "Email*"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "Email: %(email)s"
+msgstr "Email: %(email)s"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/appointment.py:0
+#, python-format
+msgid "Email: %s"
+msgstr "Email: %s"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__leave_end_dt
+msgid "End Date"
+msgstr "Tanggal Berakhir"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__end_datetime
+msgid "End Datetime"
+msgstr "Akhir Tanggalwaktu"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_slot__end_datetime
+msgid "End datetime for unique slot type management"
+msgstr "Tanggal waktu akhir untuk manajemen tipe slot unik"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__end_hour
+msgid "Ending Hour"
+msgstr "Jam Berakhir"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_calendar_alarm
+msgid "Event Alarm"
+msgstr "Alarm Acara"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "Event Details"
+msgstr "Detail Acara"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Every"
+msgstr "Setiap"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Extra Comments..."
+msgstr "Komentar Tambahan..."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Extra Message on Confirmation"
+msgstr "Pesan Tambahan pada Konfirmasi"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__message_confirmation
+msgid "Extra information provided once the appointment is booked."
+msgstr "Informasi tambahan disediakan setelah appointment dibooking."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_home_appointment
+msgid "Follow, reschedule or cancel your appointments"
+msgstr "Ikuti, jadwalkan ulang atau batalkan appointment Anda"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_follower_ids
+msgid "Followers"
+msgstr "Follower"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "For"
+msgstr "Untuk"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__weekday__5
+msgid "Friday"
+msgstr "Jumat"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__start_datetime
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "From"
+msgstr "Dari"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__avatars_display
+msgid "Front-End Display"
+msgstr "Tampilan Front-End"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "Full name*"
+msgstr "Nama lengkap*"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#, python-format
+msgid "Get Share Link"
+msgstr "Dapatkan Share Link"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/onboarding_onboarding_step.py:0
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_onboarding_link_view_form
+#, python-format
+msgid "Get Your Link"
+msgstr "Dapatkan Link Anda"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_onboarding_link
+msgid "Get a link to an appointment type during the onboarding"
+msgstr "Dapatkan link untuk tipe appointment selama onboarding"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_invite__suggested_staff_user_ids
+msgid ""
+"Get the users linked to the appointment type selected to apply a domain on "
+"the users that can be selected"
+msgstr ""
+"Link user ke tipe appointment yang dipilih untuk menetapkan domain pada user"
+" yang dapat dipilih"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,title:appointment.appointment_onboarding_preview_invite_step
+msgid "Get your link"
+msgstr "Dapatkan link Anda"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Google Agenda"
+msgstr "Google Agenda"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_search
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_search
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "Group By"
+msgstr "Dikelompokkan berdasarkan"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "Guest usage is limited to 10 customers for performance reason."
+msgstr ""
+"Tamu hanya dapat menggunakan sampai 10 pelanggan untuk alasan performa."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "Guests"
+msgstr "Tamu"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP routing"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__has_message
+msgid "Has Message"
+msgstr "Memiliki Pesan"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "How to join"
+msgstr "Cara bergabung"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__assign_method
+msgid ""
+"How users and resources will be assigned to meetings customers book on your "
+"website."
+msgstr ""
+"Bagaimana user dan sumber daya dapat ditetapkan ke meeting yang pelanggan "
+"book pada website Anda."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__id
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__id
+msgid "ID"
+msgstr "ID"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jika dicentang, pesan baru memerlukan penanganan dan perhatian Anda."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__message_has_error
+#: model:ir.model.fields,help:appointment.field_appointment_type__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Jika dicentang, beberapa pesan mempunyai kesalahan dalam pengiriman."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "If empty, Odoo will not send emails"
+msgstr "Bila kosong, Odoo tidak akan mengirim email"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_slot__restrict_to_resource_ids
+msgid ""
+"If empty, all resources are considered to be available.\n"
+"If set, only the selected resources will be taken into account for this slot."
+msgstr ""
+"Bila kosong, semua sumber daya akan dianggap tersedia.\n"
+"Bila diisi, hanya sumber daya terpilih yang akan dianggap untuk timeslot ini."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_slot__restrict_to_user_ids
+msgid ""
+"If empty, all users are considered to be available.\n"
+"If set, only the selected users will be taken into account for this slot."
+msgstr ""
+"Bila kosong, semua user akan dianggap tersedia.\n"
+"Bila diisi, hanya user terpilih yang akan dianggap untuk timeslot ini."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "If empty, the meeting is considered as taking place online"
+msgstr "Bila kosong, meeting akan dinaggap online"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__canceled_mail_template_id
+msgid ""
+"If set an email will be sent to the customer when the appointment is "
+"canceled."
+msgstr ""
+"Bila ditetapkan email akan dikirim ke pelanggan saat appointment dibatalkan."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__booked_mail_template_id
+msgid ""
+"If set an email will be sent to the customer when the appointment is "
+"confirmed."
+msgstr ""
+"Bila ditetapkan email akan dikirimkan ke pelanggan saat appointment "
+"dikonfirmasi."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_resource__active
+msgid ""
+"If the active field is set to False, it will allow you to hide the resource "
+"record without removing it."
+msgstr ""
+"Jika kolom aktif diatur ke False, itu akan memungkinkan Anda untuk "
+"menyembunyikan data sumber daya tanpa menghapusnya."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_booking_line__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the event "
+"alarm information without removing it."
+msgstr ""
+"Jika kolom aktif diatur ke False, Anda dapat menyembunyikan informasi alarm "
+"acara tanpa menghapusnya."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__image_1920
+msgid "Image"
+msgstr "Gambar"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__image_1024
+msgid "Image 1024"
+msgstr "Gambar 1024"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__image_128
+msgid "Image 128"
+msgstr "Gambar 128"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__image_256
+msgid "Image 256"
+msgstr "Gambar 256"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__image_512
+msgid "Image 512"
+msgstr "Gambar 512"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/js/wysiwyg.js:0
+#, python-format
+msgid "Insert Appointment Link"
+msgstr "Masukkan Link Appointment"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form_insert_link
+msgid "Insert link"
+msgstr "Masukkan link"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_intro
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Introduction Message"
+msgstr "Pesan Pengantar"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/js/appointment_form.js:0
+#: code:addons/appointment/static/src/js/appointment_validation.js:0
+#, python-format
+msgid "Invalid Email"
+msgstr "Email Invalid"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__appointment_invite_ids
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_tree
+msgid "Invitation Links"
+msgstr "Link Undangan"
+
+#. module: appointment
+#: model:mail.template,description:appointment.attendee_invitation_mail_template
+msgid "Invitation email to new attendees of an appointment"
+msgstr "Email undangan untuk peserta baru appointment"
+
+#. module: appointment
+#: model:mail.template,subject:appointment.attendee_invitation_mail_template
+msgid "Invitation to {{ object.event_id.name }}"
+msgstr "Undangan ke {{ object.event_id.name }}"
+
+#. module: appointment
+#: model:ir.actions.act_window,name:appointment.appointment_type_action_custom
+#: model:ir.ui.menu,name:appointment.menu_appointment_type_custom
+msgid "Invitations"
+msgstr "Undangan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_is_follower
+msgid "Is Follower"
+msgstr "Adalah Follower"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__is_published
+msgid "Is Published"
+msgstr "Dipublikasikan"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid ""
+"It's too late to cancel online, please contact the attendees another way if "
+"you really can't make it."
+msgstr ""
+"Sudah tidak bisa membatalkan secara online, mohon hubungi peserta dengan "
+"cara lain bila Anda tidak bisa hadir."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Join at"
+msgstr "Bergabung pada"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Join with Odoo Discuss"
+msgstr "Bergabung dengan Diskusi Odoo"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__country_ids
+msgid ""
+"Keep empty to allow visitors from any country, otherwise you only allow "
+"visitors from selected countries"
+msgstr ""
+"Biarkan kosong untuk mengizinkan pengunjung dari negara apapun, bila diisi "
+"Anda hanya mengizinkan pengunjung dari negara-negara yang dipilih"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__write_uid
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__write_date
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__allow_guests
+msgid "Let attendees invite guests when registering a meeting."
+msgstr "Biarkan peserta mengundang tamu saat mendaftarkan meeting"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#, python-format
+msgid "Link Copied in your clipboard!"
+msgstr "Link Disalin ke clipboard Anda!"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form
+msgid "Link Generator"
+msgstr "Pembuat Link"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__book_url
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form
+msgid "Link URL"
+msgstr "URL Link"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/components/appointment_invite/appointment_invite_copy_close.js:0
+#: code:addons/appointment/static/src/components/appointment_onboarding/appointment_onboarding_invite_buttons.js:0
+#, python-format
+msgid "Link copied to clipboard!"
+msgstr "Link disalin ke clipboard!"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__linked_resource_ids
+msgid "Linked Resource"
+msgstr "Sumber Daya yang Di-link"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_resource__linked_resource_ids
+msgid "List of resources that can be combined to handle a bigger demand."
+msgstr ""
+"Daftar sumber daya yang dapat digabung untuk mengelola tuntutan yang lebih "
+"besar."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__location_id
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Location"
+msgstr "Lokasi"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__location
+msgid "Location formatted"
+msgstr "Lokasi diformat"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__location
+msgid "Location formatted for one line uses"
+msgstr "Lokasi diformat untuk penggunaan satu baris"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,done_text:appointment.appointment_onboarding_create_appointment_type_step
+msgid "Looks great!"
+msgstr "Mantap!"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_resources.xml:0
+#, python-format
+msgid "Make your choice"
+msgstr "Buat pilihan Anda"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__resource_manage_capacity
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_type_manage_capacity
+msgid "Manage Capacities"
+msgstr "Kelola Kapasitas"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__resource_manage_capacity
+#: model:ir.model.fields,help:appointment.field_calendar_event__appointment_type_manage_capacity
+msgid ""
+"Manage the maximum amount of people a resource can handle (e.g. Table for 6 "
+"persons, ...)"
+msgstr ""
+"Kelola jumlah maksimal orang yang sumber daya dapat kelola (contoh Meja "
+"untuk 6 orang, ...)"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__resource_manual_confirmation
+msgid "Manual Confirmation"
+msgstr "Konfirmasi Manual"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Max in"
+msgstr "Max in"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_resource__capacity
+msgid ""
+"Maximum amount of people for this resource (e.g. Table for 6 persons, ...)"
+msgstr ""
+"Jumlah maksimal orang untuk sumber daya ini (contoh Meja untuk 6 orang, ...)"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_invite__resources_choice__current_user
+msgid "Me (only with Users)"
+msgstr "Saya (hanya dengan User)"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/onboarding_onboarding_step.py:0
+#: code:addons/appointment/models/onboarding_onboarding_step.py:0
+#, python-format
+msgid "Meet With Me"
+msgstr "Bertemu Dengan Saya"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__videocall_redirection
+msgid "Meeting redirection URL"
+msgstr "URL pengalihan ulang meeting"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "Meetings"
+msgstr "Pertemuan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_has_error
+msgid "Message Delivery error"
+msgstr "Kesalahan Pengiriman Pesan"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Message from the Organizer"
+msgstr "Pesan dari Organizer"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_ids
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Messages"
+msgstr "Pesan"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Min"
+msgstr "Min"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__weekday__1
+msgid "Monday"
+msgstr "Senin"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "More Options"
+msgstr "Lebih Banyak Opsi"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_question__question_type__text
+msgid "Multi-line text"
+msgstr "Teks multi-line"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "My Appointments"
+msgstr "Appointment Saya"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_search
+msgid "My Links"
+msgstr "Link Saya"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "Name"
+msgstr "Nama"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/js/wysiwyg.js:0
+#: code:addons/appointment/static/src/js/wysiwyg.js:0
+#, python-format
+msgid "Navigation"
+msgstr "Navigasi"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_alarm__default_for_new_appointment_type
+msgid "New Appointments Default"
+msgstr "Appointment Default Baru"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_answer_input_action_from_question
+msgid "No Answers yet!"
+msgstr "Belum ada Jawaban!"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_type_action
+msgid "No Appointment Configured"
+msgstr "Tidak ada Appointment yang Dikonfigurasi"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.calendar_event_action_view_bookings_resources
+#: model_terms:ir.actions.act_window,help:appointment.calendar_event_action_view_bookings_users
+msgid "No Appointment or Resource were found."
+msgstr "Tidak ada Appointment atau Sumber Daya yang ditemukan."
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_type_action_custom
+msgid "No Custom Availabilities Shared!"
+msgstr "Tidak Ada Ketersediaan Kustom yang Dibagikan!"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__avatars_display__hide
+msgid "No Picture"
+msgstr "Tidak ada Gambar"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_invite_action
+msgid "No Shared Links yet!"
+msgstr "Belum ada Link yang dibagikan!"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__appointment_type_info_msg
+msgid "No User Assigned Message"
+msgstr "Tidak ada Pesan yang Ditetapkan User"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.calendar_event_action_appointment_reporting
+#: model_terms:ir.actions.act_window,help:appointment.calendar_event_action_report_all
+msgid "No data yet!"
+msgstr "Belum ada data!"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "None"
+msgstr "Tidak Ada"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_calendar_event__alarm_ids
+msgid "Notifications sent to all attendees to remind of the meeting."
+msgstr ""
+"Notifikasi dikirim ke semua peserta untuk mengingatkan mereka mengenai "
+"meeting."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Jumlah Action"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_has_error_counter
+msgid "Number of errors"
+msgstr "Jumlah kesalahan"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Jumlah pesan yang membutuhkan tindakan"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Jumlah pesan dengan kesalahan pengiriman"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid "Number of people"
+msgstr "Jumlah orang"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__event_videocall_source__discuss
+msgid "Odoo Discuss"
+msgstr "Odoo Discuss"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_onboarding_onboarding
+msgid "Onboarding"
+msgstr "Onboarding"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,step_image_alt:appointment.appointment_onboarding_configure_calendar_provider_step
+msgid "Onboarding Connect your calendar"
+msgstr "Onboarding Hubungkan kalender Anda"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,step_image_alt:appointment.appointment_onboarding_preview_invite_step
+msgid "Onboarding Get your link"
+msgstr "Onboarding Dapatkan link Anda"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,step_image_alt:appointment.appointment_onboarding_create_appointment_type_step
+msgid "Onboarding Set Your Availabilities"
+msgstr "Onboarding Tetapkan Ketersediaan Anda"
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_onboarding_onboarding_step
+msgid "Onboarding Step"
+msgstr "Langkah Onboarding"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__slot_type__unique
+msgid "One Shot"
+msgstr "One Shot"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form
+msgid ""
+"Only letters, numbers, underscores and dashes are allowed in your links."
+msgstr ""
+"Hanya huruf, angka, garis bawah dan garis yang diizinkan pada link Anda."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_invite.py:0
+#, python-format
+msgid ""
+"Only letters, numbers, underscores and dashes are allowed in your links. You"
+" need to adapt %s."
+msgstr ""
+"Hanya huruf, angka, garis bawah dan garis yang diizinkan pada link Anda. "
+"Anda harus merubah %s."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid "Only one anytime appointment type is allowed for a specific user."
+msgstr ""
+"Hanya satu appointment tipe kapanpun yang diizinkan untuk satu user "
+"spesifik."
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#, python-format
+msgid "Open"
+msgstr "Terbuka"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_form
+msgid "Opening Hours"
+msgstr "Jam Buka"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_meeting_user
+msgid "Operator"
+msgstr "Operator"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Options"
+msgstr "Opsi"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__user_id
+msgid "Organizer"
+msgstr "Pengelola"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "Our first availability is"
+msgstr "Ketersediaan pertama kami adalah"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Outlook"
+msgstr "Outlook"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "Past"
+msgstr "Masa lalu"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_booker_id
+msgid "Person who is booking the appointment"
+msgstr "Orang yang membooking appointment"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "Phone number*"
+msgstr "Nomor telepon*"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "Phone: %(phone)s"
+msgstr "Telepon: %(phone)s"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/appointment.py:0
+#, python-format
+msgid "Phone: %s"
+msgstr "Telepon: %s"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__assign_method__resource_time
+msgid "Pick User/Resource then Time"
+msgstr "Pilih User/Sumber Daya lalu Waktu"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_manage_leaves_view_form
+msgid "Pick a Work Schedule..."
+msgstr "Pilih Jadwal Kerja..."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_form
+msgid "Pick a schedule to restrict openings"
+msgstr "Pilih jadwal untuk membatasi opening"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#, python-format
+msgid "Pick your availabilities"
+msgstr "Pilih ketersediaan Anda"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__placeholder
+msgid "Placeholder"
+msgstr "Placeholder"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid "Please, select another date."
+msgstr "Mohon pilih tanggal lain."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__suggested_resource_ids
+msgid "Possible resources"
+msgstr "Sumber daya yang mungkin ada"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__suggested_staff_user_ids
+msgid "Possible users"
+msgstr "User yang mungkin ada"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/components/appointment_onboarding/appointment_onboarding_invite_buttons.xml:0
+#: model:onboarding.onboarding.step,button_text:appointment.appointment_onboarding_preview_invite_step
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#, python-format
+msgid "Preview"
+msgstr "Pratinjau"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__category__punctual
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "Punctual"
+msgstr "Tepat Waktu"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__question_id
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__question_id
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__name
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_search
+msgid "Question"
+msgstr "Pertanyaan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__question_type
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__question_type
+msgid "Question Type"
+msgstr "Tipe Pertanyaan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__question_ids
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Questions"
+msgstr "Pertanyaan"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_question__question_type__radio
+msgid "Radio (one answer)"
+msgstr "Radio (satu jawaban)"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__rating_ids
+msgid "Ratings"
+msgstr "Rating"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__reason
+msgid "Reason"
+msgstr "Alasan"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__slot_type__recurring
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__category__recurring
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "Recurring"
+msgstr "Berulang"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__redirect_url
+msgid "Redirect URL"
+msgstr "URL Redirect"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__reminder_ids
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__alarm_ids
+#: model:ir.ui.menu,name:appointment.menu_appointment_reminders
+msgid "Reminders"
+msgstr "Pengingat"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Remove"
+msgstr "Hapus"
+
+#. module: appointment
+#: model:ir.ui.menu,name:appointment.menu_schedule_report
+#: model:ir.ui.menu,name:appointment.reporting_menu_calendar
+msgid "Reporting"
+msgstr "Laporan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__question_required
+msgid "Required Answer"
+msgstr "Jawaban Dibutuhkan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__resource_id
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Resource"
+msgstr "Sumber Daya"
+
+#. module: appointment
+#: model:ir.actions.act_window,name:appointment.calendar_event_action_view_bookings_resources
+#: model:ir.actions.server,name:appointment.calendar_event_action_all_resources_bookings
+msgid "Resource Bookings"
+msgstr "Booking Sumber Daya"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__calendar_id
+msgid "Resource Calendar"
+msgstr "Kalender Sumber Daya"
+
+#. module: appointment
+#: model:ir.ui.menu,name:appointment.menu_appointment_resource_leaves
+msgid "Resource Leaves"
+msgstr "Sumber Daya Cuti"
+
+#. module: appointment
+#: model:ir.actions.act_window,name:appointment.appointment_resource_action
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__resource_ids
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__resource_ids
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__schedule_based_on__resources
+#: model:ir.ui.menu,name:appointment.menu_appointment_resource
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_tree
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_tree_invitation
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_gantt_booking_resource
+msgid "Resources"
+msgstr "Sumber Daya"
+
+#. module: appointment
+#: model:ir.ui.menu,name:appointment.menu_appointment_schedule_resource_booking
+msgid "Resources Bookings"
+msgstr "Sumber Daya Booking"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__resources_on_leave
+msgid "Resources intersecting with leave time"
+msgstr "Sumber daya bertabrakan dengan waktu cuti"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "Responsible"
+msgstr "Penanggung Jawab"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_tree
+msgid "Restrict to Resource"
+msgstr "Batasi ke Sumber Daya"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__restrict_to_resource_ids
+msgid "Restrict to Resources"
+msgstr "Batasi ke Sumber Daya"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_tree
+msgid "Restrict to User"
+msgstr "Batasi ke User"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__restrict_to_user_ids
+msgid "Restrict to Users"
+msgstr "Batasi ke User"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_manage_leaves_view_form
+msgid "Restrict to specific Resources"
+msgstr "Batasi untuk Resource tertentu"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "SCHEDULED"
+msgstr "DIJADWALKAN"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Kesalahan Pengiriman SMS`"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__weekday__6
+msgid "Saturday"
+msgstr "Sabtu"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Save"
+msgstr "Simpan"
+
+#. module: appointment
+#: model:ir.ui.menu,name:appointment.menu_appointment_schedule_resources
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Schedule"
+msgstr "Jadwal"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__schedule_based_on
+msgid "Schedule Based On"
+msgstr "Jadwalkan Berdasarkan Pada"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/js/wysiwyg.js:0
+#, python-format
+msgid "Schedule an Appointment"
+msgstr "Jadwalkan Appointment"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.calendar_event_action_appointment_reporting
+#: model_terms:ir.actions.act_window,help:appointment.calendar_event_action_report_all
+msgid "Schedule appointments to get statistics"
+msgstr "Jadwalkan appointment untuk mendapatkan statistik"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__min_schedule_hours
+msgid "Schedule before (hours)"
+msgstr "Jadwalkan sebelum (jam)"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__max_schedule_days
+msgid "Schedule not after (days)"
+msgstr "Jadwalkan tidak setelah (hari)"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Scheduling"
+msgstr "Penjadwalan"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "Search in All"
+msgstr "Cari di Semua"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "Search in Description"
+msgstr "Cari di Keterangan"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "Search in Name"
+msgstr "Cari di Nama"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "Search in Responsible"
+msgstr "Cari di Penanggungjawab"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#, python-format
+msgid "Select Dates"
+msgstr "Pilih Tanggal"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__assign_method__time_resource
+msgid "Select Time then User/Resource"
+msgstr "Pilih Waktu lalu User/Sumber Daya"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__assign_method__time_auto_assign
+msgid "Select Time then auto-assign"
+msgstr "Pilih Waktu lalu auto-assign"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid "Select a date &amp; time"
+msgstr "Pilih tanggal &amp; waktu"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_slots.xml:0
+#, python-format
+msgid "Select a time"
+msgstr "Pilih waktu"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Select attendees..."
+msgstr "Pilih peserta..."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__value_answer_id
+msgid "Selected Answer"
+msgstr "Jawaban yang Dipilih"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__appointment_type_count
+msgid "Selected Appointments Count"
+msgstr "Jumlah Appointment yang Dipilih"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_search
+msgid "Selection Questions"
+msgstr "Pertanyaan Seleksi"
+
+#. module: appointment
+#: model:mail.template,description:appointment.appointment_canceled_mail_template
+msgid "Sent to all attendees when an appointment is cancelled"
+msgstr "Kirim ke semua peserta saat appointment dibatalkan"
+
+#. module: appointment
+#: model:mail.template,description:appointment.appointment_booked_mail_template
+msgid "Sent to followers of an appointment type when a meeting is booked"
+msgstr "Kirim ke pengikut dari tipe appointment saat meeting dibook"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer__sequence
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__sequence
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__sequence
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__sequence
+msgid "Sequence"
+msgstr "Urutan"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,title:appointment.appointment_onboarding_create_appointment_type_step
+msgid "Set your availabilities"
+msgstr "Tentukan kapan Anda tersedia"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_tree
+msgid "Share"
+msgstr "Bagikan"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#, python-format
+msgid "Share Appointment Link"
+msgstr "Share Link Appointment"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.xml:0
+#, python-format
+msgid "Share Availabilities"
+msgstr "Bagikan Ketersediaan Anda"
+
+#. module: appointment
+#. odoo-javascript
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#: code:addons/appointment/static/src/views/appointment_calendar/appointment_calendar_controller.js:0
+#, python-format
+msgid "Share Link"
+msgstr "Bagikan Link"
+
+#. module: appointment
+#: model:ir.actions.act_window,name:appointment.appointment_invite_action
+#: model:ir.ui.menu,name:appointment.menu_appointment_invite
+msgid "Share Links"
+msgstr "Share Links"
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_type_action
+msgid ""
+"Share calendar link allowing people to book meetings with you, your team or "
+"a resource."
+msgstr ""
+"Bagikan link kalender untuk mengizinkan orang untuk membook meeting dengan "
+"Anda, tim Anda atau sumber daya."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_onboarding_link_view_form
+msgid ""
+"Share this link to let people book meetings with you, your team or a "
+"resource."
+msgstr ""
+"Share link ini untuk mengizinkan orang untuk membook meeting dengan Anda, "
+"tim Anda atau sumber daya."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__shareable
+msgid "Shareable"
+msgstr "Shareable"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Shared Links"
+msgstr "Link yang dibagikan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__short_code
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__short_code
+msgid "Short Code"
+msgstr "Kode Singkat"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__short_code_format_warning
+msgid "Short Code Format Warning"
+msgstr "Peringatan Short Code Format"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__short_code_unique_warning
+msgid "Short Code Unique Warning"
+msgstr "Peringatan Short Code Unique"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__avatars_display__show
+msgid "Show Pictures"
+msgstr "Tunjukkan Gambar"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_question__question_type__char
+msgid "Single line text"
+msgstr "Teks baris tunggal"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__slot_type
+msgid "Slot type"
+msgstr "Tipe Timeslot"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__message_intro
+msgid "Small description of the appointment type."
+msgstr "Deskripsi singkat tipe appointment."
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "Sorry,"
+msgstr "Maaf,"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "Sorry, it is no longer possible to schedule an appointment."
+msgstr "Maaf, saat ini appointment tidak dapat dijadwalkan."
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "Sorry, there is not any more availability for the asked capacity."
+msgstr "Maaf, tidak ada lagi slot yang tersedia untuk kapasitas yang diminta."
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "Sorry, we have no availability for an appointment."
+msgstr "Maaf, kami tidak memiliki slot yang tersedia untuk appointment."
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "Sorry, we have no more slots available for this month."
+msgstr "Maaf, kami tidak memiliki slot lagi yang tersedia untuk bulan ini."
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__source_resource_ids
+msgid "Source combination"
+msgstr "Kombinasi Source"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__appointment_resource_ids
+msgid "Specific Resources"
+msgstr "Sumber Daya Tertentu"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_invite__resources_choice__specific_resources
+msgid "Specific Users/Resources"
+msgstr "User/Sumber Daya Tertentu"
+
+#. module: appointment
+#: model:ir.actions.act_window,name:appointment.calendar_event_action_view_bookings_users
+#: model:ir.actions.server,name:appointment.calendar_event_action_all_users_appointments
+#: model:ir.ui.menu,name:appointment.menu_appointment_schedule_staff_appointment
+msgid "Staff Bookings"
+msgstr "Booking Staff"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_manage_leaves__leave_start_dt
+msgid "Start Date"
+msgstr "Tanggal Mulai"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__start_datetime
+msgid "Start Datetime"
+msgstr "Mulai Tanggalwaktu"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_booking_line__event_start
+msgid "Start date of an event, without time for full days events"
+msgstr "Tanggal dimulainya acara, tanpa jam untuk acara sehari penuh"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_slot__start_datetime
+msgid "Start datetime for unique slot type management"
+msgstr "Mulai tanggal waktu untuk manajemen tipe slot unik"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__start_hour
+msgid "Starting Hour"
+msgstr "Jam Mulai"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,done_text:appointment.appointment_onboarding_configure_calendar_provider_step
+#: model:onboarding.onboarding.step,done_text:appointment.appointment_onboarding_preview_invite_step
+msgid "Step Completed!"
+msgstr "Langkah Selesai!"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_booking_line__event_stop
+msgid "Stop date of an event, without time for full days events"
+msgstr "Tanggal berakhirnya acara, tanpa jam untuk acara sehari penuh"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_tree_booking
+msgid "Subject"
+msgstr "Judul"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__answer_input_ids
+msgid "Submitted Answers"
+msgstr "Jawaban yang Diberikan"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__weekday__7
+msgid "Sunday"
+msgstr "Minggu"
+
+#. module: appointment
+#: model:appointment.question,name:appointment.appointment_type_dental_care_question_1
+msgid "Symptoms"
+msgstr "Simptom"
+
+#. module: appointment
+#: model:appointment.type,name:appointment.appointment_type_tennis_court
+msgid "Tennis Court"
+msgstr "Lapangan Tennis"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__value_text_box
+msgid "Text Answer"
+msgstr "Jawaban Teks"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_search
+msgid "Text Questions"
+msgstr "Pertanyaan Tek"
+
+#. module: appointment
+#: model:ir.model.constraint,message:appointment.constraint_appointment_invite_short_code_uniq
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_form
+msgid "The URL is already taken, please pick another code."
+msgstr "URL sudah digunakan, mohon pilih kode lain."
+
+#. module: appointment
+#: model:ir.model.constraint,message:appointment.constraint_appointment_type_check_resource_manual_confirmation_percentage
+msgid "The capacity percentage should be between 0 and 100%"
+msgstr "Persentase kapasitas harus antara 0 dan 100%"
+
+#. module: appointment
+#: model:ir.model.constraint,message:appointment.constraint_appointment_booking_line_check_capacity_reserved
+msgid "The capacity reserved should be positive."
+msgstr "Kapasitas yang dicadangkan harus positif."
+
+#. module: appointment
+#: model:ir.model.constraint,message:appointment.constraint_appointment_booking_line_check_capacity_used
+msgid "The capacity used can not be lesser than the capacity reserved"
+msgstr ""
+"Kapasitas yang digunakan tidak dapat lebih sedikit dari kapasitas yang "
+"dicadangkan"
+
+#. module: appointment
+#: model:ir.model.constraint,message:appointment.constraint_appointment_slot_check_start_and_end_hour
+msgid "The end time must be later than the start time."
+msgstr "Waktu akhir harus setelah waktu mulai."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "The event %s cannot book resources without an appointment type."
+msgstr "Acara %s tidak dapat membooking sumber daya tanpa tipe appointment."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "The field '%s' does not exist in the targeted model"
+msgstr "Field '%s' tidak tersedia di model yang ditarget"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_invite.py:0
+#, python-format
+msgid "The following appointment type(s) have no resource assigned: %s."
+msgstr "Tipe-tipe appointment berikut tidak memiliki sumber daya: %s."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_invite.py:0
+#, python-format
+msgid "The following appointment type(s) have no staff assigned: %s."
+msgstr "Tipe-tipe appointment berikut tidak memiliki staff: %s."
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_question.py:0
+#, python-format
+msgid "The following question(s) do not have any selectable answers : %s"
+msgstr ""
+"Pertanyaan-pertanyaan berikut tidak memiliki jawaban yang dapat dipilih : %s"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid ""
+"The following users are in restricted slots but they are not part of the "
+"available staff: %s"
+msgstr ""
+"User-user berikut ada di slot yang terbatas tapi mereka bukan merupakan "
+"staff yang tersedia: %s"
+
+#. module: appointment
+#: model:ir.model.constraint,message:appointment.constraint_appointment_resource_check_capacity
+msgid "The resource should have at least one capacity."
+msgstr "Sumber daya harus memiliki setidaknya satu kapasitas."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_resource__sequence
+msgid ""
+"The sequence dictates if the resource is going to be picked in higher priority against another resource\n"
+"        (e.g. for 2 tables of 4, the lowest sequence will be picked first)"
+msgstr ""
+"Urutan menentukan apakah sumber daya akan dipilih berdasarkan prioritas lebih tinggi terhadap sumber daya lain\n"
+"        (contoh untuk 2 meja 4 orang, urutan terendah akan dipilih terlebih dahulu)"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "Their first availability is"
+msgstr "Ketersediaan pertama mereka adalah"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointments_list_layout
+msgid "There is currently no appointment available"
+msgstr "Saat ini tidak ada appointment yang tersedia"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_appointments
+msgid "There is no appointment linked to your account."
+msgstr "Tidak ada appointment yang di-link ke akun Anda."
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_resource__shareable
+msgid ""
+"This allows to share the resource with multiple attendee for a same time "
+"slot (e.g. a bar counter)"
+msgstr ""
+"Ini memungkinkan orang untuk membagikan sumber daya dengan lebih dari satu "
+"peserta untuk timeslot yang sama (contohnya meja bar)"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"This appointment type has no availabilities because it does not have any "
+"opening hours configured"
+msgstr ""
+"Tipe appointment ini tidak tersedia karena tipe ini tidak memiliki jam buka "
+"yang dikonfigurasi"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"This appointment type has no availabilities because it has no resource "
+"assigned"
+msgstr ""
+"Tipe appointment ini tidak tersedia karena tipe ini tidak memiliki sumber "
+"daya"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"This appointment type has no availabilities because it has no resource "
+"assigned and does not have any opening hours configured"
+msgstr ""
+"Tipe appointment ini tidak tersedia karena tipe ini tidak memiliki sumber "
+"daya dan tidak memiliki jam buka yang dikonfigurasi"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"This appointment type has no availabilities because it has no staff assigned"
+msgstr ""
+"Tipe appointment ini tidak tersedia karena tipe ini tidak memiliki staff"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid ""
+"This appointment type has no availabilities because it has no staff assigned"
+" and does not have any opening hours configured"
+msgstr ""
+"Tipe appointment ini tidak tersedia karena tipe ini tidak memilki staff dan "
+"tidak memiliki jam buka yang dikonfigurasi"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_resource__tz
+msgid ""
+"This field is used in order to define in which timezone the resources will "
+"work."
+msgstr ""
+"Field ini digunakan untuk mendefinisikan di timezone mana sumber daya akan "
+"bekerja."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_edit_in_backend
+msgid "This is a preview of the customer appointment form."
+msgstr "Ini adalah pratinjau formulir appointment pelanggan."
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__weekday__4
+msgid "Thursday"
+msgstr "Kamis"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__tz
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__appointment_tz
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "Timezone"
+msgstr "Zona Waktu"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__appointment_tz
+msgid "Timezone where appointment take place"
+msgstr "Timezone dimana appointment berlangsung"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_info
+msgid "Timezone:"
+msgstr "Timezone:"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__end_datetime
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "To"
+msgstr "Kepada"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__access_token
+msgid "Token"
+msgstr "Token"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_kanban
+msgid "Total"
+msgstr "Total"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__resource_total_capacity
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_tree
+msgid "Total Capacity"
+msgstr "Kapasitas Total"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__resource_total_capacity_reserved
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_tree_booking
+msgid "Total Capacity Reserved"
+msgstr "Total Kapasitas Cadangan"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__resource_total_capacity_used
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_tree_booking
+msgid "Total Capacity Used"
+msgstr "Total Kapasitas yang Digunakan"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "Total Reserved"
+msgstr "Total Reservasi"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_appointments
+msgid "Total:"
+msgstr "Total:"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__weekday__2
+msgid "Tuesday"
+msgstr "Selasa"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "Type"
+msgstr "Tipe"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Uncertain"
+msgstr "Tidak pasti"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/views/gantt/gantt_popover.xml:0
+#, python-format
+msgid "Unconfirm Check-In"
+msgstr "Batalkan konfirmasi Check-In"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Until"
+msgstr "Hingga"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "Until (max)"
+msgstr "Sampai (maksimal)"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/controllers/portal.py:0
+#, python-format
+msgid "Upcoming"
+msgstr "Mendatang"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_calendar_alarm__default_for_new_appointment_type
+msgid "Use as default for new Appointment Types"
+msgstr "Gunakan sebagai default untuk tipe Appointment baru"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__category
+msgid ""
+"Used to define this appointment type's category.\n"
+"\n"
+"        Can be one of:\n"
+"\n"
+"            - Recurring: the default category, weekly recurring slots. Accessible from the website\n"
+"\n"
+"            - Punctual: recurring slots limited between 2 datetimes. Accessible from the website\n"
+"\n"
+"            - Custom: the user will create and share to another user a custom appointment type with hand-picked time slots\n"
+"\n"
+"            - Anytime: the user will create and share to another user an appointment type covering all their time slots"
+msgstr ""
+"Digunakan untuk mendefinisikan kategori tipe appointment.\n"
+"\n"
+"        Dapat merupakan salah satu dari:\n"
+"\n"
+"            - Rutin: kategori default, slot rutin mingguan. Dapat diakses dari website\n"
+"\n"
+"            - Tepat Waktu: slot rutin yang dibatasi antara 2 tanggalwaktu. Dapat diakses dari website\n"
+"\n"
+"            - Kustom: user dapat membuat dan membagikan ke user lain tipe appointment kustom dengan slot waktu yang mereka pilih sendiri\n"
+"\n"
+"            - Kapanpun: user dapat membuat dan membagikan ke user lain tipe appointment yang mencakup seluruh time slot mereka"
+
+#. module: appointment
+#: model:res.groups,name:appointment.group_appointment_user
+msgid "User"
+msgstr "Pengguna"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__staff_user_ids
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__staff_user_ids
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_type__schedule_based_on__users
+msgid "Users"
+msgstr "Pengguna"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__event_videocall_source
+msgid "Videoconference Link"
+msgstr "Link Konferensi video"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__website_message_ids
+msgid "Website Messages"
+msgstr "Pesan situs"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__website_message_ids
+msgid "Website communication history"
+msgstr "Sejarah komunikasi situs"
+
+#. module: appointment
+#: model:ir.model.fields.selection,name:appointment.selection__appointment_slot__weekday__3
+msgid "Wednesday"
+msgstr "Rabu"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__weekday
+msgid "Week Day"
+msgstr "Hari Kerja"
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_resource__resource_calendar_id
+msgid ""
+"If kept empty, the working schedule of the company set on the resource will "
+"be used"
+msgstr ""
+"Bila dibiarkan kosong, jadwal kerja perusahaan yang ditetapkan pada sumber "
+"daya akan digunakan"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.staff_user_select
+msgid "With"
+msgstr "Dengan"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,description:appointment.appointment_onboarding_configure_calendar_provider_step
+msgid "With Outlook or Google"
+msgstr "Dengan Outlook atau Google"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__resource_calendar_id
+msgid "Working Hours"
+msgstr "Jam Kerja"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/js/appointment_form.js:0
+#: code:addons/appointment/static/src/js/appointment_validation.js:0
+#, python-format
+msgid "You cannot invite more than 10 people"
+msgstr "Anda tidak dapat mengundang lebih dari 10 orang"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_details_column
+msgid "Your Appointment"
+msgstr "Appointment Anda"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid ""
+"Your appointment has been reserved! We will come back to you to confirm it."
+msgstr "Appointment Anda disimpan! Kami akan meminta konfirmasi Anda."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Your appointment has successfully been booked!"
+msgstr "Appointmen Anda sukses dibook!"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "Your appointment is in less than"
+msgstr "Appointment Anda akan dimulai kurang dari"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_meeting_user
+msgid "Your choice"
+msgstr "Pilihan Anda"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "days"
+msgstr "hari"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "e.g. \"During this meeting, we will...\""
+msgstr "contoh \"Pada meeting ini, kami akan...\""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "e.g. \"I feel nauseous...\""
+msgstr "contoh \"saya merasa mual...\""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form_gantt_booking
+msgid "e.g. \"John Doe - Tennis Court Booking\""
+msgstr "contoh \"John Doe - Booking Lapangan Tennis\""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "e.g. \"Technical Demo\""
+msgstr "misalnya \"Demo Teknis\""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "e.g. \"Thank you for your trust, we look forward to meeting you!\""
+msgstr ""
+"contoh \"Terima kasih atas kepercayaan Anda, kami tidak sabar untuk bertemu "
+"dengan Anda!\""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "e.g. \"What are your symptoms?\""
+msgstr "contoh \"Apa gejala Anda?\""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "e.g. +1(605)691-3277"
+msgstr "contoh +1(605)691-3277"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_manage_leaves_view_form
+msgid "e.g. Inventory count and valuation"
+msgstr "contoh Jumlah dan valuasi Inventaris"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "e.g. John Smith"
+msgstr "contoh John Smith"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_form
+msgid "e.g. Tennis Court 1"
+msgstr "contoh Lapangan Tennis 1"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid ""
+"e.g. john.doe@email.com\r\n"
+"e.g. jane.doe@example.com\r\n"
+"..."
+msgstr ""
+"contoh john.doe@email.com\r\n"
+"contoh jane.doe@example.com\r\n"
+"..."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid ""
+"e.g. john.doe@email.com \r\n"
+"e.g. jane.doe@example.com\r\n"
+"..."
+msgstr ""
+"contoh john.doe@email.com \r\n"
+"contoh jane.doe@example.com\r\n"
+"..."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_form
+msgid "e.g. john.smith@example.com"
+msgstr "contoh john.smith@example.com"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "from"
+msgstr "dari"
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "has no availability for an appointment."
+msgstr "tidak memiliki slot yang tersedia untuk appointment."
+
+#. module: appointment
+#. odoo-javascript
+#: code:addons/appointment/static/src/xml/appointment_no_slot.xml:0
+#, python-format
+msgid "has no more slots available for this month."
+msgstr "tidak memiliki slot lagi yang tersedia untuk bulan ini."
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "hours before"
+msgstr "jam sebelum"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "hours from now!"
+msgstr "jam dari sekarang!"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_meeting_details
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_validated
+msgid "people"
+msgstr "orang"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "persons)"
+msgstr "orang-orang)"
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "somebody"
+msgstr "seseorang"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,description:appointment.appointment_onboarding_create_appointment_type_step
+msgid "to automate appointments"
+msgstr "untuk mengotomatiskan appointment"
+
+#. module: appointment
+#: model:onboarding.onboarding.step,description:appointment.appointment_onboarding_preview_invite_step
+msgid "to schedule appointments"
+msgstr "untuk menjadwalkan appointment"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "total capacity"
+msgstr "kapasitas total"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+msgid "when over"
+msgstr "saat selesai"
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_appointments
+msgid "with"
+msgstr "dengan"

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="social_stream_post_view_kanban" model="ir.ui.view">
+        <field name="name">social.stream.post.view.kanban.inherit.twitter</field>
+        <field name="model">social.stream.post</field>
+        <field name="inherit_id" ref="social.social_stream_post_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stream_id']" position="after">
+                <field name="youtube_video_id"/>
+                <field name="youtube_comments_count"/>
+                <field name="youtube_likes_count"/>
+                <field name="youtube_dislikes_count"/>
+                <field name="youtube_views_count"/>
+                <field name="youtube_thumbnail_url"/>
+            </xpath>
+            <xpath expr="//span[hasclass('o_social_stream_post_author_image')]" position="inside">
+                <img t-if="record.youtube_video_id.raw_value" t-attf-src="/web/image/social.account/#{record.account_id.raw_value}/image" alt="Author Image" class="rounded"/>
+            </xpath>
+            <xpath expr="//a[hasclass('o_social_stream_post_link')]" position="attributes">
+                <attribute name="invisible">media_type == 'youtube'</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_social_stream_post_image')]" position="attributes">
+                <attribute name="invisible">media_type == 'youtube'</attribute>
+            </xpath>
+            <xpath expr="//div[@name='o_social_stream_post_message_body']" position="inside">
+                <a t-att-href="record.post_link.raw_value"
+                   t-if="record.media_type.raw_value !== 'youtube' &amp;&amp; record.youtube_video_id.raw_value">
+                    <img t-att-src="record.youtube_thumbnail_url.raw_value" alt="YouTube Thumbnail"
+                        class="w-100 py-2 o_social_youtube_thumbnail"/>
+                </a>
+            </xpath>
+            <xpath expr="//div[hasclass('o_social_stream_post_message_text')]" position="before">
+                <div class="py-2" t-if="record.media_type.raw_value === 'youtube'">
+                    <div class="fw-bold px-2"><field name="link_title"/></div>
+                    <a t-att-href="record.post_link.raw_value">
+                        <img t-att-src="record.youtube_thumbnail_url.raw_value" alt="YouTube Thumbnail"
+                            class="w-100 py-2 o_social_youtube_thumbnail"/>
+                    </a>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('o_social_stream_post_message')]" position="inside">
+                <div class="o_social_stream_post_youtube_stats d-flex justify-content-around px-2" t-if="record.media_type.raw_value === 'youtube'">
+                    <div class="d-flex justify-content-around">
+                        <div class="o_social_subtle_btn_disabled ps-2">
+                            <i class="fa fa-thumbs-o-up me-1" title="Likes"/>
+                            <b t-esc="record.youtube_likes_count.value"/>
+                        </div>
+                        <div class="o_social_youtube_comments o_social_comments o_social_subtle_btn ps-3">
+                            <b t-esc="record.youtube_comments_count.value"/>
+                            Comments
+                        </div>
+                    </div>
+
+                    <div class="flex-grow-1 text-end text-muted">
+                        <div class="o_social_subtle_btn_disabled pe-2 d-inline-block fw-bold">
+                            Views
+                            <t t-esc="record.youtube_views_count.value"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>

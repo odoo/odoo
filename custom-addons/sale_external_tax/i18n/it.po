@@ -1,0 +1,69 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_external_tax
+# 
+# Translators:
+# Wil Odoo, 2023
+# Marianna Ciofani, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: sale_external_tax
+#: model_terms:ir.ui.view,arch_db:sale_external_tax.order_form_inherit
+msgid "Compute Taxes"
+msgstr "Calcola imposte"
+
+#. module: sale_external_tax
+#: model:ir.model.fields,field_description:sale_external_tax.field_sale_order__is_avatax
+msgid "Is Avatax"
+msgstr "È AvaTax"
+
+#. module: sale_external_tax
+#: model:ir.model.fields,field_description:sale_external_tax.field_sale_order__is_tax_computed_externally
+msgid "Is Tax Computed Externally"
+msgstr "L'imposta è calcolata esternamente"
+
+#. module: sale_external_tax
+#: model:ir.model,name:sale_external_tax.model_sale_order
+msgid "Sales Order"
+msgstr "Ordine di vendita"
+
+#. module: sale_external_tax
+#: model:ir.model,name:sale_external_tax.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Riga ordine di vendita"
+
+#. module: sale_external_tax
+#. odoo-python
+#: code:addons/sale_external_tax/models/sale_order.py:0
+#, python-format
+msgid "Taxes"
+msgstr "Imposte"
+
+#. module: sale_external_tax
+#: model:ir.model.fields,help:sale_external_tax.field_sale_order__is_tax_computed_externally
+msgid ""
+"Technical field to determine if tax is calculated using an external service "
+"instead of Odoo."
+msgstr ""
+"Campo tecnico utilizza per determinare se l'imposta viene calcolata "
+"utilizzato servizi esterni rispetto a Odoo."
+
+#. module: sale_external_tax
+#. odoo-python
+#: code:addons/sale_external_tax/models/sale_order.py:0
+#, python-format
+msgid "Untaxed Amount"
+msgstr "Importo imponibile"

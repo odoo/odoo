@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(3, ref('approvals.group_approval_manager'))]"/>
+        </record>
+
+        <record id="approval_request_demo_business_trip" model="approval.request">
+            <field name="name">Business trip to London</field>
+            <field name="request_status">pending</field>
+            <field name="location">London</field>
+            <field name="category_id" ref="approval_category_data_business_trip"/>
+            <field name="request_owner_id" ref="base.user_admin"/>
+            <field name="date_start" eval="time.strftime('%Y-05-01')"/>
+            <field name="date_end" eval="time.strftime('%Y-05-05')"/>
+            <field name="reason">Meeting with a potential customer.</field>
+        </record>
+
+        <record id="approval_approver_business_trip_1" model="approval.approver">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="request_id" ref="approval_request_demo_business_trip"/>
+        </record>
+
+        <record id="approval_approver_business_trip_2" model="approval.approver">
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="request_id" ref="approval_request_demo_business_trip"/>
+        </record>
+
+        <record id="approval_request_demo_borrow_items" model="approval.request">
+            <field name="name">Borrow the screwdriver</field>
+            <field name="request_status">pending</field>
+            <field name="category_id" ref="approval_category_data_borrow_items"/>
+            <field name="request_owner_id" ref="base.user_demo"/>
+            <field name="date_start" eval="time.strftime('%Y-05-01')"/>
+            <field name="date_end" eval="time.strftime('%Y-05-01')"/>
+            <field name="product_line_ids" eval="[(0, 0, {'description': 'Screwdriver X15'})]"/>
+            <field name="reason">Need a screwdriver to fix the main door.</field>
+        </record>
+
+        <record id="approval_approver_borrow_items_1" model="approval.approver">
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="request_id" ref="approval_request_demo_borrow_items"/>
+        </record>
+
+        <record id="approval_approver_borrow_items_2" model="approval.approver">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="request_id" ref="approval_request_demo_borrow_items"/>
+        </record>
+
+        <record id="approval_category_data_business_trip" model="approval.category">
+            <field name="approver_ids" eval="[(0, 0, {'user_id': ref('base.user_admin')})]"/>
+        </record>
+
+        <record id="approval_category_data_borrow_items" model="approval.category">
+            <field name="approver_ids" eval="[(0, 0, {'user_id': ref('base.user_admin')})]"/>
+        </record>
+
+        <record id="approval_category_data_general_approval" model="approval.category">
+            <field name="approver_ids" eval="[(0, 0, {'user_id': ref('base.user_admin')})]"/>
+        </record>
+
+        <record id="approval_category_data_contract_approval" model="approval.category">
+            <field name="approver_ids" eval="[(0, 0, {'user_id': ref('base.user_admin')})]"/>
+        </record>
+
+        <record id="approval_category_data_payment_application" model="approval.category">
+            <field name="approver_ids" eval="[(0, 0, {'user_id': ref('base.user_admin')})]"/>
+        </record>
+
+        <record id="approval_category_data_car_rental_application" model="approval.category">
+            <field name="approver_ids" eval="[(0, 0, {'user_id': ref('base.user_admin')})]"/>
+        </record>
+
+        <record id="approval_category_data_job_referral_award" model="approval.category">
+            <field name="approver_ids" eval="[(0, 0, {'user_id': ref('base.user_admin')})]"/>
+        </record>
+
+        <record id="approval_category_data_procurement" model="approval.category">
+            <field name="approver_ids" eval="[(0, 0, {'user_id': ref('base.user_admin')})]"/>
+        </record>
+    </data>
+</odoo>

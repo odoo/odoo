@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_december_slip_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n.be.december.slip.wizard.view.form</field>
+        <field name="model">l10n.be.december.slip.wizard</field>
+        <field name="arch" type="xml">
+            <form string="December Slip">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="contract_id"/>
+                            <field name="payslip_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="N-1 Year">
+                            <field name="remuneration_n1"/>
+                            <field name="simple_holiday_n1"/>
+                            <p class="text-muted">Note: The double holiday pay should only be computed if the reduction in working time took place between 01/01 and 30/06 compared to year N-1.</p>
+                            <field name="double_holiday_n1"/>
+                        </group>
+                        <group string="N Year">
+                            <field name="simple_holiday_n"/>
+                            <field name="double_holiday_n"/>
+                        </group>
+                        <group string="December Pay">
+                            <field name="simple_december_pay"/>
+                            <field name="double_december_pay"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Validate" name="action_validate" type="object" class="btn-primary"/>
+                    <button special="cancel" string="Close" type="object" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_be_december_slip_wizard_action" model="ir.actions.act_window">
+        <field name="name">Double Pay Recovery Computation</field>
+        <field name="res_model">l10n.be.december.slip.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

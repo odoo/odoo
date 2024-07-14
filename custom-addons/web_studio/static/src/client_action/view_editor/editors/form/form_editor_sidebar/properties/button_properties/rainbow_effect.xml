@@ -1,0 +1,37 @@
+<templates>
+    <t t-name="web_studio.ViewEditorSidebar.RainbowEffect">
+        <h3>Rainbow Man</h3>
+        <Property
+            name="'effect'"
+            type="'boolean'"
+            value="this.props.effect and this.props.effect !== 'False'"
+            onChange.bind="toggleRainbowMan"
+        >
+            Rainbow Effect
+        </Property>
+        <t t-if="rainbowEffect">
+            <div class="o_web_studio_sidebar_text">
+                <label for="rainbow_message">Message</label>
+                <input id="rainbow_message" name="rainbow_message" type="text" t-att-value="rainbowEffect.message or 'Well Done!'" t-on-change="(ev) => this.onRainbowEffectChange('message', ev.target.value)"/>
+            </div>
+            <div t-if="rainbowEffect.fadeout" class="o_web_studio_sidebar_select">
+                <label for="rainbow_fadeout">Fadeout Speed</label>
+                <SelectMenu class="'border-0'" value="rainbowEffect.fadeout" choices="choices" onSelect="(value) => this.onRainbowEffectChange('fadeout', value)" searchable="false"/>
+            </div>
+            <div class="text-center">
+                <FileInput
+                    acceptedFileExtensions="'image/*'"
+                    onUpload="(res) => this.onRainbowEffectChange('img_url', '/web/content/' + res[0].id)"
+                    resId="user.userId"
+                    resModel="'res.users'"
+                >
+                    <div class="mt-3 mb8 ml64 mr64">
+                        <img t-att-src="rainbowEffect.img_url or '/web/static/img/smile.svg'" class="img img-fluid cursor-pointer" alt="Great !"/>
+                    </div>
+                    <button class="btn btn-secondary m-1"><i class="fa fa-upload"/> Change Image</button>
+                </FileInput>
+                <button t-if="rainbowEffect.img_url" class="btn btn-secondary m-1" t-on-click="() => this.onRainbowEffectChange('img_url', false)"><i class="fa fa-undo"/> Reset Image</button>
+            </div>
+        </t>
+    </t>
+</templates>

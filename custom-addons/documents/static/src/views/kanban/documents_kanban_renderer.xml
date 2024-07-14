@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.DocumentsKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="attributes">
+            <attribute name="class" add="o_documents_view o_renderer_with_search_panel position-relative" separator=" "/>
+            <attribute name="t-on-click">onGlobalClick</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="after">
+            <DocumentsInspector t-props="getDocumentsInspectorProps()"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="inside">
+            <DocumentsDropZone parentRoot="root"/>
+            <DocumentsFileViewer parentRoot="root" t-props="getDocumentsAttachmentViewerProps()"/>
+        </xpath>
+        <t t-foreach="getGroupsOrRecords()" position="before">
+            <FileUploadProgressContainer fileUploads="this.documentUploads" Component="constructor.components.FileUploadProgressKanbanRecord" shouldDisplay="(upload) => !upload.data.get('document_id')"/>
+        </t>
+        <t t-call="web.ActionHelper" position="replace">
+            <t t-if="props.noContentHelp">
+                <DocumentsActionHelper noContentHelp="props.noContentHelp"/>
+            </t>
+        </t>
+    </t>
+</templates>

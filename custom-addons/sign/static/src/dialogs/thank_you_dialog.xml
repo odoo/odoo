@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="sign.ThankYouDialog">
+        <Dialog t-props="dialogProps">
+            <t t-set-slot="header" t-slot-scope="scope">
+                <h4 class="modal-title text-break" t-att-class="{ 'me-auto': scope.isFullscreen }">
+                    Thank you! Your signature has been submitted.
+                </h4>
+            </t>
+            <h5 t-if="props.subtitle" id="thank-you-subtitle"><t t-esc="props.subtitle"/></h5>
+            <div id="thank-you-message" class="o_thankyou_message" t-esc="message"/>
+            <div t-if="suggestSignUp" class="o_thankyou_message alert alert-success py-4">
+                Sign up for Odoo Sign to manage your own documents and signature requests.
+            </div>
+            <t t-if="state.nextDocuments.length > 0">
+                <div class="o_thankyou_message">There are other documents waiting for your signature:</div>
+                <table class="table table-sm">
+                    <tbody>
+                        <t t-foreach="state.nextDocuments" t-as="doc" t-key="doc.id">
+                            <tr t-attf-class="next-document {{ doc.ignored ? 'text-muted' : '' }}">
+                                <td>
+                                    <strong t-out="doc.name"></strong>
+                                </td>
+                                <td>
+                                    <span>Sent by <span t-out="doc.user"></span> on <span t-out="doc.date"></span></span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-secondary o_thankyou_next_sign me-1" t-att-disabled="doc.ignored" t-on-click="() => this.clickNextSign(doc.requestId, doc.accessToken)">Sign</button>
+                                    <button class="btn btn-sm btn-secondary o_thankyou_next_ignore" t-att-disabled="doc.ignored" t-on-click="() => this.clickNextIgnore(doc)">Ignore</button>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </t>
+            <t t-set-slot="footer">
+                <t t-foreach="state.buttons" t-as="button" t-key="button.name">
+                    <button t-att-class="button.classes" t-on-click="button.click" t-att-disabled="button.disabled"><t t-out="button.name"/></button>
+                </t>
+            </t>
+        </Dialog>
+    </t>
+</templates>

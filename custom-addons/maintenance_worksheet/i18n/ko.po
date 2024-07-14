@@ -1,0 +1,110 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* maintenance_worksheet
+# 
+# Translators:
+# Daye Jeong, 2023
+# Wil Odoo, 2023
+# Sarah Park, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Sarah Park, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: maintenance_worksheet
+#: model:ir.actions.report,print_report_name:maintenance_worksheet.maintenance_request_report
+msgid ""
+"'Maintenance Request Worksheet - %s - %s' % (object.name, "
+"object.user_id.name)"
+msgstr "'유지관리 요청 워크시트 - %s - %s' % (object.name, object.user_id.name)"
+
+#. module: maintenance_worksheet
+#: model_terms:ir.ui.view,arch_db:maintenance_worksheet.maintenance_request_view_form_inherit_worksheet
+msgid "<span class=\"o_stat_text\">Worksheet</span>"
+msgstr "<span class=\"o_stat_text\">작업계획표</span>"
+
+#. module: maintenance_worksheet
+#: model_terms:ir.ui.view,arch_db:maintenance_worksheet.maintenance_request_view_form_inherit_worksheet
+msgid ""
+"<span class=\"o_stat_text\">Worksheet</span>\n"
+"                            <span class=\"o_stat_text\">Complete</span>"
+msgstr ""
+"<span class=\"o_stat_text\">작업계획표</span>\n"
+"                            <span class=\"o_stat_text\">완료</span>"
+
+#. module: maintenance_worksheet
+#: model:ir.model.fields,help:maintenance_worksheet.field_maintenance_request__worksheet_template_id
+msgid ""
+"Create templates for each type of request you have and customize their "
+"content with your own custom fields."
+msgstr "요청 유형별로 서식을 생성하여 자신만의 사용자 지정 필드를 넣어서 콘텐츠를 커스터마이징해 보세요."
+
+#. module: maintenance_worksheet
+#: model_terms:ir.actions.act_window,help:maintenance_worksheet.maintenance_worksheet_action_settings
+msgid "Customize worksheet templates for each type of request.<br>"
+msgstr "요청별 유형에 맞게 작업계획표 서식을 커스터마이징합니다.<br>"
+
+#. module: maintenance_worksheet
+#: model:ir.model,name:maintenance_worksheet.model_maintenance_request
+msgid "Maintenance Request"
+msgstr "유지보수 요청"
+
+#. module: maintenance_worksheet
+#: model:ir.model,name:maintenance_worksheet.model_report_maintenance_worksheet_maintenance_worksheet
+msgid "Maintenance Request Worksheet Custom Report"
+msgstr "유지보수 요청 작업계획표 사용자 정의 보고서"
+
+#. module: maintenance_worksheet
+#: model_terms:ir.ui.view,arch_db:maintenance_worksheet.worksheet_page
+msgid "Maintenance Request:"
+msgstr "유지보수 요청:"
+
+#. module: maintenance_worksheet
+#: model_terms:ir.actions.act_window,help:maintenance_worksheet.maintenance_worksheet_action_settings
+msgid "No worksheet templates found. Let's create one!"
+msgstr "워크시트 서식을 찾을 수 없습니다. 새로 작성해 주세요."
+
+#. module: maintenance_worksheet
+#. odoo-python
+#: code:addons/maintenance_worksheet/models/maintenance_request.py:0
+#, python-format
+msgid "Please select a Worksheet Template."
+msgstr "워크시트 서식을 선택하세요."
+
+#. module: maintenance_worksheet
+#: model_terms:ir.ui.view,arch_db:maintenance_worksheet.worksheet_page
+msgid "Worksheet"
+msgstr "작업계획표"
+
+#. module: maintenance_worksheet
+#: model:ir.model.fields,field_description:maintenance_worksheet.field_maintenance_request__worksheet_count
+msgid "Worksheet Count"
+msgstr "작업계획표 수"
+
+#. module: maintenance_worksheet
+#: model:ir.actions.report,name:maintenance_worksheet.maintenance_request_report
+msgid "Worksheet Report"
+msgstr "작업계획표 보고서"
+
+#. module: maintenance_worksheet
+#: model:ir.model,name:maintenance_worksheet.model_worksheet_template
+#: model:ir.model.fields,field_description:maintenance_worksheet.field_maintenance_request__worksheet_template_id
+msgid "Worksheet Template"
+msgstr "작업계획표 서식"
+
+#. module: maintenance_worksheet
+#: model:ir.actions.act_window,name:maintenance_worksheet.action_maintenance_worksheets
+#: model:ir.actions.act_window,name:maintenance_worksheet.maintenance_worksheet_action_settings
+#: model:ir.ui.menu,name:maintenance_worksheet.menu_maintenance_configuration_worksheet_templates
+msgid "Worksheet Templates"
+msgstr "작업계획표 서식"

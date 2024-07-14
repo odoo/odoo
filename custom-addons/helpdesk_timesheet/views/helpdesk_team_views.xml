@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="helpdesk_team_view_form_inherit_helpdesk_timesheet" model="ir.ui.view">
+        <field name="name">helpdesk.team.form.inherit.timesheet</field>
+        <field name="model">helpdesk.team</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_team_rating']" position="after">
+                <button class="oe_stat_button" icon="fa-clock-o icon" type="object" name="action_view_timesheets" invisible="not use_helpdesk_timesheet" groups="hr_timesheet.group_hr_timesheet_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="total_timesheet_time" nolabel="1"/>
+                        </span>
+                        <span class="o_stat_text">
+                            <field name="timesheet_encode_uom_id" class="oe_inline" options="{'no_open' : True}"/> Recorded
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='use_helpdesk_timesheet']" position='after'>
+                <div invisible="not use_helpdesk_timesheet">
+                    <label for="project_id"/>
+                    <field name="project_id" class="oe_inline" context="{'default_allow_billable': use_helpdesk_sale_timesheet}"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

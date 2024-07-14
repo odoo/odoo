@@ -1,0 +1,2414 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_contract_salary
+# 
+# Translators:
+# Wil Odoo, 2023
+# Abe Manyo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Abe Manyo, 2024\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_personal_info__impacts_net_salary
+msgid ""
+" If checked, any change on this information will trigger a new computation "
+"of the gross-->net salary."
+msgstr ""
+"Bila dicentang, perubahan apapun pada informasi ini akan memicu perhitungan "
+"baru gaji kotor-->bersih."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__signatures_count
+msgid "# Signatures"
+msgstr "# Tanda Tangan"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_offer.py:0
+#, python-format
+msgid "%s manually set the Offer to Refused"
+msgstr "%s secara manual tetapkan Tawaran untuk Ditolak"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_offer.py:0
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#, python-format
+msgid "%s: Job Offer - %s"
+msgstr "%s: Job Offer - %s"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,helper:hr_contract_salary.hr_contract_salary_personal_info_name
+msgid "(Lastname Firstname)"
+msgstr "(Nama terakhir Nama pertama)"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,placeholder:hr_contract_salary.hr_contract_salary_personal_info_identification_id
+msgid "00.00.00-000.00"
+msgstr "00.00.00-000.00"
+
+#. module: hr_contract_salary
+#: model:mail.template,body_html:hr_contract_salary.mail_template_send_offer
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <h2>Congratulations!</h2>\n"
+"    You can configure your salary package by clicking on the link below.<br>\n"
+"    The link will expire on the <t t-out=\"ctx.get('validity_end')\"></t>.\n"
+"    <div style=\"padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/salary_package/simulation/offer/{{ctx.get('offer_id')}}\" target=\"_blank\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Configure your package</a>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <h2>Selamat!</h2>\n"
+"    Anda dapat mengonfigurasi paket gaji Anda dengan mengeklik link di bawah.<br>\n"
+"    Link akan kadaluwarsa pada <t t-out=\"ctx.get('validity_end')\"></t>.\n"
+"    <div style=\"padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/salary_package/simulation/offer/{{ctx.get('offer_id')}}\" target=\"_blank\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Konfigurasikan paket Anda</a>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+
+#. module: hr_contract_salary
+#: model:mail.template,body_html:hr_contract_salary.mail_template_send_offer_applicant
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <h2>Congratulations!</h2>\n"
+"    You can configure your salary package by clicking on the link below.<br>\n"
+"    The link will expire on the <t t-out=\"ctx.get('validity_end')\"></t>.\n"
+"    <div style=\"padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/salary_package/simulation/offer/{{ctx.get('offer_id')}}?token={{ctx.get('access_token')}}\" target=\"_blank\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Configure your package</a>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <h2>Selamat!</h2>\n"
+"    Anda dapat mengonfigurasi paket gaji Anda dengan mengeklik link di bawah.<br>\n"
+"    Link akan kadaluwarsa pada <t t-out=\"ctx.get('validity_end')\"></t>.\n"
+"    <div style=\"padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/salary_package/simulation/offer/{{ctx.get('offer_id')}}?token={{ctx.get('access_token')}}\" target=\"_blank\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Konfigurasikan paket Anda</a>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_thank_you
+msgid "<i class=\"fa fa-check-circle-o mr8\"/>Congratulations"
+msgstr "<i class=\"fa fa-check-circle-o mr8\"/>Selamat"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span class=\"ms-3\">/ month</span>"
+msgstr "<span class=\"ms-3\">/ bulan</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span class=\"ms-3\">/ year</span>"
+msgstr "<span class=\"ms-3\">/ tahun</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span class=\"o_stat_text ml4\">Previous Contract</span>"
+msgstr "<span class=\"o_stat_text ml4\">Kontrak Sebelumnya</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_applicant_view_form
+msgid "<span class=\"o_stat_text\">Contracts</span>"
+msgstr "<span class=\"o_stat_text\">Kontrak-Kontrak</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span class=\"o_stat_text\">Offers</span>"
+msgstr "<span class=\"o_stat_text\">Tawaran-Tawaran</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span class=\"o_stat_text\">Reviews</span>"
+msgstr "<span class=\"o_stat_text\">Tinjauan-Tinjauan</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid ""
+"<span class=\"text-muted fst-italic\" invisible=\"contract_id\">An offer template need to be selected to have an offer link.</span>\n"
+"                        <span class=\"text-muted fst-italic\" invisible=\"not display_warning_message\">An applicant name needs to be set to have an offer link.</span>"
+msgstr ""
+"<span class=\"text-muted fst-italic\" invisible=\"contract_id\">Templat tawaran harus dipilih untuk memiliki link tawaran.</span>\n"
+"                        <span class=\"text-muted fst-italic\" invisible=\"not display_warning_message\">Nama lamaran harus ditetapkan untuk memiliki link tawaran.</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_thank_you
+msgid "<span class=\"text-muted mr4 ml4\">|</span>"
+msgstr "<span class=\"text-muted mr4 ml4\">|</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid ""
+"<span>\n"
+"                                    This field can only be modified by a server administrator, contact them if these field requires modifications.\n"
+"                                </span>\n"
+"                                <span invisible=\"requested_documents_fields_string\">\n"
+"                                    There are currently no requested fields.\n"
+"                                </span>"
+msgstr ""
+"<span>\n"
+"                                    Field ini hanya dapat dimodifikasi oleh administrator server, hubungi mereka bila field ini membutuhkan modifikasi.\n"
+"                                </span>\n"
+"                                <span invisible=\"requested_documents_fields_string\">\n"
+"                                    Saat ini tidak ada field yang diminta.\n"
+"                                </span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid "<span> /year</span>"
+msgstr "<span> /tahun</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form_hr
+msgid "<span> days</span>"
+msgstr "<span> hari</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span>/ month</span>"
+msgstr "<span>/ bulan</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span>days / year</span>"
+msgstr "<span>hari / tahun</span>"
+
+#. module: hr_contract_salary
+#: model:ir.model.constraint,message:hr_contract_salary.constraint_hr_contract_salary_benefit_required_fold_res_field_id
+msgid "A folded field is required"
+msgstr "Membutuhkan field yang dibutuhkan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__access_token
+msgid "Access Token"
+msgstr "Token Akses"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_needaction
+msgid "Action Needed"
+msgstr "Tindakan Diperluka"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__active
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__active
+msgid "Active"
+msgstr "Aktif"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_ids
+msgid "Activities"
+msgstr "Aktivitas"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Activity"
+msgstr "Aktivitas"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__activity_creation
+msgid "Activity Creation"
+msgstr "Pembuatan Kegiatan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__activity_creation_type
+msgid "Activity Creation Type"
+msgstr "Tipe Pembuatan Kegiatan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Dekorasi Pengecualian Aktivitas"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_state
+msgid "Activity State"
+msgstr "Status Aktivitas"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__activity_type_id
+msgid "Activity Type"
+msgstr "Tipe Aktivitas"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikon Jenis Aktifitas"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Add a line"
+msgstr "Tambahkan baris"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Add a section"
+msgstr "Add a section"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__benefit_ids
+msgid ""
+"All benefits in this field need to be selected, as a condition for the "
+"current one to be editable. Before edition, the current benefit is always "
+"set to false."
+msgstr ""
+"Semua manfaat di field ini harus dipilih, sebagai kondisi agar yang saat ini"
+" dapat diedit. Sebelum diedit, manfaat saat ini sealu ditetapkan menjadi "
+"false."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__always
+msgid "Always Selected"
+msgstr "Selalu Dipilih"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#, python-format
+msgid ""
+"An <a href='#' data-oe-model='hr.contract.salary.offer' data-oe-"
+"id='%s'>Offer</a> as been sent by %s to the applicant (mail: %s)"
+msgstr ""
+"<a href='#' data-oe-model='hr.contract.salary.offer' data-oe-"
+"id='%s'>Tawaran</a> sebagaimana dikirim oleh %s ke pelamar (email: %s)"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#, python-format
+msgid ""
+"An <a href='#' data-oe-model='hr.contract.salary.offer' data-oe-"
+"id='%s'>Offer</a> as been sent by %s to the employee (mail: %s)"
+msgstr ""
+"<a href='#' data-oe-model='hr.contract.salary.offer' data-oe-"
+"id='%s'>Tawaran</a> sebagaimana dikirim oleh %s ke karyawan (email: %s)"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_employee_report__final_yearly_costs
+msgid "Annual Employee Budget"
+msgstr "Anggaran Tahunan Karyawan"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Annual Employer Cost"
+msgstr "Biaya Tahunan Employer"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__applicant_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__applicant_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__applicant_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Applicant"
+msgstr "Pelamar"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__applicant_name
+msgid "Applicant's Name"
+msgstr "Nama Pelamar"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Applicants"
+msgstr "Pelamar"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__applies_on
+msgid "Applies On"
+msgstr "Diterapkan Pada"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_next_step_button
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_sidebar
+msgid "Apply Now"
+msgstr "Melamar Sekarang Juga"
+
+#. module: hr_contract_salary
+#: model:ir.actions.server,name:hr_contract_salary.ir_cron_clean_redundant_salary_data_ir_actions_server
+msgid "Archive/Delete redundant generated salary data"
+msgstr "Arsip/Hapus data gaji berulang yang tidak diperlukan"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_search
+msgid "Archived"
+msgstr "Diarsipkan"
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/js/binary_field_contract.js:0
+#, python-format
+msgid "Are you sure you want to delete this file permanently ?"
+msgstr "Apakah Anda yakin ingin menghapus file ini secara permanen ?"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__activity_responsible_id
+msgid "Assigned to"
+msgstr "Ditugaskan untuk"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_attachment_count
+msgid "Attachment Count"
+msgstr "Hitungan Lampiran"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_certificate_bachelor
+msgid "Bachelor"
+msgstr "Bachelor"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__applies_on__bank_account
+msgid "Bank Account"
+msgstr "Akun Bank"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_acc_number
+msgid "Bank account"
+msgstr "Akun Bank"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__benefit_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__benefit_ids
+msgid "Benefit"
+msgstr "Manfaat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__res_field_id
+msgid "Benefit Field"
+msgstr "Field Manfaa"
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.hr_contract_benefit_action
+#: model:ir.ui.menu,name:hr_contract_salary.salary_package_benefit
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Benefits"
+msgstr "Manfaat-Manfaat"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_benefit.py:0
+#, python-format
+msgid "Benefits that are not linked to a field should always be displayed."
+msgstr ""
+"Manfaat-manfaat yang tidak dihubungkan ke field harus selalu ditampilkan."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__res_field_public
+msgid "Benefit Field"
+msgstr "Field Benefit"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_birthdate
+msgid "Birthdate"
+msgstr "Tanggal lahir"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__category_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_form
+msgid "Category"
+msgstr "Kategori"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_certificate
+msgid "Certificate"
+msgstr "Sertifikat"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_diff_email_template
+msgid "Changes summary since previous contract:"
+msgstr "Ringkasan perubahan semenjak kontrak sebelumnya:"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__checkbox
+msgid "Checkbox"
+msgstr "Kotak centang"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__child_ids
+msgid "Child"
+msgstr "Anak"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__activity_creation
+msgid ""
+"Choose when the activity is created:\n"
+"- Employee signs his contract: Activity is created as soon as the employee signed the contract\n"
+"- Contract is countersigned: HR responsible have signed the contract and conclude the process."
+msgstr ""
+"Pilih kapan kegiatan dibuat:\n"
+"- Karyawan menandatangani kontrak: Kegiatan dibuat langsung setelah karyawan menandatangani kontrak\n"
+"- Kontrak ditandantagani kedua kalinya: penanggungjawab HR telah menandatangani kontrak dan menutup proses. "
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_city
+msgid "City"
+msgstr "Kota"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__code
+msgid "Code"
+msgstr "Kode"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__color
+msgid "Color"
+msgstr "Warna"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__company_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__company_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Company"
+msgstr "Perusahaan"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfigurasi"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_benefit_type
+msgid "Contract Benefit Type"
+msgstr "Tipe Benefit Kontrak"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_benefit_value
+msgid "Contract Benefit Value"
+msgstr "Nilai Benefit Kontrak"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Contract Information:"
+msgstr "Informasi Kontrak:"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__contract_start_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__contract_start_date
+msgid "Contract Start Date"
+msgstr "Tanggal Mulai Kontrak"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__contract_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__default_contract_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_history__default_contract_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__contract_template_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_job__default_contract_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Contract Template"
+msgstr "Kontrak"
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.action_hr_contract_templates
+msgid "Contract Templates"
+msgstr "Templat Kontrak"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Contract Type"
+msgstr "Jenis Kontrak"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__contract_update_template_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_history__contract_update_template_id
+msgid "Contract Update Document Template"
+msgstr "Update Kontrak Templat Dokumen"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__value_type__contract
+msgid "Contract Value"
+msgstr "Nilai Kontrak"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_employee_report
+msgid "Contract and Employee Analysis Report"
+msgstr "Laporan Analisis Kontrak dan Karyawan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__res_field_id
+msgid "Contract field linked to this benefit"
+msgstr "Field kontrak dihubungkan ke benefit ini"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__cost_res_field_id
+msgid ""
+"Contract field linked to this benefit cost. If not set, the benefit won't be"
+" taken into account when computing the employee budget."
+msgstr ""
+"Field kontrak dihubungkan ke biaya benefit ini. Bila tidak ditetapkan, "
+"benefit tidak akan diperhitungkan saat membuat anggaran karyawan."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__fold_res_field_id
+msgid "Contract field used to fold this benefit."
+msgstr "Field kontrak digunakan untuk melipat benefit ini."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__manual_res_field_id
+msgid "Contract field used to manually encode an benefit value."
+msgstr "Field kontrak digunakan untuk secara manual encode value benefit."
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_history
+msgid "Contract history"
+msgstr "Sejarah Kontrak"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__activity_creation__countersigned
+msgid "Contract is countersigned"
+msgstr "Kontrak sudah disahkan"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Contracts Reviews"
+msgstr "Peninjauan Kontrak"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__cost_res_field_id
+msgid "Cost Field"
+msgstr "Field Biaya"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__cost_field
+msgid "Cost Field Name"
+msgstr "Nama Field Biaya"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__cost_res_field_public
+msgid "Cost Field"
+msgstr "Field Biaya"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__dropdown_selection__country
+msgid "Countries"
+msgstr "Negara"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_country
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__country_id
+msgid "Country"
+msgstr "Negara"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_country_of_birth
+msgid "Country of Birth"
+msgstr "Negara Tempat Lahir"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_generate_simulation_link
+msgid "Create an Offer"
+msgstr "Buat Tawaran"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__hash_token
+msgid "Created From Token"
+msgstr "Dibuat Dari Token"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__currency_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__currency_id
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__uom__currency
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__uom__currency
+msgid "Currency"
+msgstr "Mata Uang"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package
+msgid "Customize your salary"
+msgstr "Kustomisasikan gaji Anda"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__date
+msgid "Date"
+msgstr "Tanggal"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__uom__days
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__uom__days
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_benefits
+#, python-format
+msgid "Days"
+msgstr "Hari"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_res_config_settings__access_token_validity
+msgid "Default Access Token Validity Duration"
+msgstr "Durasi Validitas Token Akses Default"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_res_config_settings__employee_salary_simulator_link_validity
+msgid "Default Salary Configurator Link Validity Duration For Employees"
+msgstr "Durasi Validitas Link Konfigurator Gaji Default Untuk Karyawan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_job__default_contract_id
+msgid ""
+"Default contract used to generate an offer. If empty, benefits will be taken"
+" from current contract of the employee/nothing for an applicant."
+msgstr ""
+"Kontrak default digunakan untuk membuat tawaran. Bila kosong, benefit akan "
+"diambil dari kontrak karyawan saat ini/tidak ada benefit untuk pelamar."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__default_contract_id
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_history__default_contract_id
+msgid "Default contract used when making an offer to an applicant."
+msgstr "Kontrak default digunakan saat membuat tawaran ke pelamar."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__sign_template_id
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_history__sign_template_id
+msgid ""
+"Default document that the applicant will have to sign to accept a contract "
+"offer."
+msgstr ""
+"Dokumen default yang pelamar akan harus tanda tangani untuk menerima tawaran"
+" kontrak."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__contract_update_template_id
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_history__contract_update_template_id
+msgid ""
+"Default document that the employee will have to sign to update his contract."
+msgstr ""
+"Dokumen default yang karyawan harus tanda tangani untuk memperbarui kontrak "
+"mereka."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__activity_creation_type
+msgid ""
+"Define when the system creates a new activity:\n"
+"- When the benefit is set: Unique creation the first time the employee will take the benefit\n"
+"- When the benefit is modified: Activity will be created for each change regarding the benefit."
+msgstr ""
+"Definisikan kapan sistem membuat kegiatan baru:\n"
+"- Saat benefit ditetapkan: Pembuatan unik saat pertama kali karyawan menggunakan benefit\n"
+"- Saat benefit dimodifikasi: Kegiatan akan dibuat untuk setiap kali perubahan dilakukan terkait benefit."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__sign_frenquency
+msgid ""
+"Define when the system creates a new sign request:\n"
+"- When the benefit is set: Unique signature request the first time the employee will take the benefit\n"
+"- When the benefit is modified: Signature request will be created for each change regarding the benefit."
+msgstr ""
+"Definisikan kapan sistem membuat permintaan tanda tangan baru:\n"
+"- Saat benefit ditetapkan: Permintaan tanda tangan unik saat pertama kali karyawan menggunakan benefit\n"
+"- Saat benefit dimodifikasi: Permintaan tanda tangan akan dibuat untuk setiap kali perubahan dilakukan terkait benefit."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__department_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__department_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Department"
+msgstr "Departemen"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__description
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Description"
+msgstr "Deskripsi"
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/xml/resume_sidebar.xml:0
+#, python-format
+msgid "Details"
+msgstr "Perincian"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid "Discard"
+msgstr "Buang"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Display"
+msgstr "Tampilan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__display_type
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__display_type
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__display_type
+msgid "Display Type"
+msgstr "Display Type"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__display_warning_message
+msgid "Display Warning Message"
+msgstr "Tampilkan Pesan Peringatan"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_certificate_doctor
+msgid "Doctor"
+msgstr "Doktor"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__document
+msgid "Document"
+msgstr "Dokumen"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__sign_template_id
+msgid ""
+"Documents selected here will be requested to the employee for additional "
+"signatures related to the benefit. eg: A company car policy to approve if "
+"you choose a company car."
+msgstr ""
+"Dokumen yang dipilih di sini akan diminta dari karyawan untuk tanda tangan "
+"tambahan terkait benefit. Contoh: Kebijakan mobil perusahaan untuk disetujui"
+" bila Anda memilih mobil perusahaan."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_sign_document_wizard__sign_template_ids
+msgid "Documents to sign"
+msgstr "Dokumen untuk ditandatangani"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_sign_document_wizard__sign_template_ids
+msgid ""
+"Documents to sign. Only documents with 1 or 2 different responsible are selectable.\n"
+"        Documents with 1 responsible will only have to be signed by the employee while documents with 2 different responsible will have to be signed by both the employee and the responsible.\n"
+"        "
+msgstr ""
+"Dokumen-dokumen untuk ditandatangani. Hanya dokumen dengan 1 atau 2 penanggungjawab yang berbeda yang dapat dipilih.\n"
+"        Dokumen dengan 1 penanggungjawab hanya harus ditandatangani oleh karyawan tapi dokumen 2 penanggungjawab berbeda harus ditandatangani oleh karyawan dan penanggungjawab.\n"
+"        "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__dropdown
+msgid "Dropdown"
+msgstr "Dropdown"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__dropdown-group
+msgid "Dropdown Group"
+msgstr "Dropdown Kelompok"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_email
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__email
+msgid "Email"
+msgstr "Email"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__email_to
+msgid "Email To"
+msgstr "Email Ke"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__sign_copy_partner_id
+msgid "Email address to which to transfer the signature."
+msgstr "Alamat email tujuan untuk mentrasnfer tanda tangan."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__employee_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__employee_id
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__applies_on__employee
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Employee"
+msgstr "Karyawan"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__employee_contract_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__employee_contract_id
+msgid "Employee Contract"
+msgstr "Kontrak Karyawan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__employee_job_id
+msgid "Employee Job"
+msgstr "Pekerjaan Karyawan"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Employee Name"
+msgstr "Nama Karyawan"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_image_1920
+msgid "Employee Photo"
+msgstr "Foto Karyawan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__activity_creation__running
+msgid "Employee signs his contract"
+msgstr "Karyawan menandatangani kontrak mereka"
+
+#. module: hr_contract_salary
+#: model:mail.template,name:hr_contract_salary.mail_template_send_offer
+msgid "Employee: Contract And Salary Package"
+msgstr "Karyawan: Paket Kontrak dan Gaji"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Employees"
+msgstr "Karyawan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__final_yearly_costs
+msgid "Employer Budget"
+msgstr "Anggaran Employer"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid ""
+"Equals to the sum of the following values:\n"
+"\n"
+"%s"
+msgstr ""
+"Sama dengan jumlah value-value berikut:\n"
+"\n"
+"%s"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_offer__state__expired
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Expired"
+msgstr "Berakhir"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.benefit,name:hr_contract_salary.benefit_extra_time_off
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__holidays
+msgid "Extra Time Off"
+msgstr "Cuti Tambahan"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_gender_female
+msgid "Female"
+msgstr "Perempuan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__field
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__field
+msgid "Field Name"
+msgstr "Nama Kolom"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_study_field
+msgid "Field of Study"
+msgstr "Bidang Studi"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__fixed_value
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__value_type__fixed
+msgid "Fixed Value"
+msgstr "Value Tetap"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__fold_field
+msgid "Fold Field Name"
+msgstr "Nama FIeld Lipat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__fold_label
+msgid "Fold Label"
+msgstr "Label Lipat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__fold_res_field_id
+msgid "Fold Res Field"
+msgstr "Field Res Lipat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__folded
+msgid "Folded"
+msgstr "Dilipat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_follower_ids
+msgid "Followers"
+msgstr "Follower"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Follower (Mitra)"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Ikon font awesome, misalnya fa-tasks"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_offer__state__full_signed
+msgid "Fully Signed"
+msgstr "Sepenuhnya Ditandatangani"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_gender
+msgid "Gender"
+msgstr "Jenis kelamin"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Generate Offer"
+msgstr "Buat Tawaran"
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.generate_offer_link_action
+#: model:ir.actions.act_window,name:hr_contract_salary.generate_simulation_link_action
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid "Generate a Simulation Link"
+msgstr "Buat Link Simulasi"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_value__color__green
+msgid "Green"
+msgstr "Hijau"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Group By"
+msgstr "Dikelompokkan berdasarkan"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract.py:0
+#, python-format
+msgid ""
+"HR Responsible %s should be a User of Sign and have a valid email address "
+"when New Contract Document Template is specified"
+msgstr ""
+"HR Penanggungjawab %s harus merupakan User dari Tanda Tangan dan memiliki "
+"alamat email valid saat Templat Dokumen Kontrak Baru ditentukan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__has_admin_access
+msgid "Has Admin Access"
+msgstr "Memiliki Akses Admin"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__has_message
+msgid "Has Message"
+msgstr "Memiliki Pesan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__helper
+msgid "Helper"
+msgstr "Helper"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_personal_information
+msgid "Hide <i class=\"oi oi-chevron-up\"/>"
+msgstr "Sembunyikan <i class=\"oi oi-chevron-up\"/>"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__hide_children
+msgid "Hide Children"
+msgstr "Sembunyikan Anak"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__hide_description
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__hide_description
+msgid "Hide Description"
+msgstr "Sembunyikan Keterangan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_personal_info_value__hide_children
+msgid "Hide children personal info when checked."
+msgstr "Sembunyikan informasi pribadi anak saat dicentang."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__hide_description
+msgid "Hide the description if the benefit is not taken."
+msgstr "Sembunyikan keterangan bila benefit tidak diambil."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__icon
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_exception_icon
+msgid "Icon"
+msgstr "Ikon"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikon untuk menunjukkan sebuah aktivitas pengecualian."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jika dicentang, pesan baru memerlukan penanganan dan perhatian Anda."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__message_has_error
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Jika dicentang, beberapa pesan mempunyai kesalahan dalam pengiriman."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_resume__impacts_monthly_total
+msgid ""
+"If checked, the value of this information will be computed in all "
+"information set as Monthly Total"
+msgstr ""
+"Bila dicentang, value informasi ini akan dihitung di semua informasi yang "
+"ditetapkan sebagai Total Bulanan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__image_1920
+msgid "Image"
+msgstr "Gambar"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__image_1920_filename
+msgid "Image 1920 Filename"
+msgstr "Gambar 1920 Namafile"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__impacts_monthly_total
+msgid "Impacts Monthly Total"
+msgstr "Berdampak pada Total Bulanan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__impacts_net_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__impacts_net_salary
+msgid "Impacts Net Salary"
+msgstr "Berdampak pada Gaji Bersih"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_offer__state__open
+msgid "In Progress"
+msgstr "Dalam Proses"
+
+#. module: hr_contract_salary
+#: model_terms:hr.contract.salary.benefit,description:hr_contract_salary.benefit_extra_time_off
+msgid ""
+"In addition to your legal leaves, you can chose up to 30 extra days off.\n"
+"            The amount of annual time off (legal leaves) you get depends on your work schedule in the previous year. A full-time work schedule through the 12 months of the last year, under your contract, will grant you 20 annual time off (legal leaves)."
+msgstr ""
+"Di tambah cuti wajib, Anda dapat memilih sampai 30 hari cuti ekstra.\n"
+"            Jumlah cuti tahunan (cuti wajib) yang Anda dapatkan tergantung pada jadwal kerja Anda di tahun lalu. Jadwal kerja full-time selama 12 bulan di tahun terakhir, untuk kontrak Anda, memberikan Anda 20 hari cuti tahunan (cuti wajib)."
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/js/hr_contract_salary.js:0
+#, python-format
+msgid ""
+"In order to choose %s, first you need to choose:\n"
+" %s"
+msgstr ""
+"Untuk dapat memilih %s, pertama Anda harus memilih:\n"
+" %s"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__info_type_id
+msgid "Info Type"
+msgstr "Tipe Info"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_form
+msgid "Information"
+msgstr "Informasi"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__integer
+msgid "Integer"
+msgstr "Bilangan Bulat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_is_follower
+msgid "Is Follower"
+msgstr "Adalah Follower"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__is_required
+msgid "Is Required"
+msgstr "Apakah Dibutuhkan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__is_origin_contract_template
+msgid "Is origin contract a contract template?"
+msgstr "Apakah kontrak awal merupakan templat kontrak?"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: model:ir.model,name:hr_contract_salary.model_hr_job
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__employee_job_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+#, python-format
+msgid "Job Position"
+msgstr "Jabatan Kerja"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__job_title
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__job_title
+#, python-format
+msgid "Job Title"
+msgstr "Jabatan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__dropdown_selection__lang
+msgid "Languages"
+msgstr "Bahasa"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: hr_contract_salary
+#: model_terms:ir.actions.act_window,help:hr_contract_salary.action_hr_contract_templates
+msgid "Let's create one"
+msgstr "Mari buat satu"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_value__display_type__line
+msgid "Line"
+msgstr "Baris"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__url
+msgid "Link"
+msgstr "Tautan..."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__validity
+msgid "Link Expiration Date"
+msgstr "Tanggal Kadaluwarsa Link"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__position__left
+msgid "Main Panel"
+msgstr "Panel Utama"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_gender_male
+msgid "Male"
+msgstr "Laki-laki"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__benefit_ids
+msgid "Mandatory Benefits"
+msgstr "Benefit Wajib"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__manual_field
+msgid "Manual Field Name"
+msgstr "Nama Field Manual"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__manual
+msgid "Manual Input"
+msgstr "Input Manual"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__manual_res_field_id
+msgid "Manual Res Field"
+msgstr "Field Res Manual"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_certificate_master
+msgid "Master"
+msgstr "Master"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_has_error
+msgid "Message Delivery error"
+msgstr "Kesalahan Pengiriman Pesan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_ids
+msgid "Messages"
+msgstr "Pesan"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_personal_info.py:0
+#, python-format
+msgid ""
+"Mismatch between res_field_id %(field)s and model %(model)s for info "
+"%(personal_info)s"
+msgstr ""
+"Tidak cocok antara res_field_id %(field)s dan model %(model)s untuk info "
+"%(personal_info)s"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_type__periodicity__monthly
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume_category__periodicity__monthly
+msgid "Monthly"
+msgstr "Bulanan"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_history_view_form
+msgid "Monthly Cost"
+msgstr "Biaya Bulanan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__monthly_yearly_costs
+msgid "Monthly Cost (Real)"
+msgstr "Biaya Bulanan (Asli)"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Monthly Gross Salary"
+msgstr "Gaji Kotor Bulanan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__value_type__monthly_total
+msgid "Monthly Total"
+msgstr "Total Bulanan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_history__reference_monthly_wage
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_history_view_form
+msgid "Monthly Wage"
+msgstr "Gaji Bulanan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Deadline Kegiatan Saya"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__name
+msgid "Name"
+msgstr "Nama"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_personal_info__res_field_id
+msgid "Name of the field related to this personal info."
+msgstr "Nama field terkait informasi pribadi ini."
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_identification_id
+msgid "National Identification Number"
+msgstr "Nomor Identifikasi Nasional"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_country_id
+msgid "Nationality"
+msgstr "Nasionalitas"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package
+msgid "Net calculation"
+msgstr "Perhitungan bersih"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__sign_template_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_history__sign_template_id
+msgid "New Contract Document Template"
+msgstr "Templat Dokumen Kontrak Baru"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Kalender Acara Aktivitas Berikutnya"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Batas Waktu Aktivitas Berikutnya"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_summary
+msgid "Next Activity Summary"
+msgstr "Ringkasan Aktivitas Berikutnya"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tipe Aktivitas Berikutnya"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "No"
+msgstr "Tidak"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid ""
+"No HR responsible defined on the job position. Please contact an "
+"administrator."
+msgstr ""
+"Tidak ada penanggungjawab HR yang didefinisikan pada jabatan kerja. Mohon "
+"hubungi administrator."
+
+#. module: hr_contract_salary
+#: model_terms:ir.actions.act_window,help:hr_contract_salary.action_hr_contract_templates
+msgid "No Template found"
+msgstr "Tidak ada Templat yang ditemukan"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid ""
+"No signature template defined on the contract. Please contact the HR "
+"responsible."
+msgstr ""
+"Tidak ada templat tanda tangan yang ditentukan pada kontrak. Silakan hubungi"
+" HR penanggungjawab."
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/js/hr_contract_salary.js:0
+#, python-format
+msgid "Not a valid e-mail address"
+msgstr "Bukan alamat e-mail valid"
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/js/hr_contract_salary.js:0
+#, python-format
+msgid "Not a valid input in integer field"
+msgstr "Bukan input valid di field integer"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Jumlah Action"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__holidays
+msgid "Number of days of paid leaves the employee gets per year."
+msgstr "Jumlah hari cuti yang karyawan dapatkan setiap tahun."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_has_error_counter
+msgid "Number of errors"
+msgstr "Jumlah kesalahan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Jumlah pesan yang membutuhkan action"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Jumlah pesan dengan kesalahan pengiriman"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+msgid "Offer"
+msgstr "Tawaran"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__offer_end_date
+msgid "Offer Validity Date"
+msgstr "Tanggal Validitas Tawaran"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_offer.py:0
+#, python-format
+msgid "Offer [%s] for %s / Budget: %s"
+msgstr "Tawaran [%s] untuk %s / Anggaran: %s"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#, python-format
+msgid "Offer link can not be send. The applicant needs to have a name."
+msgstr "Link tawaran tidak dapat dikirim. Pelamar harus memiliki nama."
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.hr_contract_salary_offer_action
+#: model:ir.actions.act_window,name:hr_contract_salary.hr_contract_salary_offer_recruitment_action
+#: model:ir.ui.menu,name:hr_contract_salary.menu_hr_contract_salary_job_offer
+#: model:ir.ui.menu,name:hr_contract_salary.menu_salary_package_offer
+msgid "Offers"
+msgstr "Tawaran-Tawaran"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Oops"
+msgstr "Oops"
+
+#. module: hr_contract_salary
+#: model:sign.template,redirect_url_text:hr_contract_salary.sign_template_cdi_developer
+msgid "Open Link"
+msgstr "Buka Tautan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__origin_contract_id
+msgid "Origin Contract"
+msgstr "Kontrak Awal"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Original Link"
+msgstr "Link Original"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_certificate_other
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_gender_other
+msgid "Other"
+msgstr "Lainnya"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__parent_id
+msgid "Parent"
+msgstr "Induk"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_offer__state__half_signed
+msgid "Partially Signed"
+msgstr "Ditandatangani Parsial"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__uom__percent
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__uom__percent
+msgid "Percent"
+msgstr "Persen"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__periodicity
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__periodicity
+msgid "Periodicity"
+msgstr "Periode"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_emergency_contact
+msgid "Person to call"
+msgstr "Orang untuk dijawab"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Personal Documents"
+msgstr "Dokumen Pribadi"
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.hr_contract_salary_personal_info_action
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__personal_info_id
+#: model:ir.ui.menu,name:hr_contract_salary.salary_package_personal_info
+msgid "Personal Info"
+msgstr "Informasi Pribadi"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Personal Information"
+msgstr "Informasi Pribadi"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_phone
+msgid "Phone Number"
+msgstr "Nomor Telepon"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_emergency_phone
+msgid "Phone number"
+msgstr "Nomor telepon"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_resume__category_id
+msgid "Pick a category to display this information"
+msgstr "Pilih kategori untuk menampilkan informasi ini"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_resume__value_type
+msgid ""
+"Pick how the value of the information is computed:\n"
+"Fixed value: Set a determined value static for all links\n"
+"Contract value: Get the value from a field on the contract record\n"
+"Payslip value: Get the value from a field on the payslip record\n"
+"Sum of Benefits value: You can pick in all benefits and compute a sum of them\n"
+"Monthly Total: The information will be a total of all the informations in the category Monthly Benefits"
+msgstr ""
+"Pilih bagaimana value informasi dihitung:\n"
+"Value tetap: Tetapkan bagaimana value statik ditentukan untuk semua link\n"
+"Value kontrak: Dapatkan value dari field pada record kontrak\n"
+"Value payslip: Dapatkan value dari field pada payslip\n"
+"Value Total Benefit: Anda dapat memilih dari semua benefit dan menghitung total mereka\n"
+"Total Bulanan: Informasi yang akan menjadi total dari semua informasi di kategori Benefit Bulanan"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_place_of_birth
+msgid "Place of Birth"
+msgstr "Tempat Lahir"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__placeholder
+msgid "Placeholder"
+msgstr "Placeholder"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__position
+msgid "Position"
+msgstr "Posisi"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Previous Contract"
+msgstr "Kontrak Sebelumnya"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_private_license_plate
+msgid "Private License Plate"
+msgstr "Plat Kendaraan Pribadi"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_applicant.py:0
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_applicant__proposed_contracts
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_applicant_view_form
+#, python-format
+msgid "Proposed Contracts"
+msgstr "Kontrak yang Diajukan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_applicant__proposed_contracts_count
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__contract_reviews_count
+msgid "Proposed Contracts Count"
+msgstr "Jumlah Kontrak yang Diajukan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__radio
+msgid "Radio"
+msgstr "Radio"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__radio
+msgid "Radio Buttons"
+msgstr "Tombol Radio"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__rating_ids
+msgid "Ratings"
+msgstr "Rating"
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/xml/resume_sidebar.xml:0
+#: code:addons/hr_contract_salary/static/src/xml/resume_sidebar.xml:0
+#, python-format
+msgid "Recompute"
+msgstr "Recompute"
+
+#. module: hr_contract_salary
+#: model:mail.template,name:hr_contract_salary.mail_template_send_offer_applicant
+msgid "Recruitment: Your Salary Package"
+msgstr "Rekrutmen: Paket Gaji Anda"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_value__color__red
+msgid "Red"
+msgstr "Merah"
+
+#. module: hr_contract_salary
+#: model:ir.actions.server,name:hr_contract_salary.action_refuse_salary_offer
+msgid "Refuse"
+msgstr "Tolak"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_offer__state__refused
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Refused"
+msgstr "Ditolak"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__res_field_id
+msgid "Related Field"
+msgstr "Field Terkait"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_form
+msgid "Related Model"
+msgstr "Model terkait"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__benefit_type_id
+msgid "Related Type"
+msgstr "Tipe Terkait"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__requested_documents_field_ids
+msgid "Requested Documents"
+msgstr "Dokumen-Dokumen yang Diminta"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__requested_documents
+msgid "Requested Documents Fields"
+msgstr "FIeld-Field Dokumen yang Diminta"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__sign_request_ids
+msgid "Requested Signatures"
+msgstr "Tandatangan-Tandatangan yang Diminta"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__requested_documents_fields_string
+msgid "Requested Documents"
+msgstr "Tandatangan yang Diminta"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__res_model
+msgid "Res Model"
+msgstr "Res Model"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_user_id
+msgid "Responsible User"
+msgstr "Tanggung-jawab"
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.hr_contract_salary_resume_action
+#: model:ir.ui.menu,name:hr_contract_salary.salary_package_resume
+msgid "Resume"
+msgstr "Lanjutkan"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_next_step_button
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_sidebar
+msgid "Review Contract &amp; Sign"
+msgstr "Tinjau Kontrak &amp; Tandatangani"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Kesalahan Pengiriman SMS`"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_payroll_structure_type__salary_benefits_ids
+msgid "Salary Benefits"
+msgstr "Manfaat Gaji"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form_hr
+msgid "Salary Configurator"
+msgstr "Konfigurator Gaji"
+
+#. module: hr_contract_salary
+#: model:ir.actions.server,name:hr_contract_salary.ir_cron_update_offer_state_ir_actions_server
+msgid "Salary Configurator: Update Offer State"
+msgstr "Konfigurator Gaji: Perbarui Status Tawaran"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_applicant__salary_offer_ids
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__salary_offer_ids
+msgid "Salary Offer"
+msgstr "Tawaran Gaji"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_applicant__salary_offers_count
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__salary_offers_count
+msgid "Salary Offers Count"
+msgstr "Jumlah Tawaran Gaji"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_benefit
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_tree
+msgid "Salary Package Benefit"
+msgstr "Benefit Paket Gaji"
+
+#. module: hr_contract_salary
+#: model:ir.ui.menu,name:hr_contract_salary.salary_package_menu
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form_hr
+msgid "Salary Package Configurator"
+msgstr "Konfigurator Paket Gaji"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_offer
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+msgid "Salary Package Offer"
+msgstr "Tawaran Paket Gaji"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_tree
+msgid "Salary Package Offers"
+msgstr "Tawaran-Tawaran Paket Gaji"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_personal_info
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_tree
+msgid "Salary Package Personal Info"
+msgstr "Informasi Pribadi Paket Gaji"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_personal_info_type
+msgid "Salary Package Personal Info Type"
+msgstr "Tipe Info Pribadi Paket Gaji"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_personal_info_value
+msgid "Salary Package Personal Info Value"
+msgstr "Value Info Pribadi Paket Gaji"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_resume
+msgid "Salary Package Resume"
+msgstr "Resume Paket Gaji"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_resume_category
+msgid "Salary Package Resume Category"
+msgstr "Kategori Resume Paket Gaji"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Salary Package Summary"
+msgstr "Ringkasan Paket Gaji"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_payroll_structure_type
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__structure_type_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__structure_type_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__structure_type_id
+msgid "Salary Structure Type"
+msgstr "Tipe Struktur Gaji"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid "Save"
+msgstr "Simpan"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_study_school
+msgid "School"
+msgstr "Sekolah"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Search Offers"
+msgstr "Cari Tawaran"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_value__display_type__section
+msgid "Section"
+msgstr "Bagian"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,placeholder:hr_contract_salary.hr_contract_salary_personal_info_country
+#: model:hr.contract.salary.personal.info,placeholder:hr_contract_salary.hr_contract_salary_personal_info_country_id
+#: model:hr.contract.salary.personal.info,placeholder:hr_contract_salary.hr_contract_salary_personal_info_country_of_birth
+msgid "Select a Country"
+msgstr "Pilih Negara"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,placeholder:hr_contract_salary.hr_contract_salary_personal_info_state_id
+msgid "Select a State"
+msgstr "Pilih Negara Bagia"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__dropdown
+msgid "Selection"
+msgstr "Seleksi"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__dropdown_selection
+msgid "Selection Nature"
+msgstr "Pilih Jenis"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+msgid "Send By Email"
+msgstr "Kirim Melalui Email"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__sign_copy_partner_id
+msgid "Send a copy to"
+msgstr "Mengirim salinan ke"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Sent Offers"
+msgstr "Kirim Tawaran"
+
+#. module: hr_contract_salary
+#: model:mail.template,description:hr_contract_salary.mail_template_send_offer_applicant
+msgid "Sent automatically when you generate an offer for an application"
+msgstr "Kirim secara otomatis saat memilih tawaran untuk lamaran"
+
+#. module: hr_contract_salary
+#: model:mail.template,description:hr_contract_salary.mail_template_send_offer
+msgid ""
+"Sent manually when you generate a simulation link on the employee contract"
+msgstr "Kirim secara manual saat membuat link simulasi pada kontrak karyawan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__sequence
+msgid "Sequence"
+msgstr "Urutan"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_personal_information
+msgid "Show <i class=\"oi oi-chevron-down\"/>"
+msgstr "Tunjukkan <i class=\"oi oi-chevron-down\"/>"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__show_name
+msgid "Show Name"
+msgstr "Tunjukkan Nama"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__position__right
+msgid "Side Panel"
+msgstr "Panel Samping"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Sign"
+msgstr "Sign"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__sign_frenquency
+msgid "Sign Creation Type"
+msgstr "Tipe Pembuatan Tanda Tangan"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_sign_document_wizard
+msgid "Sign document in contract"
+msgstr "Tanda tangani dokumen di kontrak"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Signature Request - %s"
+msgstr "Permintaan Tanda Tangan - %s"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__slider
+msgid "Slider"
+msgstr "Slider"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__slider_max
+msgid "Slider Max"
+msgstr "Slider Maksimum"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__slider_min
+msgid "Slider Min"
+msgstr "Slider Minimum"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__slider_step
+msgid "Slider Step"
+msgstr "Langkah Slider"
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/js/hr_contract_salary.js:0
+#: code:addons/hr_contract_salary/static/src/js/hr_contract_salary.js:0
+#, python-format
+msgid "Some required fields are not filled"
+msgstr "Beberapa field yang dibutuhkan tidak diisi"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__dropdown_selection__specific
+msgid "Specific Values"
+msgstr "Value-Value Spesifik"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_state_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__state
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "State"
+msgstr "Status"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__dropdown_selection__state
+msgid "States"
+msgstr "Status"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status berdasarkan aktivitas\n"
+"Terlambat: Batas waktu telah terlewati\n"
+"Hari ini: Tanggal aktivitas adalah hari ini\n"
+"Direncanakan: Aktivitas yang akan datang."
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_street
+msgid "Street"
+msgstr "Jalan"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_street2
+msgid "Street 2"
+msgstr "Jalan 2"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_search
+msgid "Structure Type"
+msgstr "Tipe Struktur"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__value_type__sum
+msgid "Sum of Benefits Values"
+msgstr "Value Total Benefit"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__sign_template_id
+msgid "Template to Sign"
+msgstr "Templat untuk Ditandatangani"
+
+#. module: hr_contract_salary
+#: model:ir.ui.menu,name:hr_contract_salary.hr_menu_contract_templates
+msgid "Templates"
+msgstr "Contoh"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__text
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__text
+msgid "Text"
+msgstr "Teks"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__origin_contract_id
+msgid "The contract from which this contract has been duplicated."
+msgstr "Kontrak dari mana kontrak ini digandakan."
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "The current requested documents are the followings:"
+msgstr "Dokumen-dokumen yang saat ini diminta adalah sebagai berikut:"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid ""
+"The employee does not have a valid work email set. The Simulation Link won't"
+" be able to be completed."
+msgstr ""
+"Karyawan tidak menetapkan email kerja yang valid. Link Simulasi tidak akan "
+"bisa diselesaikan."
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid ""
+"The employee is not linked to an existing user, please contact the "
+"administrator.."
+msgstr ""
+"Karyawan tidak dihubungkan ke user yang tersedia, silakan hubungi "
+"administrator..."
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_benefit.py:0
+#, python-format
+msgid ""
+"The minimum value for the slider should be inferior to the maximum value."
+msgstr "Value minimum untuk slider harus di bawah value maksimum."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__signatures_count
+msgid "The number of signatures on the pdf contract with the most signatures."
+msgstr ""
+"Jumlah tandatangan pada kontrak pdf dengan tanda tangan paling banyak."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__activity_type_id
+msgid ""
+"The type of activity that will be created automatically on the contract if "
+"this benefit is chosen by the employee."
+msgstr ""
+"Tipe kegiatan yang akan dibuat secara otomatis pada kontrak bila benefit ini"
+" dipilih oleh karyawan."
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_benefits
+msgid "There is no available option to customize your salary"
+msgstr "Tidak ada opsi yang tersedia untuk mengustomisasi gaji Anda"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_diff_email_template
+msgid "There were no changes since previous contract."
+msgstr "Tidak ada perubahan dari kontrak sebelumnya."
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_thank_you
+msgid ""
+"They will review your contract.<br/> Feel free to contact them if you have "
+"any questions."
+msgstr ""
+"Mereka akan meninjau kontrak Anda.<br/> Jangan ragu untuk menghubungi mereka"
+" bila Anda memiliki pertanyaan apapun."
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid ""
+"This link is invalid. Please contact the HR Responsible to get a new one..."
+msgstr ""
+"Link ini tidak valid. Mohon hubungi HR Penanggungjawab untuk mendapatkan "
+"link baru..."
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "This offer has been updated, please request an updated link.."
+msgstr "Tawaran ini telah diperbarui, silakan minta link baru..."
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "This offer is outdated, please request an updated link..."
+msgstr "Tawaran ini sudah tidak berlaku, silakan minta link baru..."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__display_name
+msgid "Title"
+msgstr "Judul"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+msgid "To"
+msgstr "Kepada"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+msgid "Token"
+msgstr "Token"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__monthly_yearly_costs
+msgid "Total real monthly cost of the employee for the employer."
+msgstr "Total asli bulayanan karyawan untuk employer."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__final_yearly_costs
+msgid "Total real yearly cost of the employee for the employer."
+msgstr "Total asli tahunan karyawan untuk employer."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_history__reference_yearly_cost
+msgid "Total yearly cost of the employee for the employer."
+msgstr "Total asli tahunan karyawan untuk employer."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Jenis dari aktivitas pengecualian pada rekaman data."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__uom
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__uom
+msgid "Unit of Measure"
+msgstr "Satuan Ukuran"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form_hr
+msgid "Validity duration for salary package requests for employees"
+msgstr "Validitas durasi untuk permintaan paket gaji untuk karyawan"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form
+msgid "Validity duration for salary package requests for new applicants"
+msgstr ""
+"Validitas durasi untuk permintaan paket gaji karyawan untuk pelamar baru"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__value_ids
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__value
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__value_ids
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__value
+msgid "Value"
+msgstr "Value"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__value_type
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_search
+msgid "Value Type"
+msgstr "Tipe Value"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Wage"
+msgstr "Gaji Dasar"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__wage_on_signature
+msgid "Wage on Payroll"
+msgstr "Upah pada Payroll"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__wage_on_signature
+msgid "Wage on contract signature"
+msgstr "Upah pada tandatangan kontrak"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_history__reference_monthly_wage
+msgid "Wage update with holidays retenues"
+msgstr "Update upah dengan pengurangan libur"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__wage_with_holidays
+msgid "Wage with Holidays"
+msgstr "Gaji dengan Libur"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__website_message_ids
+msgid "Website Messages"
+msgstr "Pesan situs"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__website_message_ids
+msgid "Website communication history"
+msgstr "Sejarah komunikasi situs"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__activity_creation_type__onchange
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__sign_frenquency__always
+msgid "When the benefit is modified"
+msgstr "Saat benefit dimodifikasi"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__activity_creation_type__always
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__sign_frenquency__onchange
+msgid "When the benefit is set"
+msgstr "Saat benefit ditetapkan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__show_name
+msgid "Whether the name should be displayed in the Salary Configurator"
+msgstr "Apakah nama ditampilkan atau tidak di Konfigurator Gaji"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_type__periodicity__yearly
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume_category__periodicity__yearly
+msgid "Yearly"
+msgstr "Tahunan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__final_yearly_costs
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_history__reference_yearly_cost
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_history_view_form
+msgid "Yearly Cost"
+msgstr "Biaya Tahunan"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__final_yearly_costs
+msgid "Yearly Cost (Real)"
+msgstr "Biaya Tahunan (Asli)"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Yes"
+msgstr "Ya"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_personal_information
+msgid "Your Personal Information"
+msgstr "Informasi Pribadi Anda"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_thank_you
+msgid "Your contract has been sent to:"
+msgstr "Kontrak Anda telah dikirim ke:"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_zip
+msgid "Zip Code"
+msgstr "Kode Pos"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package
+msgid "close"
+msgstr "tutup"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_form
+msgid "e.g. Birthdate"
+msgstr "contoh Tanggal lahir"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "e.g. Meal Vouchers"
+msgstr "contoh Meal Voucher"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "sign"
+msgstr "sign"
+
+#. module: hr_contract_salary
+#: model:mail.template,subject:hr_contract_salary.mail_template_send_offer_applicant
+msgid ""
+"{{ object.company_id.name }}: Job Offer - {{ object.applicant_id.name }}"
+msgstr ""
+"{{ object.company_id.name }}: Tawaran Kerja - {{ object.applicant_id.name }}"
+
+#. module: hr_contract_salary
+#: model:mail.template,subject:hr_contract_salary.mail_template_send_offer
+msgid ""
+"{{ object.company_id.name }}: Job Offer - {{ "
+"object.employee_contract_id.name }}"
+msgstr ""
+"{{ object.company_id.name }}: Tawaran Kerja - {{ "
+"object.employee_contract_id.name }}"

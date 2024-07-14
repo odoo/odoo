@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web_studio.FieldSelectorDialog">
+    <Dialog title="'Select a Field'">
+      <div class="o_web_studio_kanban_helper">
+        <label for="field">Field</label>
+        <select id="field" name="field" class="o_input" t-ref="select">
+            <option t-if="props.showNew" class="o_new" value=''>New Field</option>
+            <option t-foreach="props.fields" t-as="field" t-key="field_index" t-att-value="field.name">
+                <t t-esc="field.string"/> <span t-if="env.debug">(<t t-esc="field.name"/>)</span>
+            </option>
+        </select>
+      </div>
+      <t t-set-slot="footer">
+        <button class="btn btn-primary" t-on-click="onConfirm">
+            Confirm
+        </button>
+        <button class="btn btn-secondary" t-on-click="onCancel">
+            Cancel
+        </button>
+      </t>
+    </Dialog>
+  </t>
+
+</templates>

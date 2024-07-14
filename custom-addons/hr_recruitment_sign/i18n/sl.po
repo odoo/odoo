@@ -1,0 +1,260 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_recruitment_sign
+# 
+# Translators:
+# Tadej Lupšina <tadej@hbs.si>, 2023
+# matjaz k <matjaz@mentis.si>, 2023
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2023
+# laznikd <laznik@mentis.si>, 2023
+# Martin Trigaux, 2023
+# Jasmina Macur <jasmina@hbs.si>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2023\n"
+"Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_applicant__sign_request_count
+msgid "# Signatures"
+msgstr "# Podpisi"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid "%s and %s are the signatories."
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_applicant_sign_view_form
+msgid "<span class=\"o_stat_text\">Signature Requests</span>"
+msgstr "<span class=\"o_stat_text\">Zahteva za podpis</span>"
+
+#. module: hr_recruitment_sign
+#: model:ir.model,name:hr_recruitment_sign.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__applicant_id
+msgid "Applicant"
+msgstr "Kandidat"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__applicant_role_id
+msgid "Applicant Role"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__partner_name
+msgid "Applicant's Name"
+msgstr "Naziv kandidata"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,help:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__applicant_role_id
+msgid ""
+"Applicant's role on the templates to sign. The same role must be present in "
+"all the templates"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Attach a file"
+msgstr "Pripni datoteko"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__attachment_ids
+msgid "Attachment"
+msgstr "Priponka"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__partner_id
+msgid "Contact"
+msgstr "Stik"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__cc_partner_ids
+msgid "Copy to"
+msgstr "Kopiraj"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__create_uid
+msgid "Created by"
+msgstr "Ustvaril"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__create_date
+msgid "Created on"
+msgstr "Ustvarjeno"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Discard"
+msgstr "Opusti"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__display_name
+msgid "Display Name"
+msgstr "Prikazani naziv"
+
+#. module: hr_recruitment_sign
+#: model:ir.actions.act_window,name:hr_recruitment_sign.sign_recruitment_wizard_action
+msgid "Document Signature"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__sign_template_ids
+msgid "Documents to sign"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,help:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__sign_template_ids
+msgid ""
+"Documents to sign. Only documents with 1 or 2 different responsible are selectable.\n"
+"        Documents with 1 responsible will only have to be signed by the applicant while documents with 2 different responsible will have to be signed by both the applicant and the responsible.\n"
+"        "
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__has_both_template
+msgid "Has Both Template"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Zadnji posodobil"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__write_date
+msgid "Last Updated on"
+msgstr "Zadnjič posodobljeno"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Mail Options"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__message
+msgid "Message"
+msgstr "Sporočilo"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid ""
+"No appropriate template could be found, please make sure you configured them"
+" properly."
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "No template available"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid "Only %s has to sign."
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Optional Message..."
+msgstr "Neobvezno sporočilo..."
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__possible_template_ids
+msgid "Possible Template"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.actions.server,name:hr_recruitment_sign.action_request_signature
+msgid "Request Signature"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__responsible_id
+msgid "Responsible"
+msgstr "Odgovoren"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Send"
+msgstr "Pošlji"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Sign Request Options"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__sign_template_responsible_ids
+msgid "Sign Template Responsible"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model:ir.model,name:hr_recruitment_sign.model_hr_recruitment_sign_document_wizard
+msgid "Sign document in recruitment"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Signature Request"
+msgstr "Zahteva za podpis"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid "Signature Request - %s"
+msgstr "Zahteva za podpis - %s"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/models/hr_applicant.py:0
+#, python-format
+msgid "Signature Requests"
+msgstr "Zahteve za podpis"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__subject
+msgid "Subject"
+msgstr "Zadeva"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__template_warning
+msgid "Template Warning"
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Write email or search contact..."
+msgstr "Napišite e-poštni naslov ali poiščite stik ..."
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/models/hr_applicant.py:0
+#, python-format
+msgid "You must define a Contact Name for this applicant."
+msgstr ""
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.message_signature_request
+msgid "requested a new signature on the following documents:"
+msgstr ""

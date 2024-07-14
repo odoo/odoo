@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp_workorder.MrpDisplayAction">
+        <WithSearch t-props="withSearchProps" t-slot-scope="search">
+            <MrpDisplay
+            models="models"
+            resModel="resModel"
+            action="props.action"
+            context="search.context"
+            domain="search.domain"
+            groupBy="search.groupBy"
+            orderBy="search.orderBy"
+            comparison="search.comparison"
+            display="search.display"/>
+        </WithSearch>
+    </t>
+</templates>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports_cash_basis.CashBasisReportFilterExtraOptions" t-inherit="account_reports.AccountReportFilterExtraOptions" t-inherit-mode="extension">
+        <xpath expr="//t[@t-set-slot='toggler']" position="inside">
+            <t t-if="controller.filters.show_cash_basis">
+                <t t-if="controller.filters.show_draft || controller.filters.show_unreconciled || controller.options.include_analytic_without_aml"> ,</t>
+                <t t-esc="(controller.options.report_cash_basis) ? ' Cash Basis' : ' Accrual Basis'"/>
+            </t>
+        </xpath>
+
+        <xpath expr="//DropdownItem[contains(@class, 'filter_show_all_hook')]" position="after">
+            <t t-if="controller.groups.account_user &amp;&amp; controller.filters.show_cash_basis">
+                <DropdownItem
+                    class="{ 'selected': controller.options.report_cash_basis }"
+                    onSelected="() => this.toggleFilter('report_cash_basis')"
+                >
+                    Cash Basis Method
+                </DropdownItem>
+            </t>
+        </xpath>
+    </t>
+</templates>

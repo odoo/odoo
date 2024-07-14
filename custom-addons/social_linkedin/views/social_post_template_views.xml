@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="social_post_template_view_form" model="ir.ui.view">
+        <field name="name">social.post.template.view.form.inherit.social.linkedin</field>
+        <field name="model">social.post.template</field>
+        <field name="priority">15</field>
+        <field name="inherit_id" ref="social.social_post_template_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='previews_placeholder']" position="inside">
+                <field name="display_linkedin_preview" invisible="1" />
+                <field name="linkedin_preview" nolabel="1" colspan="2" widget="social_post_preview" media_type="linkedin"
+                    readonly="1"
+                    invisible="not display_linkedin_preview"
+                    class="o_social_preview_wrapper m-0 px-4 py-4 bg-200"/>
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>

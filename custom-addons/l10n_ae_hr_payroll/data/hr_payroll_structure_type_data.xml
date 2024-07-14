@@ -1,0 +1,11 @@
+<odoo>
+    <data noupdate="1">
+        <record id="uae_employee_payroll_structure_type" model="hr.payroll.structure.type">
+            <field name="name">UAE Employee</field>
+            <field name="wage_type">monthly</field>
+            <field name="default_schedule_pay">monthly</field>
+            <field name="country_id" ref="base.ae"/>
+            <field name="default_resource_calendar_id" ref="resource.resource_calendar_std"/>
+        </record>
+    </data>
+</odoo>

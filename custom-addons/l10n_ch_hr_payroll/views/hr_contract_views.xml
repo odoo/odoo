@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit.l10n.ch.hr.payroll</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+        <field name="arch" type="xml">
+            <group name="salary_info" position="inside">
+                <group name="ch_salary_info" string="Salary Information" invisible="country_code != 'CH'">
+                    <field name="l10n_ch_job_type"/>
+                    <field name="l10n_ch_thirteen_month"/>
+                </group>
+                <group name="ch_salary_insurances" string="Insurances" invisible="country_code != 'CH'">
+                    <field name="l10n_ch_social_insurance_id"/>
+                    <field name="l10n_ch_compensation_fund_id"/>
+                    <field name="l10n_ch_accident_insurance_line_id" options="{'no_create':True}"/>
+                    <field name="l10n_ch_additional_accident_insurance_line_ids" widget="many2many_tags" options="{'no_create':True}"/>
+                    <field name="l10n_ch_sickness_insurance_line_ids" widget="many2many_tags" options="{'no_create':True}"/>
+                    <field name="l10n_ch_lpp_insurance_id"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

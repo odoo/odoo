@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment.payment_provider_sepa_direct_debit" model="payment.provider">
+        <field name="code">custom</field>
+        <field name="custom_mode">sepa_direct_debit</field>
+        <field name="image_128"
+               type="base64"
+               file="payment_sepa_direct_debit/static/description/icon.png"/>
+        <field name="inline_form_view_id" ref="inline_form"/>
+        <field name="allow_tokenization">True</field>
+        <field name="pending_msg" type="html">
+            <p>Please make an unique payment transfer to confirm the SEPA mandate.</p>
+        </field>
+    </record>
+
+    <!-- This payment method specification is kept in the data on purpose, not being
+        generated in a post_init_hook like the other payment methods.
+
+        We need to keep the payment method name different than the one defined
+        in account_sepa_direct_debit, and we want to make sure the '(provider)' part
+        of the payment method name is correctly translated.
+
+        Since payment_sepa_direct_debit depends on account_payment, we can
+        rely on this solution.
+    -->
+    <record id="payment_method_sepa_direct_debit" model="account.payment.method">
+        <field name="name">SEPA Direct Debit (provider)</field>
+        <field name="code">sepa_direct_debit</field>
+        <field name="payment_type">inbound</field>
+    </record>
+
+</odoo>

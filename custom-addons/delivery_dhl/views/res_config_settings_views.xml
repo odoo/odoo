@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_sale" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.delivery.dhl.sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='shipping_costs_dhl']" position="inside">
+                <div class="content-group">
+                    <div class="mt8" invisible="not module_delivery_dhl">
+                        <button name="%(delivery.action_delivery_carrier_form)d" icon="oi-arrow-right" type="action" string="DHL Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'dhl'}"/>
+                    </div>
+                 </div>
+             </xpath>
+        </field>
+    </record>
+
+    <record id="res_config_settings_view_form_stock" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.delivery.dhl.stock</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='compute_shipping_costs_dhl']" position="inside">
+                <div class="content-group">
+                    <div class="mt8" invisible="not module_delivery_dhl">
+                        <button name="%(delivery.action_delivery_carrier_form)d" icon="oi-arrow-right" type="action" string="DHL Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'dhl'}"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

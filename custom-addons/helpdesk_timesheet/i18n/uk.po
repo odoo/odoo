@@ -1,0 +1,437 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* helpdesk_timesheet
+# 
+# Translators:
+# Martin Trigaux, 2023
+# Wil Odoo, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_project_project__ticket_count
+msgid "# Tickets"
+msgstr "Кількість заявок"
+
+#. module: helpdesk_timesheet
+#: model:ir.model,name:helpdesk_timesheet.model_account_analytic_line
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_sla_report_analysis__analytic_account_id
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket__analytic_account_id
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket_report_analysis__analytic_account_id
+msgid "Analytic Account"
+msgstr "Аналітичний рахунок"
+
+#. module: helpdesk_timesheet
+#. odoo-python
+#: code:addons/helpdesk_timesheet/models/helpdesk_ticket.py:0
+#, python-format
+msgid "Confirm Time Spent"
+msgstr "Підтвердити витрачений час"
+
+#. module: helpdesk_timesheet
+#: model:ir.model,name:helpdesk_timesheet.model_helpdesk_ticket_convert_wizard
+msgid "Convert Helpdesk Tickets to Tasks"
+msgstr "Конвертуйте заявки служби підтримки в задачі"
+
+#. module: helpdesk_timesheet
+#: model:ir.model,name:helpdesk_timesheet.model_project_task_convert_wizard
+msgid "Convert Project Tasks to Tickets"
+msgstr "Конвертувати завдання проекту у заявки"
+
+#. module: helpdesk_timesheet
+#: model:ir.model,name:helpdesk_timesheet.model_helpdesk_ticket_create_timesheet
+msgid "Create Timesheet from ticket"
+msgstr "Створіть табель із заявки"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket_create_timesheet__create_uid
+msgid "Created by"
+msgstr "Створив"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket_create_timesheet__create_date
+msgid "Created on"
+msgstr "Створено"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet
+msgid "Days Spent"
+msgstr "Витрачені дні"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_create_timesheet_view_form
+msgid "Delete"
+msgstr "Видалити"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_sla_report_analysis__department_id
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket_report_analysis__department_id
+msgid "Department"
+msgstr "Відділ"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_create_timesheet_view_form
+msgid "Describe your activity..."
+msgstr "Опишіть вашу дію..."
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket_create_timesheet__description
+msgid "Description"
+msgstr "Опис"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_create_timesheet_view_form
+msgid "Discard"
+msgstr "Відмінити"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket_create_timesheet__display_name
+msgid "Display Name"
+msgstr "Назва для відображення"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_account_analytic_line__display_task
+msgid "Display Task"
+msgstr "Відобразити завдання"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket__display_timer
+msgid "Display Timer"
+msgstr "Відображати таймер"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket__display_timer_pause
+msgid "Display Timer Pause"
+msgstr "Відобразити паузу таймера"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket__display_timer_resume
+msgid "Display Timer Resume"
+msgstr "Відобразити відновлення таймера"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket__display_timer_start_primary
+msgid "Display Timer Start Primary"
+msgstr "Відобразити початок основного таймера"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket__display_timer_start_secondary
+msgid "Display Timer Start Secondary"
+msgstr "Відобразити початок другого таймера"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket__display_timer_stop
+msgid "Display Timer Stop"
+msgstr "Відобразити зупинку таймера"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket__display_timesheet_timer
+msgid "Display Timesheet Time"
+msgstr "Відобразити час табеля"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet
+msgid "Duration"
+msgstr "Тривалість"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_sla_report_analysis__employee_id
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket_report_analysis__employee_id
+msgid "Employee"
+msgstr "Співробітник"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket__encode_uom_in_days
+msgid "Encode Uom In Days"
+msgstr "Кодувати одиниці вимірювання у днях"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_account_analytic_line__has_helpdesk_team
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_project_project__has_helpdesk_team
+msgid "Has Helpdesk Teams"
+msgstr "Має команди служби підтримки"
+
+#. module: helpdesk_timesheet
+#: model:ir.model,name:helpdesk_timesheet.model_helpdesk_team
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_project_project__helpdesk_team
+msgid "Helpdesk Team"
+msgstr "Команда служби підтримки"
+
+#. module: helpdesk_timesheet
+#: model:ir.model,name:helpdesk_timesheet.model_helpdesk_ticket
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_account_analytic_line__helpdesk_ticket_id
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_timesheets_analysis_report__helpdesk_ticket_id
+msgid "Helpdesk Ticket"
+msgstr "Заявка служби підтримки"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket__total_hours_spent
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket_report_analysis__total_hours_spent
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_create_timesheet_view_form
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_view_cohort_inherit_helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_view_graph_main_inherit_helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_view_pivot_main_inherit_helpdesk_timesheet
+msgid "Hours Spent"
+msgstr "Витрачені години"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket_create_timesheet__id
+msgid "ID"
+msgstr "ID"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket__is_timer_running
+msgid "Is Timer Running"
+msgstr "Таймер запущено"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.timesheet_table
+msgid "Issue with new portal system"
+msgstr "Проблема з новою портальною системою"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket_create_timesheet__write_uid
+msgid "Last Updated by"
+msgstr "Востаннє оновив"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket_create_timesheet__write_date
+msgid "Last Updated on"
+msgstr "Останнє оновлення"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_sla_report_analysis__manager_id
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket_report_analysis__employee_parent_id
+msgid "Manager"
+msgstr "Керівник"
+
+#. module: helpdesk_timesheet
+#. odoo-python
+#: code:addons/helpdesk_timesheet/models/helpdesk_team.py:0
+#, python-format
+msgid "New"
+msgstr "Новий"
+
+#. module: helpdesk_timesheet
+#. odoo-python
+#: code:addons/helpdesk_timesheet/models/project.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Операція не підтримується"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet
+msgid "Pause"
+msgstr "Пауза"
+
+#. module: helpdesk_timesheet
+#: model:ir.model,name:helpdesk_timesheet.model_project_project
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_team__project_id
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket__project_id
+msgid "Project"
+msgstr "Проект"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,help:helpdesk_timesheet.field_helpdesk_team__project_id
+#: model:ir.model.fields,help:helpdesk_timesheet.field_helpdesk_ticket__project_id
+msgid ""
+"Project to which the timesheets of this helpdesk team's tickets will be "
+"linked."
+msgstr ""
+"Проект, до якого будуть прив’язані табелі цієї команди служби підтримки."
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.actions.act_window,help:helpdesk_timesheet.act_hr_timesheet_line_helpdesk
+msgid "Record a new activity"
+msgstr "Записати нову дію"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_team_view_form_inherit_helpdesk_timesheet
+msgid "Recorded"
+msgstr "Записано"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet
+msgid "Resume"
+msgstr "Продовжити"
+
+#. module: helpdesk_timesheet
+#: model:ir.model,name:helpdesk_timesheet.model_helpdesk_sla_report_analysis
+msgid "SLA Status Analysis"
+msgstr "Аналіз статусу SLA"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_create_timesheet_view_form
+msgid "Save"
+msgstr "Зберегти"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_create_timesheet_view_form
+msgid "Save time"
+msgstr "Зберегти час"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet
+msgid "Start"
+msgstr "Початок"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet
+msgid "Stop"
+msgstr "Зупинити"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.timesheet_table
+msgid "Task/Ticket"
+msgstr "Задача/Заявка"
+
+#. module: helpdesk_timesheet
+#: model:project.project,label_tasks:helpdesk_timesheet.helpdesk_team3_projet
+msgid "Tasks"
+msgstr "Завдання"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket_create_timesheet__ticket_id
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.hr_timesheet_line_search_inherit_helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.hr_timesheet_line_tree_inherit_helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.report_timesheet_ticket
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.timesheet_table
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.timesheet_view_form_inherit
+msgid "Ticket"
+msgstr "Заявка"
+
+#. module: helpdesk_timesheet
+#: model:ir.model,name:helpdesk_timesheet.model_helpdesk_ticket_report_analysis
+msgid "Ticket Analysis"
+msgstr "Аналіз заявки"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,help:helpdesk_timesheet.field_helpdesk_ticket_create_timesheet__ticket_id
+msgid "Ticket for which we are creating a sales order"
+msgstr "Заявка, для якої ми створюємо замовлення на продаж"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.report_timesheet_ticket
+msgid "Ticket:"
+msgstr "Заявка:"
+
+#. module: helpdesk_timesheet
+#. odoo-python
+#: code:addons/helpdesk_timesheet/models/project.py:0
+#: code:addons/helpdesk_timesheet/models/project.py:0
+#: model:ir.actions.act_window,name:helpdesk_timesheet.project_project_action_view_helpdesk_tickets
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_project_project__ticket_ids
+#, python-format
+msgid "Tickets"
+msgstr "Квитки"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket_create_timesheet__time_spent
+msgid "Time"
+msgstr "Час"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,help:helpdesk_timesheet.field_helpdesk_ticket__timesheet_ids
+msgid ""
+"Time spent on this ticket. By default, your timesheets will be linked to the sales order item of your ticket.\n"
+"Remove the sales order item to make your timesheet entries non billable."
+msgstr ""
+"Час, витрачений на цю заявку. За замовчуванням ваші табелі буде пов’язано з рядком замовлення на продаж вашої заявки.\n"
+"Видаліть рядок замовлення, щоб ваші записи в табелі не підлягали оплаті."
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket__timer_pause
+msgid "Timer Last Pause"
+msgstr "Остання пауза таймера"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket__timer_start
+msgid "Timer Start"
+msgstr "Початок таймера"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet
+msgid "Timesheet Activities"
+msgstr "Дії по табелю"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_team__timesheet_encode_uom_id
+msgid "Timesheet Encoding Unit"
+msgstr "Одиниця кодування табеля"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket__use_helpdesk_timesheet
+msgid "Timesheet activated on Team"
+msgstr "Табель активовано в команді"
+
+#. module: helpdesk_timesheet
+#: model:ir.actions.act_window,name:helpdesk_timesheet.act_hr_timesheet_line_helpdesk
+#: model:ir.actions.report,name:helpdesk_timesheet.timesheet_report_ticket
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket__timesheet_ids
+#: model:res.groups,name:helpdesk_timesheet.group_use_helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.report_timesheet_ticket
+msgid "Timesheets"
+msgstr "Табелі"
+
+#. module: helpdesk_timesheet
+#: model:ir.model,name:helpdesk_timesheet.model_timesheets_analysis_report
+msgid "Timesheets Analysis Report"
+msgstr "Звіт аналізу табелів"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.helpdesk_ticket_view_tree_inherit_helpdesk_timesheet
+msgid "Total"
+msgstr "Разом"
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_team__total_timesheet_time
+msgid "Total Timesheet Time"
+msgstr "Всього часу по табелю"
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.actions.act_window,help:helpdesk_timesheet.act_hr_timesheet_line_helpdesk
+msgid ""
+"Track your working hours by projects every day and invoice this time to your"
+" customers."
+msgstr ""
+"Слідкуйте за вашими відпрацьованими годинами за проектами щодня та "
+"виставляйте у рахунках цей час вашим клієнтам."
+
+#. module: helpdesk_timesheet
+#: model:ir.model.fields,field_description:helpdesk_timesheet.field_helpdesk_ticket__user_timer_id
+msgid "User Timer"
+msgstr "Таймер користувача"
+
+#. module: helpdesk_timesheet
+#: model:project.project,name:helpdesk_timesheet.helpdesk_team3_projet
+msgid "VIP Support"
+msgstr "VIP підтримка"
+
+#. module: helpdesk_timesheet
+#. odoo-python
+#: code:addons/helpdesk_timesheet/models/analytic.py:0
+#, python-format
+msgid ""
+"You cannot link a timesheet entry to a task and a ticket at the same time."
+msgstr ""
+"Ви не можете пов’язати запис у табелі одночасно із завданням і заявкою."
+
+#. module: helpdesk_timesheet
+#: model_terms:ir.ui.view,arch_db:helpdesk_timesheet.report_timesheet_ticket
+msgid "for the"
+msgstr "для"

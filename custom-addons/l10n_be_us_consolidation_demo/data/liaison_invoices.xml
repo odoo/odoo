@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- INVOICE -->
+        <record id="liaison_invoice_1" model="account.move">
+            <field name="partner_id" ref="base.main_partner"/>
+            <field name="invoice_user_id" ref="base.user_demo"/>
+            <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+            <field name="move_type">out_invoice</field>
+            <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+            <field name="company_id" ref="l10n_be.demo_company_be"/>
+            <field name="journal_id" model="account.journal"
+                   search="[('type', '=', 'sale'), ('company_id', '=', ref('l10n_be.demo_company_be'))]"/>
+            <field name="invoice_line_ids" eval="[
+                (0,0,{
+                    'name': 'IC Services',
+                    'account_id': ref('be_specific_income_account'),
+                    'price_unit': 12500.0,
+                    'quantity': 1
+                })
+            ]"/>
+        </record>
+
+        <!-- VENDOR BILL -->
+        <record id="liaison_bill_1" model="account.move">
+            <field name="partner_id" ref="l10n_be.partner_demo_company_be"/>
+            <field name="invoice_user_id" ref="base.user_demo"/>
+            <field name="journal_id" model="account.journal"
+                   search="[('type', '=', 'purchase'), ('company_id', '=', ref('base.main_company'))]"/>
+            <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+            <field name="move_type">in_invoice</field>
+            <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+            <field name="invoice_line_ids" eval="[
+                (0,0,{
+                    'name': 'IC Services',
+                    'account_id': ref('main_specific_expense_account'),
+                    'price_unit': 12500.0,
+                    'quantity': 1
+                })
+            ]"/>
+        </record>
+
+        <function model="account.move" name="_post">
+            <value eval="[ref('liaison_invoice_1'), ref('liaison_bill_1')]"/>
+        </function>
+
+        <record id="invoice_activity_5" model="mail.activity">
+            <field name="res_id" ref="l10n_be_us_consolidation_demo.liaison_bill_1"/>
+            <field name="res_model_id" ref="account.model_account_move"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
+            <field name="summary">Get Approval</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+
+    </data>
+</odoo>

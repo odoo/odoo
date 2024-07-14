@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_multicurrency_revaluation_wizard" model="ir.ui.view">
+            <field name="name">account.multicurrency.revaluation.wizard.view</field>
+            <field name="model">account.multicurrency.revaluation.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Make Adjustment Entry">
+                    <field name="company_id" invisible="1"/>
+                    <div invisible="not show_warning_move_id" class="alert alert-warning" role="alert">Proceed with caution as there might be an existing adjustment for this period (<field name="show_warning_move_id"/>)</div>
+                    <group>
+                        <group>
+                            <field name="journal_id"/>
+                            <field name="expense_provision_account_id"/>
+                            <field name="income_provision_account_id"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="reversal_date"/>
+                        </group>
+                    </group>
+                    <field name="preview_data" widget="grouped_view_widget"/>
+                    <footer>
+                        <button string='Create Entry' name="create_entries" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+    </data>
+</odoo>

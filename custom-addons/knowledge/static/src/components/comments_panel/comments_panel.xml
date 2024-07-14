@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <div t-name="knowledge.KnowledgeArticleCommentsPanel" t-ref="root">
+        <div t-if="state.displayCommentsPanel" class="o_knowledge_comments_panel">
+            <select t-att-value="state.commentMode" t-on-change="_onChangeMode" class="form-select border-0 my-2">
+                <option value="all">All Comments</option>
+                <option value="resolved">Resolved Comments</option>
+                <option value="unresolved">Unresolved Comments</option>
+            </select>
+            <t t-if="state.creatingComment">
+                <div class="card ps-0 mb-2">
+                    <p class="card-body p-0 m-0 row">
+                        <KnowledgeCommentsThread
+                            t-props="state.creatingComment"
+                            record="props.record"
+                            changeCommentResolvedState="boundFunctions.changeCommentResolvedState"
+                            forceFullSize="true"
+                            destroyComment="boundFunctions.destroyComment"
+                            insertNewThread.bind="insertNewThread"
+                        />
+                    </p>
+                </div>
+            </t>
+            <t t-if="Object.values(state.comments).length">
+                <t t-foreach="displayedComments"
+                    t-as="thread" t-key="thread.knowledgeThreadId">
+                    <div class="card ps-0 mb-2">
+                        <p class="card-body p-0 m-0 row">
+                            <KnowledgeCommentsThread
+                                t-props="thread"
+                                record="props.record"
+                                changeCommentResolvedState="boundFunctions.changeCommentResolvedState"
+                                forceFullSize="true"
+                                destroyComment="boundFunctions.destroyComment"
+                            />
+                        </p>
+                    </div>
+                </t>
+            </t>
+            <div t-elif="!this.state.creatingComment" class="o_comments_helper text-center p-4 d-flex flex-column align-items-center justify-content-end">
+                <p class="o_view_nocontent_smiling_face"/>
+                <h3>Nothing going on!</h3>
+                <p class="mb-0">
+                    Highlight content and use the <i class="fa fa-commenting"/> button to add comments
+                </p>
+            </div>
+        </div>
+    </div>
+</templates>

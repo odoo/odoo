@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_move_line_detailed_operation_tree_inherit_quality" model="ir.ui.view">
+        <field name="name">stock.move.line.operations.tree.inherit</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_uom_id']" position="after">
+                <field name="check_state" column_invisible="True"/>
+                <button type="object" class="btn-info" name="action_open_quality_check_wizard" icon="fa-check" invisible="check_state != 'in_progress'" title="Quality Check"/>
+                <button type="object" class="btn-danger" name="action_open_quality_check_wizard" icon="fa-check" invisible="check_state != 'fail'" title="Quality Check"/>
+                <button type="object" class="btn-success" name="action_open_quality_check_wizard" icon="fa-check" invisible="check_state != 'pass'" title="Quality Check"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Regular Pay -->
+        <record id="l10n_be_hr_payroll.cp200_employees_salary_company_car" model="hr.salary.rule">
+            <field name="condition_python">result = bool(not payslip.is_outside_contract and contract.transport_mode_car and payslip.vehicle_id._get_car_atn(date=payslip.date_from))</field>
+            <field name="amount_python_compute">
+result = payslip.vehicle_id._get_car_atn(date=payslip.date_from)
+salary_simulation = payslip.env.context.get('salary_simulation')
+if not salary_simulation:
+    first_period_contract_ids = payslip._get_period_contracts()
+    first_period_contract = contract.browse(first_period_contract_ids).filtered(lambda c: c.transport_mode_car)
+    result = result if (first_period_contract and payslip.contract_id == first_period_contract[0]) else 0
+            </field>
+        </record>
+        <record id="l10n_be_hr_payroll.cp200_employees_salary_company_car_2" model="hr.salary.rule">
+            <field name="condition_python">result = bool(not payslip.is_outside_contract and contract.transport_mode_car and payslip.vehicle_id._get_car_atn(date=payslip.date_from))</field>
+            <field name="amount_python_compute">
+result_qty = result_rules['ATN.CAR']['quantity']
+result = -result_rules['ATN.CAR']['amount']
+            </field>
+        </record>
+        <record id="cp200_employees_salary_co2_fee" model="hr.salary.rule">
+            <field name="category_id" ref="hr_salary_rule_category_co2_fee"/>
+            <field name="name">Accounting: CO2 Fee (Employer)</field>
+            <field name="code">CO2FEE</field>
+            <field name="sequence">505</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(not payslip.is_outside_contract and contract.transport_mode_car and payslip.vehicle_id)</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = payslip.vehicle_id.with_context(
+    co2_fee_date=payslip.date_from)._get_co2_fee(
+    payslip.vehicle_id.co2,
+    payslip.vehicle_id.fuel_type)
+salary_simulation = payslip.env.context.get('salary_simulation')
+if not salary_simulation:
+    first_period_contract_ids = payslip._get_period_contracts()
+    first_period_contract = contract.browse(first_period_contract_ids).filtered(lambda c: c.transport_mode_car)[0]
+    result = result if payslip.contract_id == first_period_contract else 0</field>
+            <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+            <field name="appears_on_payslip" eval="False"/>
+            <field name="appears_on_payroll_report" eval="True"/>
+        </record>
+
+        <!-- PFI -->
+        <record id="l10n_be_hr_payroll.cp200_pfi_company_car" model="hr.salary.rule">
+            <field name="condition_python">result = bool(contract.transport_mode_car and payslip.vehicle_id._get_car_atn(date=payslip.date_from))</field>
+            <field name="amount_python_compute">result = payslip.vehicle_id._get_car_atn(date=payslip.date_from)</field>
+        </record>
+        <record id="l10n_be_hr_payroll.cp200_pfi_company_car_2" model="hr.salary.rule">
+            <field name="condition_python">result = bool(contract.transport_mode_car and payslip.vehicle_id._get_car_atn(date=payslip.date_from))</field>
+            <field name="amount_python_compute">result = -payslip.vehicle_id._get_car_atn(date=payslip.date_from)</field>
+        </record>
+        <record id="l10n_be_hr_payroll.cp200_pfi_salary_withholding_taxes" model="hr.salary.rule">
+            <field name="amount_python_compute">
+result = contract.wage
+# The car atn is included for withholding taxes in pfi contracts, not the other advantages
+car_atn = payslip.vehicle_id._get_car_atn(date=payslip.date_from)
+if bool(contract.transport_mode_car and car_atn):
+    result += car_atn
+result *= -0.2
+            </field>
+        </record>
+        <!-- Termination Fees -->
+        <record id="l10n_be_hr_payroll.cp200_employees_termination_fees_company_car_annual" model="hr.salary.rule">
+            <field name="amount_python_compute">
+result_qty = 12
+result = payslip.vehicle_id._get_car_atn(date=payslip.date_from) if contract.transport_mode_car else 0</field>
+        </record>
+    </data>
+</odoo>

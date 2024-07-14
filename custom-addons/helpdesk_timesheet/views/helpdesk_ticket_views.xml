@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="helpdesk_ticket_view_form_inherit_helpdesk_timesheet" model="ir.ui.view">
+        <field name='name'>helpdesk.ticket.form.inherit.timesheet</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+                 <field name="stage_id" position="before">
+                    <field name="display_timer" invisible="1"/>
+                    <field name="display_timesheet_timer" invisible="1"/>
+                    <field name="timer_pause" invisible="1" />
+                    <field name="display_timer_start_primary" invisible="1"/>
+                    <field name="display_timer_start_secondary" invisible="1"/>
+                    <field name="display_timer_stop" invisible="1"/>
+                    <field name="display_timer_pause" invisible="1"/>
+                    <field name="display_timer_resume" invisible="1"/>
+                    <field name="encode_uom_in_days" invisible="1"/>
+                    <button class="btn-primary" name="action_timer_start" type="object" string="Start" data-hotkey="z"
+                        invisible="not display_timer_start_primary or not display_timer"/>
+                    <button class="btn-secondary" name="action_timer_start" type="object" string="Start" data-hotkey="z"
+                        invisible="not display_timer_start_secondary or not display_timer"/>
+                    <button class="btn-primary o_fsm_stop" name="action_timer_stop" type="object" string="Stop" data-hotkey="z"
+                        invisible="not display_timer_stop or not display_timer"/>
+                    <button class="btn-secondary" name="action_timer_pause" type="object" string="Pause" data-hotkey="w"
+                        invisible="not display_timer_pause or not display_timer"/>
+                    <button class="btn-secondary" name="action_timer_resume" type="object" string="Resume" data-hotkey="w"
+                        invisible="not display_timer_resume or not display_timer"/>
+                    <field name="timer_start" widget="timer_start_field" class="d-flex align-self-center me-auto ms-2 h2" invisible="not display_timer"/>
+                </field>
+                <xpath expr="//field[@name='stage_id']" position="attributes">
+                    <attribute name="class">ms-2</attribute>
+                </xpath>
+            <xpath expr="//field[@name='email_cc']" position="after">
+                <field name="use_helpdesk_timesheet" invisible="1"/>
+                <field name="project_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//page[@name='extra_info']//field[@name='company_id']" position="after">
+                <field name="analytic_account_id" groups="analytic.group_analytic_accounting" invisible="not use_helpdesk_timesheet"/>
+            </xpath>
+            <xpath expr="//page[@name='description']" position="after">
+                <page string="Timesheets" name="timesheets"
+                    invisible="not project_id or not use_helpdesk_timesheet"
+                    groups="hr_timesheet.group_hr_timesheet_user">
+                    <field name='timesheet_ids' mode="tree,kanban" context="{'default_project_id': project_id}">
+                        <tree editable="bottom" string="Timesheet Activities" default_order="date" decoration-muted="readonly_timesheet == True">
+                            <field name="readonly_timesheet" column_invisible="True"/>
+                            <field name="date" readonly="readonly_timesheet"/>
+                            <field name="user_id" column_invisible="True"/>
+                            <field name="employee_id" widget="many2one_avatar_employee" required="1" readonly="readonly_timesheet"/>
+                            <field name="name" required="0" readonly="readonly_timesheet"/>
+                            <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24" readonly="readonly_timesheet"/>
+                            <field name="project_id" column_invisible="True"/>
+                            <field name="task_id" column_invisible="True"/>
+                            <field name="company_id" column_invisible="True"/>
+                        </tree>
+                        <kanban class="o_kanban_mobile">
+                            <field name="date"/>
+                            <field name="user_id"/>
+                            <field name="employee_id"/>
+                            <field name="name"/>
+                            <field name="unit_amount"/>
+                            <field name="project_id"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <strong><span><t t-out="record.employee_id.value"/></span></strong>
+                                            </div>
+                                            <div class="col-6 float-end text-end">
+                                                <strong><t t-out="record.date.value"/></strong>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6 text-muted">
+                                                <span><t t-out="record.name.value"/></span>
+                                            </div>
+                                            <div class="col-6">
+                                                <span class="float-end text-end">
+                                                    <field name="unit_amount" widget="float_time" decoration-danger="unit_amount &gt; 24"/>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                        <form  string="Timesheet Activities">
+                            <sheet>
+                                <group>
+                                    <field name="readonly_timesheet" invisible="1"/>
+                                    <field name="date" readonly="readonly_timesheet"/>
+                                    <field name="user_id" invisible="1"/>
+                                    <field name="employee_id" required="1" readonly="readonly_timesheet"/>
+                                    <field name="name" required="0" readonly="readonly_timesheet"/>
+                                    <field name="unit_amount" string="Duration" widget="float_time" decoration-danger="unit_amount &gt; 24" readonly="readonly_timesheet"/>
+                                    <field name="project_id" invisible="1"/>
+                                    <field name="company_id" invisible="1"/>
+                                </group>
+                            </sheet>
+                        </form>
+                    </field>
+                    <group>
+                        <group class="oe_subtotal_footer" name="ticket_hours">
+                            <span>
+                                <label class="fw-bold" for="total_hours_spent" string="Hours Spent"
+                                    invisible="encode_uom_in_days"/>
+                                <label class="fw-bold" for="total_hours_spent" string="Days Spent"
+                                    invisible="not encode_uom_in_days"/>
+                            </span>
+                            <field name="total_hours_spent" widget="timesheet_uom" nolabel="1" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_view_tree_inherit_helpdesk_timesheet" model="ir.ui.view">
+        <field name='name'>helpdesk.ticket.tree.inherit.timesheet</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="priority">70</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_tree"/>
+        <field name="arch" type="xml">
+            <field name='partner_id' position="after">
+                <field name="total_hours_spent" widget="timesheet_uom" optional="hide" invisible="total_hours_spent == 0" sum="Total"/>
+                <field name="analytic_account_id" groups="analytic.group_analytic_accounting" options="{'no_quick_create': True}" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_view_pivot_main_inherit_helpdesk_timesheet" model="ir.ui.view">
+        <field name='name'>helpdesk.ticket.pivot.inherit.timesheet</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="priority">70</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_pivot_main"/>
+        <field name="arch" type="xml">
+            <field name='assign_hours' position="after">
+                <field name="total_hours_spent" string="Hours Spent" widget="timesheet_uom"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_view_graph_main_inherit_helpdesk_timesheet" model="ir.ui.view">
+        <field name='name'>helpdesk.ticket.graph.inherit.timesheet</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="priority">70</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_graph_main"/>
+        <field name="arch" type="xml">
+            <field name='assign_hours' position="after">
+                <field name="total_hours_spent" string="Hours Spent" widget="timesheet_uom"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_view_cohort_inherit_helpdesk_timesheet" model="ir.ui.view">
+        <field name='name'>helpdesk.ticket.cohort.inherit.timesheet</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="priority">70</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_cohort"/>
+        <field name="arch" type="xml">
+            <field name='assign_hours' position="after">
+                <field name="total_hours_spent" string="Hours Spent"/>
+            </field>
+        </field>
+    </record>
+</odoo>

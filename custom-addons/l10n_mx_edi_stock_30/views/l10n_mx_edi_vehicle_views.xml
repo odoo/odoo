@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_mx_edi_vehicle_form_inherit_l10n_mx_edi_stock_30" model="ir.ui.view">
+        <field name="name">l10n_mx_edi.vehicle.form.inherit.l10n_mx_edi_stock_30</field>
+        <field name="model">l10n_mx_edi.vehicle</field>
+        <field name="inherit_id" ref="l10n_mx_edi_stock.vehicle_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vehicle_config']" position="after">
+                <field name="gross_vehicle_weight" invisible="not vehicle_config" required="vehicle_config"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

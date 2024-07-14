@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_config_settings_view_form_inherit_l10n_mx_edi_extended" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.l10n_mx_edi_extended</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="l10n_mx_edi.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//block[@id='l10n_mx_edi_settings']" position="inside">
+                    <setting string="External Trade" help="Configure data to external trade." title="The parameters to configure the External Trade complement.">
+                        <div class="row mt16">
+                            <label for="l10n_mx_edi_num_exporter" class="col-lg-3 o_light_label"/>
+                            <field name="l10n_mx_edi_num_exporter"/>
+                        </div>
+                    </setting>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

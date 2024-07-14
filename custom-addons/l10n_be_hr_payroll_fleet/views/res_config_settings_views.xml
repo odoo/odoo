@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+      <field name="name">res.config.settings.view.form.inherit.l10n.be.hr.payroll.fleet</field>
+      <field name="model">res.config.settings</field>
+      <field name="inherit_id" ref="fleet.res_config_settings_view_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//app[@id='fleet']" position="inside">
+          <block>
+            <setting string="New Vehicle Request">
+              <div class="text-muted content-group mt16">
+                <span>An employee cannot request a new car if there are more than </span>
+                <field name="max_unused_cars" class="text-center" style="width: 10%; min-width: 4rem;" />
+                <span> existing cars availables.</span>
+              </div>
+            </setting>
+          </block>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>

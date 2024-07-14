@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="spreadsheet_template_pipeline_revenue" model="spreadsheet.template">
+        <field name="name">Pipeline Revenue Report (Monthly)</field>
+        <field name="sequence">60</field>
+        <field name="spreadsheet_binary_data" type="base64" file="documents_spreadsheet_crm/data/files/pipeline_revenue_report_template.json"/>
+        <field name="thumbnail" type="base64" file="documents_spreadsheet_crm/data/files/pipeline_revenue_report_template.png"/>
+    </record>
+
+    <record id="spreadsheet_template_pipeline_dashboard" model="spreadsheet.template">
+        <field name="name">Pipeline dashboard</field>
+        <field name="sequence">80</field>
+        <field name="spreadsheet_binary_data" type="base64" file="documents_spreadsheet_crm/data/files/pipeline_dashboard.json"/>
+        <field name="thumbnail" type="base64" file="documents_spreadsheet_crm/data/files/pipeline_dashboard.png"/>
+    </record>
+
+    <record id="spreadsheet_template_mrr_nrr_pipeline_revenue" model="spreadsheet.template">
+        <field name="name">MRR/NRR Pipeline Revenue Report (Monthly)</field>
+        <field name="sequence">70</field>
+        <field name="spreadsheet_binary_data" type="base64" file="documents_spreadsheet_crm/data/files/MRR_NRR_pipeline_revenue_report_template.json"/>
+        <field name="thumbnail" type="base64" file="documents_spreadsheet_crm/data/files/MRR_NRR_pipeline_revenue_report_template.png"/>
+    </record>
+</odoo>

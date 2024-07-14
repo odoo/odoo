@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="hr_payroll.calendar.controlButtons" t-inherit="hr_work_entry_contract.calendar.controlButtons" t-inherit-mode="extension">
+        <xpath expr="." position="inside">
+            <button t-if="getShowGeneratePayslipsButton()" t-att-disabled="checkConflicts()" class="btn btn-primary btn-payslip-generate ms-3" t-on-click="onGeneratePayslips">
+                Generate Payslips
+            </button>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="sign.TemplateAlertDialog">
+        <Dialog size="'md'" title="props.title" contentClass="props.contentClass">
+            <p>These files cannot be read, they may be corrupted or encrypted.</p>
+            <t t-foreach="props.failedTemplates" t-as="failedTemplate" t-key="failedTemplate">
+                <p> - <t t-out="failedTemplate.name"/></p>
+            </t>
+            <p>They will be removed from the uploaded files<span t-if="props.failedTemplates.length &lt; props.successTemplateCount"> and the process will continue</span>.</p>
+            <t t-set-slot="footer">
+              <button class="btn btn-primary" t-on-click="_confirm" t-esc="props.confirmLabel"/>
+              <button t-if="props.cancel" class="btn btn-secondary" t-on-click="_cancel" t-esc="props.cancelLabel"/>
+            </t>
+        </Dialog>
+    </t>
+</templates>

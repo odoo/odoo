@@ -1,0 +1,523 @@
+@mixin centerer($horizontal: true, $vertical: true) {
+    position: absolute;
+
+    @if ($horizontal and $vertical) {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    @else if ($horizontal) {
+        left: 50%;
+        transform: translate(-50%, 0);
+    }
+
+    @else if ($vertical) {
+        top: 50%;
+        transform: translate(0, -50%);
+    }
+}
+
+$headerFont : Avengeance,
+$font-family-sans-serif;
+$subHeaderFont: ToonTime,
+$font-family-sans-serif;
+
+.o_referral_action {
+    cursor: pointer
+}
+
+.o_hr_referral_title {    
+    color: #FFFFFF;
+
+    h1 {
+        font-family: $headerFont;
+        text-transform: uppercase;
+        font-size: 2rem;
+        margin: 0;
+
+        @include media-breakpoint-up(md) {
+            font-size: 3rem;
+        }
+    }
+    p {
+        font-size: 1rem;
+
+        @include media-breakpoint-up(md) {
+            font-size: 2rem;
+        }
+    }
+}
+
+.o_hr_referral_btn {
+    border-radius: 2px;
+    font-weight: bolder;
+    letter-spacing: .05rem;
+    &.side-btn{
+        background: transparent;
+        border-color: #FFFFFF;
+        color: #FFFFFF;
+        &:hover{
+            background: $o-gray-100;
+            color: $black;
+        }
+    }
+    &.center {
+        @include centerer(true, false);
+        bottom: 1rem;
+    }
+}
+
+.o_hr_referral_background{
+    background: center/cover no-repeat;
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    position: fixed;
+    z-index: -1;
+    .hr_referral_bg_city {
+	    background: url('/hr_referral/static/src/img/city.svg') center/cover no-repeat;
+        height: 100%;
+	}
+
+	.hr_referral_bg_grass {
+	    background: url('/hr_referral/static/src/img/grass.svg') top center repeat-x, linear-gradient(0deg, #032a39 80%, rgba(255, 255, 255, 0) 96%);
+	    width: 100%;
+	    height: 40%;
+        bottom: 0;
+        position: absolute;
+    }
+
+}
+.o_hr_referral_wrapper {
+    --hrReferral__user-color: #{$o-main-text-color};
+
+    min-height: 100%;
+    position: relative;
+    font-family: "Montserrat", #{$font-family-sans-serif};
+    color: #FFFFFF;
+    overflow: auto visible;
+}
+
+.o_hr_referral {
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+    height: 100%;
+
+    .superheroes_box {
+        min-height: 220px;
+        height: 100%;
+        max-height: 50vh;
+        position: relative;
+        color: #FFFFFF;
+        .superheroes {
+            position: absolute;
+            height: 100%;
+            margin: auto;
+            right: 0px;
+            left: 0px;
+            display: grid;
+            grid-template-columns: 11% 11% 11% 12% 10% 12% 11% 11% 11%;
+            grid-template-areas: "friend-7 friend-5 friend-3 friend-1 super_user friend-2 friend-4 friend-6 friend-8";
+            &.superheroes_hoverer{
+                .friend-name{
+                    opacity: 0;
+                    transition: .3s;
+                    @include centerer(true, false);
+                    top:0;
+                }
+                .friend-hoverer{
+                    z-index: 9;
+                    position: relative;
+                    width: 100%;
+                    height: 100%;
+                    &:hover .friend-name{
+                        opacity: 1;
+                    }
+                }
+            }
+            .super{
+                display: flex;
+                justify-content: center;
+                width: 100%;
+                max-height: 100%;
+                @include centerer(true, false);
+                .img{
+                    height: 100%;
+                }
+            }
+            .super_user {
+                grid-area: super_user;
+                z-index: 7;
+                bottom: 0;
+                height: 100%;
+            }
+            .friend-1{
+                grid-area: friend-1;
+                bottom:1rem;
+                z-index: 6;
+                height: 95%;
+            }
+            .friend-2{
+                grid-area: friend-2;
+                bottom:1.5rem;
+                z-index: 6;
+                height: 95%;
+            }
+            .friend-3{
+                grid-area: friend-3;
+                bottom:2rem;
+                z-index: 5;
+                height: 90%;
+            }
+            .friend-4{
+                grid-area: friend-4;
+                bottom:2.5rem;
+                z-index: 5;
+                height: 90%;
+            }
+            .friend-5{
+                grid-area: friend-5;
+                bottom:3rem;
+                z-index: 4;
+                height: 85%;
+            }
+            .friend-6{
+                grid-area: friend-6;
+                bottom:3.5rem;
+                z-index: 4;
+                height: 85%;
+            }
+            .friend-7{
+                grid-area: friend-7;
+                bottom:4rem;
+                z-index: 3;
+                height: 80%;
+            }
+            .friend-8{
+                grid-area: friend-8;
+                bottom:4.5rem;
+                z-index: 3;
+                height: 80%;
+            }
+            .behind{
+                z-index: -1;
+            }
+            .front{
+                bottom: -1rem !important;
+                z-index: 8 !important;
+            }
+        }
+    }
+
+    .user_wrapper {
+        margin: auto;
+        position: relative;
+    }
+    .user {
+        display: flex;
+        @include centerer(true, false);
+        margin-top: 1.5rem;
+        @include media-breakpoint-down(sm) {
+            margin-top: 0;
+            transform: translateX(-50%) scale(.8);
+        }
+    }
+    .user_image {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        >img {
+            z-index: 1;
+            background: white;
+            width: 130px;
+            height: 130px;
+            object-fit: cover;
+        }
+    }
+    .user_info {
+            @include centerer(true, true);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-width: 350px;
+            height: 60%;
+            color: var(--hrReferral__user-color);
+            border-radius: 2px;
+            padding: 0 1rem;
+        }
+    .user_total, .user_points {
+        width: 25%;
+        text-align: center;
+        font-weight: bold;
+        & img {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    .user_level:before {
+        content: 'Level:';
+        display: inline-block;
+        font-weight: bold;
+    }
+
+    @keyframes bounceIn {
+        0% {
+            transform: scale(0.1);
+            opacity: 0;
+        }
+
+        60% {
+            transform: scale(1.5);
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+    @keyframes bounce {
+        0% {
+            -webkit-transform: scale3d(1, 1, 1);
+            transform: scale3d(1, 1, 1);
+        }
+
+        3% {
+            -webkit-transform: scale3d(0.75, 1.25, 1);
+            transform: scale3d(0.75, 1.25, 1);
+        }
+
+        5% {
+            -webkit-transform: scale3d(1.25, 0.75, 1);
+            transform: scale3d(1.25, 0.75, 1);
+        }
+
+        10% {
+            -webkit-transform: scale3d(0.85, 1.15, 1);
+            transform: scale3d(0.85, 1.15, 1);
+        }
+
+        12% {
+            -webkit-transform: scale3d(1.05, 0.95, 1);
+            transform: scale3d(1.05, 0.95, 1);
+        }
+
+        15% {
+            -webkit-transform: scale3d(1, 1, 1);
+            transform: scale3d(1, 1, 1);
+        }
+    }
+
+    @keyframes appear {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+	.o_level_up {
+        animation: bounceIn .2s both;
+        animation-fill-mode: both;
+        animation-delay: 3s;
+        @include o-position-absolute($top: -2.5rem);
+        z-index: 3;
+
+        img {
+            animation: bounce 3s infinite;
+            max-height: 70px;
+        }
+
+        p {
+            @include centerer(true, false);
+            bottom: -150%;
+            min-width: 200px;
+            color: #FFFFFF;
+            font-size: 1.5rem;
+            font-family: $headerFont;
+            animation: appear .5s both;
+            animation-delay: 5s;
+        }
+    }
+    .o_level_up_txt {
+        animation-fill-mode: both;
+        animation: appear .5s both;
+        animation-delay: 5s;
+        z-index: 3;
+
+        p {
+            min-width: 200px;
+            color: #FFFFFF;
+            font-size: 1.5rem;
+            font-family: $headerFont;
+            margin-bottom: 0;
+        }
+    }
+    .o_hr_referral_level_up {
+        cursor: pointer;
+    }
+
+    .activity_wrapper {
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+    .activity {
+        max-width: 400px;
+        margin: 0 auto;
+        .activity_stat {
+			text-align:center;
+			transition:.3s;
+			padding: 5px;
+			border-radius: 2px;
+			border: 1px solid transparent;
+			&:hover{
+				background: #ffffff29;
+			}
+        }
+        .activity_number {
+		    margin: 0px auto;
+		    color: #00a09d;
+		    font-size: 2rem;
+		    font-weight: bold;
+		    transition: .3s;
+        }
+
+        .activity_text {
+            color: #FFFFFF;
+        }
+    }
+    div:first-child.space_restart {
+        @include media-breakpoint-down(md) {
+            margin-top: 4rem;
+        }
+    }
+    .message {
+        background: rgba(255, 255, 255, 0.5);
+        color: #5A5A5A;
+        border-radius: 2px;
+        padding: 5px;
+        text-align: center;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        transition: .3s;
+        &:hover {
+            background: $white;
+        }
+        .img {
+        	max-width: 40px;
+        	float: left;
+        }
+        span {
+            display: inline-block;
+            max-width: 90%;
+            margin: auto;
+            vertical-align: middle;
+        }
+    }
+}
+
+.o_hr_referral_restart {
+    position: absolute;
+    top: 3rem;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    cursor:pointer;
+    line-height: 2rem;
+    &:before {
+        @include o-position-absolute($bottom: 0, $right: 0);
+        padding: 0 10px;
+        font-size: 2rem;
+        transition: .5s;
+    }
+    &:hover:before {
+        transform: rotate(180deg);
+        right:100%;
+    }
+    @include media-breakpoint-up(sm) {
+        top: 1rem;
+        &:after{
+            content: attr(aria-label);
+            display: inline-block;
+            height: 100%;
+            font-size: 1rem;
+            font-family: "Montserrat", #{$font-family-sans-serif};
+            opacity: 0;
+            transition: .3s ease;
+            transition-delay: .2s;
+            color: $white;
+        }
+        &:hover:after{
+            right: 0;
+            opacity: 1;
+        }
+    }
+    @include media-breakpoint-up(md) {
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        top: auto;
+    }
+}
+
+.o_choose_friend_wrapper{
+	height: calc(100vh - #{$o-navbar-height});
+	position: relative;
+    top: 10%;
+    margin-bottom: 1rem;
+    .friends_avatars{
+    	display: flex;
+    	justify-content: space-evenly;
+    	flex-wrap: wrap;
+    }
+    .o_choose_friend{
+        > div{
+            width: 100px;
+            height: 100px;
+            margin: 0 .5rem;
+            background: $white;
+            overflow: hidden;
+            position: relative;
+        }
+        &.o_choose_friend_available{
+            cursor: pointer;
+            div{
+                transition: .3s;
+            }
+            &:hover div{
+                opacity:.9;
+                transform:scale(1.1);
+            }
+        }
+        &.o_choose_friend_not_available{
+            cursor: not-allowed;
+            .o_choose_friend_not_available {
+                background: rgba(black, 0.5);
+                position: absolute;
+                height: 100%;
+                width: 100%;
+            }
+        }
+    }
+}
+
+.o_referral_img {
+    img {
+        max-height: 70px;
+    }
+}
+
+.o_hr_referral_btn_dismiss {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}

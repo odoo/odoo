@@ -1,0 +1,139 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_inter_company_rules
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: account_inter_company_rules
+#. odoo-python
+#: code:addons/account_inter_company_rules/models/account_move.py:0
+#, python-format
+msgid "%s Invoice: %s"
+msgstr "%s الفاتورة: %s"
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_account_move_send
+msgid "Account Move Send"
+msgstr "إرسال حركة الحساب "
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_bank_statement_line__auto_generated
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_move__auto_generated
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_payment__auto_generated
+msgid "Auto Generated Document"
+msgstr "المستند المنشأ تلقائيًا"
+
+#. module: account_inter_company_rules
+#. odoo-python
+#: code:addons/account_inter_company_rules/models/account_move.py:0
+#, python-format
+msgid "Automatically generated from %(origin)s of company %(company)s."
+msgstr "مُنشأ تلقائياً من %(origin)s للشركة %(company)s. "
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_res_company
+msgid "Companies"
+msgstr "الشركات"
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات "
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_company__intercompany_user_id
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_config_settings__intercompany_user_id
+msgid "Create as"
+msgstr "إنشاء كـ"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields.selection,name:account_inter_company_rules.selection__res_company__rule_type__not_synchronize
+msgid "Do not synchronize"
+msgstr "عدم القيام بالمزامنة "
+
+#. module: account_inter_company_rules
+#. odoo-python
+#: code:addons/account_inter_company_rules/models/res_company.py:0
+#: code:addons/account_inter_company_rules/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Generate a bill/invoice when a company confirms an invoice/bill for %s. The "
+"new bill/invoice will be created in the first Purchase/Sales Journal of the "
+"Journals list view."
+msgstr ""
+"أنشئ فواتير الموردين/العملاء عندما تقوم الشركة بتأكيد فاتورة مورد/عميل لـ%s."
+" سيتم إنشاء فاتورة المورد/العميل الجديدة في دفتر يومية المشتريات/المبيعات "
+"الأول في نافذة عرض القائمة الخاصة بدفتر اليومية. "
+
+#. module: account_inter_company_rules
+#: model_terms:ir.ui.view,arch_db:account_inter_company_rules.view_company_inter_change_inherit_form
+msgid "Inter-Company Transactions"
+msgstr "المعاملات بين الشركات "
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_company__intercompany_transaction_message
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_config_settings__intercompany_transaction_message
+msgid "Intercompany Transaction Message"
+msgstr "رسالة المعاملة بين الشركات "
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_account_move
+msgid "Journal Entry"
+msgstr "قيد اليومية"
+
+#. module: account_inter_company_rules
+#: model:ir.model,name:account_inter_company_rules.model_account_move_line
+msgid "Journal Item"
+msgstr "عنصر اليومية"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,help:account_inter_company_rules.field_res_company__intercompany_user_id
+#: model:ir.model.fields,help:account_inter_company_rules.field_res_config_settings__intercompany_user_id
+msgid ""
+"Responsible user for creation of documents triggered by intercompany rules."
+msgstr ""
+"المستخدم المسؤول عن إنشاء مستندات تُفعل من خلال قواعد ما بين الشركات. "
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_company__rule_type
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_config_settings__rule_type
+msgid "Rule"
+msgstr "القاعدة "
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_res_config_settings__rules_company_id
+msgid "Select Company"
+msgstr "اختر شركة"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,help:account_inter_company_rules.field_res_company__rule_type
+#: model:ir.model.fields,help:account_inter_company_rules.field_res_config_settings__rule_type
+msgid "Select the type to setup inter company rules in selected company."
+msgstr "اختر النوع لإعداد قواعد ما بين الشركات في الشركة المختارة. "
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_bank_statement_line__auto_invoice_id
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_move__auto_invoice_id
+#: model:ir.model.fields,field_description:account_inter_company_rules.field_account_payment__auto_invoice_id
+msgid "Source Invoice"
+msgstr "الفاتورة المصدر"
+
+#. module: account_inter_company_rules
+#: model:ir.model.fields.selection,name:account_inter_company_rules.selection__res_company__rule_type__invoice_and_refund
+msgid "Synchronize invoices/bills"
+msgstr "مزامنة فواتير العملاء/فواتير الموردين "

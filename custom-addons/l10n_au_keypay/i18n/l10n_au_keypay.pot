@@ -1,0 +1,177 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_au_keypay
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-01-08 03:09+0000\n"
+"PO-Revision-Date: 2021-01-08 03:09+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_au_keypay
+#: code:addons/l10n_au_keypay/models/res_config_settings.py:0
+#, python-format
+msgid "%s Payruns were fetched and added to your accounting"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model_terms:ir.ui.view,arch_db:l10n_au_keypay.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.model,name:l10n_au_keypay.model_account_account
+msgid "Account"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: code:addons/l10n_au_keypay/models/company.py:0
+#, python-format
+msgid ""
+"Account not found: %s, either create an account with that code or link an "
+"existing one to that Employment Hero code"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model_terms:ir.ui.view,arch_db:l10n_au_keypay.res_config_settings_view_form
+msgid "Allows to synchronize Employment Hero payroll for this company"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model_terms:ir.ui.view,arch_db:l10n_au_keypay.res_config_settings_view_form
+msgid "Australian Localization"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.model.fields,field_description:l10n_au_keypay.field_res_company__l10n_au_kp_identifier
+#: model:ir.model.fields,field_description:l10n_au_keypay.field_res_config_settings__l10n_au_kp_identifier
+msgid "Business Id"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.model,name:l10n_au_keypay.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: code:addons/l10n_au_keypay/models/company.py:0
+#, python-format
+msgid "Company %s does not have the apikey, business_id or the journal_id set"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.model,name:l10n_au_keypay.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.model.fields,field_description:l10n_au_keypay.field_res_config_settings__l10n_au_kp_country_code
+msgid "Country Code"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.model.fields,field_description:l10n_au_keypay.field_account_account__l10n_au_kp_enable
+#: model:ir.model.fields,field_description:l10n_au_keypay.field_res_company__l10n_au_kp_enable
+#: model:ir.model.fields,field_description:l10n_au_keypay.field_res_config_settings__l10n_au_kp_enable
+msgid "Enable Employment Hero Integration"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.model.fields,field_description:l10n_au_keypay.field_res_company__l10n_au_kp_lock_date
+#: model:ir.model.fields,field_description:l10n_au_keypay.field_res_config_settings__l10n_au_kp_lock_date
+msgid "Fetch Payrun After"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.actions.server,name:l10n_au_keypay.action_kp_payroll_fetch_payrun
+msgid "Fetch Payruns"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model_terms:ir.ui.view,arch_db:l10n_au_keypay.res_config_settings_view_form
+msgid "Fetch Payruns Manually"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.model.fields,help:l10n_au_keypay.field_account_account__l10n_au_kp_account_identifier
+msgid "Identifier of the Employment Hero account that matches this account"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.model.fields,help:l10n_au_keypay.field_account_move__l10n_au_kp_payrun_identifier
+msgid "Identifier of the Employment Hero payrun that created this move"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.model.fields,help:l10n_au_keypay.field_res_company__l10n_au_kp_lock_date
+#: model:ir.model.fields,help:l10n_au_keypay.field_res_config_settings__l10n_au_kp_lock_date
+msgid ""
+"Import payruns paied after this date. This date cannot be prior to Lock "
+"Date)"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.model,name:l10n_au_keypay.model_account_move
+msgid "Journal Entries"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.model.fields,field_description:l10n_au_keypay.field_res_config_settings__l10n_au_kp_api_key
+msgid "Employment Hero API Key"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.actions.server,name:l10n_au_keypay.keypay_sync_cron_ir_actions_server
+#: model:ir.cron,cron_name:l10n_au_keypay.keypay_sync_cron
+#: model:ir.cron,name:l10n_au_keypay.keypay_sync_cron
+msgid "Employment Hero Payroll Sync"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.model.fields,field_description:l10n_au_keypay.field_account_move__l10n_au_kp_payrun_identifier
+msgid "Employment Hero payrun id"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.model.fields,field_description:l10n_au_keypay.field_account_account__l10n_au_kp_account_identifier
+msgid "Matching Employment Hero Account"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: code:addons/l10n_au_keypay/models/company.py:0
+#, python-format
+msgid "Pay period ending %s (#%s)"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.model.fields,field_description:l10n_au_keypay.field_res_company__l10n_au_kp_journal_id
+#: model:ir.model.fields,field_description:l10n_au_keypay.field_res_config_settings__l10n_au_kp_journal_id
+msgid "Payroll Journal"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.model.fields,field_description:l10n_au_keypay.field_res_config_settings__l10n_au_kp_base_url
+msgid "Payroll URL"
+msgstr ""
+
+#. module: l10n_au_keypay
+#: model:ir.model.fields,help:l10n_au_keypay.field_res_config_settings__l10n_au_kp_country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+
+#. module: l10n_au_keypay
+#: code:addons/l10n_au_keypay/models/company.py:0
+#, python-format
+msgid "You don't have the access rights to fetch Employment Hero payrun."
+msgstr ""

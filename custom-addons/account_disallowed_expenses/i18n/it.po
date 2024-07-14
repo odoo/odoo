@@ -1,0 +1,237 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_disallowed_expenses
+# 
+# Translators:
+# Wil Odoo, 2023
+# Marianna Ciofani, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: account_disallowed_expenses
+#: model:ir.model,name:account_disallowed_expenses.model_account_account
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__account_ids
+msgid "Account"
+msgstr "Conto"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__active
+msgid "Active"
+msgstr "Attivo"
+
+#. module: account_disallowed_expenses
+#: model_terms:ir.actions.act_window,help:account_disallowed_expenses.action_account_disallowed_expenses_category_list
+msgid "Add a Disallowed Expenses Category"
+msgstr "Aggiungi una categoria per le spese non deducibili"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__category_id
+msgid "Category"
+msgstr "Categoria"
+
+#. module: account_disallowed_expenses
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_disallowed_expenses_category_form
+msgid "Category Name"
+msgstr "Nome categoria"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__code
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_disallowed_expenses_category_form
+msgid "Code"
+msgstr "Codice"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__company_id
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__company_id
+msgid "Company"
+msgstr "Azienda"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__create_uid
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__create_uid
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__create_date
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__create_date
+msgid "Created on"
+msgstr "Data creazione"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__current_rate
+msgid "Current Rate"
+msgstr "Quota attuale"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__rate
+msgid "Disallowed %"
+msgstr "% non deducibile"
+
+#. module: account_disallowed_expenses
+#: model:account.report.column,name:account_disallowed_expenses.disallowed_expenses_report_disallowed_amount
+msgid "Disallowed Amount"
+msgstr "Importo non deducibile"
+
+#. module: account_disallowed_expenses
+#: model:ir.ui.menu,name:account_disallowed_expenses.menu_action_account_report_de
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_form
+msgid "Disallowed Expenses"
+msgstr "Spese non deducibili"
+
+#. module: account_disallowed_expenses
+#: model:ir.actions.act_window,name:account_disallowed_expenses.action_account_disallowed_expenses_category_list
+#: model:ir.ui.menu,name:account_disallowed_expenses.menu_action_account_disallowed_expenses_category_list
+msgid "Disallowed Expenses Categories"
+msgstr "Categorie spese non deducibili"
+
+#. module: account_disallowed_expenses
+#: model:ir.model,name:account_disallowed_expenses.model_account_disallowed_expenses_category
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_account__disallowed_expenses_category_id
+msgid "Disallowed Expenses Category"
+msgstr "Categoria spese non deducibili"
+
+#. module: account_disallowed_expenses
+#: model:ir.model,name:account_disallowed_expenses.model_account_disallowed_expenses_report_handler
+msgid "Disallowed Expenses Custom Handler"
+msgstr "Gestore personalizzato spese non ammesse"
+
+#. module: account_disallowed_expenses
+#: model:ir.model,name:account_disallowed_expenses.model_account_disallowed_expenses_rate
+msgid "Disallowed Expenses Rate"
+msgstr "Quota di spese non deducibili"
+
+#. module: account_disallowed_expenses
+#: model:account.report,name:account_disallowed_expenses.disallowed_expenses_report
+#: model:ir.actions.client,name:account_disallowed_expenses.action_account_report_de
+msgid "Disallowed Expenses Report"
+msgstr "Nota spese non deducibile"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.constraint,message:account_disallowed_expenses.constraint_account_disallowed_expenses_category_unique_code
+msgid "Disallowed expenses category code should be unique."
+msgstr "Il codice categoria per le spese non deducibili deve essere univoco."
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__display_name
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: account_disallowed_expenses
+#. odoo-python
+#: code:addons/account_disallowed_expenses/report/account_disallowed_expenses_report.py:0
+#, python-format
+msgid "General Ledger"
+msgstr "Libro mastro"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__id
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_disallowed_expenses
+#. odoo-python
+#: code:addons/account_disallowed_expenses/report/account_disallowed_expenses_report.py:0
+#, python-format
+msgid "Journal Items"
+msgstr "Movimenti contabili"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__write_uid
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__write_uid
+msgid "Last Updated by"
+msgstr "Ultimo aggiornamento di"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__write_date
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__write_date
+msgid "Last Updated on"
+msgstr "Ultimo aggiornamento il"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__name
+msgid "Name"
+msgstr "Nome"
+
+#. module: account_disallowed_expenses
+#. odoo-python
+#: code:addons/account_disallowed_expenses/models/account_disallowed_expenses.py:0
+#, python-format
+msgid "No Rate"
+msgstr "Nessuna quota"
+
+#. module: account_disallowed_expenses
+#: model:account.report.column,name:account_disallowed_expenses.disallowed_expenses_report_rate
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_category__rate_ids
+msgid "Rate"
+msgstr "Quota"
+
+#. module: account_disallowed_expenses
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_disallowed_expenses_category_form
+msgid "Rates"
+msgstr "Quote"
+
+#. module: account_disallowed_expenses
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_disallowed_expenses_category_form
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_disallowed_expenses_category_tree
+msgid "Related Account(s)"
+msgstr "Conti correlati"
+
+#. module: account_disallowed_expenses
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_disallowed_expenses_category_tree
+msgid "Set Rates"
+msgstr "Configura tariffe"
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,help:account_disallowed_expenses.field_account_disallowed_expenses_category__active
+msgid "Set active to false to hide the category without removing it."
+msgstr ""
+"Per nascondere la categoria senza rimuoverla, impostare Attivo a falso."
+
+#. module: account_disallowed_expenses
+#: model:ir.model.fields,field_description:account_disallowed_expenses.field_account_disallowed_expenses_rate__date_from
+msgid "Start Date"
+msgstr "Data inizio"
+
+#. module: account_disallowed_expenses
+#. odoo-javascript
+#: code:addons/account_disallowed_expenses/static/src/components/disallowed_expenses_report/warnings.xml:0
+#, python-format
+msgid "There are multiple disallowed expenses rates in this period"
+msgstr "Sono presenti più quote di spese non deducibili per il periodo"
+
+#. module: account_disallowed_expenses
+#. odoo-python
+#: code:addons/account_disallowed_expenses/report/account_disallowed_expenses_report.py:0
+#, python-format
+msgid "Total"
+msgstr "Totale"
+
+#. module: account_disallowed_expenses
+#: model:account.report.column,name:account_disallowed_expenses.disallowed_expenses_report_total_amount
+msgid "Total Amount"
+msgstr "Importo totale"
+
+#. module: account_disallowed_expenses
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_disallowed_expenses_category_form
+msgid "e.g. 1201"
+msgstr "es. 1201"
+
+#. module: account_disallowed_expenses
+#: model_terms:ir.ui.view,arch_db:account_disallowed_expenses.view_account_disallowed_expenses_category_form
+msgid "e.g. Non-Deductible Tax"
+msgstr "es. Imposta non deducibile"

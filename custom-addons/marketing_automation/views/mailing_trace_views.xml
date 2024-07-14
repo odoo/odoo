@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="mailing_trace_view_form" model="ir.ui.view">
+        <field name="name">mailing.trace.view.form.inherit.marketing.automation</field>
+        <field name="model">mailing.trace</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_trace_view_form"/>
+        <field name="arch" type="xml">
+        	<xpath expr="//field[@name='source_id']" position="after">
+                <field name="marketing_trace_id"
+                    invisible="not marketing_trace_id"/>
+        	</xpath>
+        </field>
+    </record>
+</odoo>

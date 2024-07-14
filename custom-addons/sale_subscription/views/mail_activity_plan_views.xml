@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_activity_plan_action_subscription" model="ir.actions.act_window">
+        <field name="name">Subscription Plans</field>
+        <field name="res_model">mail.activity.plan</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="mail.mail_activity_plan_view_search"/>
+        <field name="context">{'default_res_model': 'sale.order'}</field>
+        <field name="domain">[('res_model', '=', 'sale.order')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new plan
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="mail_activity_plan_menu_config_subscription"
+        name="Activity Plans"
+        action="mail_activity_plan_action_subscription"
+        parent="sale_subscription.menu_sale_subscription_config"
+        sequence="110"
+        groups="sales_team.group_sale_manager"/>
+</odoo>

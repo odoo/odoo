@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Hide environment (test/prod) label -->
+    <record id="payment_provider_kanban" model="ir.ui.view">
+        <field name="name">SEPA Direct Debit Provider Kanban</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_payment_provider_desc')]//field[@name='state']" position="attributes">
+                <attribute name="invisible">code == 'sepa_direct_debit'</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Show and require bank journal for sepa too -->
+    <record id="payment_provider_form_inherit_payment_custom" model="ir.ui.view">
+        <field name="name">Sepa Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment_custom.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="payment_followup" position="attributes">
+                <attribute name="invisible">code == 'custom' and custom_mode != 'sepa_direct_debit'</attribute>
+            </group>
+        </field>
+    </record>
+
+    <record id="payment_provider_form_inherit_account_payment" model="ir.ui.view">
+        <field name="name">Sepa Provider Form 2</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="account_payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <field name="journal_id" position="attributes">
+                <attribute name="required">state != 'disabled' and (code not in ['none', 'custom'] or custom_mode == 'sepa_direct_debit')</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>

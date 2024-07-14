@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates>
+
+    <t t-name="account_consolidation.GridButtons" t-inherit="web_grid.Buttons">
+        <xpath expr="//div[hasclass('o_grid_buttons')]/div" position="after">
+            <div class="me-2" t-if="props.context.default_period_id">
+                <button class="btn btn-primary o_grid_button_add_column"
+                        type="button"
+                        role="button"
+                        t-on-click.prevent="() => this.addColumn()"
+                >
+                    Add a column
+                </button>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <record id="documents_internal_folder" model="documents.folder" forcecreate="0">
+        <field name="name">Internal</field>
+        <field name="description" type="html">
+            <center>
+                <p>Categorize, share and keep track of all your internal documents.</p>
+                <p>Incoming letters sent to <span class="o_folder_description_alias">inbox email alias</span> will be added to your inbox automatically.</p>
+            </center>
+        </field>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="documents_finance_folder" model="documents.folder" forcecreate="0">
+        <field name="name">Finance</field>
+        <field name="description" type="html">
+            <center>
+                <p>Automate your inbox using scanned documents or emails sent to <span class="o_folder_description_alias"><strong>inbox-financial</strong> email alias</span>.</p>
+            </center>
+        </field>
+        <field name="sequence">11</field>
+    </record>
+
+    <record id="documents_marketing_folder" model="documents.folder" forcecreate="0">
+        <field name="name">Marketing</field>
+        <field name="sequence">13</field>
+    </record>
+</data></odoo>

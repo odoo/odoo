@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Schedule 1: Regular -->
+    <record id="hr_payroll_structure_au_regular" model="hr.payroll.structure">
+        <field name="name">Australia: Employee Regular Pay</field>
+        <field name="code">AUREGULAR</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="type_id" ref="l10n_au_hr_payroll.structure_type_schedule_1"/>
+        <field name="report_id" ref="l10n_au_hr_payroll.action_report_payslip_au"/>
+    </record>
+    <record id="l10n_au_hr_payroll.structure_type_schedule_1" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_au_regular"/>
+    </record>
+
+    <!-- Schedule 2: Agricultural -->
+    <record id="hr_payroll_structure_au_horticulture" model="hr.payroll.structure">
+        <field name="name">Australia: Horticulture / Shearing Pay</field>
+        <field name="code">AUAGRI</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="type_id" ref="l10n_au_hr_payroll.structure_type_schedule_2"/>
+        <field name="report_id" ref="l10n_au_hr_payroll.action_report_payslip_au"/>
+    </record>
+    <record id="l10n_au_hr_payroll.structure_type_schedule_2" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_au_horticulture"/>
+    </record>
+
+    <!-- Schedule 3: Actors -->
+    <record id="hr_payroll_structure_au_actor" model="hr.payroll.structure">
+        <field name="name">Australia: Actor / Performer Pay</field>
+        <field name="code">AUACTOR</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="type_id" ref="l10n_au_hr_payroll.structure_type_schedule_3"/>
+        <field name="report_id" ref="l10n_au_hr_payroll.action_report_payslip_au"/>
+    </record>
+    <record id="hr_payroll_structure_au_actor_promotional" model="hr.payroll.structure">
+        <field name="name">Australia: Actor for promotional activity</field>
+        <field name="code">AUACTOR.PROMO</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="type_id" ref="l10n_au_hr_payroll.structure_type_schedule_3"/>
+        <field name="report_id" ref="l10n_au_hr_payroll.action_report_payslip_au"/>
+    </record>
+    <record id="l10n_au_hr_payroll.structure_type_schedule_3" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_au_actor"/>
+    </record>
+
+    <!-- Schedule 4: Return to work -->
+    <record id="hr_payroll_structure_au_return_to_work" model="hr.payroll.structure">
+        <field name="name">Australia: Return to work</field>
+        <field name="code">AUB2WORK</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="type_id" ref="l10n_au_hr_payroll.structure_type_schedule_4"/>
+        <field name="report_id" ref="l10n_au_hr_payroll.action_report_payslip_au"/>
+        <field name="rule_ids" eval="[]"/>
+        <field name="use_worked_day_lines">False</field>
+    </record>
+    <record id="l10n_au_hr_payroll.structure_type_schedule_4" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_au_return_to_work"/>
+        <field name="l10n_au_default_input_type_ids" eval="[(4, ref('l10n_au_hr_payroll.input_b2work'))]"/>
+    </record>
+
+    <!-- Schedule 5: Back payments and commissions -->
+    <record id="hr_payroll_structure_au_lumpsum" model="hr.payroll.structure">
+        <field name="name">Australia: Back payments and commissions</field>
+        <field name="code">AULUMP</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="type_id" ref="l10n_au_hr_payroll.structure_type_schedule_5"/>
+        <field name="report_id" ref="l10n_au_hr_payroll.action_report_payslip_au"/>
+        <field name="use_worked_day_lines">False</field>
+    </record>
+    <record id="l10n_au_hr_payroll.structure_type_schedule_5" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_au_lumpsum"/>
+    </record>
+
+    <!-- Schedule 9: Seniors and pensioners -->
+    <record id="hr_payroll_structure_au_senior" model="hr.payroll.structure">
+        <field name="name">Australia: Senior / Pensioner Pay</field>
+        <field name="code">AUSENIOR</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="type_id" ref="l10n_au_hr_payroll.structure_type_schedule_9"/>
+        <field name="report_id" ref="l10n_au_hr_payroll.action_report_payslip_au"/>
+    </record>
+    <record id="l10n_au_hr_payroll.structure_type_schedule_9" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_au_senior"/>
+    </record>
+
+    <!-- Schedule 11: Termination payments -->
+    <record id="hr_payroll_structure_au_termination" model="hr.payroll.structure">
+        <field name="name">Australia: Termination Payments</field>
+        <field name="code">AUTERM</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="type_id" ref="l10n_au_hr_payroll.structure_type_schedule_11_and_7"/>
+        <field name="report_id" ref="l10n_au_hr_payroll.action_report_payslip_au"/>
+        <field name="rule_ids" eval="[]"/>
+        <field name="use_worked_day_lines">False</field>
+    </record>
+    <record id="l10n_au_hr_payroll.structure_type_schedule_11_and_7" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_au_termination"/>
+    </record>
+
+    <!-- Schedule 15: Working holiday makers -->
+    <record id="hr_payroll_structure_au_whm" model="hr.payroll.structure">
+        <field name="name">Australia: Working Holiday Maker pay</field>
+        <field name="code">AUWHM</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="type_id" ref="l10n_au_hr_payroll.structure_type_schedule_15"/>
+        <field name="report_id" ref="l10n_au_hr_payroll.action_report_payslip_au"/>
+    </record>
+    <record id="l10n_au_hr_payroll.structure_type_schedule_15" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_au_whm"/>
+    </record>
+
+    <!-- No TFN provided -->
+    <record id="hr_payroll_structure_au_no_tfn" model="hr.payroll.structure">
+        <field name="name">Australia: no TFN provided</field>
+        <field name="code">AUNOTFN</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="type_id" ref="l10n_au_hr_payroll.structure_type_no_tfn"/>
+        <field name="report_id" ref="l10n_au_hr_payroll.action_report_payslip_au"/>
+    </record>
+    <record id="l10n_au_hr_payroll.structure_type_no_tfn" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_au_no_tfn"/>
+    </record>
+</odoo>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="preparation_display_main_restaurant" model="pos_preparation_display.display">
+        <field name="category_ids" eval="[(6, 0, [ref('pos_restaurant.food')])]"/>
+    </record>
+
+    <record id="preparation_display_order_0" model="pos_preparation_display.order">
+        <field name="displayed">True</field>
+        <field name="pos_order_id" ref="pos_restaurant.pos_closed_order_3_1" />
+    </record>
+    <record id="preparation_display_orderline_0_1" model="pos_preparation_display.orderline">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_margherita"/>
+        <field name="product_quantity">1</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_0" />
+    </record>
+    <record id="preparation_display_orderline_0_2" model="pos_preparation_display.orderline">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_funghi"/>
+        <field name="product_quantity">1</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_0" />
+    </record>
+    <record id="preparation_display_order_stage_0_1" model="pos_preparation_display.order.stage">
+        <field name="stage_id" ref="preparation_display_main_restaurant_to_prepare_stage" />
+        <field name="preparation_display_id" ref="preparation_display_main_restaurant" />
+        <field name="order_id" ref="preparation_display_order_0" />
+    </record>
+
+    <record id="preparation_display_order_1" model="pos_preparation_display.order">
+        <field name="displayed">True</field>
+        <field name="pos_order_id" ref="pos_restaurant.pos_closed_order_3_2" />
+    </record>
+    <record id="preparation_display_orderline_1_1" model="pos_preparation_display.orderline">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_vege"/>
+        <field name="product_quantity">1</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_1" />
+    </record>
+    <record id="preparation_display_orderline_1_2" model="pos_preparation_display.orderline">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_bolo"/>
+        <field name="product_quantity">2</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_1" />
+    </record>
+    <record id="preparation_display_order_stage_1_1" model="pos_preparation_display.order.stage">
+        <field name="stage_id" ref="preparation_display_main_restaurant_to_prepare_stage" />
+        <field name="preparation_display_id" ref="preparation_display_main_restaurant" />
+        <field name="order_id" ref="preparation_display_order_1" />
+    </record>
+
+    <record id="preparation_display_order_2" model="pos_preparation_display.order">
+        <field name="displayed">True</field>
+        <field name="pos_order_id" ref="pos_restaurant.pos_open_order_3" />
+    </record>
+    <record id="preparation_display_orderline_2_1" model="pos_preparation_display.orderline">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_mozza"/>
+        <field name="product_quantity">2</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_2" />
+    </record>
+    <record id="preparation_display_orderline_2_2" model="pos_preparation_display.orderline">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_temaki"/>
+        <field name="product_quantity">1</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_2" />
+    </record>
+    <record id="preparation_display_order_stage_2_1" model="pos_preparation_display.order.stage">
+        <field name="stage_id" ref="preparation_display_main_restaurant_ready_stage" />
+        <field name="preparation_display_id" ref="preparation_display_main_restaurant" />
+        <field name="order_id" ref="preparation_display_order_2" />
+    </record>
+
+    <record id="preparation_display_order_3" model="pos_preparation_display.order">
+        <field name="displayed">True</field>
+        <field name="pos_order_id" ref="pos_restaurant.pos_open_order_2" />
+    </record>
+    <record id="preparation_display_orderline_3_1" model="pos_preparation_display.orderline">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_chirashi"/>
+        <field name="product_quantity">2</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_3" />
+    </record>
+    <record id="preparation_display_orderline_3_2" model="pos_preparation_display.orderline">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_temaki"/>
+        <field name="product_quantity">1</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_3" />
+    </record>
+    <record id="preparation_display_orderline_3_3" model="pos_preparation_display.orderline">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_salmon"/>
+        <field name="product_quantity">1</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_3" />
+    </record>
+    <record id="preparation_display_orderline_3_4" model="pos_preparation_display.orderline">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_4formaggi"/>
+        <field name="product_quantity">4</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_3" />
+    </record>
+    <record id="preparation_display_order_stage_3_1" model="pos_preparation_display.order.stage">
+        <field name="stage_id" ref="preparation_display_main_restaurant_to_prepare_stage" />
+        <field name="preparation_display_id" ref="preparation_display_main_restaurant" />
+        <field name="order_id" ref="preparation_display_order_3" />
+    </record>
+
+    <record id="preparation_display_order_4" model="pos_preparation_display.order">
+        <field name="displayed">True</field>
+        <field name="pos_order_id" ref="pos_restaurant.pos_closed_order_4_1" />
+    </record>
+    <record id="preparation_display_orderline_4_1" model="pos_preparation_display.orderline">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_bolo"/>
+        <field name="product_quantity">1</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_4" />
+    </record>
+    <record id="preparation_display_orderline_4_2" model="pos_preparation_display.orderline" forcecreate="False">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_vege"/>
+        <field name="product_quantity">1</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_4" />
+    </record>
+    <record id="preparation_display_orderline_4_3" model="pos_preparation_display.orderline" forcecreate="False">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_bacon"/>
+        <field name="product_quantity">2</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_4" />
+    </record>
+    <record id="preparation_display_order_stage_4_1" model="pos_preparation_display.order.stage">
+        <field name="stage_id" ref="preparation_display_main_restaurant_ready_stage" />
+        <field name="preparation_display_id" ref="preparation_display_main_restaurant" />
+        <field name="order_id" ref="preparation_display_order_4" />
+    </record>
+
+    <record id="preparation_display_order_5" model="pos_preparation_display.order">
+        <field name="displayed">True</field>
+        <field name="pos_order_id" ref="pos_restaurant.pos_closed_order_4_2" />
+    </record>
+    <record id="preparation_display_orderline_5_1" model="pos_preparation_display.orderline">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_cheeseburger"/>
+        <field name="product_quantity">4</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_5" />
+    </record>
+    <record id="preparation_display_orderline_5_2" model="pos_preparation_display.orderline" forcecreate="False">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_salmon"/>
+        <field name="product_quantity">1</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_5" />
+    </record>
+    <record id="preparation_display_orderline_5_3" model="pos_preparation_display.orderline" forcecreate="False">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_chicken"/>
+        <field name="product_quantity">1</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_5" />
+    </record>
+    <record id="preparation_display_order_stage_5_1" model="pos_preparation_display.order.stage">
+        <field name="stage_id" ref="preparation_display_main_restaurant_ready_stage" />
+        <field name="preparation_display_id" ref="preparation_display_main_restaurant" />
+        <field name="order_id" ref="preparation_display_order_5" />
+    </record>
+
+    <record id="preparation_display_order_6" model="pos_preparation_display.order">
+        <field name="displayed">True</field>
+        <field name="pos_order_id" ref="pos_restaurant.pos_open_order_4" />
+    </record>
+    <record id="preparation_display_orderline_6_1" model="pos_preparation_display.orderline">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_chicken"/>
+        <field name="product_quantity">1</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_6" />
+    </record>
+    <record id="preparation_display_orderline_6_2" model="pos_preparation_display.orderline" forcecreate="False">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_mozza"/>
+        <field name="product_quantity">2</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_6" />
+    </record>
+    <record id="preparation_display_orderline_6_3" model="pos_preparation_display.orderline" forcecreate="False">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_bacon"/>
+        <field name="product_quantity">1</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_6" />
+    </record>
+    <record id="preparation_display_orderline_6_4" model="pos_preparation_display.orderline" forcecreate="False">
+        <field name="todo">True</field>
+        <field name="product_id" ref="pos_restaurant.pos_food_chicken"/>
+        <field name="product_quantity">1</field>
+        <field name="product_cancelled">0</field>
+        <field name="preparation_display_order_id" ref="preparation_display_order_6" />
+    </record>
+    <record id="preparation_display_order_stage_6_1" model="pos_preparation_display.order.stage">
+        <field name="stage_id" ref="preparation_display_main_restaurant_to_prepare_stage" />
+        <field name="preparation_display_id" ref="preparation_display_main_restaurant" />
+        <field name="order_id" ref="preparation_display_order_6" />
+    </record>
+
+    <function model="pos_preparation_display.order" name="_send_orders_to_preparation_display" eval="[ref('preparation_display_main_restaurant')]"/>
+
+    
+</odoo>

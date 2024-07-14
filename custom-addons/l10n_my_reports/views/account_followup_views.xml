@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="customer_statements_form_view_my" model="ir.ui.view">
+        <field name="name">customer.statements.followup.my</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account_followup.customer_statements_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//button[@name='action_open_unreconciled_partner']" position="after">
+                <field name="active_company_country_code" invisible="1" />
+                <button string="Print Statement of Account" invisible="active_company_country_code != 'MY'" name="action_print_report_statement_account"
+                        class="btn btn-secondary" type="object" />
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

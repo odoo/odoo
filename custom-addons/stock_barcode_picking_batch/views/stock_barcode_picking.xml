@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="picking_view_kanban_inherit_barcode_picking_batch" model="ir.ui.view">
+        <field name="name">stock.picking.view.kanban.barcode.picking.batch</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock_barcode.picking_view_kanban_inherit_barcode"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_kanban_record_top')]" position="after">
+                <field name="display_batch_button" invisible="1"/>
+                <div invisible="not display_batch_button"
+                     class="d-flex justify-content-end">
+                    <button name="action_open_batch_picking" type="object"
+                            class="btn btn-sm btn-primary">
+                        <field name="batch_id" readonly="state in ['cancel', 'done']"/>
+                        <span class="fa fa-external-link-square ms-1" title="Open Batch Picking"/>
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

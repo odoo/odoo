@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="deferred_expense_report" model="account.report">
+        <field name="name">Deferred Expense Report</field>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_analytic" eval="True"/>
+        <field name="filter_period_comparison" eval="True"/>
+        <field name="filter_growth_comparison" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_hierarchy">by_default</field>
+        <field name="default_opening_date_filter">last_month</field>
+        <field name="search_bar" eval="True"/>
+        <field name="custom_handler_model_id" ref="model_account_deferred_expense_report_handler"/>
+        <field name="column_ids">
+            <record id="deferred_expense_current" model="account.report.column">
+                <field name="name">Current</field>
+                <field name="expression_label">current</field>
+            </record>
+        </field>
+    </record>
+
+    <record id="deferred_revenue_report" model="account.report">
+        <field name="name">Deferred Revenue Report</field>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_analytic" eval="True"/>
+        <field name="filter_period_comparison" eval="True"/>
+        <field name="filter_growth_comparison" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_hierarchy">by_default</field>
+        <field name="default_opening_date_filter">last_month</field>
+        <field name="search_bar" eval="True"/>
+        <field name="custom_handler_model_id" ref="model_account_deferred_revenue_report_handler"/>
+        <field name="column_ids">
+            <record id="deferred_revenue_current" model="account.report.column">
+                <field name="name">Current</field>
+                <field name="expression_label">current</field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_attachment_view_tree" model="ir.ui.view">
+        <field name="name">hr.salary.attachment.tree</field>
+        <field name="model">hr.salary.attachment</field>
+        <field name="arch" type="xml">
+            <tree string="Salary Attachments" multi_edit="1">
+                <field name="currency_id" column_invisible="True"/>
+                <field name="employee_ids" widget="many2many_avatar_employee"/>
+                <field name="description"/>
+                <field name="deduction_type_id" options="{'no_open': True, 'no_create_edit': True, 'no_create': True}"/>
+                <field name="monthly_amount" sum="Monthly Amount" widget="monetary"/>
+                <field name="total_amount" optional="hide" widget="monetary"/>
+                <field name="paid_amount" optional="hide" widget="monetary"/>
+                <field name="date_start"/>
+                <field name="employee_count" column_invisible="True"/>
+                <field name="state" widget="badge" decoration-success="state == 'open'" decoration-info="state == 'close'" decoration-danger="state == 'cancel'" invisible="state == 'open' and employee_count &gt; 1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_salary_attachment_view_form" model="ir.ui.view">
+        <field name="name">hr.salary.attachment.form</field>
+        <field name="model">hr.salary.attachment</field>
+        <field name="arch" type="xml">
+            <form string="Salary Attachment">
+                <header>
+                    <button name="action_done" type="object" string="Mark as Completed"
+                        invisible="state not in ['open', 'cancel'] or employee_count &gt; 1"/>
+                    <button name="action_done" type="object" string="Create Individual Attachments"
+                        class="oe_highlight" invisible="state != 'open' or employee_count &lt;= 1"/>
+                    <button name="action_open" type="object" string="Running"
+                        invisible="state not in ['close', 'cancel'] or employee_count &gt; 1"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                        invisible="state not in ('open', 'close')"/>
+                    <field name="state" widget="statusbar"
+                        invisible="employee_count &gt; 1"/>
+                </header>
+                <div role="alert" class="alert alert-warning text-center" invisible="not has_similar_attachment">
+                    <field name="has_similar_attachment_warning"/>
+                    <field name="has_similar_attachment" invisible="1"/>
+                </div>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_open_payslips" class="oe_stat_button"
+                            icon="fa-money" id="open_payslips" invisible="payslip_count == 0">
+                            <field name="payslip_count" widget="statinfo" string="Payslips" />
+                        </button>
+                    </div>
+                    <field name="company_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="has_total_amount" invisible="1"/>
+                    <field name="attachment_name" invisible="1"/>
+                    <field name="employee_count" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="employee_ids" widget="many2many_avatar_employee"/>
+                            <field name="description"/>
+                            <field name="deduction_type_id" options="{'no_open': True, 'no_create_edit': True, 'no_create': True}"/>
+                            <field name="date_start"/>
+                            <field name="date_estimated_end" invisible="not date_estimated_end"/>
+                            <field name="date_end" invisible="not date_end or state == 'open'"/>
+                            <field name="attachment" filename="attachment_name"/>
+                        </group>
+                        <group>
+                            <field name="monthly_amount"/>
+                            <field name="total_amount" invisible="not has_total_amount" required="has_total_amount"/>
+                            <field name="paid_amount" invisible="paid_amount == 0"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_salary_attachment_view_search" model="ir.ui.view">
+        <field name="name">hr.salary.attachment.search</field>
+        <field name="model">hr.salary.attachment</field>
+        <field name="arch" type="xml">
+            <search string="Search Salary Attachment">
+                <field name="employee_ids"/>
+                <field name="description"/>
+                <field name="deduction_type_id"/>
+                <field name="state"/>
+                <filter string="Active" name="active_this_year"
+                    domain="[
+                        '&amp;', ('state', '=', 'open'),
+                                 ('date_start', '&lt;=', (context_today().strftime('%Y-%m-%d')))
+                    ]"/>
+                <filter string="Employee" name="employee_id_group" context="{'group_by': 'employee_ids'}"/>
+                <filter string="Type" name="deduction_type_id" context="{'group_by': 'deduction_type_id'}"/>
+                <filter string="Status" name="state" context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_salary_attachment_action" model="ir.actions.act_window">
+        <field name="name">Salary Attachment</field>
+        <field name="res_model">hr.salary.attachment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="hr_salary_attachment_action_view_employee" model="ir.actions.act_window">
+        <field name="name">Salary Attachment</field>
+        <field name="res_model">hr.salary.attachment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{"search_default_employee_ids": [active_id]}</field>
+    </record>
+</odoo>

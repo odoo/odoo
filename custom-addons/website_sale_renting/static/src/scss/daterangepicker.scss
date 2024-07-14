@@ -1,0 +1,71 @@
+.o_daterangepicker_danger {
+    background-color: #daa;
+    text-decoration: none;
+}
+
+.o_website_sale_renting {
+    &.daterangepicker {
+        td.disabled, option.disabled {
+            color: #d6d6d6;
+            background-color: transparent !important;
+            text-decoration: none;
+        }
+        .calendar-table {
+            td {
+                border-bottom-color: transparent;
+                &.off {
+                    &.ends {
+                        &, &:focus, &:hover{
+                            opacity: 0;
+                        }
+                    }
+                }
+                &.start-date {
+                    border-radius: 4px 0 0 4px;
+                }
+                &.end-date {
+                    border-radius: 0 4px 4px 0;
+                }
+                &.start-date.end-date {
+                    border-radius: 4px;
+                }
+                &.today {
+                    position: static;
+                    color: $o-brand-primary;
+                    text-decoration: underline;
+                    font-weight: 700;
+                    &.start-date, &.end-date{
+                        color: #ffffff;
+                    }
+                    &:before {
+                        display: none;
+                    }
+                }
+            }
+            th {
+                &.month {
+                    @include font-size(1rem !important);
+                    font-weight: normal;
+                }
+                &.off {
+                    &.ends {
+                        &, &:focus, &:hover{
+                            opacity: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.editor_enable {
+    .o_website_sale_daterange_picker .s_website_form_datetime {
+        input {
+            pointer-events: none;
+        }
+    }
+    .s_rental_search_select {
+        pointer-events: none;
+    }
+}

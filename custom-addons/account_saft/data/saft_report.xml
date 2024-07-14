@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Generic template to fill a partner address.
+    To be called with 'partner_address' set as a res.partner record.
+    -->
+    <template id="address">
+        <StreetName t-if="partner_address.street" t-out="partner_address.street[:70]"/>
+        <AdditionalAddressDetail t-if="partner_address.street2" t-out="partner_address.street2[:70]"/>
+        <City t-out="partner_address.city"/>
+        <PostalCode t-out="partner_address.zip"/>
+        <Country t-if="partner_address.country_id" t-out="partner_address.country_id.code"/>
+    </template>
+
+    <!-- Generic template to fill details about addresses and contacts found for a partner.
+    To be called with 'partner_id' set as a res.partner id.
+    -->
+    <template id="addresses_contacts">
+        <t t-set="partner_info" t-value="partner_detail_map[partner_id]"/>
+        <t t-set="partner" t-value="partner_info['partner']"/>
+        <Name t-out="partner.name[:70]"/>
+        <Address t-foreach="partner_info['addresses']" t-as="partner_address">
+            <t t-call="account_saft.address"/>
+        </Address>
+        <Contact t-foreach="partner_info['contacts']" t-as="partner_contact">
+            <ContactPerson>
+                <Title t-if="partner_contact.title" t-out="partner_contact.title.name"/>
+                <FirstName t-out="'NotUsed'"/>
+                <LastName t-out="partner_contact.name[:35]"/>
+            </ContactPerson>
+            <Telephone t-if="partner_contact.phone or partner_contact.mobile" t-out="(partner_contact.phone or partner_contact.mobile)[:18]"/>
+            <Email t-if="partner_contact.email" t-out="partner_contact.email[:70]"/>
+            <Website t-if="partner_contact.website" t-out="partner_contact.website"/>
+        </Contact>
+        <TaxRegistration t-if="partner.vat">
+            <TaxRegistrationNumber t-out="partner.vat"/>
+        </TaxRegistration>
+    </template>
+
+    <!-- Generic template to fill details about the company.
+    To be called with 'company' set as a res.company record.
+    -->
+    <template id="company_header">
+        <RegistrationNumber t-if="company.company_registry" t-out="company.company_registry"/>
+        <t t-call="account_saft.addresses_contacts">
+            <t t-set="partner_id" t-value="company.partner_id.id"/>
+        </t>
+        <BankAccount t-foreach="company.bank_ids" t-as="partner_bank">
+            <t t-if="partner_bank.acc_type == 'iban'">
+                <IBANNumber t-out="partner_bank.acc_number"/>
+            </t>
+            <t t-else="">
+                <BankAccountNumber t-out="partner_bank.acc_number"/>
+                <BankAccountName t-if="partner_bank.bank_name" t-out="partner_bank.bank_name[:70]"/>
+                <SortCode t-if="partner_bank.bank_bic" t-out="partner_bank.bank_bic[:18]"/>
+            </t>
+        </BankAccount>
+    </template>
+
+    <template id="line_debit_credit_amount">
+        <DebitAmount t-if="line_vals['debit']">
+            <Amount t-out="format_float(line_vals['debit'])"/>
+            <t t-if="line_vals['currency_id'] != company.currency_id.id">
+                <CurrencyCode t-out="line_vals['currency_code']"/>
+                <CurrencyAmount t-out="format_float(abs(line_vals['amount_currency']))"/>
+                <ExchangeRate t-out="format_float(line_vals['rate'], digits=8)"/>
+            </t>
+        </DebitAmount>
+        <CreditAmount t-if="line_vals['credit']">
+            <Amount t-out="format_float(line_vals['credit'])"/>
+            <t t-if="line_vals['currency_id'] != company.currency_id.id">
+                <CurrencyCode t-out="line_vals['currency_code']"/>
+                <CurrencyAmount t-out="format_float(abs(line_vals['amount_currency']))"/>
+                <ExchangeRate t-out="format_float(line_vals['rate'], digits=8)"/>
+            </t>
+        </CreditAmount>
+        <!-- When both debit and credit are 0.0, we still need to display one or the other, depending on the move_type -->
+        <DebitAmount t-if="not line_vals.get('debit') and not line_vals.get('credit') and line_vals.get('move_type', '') in ('in_invoice', 'out_refund')">
+            <Amount t-out="format_float(line_vals['debit'])"/>
+            <t t-if="line_vals['currency_id'] != company.currency_id.id">
+                <CurrencyCode t-out="line_vals['currency_code']"/>
+                <CurrencyAmount t-out="format_float(abs(line_vals['amount_currency']))"/>
+                <ExchangeRate t-out="format_float(line_vals['rate'], digits=8)"/>
+            </t>
+        </DebitAmount>
+        <CreditAmount t-if="not line_vals.get('debit') and not line_vals.get('credit') and line_vals.get('move_type', '') in ('out_invoice', 'in_refund')">
+            <Amount t-out="format_float(line_vals['credit'])"/>
+            <t t-if="line_vals['currency_id'] != company.currency_id.id">
+                <CurrencyCode t-out="line_vals['currency_code']"/>
+                <CurrencyAmount t-out="format_float(abs(line_vals['amount_currency']))"/>
+                <ExchangeRate t-out="format_float(line_vals['rate'], digits=8)"/>
+            </t>
+        </CreditAmount>
+    </template>
+
+    <template id="tax_information">
+        <TaxCode t-out="tax_vals['tax_id']"/>
+        <TaxPercentage t-if="tax_vals['tax_amount_type'] == 'percent'" t-out="tax_vals['tax_amount']"/>
+        <TaxBaseDescription t-out="tax_vals['tax_name'][:70]"/>
+        <TaxAmount>
+            <Amount t-out="format_float(sign * tax_vals['amount'])"/>
+            <t t-if="tax_vals['currency_id'] != company.currency_id.id">
+                <CurrencyCode t-out="tax_vals['currency_code']"/>
+                <CurrencyAmount t-out="format_float(sign * tax_vals['amount_currency'])"/>
+                <ExchangeRate t-out="format_float(tax_vals['rate'], digits=8)"/>
+            </t>
+        </TaxAmount>
+    </template>
+
+    <template id="saft_template">
+        <AuditFile t-attf-xmlns="#{xmlns}">
+            <Header>
+                <AuditFileVersion t-out="file_version"/>
+                <AuditFileCountry t-out="company.account_fiscal_country_id.code"/>
+                <AuditFileDateCreated t-out="today_str"/>
+                <SoftwareCompanyName>Odoo SA</SoftwareCompanyName>
+                <SoftwareID>Odoo</SoftwareID>
+                <SoftwareVersion t-out="software_version"/>
+                <Company>
+                    <t t-call="account_saft.company_header"/>
+                </Company>
+                <DefaultCurrencyCode t-out="company.currency_id.name"/>
+                <SelectionCriteria>
+                    <SelectionStartDate t-out="date_from"/>
+                    <SelectionEndDate t-out="date_to"/>
+                </SelectionCriteria>
+                <TaxAccountingBasis t-out="accounting_basis"/>
+            </Header>
+            <MasterFiles>
+                <GeneralLedgerAccounts t-if="account_vals_list">
+                    <Account t-foreach="account_vals_list" t-as="account_vals">
+                        <t t-set="account" t-value="account_vals['account']"/>
+                        <AccountID t-out="account.id"/>
+                        <AccountDescription t-out="account.name[:256]"/>
+                        <StandardAccountID t-out="account.code"/>
+                        <t t-if="account_vals['saft_account_type']">
+                            <AccountType t-esc="account_vals['saft_account_type']"/>
+                        </t>
+                        <t t-if="account_vals['opening_balance'] &lt; 0.0">
+                            <OpeningCreditBalance t-out="format_float(-account_vals['opening_balance'])"/>
+                        </t>
+                        <t t-else="">
+                            <OpeningDebitBalance t-out="format_float(account_vals['opening_balance'])"/>
+                        </t>
+                        <t t-if="account_vals['closing_balance'] &lt; 0.0">
+                            <ClosingCreditBalance t-out="format_float(-account_vals['closing_balance'])"/>
+                        </t>
+                        <t t-else="">
+                            <ClosingDebitBalance t-out="format_float(account_vals['closing_balance'])"/>
+                        </t>
+                    </Account>
+                </GeneralLedgerAccounts>
+                <Customers t-if="customer_vals_list">
+                    <Customer t-foreach="customer_vals_list" t-as="partner_vals">
+                        <t t-call="account_saft.addresses_contacts">
+                            <t t-set="partner_id" t-value="partner_vals['partner'].id"/>
+                        </t>
+                        <CustomerID t-out="partner_vals['partner'].id"/>
+                        <t t-if="partner_vals['opening_balance'] &lt; 0.0">
+                            <OpeningCreditBalance t-out="format_float(-partner_vals['opening_balance'])"/>
+                        </t>
+                        <t t-else="">
+                            <OpeningDebitBalance t-out="format_float(partner_vals['opening_balance'])"/>
+                        </t>
+                        <t t-if="partner_vals['closing_balance'] &lt; 0.0">
+                            <ClosingCreditBalance t-out="format_float(-partner_vals['closing_balance'])"/>
+                        </t>
+                        <t t-else="">
+                            <ClosingDebitBalance t-out="format_float(partner_vals['closing_balance'])"/>
+                        </t>
+                    </Customer>
+                </Customers>
+                <Suppliers t-if="supplier_vals_list">
+                    <Supplier t-foreach="supplier_vals_list" t-as="partner_vals">
+                        <t t-call="account_saft.addresses_contacts">
+                            <t t-set="partner_id" t-value="partner_vals['partner'].id"/>
+                        </t>
+                        <SupplierID t-out="partner_vals['partner'].id"/>
+                        <t t-if="partner_vals['opening_balance'] &lt; 0.0">
+                            <OpeningCreditBalance t-out="format_float(-partner_vals['opening_balance'])"/>
+                        </t>
+                        <t t-else="">
+                            <OpeningDebitBalance t-out="format_float(partner_vals['opening_balance'])"/>
+                        </t>
+                        <t t-if="partner_vals['closing_balance'] &lt; 0.0">
+                            <ClosingCreditBalance t-out="format_float(-partner_vals['closing_balance'])"/>
+                        </t>
+                        <t t-else="">
+                            <ClosingDebitBalance t-out="format_float(partner_vals['closing_balance'])"/>
+                        </t>
+                    </Supplier>
+                </Suppliers>
+                <TaxTable t-if="tax_vals_list">
+                    <TaxTableEntry t-foreach="tax_vals_list" t-as="tax_vals">
+                        <TaxCodeDetails>
+                            <TaxCode t-out="tax_vals['id']"/>
+                            <Description t-out="tax_vals['name'][:256]"/>
+                            <t t-if="tax_vals['amount_type'] == 'percent'">
+                                <TaxPercentage t-out="tax_vals['amount']"/>
+                            </t>
+                            <t t-else="">
+                                <FlatTaxRate>
+                                    <Amount t-out="tax_vals['amount']"/>
+                                </FlatTaxRate>
+                            </t>
+                            <Country t-out="company.account_fiscal_country_id.code"/>
+                        </TaxCodeDetails>
+                    </TaxTableEntry>
+                </TaxTable>
+                <Owners>
+                    <Owner>
+                        <t t-call="account_saft.company_header"/>
+                        <OwnerID t-out="company.id"/>
+                    </Owner>
+                </Owners>
+            </MasterFiles>
+            <GeneralLedgerEntries t-if="move_vals_list">
+                <NumberOfEntries t-out="len(move_vals_list)"/>
+                <TotalDebit t-out="format_float(total_debit_in_period)"/>
+                <TotalCredit t-out="format_float(total_credit_in_period)"/>
+                <Journal t-foreach="journal_vals_list" t-as="journal_vals">
+                    <JournalID t-out="journal_vals['id']"/>
+                    <Description t-out="journal_vals['name'][:256]"/>
+                    <Type t-out="journal_vals['type'][:9]"/>
+                    <Transaction t-foreach="journal_vals['move_vals_list']" t-as="move_vals">
+                        <TransactionID t-out="move_vals['id']"/>
+                        <Period t-out="format_date(move_vals['date'], '%m')"/>
+                        <PeriodYear t-out="format_date(move_vals['date'], '%Y')"/>
+                        <TransactionDate t-out="move_vals['date']"/>
+                        <TransactionType t-out="move_vals['type'][:9]"/>
+                        <Description t-out="move_vals['name'][:256]"/>
+                        <SystemEntryDate t-out="format_date(move_vals['create_date'], '%Y-%m-%d')"/>
+                        <GLPostingDate t-out="move_vals['date']"/>
+                        <t t-if="move_vals['partner_id']">
+                            <t t-set="partner_vals" t-value="partner_detail_map[move_vals['partner_id']]"/>
+                            <CustomerID t-if="partner_vals['type'] == 'customer'" t-out="move_vals['partner_id']"/>
+                            <SupplierID t-if="partner_vals['type'] == 'supplier'" t-out="move_vals['partner_id']"/>
+                        </t>
+                        <Line t-foreach="move_vals['line_vals_list']" t-as="line_vals">
+                            <RecordID t-out="line_vals['id']"/>
+                            <AccountID t-out="line_vals['account_id']"/>
+                            <ValueDate t-out="move_vals['invoice_date']"/>
+                            <SourceDocumentID t-out="move_vals['id']"/>
+                            <t t-if="line_vals['partner_id']">
+                                <t t-set="partner_vals" t-value="partner_detail_map[line_vals['partner_id']]"/>
+                                <CustomerID t-if="partner_vals['type'] == 'customer'" t-out="line_vals['partner_id']"/>
+                                <SupplierID t-if="partner_vals['type'] == 'supplier'" t-out="line_vals['partner_id']"/>
+                            </t>
+                            <Description t-out="(line_vals['name'] or move_vals['name'])[:256]"/>
+                            <t t-call="account_saft.line_debit_credit_amount"/>
+                            <TaxInformation t-foreach="line_vals.get('tax_detail_vals_list', [])" t-as="tax_vals">
+                                <t t-set="sign" t-value="-1 if line_vals['credit'] else 1"/>
+                                <t t-call="account_saft.tax_information"/>
+                            </TaxInformation>
+                        </Line>
+                    </Transaction>
+                </Journal>
+            </GeneralLedgerEntries>
+        </AuditFile>
+    </template>
+</odoo>

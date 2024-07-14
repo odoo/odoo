@@ -1,0 +1,65 @@
+.account_report {
+    .filter_date, .filter_comparison {
+        .dropdown-item.date {
+            display: flex;
+            justify-content: space-between;
+
+            &.focus, &.selected:hover, &.selected:focus { background-color: inherit }
+
+            .o_datetime_input {
+                display: inline;
+                width: 86px;
+                margin: 0 8px;
+                padding: 0 4px;
+                text-align: center;
+            }
+        }
+    }
+
+    .filter_comparison {
+        .dropdown-item.period {
+            display: flex;
+            justify-content: space-between;
+
+            &.focus, &.selected:hover, &.selected:focus { background-color: inherit }
+
+            input[type=number] {
+                display: inline;
+                width: 86px;
+                margin: 0 8px;
+                border-top: none;
+                border-left: none;
+                border-right: none;
+                border-bottom: 1px solid var(--o-input-border-color);
+                text-align: center;
+            }
+        }
+
+        .dropdown-item.date {
+            &.focus, &.selected:hover, &.selected:focus { background-color: inherit }
+            .o_datetime_input {
+                display: inline;
+                width: 86px;
+                margin: 0 8px;
+                padding: 0 4px;
+                text-align: center;
+            }
+        }
+    }
+
+    .filter_analytic, .filter_analytic_groupby, .filter_partner {
+        .dropdown-item {
+            display: flex;
+            label { width: 60px }
+        }
+        .dropdown-item.focus, .dropdown-item.selected:hover, .dropdown-item.selected:focus { background-color: inherit }
+        .o_input_dropdown { width: 100% }
+        .o_field_tags {
+            margin-left: 8px;
+            flex-direction: column;
+            flex-grow: 9;
+
+            .o_tag { width: fit-content }
+        }
+    }
+}

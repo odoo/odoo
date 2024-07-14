@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_move_form_inherit_l10n_mx_edi" model="ir.ui.view">
+            <field name="name">account.move.form.inherit.l10n_mx_edi</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//button[@name='button_request_cancel']" position="after">
+                    <!-- Invisible fields -->
+                    <field name="l10n_mx_edi_is_cfdi_needed" invisible="1"/>
+                    <field name="l10n_mx_edi_update_payments_needed" invisible="1" groups="account.group_account_invoice"/>
+                    <field name="l10n_mx_edi_update_sat_needed" invisible="1" groups="account.group_account_invoice"/>
+
+                    <button string="Update Payments"
+                            name="l10n_mx_edi_cfdi_invoice_try_update_payments"
+                            type="object"
+                            groups="account.group_account_invoice"
+                            invisible="not l10n_mx_edi_update_payments_needed"/>
+                    <button string="Update SAT"
+                            name="l10n_mx_edi_cfdi_try_sat"
+                            type="object"
+                            groups="account.group_account_invoice"
+                            invisible="not l10n_mx_edi_update_sat_needed"/>
+                </xpath>
+
+                <xpath expr="//sheet/group//group[last()]" position="inside">
+                    <field name="l10n_mx_edi_cfdi_state"
+                           invisible="not l10n_mx_edi_cfdi_state"/>
+                    <field name="l10n_mx_edi_cfdi_sat_state"
+                           invisible="not l10n_mx_edi_cfdi_sat_state"/>
+                    <field name="l10n_mx_edi_cfdi_uuid"
+                           invisible="not l10n_mx_edi_cfdi_uuid"/>
+                    <field name="l10n_mx_edi_cfdi_origin"
+                           invisible="not l10n_mx_edi_is_cfdi_needed"
+                           readonly="l10n_mx_edi_cfdi_state in ('sent', 'cancel')"/>
+                    <field name="l10n_mx_edi_cfdi_cancel_id"
+                           invisible="not l10n_mx_edi_cfdi_cancel_id"/>
+                </xpath>
+
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field name="l10n_mx_edi_payment_method_id"
+                           invisible="not l10n_mx_edi_is_cfdi_needed or l10n_mx_edi_payment_policy == 'PPD'"
+                           readonly="state != 'draft'"
+                           options="{'no_open': True}"/>
+                    <field name="l10n_mx_edi_payment_policy"
+                           invisible="not l10n_mx_edi_payment_policy"/>
+                    <field name="l10n_mx_edi_usage"
+                           invisible="not l10n_mx_edi_is_cfdi_needed"
+                           readonly="state != 'draft'"/>
+                </xpath>
+
+                <!-- Publico General -->
+                <xpath expr="//label[@for='invoice_date']" position="before">
+                    <field name="l10n_mx_edi_cfdi_to_public"
+                           invisible="not l10n_mx_edi_is_cfdi_needed"
+                           readonly="l10n_mx_edi_cfdi_state in ('sent', 'global_sent')"/>
+                </xpath>
+
+                <!-- Documents tab -->
+                <xpath expr="//page[@id='other_tab_entry']" position="after">
+                    <page id="edi_documents"
+                          string="CFDI"
+                          name="page_cfdi"
+                          invisible="not l10n_mx_edi_document_ids">
+                        <field name="l10n_mx_edi_document_ids">
+                            <tree create="false" delete="false" edit="false" no_open="1">
+                                <!-- Invisible fields -->
+                                <field name="attachment_id" column_invisible="1"/>
+                                <field name="cancel_button_needed" column_invisible="1"/>
+                                <field name="retry_button_needed" column_invisible="1"/>
+                                <field name="show_button_needed" column_invisible="1"/>
+                                <field name="message" column_invisible="1"/>
+
+                                <!-- Visible fields -->
+                                <field name="datetime"/>
+                                <field name="move_id"/>
+                                <field name="state" widget="l10n_mx_edi_document_state"/>
+                                <field name="sat_state" invisible="not sat_state"/>
+                                <field name="attachment_uuid" optional="hide"/>
+                                <field name="attachment_origin" optional="hide"/>
+                                <field name="cancellation_reason" optional="hide"/>
+
+                                <button name="action_show_document"
+                                        type="object"
+                                        string="Show"
+                                        invisible="not show_button_needed or move_id == parent.id"/>
+                                <button name="action_download_file"
+                                        type="object"
+                                        string="Download"
+                                        invisible="not attachment_id"/>
+                                <button name="action_retry"
+                                        type="object"
+                                        string="Retry"
+                                        invisible="not retry_button_needed"/>
+                                <button name="action_force_payment_cfdi"
+                                        type="object"
+                                        string="Force CFDI"
+                                        invisible="state != 'payment_sent_pue'"/>
+                                <button name="action_cancel"
+                                        type="object"
+                                        string="Cancel"
+                                        invisible="not cancel_button_needed"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_out_invoice_tree_inherit_l10n_mx_edi" model="ir.ui.view">
+            <field name="name">account.move.tree.inherit.l10n_mx_edi</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_out_invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="state" position="before">
+                    <field name="l10n_mx_edi_cfdi_uuid" optional="hide"/>
+                    <field name="l10n_mx_edi_cfdi_state" optional="hide"/>
+                    <field name="l10n_mx_edi_cfdi_sat_state" optional="hide"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

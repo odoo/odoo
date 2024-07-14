@@ -1,0 +1,435 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_sepa
+# 
+# Translators:
+# Wil Odoo, 2023
+# Rasareeyar Lappiam, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid "A bank account is not defined."
+msgstr "ไม่ได้กำหนดบัญชีธนาคาร"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_payment_register.py:0
+#, python-format
+msgid "A bank account must be set on the following documents: "
+msgstr "จำเป็นต้องตั้งค่าบัญชีธนาคารในเอกสารดังต่อไปนี้:"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03_austrian_004
+msgid "Austrian"
+msgstr "ออสเตรีย"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"Bank account %s 's bank does not have any BIC number associated. Please "
+"define one."
+msgstr ""
+"บัญชีธนาคาร ของธนาคาร%s ไม่มีหมายเลข BIC ที่เชื่อมโยงอยู่ "
+"โปรดกำหนดอย่างน้อยหนึ่งรายการ"
+
+#. module: account_sepa
+#: model_terms:ir.ui.view,arch_db:account_sepa.view_batch_payment_form_inherit
+msgid "Batch Booking"
+msgstr "การจองเป็นชุด"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_batch_payment
+msgid "Batch Payment"
+msgstr "เงินดาวน์"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_res_company
+msgid "Companies"
+msgstr "บริษัท"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_res_config_settings
+msgid "Config Settings"
+msgstr "ตั้งค่าการกำหนดค่า"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_res_partner
+msgid "Contact"
+msgstr "ติดต่อ"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_company__sepa_orgid_issr
+msgid ""
+"Entity that assigns the identification (eg. KBE-BCO or Finanzamt Muenchen "
+"IV)."
+msgstr ""
+"นิติบุคคลที่กำหนดการระบุตัวตน (เช่น KBE-BCO หรือ Finanzamt Muenchen IV)"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03
+msgid "Generic"
+msgstr "ทั่วไป"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03_de
+msgid "German"
+msgstr "เยอรมัน"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_journal__has_sepa_ct_payment_method
+msgid "Has Sepa Ct Payment Method"
+msgstr "มีวิธีการชำระเงิน Sepa Ct"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_res_company__sepa_orgid_id
+#: model:ir.model.fields,field_description:account_sepa.field_res_config_settings__sepa_orgid_id
+msgid "Identification"
+msgstr "บัตรประจำตัว"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_company__sepa_orgid_id
+#: model:ir.model.fields,help:account_sepa.field_res_config_settings__sepa_orgid_id
+msgid "Identification assigned by an institution (eg. VAT number)."
+msgstr "บัตรประจำตัวที่กำหนดโดยสถาบัน (เช่น หมายเลข VAT)"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_res_company__sepa_orgid_issr
+#: model:ir.model.fields,field_description:account_sepa.field_res_config_settings__sepa_orgid_issr
+msgid "Issuer"
+msgstr "ผู้ออก"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_journal
+msgid "Journal"
+msgstr "สมุดรายวัน"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_res_company__account_sepa_lei
+#: model:ir.model.fields,field_description:account_sepa.field_res_partner__account_sepa_lei
+#: model:ir.model.fields,field_description:account_sepa.field_res_users__account_sepa_lei
+msgid "LEI"
+msgstr "LEI"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_company__account_sepa_lei
+#: model:ir.model.fields,help:account_sepa.field_res_partner__account_sepa_lei
+#: model:ir.model.fields,help:account_sepa.field_res_users__account_sepa_lei
+msgid "Legal Entity Identifier"
+msgstr "ตัวระบุนิติบุคคล"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid "Maximum amount is %s for payments in Euros, %s for other currencies."
+msgstr ""
+"จำนวนเงินสูงสุดคือ %s สำหรับการชำระเงินในสกุลเงินยูโร และ%s "
+"สำหรับสกุลเงินอื่นๆ"
+
+#. module: account_sepa
+#: model_terms:ir.ui.view,arch_db:account_sepa.res_partner_sepa_inherit_form
+msgid "Miscellaneous"
+msgstr "เบ็ดเตล็ด"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_config_settings__sepa_initiating_party_name
+msgid ""
+"Name of the Creditor Reference Party. Usage Rule: Limited to 70 characters "
+"in length."
+msgstr ""
+"ชื่อของฝ่ายอ้างอิงเจ้าหนี้ กฎการใช้งาน: จำกัดความยาวไว้ที่ 70 ตัวอักษร"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_09
+msgid "New generic version (09)"
+msgstr "เวอร์ชันทั่วไปใหม่ (09)"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid "Partner %s has no country code defined."
+msgstr "พาร์ทเนอร์ %s ยังไม่ได้กำหนดรหัสประเทศ"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid "Partner %s has not bank account defined."
+msgstr "พาร์ทเนอร์ %s ยังไม่ได้กำหนดบัญชีธนาคาร"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_payment_method
+msgid "Payment Methods"
+msgstr "วิธีการชำระเงิน"
+
+#. module: account_sepa
+#: model_terms:ir.ui.view,arch_db:account_sepa.account_journal_dashboard_kanban_view_inherited
+msgid "Payment to send via SEPA"
+msgstr "การชำระเงินเพื่อส่งผ่าน SEPA"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_payment
+msgid "Payments"
+msgstr "การชำระเงิน"
+
+#. module: account_sepa
+#: model_terms:ir.ui.view,arch_db:account_sepa.account_journal_dashboard_kanban_view_inherited
+msgid "Payments to send via SEPA"
+msgstr "การชำระเงินที่จะส่งผ่าน SEPA"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"Please first set a SEPA identification number in the accounting settings."
+msgstr "โปรดตั้งค่าหมายเลขประจำตัว SEPA ในการตั้งค่าการบัญชีก่อนดำเนินการ"
+
+#. module: account_sepa
+#: model:ir.model,name:account_sepa.model_account_payment_register
+msgid "Register Payment"
+msgstr "ลงทะเบียนการชำระเงิน"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_account_batch_payment__sct_batch_booking
+msgid "Request batch booking from the bank for the related bank statements."
+msgstr "คำขอการจองชุดงานจากธนาคารสำหรับรายการเดินบัญชีจากธนาคารที่เกี่ยวข้อง"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_batch_payment__sct_batch_booking
+msgid "SCT Batch Booking"
+msgstr "การจองชุด SCT"
+
+#. module: account_sepa
+#: model:account.payment.method,name:account_sepa.account_payment_method_sepa_ct
+msgid "SEPA Credit Transfer"
+msgstr "การโอนเครดิต SEPA"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal_dashboard.py:0
+#, python-format
+msgid "SEPA Credit Transfers to Send"
+msgstr "การโอนเครดิต SEPA เพื่อส่ง"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_journal__sepa_pain_version
+#: model:ir.model.fields,field_description:account_sepa.field_account_payment__sepa_pain_version
+#: model_terms:ir.ui.view,arch_db:account_sepa.view_account_journal_form
+msgid "SEPA Pain Version"
+msgstr "เวอร์ชั่น Pain ของ SEPA"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_account_journal__sepa_pain_version
+#: model:ir.model.fields,help:account_sepa.field_account_payment__sepa_pain_version
+msgid ""
+"SEPA may be a generic format, some countries differ from the SEPA "
+"recommendations made by the EPC (European Payment Council) and thus the XML "
+"created need some tweaking."
+msgstr ""
+"SEPA อาจเป็นรูปแบบทั่วไป บางประเทศแตกต่างจากคำแนะนำ SEPA ที่ทำโดย EPC "
+"(European Payment Council) ดังนั้น XML "
+"ที่สร้างขึ้นจึงจำเป็นต้องมีการปรับแต่งบางอย่าง"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_batch_payment__sct_generic
+msgid "Sct Generic"
+msgstr "Sct ทั่วไป"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid "Some payments are above the maximum amount allowed."
+msgstr "การชำระเงินบางรายการสูงเกินกว่าจำนวนเงินสูงสุดที่อนุญาต"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"Some payments are not made on an IBAN recipient account. This batch might "
+"not be accepted by certain banks because of that."
+msgstr ""
+"การชำระเงินบางรายการไม่ได้ดำเนินการในบัญชีผู้รับ IBAN "
+"ธนาคารบางแห่งอาจไม่ยอมรับการชำระเงินชุดนี้เนื่องจากเหตุดังกล่าว"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid "Some payments have no recipient bank account set."
+msgstr "การชำระเงินบางรายการไม่ได้ตั้งค่าบัญชีธนาคารของผู้รับไว้"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"Some payments were instructed in another currency than Euro. This batch "
+"might not be accepted by certain banks because of that."
+msgstr ""
+"การชำระเงินบางส่วนได้รับคำสั่งในสกุลเงินอื่นที่ไม่ใช่ยูโร "
+"ธนาคารบางแห่งอาจไม่ยอมรับชุดการชำระเงินนี้เนื่องจากเหตุดังกล่าว"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03_se
+msgid "Swedish"
+msgstr "สวีเดน"
+
+#. module: account_sepa
+#: model:ir.model.fields.selection,name:account_sepa.selection__account_journal__sepa_pain_version__pain_001_001_03_ch_02
+msgid "Swiss"
+msgstr "สวิส"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_account_batch_payment__sct_generic
+msgid ""
+"Technical feature used during the file creation. A SEPA message is said to "
+"be 'generic' if it cannot be considered as a standard european credit "
+"transfer. That is if the bank journal is not in €, a transaction is not in €"
+" or a payee is not identified by an IBAN account number."
+msgstr ""
+"ฟีเจอร์ทางเทคนิคที่ใช้ระหว่างการสร้างไฟล์ ข้อความ SEPA ถือเป็นข้อความ "
+"'ทั่วไป' ถ้าหากไม่สามารถถือได้ว่าเป็นการโอนเครดิตแบบมาตรฐานของยุโรป "
+"นั่นคือหากสมุดรายวันของธนาคารไม่ใช่สกุลเงินยูโร "
+"ธุรกรรมไม่ได้อยู่ในสกุลเงินยูโร หรือหมายเลขบัญชี IBAN ไม่ได้ระบุผู้รับเงิน"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"The BIC code '%s' associated to the bank '%s' of bank account '%s' of partner '%s' does not respect the required convention.\n"
+"It must contain 8 or 11 characters and match the following structure:\n"
+"- 4 letters: institution code or bank code\n"
+"- 2 letters: country code\n"
+"- 2 letters or digits: location code\n"
+"- 3 letters or digits: branch code, optional\n"
+msgstr ""
+"รหัส BIC '%s' ที่เกี่ยวข้องกับธนาคาร '%s' ของบัญชีธนาคาร '%s' ของพาร์ทเนอร์ '%s' ไม่เป็นไปตามแบบแผนที่จำเป็น\n"
+"จำเป็นต้องมีตัวอักษร 8 หรือ 11 ตัว และตรงกับข้อกำหนดต่อไปนี้:\n"
+"- ตัวอักษร 4 ตัว: รหัสสถาบันหรือรหัสธนาคาร\n"
+"- ตัวอักษร 2 ตัว: รหัสประเทศ\n"
+"- ตัวอักษรหรือตัวเลข 2 ตัว: รหัสสถานที่\n"
+"- ตัวอักษรหรือตัวเลข 3 ตัว: รหัสสาขา (ไม่บังคับ)\n"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/res_partner.py:0
+#, python-format
+msgid ""
+"The LEI number must contain 20 characters and match the following structure:\n"
+"- 18 alphanumeric characters with capital letters\n"
+"- 2 digits in the end\n"
+msgstr ""
+"หมายเลข LEI ต้องมีตัวอักษร 20 ตัวและตรงกับโครงสร้างต่อไปนี้:\n"
+"- ตัวอักษรและตัวเลข 18 ตัวพร้อมตัวพิมพ์ใหญ่\n"
+"- ตัวเลขท้าย 2 ตัว\n"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"The account %s, linked to partner '%s', is not of type IBAN.\n"
+"A valid IBAN account is required to use SEPA features."
+msgstr ""
+"บัญชี %s ที่เชื่อมโยงกับพาร์ทเนอร์ '%s' ไม่ใช่ประเภทของ IBAN ที่ถูกต้อง\n"
+"จำเป็นต้องมีบัญชี IBAN ที่ถูกต้องเพื่อใช้ฟีเจอร์ SEPA"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_batch_payment.py:0
+#, python-format
+msgid ""
+"The account %s, of journal '%s', is not of type IBAN.\n"
+"A valid IBAN account is required to use SEPA features."
+msgstr ""
+"บัญชี %s ของสมุดรายวัน '%s' ไม่ใช่ประเภทของ IBAN ที่ถูกต้อง\n"
+"จำเป็นต้องมีบัญชี IBAN ที่ถูกต้องเพื่อใช้ฟีเจอร์ SEPA"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"The amount of the payment '%(payment)s' is too high. The maximum permitted "
+"is %(limit)s."
+msgstr ""
+"จำนวนเงินที่ชำระ '%(payment)s' นั้นสูงเกินไป จำนวนสูงสุดที่อนุญาตคือ "
+"%(limit)s"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid ""
+"The bank defined on account %s (from partner %s) has no BIC. Please first "
+"set one."
+msgstr ""
+"ธนาคารที่กำหนดในบัญชี %s (จากพาร์ทเนอร์ %s) ไม่มี BIC "
+"โปรดตั้งค่าหนึ่งรายการก่อนดำเนินการ"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_payment.py:0
+#, python-format
+msgid ""
+"The journal '%s' requires a proper IBAN account to pay via SEPA. Please "
+"configure it first."
+msgstr ""
+"สมุดรายวัน '%s' จำเป็นต้องมีบัญชี IBAN ที่เหมาะสมในการชำระเงินผ่าน SEPA "
+"โปรดกำหนดค่าก่อนดำเนินการ"
+
+#. module: account_sepa
+#. odoo-python
+#: code:addons/account_sepa/models/account_journal.py:0
+#, python-format
+msgid "Too many transactions for a single file."
+msgstr "มีธุรกรรมมากเกินไปสำหรับไฟล์เดียว"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_account_payment__sepa_uetr
+msgid "UETR"
+msgstr "UETR"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_account_payment__sepa_uetr
+msgid "Unique end-to-end transaction reference"
+msgstr "การอ้างอิงธุรกรรมจากต้นทางถึงปลายทางที่ไม่ซ้ำใคร"
+
+#. module: account_sepa
+#: model:ir.model.fields,help:account_sepa.field_res_company__sepa_initiating_party_name
+#: model:ir.model.fields,help:account_sepa.field_res_config_settings__sepa_orgid_issr
+msgid ""
+"Will appear in SEPA payments as the name of the party initiating the "
+"payment. Limited to 70 characters."
+msgstr ""
+"จะแสดงในการชำระเงิน SEPA ซึ่งเป็นชื่อของฝ่ายที่เริ่มต้นการชำระเงิน "
+"ถูกจำกัดไว้ที่ 70 ตัวอักษร"
+
+#. module: account_sepa
+#: model:ir.model.fields,field_description:account_sepa.field_res_company__sepa_initiating_party_name
+#: model:ir.model.fields,field_description:account_sepa.field_res_config_settings__sepa_initiating_party_name
+msgid "Your Company Name"
+msgstr "ชื่อบริษัทของคุณ"

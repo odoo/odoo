@@ -1,0 +1,2195 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_appraisal
+# 
+# Translators:
+# Wichanon Jamwutthipreecha, 2023
+# Wil Odoo, 2023
+# Rasareeyar Lappiam, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "%(user)s decided, as %(role)s, to publish the employee's feedback"
+msgstr "%(user)s ได้ตัดสินใจในฐานะ %(role)s เพื่อเผยแพร่ข้อเสนอแนะของพนักงาน"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "%s's Goals"
+msgstr "เป้าหมายของ %s"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "1 Meeting"
+msgstr "1 ประชุม"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_goal__progression__100
+msgid "100%"
+msgstr "100%"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_goal__progression__025
+msgid "25%"
+msgstr "25%"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__module_hr_appraisal_survey
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "360 Feedback"
+msgstr "360 Feedback"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_goal__progression__050
+msgid "50%"
+msgstr "50%"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_goal__progression__075
+msgid "75%"
+msgstr "75%"
+
+#. module: hr_appraisal
+#: model:mail.template,body_html:hr_appraisal.mail_template_appraisal_confirm
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        An appraisal of <t t-out=\"ctx.get('employee_to_name', 'employee')\">employee</t> has been confirmed.\n"
+"                        <br><br>\n"
+"                        Please schedule an appraisal date together.\n"
+"                        <br><br>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    View Appraisal\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        การประเมินของ <t t-out=\"ctx.get('employee_to_name', 'employee')\">พนักงาน</t> ได้รับการยืนยันแล้ว\n"
+"                        <br><br>\n"
+"                        โปรดกำหนดวันประเมินพร้อมกัน\n"
+"                        <br><br>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    ดูการประเมิน\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+
+#. module: hr_appraisal
+#: model:mail.template,body_html:hr_appraisal.mail_template_appraisal_request_from_employee
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Dear <t t-out=\"ctx.get('employee_to_name', 'employee')\">employee</t>,\n"
+"                        <br>\n"
+"                        <t t-out=\"ctx.get('author_name', '')\">Addison Olson</t> (<t t-out=\"ctx.get('author_mail', '')\">addison.olson28@example.com</t>) wishes an appraisal.\n"
+"                        <t t-if=\"ctx.get('user_body')\">\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; background-color: #F1F1F1;\">\n"
+"                                <t t-out=\"ctx.get('user_body')\">Annual appraisal.</t>\n"
+"                            </div>\n"
+"                        </t>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\" margin: auto; background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    View Appraisal\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        เรียน <t t-out=\"ctx.get('employee_to_name', 'employee')\">พนักงาน</t>\n"
+"                        <br>\n"
+"                        <t t-out=\"ctx.get('author_name', '')\">Addison Olson</t> (<t t-out=\"ctx.get('author_mail', '')\">addison.olson28@example.com</t>) ประสงค์ที่จะมีการประเมิน\n"
+"                        <t t-if=\"ctx.get('user_body')\">\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; background-color: #F1F1F1;\">\n"
+"                                <t t-out=\"ctx.get('user_body')\">การประเมินประจำปี</t>\n"
+"                            </div>\n"
+"                        </t>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\" margin: auto; background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    ดูการประเมิน\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+
+#. module: hr_appraisal
+#: model:mail.template,body_html:hr_appraisal.mail_template_appraisal_request
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Dear <t t-out=\"ctx.get('employee_to_name', 'employee')\">employee</t>,\n"
+"                        <br>\n"
+"                        An appraisal has been requested by <t t-out=\"ctx.get('author_name', '')\">Addison Olson</t>\n"
+"                        <br>\n"
+"                        (<t t-out=\"ctx.get('author_mail', '')\">addison.olson28@example.com</t>).\n"
+"                        <t t-if=\"ctx.get('user_body')\">\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; background-color: #F1F1F1;\">\n"
+"                                <t t-out=\"ctx.get('user_body')\">Annual appraisal.</t>\n"
+"                            </div>\n"
+"                        </t>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\" margin: auto; background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    View Appraisal\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                        <br>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        เรียน <t t-out=\"ctx.get('employee_to_name', 'employee')\">พนักงาน</t>\n"
+"                        <br>\n"
+"                        ได้รับการร้องขอการประเมินโดย <t t-out=\"ctx.get('author_name', '')\">Addison Olson</t>\n"
+"                        <br>\n"
+"                        (<t t-out=\"ctx.get('author_mail', '')\">addison.olson28@example.com</t>).\n"
+"                        <t t-if=\"ctx.get('user_body')\">\n"
+"                            <div style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; background-color: #F1F1F1;\">\n"
+"                                <t t-out=\"ctx.get('user_body')\">การประเมินประจำปี</t>\n"
+"                            </div>\n"
+"                        </t>\n"
+"                        <t t-if=\"ctx.get('recipient_users')\">\n"
+"                            <p style=\"margin: 16px 0px 16px 0px; padding: 8px 16px 8px 16px; text-align: center;\">\n"
+"                                <a t-att-href=\"ctx.get('url')\" style=\" margin: auto; background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                    ดูการประเมิน\n"
+"                                </a>\n"
+"                            </p>\n"
+"                        </t>\n"
+"                        <br>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>\n"
+"                Describe something that made you proud, a piece of work positive for\n"
+"                the company.\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                อธิบายสิ่งที่ทำให้คุณภูมิใจ ซึ่งเป็นผลงานเชิงบวก\n"
+"                ต่อบริษัท\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>\n"
+"                Did you face new difficulties? Did you confront yourself to new\n"
+"                obstacles?\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                \n"
+"คุณประสบปัญหาใหม่หรือไม่? คุณเผชิญหน้ากับ\n"
+"                อุปสรรคใหม่ๆ หรือไม่?\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>\n"
+"                Every job has strong points, what are, in your opinion, the tasks that\n"
+"                you enjoy the most/the least?\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                ทุกงานมีจุดแข็ง คุณคิดว่างานไหนที่\n"
+"                คุณชอบมากที่สุด/น้อยที่สุด?\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<em>\n"
+"                From a manager point of view, how could you help the employee to\n"
+"                overcome their weaknesses?\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                จากมุมมองของผู้จัดการ คุณจะช่วยพนักงาน\n"
+"                เอาชนะจุดอ่อนของพวกเขาได้อย่างไร?\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>\n"
+"                How can the company help you with your need and objectives in order\n"
+"                for you to reach your goals and look for the best collaboration.\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                บริษัทจะช่วยคุณในเรื่องความต้องการและวัตถุประสงค์เพื่อ\n"
+"                ให้คุณบรรลุเป้าหมายและมองหาการทำงานร่วมกันที่ดีที่สุดได้อย่างไร\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<em>\n"
+"                How do you see the employee in the future, do your vision follow the\n"
+"                employee's desire?\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                คุณมองพนักงานในอนาคตอย่างไร วิสัยทัศน์ของคุณเป็นไปตาม\n"
+"                ความต้องการของพนักงานหรือไม่?\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<em>\n"
+"                Some achievements comforting you in their strengths to face job's\n"
+"                issues.\n"
+"            </em>"
+msgstr ""
+"<em>\n"
+"                ความสำเร็จที่คุณมีจะปลอบใจคุณด้วยจุดแข็งในการเผชิญกับปัญหาของงาน\n"
+"            </em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Autonomy</em>"
+msgstr "<em>ความเป็นอิสระ</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>Culture/Behavior:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-1\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+msgstr ""
+"<em>วัฒนธรรม/พฤติกรรม:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-1\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Do you need rapid answer to the current situation?</em>"
+msgstr "<em>คุณต้องการคำตอบอย่างรวดเร็วต่อสถานการณ์ปัจจุบันหรือไม่?</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "<em>Give an example of long-term objective (&gt; 6 months)</em>"
+msgstr "<em>ขอยกตัวอย่างเป้าหมายระยะยาว (&gt; 6 เดือน)</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "<em>Give an example of short-term objective (&lt; 6 months)</em>"
+msgstr "<em>ให้ตัวอย่างวัตถุประสงค์ระยะสั้น (&lt; 6 เดือน)</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>Internal Communication:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-2\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+msgstr ""
+"<em>การสื่อสารภายใน:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-2\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>Job's content:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-3\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+msgstr ""
+"<em>เนื้อหาของตำแหน่งงาน:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-3\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Pro-activity</em>"
+msgstr "<em>ส่งเสริมกิจกรรม</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>Remuneration:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-5\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+msgstr ""
+"<em>ค่าตอบแทน:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-5\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Stress Resistance</em>"
+msgstr "<em>ความต้านทานต่อความเครียด</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Teamwork</em>"
+msgstr "<em>การทำงานเป็นทีม</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "<em>Time Management</em>"
+msgstr "<em>การจัดการเวลา</em>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<em>Work organization:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-4\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+msgstr ""
+"<em>องค์กรการทำงาน:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-4\">\n"
+"                    <i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/><i class=\"fa fa-star-o\" contenteditable=\"false\"/>\n"
+"                </span>"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_employee_base.py:0
+#, python-format
+msgid ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                            Schedule an appraisal\n"
+"                        </p><p>\n"
+"                            Plan appraisals with your colleagues, collect and discuss feedback.\n"
+"                        </p>"
+msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                           กำหนดเวลาการประเมิน\n"
+"                        </p><p>\n"
+"                            วางแผนการประเมินรวมกับเพื่อนร่วมงานของคุณ รวบรวมและพูดคุยเกี่ยวกับผลตอบรับ\n"
+"                        </p>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_kanban
+msgid "<span class=\"bg-info\">Ready</span>"
+msgstr "<span class=\"bg-info\">พร้อม</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_kanban
+msgid "<span class=\"bg-success\">Done</span>"
+msgstr "<span class=\"bg-success\">เสร็จสิ้น</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_users_view_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                            Last Appraisal\n"
+"                        </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                           การประเมินล่าสุด\n"
+"                        </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "<span class=\"o_stat_text\">Appraisals</span>"
+msgstr "<span class=\"o_stat_text\">การประเมิน</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "<span class=\"o_stat_text\">Goals</span>"
+msgstr "<span class=\"o_stat_text\">เป้าหมาย</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_kanban
+msgid "<span class=\"text-bg-danger\">Canceled</span>"
+msgstr "<span class=\"text-bg-danger\">ยกเลิกแล้ว</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_kanban
+msgid "<span class=\"text-bg-success\">Done</span>"
+msgstr "<span class=\"text-bg-success\">เสร็จ</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid ""
+"<span class=\"text-end\" invisible=\"employee_feedback_published\">Not Visible to Manager</span>\n"
+"                                            <span class=\"text-end\" invisible=\"not employee_feedback_published or state == 'new'\">Visible to Manager</span>\n"
+"                                            <span class=\"text-end\" invisible=\"not employee_feedback_published or state != 'new'\">Visible &amp; Editable by Manager</span>"
+msgstr ""
+"<span class=\"text-end\" invisible=\"employee_feedback_published\">ผู้จัดการไม่สามารถมองเห็นได้</span>\n"
+"                                            <span class=\"text-end\" invisible=\"not employee_feedback_published or state == 'new'\">ผู้จัดการสามารถมองเห็นได้</span>\n"
+"                                            <span class=\"text-end\" invisible=\"not employee_feedback_published or state != 'new'\">มองเห็น &amp; แก้ไขได้โดยผู้จัดการ</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid ""
+"<span class=\"text-end\" invisible=\"manager_feedback_published or not can_see_manager_publish\">Not Visible to Employee</span>\n"
+"                                            <span class=\"text-end\" invisible=\"not manager_feedback_published or not can_see_manager_publish\">Visible to Employee</span>"
+msgstr ""
+"<span class=\"text-end\" invisible=\"manager_feedback_published or not can_see_manager_publish\">พนักงานไม่สามารถมองเห็นได้</span>\n"
+"                                            <span class=\"text-end\" invisible=\"not manager_feedback_published or not can_see_manager_publish\">พนักงานสามารถมองเห็นได้</span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Evaluation\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                การประเมิน\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Feedback\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                ข้อเสนอแนะ\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Improvements\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                การปรับปรุง\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                My feelings\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                ความรู้สึกของฉัน\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                My future\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                อนาคตของฉัน\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"<span style=\"font-weight: bolder;\">\n"
+"                My work\n"
+"            </span>"
+msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                งานของฉัน\n"
+"            </span>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_kanban
+msgid "<strong><span>Meeting: </span></strong>"
+msgstr "<strong><span>ประชุม: </span></strong>"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_report_view_gantt
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_view_gantt
+msgid "<strong>Date — </strong>"
+msgstr "<strong>วันที่ — </strong>"
+
+#. module: hr_appraisal
+#: model:ir.model.constraint,message:hr_appraisal.constraint_hr_appraisal_goal_tag_name_uniq
+msgid "A tag with the same name already exists."
+msgstr "มีแท็กที่มีชื่อเดียวกันนี้อยู่แล้ว"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_needaction
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_needaction
+msgid "Action Needed"
+msgstr "จำเป็นต้องดำเนินการ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__active
+msgid "Active"
+msgstr "เปิดใช้งาน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_ids
+msgid "Activities"
+msgstr "กิจกรรม"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_exception_decoration
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "การตกแต่งข้อยกเว้นกิจกรรม"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_state
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_state
+msgid "Activity State"
+msgstr "สถานะกิจกรรม"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_type_icon
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "ไอคอนประเภทกิจกรรม"
+
+#. module: hr_appraisal
+#: model_terms:ir.actions.act_window,help:hr_appraisal.hr_appraisal_goal_tag_action
+msgid "Add a new tag"
+msgstr "เพิ่มแท็กใหม่"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.request_appraisal_view_form
+msgid "Add existing contacts..."
+msgstr "เพิ่มรายชื่อติดต่อที่มีอยู่..."
+
+#. module: hr_appraisal
+#: model:res.groups,name:hr_appraisal.group_hr_appraisal_manager
+msgid "Administrator"
+msgstr "ผู้ดูแลระบบ"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.hr_appraisal_action
+#: model:ir.actions.act_window,name:hr_appraisal.open_view_hr_appraisal_tree2
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__appraisal_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__appraisal_id
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_view_activity
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_tree
+msgid "Appraisal"
+msgstr "การประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.action_appraisal_report_all
+#: model:ir.ui.menu,name:hr_appraisal.menu_appraisal_analysis_report
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_report_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_report_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_graph
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_pivot
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Appraisal Analysis"
+msgstr "วิเคราะห์การประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_appraisal_note
+msgid "Appraisal Assessment Note"
+msgstr "ใบประเมินผลการประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__appraisal_confirm_mail_template
+msgid "Appraisal Confirm Mail Template"
+msgstr "เทมเพลตอีเมลยืนยันการประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_appraisal_count
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__appraisal_count
+msgid "Appraisal Count"
+msgstr "จำนวนการประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__date_close
+msgid "Appraisal Date"
+msgstr "วันที่การประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__employee_id
+msgid "Appraisal Employee"
+msgstr "การประเมินพนักงาน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__appraisal_employee_feedback_template
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__appraisal_employee_feedback_template
+msgid "Appraisal Employee Feedback Template"
+msgstr "เทมเพลตผลตอบรับการประเมินพนักงาน"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal Form to Fill"
+msgstr "แบบฟอร์มประเมินที่จะกรอก"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_appraisal_goal
+msgid "Appraisal Goal"
+msgstr "เป้าหมายการประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_appraisal_goal_tag
+msgid "Appraisal Goal Tags"
+msgstr "แท็กเป้าหมายการประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__appraisal_manager_feedback_template
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__appraisal_manager_feedback_template
+msgid "Appraisal Manager Feedback Template"
+msgstr "เทมเพลตผลตอบรับการประเมินผู้จัดการ"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal Officer"
+msgstr "เจ้าหน้าที่ประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__appraisal_plan_posted
+msgid "Appraisal Plan Posted"
+msgstr "โพสต์แผนการประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_department__appraisal_properties_definition
+msgid "Appraisal Properties"
+msgstr "คุณสมบัติการประเมิน"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal Request"
+msgstr "ร้องขอการประเมิน"
+
+#. module: hr_appraisal
+#: model:mail.template,subject:hr_appraisal.mail_template_appraisal_request
+msgid "Appraisal Requested"
+msgstr "ร้องขอการประเมินแล้ว"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_report__state__pending
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Appraisal Sent"
+msgstr "ส่งการประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_appraisal_report
+msgid "Appraisal Statistics"
+msgstr "สถิติการประเมิน"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_department_view_form
+msgid "Appraisal Templates"
+msgstr "เทมเพลตการประเมิน"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal for %s to fill"
+msgstr "การประเมินสำหรับ %s ที่จะเติม"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal of %s"
+msgstr "การประเมินของ %s"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Appraisal to fill"
+msgstr "การประเมินที่จะกรอก"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.hr_appraisal_action_from_department
+msgid "Appraisal to start"
+msgstr "การประเมินที่จะเริ่ม"
+
+#. module: hr_appraisal
+#: model:ir.actions.server,name:hr_appraisal.ir_cron_scheduler_appraisal_ir_actions_server
+msgid "Appraisal: Run employee appraisal"
+msgstr "หารประเมิน: ดำเนินการประเมินพนักงาน"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.open_view_hr_appraisal_tree
+#: model:ir.ui.menu,name:hr_appraisal.menu_hr_appraisal_root
+#: model:ir.ui.menu,name:hr_appraisal.menu_open_view_hr_appraisal_tree
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_departure_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Appraisals"
+msgstr "การประเมิน"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Appraisals Plans"
+msgstr "แผนการประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_department__appraisals_to_process_count
+msgid "Appraisals to Process"
+msgstr "การประเมินที่จะดำเนินการ"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Archived"
+msgstr "เก็บถาวรแล้ว"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Ask to fill a survey to other employees"
+msgstr "ขอให้กรอกแบบสอบถามให้พนักงานคนอื่น"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__assessment_note_ids
+msgid "Assessment Note"
+msgstr "ใบประเมินผล"
+
+#. module: hr_appraisal
+#: model_terms:ir.actions.act_window,help:hr_appraisal.action_hr_appraisal_goal
+msgid ""
+"Assign Goals to motivate your Employees and keep track of their objectives "
+"between Appraisals."
+msgstr ""
+"กำหนดเป้าหมายเพื่อจูงใจพนักงานของคุณและติดตามวัตถุประสงค์ระหว่างการประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_attachment_count
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_attachment_count
+msgid "Attachment Count"
+msgstr "จำนวนสิ่งที่แนบมา"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__author_id
+msgid "Author"
+msgstr "ผู้เขียน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__appraisal_plan
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__appraisal_plan
+msgid "Automatically Generate Appraisals"
+msgstr "สร้างการประเมินโดยอัตโนมัติ"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Automatically generate appraisals"
+msgstr "สร้างการประเมินโดยอัตโนมัติ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__avatar_1920
+msgid "Avatar"
+msgstr "อวตาร"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__avatar_128
+msgid "Avatar 128"
+msgstr "อวตาร 128"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "พนักงานทั่วไป"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__body_has_template_value
+msgid "Body content is the same as the template"
+msgstr "เนื้อหาเนื้อความเหมือนกับเทมเพลต"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_calendar_event
+msgid "Calendar Event"
+msgstr "ปฎิทินอีเวนต์"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__can_edit_body
+msgid "Can Edit Body"
+msgstr "แก้ไขเนื้อหาหลักได้"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__can_see_employee_publish
+msgid "Can See Employee Publish"
+msgstr "สามารถดูพนักงานที่เผยแพร่"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__can_see_manager_publish
+msgid "Can See Manager Publish"
+msgstr "สามารถดูผู้จัดการที่เผยแพร่"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.request_appraisal_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_departure_wizard__cancel_appraisal
+msgid "Cancel Future Appraisals"
+msgstr "ยกเลิกการประเมินในอนาคต"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_departure_wizard__cancel_appraisal
+msgid "Cancel all appraisal after contract end date."
+msgstr "ยกเลิกการประเมินทั้งหมดหลังจากวันสิ้นสุดสัญญา"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal__state__cancel
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_report__state__cancel
+msgid "Cancelled"
+msgstr "ยกเลิก"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__color
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__color
+msgid "Color"
+msgstr "สี"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_res_company
+msgid "Companies"
+msgstr "บริษัท"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__company_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__company_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__company_id
+msgid "Company"
+msgstr "บริษัท"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.request_appraisal_view_form
+msgid "Compose Email"
+msgstr "เขียนอีเมล"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_res_config_settings
+msgid "Config Settings"
+msgstr "ตั้งค่าการกำหนดค่า"
+
+#. module: hr_appraisal
+#: model:ir.ui.menu,name:hr_appraisal.menu_hr_appraisal_configuration
+msgid "Configuration"
+msgstr "การกำหนดค่า"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Configure General Feedback Template"
+msgstr "กำหนดค่าเทมเพลตผลตอบรับทั่วไป"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Confirm"
+msgstr "ยืนยัน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal__state__pending
+msgid "Confirmed"
+msgstr "ยืนยันแล้ว"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__body
+msgid "Contents"
+msgstr "เนื้อหา"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__create_date
+msgid "Create Date"
+msgstr "วันที่สร้าง"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__duration_first_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__duration_first_appraisal
+msgid "Create a first Appraisal after"
+msgstr "สร้างการประเมินแรกหลังจาก"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__duration_next_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__duration_next_appraisal
+msgid "Create a second Appraisal after"
+msgstr "สร้างการประเมินที่สองหลังจาก"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_company__duration_after_recruitment
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__duration_after_recruitment
+msgid "Create an Appraisal after recruitment"
+msgstr "สร้างการประเมินหลังการรับสมัคร"
+
+#. module: hr_appraisal
+#: model_terms:ir.actions.act_window,help:hr_appraisal.action_hr_appraisal_goal
+msgid "Create new goals"
+msgstr "สร้างเป้าหมายใหม่"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__create_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__create_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__create_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__create_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__create_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__create_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__create_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__create_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Creation Date"
+msgstr "วันที่สร้าง"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_department__custom_appraisal_templates
+msgid "Custom Appraisal Templates"
+msgstr "เทมเพลตการประเมินที่กำหนดเอง"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Date"
+msgstr "วันที่"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__date_close
+msgid ""
+"Date of the appraisal, automatically updated when the appraisal is Done or "
+"Cancelled."
+msgstr ""
+"วันที่ของการประเมิน อัปเดตโดยอัตโนมัติเมื่อการประเมินเสร็จสิ้นหรือยกเลิก"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__deadline
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__deadline
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_search
+msgid "Deadline"
+msgstr "วันครบกำหนด"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_view_activity
+msgid "Deadline:"
+msgstr "วันครบกำหนด"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal_goal.py:0
+#, python-format
+msgid "Deadline: %s"
+msgstr "วันครบกำหนด: %s"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_kanban
+msgid "Delete"
+msgstr "ลบ"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_department
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__department_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__department_id
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Department"
+msgstr "แผนก"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr "ตัวช่วยการออกกงาน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__description
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_form
+msgid "Description"
+msgstr "คำอธิบาย"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__display_name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__display_name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__display_name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__display_name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__display_name
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal__state__done
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_report__state__done
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Done"
+msgstr "เสร็จสิ้น"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_employee
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__employee_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_department_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Employee"
+msgstr "พนักงาน"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_appraisal
+msgid "Employee Appraisal"
+msgstr "การประเมินพนักงาน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_autocomplete_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__employee_autocomplete_ids
+msgid "Employee Autocomplete"
+msgstr "เติมข้อความพนักงานอัตโนมัติ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_feedback
+msgid "Employee Feedback"
+msgstr "ผลตอบรับพนักงาน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_feedback_published
+msgid "Employee Feedback Published"
+msgstr "เผยแพร่ผลตอบรับของพนักงานแล้ว"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_feedback_template
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_department__employee_feedback_template
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Employee Feedback Template"
+msgstr "เทมเพลตผลตอบรับพนักงาน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__name
+msgid "Employee Name"
+msgstr "ชื่อพนักงาน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__employee_user_id
+msgid "Employee User"
+msgstr "ผู้ใช้พนักงาน"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Employee's Feedback"
+msgstr "ผลตอบรับของพนักงาน"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.action_hr_appraisal_note
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_config_settings__assessment_note_ids
+#: model:ir.ui.menu,name:hr_appraisal.menu_hr_appraisal_note
+msgid "Evaluation Scale"
+msgstr "สเกลการประเมินผล"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/res_company.py:0
+#, python-format
+msgid "Exceeds expectations"
+msgstr "เกินความคาดหมาย"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Extended Filters..."
+msgstr "ตัวกรองเพิ่มเติม..."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Feedback Templates"
+msgstr "เทมเพลตผลตอบรับ"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Fill appraisal for %s"
+msgstr "กรอกการประเมินสำหรับ %s"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__date_final_interview
+msgid "Final Interview"
+msgstr "การสัมภาษณ์ครั้งสุดท้าย"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Final Interview Date"
+msgstr "วันที่การสัมภาษณ์ครั้งสุดท้าย"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__assessment_note
+msgid "Final Rating"
+msgstr "การให้คะแนนครั้งสุดท้าย"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_follower_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_follower_ids
+msgid "Followers"
+msgstr "ผู้ติดตาม"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_partner_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "ผู้ติดตาม (พาร์ทเนอร์)"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__activity_type_icon
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "ไอคอนแบบฟอนต์ที่ยอดเยี่ยมเช่น fa-tasks"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Future Activities"
+msgstr "กิจกรรมในอนาคต"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"Give one positive achievement that convinced you of the employee's\n"
+"            value."
+msgstr ""
+"มอบความสำเร็จเชิงบวกหนึ่งอย่างที่ทำให้คุณมั่นใจในคุณค่า\n"
+"            ของพนักงาน"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_form
+msgid "Goal"
+msgstr "เป้าหมาย"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.hr_appraisal_goal_tag_action
+msgid "Goal Tags"
+msgstr "แท็กเป้าหมาย"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.action_hr_appraisal_goal
+#: model:ir.ui.menu,name:hr_appraisal.menu_hr_appraisal_goal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_graph
+msgid "Goals"
+msgstr "เป้าหมาย"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Group By"
+msgstr "กลุ่มโดย"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Group by..."
+msgstr "จัดกลุ่มโดย…"
+
+#. module: hr_appraisal
+#: model:mail.template,name:hr_appraisal.mail_template_appraisal_confirm
+msgid "HR: Appraisal Confirmation"
+msgstr "HR: การยืนยันการประเมิน"
+
+#. module: hr_appraisal
+#: model:mail.template,name:hr_appraisal.mail_template_appraisal_request_from_employee
+msgid "HR: Employee Appraisal Request"
+msgstr "HR: คำขอประเมินพนักงาน"
+
+#. module: hr_appraisal
+#: model:mail.template,name:hr_appraisal.mail_template_appraisal_request
+msgid "HR: Manager appraisal request"
+msgstr "HR: คำขอประเมินผู้จัดการ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__has_message
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__has_message
+msgid "Has Message"
+msgstr "มีข้อความ"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "How could the employee improve?"
+msgstr "พนักงานจะสามารถปรับปรุงได้อย่างไร?"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "How do I feel about my own..."
+msgstr "ฉันรู้สึกยังไงกับตัวเอง..."
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "How do I feel about the company..."
+msgstr "ฉันรู้สึกอย่างไรกับบริษัท..."
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__id
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_exception_icon
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_exception_icon
+msgid "Icon"
+msgstr "ไอคอน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__activity_exception_icon
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "ไอคอนเพื่อระบุการยกเว้นกิจกรรม"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__message_needaction
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__message_has_error
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__message_has_sms_error
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__message_has_error
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "ถ้าเลือก ข้อความบางข้อความมีข้อผิดพลาดในการส่ง"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__image_1920
+msgid "Image"
+msgstr "รูปภาพ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__image_128
+msgid "Image 128"
+msgstr "รูปภาพ 128"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "In progress Evaluations"
+msgstr "อยู่ระหว่างดำเนินการประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__final_interview
+msgid "Interview"
+msgstr "สัมภาษณ์"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__is_mail_template_editor
+msgid "Is Editor"
+msgstr "เป็นผู้แก้ไข"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_is_follower
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_is_follower
+msgid "Is Follower"
+msgstr "เป็นผู้ติดตาม"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__is_manager
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__is_manager
+msgid "Is Manager"
+msgstr "เป็นผู้จัดการ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__lang
+msgid "Language"
+msgstr "ภาษา"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__last_appraisal_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__last_appraisal_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_base__last_appraisal_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_public__last_appraisal_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_users__last_appraisal_id
+msgid "Last Appraisal"
+msgstr "การประเมินล่าสุด"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__last_appraisal_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__last_appraisal_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_users__last_appraisal_date
+msgid "Last Appraisal Date"
+msgstr "วันที่ประเมินล่าสุด"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Last Meeting"
+msgstr "การประชุมล่าสุด"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__write_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__write_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__write_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__write_uid
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__write_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__write_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__write_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__write_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_search
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Late"
+msgstr "ล่าช้า"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Late Activities"
+msgstr "กิจกรรมล่าสุด"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid ""
+"Long term (&gt; 6 months) career discussion, where does the employee\n"
+"            wants to go, how to help them reach this path?"
+msgstr ""
+"การอภิปรายเกี่ยวกับอาชีพในระยะยาว (&gt; 6 เดือน) "
+"พนักงานต้องการอะไรและจะช่วยให้พวกเขาบรรลุเป้าหมายนี้ได้อย่างไร"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__template_id
+msgid "Mail Template"
+msgstr "เทมเพลตเมล"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__manager_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__manager_id
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_department_view_form
+#, python-format
+msgid "Manager"
+msgstr "ผู้จัดการ"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Manager Assessment will show here"
+msgstr "การประเมินผู้จัดการจะแสดงที่นี่"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__manager_feedback
+msgid "Manager Feedback"
+msgstr "ผลตอบรับของผู้จัดการ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__manager_feedback_published
+msgid "Manager Feedback Published"
+msgstr "เผยแพร่ผลตอบรับของผู้จัดการ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__manager_feedback_template
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_department__manager_feedback_template
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "Manager Feedback Template"
+msgstr "เทมเพลตผลตอบรับผู้จัดการ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__manager_user_ids
+msgid "Manager Users"
+msgstr "ผู้ใช้ผู้จัดการ"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Manager's Feedback"
+msgstr "ผลตอบรับของผู้จัดการ"
+
+#. module: hr_appraisal
+#: model:ir.actions.server,name:hr_appraisal.action_mark_as_done
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Mark as Done"
+msgstr "ทำเครื่องหมายว่าสำเร็จ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__meeting_count_display
+msgid "Meeting Count"
+msgstr "จำนวนการประชุม"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__meeting_ids
+msgid "Meetings"
+msgstr "การประชุม"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/res_company.py:0
+#, python-format
+msgid "Meets expectations"
+msgstr "ตรงตามความคาดหวัง"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_has_error
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_has_error
+msgid "Message Delivery error"
+msgstr "เกิดข้อผิดพลาดในการส่งข้อความ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_ids
+msgid "Messages"
+msgstr "ข้อความ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__my_activity_date_deadline
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "วันครบกำหนดกิจกรรมของฉัน"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.hr_appraisal_action_my
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "My Appraisals"
+msgstr "การประเมินของฉัน"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_search
+msgid "My Goals"
+msgstr "เป้าหมายของฉัน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal_tag__name
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__name
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_tree
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/res_company.py:0
+#, python-format
+msgid "Needs improvement"
+msgstr "จำเป็นต้องปรับปรุง"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "ปฏิทินอีเวนต์กิจกรรมถัดไป"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_date_deadline
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "วันครบกำหนดกิจกรรมถัดไป"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_summary
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_summary
+msgid "Next Activity Summary"
+msgstr "สรุปกิจกรรมถัดไป"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_type_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_type_id
+msgid "Next Activity Type"
+msgstr "ประเภทกิจกรรมถัดไป"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_view_search
+msgid "Next Appraisal"
+msgstr "การประเมินครั้งถัดไป"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__next_appraisal_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_public__next_appraisal_date
+#: model:ir.model.fields,field_description:hr_appraisal.field_res_users__next_appraisal_date
+msgid "Next Appraisal Date"
+msgstr "วันที่การประเมินถัดไป"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Next Meeting"
+msgstr "การประชุมถัดไป"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "No Meeting"
+msgstr "ไม่มีการประชุม"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Note"
+msgstr "โน้ต"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_needaction_counter
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_needaction_counter
+msgid "Number of Actions"
+msgstr "จํานวนการดําเนินการ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_has_error_counter
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_has_error_counter
+msgid "Number of errors"
+msgstr "จํานวนข้อผิดพลาด"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__message_needaction_counter
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "จำนวนข้อความที่ต้องดำเนินการ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__message_has_error_counter
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "จํานวนข้อความที่มีข้อผิดพลาดในการส่ง"
+
+#. module: hr_appraisal
+#: model:res.groups,name:hr_appraisal.group_hr_appraisal_user
+msgid "Officer: Access all appraisals"
+msgstr "เจ้าหน้าที่: เข้าถึงการประเมินทั้งหมด"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_view_form
+msgid "Ongoing"
+msgstr "กำลังดำเนินการ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__ongoing_appraisal_count
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_public__ongoing_appraisal_count
+msgid "Ongoing Appraisal Count"
+msgstr "จำนวนการประเมินอย่างต่อเนื่อง"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal_goal.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "ไม่รองรับการทำงาน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_request_appraisal__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"ตัวเลือกภาษาการแปล (โค้ด ISO) เพื่อเลือกเมื่อส่งอีเมล หากไม่ได้ตั้งค่าไว้ "
+"ระบบจะใช้เวอร์ชันภาษาอังกฤษ โดยปกติควรเป็นตัวอย่างนิพจน์ที่ให้ภาษาที่เหมาะสม"
+" เช่น {{ object.partner_id.lang }}"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__parent_user_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_base__parent_user_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee_public__parent_user_id
+msgid "Parent User"
+msgstr "ผู้ใช้หลัก"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_search
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "People I Manage"
+msgstr "บุคคลที่ฉันจัดการ"
+
+#. module: hr_appraisal
+#: model_terms:ir.actions.act_window,help:hr_appraisal.open_view_hr_appraisal_tree
+msgid "Plan appraisals with your colleagues, collect and discuss feedback."
+msgstr ""
+"วางแผนการประเมินกับเพื่อนร่วมงานของคุณ รวบรวมและหารือเกี่ยวกับผลตอบรับ"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Previous Appraisals"
+msgstr "การประเมินครั้งก่อน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__note
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Private Note"
+msgstr "บันทึกย่อส่วนตัว"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Private note (only accessible to people set as managers)"
+msgstr "บันทึกส่วนตัว (เข้าถึงได้เฉพาะผู้ที่ถูกกำหนดให้เป็นผู้จัดการเท่านั้น)"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__progression
+msgid "Progress"
+msgstr "ความคืบหน้า"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__appraisal_properties
+msgid "Properties"
+msgstr "คุณสมบัติ"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_hr_employee_public
+msgid "Public Employee"
+msgstr "ข้าราชการ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__rating_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__rating_ids
+msgid "Ratings"
+msgstr "การให้คะแนน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__recipient_ids
+msgid "Recipients"
+msgstr "ผู้รับ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__related_partner_id
+msgid "Related Partner"
+msgstr "พาร์ทเนอร์ที่เกี่ยวข้อง"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__employee_user_id
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__manager_user_id
+#: model:ir.model.fields,help:hr_appraisal.field_hr_employee__parent_user_id
+#: model:ir.model.fields,help:hr_appraisal.field_hr_employee_base__parent_user_id
+msgid "Related user name for the resource to manage its access."
+msgstr "ชื่อผู้ใช้ที่เกี่ยวข้องสำหรับทรัพยากรเพื่อจัดการการเข้าถึง"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__render_model
+msgid "Rendering Model"
+msgstr "โมเดลการแสดงผล"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Reopen"
+msgstr "เปิดอีกครั้ง"
+
+#. module: hr_appraisal
+#: model:ir.ui.menu,name:hr_appraisal.menu_hr_appraisal_report
+msgid "Reporting"
+msgstr "การรายงาน"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_users_view_form
+msgid "Request Appraisal"
+msgstr "ร้องขอการประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.actions.server,name:hr_appraisal.action_create_multi_appraisals
+msgid "Request Appraisals"
+msgstr "ร้องขอการประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_request_appraisal
+msgid "Request an Appraisal"
+msgstr "ร้องขอการประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__activity_user_id
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__activity_user_id
+msgid "Responsible User"
+msgstr "ผู้ใช้ที่รับผิดชอบ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__message_has_sms_error
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "ข้อผิดพลาดในการส่ง SMS"
+
+#. module: hr_appraisal
+#: model_terms:ir.actions.act_window,help:hr_appraisal.open_view_hr_appraisal_tree
+msgid "Schedule an appraisal"
+msgstr "กำหนดเวลาสำหรับการประเมิน"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Search Appraisal"
+msgstr "แสดงการประเมิน"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Self Assessment will show here"
+msgstr "การประเมินตนเองจะแสดงที่นี้"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.request_appraisal_view_form
+msgid "Send"
+msgstr "ส่ง"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "Send by email"
+msgstr "ส่งทางอีเมล"
+
+#. module: hr_appraisal
+#: model:mail.template,description:hr_appraisal.mail_template_appraisal_confirm
+msgid ""
+"Sent automatically to both employee and manager when appraisal is confirmed"
+msgstr ""
+"ส่งไปยังพนักงานและผู้จัดการโดยอัตโนมัติเมื่อการประเมินได้รับการยืนยันแล้ว"
+
+#. module: hr_appraisal
+#: model:mail.template,description:hr_appraisal.mail_template_appraisal_request_from_employee
+msgid ""
+"Sent manually to the employee by the manager who wants to do an appraisal"
+msgstr "ส่งไปยังพนักงานด้วยตนเองโดยผู้จัดการที่ต้องการทำการประเมิน"
+
+#. module: hr_appraisal
+#: model:mail.template,description:hr_appraisal.mail_template_appraisal_request
+msgid "Sent manually to the manager by the employee who wants an appraisal"
+msgstr "ส่งถึงผู้จัดการด้วยตนเองสำหรับพนักงานที่ต้องการประเมิน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_note__sequence
+msgid "Sequence"
+msgstr "ลำดับ"
+
+#. module: hr_appraisal
+#: model:ir.actions.act_window,name:hr_appraisal.hr_appraisal_config_settings_action
+#: model:ir.ui.menu,name:hr_appraisal.hr_appraisal_menu_configuration
+msgid "Settings"
+msgstr "การตั้งค่า"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_manager_feedback
+msgid "Short term (6-months) actions / decisions / objectives"
+msgstr "การดำเนินการ/การตัดสินใจ/วัตถุประสงค์ในระยะสั้น (6 เดือน)"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__show_employee_feedback_full
+msgid "Show Employee Feedback Full"
+msgstr "แสดงผลตอบรับของพนักงาน เต็ม"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__show_manager_feedback_full
+msgid "Show Manager Feedback Full"
+msgstr "แสดงผลตอบรับของผู้จัดการ เต็ม"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Show all records which has next action date is before today"
+msgstr "แสดงระเบียนทั้งหมดที่มีวันที่ดำเนินการถัดไปคือก่อนวันนี้"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__state
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_report__state
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "Status"
+msgstr "สถานะ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__activity_state
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"สถานะตามกิจกรรม\n"
+"เกินกำหนด: วันที่ครบกำหนดผ่านไปแล้ว\n"
+"วันนี้: วันที่จัดกิจกรรมคือวันนี้\n"
+"วางแผน: กิจกรรมในอนาคต"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/res_company.py:0
+#, python-format
+msgid "Strongly Exceed Expectations"
+msgstr "เกินความคาดหมายอย่างมาก"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__subject
+msgid "Subject"
+msgstr "หัวเรื่อง"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.request_appraisal_view_form
+msgid "Subject..."
+msgstr "หัวเรื่อง..."
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Such grouping is not allowed."
+msgstr "ไม่อนุญาตให้จัดกลุ่มดังกล่าว"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__tag_ids
+#: model:ir.ui.menu,name:hr_appraisal.menu_config_goal_tags
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_tag_view_tree
+msgid "Tags"
+msgstr "แท็ก"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid ""
+"Thanks to your Appraisal Plan, without any new manual Appraisal, the new "
+"Appraisal will be automatically created on %s."
+msgstr ""
+"ขอบคุณแผนการประเมินของคุณ หากไม่มีการประเมินด้วยตนเอง "
+"การประเมินใหม่จะถูกสร้างขึ้นโดยอัตโนมัติบน %s"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "The appraisal's status has been set to Done by %s"
+msgstr "สถานะของการประเมินได้รับการตั้งค่าเป็นเสร็จสิ้นโดย%s"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__note
+msgid "The content of this note is not visible by the Employee."
+msgstr "พนักงานจะมองไม่เห็นเนื้อหาของบันทึกย่อนี้"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__last_appraisal_date
+#: model:ir.model.fields,help:hr_appraisal.field_hr_employee__last_appraisal_date
+#: model:ir.model.fields,help:hr_appraisal.field_res_users__last_appraisal_date
+msgid "The date of the last appraisal"
+msgstr "วันที่ของการประเมินล่าสุด"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_employee__next_appraisal_date
+#: model:ir.model.fields,help:hr_appraisal.field_res_users__next_appraisal_date
+msgid ""
+"The date of the next appraisal is computed by the appraisal plan's dates "
+"(first appraisal + periodicity)."
+msgstr ""
+"วันที่ของการประเมินครั้งต่อไปคำนวณโดยวันที่ของแผนการประเมิน "
+"(การประเมินครั้งแรก + งวด)"
+
+#. module: hr_appraisal
+#: model:ir.model.constraint,message:hr_appraisal.constraint_res_company_positif_number_months
+msgid "The duration time must be bigger or equal to 1 month."
+msgstr "ระยะเวลาต้องมากกว่าหรือเท่ากับ 1 เดือน"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid ""
+"The employee %s arrived %s months ago. The appraisal is created and you can "
+"fill it here."
+msgstr ""
+"พนักงาน %s มาถึงเมื่อ %s เดือนที่แล้ว การประเมินถูกสร้างขึ้นแล้ว "
+"และคุณสามารถกรอกข้อมูลได้ที่นี่"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "The employee feedback cannot be changed by managers."
+msgstr "ผู้จัดการไม่สามารถเปลี่ยนแปลงความคิดเห็นของพนักงานได้"
+
+#. module: hr_appraisal
+#. odoo-javascript
+#: code:addons/hr_appraisal/static/src/fields/boolean_confirm.js:0
+#, python-format
+msgid ""
+"The employee's feedback will be published without their consent. Do you "
+"really want to publish it? This action will be logged in the chatter."
+msgstr ""
+"ความคิดเห็นของพนักงานจะถูกเผยแพร่โดยไม่ได้รับความยินยอมจากพวกเขา "
+"คุณต้องการเผยแพร่หรือไม่? การกระทำนี้จะถูกบันทึกไว้ในการแชท"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid ""
+"The last appraisal of %s was %s months ago. The appraisal is created and you"
+" can fill it here."
+msgstr ""
+"การประเมินล่าสุดของ %s คือ %s เดือนที่ผ่านมา การประเมินถูกสร้างขึ้นแล้ว "
+"และคุณสามารถกรอกได้ที่นี่"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "The manager feedback cannot be changed by an employee."
+msgstr "ความคิดเห็นของผู้จัดการไม่สามารถเปลี่ยนแปลงโดยพนักงานได้"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__assessment_note
+msgid "This field is not visible to the Employee."
+msgstr "ฟิลด์นี้จะไม่ปรากฏแก่พนักงาน"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal__state__new
+msgid "To Confirm"
+msgstr "ยืนยัน"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "To Do"
+msgstr "ที่จะทำ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields.selection,name:hr_appraisal.selection__hr_appraisal_report__state__new
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_appraisal_report_search
+msgid "To Start"
+msgstr "ที่จะเริ่มต้น"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_search
+msgid "Today Activities"
+msgstr "กิจกรรมวันนี้"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__activity_exception_decoration
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "ประเภทกิจกรรมข้อยกเว้นบนบันทึก"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__uncomplete_goals_count
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_employee__uncomplete_goals_count
+msgid "Uncomplete Goals Count"
+msgstr "จำนวนเป้าหมายที่ไม่สมบูรณ์"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Unpublished"
+msgstr "ยกเลิกการเผยแพร่"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_employee_view_search
+msgid "Upcoming Appraisals"
+msgstr "การประเมินที่กำลังจะมีขึ้น"
+
+#. module: hr_appraisal
+#: model:ir.model,name:hr_appraisal.model_res_users
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__manager_user_id
+msgid "User"
+msgstr "ผู้ใช้"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_request_appraisal__user_body
+msgid "User Contents"
+msgstr "เนื้อหาผู้ใช้"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__waiting_feedback
+msgid "Waiting Feedback from Employee/Managers"
+msgstr "รอผลตอบรับจากพนักงาน/ผู้จัดการ"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal__website_message_ids
+#: model:ir.model.fields,field_description:hr_appraisal.field_hr_appraisal_goal__website_message_ids
+msgid "Website Messages"
+msgstr "ข้อความเว็บไซต์"
+
+#. module: hr_appraisal
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal__website_message_ids
+#: model:ir.model.fields,help:hr_appraisal.field_hr_appraisal_goal__website_message_ids
+msgid "Website communication history"
+msgstr "ประวัติการสื่อสารของเว็บไซต์"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "What are my best achievement(s) since my last appraisal?"
+msgstr "ความสำเร็จที่ดีที่สุดของฉันนับตั้งแต่การประเมินครั้งล่าสุดคืออะไร?"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"What are my short and long-term goals with the company, and for my\n"
+"            career?"
+msgstr ""
+"เป้าหมายระยะสั้นและระยะยาวของฉันกับบริษัทและสำหรับอาชีพการงาน\n"
+"            ของฉันคืออะไร?"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid ""
+"What has been the most challenging aspect of my work this past year and\n"
+"            why?"
+msgstr ""
+"อะไรคือสิ่งที่ท้าทายที่สุดในงานของฉันในปีที่ผ่านมาและ\n"
+"            เพราะอะไร?"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "What would I need to improve my work?"
+msgstr "ฉันจะต้องปรับปรุงการทำงานของฉันอย่างไร?"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid ""
+"When the Appraisals plan is saved, it will overwrite all empty Next "
+"Appraisal Dates for every employee."
+msgstr ""
+"เมื่อบันทึกแผนการประเมินแล้ว "
+"ระบบจะเขียนทับวันที่ประเมินครั้งต่อไปที่ว่างเปล่าทั้งหมดสำหรับพนักงานทุกคน"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_employee_feedback
+msgid "Which parts of my job do I most / least enjoy?"
+msgstr "ฉันสนุกกับงานส่วนไหนมากที่สุด/น้อยที่สุด?"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid ""
+"You arrived %s months ago. Your appraisal is created and you can fill it "
+"here."
+msgstr ""
+"คุณเริ่มทำงานเมื่อ %s เดือนที่แล้ว การประเมินของคุณถูกสร้างขึ้นแล้ว "
+"และคุณสามารถกรอกข้อมูลได้ที่นี่"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "You cannot delete appraisal which is not in draft or canceled state"
+msgstr "คุณไม่สามารถลบการประเมินที่ไม่ได้อยู่ในแบบร่างหรือสถานะยกเลิก"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_employee.py:0
+#, python-format
+msgid "You cannot set 'Next Appraisal Date' in the past."
+msgstr "คุณไม่สามารถกำหนด 'วันประเมินครั้งต่อไป' ในอดีตได้"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid "Your Appraisal has been completed"
+msgstr "การประเมินของคุณเสร็จสมบูรณ์แล้ว"
+
+#. module: hr_appraisal
+#. odoo-python
+#: code:addons/hr_appraisal/models/hr_appraisal.py:0
+#, python-format
+msgid ""
+"Your last appraisal was %s months ago. Your appraisal is created and you can"
+" fill it here."
+msgstr ""
+"การประเมินครั้งสุดท้ายของคุณคือ %s เดือนที่ผ่านมา "
+"การประเมินของคุณถูกสร้างขึ้นแล้ว และคุณสามารถกรอกข้อมูลได้ที่นี่"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "e.g. John Doe"
+msgstr "เช่น John Doe"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_goal_view_form
+msgid "e.g. Present yourself to your new team"
+msgstr "เช่น นำเสนอตัวเองกับทีมใหม่ของคุณ"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "months after recruitment, then after"
+msgstr "เดือนหลังจากการรับสมัคร จากนั้น"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "months, then every"
+msgstr "เดือน จากนั้น ทุกๆ"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.res_config_settings_view_employee_form
+msgid "months."
+msgstr "เดือน"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_kanban
+msgid "oe_kanban_text_red"
+msgstr "oe_kanban_text_red"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.view_hr_appraisal_form
+msgid "once published"
+msgstr "เมื่อตีพิมพ์แล้ว"
+
+#. module: hr_appraisal
+#: model_terms:ir.ui.view,arch_db:hr_appraisal.hr_appraisal_view_activity
+msgid "text-danger"
+msgstr "text-danger"
+
+#. module: hr_appraisal
+#: model:mail.template,subject:hr_appraisal.mail_template_appraisal_request_from_employee
+msgid ""
+"{{ hasattr(object, 'name') and object.name or '' }} requests an Appraisal"
+msgstr "{{ hasattr(object, 'name') and object.name or '' }} คำขอการประเมิน"
+
+#. module: hr_appraisal
+#: model:mail.template,subject:hr_appraisal.mail_template_appraisal_confirm
+msgid "{{ object.employee_id.name }}: Appraisal Confirmed"
+msgstr "{{ object.employee_id.name }}: ยืนยันการประเมินแล้ว"

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="l10n_mx_edi_pos.PartnerDetailsEdit" t-inherit="point_of_sale.PartnerDetailsEdit" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('partner-details-box')]" position="after">
+            <div t-if="pos.company.country?.code === 'MX'"
+                class="partner-details-box row row-cols-1 row-cols-sm-2 gy-3 mt-3">
+                <h3 class="w-100">Additional invoicing information</h3>
+                <div class="partner-detail col div_l10n_mx_edi_additional_fields"
+                    t-if="isMexicoSelected()">
+                    <label class="form-label" for="fiscal_regime">Fiscal Regime</label>
+                    <select 
+                        class="detail form-select" 
+                        t-att="{'disabled': isFieldCommercialAndPartnerIsChild('l10n_mx_edi_fiscal_regime')}"
+                        name="l10n_mx_edi_fiscal_regime" 
+                        t-model="changes.l10n_mx_edi_fiscal_regime"
+                        t-att-class="{'border-danger': missingFields.includes('l10n_mx_edi_fiscal_regime')}"
+                        id="fiscal_regime"
+                        >
+                        <t t-foreach="pos.l10n_mx_edi_fiscal_regime" t-as="fiscal_regime" t-key="fiscal_regime.value">
+                            <option 
+                                t-att-value="fiscal_regime.value"
+                                t-out="fiscal_regime.name" />
+                        </t>
+                    </select>
+                </div>
+                <div class="partner-detail col">
+                    <div class="form-check">
+                        <label class="form-check-label" for="tax_breakdown">No Tax Breakdown</label>
+                        <input 
+                            type="checkbox" 
+                            t-att="{'disabled': isFieldCommercialAndPartnerIsChild('l10n_mx_edi_no_tax_breakdown')}"
+                            name="l10n_mx_edi_no_tax_breakdown" 
+                            t-model="changes.l10n_mx_edi_no_tax_breakdown"
+                            style="width: 15px; height: 15px" 
+                            id="tax_breakdown"
+                            class="form-check-input"
+                            t-att-class="{'border-danger': missingFields.includes('l10n_mx_edi_no_tax_breakdown')}"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

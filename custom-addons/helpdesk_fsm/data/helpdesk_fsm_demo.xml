@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="helpdesk.helpdesk_team1" model="helpdesk.team">
+        <field name="use_fsm" eval="True"/>
+        <field name="fsm_project_id" ref="industry_fsm.fsm_project"/>
+    </record>
+    <record id="helpdesk.helpdesk_team3" model="helpdesk.team">
+        <field name="use_fsm" eval="True"/>
+        <field name="fsm_project_id" ref="industry_fsm.fsm_project"/>
+    </record>
+
+    <record id="helpdesk_fsm_task_1" model="project.task">
+        <field name="name">Table legs are unbalanced</field>
+        <field name="project_id" ref="industry_fsm.fsm_project"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="helpdesk_ticket_id" ref="helpdesk.helpdesk_ticket_15"/>
+    </record>
+    <record id="helpdesk_fsm_task_2" model="project.task">
+        <field name="name">Want to change the place of the dining area</field>
+        <field name="project_id" ref="industry_fsm.fsm_project"/>
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="helpdesk_ticket_id" ref="helpdesk.helpdesk_ticket_17"/>
+    </record>
+
+</odoo>

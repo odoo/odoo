@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<odoo>
+    <data>
+        <template id="envio_dte">
+<EnvioDTE xmlns="http://www.sii.cl/SiiDte" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sii.cl/SiiDte EnvioDTE_v10.xsd" version="1.0">
+    <SetDTE ID="SetDoc">
+        <Caratula version="1.0">
+            <RutEmisor t-out="RutEmisor"/>
+            <RutEnvia t-out="RutEnvia"/>
+            <RutReceptor t-out="RutReceptor"/>
+            <FchResol t-out="FchResol"/>
+            <NroResol t-out="NroResol"/>
+            <TmstFirmaEnv t-out="TmstFirmaEnv"/>
+            <SubTotDTE>
+                <TpoDTE t-out="move.l10n_latam_document_type_id.code"/>
+                <NroDTE>1</NroDTE>
+            </SubTotDTE>
+        </Caratula>
+        <t t-out="dte"/>
+    </SetDTE>
+</EnvioDTE>
+        </template>
+
+        <template id="envio_boleta">
+            <EnvioBOLETA xmlns="http://www.sii.cl/SiiDte" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sii.cl/SiiDte EnvioBOLETA_v11.xsd" version="1.0">
+                <SetDTE ID="SetDoc">
+                    <Caratula version="1.0">
+                        <RutEmisor t-out="RutEmisor"/>
+                        <RutEnvia t-out="RutEnvia"/>
+                        <RutReceptor t-out="RutReceptor"/>
+                        <FchResol t-out="FchResol"/>
+                        <NroResol t-out="NroResol"/>
+                        <TmstFirmaEnv t-out="TmstFirmaEnv"/>
+                            <SubTotDTE>
+                                <TpoDTE t-out="move.l10n_latam_document_type_id.code"/>
+                                <NroDTE>1</NroDTE>
+                            </SubTotDTE>
+                    </Caratula>
+                    <t t-out="dte"/>
+                </SetDTE>
+            </EnvioBOLETA>
+        </template>
+    </data>
+</odoo>
+
+

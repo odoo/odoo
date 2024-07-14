@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<data>
+
+    <!-- Reports -->
+    <template id="web_studio.report_layout" inherit_id="web.report_layout">
+        <xpath expr="//head" position="inside">
+            <t t-if="studio" t-call-assets="web_studio.report_assets"/>
+        </xpath>
+    </template>
+
+</data>
+
+</odoo>

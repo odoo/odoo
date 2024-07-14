@@ -1,0 +1,67 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_external_tax
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_external_tax
+#: model_terms:ir.ui.view,arch_db:sale_external_tax.order_form_inherit
+msgid "Compute Taxes"
+msgstr "計算稅款"
+
+#. module: sale_external_tax
+#: model:ir.model.fields,field_description:sale_external_tax.field_sale_order__is_avatax
+msgid "Is Avatax"
+msgstr "是 AvaTax"
+
+#. module: sale_external_tax
+#: model:ir.model.fields,field_description:sale_external_tax.field_sale_order__is_tax_computed_externally
+msgid "Is Tax Computed Externally"
+msgstr "稅項是否由外部計算"
+
+#. module: sale_external_tax
+#: model:ir.model,name:sale_external_tax.model_sale_order
+msgid "Sales Order"
+msgstr "銷售訂單"
+
+#. module: sale_external_tax
+#: model:ir.model,name:sale_external_tax.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "銷售訂單明細"
+
+#. module: sale_external_tax
+#. odoo-python
+#: code:addons/sale_external_tax/models/sale_order.py:0
+#, python-format
+msgid "Taxes"
+msgstr "稅金"
+
+#. module: sale_external_tax
+#: model:ir.model.fields,help:sale_external_tax.field_sale_order__is_tax_computed_externally
+msgid ""
+"Technical field to determine if tax is calculated using an external service "
+"instead of Odoo."
+msgstr "技術欄位，以決定稅款是否使用外部服務而非 Odoo 計算。"
+
+#. module: sale_external_tax
+#. odoo-python
+#: code:addons/sale_external_tax/models/sale_order.py:0
+#, python-format
+msgid "Untaxed Amount"
+msgstr "不含稅金額"

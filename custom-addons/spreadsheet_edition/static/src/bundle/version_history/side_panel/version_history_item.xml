@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+  <t t-name="spreadsheet_edition.VersionHistoryItem">
+      <div 
+        class="o-version-history-item"
+        t-att-class="{'active': this.props.active}"
+        t-ref="item"
+        t-on-click="() => props.onActivation(this.revision.nextRevisionId)">
+
+        <div class="d-flex o-version-history-item-text">
+          <input
+            type="text"
+            maxlength="60"
+            class="o_input o-version-history-input"
+            t-ref="revisionName"
+            t-att-value="state.editName"
+            t-att-disabled="!this.props.active"
+            t-model="state.editName"
+            t-on-keydown="onKeyDown"
+            t-on-change="renameRevision"/>
+
+          <span
+            class="o-version-history-menu"
+            t-ref="menuButton"
+            t-att-class="{'active': this.props.active}"
+            t-on-click.stop="this.openMenu"
+            t-on-contextmenu.prevent.stop="this.openMenu">
+            <t t-call="o-spreadsheet-Icon.LIST"/>
+          </span>
+        </div>
+
+        <span
+          t-if="revision.name || isLatestVersion"
+          class="o-version-history-info d-flex"
+          t-esc="dateValue"/>
+        
+        <div
+          t-if="revision.user"
+          class="d-flex pt-1">
+          <span class="o_spreadsheet_user d-inline-flex align-items-center">
+            <img t-attf-src="/web/image?model=res.users&amp;field=avatar_128&amp;id={{revision.user[0]}}" class="pe-1 rounded-circle"/>
+            <span t-esc="revision.user[1]"/>
+          </span>
+        </div>
+      </div>
+      <Menu
+        t-if="menuState.isOpen"
+        position="menuState.position"
+        menuItems="menuItems"
+        onClose.bind="closeMenu"
+      />
+  </t>
+</templates>

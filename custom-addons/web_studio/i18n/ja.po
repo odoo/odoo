@@ -1,0 +1,4093 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* web_studio
+# 
+# Translators:
+# Martin Trigaux, 2023
+# Wil Odoo, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:09+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#, python-format
+msgid ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    This is your new action.\n"
+"                </p>\n"
+"                <p>By default, it contains a list and a form view and possibly\n"
+"                    other view types depending on the options you chose for your model.\n"
+"                </p>\n"
+"                <p>\n"
+"                    You can start customizing these screens by clicking on the Studio icon on the\n"
+"                    top right corner (you can also customize this help message there).\n"
+"                </p>\n"
+"            "
+msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"これがあなたの新しい行動です。\n"
+"</p>\n"
+"<p>デフォルトでは、リストとフォームビュー、およびモデルに選択したオプションに応じて\n"
+"他のビュータイプが含まれます。\n"
+"</p>\n"
+"<p>\n"
+"右上隅にあるStudioアイコンをクリックして、これらの画面のカスタマイズを開始できます\n"
+"(このヘルプメッセージをそこでカスタマイズすることもできます)。\n"
+"</p>"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/interactive_editor.js:0
+#, python-format
+msgid ""
+"\n"
+"    There are no many2one fields related to the current model.\n"
+"    To create a one2many field on the current model, you must first create its many2one counterpart on the model you want to relate to.\n"
+msgstr ""
+"\n"
+"    現在のモデルに関連したmany2oneフィールドはありません。\n"
+"    現在のモデルにone2manyフィールドを作成するには、最初に関連付けたいモデルに対応するmany2oneを作成する必要があります。\n"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid ""
+" <p class=\"o_view_nocontent_empty_report\">\n"
+"                Add a new report\n"
+"            </p>\n"
+"            "
+msgstr ""
+"<p class=\"o_view_nocontent_empty_report\">\n"
+"新しいレポートを追加する\n"
+"</p>"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid ""
+" <p class=\"o_view_nocontent_smiling_face\">\n"
+"                Add a new filter\n"
+"            </p>\n"
+"            "
+msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"新しいフィルターを追加します\n"
+"</p>"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor.xml:0
+#, python-format
+msgid "\" failed."
+msgstr "\"失敗しました。"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid "%(rule_string)s (%(model_name)s)"
+msgstr "%(rule_string)s (%(model_name)s)"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/report.py:0
+#, python-format
+msgid "%s Report"
+msgstr "%sレポート"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/new_model_item/new_model_item.xml:0
+#, python-format
+msgid "'My model'"
+msgstr "「自分のモデル」"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                Add a new access control list\n"
+"            </p>\n"
+"            "
+msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"新しいアクセス制御リストを追加する\n"
+"</p>"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_editor_model.js:0
+#, python-format
+msgid "A field with the same name already exists."
+msgstr "同じ名前のフィールドがすでに存在します。"
+
+#. module: web_studio
+#: model:ir.model.constraint,message:web_studio.constraint_studio_approval_entry_uniq_combination
+msgid "A rule can only be approved/rejected once per record."
+msgstr "ルールは、レコードごとに1回だけ承認/拒否できます。"
+
+#. module: web_studio
+#: model:ir.model.constraint,message:web_studio.constraint_studio_approval_rule_method_or_action_together
+msgid "A rule must apply to an action or a method (but not both)."
+msgstr "ルールは、アクションまたはメソッドに適用する必要があります(両方ではありません)。"
+
+#. module: web_studio
+#: model:ir.model.constraint,message:web_studio.constraint_studio_approval_rule_method_or_action_not_null
+msgid "A rule must apply to an action or a method."
+msgstr "ルールは、アクションまたはメソッドに適用する必要があります。"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_ir_model__abstract
+msgid "Abstract"
+msgstr "概要"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
+#, python-format
+msgid "Access Control"
+msgstr "アクセス管理"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid "Access Control Lists"
+msgstr "アクセス制御リスト"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_res_groups
+msgid "Access Groups"
+msgstr "アクセスグループ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/pivot/pivot_editor_sidebar.xml:0
+#, python-format
+msgid "Access records from cell"
+msgstr "セルからのレコードへのアクセス"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/graph/graph_editor_sidebar.xml:0
+#, python-format
+msgid "Access records from graph"
+msgstr "グラフからのレコードへのアクセス"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_mail_activity_type__category
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_entry__action_id
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__action_id
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_entry_search_view
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_rule_search_view
+msgid "Action"
+msgstr "アクション"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_ir_actions_act_window
+msgid "Action Window"
+msgstr "アクションウィンドウ"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_ir_actions_act_window_view
+msgid "Action Window View"
+msgstr "アクションウィンドウビュー"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/approval/approval_infos.xml:0
+#, python-format
+msgid "Action to approve:"
+msgstr "承認するアクション:"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/action_button/action_button.xml:0
+#, python-format
+msgid "Action to run"
+msgstr "実行するアクション"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.xml:0
+#, python-format
+msgid "Action's title"
+msgstr "アクションのタイトル"
+
+#. module: web_studio
+#: model:ir.model.fields,help:web_studio.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
+"アクションは、カレンダービューを開くなどの特定の動作をトリガーしたり、ドキュメントのアップロード時に完了として自動的にマークを付けたりする場合があります"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.xml:0
+#: code:addons/web_studio/static/src/client_action/editor/new_view_dialogs/map_new_view_dialog.xml:0
+#: code:addons/web_studio/static/src/client_action/editor/new_view_dialogs/new_view_dialog.xml:0
+#, python-format
+msgid "Activate View"
+msgstr "ビューをアクティブ化"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__active
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_rule_search_view
+#, python-format
+msgid "Active"
+msgstr "有効化"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
+#: code:addons/web_studio/static/src/studio_service.js:0
+#: model:ir.model,name:web_studio.model_mail_activity
+#, python-format
+msgid "Activity"
+msgstr "活動"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_mail_activity_type
+msgid "Activity Type"
+msgstr "活動タイプ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.js:0
+#, python-format
+msgid "Activity view unavailable on this model"
+msgstr "このモデルではアクティビティビューを使用できません"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/interactive_editor_sidebar.js:0
+#, python-format
+msgid "Add"
+msgstr "追加"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/chatter_container.xml:0
+#, python-format
+msgid "Add Chatter Widget"
+msgstr "Chatterウィジェットを追加する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_renderer/form_editor_renderer_components.xml:0
+#, python-format
+msgid "Add Picture"
+msgstr "写真を追加"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/new_button_box_dialog.js:0
+#, python-format
+msgid "Add a Button"
+msgstr "ボタンを追加する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/action_button/action_button.xml:0
+#, python-format
+msgid "Add a button"
+msgstr "ボタンを追加"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/button_properties.xml:0
+#, python-format
+msgid "Add a description..."
+msgstr "説明を追加..."
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_renderer/form_editor_renderer_components.xml:0
+#, python-format
+msgid "Add a pipeline status bar"
+msgstr "パイプラインステータスバーを追加する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/kanban/kanban_editor_compiler.js:0
+#, python-format
+msgid "Add a priority"
+msgstr "優先度を追加する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/button_properties.xml:0
+#, python-format
+msgid "Add an approval rule"
+msgstr "承認ルールを追加する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/kanban/kanban_editor_compiler.js:0
+#, python-format
+msgid "Add an avatar"
+msgstr "アバターを追加する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Add details to your records with an embedded list view"
+msgstr "埋め込みリストビューでレコードに詳細を追加"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/selection_content_dialog.xml:0
+#, python-format
+msgid "Add new value"
+msgstr "新しい値を追加"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/list/list_editor_sidebar/list_editor_sidebar.js:0
+#, python-format
+msgid "Add record at the bottom"
+msgstr "レコードを一番下に追加"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/list/list_editor_sidebar/list_editor_sidebar.js:0
+#, python-format
+msgid "Add record on top"
+msgstr "トップに記録を追加"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/kanban/kanban_editor_compiler.js:0
+#, python-format
+msgid "Add tags"
+msgstr "タグを追加する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/map/map_editor_sidebar.xml:0
+#, python-format
+msgid "Additional Fields"
+msgstr "追加フィールド"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_type_properties.js:0
+#, python-format
+msgid "Aggregate"
+msgstr "集計"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/calendar/calendar_editor_sidebar.xml:0
+#, python-format
+msgid "All Day"
+msgstr "終日"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.xml:0
+#, python-format
+msgid ""
+"All changes done to the report's structure will be discarded and the report "
+"will be reset to its factory settings."
+msgstr "レポートの構造に加えられた全ての変更は破棄され、レポートは工場出荷時の設定にリセットされます。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/button_properties.xml:0
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__group_id
+#, python-format
+msgid "Allowed Group"
+msgstr "許可されたグループ"
+
+#. module: web_studio
+#: model:ir.model.fields,help:web_studio.field_studio_approval_rule__responsible_id
+msgid ""
+"An activity will be assigned to this user when an approval is requested"
+msgstr "承認が要求されると、このユーザに活動が割り当てられます。"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid "An approval for '%(rule_name)s' has been requested on %(record_name)s"
+msgstr " '%(rule_name)s'の承認が %(record_name)sで要求されました。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/approval/approval_infos.xml:0
+#, python-format
+msgid "Approval"
+msgstr "承認"
+
+#. module: web_studio
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_entry_search_view
+msgid "Approval Entries"
+msgstr "承認エントリ"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_entry__rule_id
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_request__rule_id
+msgid "Approval Rule"
+msgstr "承認ルール"
+
+#. module: web_studio
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_rule_search_view
+msgid "Approval Rules"
+msgstr "承認規則"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/button_properties.xml:0
+#, python-format
+msgid "Approvals"
+msgstr "承認"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid "Approvals can only be done on a method or an action, not both."
+msgstr "承認は、メソッドまたはアクションの両方ではなく、メソッドまたはアクションでのみ実行できます。"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid "Approvals missing"
+msgstr "承認が見つかりません"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/approval/approval_infos.xml:0
+#, python-format
+msgid "Approve"
+msgstr "承認"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_entry__approved
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_entry_search_view
+msgid "Approved"
+msgstr "承認済"
+
+#. module: web_studio
+#: model_terms:ir.ui.view,arch_db:web_studio.notify_approval
+msgid "Approved as"
+msgstr "として承認"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/approval/approval_infos.xml:0
+#, python-format
+msgid "Approved on"
+msgstr "承認済み"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_entry__user_id
+msgid "Approved/rejected by"
+msgstr "承認/却下"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Archive deprecated records"
+msgstr "非推奨のレコードをアーカイブする"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_rule_form_view
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_rule_search_view
+#, python-format
+msgid "Archived"
+msgstr "アーカイブ済"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Archiving"
+msgstr "アーカイブ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_properties.js:0
+#, python-format
+msgid "Are you sure you want to remove the selection values?"
+msgstr "選択値を削除してもよろしいですか?"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/sidebar_properties_toolbox/sidebar_properties_toolbox.js:0
+#, python-format
+msgid "Are you sure you want to remove this %s from the view?"
+msgstr "この%sをビューから削除してもよろしいですか?"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/navbar/home_menu_customizer/home_menu_customizer.js:0
+#, python-format
+msgid "Are you sure you want to reset the background image?"
+msgstr "背景画像をリセットしてもよろしいですか?"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/edition_flow.js:0
+#, python-format
+msgid ""
+"Are you sure you want to restore the default view?\r\n"
+"All customization done with studio on this view will be lost."
+msgstr ""
+"デフォルトのビューを復元してもよろしいですか？\r\n"
+"このビューでスタジオで行われたすべてのカスタマイズは失われます。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/graph/graph_editor.js:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/list/list_editor_sidebar/list_editor_sidebar.js:0
+#, python-format
+msgid "Ascending"
+msgstr "昇順"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Assign a responsible to each record"
+msgstr "各レコードに責任者を割り当てます"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Assign dates and visualize records in a calendar"
+msgstr "日付を割り当て、カレンダーでレコードを視覚化します"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Attach a picture to a record"
+msgstr "レコードに写真を添付する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/search/search_editor.xml:0
+#, python-format
+msgid "Autocompletion Fields"
+msgstr "オートコンプリートフィールド"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_base_automation
+msgid "Automation Rule"
+msgstr "自動化規則"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
+#, python-format
+msgid "Automations"
+msgstr "自動化"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_type_properties.js:0
+#, python-format
+msgid "Average"
+msgstr "平均"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/list/list_editor_sidebar/list_editor_sidebar.js:0
+#, python-format
+msgid "Average of %s"
+msgstr "%sの平均"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/approval/approval_infos.xml:0
+#, python-format
+msgid "Awaiting approval"
+msgstr "承認待ち"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/cohort/cohort_editor.js:0
+#, python-format
+msgid "Backwards"
+msgstr "後方"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/graph/graph_editor.js:0
+#, python-format
+msgid "Bar"
+msgstr "バー"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_base
+msgid "Base"
+msgstr "ベース"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/views/kanban_report/new_report_dialog.js:0
+#, python-format
+msgid "Blank"
+msgstr "空白"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#, python-format
+msgid "Blocked"
+msgstr "不許可"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_properties.xml:0
+#, python-format
+msgid "Bold"
+msgstr "ボールド"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/views/kanban_report/new_report_dialog.js:0
+#, python-format
+msgid "Business header/footer"
+msgstr "ビジネスヘッダ/フッタ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/action_button/action_button.js:0
+#, python-format
+msgid "Buttons Properties"
+msgstr "ボタンプロパティ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
+#: code:addons/web_studio/static/src/studio_service.js:0
+#, python-format
+msgid "Calendar"
+msgstr "カレンダー"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/action_button/action_button.xml:0
+#, python-format
+msgid "Call a method"
+msgstr "メソッドを呼出す"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/form_editor_sidebar.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/kanban/kanban_editor_sidebar/kanban_editor_sidebar.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/list/list_editor_sidebar/list_editor_sidebar.xml:0
+#, python-format
+msgid "Can Create"
+msgstr "作成可"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/form_editor_sidebar.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/list/list_editor_sidebar/list_editor_sidebar.xml:0
+#, python-format
+msgid "Can Delete"
+msgstr "削除可"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/form_editor_sidebar.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/list/list_editor_sidebar/list_editor_sidebar.xml:0
+#, python-format
+msgid "Can Edit"
+msgstr "編集可"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__can_validate
+msgid "Can be approved"
+msgstr "承認可"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid "Can't patch 'create', 'write' and 'unlink'."
+msgstr "'作成', '書く' および 'リンク解除'のパッチを当てることはできません。"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid "Can't patch private methods."
+msgstr "プライベートメソッドにパッチを当てることができません。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/app_menu_editor/app_menu_editor.xml:0
+#: code:addons/web_studio/static/src/client_action/editor/new_model_item/new_model_item.xml:0
+#: code:addons/web_studio/static/src/client_action/editor/new_view_dialogs/map_new_view_dialog.xml:0
+#: code:addons/web_studio/static/src/client_action/editor/new_view_dialogs/new_view_dialog.xml:0
+#: code:addons/web_studio/static/src/client_action/menu_creator/menu_creator.xml:0
+#: code:addons/web_studio/static/src/client_action/studio_home_menu/icon_creator_dialog/icon_creator_dialog.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/components/field_selector_dialog.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/new_button_box_dialog.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/action_button/action_button.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/field_configuration.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/selection_content_dialog.xml:0
+#, python-format
+msgid "Cancel"
+msgstr "取消"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Categorize records with custom tags"
+msgstr "カスタムタグでレコードを分類する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/navbar/home_menu_customizer/home_menu_customizer.xml:0
+#, python-format
+msgid "Change Background"
+msgstr "背景を変更する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/rainbow_effect.xml:0
+#, python-format
+msgid "Change Image"
+msgstr "画像を変更する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Chatter"
+msgstr "おしゃべり"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "CheckBox"
+msgstr "チェックボックス"
+
+#. module: web_studio
+#: model:ir.model.fields,help:web_studio.field_ir_model_data__studio
+msgid "Checked if it has been edited with Studio."
+msgstr "スタジオで編集されているか確認しました。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/app_creator/app_creator.xml:0
+#, python-format
+msgid "Choose an app name"
+msgstr "アプリ名を選択してください"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/menu_creator/menu_creator.xml:0
+#, python-format
+msgid "Choose the name of the menu"
+msgstr "メニューの名前を選択"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/cohort/cohort_editor.js:0
+#, python-format
+msgid "Churn"
+msgstr "チャーン"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/approval/studio_approval.xml:0
+#, python-format
+msgid "Click to see all approval rules."
+msgstr "クリックすると、すべての承認ルールが表示されます。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/approval/approval_infos.xml:0
+#: code:addons/web_studio/static/src/client_action/navbar/navbar.xml:0
+#: code:addons/web_studio/static/src/client_action/xml_resource_editor/xml_resource_editor.xml:0
+#: code:addons/web_studio/static/src/client_action/xml_resource_editor/xml_resource_editor.xml:0
+#, python-format
+msgid "Close"
+msgstr "閉じる"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
+#: code:addons/web_studio/static/src/studio_service.js:0
+#, python-format
+msgid "Cohort"
+msgstr "コーホート"
+
+#. module: web_studio
+#. odoo-javascript
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#: code:addons/web_studio/models/ir_model.py:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/calendar/calendar_editor_sidebar.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.xml:0
+#, python-format
+msgid "Color"
+msgstr "色"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/pivot/pivot_editor_sidebar.xml:0
+#, python-format
+msgid "Column grouping"
+msgstr "列グループ化"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/form_editor_sidebar.js:0
+#, python-format
+msgid "Columns"
+msgstr "列"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_res_company
+msgid "Companies"
+msgstr "会社"
+
+#. module: web_studio
+#. odoo-javascript
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Company"
+msgstr "会社"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/form_editor_sidebar.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/search/search_editor.xml:0
+#, python-format
+msgid "Components"
+msgstr "構成要素"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/modifiers/modifiers_properties.xml:0
+#, python-format
+msgid "Conditional"
+msgstr "条件付き"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__conditional
+msgid "Conditional Rule"
+msgstr "条件付きルール"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#: code:addons/web_studio/models/ir_ui_menu.py:0
+#, python-format
+msgid "Configuration"
+msgstr "設定"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/new_model_item/new_model_item.xml:0
+#, python-format
+msgid "Configure Model"
+msgstr "モデルの構成"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/menu_creator/menu_creator.xml:0
+#, python-format
+msgid "Configure model"
+msgstr "モデル設定"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/app_menu_editor/app_menu_editor.xml:0
+#: code:addons/web_studio/static/src/client_action/menu_creator/menu_creator.xml:0
+#: code:addons/web_studio/static/src/client_action/studio_home_menu/icon_creator_dialog/icon_creator_dialog.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/components/field_selector_dialog.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/new_button_box_dialog.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/action_button/action_button.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/field_configuration.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/selection_content_dialog.xml:0
+#, python-format
+msgid "Confirm"
+msgstr "確認"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/navbar/home_menu_customizer/home_menu_customizer.js:0
+#, python-format
+msgid "Confirmation"
+msgstr "確認"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#, python-format
+msgid "Contact"
+msgstr "連絡先"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/new_view_dialogs/map_new_view_dialog.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/map/map_editor_sidebar.xml:0
+#, python-format
+msgid "Contact Field"
+msgstr "連絡先フィールド"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/new_view_dialogs/map_new_view_dialog.js:0
+#, python-format
+msgid "Contact Field Required"
+msgstr "必要な連絡先フィールド"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Contact details"
+msgstr "連絡先の詳細"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_type_properties.js:0
+#, python-format
+msgid "Context"
+msgstr "コンテキスト"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/navbar/home_menu_customizer/home_menu_customizer.js:0
+#, python-format
+msgid "Could not change the background"
+msgstr "背景を変更できませんでした"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/menu_creator/menu_creator.js:0
+#, python-format
+msgid "Create Menu"
+msgstr "メニューの作成"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/new_model_item/new_model_item.js:0
+#, python-format
+msgid "Create Model"
+msgstr "モデルの作成"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/new_model_item/new_model_item.js:0
+#, python-format
+msgid "Create a new Model"
+msgstr "新しいモデルを作成する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/app_creator/app_creator.xml:0
+#, python-format
+msgid "Create your App"
+msgstr "アプリを作成する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/app_creator/app_creator.xml:0
+#: code:addons/web_studio/static/src/client_action/app_creator/app_creator.xml:0
+#, python-format
+msgid "Create your app"
+msgstr "アプリを作成する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/app_creator/app_creator.xml:0
+#, python-format
+msgid "Create your first menu"
+msgstr "初めてのメニューを作成する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/menu_creator/menu_creator.js:0
+#, python-format
+msgid "Create your menu"
+msgstr "メニューを作成する"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_entry__create_uid
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_request__create_uid
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_entry__create_date
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_request__create_date
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.js:0
+#, python-format
+msgid "Creating this type of view is not currently supported in Studio."
+msgstr "このタイプのビューの作成は、現在Studioではサポートされていません。"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#, python-format
+msgid "Currency"
+msgstr "通貨"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.xml:0
+#, python-format
+msgid "Current model:"
+msgstr "現在のモデル:"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_ui_menu.py:0
+#, python-format
+msgid "Custom Configuration"
+msgstr "カスタム構成"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_base_module_uninstall__custom_fields
+msgid "Custom Fields"
+msgstr "カスタムフィールド"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_base_module_uninstall__custom_models
+msgid "Custom Models"
+msgstr "カスタムモデル"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_base_module_uninstall__custom_reports
+msgid "Custom Reports"
+msgstr "カスタムレポート"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Custom Sorting"
+msgstr "カスタムソート"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_base_module_uninstall__custom_views
+msgid "Custom Views"
+msgstr "カスタムビュー"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#, python-format
+msgid "Custom field names cannot contain double underscores."
+msgstr "カスタムフィールド名にダブルアンダースコアを含めることはできません。"
+
+#. module: web_studio
+#: model_terms:ir.ui.view,arch_db:web_studio.view_base_module_uninstall_studio
+msgid "Custom fields:"
+msgstr "カスタムフィールド:"
+
+#. module: web_studio
+#: model_terms:ir.ui.view,arch_db:web_studio.view_base_module_uninstall_studio
+msgid "Custom models:"
+msgstr "カスタムモデル:"
+
+#. module: web_studio
+#: model_terms:ir.ui.view,arch_db:web_studio.view_base_module_uninstall_studio
+msgid "Custom reports:"
+msgstr "カスタムレポート:"
+
+#. module: web_studio
+#: model_terms:ir.ui.view,arch_db:web_studio.view_base_module_uninstall_studio
+msgid "Custom views:"
+msgstr "カスタムビュー:"
+
+#. module: web_studio
+#: model_terms:ir.ui.view,arch_db:web_studio.view_base_module_uninstall_studio
+msgid "Customization made with Studio will be permanently lost"
+msgstr "Studioで行われたカスタマイズは完全に失われます"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/navbar/home_menu_customizer/home_menu_customizer.xml:0
+#, python-format
+msgid "Customizations"
+msgstr "カスタマイズ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_xml/report_editor_xml.xml:0
+#, python-format
+msgid "DIFF"
+msgstr "DIFF"
+
+#. module: web_studio
+#. odoo-javascript
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "Date"
+msgstr "日付"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Date & Calendar"
+msgstr "日付とカレンダー"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Date range & Gantt"
+msgstr "日付範囲とガント"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "Datetime"
+msgstr "日付時刻"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/cohort/cohort_editor.js:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.js:0
+#, python-format
+msgid "Day"
+msgstr "日"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.xml:0
+#, python-format
+msgid "Day Precision"
+msgstr "デイプレシジョン"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "Decimal"
+msgstr "10進数"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/calendar/calendar_editor_sidebar.xml:0
+#, python-format
+msgid "Default Display Mode"
+msgstr "デフォルトの表示モード"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/kanban/kanban_editor_sidebar/kanban_editor_sidebar.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/list/list_editor_sidebar/list_editor_sidebar.xml:0
+#, python-format
+msgid "Default Group By"
+msgstr "デフォルトグループ化"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.xml:0
+#, python-format
+msgid "Default Group by"
+msgstr "デフォルトのグループ化"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.xml:0
+#, python-format
+msgid "Default Scale"
+msgstr "デフォルトのスケール"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/interactive_editor.js:0
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox.xml:0
+#: model:ir.model,name:web_studio.model_ir_default
+#, python-format
+msgid "Default Values"
+msgstr "デフォルト値"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_properties.xml:0
+#, python-format
+msgid "Default value"
+msgstr "デフォルト値"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.xml:0
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.xml:0
+#, python-format
+msgid "Default view"
+msgstr "デフォルトビュー"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Define start/end dates and visualize records in a Gantt chart"
+msgstr "開始日/終了日を定義し、ガントチャートでレコードを視覚化します"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/calendar/calendar_editor_sidebar.xml:0
+#, python-format
+msgid "Delay Field"
+msgstr "遅延フィールド"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#: model_terms:ir.ui.view,arch_db:web_studio.act_report_xml_view_kanban
+#, python-format
+msgid "Delete"
+msgstr "削除"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/graph/graph_editor.js:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/list/list_editor_sidebar/list_editor_sidebar.js:0
+#, python-format
+msgid "Descending"
+msgstr "降順"
+
+#. module: web_studio
+#. odoo-javascript
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#: code:addons/web_studio/models/ir_model.py:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/button_properties.xml:0
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__message
+#, python-format
+msgid "Description"
+msgstr "説明"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/icon_creator/icon_creator.xml:0
+#: code:addons/web_studio/static/src/client_action/icon_creator/icon_creator.xml:0
+#, python-format
+msgid "Design your Icon"
+msgstr "アイコンをデザインする"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.xml:0
+#, python-format
+msgid "Disable View"
+msgstr "ビューを無効化"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_snackbar.xml:0
+#, python-format
+msgid "Discard"
+msgstr "破棄"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/selection_content_dialog.xml:0
+#, python-format
+msgid "Discard changes"
+msgstr "変更を破棄"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_entry__display_name
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_request__display_name
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.xml:0
+#, python-format
+msgid "Display Total row"
+msgstr "合計行を表示"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.xml:0
+#, python-format
+msgid "Display Unavailability"
+msgstr "使用不可を表示する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/kanban/kanban_editor_record.js:0
+#, python-format
+msgid "Do you want to add a dropdown with colors?"
+msgstr "色付きのドロップダウンを追加しますか?"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/search/search_editor.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_type_properties.js:0
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__domain
+#, python-format
+msgid "Domain"
+msgstr "ドメイン"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#, python-format
+msgid "Done"
+msgstr "完了"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/app_menu_editor/app_menu_editor.xml:0
+#, python-format
+msgid "Drag a menu to the right to create a sub-menu"
+msgstr "サブメニューを作成するには、メニューを右にドラッグ"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#, python-format
+msgid "Dropdown Menu"
+msgstr "ドロップダウンメニュー"
+
+#. module: web_studio
+#: model_terms:ir.ui.view,arch_db:web_studio.act_report_xml_view_kanban
+msgid "Duplicate"
+msgstr "複製"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.js:0
+#, python-format
+msgid "Dynamic Table"
+msgstr "ダイナミックテーブル"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#, python-format
+msgid "Edit"
+msgstr "編集"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/components/field_content_overlay.js:0
+#, python-format
+msgid "Edit %s view"
+msgstr " %s ビューを編集"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/studio_home_menu/icon_creator_dialog/icon_creator_dialog.js:0
+#, python-format
+msgid "Edit Application Icon"
+msgstr "アプリのアイコンを編集"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/app_menu_editor/app_menu_editor.js:0
+#: code:addons/web_studio/static/src/client_action/editor/app_menu_editor/app_menu_editor.xml:0
+#, python-format
+msgid "Edit Menu"
+msgstr "メニューを編集"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_properties.xml:0
+#, python-format
+msgid "Edit Values"
+msgstr "値の編集"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/app_menu_editor/app_menu_editor.xml:0
+#, python-format
+msgid "Edit selection"
+msgstr "選択範囲を編集"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.xml:0
+#, python-format
+msgid "Edit sources"
+msgstr "ソースの編集"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/xml_resource_editor/xml_resource_editor.js:0
+#, python-format
+msgid ""
+"Editing a built-in file through this editor is not advised, as it will "
+"prevent it from being updated during future App upgrades."
+msgstr "今後のアプリアップグレード時に更新されないのでこのエディタを使って組み込みファイルを編集することはおすすめしません。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/selection_content_dialog.xml:0
+#, python-format
+msgid "Editing item:"
+msgstr "編集項目："
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#, python-format
+msgid "Email"
+msgstr "メール"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/chatter_properties/chatter_properties.xml:0
+#, python-format
+msgid "Email Alias"
+msgstr "Eメールエイリアス"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_mail_template
+msgid "Email Templates"
+msgstr "メールテンプレート"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_mail_thread
+msgid "Email Thread"
+msgstr "Eメールスレッド"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.xml:0
+#, python-format
+msgid "Empty List Message"
+msgstr "空のリストメッセージ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/list/list_editor_sidebar/list_editor_sidebar.xml:0
+#, python-format
+msgid "Enable Mass Editing"
+msgstr "一括編集を有効にする"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/map/map_editor_sidebar.xml:0
+#, python-format
+msgid "Enable Routing"
+msgstr "ルーティングを有効にする"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#, python-format
+msgid "End Date"
+msgstr "終了日"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__entry_ids
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_rule_form_view
+msgid "Entries"
+msgstr "仕訳"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/studio_view.js:0
+#: code:addons/web_studio/static/src/client_action/view_editor/view_editor_model.js:0
+#: code:addons/web_studio/static/src/client_action/view_editor/view_editor_snackbar.xml:0
+#, python-format
+msgid "Error"
+msgstr "エラー"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor.xml:0
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor.xml:0
+#, python-format
+msgid "Error message:"
+msgstr "エラーメッセージ:"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor.xml:0
+#, python-format
+msgid "Error name:"
+msgstr "エラー名："
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/button_properties.xml:0
+#, python-format
+msgid "Exclusive Approval"
+msgstr "独占承認"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__exclusive_user
+msgid "Exclusive approval"
+msgstr "独占承認"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.xml:0
+#, python-format
+msgid "Existing Fields"
+msgstr "既存のフィールド"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/menu_creator/menu_creator.js:0
+#, python-format
+msgid "Existing Model"
+msgstr "既存モデル"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/navbar/home_menu_customizer/home_menu_customizer.xml:0
+#, python-format
+msgid "Export"
+msgstr "エクスポート"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/views/kanban_report/new_report_dialog.js:0
+#, python-format
+msgid "External"
+msgstr "外部"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/rainbow_effect.xml:0
+#, python-format
+msgid "Fadeout Speed"
+msgstr "フェードアウト速度"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/rainbow_effect.js:0
+#, python-format
+msgid "Fast"
+msgstr "速い"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/search/search_editor.xml:0
+#, python-format
+msgid "Favourites"
+msgstr "お気に入り"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.js:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/components/field_selector_dialog.xml:0
+#, python-format
+msgid "Field"
+msgstr "フィールド"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/selection_content_dialog.js:0
+#, python-format
+msgid "Field Properties"
+msgstr "フィールドプロパティ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/field_configuration.js:0
+#, python-format
+msgid "Field properties: %s"
+msgstr "フィールドプロパティ: %s"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_ir_model_fields
+msgid "Fields"
+msgstr "フィールド"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#: model_terms:ir.ui.view,arch_db:web_studio.act_report_xml_view_kanban
+#, python-format
+msgid "File"
+msgstr "ファイル"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid "Filename for %s"
+msgstr "%sのファイル名"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/search/search_editor.js:0
+#, python-format
+msgid "Filter"
+msgstr "フィルター"
+
+#. module: web_studio
+#. odoo-javascript
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
+#, python-format
+msgid "Filter Rules"
+msgstr "フィルタルール"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/field_configuration.xml:0
+#, python-format
+msgid "Filter label"
+msgstr "フィルタラベル"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/search/search_editor.xml:0
+#: model:ir.model,name:web_studio.model_ir_filters
+#, python-format
+msgid "Filters"
+msgstr "フィルタ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_renderer/form_editor_renderer_components.js:0
+#, python-format
+msgid "First Status"
+msgstr "最初のステータス"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/graph/graph_editor_sidebar.xml:0
+#, python-format
+msgid "First dimension"
+msgstr "最初の次元"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid ""
+"For compatibility purpose with base_automation,approvals on 'create', "
+"'write' and 'unlink' methods are forbidden."
+msgstr "base_automationとの互換性のため、'作成'、'書く'、'リンク解除'メソッドでの承認は禁止されています。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
+#: code:addons/web_studio/static/src/studio_service.js:0
+#, python-format
+msgid "Form"
+msgstr "フォーム"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/xml_resource_editor/xml_resource_editor.xml:0
+#, python-format
+msgid "Format"
+msgstr "フォーマット"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/cohort/cohort_editor.js:0
+#, python-format
+msgid "Forward"
+msgstr "フォワード"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
+#: code:addons/web_studio/static/src/studio_service.js:0
+#, python-format
+msgid "Gantt"
+msgstr "ガント"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.js:0
+#, python-format
+msgid "General views"
+msgstr "概要ビュー"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/new_view_dialogs/new_view_dialog.js:0
+#, python-format
+msgid "Generate %s View"
+msgstr "%sビューを生成"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Get contact, phone and email fields on records"
+msgstr "レコードの連絡先、電話、メールのフィールドを取得する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.js:0
+#, python-format
+msgid "Go back"
+msgstr "戻る"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#: model:ir.model.fields.selection,name:web_studio.selection__mail_activity_type__category__grant_approval
+#: model:mail.activity.type,name:web_studio.mail_activity_data_approve
+#, python-format
+msgid "Grant Approval"
+msgstr "承認を付与"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
+#: code:addons/web_studio/static/src/studio_service.js:0
+#, python-format
+msgid "Graph"
+msgstr "グラフ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/rainbow_effect.xml:0
+#, python-format
+msgid "Great !"
+msgstr "すごい '"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_entry__group_id
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_rule_search_view
+msgid "Group"
+msgstr "グループ"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_entry_search_view
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_rule_search_view
+#, python-format
+msgid "Group By"
+msgstr "グループ化"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/search/search_editor.xml:0
+#, python-format
+msgid "Group by"
+msgstr "グループ化"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/list/list_editor_sidebar/list_editor_sidebar.xml:0
+#, python-format
+msgid "Grouping is not applied while in Studio to allow editing."
+msgstr "編集を可能にするため、スタジオ内ではグループ化は適用されません。"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid "Groups used in approval rules must have an external identifier."
+msgstr "承認ルールで使用されるグループには、外部識別子が必要です。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "HTML"
+msgstr "HTML"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTPルーティング"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.js:0
+#, python-format
+msgid "Half Day"
+msgstr "半日"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.js:0
+#, python-format
+msgid "Half Hour"
+msgstr "30分"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.xml:0
+#, python-format
+msgid ""
+"Header and footer are shared with other reports which may be impacted by the"
+" reset."
+msgstr "ヘッダーとフッターは、リセットの影響を受ける可能性のある他のレポートと共有されます。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_properties.xml:0
+#, python-format
+msgid "Help Tooltip"
+msgstr "ヘルプツールチップ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/map/map_editor_sidebar.xml:0
+#, python-format
+msgid "Hide Address"
+msgstr "非表示アドレス"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/map/map_editor_sidebar.xml:0
+#, python-format
+msgid "Hide Name"
+msgstr "名前を隠す"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_properties.js:0
+#, python-format
+msgid "Hide by default"
+msgstr "デフォルトで非表示"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#, python-format
+msgid "High Priority"
+msgstr "優先度が高い"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_res_company__background_image
+msgid "Home Menu Background Image"
+msgstr "ホームメニューの背景画像"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.js:0
+#, python-format
+msgid "Hour"
+msgstr "時間"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_entry__id
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_request__id
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor.xml:0
+#, python-format
+msgid "IDs"
+msgstr "ID"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/new_button_box_dialog.xml:0
+#, python-format
+msgid "Icon"
+msgstr "アイコン"
+
+#. module: web_studio
+#: model:ir.model.fields,help:web_studio.field_studio_approval_rule__domain
+msgid "If set, the rule will only apply on records that match the domain."
+msgstr "設定されている場合、ルールはドメインに一致するレコードにのみ適用されます。"
+
+#. module: web_studio
+#: model:ir.model.fields,help:web_studio.field_studio_approval_rule__exclusive_user
+msgid ""
+"If set, the user who approves this rule will not be able to approve other "
+"rules for the same record"
+msgstr "設定されている場合、このルールを承認するユーザーは、同じレコードの他のルールを承認できなくなります"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid ""
+"If you don't want to create a new model, an existing model should be "
+"selected."
+msgstr "新しいモデルを作成したくない場合は、既存のモデルを選択する必要があります。"
+
+#. module: web_studio
+#. odoo-javascript
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "Image"
+msgstr "画像"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/navbar/home_menu_customizer/home_menu_customizer.xml:0
+#, python-format
+msgid "Import"
+msgstr "インポート"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#: code:addons/web_studio/models/ir_model.py:0
+#, python-format
+msgid "In Progress"
+msgstr "進行中"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.xml:0
+#, python-format
+msgid "Include header and footer"
+msgstr "ヘッダーとフッターを含める"
+
+#. module: web_studio
+#: model:ir.model.fields,help:web_studio.field_ir_ui_menu__is_studio_configuration
+msgid ""
+"Indicates that this menu was created by Studio to hold configuration sub-"
+"menus"
+msgstr "このメニューが構成サブメニューを保持するためにStudioによって作成されたことを示します"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.js:0
+#, python-format
+msgid "Insert a field"
+msgstr "フィールドを挿入"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.js:0
+#, python-format
+msgid "Insert a field..."
+msgstr "フィールドを挿入..."
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.js:0
+#, python-format
+msgid "Insert a table based on a relational field."
+msgstr "関連フィールドに基づいたテーブルを挿入"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "Integer"
+msgstr "整数"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/views/kanban_report/new_report_dialog.js:0
+#, python-format
+msgid "Internal"
+msgstr "内部"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/cohort/cohort_editor_sidebar.xml:0
+#, python-format
+msgid "Interval"
+msgstr "間隔"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#, python-format
+msgid "Invalid studio_approval %s in button"
+msgstr "ボタンのstudio_approval %sが無効です"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/modifiers/modifiers_properties.xml:0
+#, python-format
+msgid "Invisible"
+msgstr "見えない"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_base_module_uninstall__is_studio
+msgid "Is Studio"
+msgstr "スタジオです"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.xml:0
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.xml:0
+#, python-format
+msgid "Is default view"
+msgstr "デフォルトのビューです"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid "It lacks a method to check."
+msgstr "確認するメソッドが欠けています"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
+#: code:addons/web_studio/static/src/studio_service.js:0
+#, python-format
+msgid "Kanban"
+msgstr "かんばん"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#, python-format
+msgid "Kanban State"
+msgstr "かんばん状態"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/new_button_box_dialog.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/group_properties/group_properties.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/page_properties/page_properties.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/search/search_editor.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/action_button/action_button.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/selection_content_dialog.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_properties.xml:0
+#, python-format
+msgid "Label"
+msgstr "ラベル"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/action_button/action_button.xml:0
+#, python-format
+msgid "Label of the button"
+msgstr "ボタンのラベル"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_entry__write_uid
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_request__write_uid
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_entry__write_date
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_request__write_date
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_xml/report_editor_xml.xml:0
+#, python-format
+msgid "Leave DIFF"
+msgstr "DIFFから移動"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.xml:0
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/limit_group_visibility/limit_group_visibility.xml:0
+#, python-format
+msgid "Limit visibility to groups"
+msgstr "グループへの可視性を制限する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/graph/graph_editor.js:0
+#, python-format
+msgid "Line"
+msgstr "ライン"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "Lines"
+msgstr "行"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_request__mail_activity_id
+msgid "Linked Activity"
+msgstr "リンクされたアクティビティ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
+#: code:addons/web_studio/static/src/studio_service.js:0
+#, python-format
+msgid "List"
+msgstr "リスト"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Manually sort records in the list view"
+msgstr "リストビューでレコードを手動で並べ替える"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "Many2Many"
+msgstr "多対多"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "Many2One"
+msgstr "多対１"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
+#: code:addons/web_studio/static/src/studio_service.js:0
+#, python-format
+msgid "Map"
+msgstr "マップ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/graph/graph_editor_sidebar.xml:0
+#, python-format
+msgid "Measure"
+msgstr "測定対象"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/cohort/cohort_editor_sidebar.xml:0
+#, python-format
+msgid "Measure Field"
+msgstr "測定フィールド"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/pivot/pivot_editor_sidebar.xml:0
+#, python-format
+msgid "Measures"
+msgstr "分析対象"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/rainbow_effect.js:0
+#, python-format
+msgid "Medium"
+msgstr "中"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_ir_ui_menu
+msgid "Menu"
+msgstr "メニュー"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/rainbow_effect.xml:0
+#, python-format
+msgid "Message"
+msgstr "メッセージ"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_entry__method
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__method
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_entry_search_view
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_rule_search_view
+msgid "Method"
+msgstr "方法"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/action_button/action_button.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/action_button/action_button.xml:0
+#, python-format
+msgid "Method to run"
+msgstr "実行するメソッド"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/views/kanban_report/new_report_dialog.js:0
+#, python-format
+msgid "Minimal header/footer"
+msgstr "最小限のヘッダ/フッタ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/cohort/cohort_editor_sidebar.xml:0
+#, python-format
+msgid "Mode"
+msgstr "モード"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/menu_creator/menu_creator.xml:0
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor.xml:0
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__model_id
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_entry_search_view
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_rule_search_view
+#, python-format
+msgid "Model"
+msgstr "モデル"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_ir_model_access
+msgid "Model Access"
+msgstr "モデルアクセス"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_ir_model_data
+msgid "Model Data"
+msgstr "モデルデータ"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_entry__model
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__model_name
+msgid "Model Name"
+msgstr "モデル名"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/new_model_item/new_model_item.xml:0
+#, python-format
+msgid "Model name"
+msgstr "モデル名"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_ir_model
+msgid "Models"
+msgstr "モデル"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/xml_resource_editor/xml_resource_editor.xml:0
+#, python-format
+msgid "Modified by:"
+msgstr "修正者: "
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_ir_module_module
+msgid "Module"
+msgstr "モジュール"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_base_module_uninstall
+msgid "Module Uninstall"
+msgstr "モジュールアンインストール"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "Monetary"
+msgstr "金銭"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Monetary value"
+msgstr "金銭価値"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/cohort/cohort_editor.js:0
+#, python-format
+msgid "Month"
+msgstr "月"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.xml:0
+#, python-format
+msgid "Month Precision"
+msgstr "月の精度"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.xml:0
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/sidebar_properties_toolbox/sidebar_properties_toolbox.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox.xml:0
+#, python-format
+msgid "More"
+msgstr "さらに"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "Multine Text"
+msgstr "複数行テキスト"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.js:0
+#, python-format
+msgid "Multiple records views"
+msgstr "複数のレコードビュー"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#, python-format
+msgid "My %s"
+msgstr "自分の%s"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/new_button_box_dialog.xml:0
+#, python-format
+msgid "My Button"
+msgstr "マイボタン"
+
+#. module: web_studio
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_entry_search_view
+msgid "My entries"
+msgstr "自分のエントリ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor.xml:0
+#, python-format
+msgid "N/A"
+msgstr "N/A"
+
+#. module: web_studio
+#. odoo-javascript
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor.xml:0
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_entry__name
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__name
+#, python-format
+msgid "Name"
+msgstr "名称"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#, python-format
+msgid "New"
+msgstr "新規"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/interactive_editor.js:0
+#, python-format
+msgid "New %s"
+msgstr "New %s"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/studio_home_menu/studio_home_menu.js:0
+#, python-format
+msgid "New App"
+msgstr "新しいアプリ"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid "New Approval Entry"
+msgstr "新しい承認エントリ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/components/field_selector_dialog.xml:0
+#, python-format
+msgid "New Field"
+msgstr "新しい分野"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.xml:0
+#, python-format
+msgid "New Fields"
+msgstr "新しい分野"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/interactive_editor.js:0
+#, python-format
+msgid "New Filter"
+msgstr "新しいフィルター"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#, python-format
+msgid "New Lines"
+msgstr "新しい行"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/app_menu_editor/app_menu_editor.xml:0
+#, python-format
+msgid "New Menu"
+msgstr "新しいメニュー"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/new_model_item/new_model_item.xml:0
+#: code:addons/web_studio/static/src/client_action/menu_creator/menu_creator.js:0
+#, python-format
+msgid "New Model"
+msgstr "ニューモデル"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_renderer/form_editor_renderer_components.js:0
+#, python-format
+msgid "New Page"
+msgstr "新規ページ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/new_button_box_dialog.js:0
+#, python-format
+msgid "New button"
+msgstr "新しいボタン"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/app_creator/app_creator.xml:0
+#: code:addons/web_studio/static/src/client_action/app_creator/app_creator.xml:0
+#: code:addons/web_studio/static/src/client_action/app_creator/app_creator.xml:0
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.xml:0
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.xml:0
+#, python-format
+msgid "Next"
+msgstr "次へ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_type_properties.js:0
+#, python-format
+msgid "No aggregation"
+msgstr "集計なし"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid "No approval found for this rule, record and user combination."
+msgstr "このルール、レコード、およびユーザーの組み合わせに対する承認は見つかりませんでした。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/views/kanban_report/new_report_dialog.js:0
+#, python-format
+msgid "No header/footer"
+msgstr "ヘッダ/フッタなし"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/interactive_editor.js:0
+#, python-format
+msgid "No related many2one fields found"
+msgstr "関連するmany2oneフィールドが見つかりません"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/rainbow_effect.js:0
+#, python-format
+msgid "None"
+msgstr "なし"
+
+#. module: web_studio
+#. odoo-javascript
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Notes"
+msgstr "ノート"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/button_properties.xml:0
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__notification_order
+#, python-format
+msgid "Notification Order"
+msgstr "通知オーダ"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__entries_count
+msgid "Number of Entries"
+msgstr "仕訳数"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/app_creator/app_creator.xml:0
+#, python-format
+msgid "Odoo Studio"
+msgstr "Odooスタジオ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor.xml:0
+#, python-format
+msgid "On view (ir.ui.view):"
+msgstr "ビュー (ir.ui.view):"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "One2Many"
+msgstr "1対多"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid "Only %s members can approve this rule."
+msgstr "%sメンバーのみがこのルールを承認できます。"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid ""
+"Only groups with an external ID can be used here. Please choose another "
+"group or assign manually an external ID to this group."
+msgstr "ここでは、外部IDを持つグループのみを使用できます。別のグループを選択するか、このグループに外部IDを手動で割り当ててください。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/list/list_editor_sidebar/list_editor_sidebar.js:0
+#, python-format
+msgid "Open form view"
+msgstr "フォームビューを開く"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_properties.xml:0
+#, python-format
+msgid "Optional"
+msgstr "オプション"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/list/list_editor_sidebar/list_editor_sidebar.xml:0
+#, python-format
+msgid "Order"
+msgstr "オーダ"
+
+#. module: web_studio
+#: model_terms:ir.ui.view,arch_db:web_studio.act_report_xml_view_kanban
+msgid "PDF file"
+msgstr "PDFファイル"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_report_paperformat
+msgid "Paper Format Config"
+msgstr "紙のフォーマット設定"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.xml:0
+#, python-format
+msgid "Paper format"
+msgstr "用紙"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/menu_creator/menu_creator.js:0
+#, python-format
+msgid "Parent Menu"
+msgstr "親メニュー"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor.xml:0
+#, python-format
+msgid "Parent View (inherit_id)"
+msgstr "親ビュー (inherit_id)"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#, python-format
+msgid "Partner"
+msgstr "取引先"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#, python-format
+msgid "Phone"
+msgstr "電話"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Picture"
+msgstr "画像"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/graph/graph_editor.js:0
+#, python-format
+msgid "Pie"
+msgstr "円グラフ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Pipeline stages"
+msgstr "パイプラインステージ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_renderer/form_editor_renderer_components.js:0
+#, python-format
+msgid "Pipeline status bar"
+msgstr "パイプラインステータスバー"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
+#: code:addons/web_studio/static/src/studio_service.js:0
+#, python-format
+msgid "Pivot"
+msgstr "ピボット"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_type_properties.js:0
+#, python-format
+msgid "Placeholder"
+msgstr "プレースホルダ"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid "Please specify a field."
+msgstr "フィールドを指定してください。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/kanban/kanban_editor_record.xml:0
+#, python-format
+msgid "Preview is not available"
+msgstr "プレビューは利用できません"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/app_creator/app_creator.xml:0
+#: code:addons/web_studio/static/src/client_action/app_creator/app_creator.xml:0
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.xml:0
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.xml:0
+#, python-format
+msgid "Previous"
+msgstr "前へ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.xml:0
+#, python-format
+msgid "Print preview"
+msgstr "印刷プレビュー"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "Priority"
+msgstr "優先度"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid ""
+"Private methods cannot be restricted (since they cannot be called remotely, "
+"this would be useless)."
+msgstr "プライベートメソッドを制限することはできません(リモートで呼び出すことができないため、これは役に立ちません)。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/interactive_editor_sidebar.js:0
+#, python-format
+msgid "Properties"
+msgstr "属性"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.js:0
+#, python-format
+msgid "Quarter Hour"
+msgstr "クォーターアワー"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/calendar/calendar_editor_sidebar.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/kanban/kanban_editor_sidebar/kanban_editor_sidebar.xml:0
+#, python-format
+msgid "Quick Create"
+msgstr "クイック作成"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/calendar/calendar_editor_sidebar.xml:0
+#, python-format
+msgid "Quick Create Field"
+msgstr "クイック作成フィールド"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_ir_qweb
+msgid "Qweb"
+msgstr "Qweb"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/rainbow_effect.xml:0
+#, python-format
+msgid "Rainbow Effect"
+msgstr "レインボーエフェクト"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/rainbow_effect.xml:0
+#, python-format
+msgid "Rainbow Man"
+msgstr "レインボーマン"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/modifiers/modifiers_properties.xml:0
+#, python-format
+msgid "Readonly"
+msgstr "読出のみ"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#, python-format
+msgid "Ready"
+msgstr "準備完了"
+
+#. module: web_studio
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_entry_form_view
+msgid "Record"
+msgstr "レコード"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_entry__res_id
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_request__res_id
+msgid "Record ID"
+msgstr "レコードID"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/view_editor_snackbar.xml:0
+#, python-format
+msgid "Redo"
+msgstr "やり直し"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_entry__reference
+msgid "Reference"
+msgstr "参照"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/approval/approval_infos.xml:0
+#, python-format
+msgid "Reject"
+msgstr "拒否"
+
+#. module: web_studio
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_entry_search_view
+msgid "Rejected"
+msgstr "拒否済"
+
+#. module: web_studio
+#: model_terms:ir.ui.view,arch_db:web_studio.notify_approval
+msgid "Rejected as"
+msgstr "として拒否されました"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/approval/approval_infos.xml:0
+#, python-format
+msgid "Rejected on"
+msgstr "拒否されました"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "Related Field"
+msgstr "関連項目"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.xml:0
+#, python-format
+msgid "Reload from attachment"
+msgstr "アタッチメントからリロード"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/sidebar_properties_toolbox/sidebar_properties_toolbox.xml:0
+#, python-format
+msgid "Remove from View"
+msgstr "ビューから削除"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/app_menu_editor/app_menu_editor.xml:0
+#, python-format
+msgid "Remove selection"
+msgstr "選択を削除"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_ir_actions_report
+msgid "Report Action"
+msgstr "レポートアクション"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.js:0
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.js:0
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.js:0
+#, python-format
+msgid "Report Tools"
+msgstr "レポートツール"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_model.js:0
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_model.js:0
+#, python-format
+msgid "Report edition failed"
+msgstr "レポート編集に失敗しました"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.xml:0
+#, python-format
+msgid "Report name"
+msgstr "レポート名"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.js:0
+#, python-format
+msgid "Report preview not available"
+msgstr "レポートビューを表示できません"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.js:0
+#, python-format
+msgid "Reporting views"
+msgstr "レポートビュー"
+
+#. module: web_studio
+#. odoo-javascript
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
+#, python-format
+msgid "Reports"
+msgstr "レポート"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/modifiers/modifiers_properties.xml:0
+#, python-format
+msgid "Required"
+msgstr "必須"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/navbar/home_menu_customizer/home_menu_customizer.xml:0
+#, python-format
+msgid "Reset Default Background"
+msgstr "デフォルトの背景をリセット"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/rainbow_effect.xml:0
+#, python-format
+msgid "Reset Image"
+msgstr "画像をリセット"
+
+#. module: web_studio
+#: model_terms:ir.ui.view,arch_db:web_studio.reset_view_arch_wizard_view
+msgid "Reset View"
+msgstr "表示方法をリセットする"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_reset_view_arch_wizard
+msgid "Reset View Architecture Wizard"
+msgstr "ビューアーキテクチャウィザードのリセット"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.js:0
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.js:0
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.xml:0
+#, python-format
+msgid "Reset report"
+msgstr "レポートをリセット"
+
+#. module: web_studio
+#. odoo-javascript
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/button_properties.xml:0
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__responsible_id
+#, python-format
+msgid "Responsible"
+msgstr "担当者"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox.xml:0
+#, python-format
+msgid "Restore Default View"
+msgstr "デフォルトビューに戻す"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Restrict a record to a specific company"
+msgstr "レコードを特定の会社に制限する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/cohort/cohort_editor.js:0
+#, python-format
+msgid "Retention"
+msgstr "リテンション"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/approval/approval_infos.xml:0
+#, python-format
+msgid "Revoke"
+msgstr "取り消す"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/pivot/pivot_editor_sidebar.xml:0
+#, python-format
+msgid "Row grouping - First level"
+msgstr "列のグループ分け - 第1レベル"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/pivot/pivot_editor_sidebar.xml:0
+#, python-format
+msgid "Row grouping - Second level"
+msgstr "列のグループ分け - 第2レベル"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_ir_rule
+msgid "Rule"
+msgstr "ルール"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid ""
+"Rules with existing entries cannot be deleted since it would delete existing"
+" approval entries. You should archive the rule instead."
+msgstr "既存の承認エントリが削除されるため、既存のエントリを持つルールは削除できません。代わりに、ルールをアーカイブする必要があります。"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid ""
+"Rules with existing entries cannot be modified since it would break existing"
+" approval entries. You should archive the rule and create a new one instead."
+msgstr ""
+"既存の承認エントリが破損するため、既存のエントリを持つルールは変更できません。ルールをアーカイブして、代わりに新しいルールを作成する必要があります。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/action_button/action_button.xml:0
+#, python-format
+msgid "Run a Server Action"
+msgstr "サーバーアクションを実行"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_snackbar.xml:0
+#: code:addons/web_studio/static/src/client_action/xml_resource_editor/xml_resource_editor.xml:0
+#, python-format
+msgid "Save"
+msgstr "保存"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_editor_snackbar.xml:0
+#, python-format
+msgid "Saved"
+msgstr "保存しました"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_editor_snackbar.xml:0
+#, python-format
+msgid "Saving"
+msgstr "保存"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_model.js:0
+#, python-format
+msgid "Saving both some report's parts and full xml is not permitted."
+msgstr "レポートの一部と完全なxmlの両方を保存することは許可されていません。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor.xml:0
+#, python-format
+msgid "Saving the report \""
+msgstr "レポートを保存中です \""
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
+#: code:addons/web_studio/static/src/studio_service.js:0
+#, python-format
+msgid "Search"
+msgstr "検索"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.xml:0
+#, python-format
+msgid "Search..."
+msgstr "検索..."
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_renderer/form_editor_renderer_components.js:0
+#, python-format
+msgid "Second Status"
+msgstr "2番目のステータス"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/graph/graph_editor_sidebar.xml:0
+#, python-format
+msgid "Second dimension"
+msgstr "第2次元"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/new_button_box_dialog.xml:0
+#, python-format
+msgid "Select a related field"
+msgstr "関連フィールドを選択"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/new_button_box_dialog.js:0
+#, python-format
+msgid "Select a related field."
+msgstr "関連するフィールドを選択します。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/new_view_dialogs/map_new_view_dialog.xml:0
+#, python-format
+msgid ""
+"Select the contact field to use to get the coordinates of your records."
+msgstr "レコードの座標を取得するために使用する連絡先フィールドを選択します。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/field_configuration.xml:0
+#, python-format
+msgid "Select the model in relation to this one"
+msgstr "このモデルに関連するモデルを選択します"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/field_configuration.xml:0
+#, python-format
+msgid "Select the reciprocal ManyToOne field"
+msgstr "相互多対1フィールドを選択"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "Selection"
+msgstr "選択"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/chatter_properties/chatter_properties.xml:0
+#, python-format
+msgid "Send a"
+msgstr "送る"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Send messages, log notes and schedule activities"
+msgstr "メッセージの送信、メモの記録、アクティビティのスケジュール"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/search/search_editor.js:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/search/search_editor.xml:0
+#, python-format
+msgid "Separator"
+msgstr "区切り線"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#: code:addons/web_studio/models/ir_model.py:0
+#, python-format
+msgid "Sequence"
+msgstr "シーケンス"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_ir_actions_server
+msgid "Server Action"
+msgstr "サーバーアクション"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.xml:0
+#, python-format
+msgid "Set As Default"
+msgstr "デフォルトとして設定"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/kanban/kanban_editor_sidebar/properties/kanban_cover_properties/kanban_cover_properties.xml:0
+#, python-format
+msgid "Set Cover Image"
+msgstr "カバーイメージを設定"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Set a price or cost on records"
+msgstr "レコードに価格またはコストを設定する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/button_properties.xml:0
+#, python-format
+msgid "Set approval rules"
+msgstr "承認ルールを設定する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox.xml:0
+#, python-format
+msgid "Show Invisible Elements"
+msgstr "見えない要素を表示する"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor.xml:0
+#, python-format
+msgid "Show Traceback"
+msgstr "トレースバックを表示"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_properties.js:0
+#, python-format
+msgid "Show by default"
+msgstr "デフォルトで表示"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.xml:0
+#, python-format
+msgid "Show in print menu"
+msgstr "印刷メニューに表示"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "Signature"
+msgstr "署名"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/rainbow_effect.js:0
+#, python-format
+msgid "Slow"
+msgstr "スロー"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid ""
+"Some records were skipped because approvals were missing to"
+"                                    proceed with your request: "
+msgstr "リクエストを進めるための承認が不足していたため、いくつかのレコードがスキップされました:"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/list/list_editor_sidebar/list_editor_sidebar.xml:0
+#, python-format
+msgid "Sort By"
+msgstr "並び替え"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/map/map_editor_sidebar.xml:0
+#, python-format
+msgid "Sort by"
+msgstr "並べ替え"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/graph/graph_editor_sidebar.xml:0
+#, python-format
+msgid "Sorting"
+msgstr "並べ替え"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/selection_content_dialog.xml:0
+#, python-format
+msgid "Specify all possible values"
+msgstr "可能なすべての値を指定します"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/graph/graph_editor_sidebar.xml:0
+#, python-format
+msgid "Stacked graph"
+msgstr "積み上げグラフ"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#, python-format
+msgid "Stage"
+msgstr "ステージ"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#, python-format
+msgid "Stage Name"
+msgstr "ステージ名"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Stage and visualize records in a custom pipeline"
+msgstr "カスタムパイプラインでレコードをステージングして視覚化する"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#, python-format
+msgid "Start Date"
+msgstr "開始日"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/new_view_dialogs/new_view_dialog.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/calendar/calendar_editor_sidebar.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/cohort/cohort_editor_sidebar.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.xml:0
+#, python-format
+msgid "Start Date Field"
+msgstr "開始日フィールド"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/new_view_dialogs/new_view_dialog.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/calendar/calendar_editor_sidebar.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/cohort/cohort_editor_sidebar.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.xml:0
+#, python-format
+msgid "Stop Date Field"
+msgstr "停止日フィールド"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_ir_model_data__studio
+msgid "Studio"
+msgstr "スタジオ"
+
+#. module: web_studio
+#: model:ir.actions.client,name:web_studio.action_web_studio_app_creator
+msgid "Studio App Creator"
+msgstr "スタジオアプリクリエーター"
+
+#. module: web_studio
+#: model:ir.actions.act_window,name:web_studio.studio_approval_entry_action
+#: model:ir.ui.menu,name:web_studio.menu_studio_approval_entry
+msgid "Studio Approval Entries"
+msgstr "スタジオ承認エントリ"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_studio_approval_entry
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_entry_form_view
+msgid "Studio Approval Entry"
+msgstr "スタジオ承認エントリ"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_studio_approval_request
+msgid "Studio Approval Request"
+msgstr "スタジオ承認依頼"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_studio_approval_rule
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_rule_form_view
+msgid "Studio Approval Rule"
+msgstr "スタジオ承認ルール"
+
+#. module: web_studio
+#: model:ir.actions.act_window,name:web_studio.studio_approval_rule_action
+#: model:ir.ui.menu,name:web_studio.menu_studio_approval_rule
+msgid "Studio Approval Rules"
+msgstr "スタジオ承認規則"
+
+#. module: web_studio
+#: model:ir.model.fields,field_description:web_studio.field_ir_ui_menu__is_studio_configuration
+msgid "Studio Configuration Menu"
+msgstr "スタジオ設定メニュー"
+
+#. module: web_studio
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_customizations_filter
+msgid "Studio Customizations"
+msgstr "スタジオのカスタマイズ"
+
+#. module: web_studio
+#: model:ir.model,name:web_studio.model_studio_mixin
+msgid "Studio Mixin"
+msgstr "スタジオミックスイン"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.xml:0
+#, python-format
+msgid "Suggested features for your new model"
+msgstr "新しいモデルの推奨機能"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_type_properties.js:0
+#, python-format
+msgid "Sum"
+msgstr "合計"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/list/list_editor_sidebar/list_editor_sidebar.js:0
+#, python-format
+msgid "Sum of %s"
+msgstr " %sの合計"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/form_editor_sidebar.js:0
+#, python-format
+msgid "Tabs"
+msgstr "タブ"
+
+#. module: web_studio
+#. odoo-javascript
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "Tags"
+msgstr "タグ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_properties.xml:0
+#, python-format
+msgid "Technical Name"
+msgstr "技術名称"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#, python-format
+msgid "Template '%s' not found"
+msgstr "テンプレート &#39;%s&#39;が見つかりません"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.js:0
+#, python-format
+msgid "Text"
+msgstr "テキスト"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/app_creator/app_creator.xml:0
+#, python-format
+msgid "The fastest way to create a web application."
+msgstr "Webアプリケーションを作成するための最速の方法。"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#: code:addons/web_studio/controllers/main.py:0
+#: code:addons/web_studio/controllers/main.py:0
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid "The field %s does not exist."
+msgstr "フィールド%sは存在しません。"
+
+#. module: web_studio
+#. odoo-javascript
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#: code:addons/web_studio/static/src/approval/approval_hook.js:0
+#, python-format
+msgid "The following approvals are missing:"
+msgstr "次の承認がありません。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_structures/view_structures.xml:0
+#, python-format
+msgid "The following fields are currently not in the view."
+msgstr "以下のフィールドは現在のビューにありません。"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid "The icon has not a correct format"
+msgstr "アイコンの形式が正しくありません"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid "The icon is not linked to an attachment"
+msgstr "アイコンは添付ファイルにリンクされていません"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid "The method %s does not exist on the model %s."
+msgstr "メソッド %sはモデル %s上で存在しません。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/action_button/action_button.js:0
+#, python-format
+msgid "The method %s is private."
+msgstr "メソッド%sはプライベートです。"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#: code:addons/web_studio/controllers/main.py:0
+#: code:addons/web_studio/controllers/main.py:0
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid "The model %s does not exist."
+msgstr "モデル%sは存在しません。"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid "The model %s doesn't exist."
+msgstr "モデル%sは存在しません。"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid "The model %s doesn't support adding fields."
+msgstr "モデル%sはフィールドの追加をサポートしていません。"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid "The operation  type \"%s\" is not supported"
+msgstr "オペレーションタイプ \"%s\" はサポートされていません"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid "The related field of a button has to be a many2one to %s."
+msgstr "ボタンの関連フィールドは、many2oneから%sである必要があります。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor.xml:0
+#, python-format
+msgid ""
+"The report could not be loaded as some error occured. Usually it means that "
+"some view inherits from another but targets a node that doesn't exist. It "
+"might be due to the mutations of the base views during the upgrade process."
+msgstr ""
+"何らかのエラーが発生したため、レポートをロードできませんでした。通常は、あるビューが別のビューを継承しているにもかかわらず、存在しないノードをターゲットにしていることを意味します。アップグレード処理中にベースビューが変更されたことが原因かもしれません。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_model.js:0
+#, python-format
+msgid "The report is in error. Only editing the XML sources is permitted"
+msgstr "レポートはエラーです。XMLソースの編集のみ許可されています。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/studio_view.js:0
+#, python-format
+msgid ""
+"The requested change caused an error in the view. It could be because a "
+"field was deleted, but still used somewhere else."
+msgstr "要求された変更により、ビューでエラーが発生しました。フィールドが削除されたが、他の場所で使用されていることが原因である可能性があります。"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid ""
+"There are %s records using selection values not listed in those you are trying to save.\n"
+"Are you sure you want to remove the selection values of those records?"
+msgstr ""
+"保存しようとしているものにリストされていない選択値を使用している%sレコードがあります。それらのレコードの選択値を削除してもよろしいですか?"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid "There is no method %s on the model %s (%s)"
+msgstr "モデル%s(%s)にメソッド%sはありません"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.js:0
+#, python-format
+msgid ""
+"There is no record on which this report can be previewed. Create at least "
+"one record to preview the report."
+msgstr "このレポートをプレビューできるレコードがありません。レポートをプレビューするために少なくとも1つのレコードを作成して下さい。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.xml:0
+#, python-format
+msgid "There is no record to preview"
+msgstr "プレビューするレコードがありません。"
+
+#. module: web_studio
+#: model:ir.model.fields,help:web_studio.field_studio_approval_rule__users_to_notify
+msgid ""
+"These users will receive a notification via internal note when an approval "
+"is requested"
+msgstr "これらのユーザは、承認が要求されると、内部メモを介して通知を受け取ります。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_renderer/form_editor_renderer_components.js:0
+#, python-format
+msgid "Third Status"
+msgstr "3番目のステータス"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/navbar/navbar.js:0
+#: code:addons/web_studio/static/src/client_action/studio_home_menu/studio_home_menu.js:0
+#: code:addons/web_studio/static/src/studio_service.js:0
+#, python-format
+msgid "This action is not editable by Studio"
+msgstr "このアクションはStudioで編集できません"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid ""
+"This approval or the one you already submitted limits you to a single approval on this action.\n"
+"Another user is required to further approve this action."
+msgstr ""
+"この承認または既に提出した承認は、このアクションに対する単一の承認に制限されます。このアクションをさらに承認するには、別のユーザーが必要です。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor.xml:0
+#, python-format
+msgid ""
+"This could also be due to the absence of a real record to render the report "
+"with."
+msgstr "これは、レポートをレンダリングするための実際のレコードがないためでもあります。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor.xml:0
+#, python-format
+msgid "This may be due to an incorrect syntax in the edited parts."
+msgstr "これは、編集した部分のシンタックスが間違っているためかもしれません。"
+
+#. module: web_studio
+#: model:ir.model.fields,help:web_studio.field_studio_approval_rule__message
+msgid ""
+"This message will be displayed to users that cannot proceed without this "
+"approval"
+msgstr "このメッセージは、この承認がないと先に進めないユーザに表示されます。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/view_editor_model.js:0
+#, python-format
+msgid "This operation caused an error, probably because a xpath was broken"
+msgstr "この操作により、おそらくxpathが壊れたためにエラーが発生しました"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid "This rule has already been approved/rejected."
+msgstr "このルールはすでに承認/却下されています。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/approval/approval_infos.xml:0
+#, python-format
+msgid "This rule limits this user to a single approval for this action."
+msgstr "このルールは、このユーザーをこのアクションの単一の承認に制限します。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/cohort/cohort_editor_sidebar.xml:0
+#, python-format
+msgid "Timeline"
+msgstr "タイムライン"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.js:0
+#, python-format
+msgid "Timeline views"
+msgstr "タイムラインビュー"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/systray_item/systray_item.xml:0
+#: code:addons/web_studio/static/src/systray_item/systray_item.xml:0
+#, python-format
+msgid "Toggle Studio"
+msgstr "スタジオ切替"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#, python-format
+msgid "Total"
+msgstr "合計"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/graph/graph_editor_sidebar.xml:0
+#, python-format
+msgid "Type"
+msgstr "タイプ"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#, python-format
+msgid "Type down your notes here..."
+msgstr "ここにメモを入力してください..."
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg.xml:0
+#: code:addons/web_studio/static/src/client_action/view_editor/view_editor_snackbar.xml:0
+#, python-format
+msgid "Undo"
+msgstr "戻す"
+
+#. module: web_studio
+#: model:ir.model.fields,help:web_studio.field_studio_approval_rule__notification_order
+msgid ""
+"Use this field to setup multi-level validation. Next activities and "
+"notifications for an approval request will only be sent once rules from "
+"previous levels have been validated"
+msgstr ""
+"複数レベルの検証を設定するには、このフィールドを使用します。承認要求に対する次の活動と通知は、前のレベルの規則が検証された場合にのみ送信されます。"
+
+#. module: web_studio
+#: model_terms:ir.ui.view,arch_db:web_studio.studio_approval_entry_search_view
+msgid "User"
+msgstr "ユーザ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "User assignment"
+msgstr "ユーザーの割り当て"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/approval/studio_approval.xml:0
+#, python-format
+msgid "User avatar placeholder"
+msgstr "ユーザーアバタープレースホルダー"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid "User is not a member of the selected group."
+msgstr "ユーザは選択されたグループのメンバではありません。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/button_properties/button_properties.xml:0
+#: model:ir.model.fields,field_description:web_studio.field_studio_approval_rule__users_to_notify
+#, python-format
+msgid "Users to notify"
+msgstr "通知するユーザ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/xml_resource_editor/xml_resource_editor.xml:0
+#, python-format
+msgid "Uses:"
+msgstr "ユーザ:"
+
+#. module: web_studio
+#. odoo-javascript
+#. odoo-python
+#: code:addons/web_studio/models/ir_model.py:0
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/selection_content_dialog.xml:0
+#, python-format
+msgid "Value"
+msgstr "数値"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/app_menu_editor/app_menu_editor.xml:0
+#: code:addons/web_studio/static/src/client_action/editor/app_menu_editor/app_menu_editor.xml:0
+#, python-format
+msgid "Value of list"
+msgstr "リストの値"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/interactive_editor_sidebar.js:0
+#: model:ir.model,name:web_studio.model_ir_ui_view
+#, python-format
+msgid "View"
+msgstr "ビュー"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/report_editor/report_editor.xml:0
+#, python-format
+msgid "View in Error:"
+msgstr "エラー表示:"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
+#, python-format
+msgid "Views"
+msgstr "ビュー"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/approval/studio_approval.xml:0
+#, python-format
+msgid "Waiting for approval"
+msgstr "承認待ち"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/controllers/main.py:0
+#, python-format
+msgid "Webhook Automations"
+msgstr "Webhook自動化"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/editor/editor_menu/editor_menu.js:0
+#, python-format
+msgid "Webhooks"
+msgstr "Webhooks"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/cohort/cohort_editor.js:0
+#, python-format
+msgid "Week"
+msgstr "週"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/gantt/gantt_editor_sidebar.xml:0
+#, python-format
+msgid "Week Precision"
+msgstr "週の精度"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/app_creator/app_creator.xml:0
+#, python-format
+msgid "Welcome to"
+msgstr "ようこそ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/action_button/action_button.xml:0
+#, python-format
+msgid "What should the button do"
+msgstr "ボタンが行うべきこと"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/list/list_editor_sidebar/list_editor_sidebar.xml:0
+#, python-format
+msgid "When Creating Record"
+msgstr "レコードを作る時"
+
+#. module: web_studio
+#: model:ir.model.fields,help:web_studio.field_studio_approval_rule__can_validate
+msgid "Whether the rule can be approved by the current user"
+msgstr "ルールを現在のユーザーが承認できるかどうか"
+
+#. module: web_studio
+#: model:ir.model.fields,help:web_studio.field_ir_model__abstract
+msgid "Whether this model is abstract"
+msgstr "このモデルが抽象的かどうか"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/type_widget_properties.xml:0
+#, python-format
+msgid "Widget"
+msgstr "ウィジェット"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/model_configurator/model_configurator.js:0
+#, python-format
+msgid "Write additional notes or comments"
+msgstr "追加のメモやコメントを書く"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox.xml:0
+#, python-format
+msgid "XML"
+msgstr "XML"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/cohort/cohort_editor.js:0
+#, python-format
+msgid "Year"
+msgstr "年"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid "You cannot cancel an approval you didn't set yourself."
+msgstr "自分で設定していない承認を取消することはできません。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/action_editor/action_editor.js:0
+#, python-format
+msgid "You cannot deactivate this view as it is the last one active."
+msgstr "このビューは最後にアクティブになっているため、非アクティブにすることはできません。"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/kanban/kanban_editor_record.js:0
+#, python-format
+msgid "You first need to create a many2many field in the form view."
+msgstr "最初に、フォームビューでmany2manyフィールドを作成する必要があります。"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/studio_approval.py:0
+#, python-format
+msgid "You just like to break things, don't you?"
+msgstr "あなたはただ物事を壊すのが好きですよね?"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/chatter_properties/chatter_properties.xml:0
+#, python-format
+msgid "domain not defined"
+msgstr "ドメインが定義されていません"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/sidebar_properties_toolbox/sidebar_properties_toolbox.js:0
+#, python-format
+msgid "dropdown"
+msgstr "ドロップダウン"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/menu_creator/menu_creator.xml:0
+#, python-format
+msgid "e.g. Properties"
+msgstr "例:プロパティ"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/app_creator/app_creator.xml:0
+#, python-format
+msgid "e.g. Real Estate"
+msgstr "例:不動産"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/icon_creator/icon_creator.xml:0
+#, python-format
+msgid "or"
+msgstr "又は"
+
+#. module: web_studio
+#. odoo-python
+#: code:addons/web_studio/models/ir_ui_view.py:0
+#, python-format
+msgid "studio_approval attribute can only be set in form views"
+msgstr "studio_approval属性は、フォームビューでのみ設定できます"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/interactive_editor_sidebar.xml:0
+#, python-format
+msgid "tabsDisplay.new.title"
+msgstr "tabsDisplay.new.title"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/interactive_editor_sidebar.xml:0
+#, python-format
+msgid "tabsDisplay.properties.title"
+msgstr "tabsDisplay.properties.title"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/interactive_editor_sidebar.xml:0
+#, python-format
+msgid "tabsDisplay.view.title"
+msgstr "tabsDisplay.view.title"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/editors/form/form_editor_sidebar/properties/chatter_properties/chatter_properties.xml:0
+#, python-format
+msgid "test email"
+msgstr "テストメール"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/icon_creator/icon_creator.xml:0
+#, python-format
+msgid "upload it"
+msgstr "アップロードする"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/icon_creator/icon_creator.xml:0
+#, python-format
+msgid "upload one"
+msgstr "1つアップロードする"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/properties/field_properties/field_properties.xml:0
+#, python-format
+msgid "x_studio_"
+msgstr "x_studio_"
+
+#. module: web_studio
+#. odoo-javascript
+#: code:addons/web_studio/static/src/client_action/view_editor/interactive_editor/field_configuration/selection_content_dialog.xml:0
+#, python-format
+msgid "{{ item.isInEdition ? 'Add selection' : 'Edit selection' }}"
+msgstr "{{ item.isInEdition ? 'Add selection' : 'Edit selection' }}"

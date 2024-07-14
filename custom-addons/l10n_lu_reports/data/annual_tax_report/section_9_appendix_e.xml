@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_lu_annual_tax_report_section_appendix_e" model="account.report">
+        <field name="name">Appendix E</field>
+        <field name="sequence">7</field>
+        <field name="country_id" ref="base.lu"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="l10n_lu_annual_tax_report_appendix_e_start" model="account.report.column">
+                <field name="name">Start of financial year</field>
+                <field name="expression_label">year_start</field>
+            </record>
+            <record id="l10n_lu_annual_tax_report_appendix_e_end" model="account.report.column">
+                <field name="name">End of financial year</field>
+                <field name="expression_label">year_end</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_lu_annual_tax_report_appendix_e_stock" model="account.report.line">
+                <field name="name">Stock / Miscellaneous</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_lu_annual_tax_report_appendix_e_total_stock" model="account.report.line">
+                        <field name="name">1. Total stock and tobacco</field>
+                        <field name="code">L10N_LU_TAX_168</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_e_168_year_start" model="account.report.expression">
+                                <field name="label">year_start</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_163.year_start + L10N_LU_TAX_167.year_start</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_e_168_year_end" model="account.report.expression">
+                                <field name="label">year_end</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_163.year_end + L10N_LU_TAX_167.year_end</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_lu_annual_tax_report_appendix_e_a" model="account.report.line">
+                                <field name="name">a. Stock not falling within the scope of Art. 56ter-1 and 56ter-2 and manufactured tobacco referred to in b. excluded</field>
+                                <field name="code">L10N_LU_TAX_163</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_e_163_year_start" model="account.report.expression">
+                                        <field name="label">year_start</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">L10N_LU_TAX_791.year_start + L10N_LU_TAX_991.year_start + L10N_LU_TAX_793.year_start + L10N_LU_TAX_797.year_start + L10N_LU_TAX_795.year_start + L10N_LU_TAX_995.year_start + L10N_LU_TAX_158.year_start + L10N_LU_TAX_162.year_start + L10N_LU_TAX_200.year_start + L10N_LU_TAX_791.year_start</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_e_163_year_end" model="account.report.expression">
+                                        <field name="label">year_end</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">sum_children</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_e_791" model="account.report.line">
+                                        <field name="name">791 - rate of 17%</field>
+                                        <field name="code">L10N_LU_TAX_791</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_791_year_start" model="account.report.expression">
+                                                <field name="label">year_start</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_791_year_end" model="account.report.expression">
+                                                <field name="label">year_end</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_e_991" model="account.report.line">
+                                        <field name="name">991 - rate of 16%</field>
+                                        <field name="code">L10N_LU_TAX_991</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_991_year_start" model="account.report.expression">
+                                                <field name="label">year_start</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_991_year_end" model="account.report.expression">
+                                                <field name="label">year_end</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_e_793" model="account.report.line">
+                                        <field name="name">793 - rate of 14%</field>
+                                        <field name="code">L10N_LU_TAX_793</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_793_year_start" model="account.report.expression">
+                                                <field name="label">year_start</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_793_year_end" model="account.report.expression">
+                                                <field name="label">year_end</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_e_993" model="account.report.line">
+                                        <field name="name">993 - rate of 13%</field>
+                                        <field name="code">L10N_LU_TAX_993</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_993_year_start" model="account.report.expression">
+                                                <field name="label">year_start</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_993_year_end" model="account.report.expression">
+                                                <field name="label">year_end</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_e_797" model="account.report.line">
+                                        <field name="name">797 - rate of 12%</field>
+                                        <field name="code">L10N_LU_TAX_797</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_797_year_start" model="account.report.expression">
+                                                <field name="label">year_start</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_797_year_end" model="account.report.expression">
+                                                <field name="label">year_end</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_e_795" model="account.report.line">
+                                        <field name="name">795 - rate of 8%</field>
+                                        <field name="code">L10N_LU_TAX_795</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_795_year_start" model="account.report.expression">
+                                                <field name="label">year_start</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_795_year_end" model="account.report.expression">
+                                                <field name="label">year_end</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_e_995" model="account.report.line">
+                                        <field name="name">995 - rate of 7%</field>
+                                        <field name="code">L10N_LU_TAX_995</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_995_year_start" model="account.report.expression">
+                                                <field name="label">year_start</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_995_year_end" model="account.report.expression">
+                                                <field name="label">year_end</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_e_158" model="account.report.line">
+                                        <field name="name">158 - rate of 3%</field>
+                                        <field name="code">L10N_LU_TAX_158</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_158_year_start" model="account.report.expression">
+                                                <field name="label">year_start</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_158_year_end" model="account.report.expression">
+                                                <field name="label">year_end</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_e_396" model="account.report.line">
+                                        <field name="name">396 - Custom rate (%)</field>
+                                        <field name="code">L10N_LU_TAX_396</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_396_year_start" model="account.report.expression">
+                                                <field name="label">year_start</field>
+                                                <field name="engine">external</field>
+                                                <field name="figure_type">percentage</field>
+                                                <field name="formula">most_recent</field>
+                                                <field name="subformula">editable;rounding=0</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_e_162" model="account.report.line">
+                                        <field name="name">162 - Custom rate (value)</field>
+                                        <field name="code">L10N_LU_TAX_162</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_162_year_start" model="account.report.expression">
+                                                <field name="label">year_start</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_162_year_end" model="account.report.expression">
+                                                <field name="label">year_end</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_e_200" model="account.report.line">
+                                        <field name="name">200 - Exempt</field>
+                                        <field name="code">L10N_LU_TAX_200</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_200_year_start" model="account.report.expression">
+                                                <field name="label">year_start</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_200_year_end" model="account.report.expression">
+                                                <field name="label">year_end</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_appendix_e_a1" model="account.report.line">
+                                <field name="name">which of total under 1.a. is</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="children_ids">
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_e_164" model="account.report.line">
+                                        <field name="name">1. stock for resale</field>
+                                        <field name="code">L10N_LU_TAX_164</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_164_year_start" model="account.report.expression">
+                                                <field name="label">year_start</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_164_year_end" model="account.report.expression">
+                                                <field name="label">year_end</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_e_165" model="account.report.line">
+                                        <field name="name">2. goods produced inhouse</field>
+                                        <field name="code">L10N_LU_TAX_165</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_165_year_start" model="account.report.expression">
+                                                <field name="label">year_start</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">L10N_LU_TAX_163.year_start - L10N_LU_TAX_164.year_start</field>
+                                            </record>
+                                            <record id="l10n_lu_annual_tax_report_section_appendix_e_165_year_end" model="account.report.expression">
+                                                <field name="label">year_end</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">L10N_LU_TAX_163.year_end - L10N_LU_TAX_164.year_end</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_appendix_e_b" model="account.report.line">
+                                <field name="name">b. Manufactured tobacco in stock</field>
+                                <field name="code">L10N_LU_TAX_167</field>
+                                <field name="hierarchy_level">2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_e_167_year_start" model="account.report.expression">
+                                        <field name="label">year_start</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable</field>
+                                    </record>
+                                    <record id="l10n_lu_annual_tax_report_section_appendix_e_167_year_end" model="account.report.expression">
+                                        <field name="label">year_end</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_appendix_e_wip" model="account.report.line">
+                        <field name="name">2. Work in progress</field>
+                        <field name="code">L10N_LU_TAX_116</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_e_116_year_start" model="account.report.expression">
+                                <field name="label">year_start</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_e_116_year_end" model="account.report.expression">
+                                <field name="label">year_end</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_appendix_e_receivables" model="account.report.line">
+                        <field name="name">3. Receivables from clients</field>
+                        <field name="code">L10N_LU_TAX_118</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_e_118_year_start" model="account.report.expression">
+                                <field name="label">year_start</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_e_118_year_end" model="account.report.expression">
+                                <field name="label">year_end</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_appendix_e_payments" model="account.report.line">
+                        <field name="name">4. Payments made on account by clients</field>
+                        <field name="code">L10N_LU_TAX_120</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_e_120_year_start" model="account.report.expression">
+                                <field name="label">year_start</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_e_120_year_end" model="account.report.expression">
+                                <field name="label">year_end</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

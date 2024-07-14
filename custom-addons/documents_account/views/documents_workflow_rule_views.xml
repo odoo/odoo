@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="workflow_rule_form_view_inherit_account" model="ir.ui.view">
+        <field name="name">Rules form inherit account</field>
+        <field name="model">documents.workflow.rule</field>
+        <field name="inherit_id" ref="documents.workflow_rule_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_model']" position='after'>
+                 <field name="display_journal_id" invisible="1"/>
+                 <field name="suitable_journal_ids" invisible="1"/>
+                 <field name="journal_id" invisible="not display_journal_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

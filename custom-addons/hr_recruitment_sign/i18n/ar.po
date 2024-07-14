@@ -1,0 +1,260 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_recruitment_sign
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_applicant__sign_request_count
+msgid "# Signatures"
+msgstr "عدد التوقيعات"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid "%s and %s are the signatories."
+msgstr "%s و %s هي الأطراف الموقعة. "
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_applicant_sign_view_form
+msgid "<span class=\"o_stat_text\">Signature Requests</span>"
+msgstr "<span class=\"o_stat_text\">طلبات التوقيع</span>"
+
+#. module: hr_recruitment_sign
+#: model:ir.model,name:hr_recruitment_sign.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__applicant_id
+msgid "Applicant"
+msgstr "المتقدم للوظيفة "
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__applicant_role_id
+msgid "Applicant Role"
+msgstr "دور المتقدم للوظيفة "
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__partner_name
+msgid "Applicant's Name"
+msgstr "اسم المتقدم"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,help:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__applicant_role_id
+msgid ""
+"Applicant's role on the templates to sign. The same role must be present in "
+"all the templates"
+msgstr ""
+"دور المتقدم للوظيفة في القوالب لتوقيعها. يجب أن يكون نفس الدور موجوداً في "
+"كافة القوالب "
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Attach a file"
+msgstr "إرفاق ملف"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__attachment_ids
+msgid "Attachment"
+msgstr "مرفق"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__partner_id
+msgid "Contact"
+msgstr "جهة الاتصال"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__cc_partner_ids
+msgid "Copy to"
+msgstr "نسخ إلى"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__create_date
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Discard"
+msgstr "إهمال "
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__display_name
+msgid "Display Name"
+msgstr "اسم العرض "
+
+#. module: hr_recruitment_sign
+#: model:ir.actions.act_window,name:hr_recruitment_sign.sign_recruitment_wizard_action
+msgid "Document Signature"
+msgstr "توقيع المستند"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__sign_template_ids
+msgid "Documents to sign"
+msgstr "المستندات لتوقيعها "
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,help:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__sign_template_ids
+msgid ""
+"Documents to sign. Only documents with 1 or 2 different responsible are selectable.\n"
+"        Documents with 1 responsible will only have to be signed by the applicant while documents with 2 different responsible will have to be signed by both the applicant and the responsible.\n"
+"        "
+msgstr ""
+"المستندات لتوقيعها. وحدها المستندات التي لها مسؤول 1 أو 2 يتم تحديدها.\n"
+"        يجب أن تُوقّع المستندات ذات المسؤول الواحد من قِبَل المتقدم للوظيفة، بينما تُوقّع المستندات ذات المسؤولَين المختلفين من قِبَل المتقدم للوظيفة والمسؤول معاً.\n"
+"        "
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__has_both_template
+msgid "Has Both Template"
+msgstr "يحتوي على كلا القالبين "
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Mail Options"
+msgstr "خيارات البريد "
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__message
+msgid "Message"
+msgstr "الرسالة"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid ""
+"No appropriate template could be found, please make sure you configured them"
+" properly."
+msgstr "لم يتم العثور على أي قالب مناسب. يرجى التأكد من تهيئتها بشكل صحيح. "
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "No template available"
+msgstr "لا توجد قوالب "
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid "Only %s has to sign."
+msgstr "وحده %s عليه التوقيع. "
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Optional Message..."
+msgstr "رسالة اختيارية..."
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__possible_template_ids
+msgid "Possible Template"
+msgstr "القالب المحتمل "
+
+#. module: hr_recruitment_sign
+#: model:ir.actions.server,name:hr_recruitment_sign.action_request_signature
+msgid "Request Signature"
+msgstr "طلب التوقيع "
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__responsible_id
+msgid "Responsible"
+msgstr "المسؤول "
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Send"
+msgstr "إرسال"
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Sign Request Options"
+msgstr "خيارات طلب التوقيع "
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__sign_template_responsible_ids
+msgid "Sign Template Responsible"
+msgstr "المسؤول عن قالب التوقيع "
+
+#. module: hr_recruitment_sign
+#: model:ir.model,name:hr_recruitment_sign.model_hr_recruitment_sign_document_wizard
+msgid "Sign document in recruitment"
+msgstr "توقيع المستند في التوظيف  "
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Signature Request"
+msgstr "طلب التوقيع"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/wizard/hr_recruitment_sign_document_wizard.py:0
+#, python-format
+msgid "Signature Request - %s"
+msgstr "طلب التوقيع - %s"
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/models/hr_applicant.py:0
+#, python-format
+msgid "Signature Requests"
+msgstr "طلبات التوقيع"
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__subject
+msgid "Subject"
+msgstr "الموضوع "
+
+#. module: hr_recruitment_sign
+#: model:ir.model.fields,field_description:hr_recruitment_sign.field_hr_recruitment_sign_document_wizard__template_warning
+msgid "Template Warning"
+msgstr "تحذير القالب "
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.hr_recruitment_sign_view
+msgid "Write email or search contact..."
+msgstr "اكتب رسالة بريد إلكتروني أو ابحث عن جهة الاتصال..."
+
+#. module: hr_recruitment_sign
+#. odoo-python
+#: code:addons/hr_recruitment_sign/models/hr_applicant.py:0
+#, python-format
+msgid "You must define a Contact Name for this applicant."
+msgstr "عليك تحديد اسم لهذا المتقدم. "
+
+#. module: hr_recruitment_sign
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_sign.message_signature_request
+msgid "requested a new signature on the following documents:"
+msgstr "طلب توقيعاً جديداً في المستندات التالية: "

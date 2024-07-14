@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="product_template_view_form">
+        <field name="name">view.prod.form.inh.l10n.pe</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="product_tag_ids" position="before">
+                <field name="l10n_pe_edi_tariff_fraction" invisible="'PE' not in fiscal_country_codes"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

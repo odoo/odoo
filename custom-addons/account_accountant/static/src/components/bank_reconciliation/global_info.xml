@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="account_accountant.BankRecGlobalInfo">
+        <div t-if="props.journalId"
+             class="journal-balance d-flex w-100"
+             t-on-click="(ev) => this.actionOpenBankGL()">
+            <span class="btn flex-fill text-900 text-start ps-0 fw-bold fs-4 align-self-center">
+                Balance
+            </span>
+            <span class="btn btn-link pe-0 fw-bold fs-4 align-self-center"
+                  t-if="props.journalBalanceAmount or props.journalBalanceAmount === 0"
+                  t-esc="props.journalBalanceAmount"/>
+        </div>
+    </t>
+
+</templates>

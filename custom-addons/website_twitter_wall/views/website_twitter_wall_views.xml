@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem name="Twitter Wall" id="menu_website_twitter_wall_root" sequence="32" parent="website.menu_website_configuration" active="0"/>
+
+    <record id="website_twitter_wall_view_tree" model="ir.ui.view">
+        <field name="name">website.twitter.wall.tree</field>
+        <field name="model">website.twitter.wall</field>
+        <field name="arch" type="xml">
+            <tree string="Walls">
+                <field name="name" />
+                <field name="description" />
+                <field name="is_live" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="website_twitter_wall_view_form" model="ir.ui.view">
+        <field name="name">website.twitter.wall.form</field>
+        <field name="model">website.twitter.wall</field>
+        <field name="arch" type="xml">
+            <form string="Walls">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="is_published" widget="website_redirect_button"/>
+                        <button class="oe_stat_button" name="open_tweets" type="object" icon="fa-twitter" invisible="total_tweets == 0">
+                            <field string="Tweets" name="total_tweets" widget="statinfo"/>
+                        </button>
+                        <field name="is_live" invisible="1" />
+                        <button class="oe_stat_button" name="toggle_live_mode" type="object" invisible="not is_live" icon="fa-toggle-on text-success">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Live Mode</span>
+                                <span class="o_stat_text">is <strong class="text-success"> On </strong></span>
+                            </div>
+                        </button>
+                        <button name="toggle_live_mode" type="object" class="oe_stat_button" icon="fa-toggle-off" invisible="is_live" widget="statinfo">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Live Mode</span>
+                                <span class="o_stat_text">is <strong class="text-danger"> Off </strong></span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="image" class="oe_avatar" widget="image" />
+                    <div class="oe_title">
+                        <label for="name" string="Wall Name"/>
+                        <h1>
+                            <field name="name" default_focus="1" placeholder="e.g. My Twitter Wall"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <label for="search_pattern"/>
+                        <div>
+                            <field name="search_pattern" class="oe_inline"/>
+                            <a class="oe_edit_only" target="_blank" href="https://dev.twitter.com/rest/public/search#query-operators">Query operators</a>
+                        </div>
+                        <field name="mode" class="oe_inline" widget="radio"/>
+                        <field name="description" class="oe_inline" />
+                        <field name="active" invisible="1"/>
+                        <field name="website_url" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="website_twitter_wall_view_search" model="ir.ui.view">
+        <field name="name">website.twitter.wall.view.search</field>
+        <field name="model">website.twitter.wall</field>
+        <field name="arch" type="xml">
+            <search string="Search CRM Score">
+                <field name="name"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="website_twitter_wall_action" model="ir.actions.act_window">
+        <field name="name">Walls</field>
+        <field name="res_model">website.twitter.wall</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="website_twitter_wall_view_search"/>
+    </record>
+
+    <menuitem id="twitter_wall_menu" action="website_twitter_wall_action" parent="menu_website_twitter_wall_root" sequence="1" />
+
+    <record id="website_twitter_tweet_view_tree" model="ir.ui.view">
+        <field name="name">website.twitter.tweet.tree</field>
+        <field name="model">website.twitter.tweet</field>
+        <field name="arch" type="xml">
+            <tree string="Tweets" create="false" edit="false">
+                <field name="tweet_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="website_twitter_tweet_view_form" model="ir.ui.view">
+        <field name="name">website.twitter.tweet.form</field>
+        <field name="model">website.twitter.tweet</field>
+        <field name="arch" type="xml">
+            <form string="Tweets" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <field name="tweet_id" />
+                        <field name="wall_ids" string="Wall"/>
+                        <field name="tweet"/>
+                        <field name="tweet_html" widget="html"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="website_twitter_tweet_action" model="ir.actions.act_window">
+        <field name="name">Tweets</field>
+        <field name="res_model">website.twitter.tweet</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="website_twitter_tweet_menu"
+        action="website_twitter_tweet_action"
+        parent="menu_website_twitter_wall_root"
+        groups="base.group_no_one"
+        sequence="2" />
+</odoo>

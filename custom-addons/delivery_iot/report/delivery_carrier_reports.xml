@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- These are shells to allow for assigning printers -->
+    <data>
+        <template id="report_shipping_labels"/>
+        <template id="report_shipping_docs"/>
+        <record id="action_report_shipping_labels" model="ir.actions.report">
+            <field name="name">Shipping Labels</field>
+            <field name="model">stock.picking</field>
+            <field name="report_name">delivery_iot.report_shipping_labels</field>
+            <field name="print_report_name">'Empty Report - Used for assigning IoT printer'</field>
+        </record>
+        <record id="action_report_shipping_docs" model="ir.actions.report">
+            <field name="name">Shipping Documents</field>
+            <field name="model">stock.picking</field>
+            <field name="report_name">delivery_iot.report_shipping_docs</field>
+            <field name="print_report_name">'Empty Report - Used for assigning IoT printer'</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,1570 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_lu_annual_tax_report_section_appendix_a" model="account.report">
+        <field name="name">Appendix A</field>
+        <field name="sequence">4</field>
+        <field name="country_id" ref="base.lu"/>
+        <field name="availability_condition">country</field>
+        <field name="custom_handler_model_id" ref="model_l10n_lu_appendix_a_tax_report_handler"/>
+        <field name="column_ids">
+            <record id="l10n_lu_annual_tax_report_total" model="account.report.column">
+                <field name="name">TOTAL if applicable VAT included</field>
+                <field name="expression_label">total</field>
+            </record>
+            <record id="l10n_lu_annual_tax_report_percent" model="account.report.column">
+                <field name="name">%</field>
+                <field name="expression_label">percent</field>
+                <field name="figure_type">percentage</field>
+            </record>
+            <record id="l10n_lu_annual_tax_report_vat_excluded" model="account.report.column">
+                <field name="name">Business portion - VAT excluded</field>
+                <field name="expression_label">vat_excluded</field>
+            </record>
+            <record id="l10n_lu_annual_tax_report_vat_invoiced" model="account.report.column">
+                <field name="name">Business portion - of VAT invoiced</field>
+                <field name="expression_label">vat_invoiced</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_lu_annual_tax_report_total_opex" model="account.report.line">
+                <field name="name">Total operational expenditures</field>
+                <field name="code">L10N_LU_TAX_192</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_lu_annual_tax_report_total_opex_vat_excluded" model="account.report.expression">
+                        <field name="label">vat_excluded</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sum_children</field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_total_opex_vat_invoiced" model="account.report.expression">
+                        <field name="label">vat_invoiced</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sum_children</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_239" model="account.report.line">
+                        <field name="name">1. Gross salaries</field>
+                        <field name="code">L10N_LU_TAX_239</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_239_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_239_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_239_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_239_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_239_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_239_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_239.vat_excluded</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_241" model="account.report.line">
+                        <field name="name">1a. of which productive salaries</field>
+                        <field name="code">L10N_LU_TAX_241</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_241_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_241_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_241_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_241_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_241.vat_excluded</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_244" model="account.report.line">
+                        <field name="name">2. Gross wages</field>
+                        <field name="code">L10N_LU_TAX_244</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_244_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_244_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_244_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_244_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_244_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_244_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_244.vat_excluded</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_247" model="account.report.line">
+                        <field name="name">3. Occasional salaries</field>
+                        <field name="code">L10N_LU_TAX_247</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_247_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_247_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_247_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_247_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_247_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_247_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_247.vat_excluded</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_250" model="account.report.line">
+                        <field name="name">4. Compulsory social security contributions (employer's share)</field>
+                        <field name="code">L10N_LU_TAX_250</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_250_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_250_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_250_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_250_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_250_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_250_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_250.vat_excluded</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_253" model="account.report.line">
+                        <field name="name">5. Accident insurance</field>
+                        <field name="code">L10N_LU_TAX_253</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_253_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_253_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_253_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_253_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_253_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_253_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_253.vat_excluded</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_256" model="account.report.line">
+                        <field name="name">6. Commissions</field>
+                        <field name="code">L10N_LU_TAX_256</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_256_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_256_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_256_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_256_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_256_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_256.vat_excluded + L10N_LU_TAX_256.vat_invoiced</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_260" model="account.report.line">
+                        <field name="name">7. Staff travel and representation expenses</field>
+                        <field name="code">L10N_LU_TAX_260</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_260_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_260_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_260_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_260_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_260_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_260_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_260_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_260_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_260_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_260.vat_excluded + L10N_LU_TAX_260.vat_invoiced</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_264" model="account.report.line">
+                        <field name="name">8. Custom (name)</field>
+                        <field name="code">L10N_LU_TAX_264</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_264_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">external</field>
+                                <field name="figure_type">string</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_265" model="account.report.line">
+                        <field name="name">8. Custom (value)</field>
+                        <field name="code">L10N_LU_TAX_265</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_265_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_265_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_265_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_265_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_265.vat_excluded + L10N_LU_TAX_265.vat_invoiced</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_269" model="account.report.line">
+                        <field name="name">9. Accounting and bookkeeping fees</field>
+                        <field name="code">L10N_LU_TAX_269</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_269_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_269_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_269_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_269_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_269_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_269_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_269_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_269_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_269_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_269.vat_excluded + L10N_LU_TAX_269.vat_invoiced</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_273" model="account.report.line">
+                        <field name="name">10. Custom (name)</field>
+                        <field name="code">L10N_LU_TAX_273</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_273_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">external</field>
+                                <field name="figure_type">string</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_274" model="account.report.line">
+                        <field name="name">10. Custom (value)</field>
+                        <field name="code">L10N_LU_TAX_274</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_274_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_274_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_274_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_274_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_274.vat_excluded + L10N_LU_TAX_274.vat_invoiced</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_278" model="account.report.line">
+                        <field name="name">11. Custom (name)</field>
+                        <field name="code">L10N_LU_TAX_278</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_278_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">external</field>
+                                <field name="figure_type">string</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_279" model="account.report.line">
+                        <field name="name">11. Custom (value)</field>
+                        <field name="code">L10N_LU_TAX_279</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_279_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_279_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_279_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                             <record id="l10n_lu_annual_tax_report_section_appendix_a_279_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_279.vat_excluded + L10N_LU_TAX_279.vat_invoiced</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_283" model="account.report.line">
+                        <field name="name">12. Employer's travel and representation expenses</field>
+                        <field name="code">L10N_LU_TAX_283</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_283_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_283_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_283_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_283_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_283_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_283_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_283_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_283_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_283_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_283.vat_excluded + L10N_LU_TAX_283.vat_invoiced</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_285" model="account.report.line">
+                        <field name="name">13. Electricity</field>
+                        <field name="code">L10N_LU_TAX_285</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_285_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_285_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_285_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_285_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_285_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_285_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_285_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_285_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_285_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_285.vat_excluded + L10N_LU_TAX_285.vat_invoiced</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_289" model="account.report.line">
+                        <field name="name">14. Gas</field>
+                        <field name="code">L10N_LU_TAX_289</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_289_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_289_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_289_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_289_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_289_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_289_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_289_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_289_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_289_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_289.vat_excluded + L10N_LU_TAX_289.vat_invoiced</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_293" model="account.report.line">
+                        <field name="name">15. Water</field>
+                        <field name="code">L10N_LU_TAX_293</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_293_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_293_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_293_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_293_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_293_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_293_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_293_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_293_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_293_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_293.vat_excluded + L10N_LU_TAX_293.vat_invoiced</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_297" model="account.report.line">
+                        <field name="name">16. Heating</field>
+                        <field name="code">L10N_LU_TAX_297</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_297_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_297_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_297_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_297_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_297_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_297.vat_excluded + L10N_LU_TAX_297.vat_invoiced</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_301" model="account.report.line">
+                        <field name="name">17. Telecommunications</field>
+                        <field name="code">L10N_LU_TAX_301</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_301_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_301_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_301_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_301_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_301_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_301_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_301_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_301_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_301_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_301.vat_excluded + L10N_LU_TAX_301.vat_invoiced</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_305" model="account.report.line">
+                        <field name="name">18a. Renting/leasing of immovable property with application of VAT</field>
+                        <field name="code">L10N_LU_TAX_305</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_305_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_305_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_305_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_305_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_305_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_305_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_305_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_305_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_305_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_305.vat_excluded + L10N_LU_TAX_305.vat_invoiced</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_307" model="account.report.line">
+                        <field name="name">18b. Renting/leasing of immovable property with no application of VAT</field>
+                        <field name="code">L10N_LU_TAX_307</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_307_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_307_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_307_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_307_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_307_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_307_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_307.vat_excluded</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_310" model="account.report.line">
+                        <field name="name">18c. Renting/leasing of permanently installed equipment and machinery</field>
+                        <field name="code">L10N_LU_TAX_310</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_310_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_310_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_310_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_310_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_310_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_310_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_310_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_310_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_310_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_LU_TAX_310.vat_excluded + L10N_LU_TAX_310.vat_invoiced</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_314" model="account.report.line">
+                        <field name="name">19. Fire insurance</field>
+                        <field name="code">L10N_LU_TAX_314</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_314_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_314_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_314_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_316" model="account.report.line">
+                        <field name="name">20. Property tax</field>
+                        <field name="code">L10N_LU_TAX_316</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_316_percent_default" model="account.report.expression">
+                                <field name="label">_default_percent</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_316_percent" model="account.report.expression">
+                                <field name="label">percent</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=0</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_316_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_316_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_316_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_318" model="account.report.line">
+                        <field name="name">21. Custom (name)</field>
+                        <field name="code">L10N_LU_TAX_318</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_318_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">external</field>
+                                <field name="figure_type">string</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_319" model="account.report.line">
+                        <field name="name">21. Custom (value)</field>
+                        <field name="code">L10N_LU_TAX_319</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_319_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_319_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_321" model="account.report.line">
+                        <field name="name">22. Custom (name)</field>
+                        <field name="code">L10N_LU_TAX_321</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_321_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">external</field>
+                                <field name="figure_type">string</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_322" model="account.report.line">
+                        <field name="name">22. Custom (value)</field>
+                        <field name="code">L10N_LU_TAX_322</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_322_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_322_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_324" model="account.report.line">
+                        <field name="name">23. Business tax</field>
+                        <field name="code">L10N_LU_TAX_324</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_324_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_324_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_324_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_325" model="account.report.line">
+                        <field name="name">24. Licensing (cabaretage) tax and other taxes</field>
+                        <field name="code">L10N_LU_TAX_325</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_325_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_326" model="account.report.line">
+                        <field name="name">25. Interest paid for long-term debts</field>
+                        <field name="code">L10N_LU_TAX_326</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_326_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_327" model="account.report.line">
+                        <field name="name">26. Interest paid for short-term debts</field>
+                        <field name="code">L10N_LU_TAX_327</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_327_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_327_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_327_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_328" model="account.report.line">
+                        <field name="name">27. Other financial costs</field>
+                        <field name="code">L10N_LU_TAX_328</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_328_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_328_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_328_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_328_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_328_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_328_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_330" model="account.report.line">
+                        <field name="name">28. Stock and business equipment insurance</field>
+                        <field name="code">L10N_LU_TAX_330</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_330_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_331" model="account.report.line">
+                        <field name="name">29. Public and professional third party liability insurance</field>
+                        <field name="code">L10N_LU_TAX_331</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_331_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_331_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_331_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_332" model="account.report.line">
+                        <field name="name">30. Office expenses</field>
+                        <field name="code">L10N_LU_TAX_332</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_332_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_332_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_332_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_332_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_332_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_332_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_334" model="account.report.line">
+                        <field name="name">31. Cleaning and maintenance of business premises</field>
+                        <field name="code">L10N_LU_TAX_334</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_334_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_334_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_336" model="account.report.line">
+                        <field name="name">32. Fees and subscriptions paid to professional associations and learned societies</field>
+                        <field name="code">L10N_LU_TAX_336</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_336_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_336_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_336_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_337" model="account.report.line">
+                        <field name="name">33. Papers and periodicals for business purposes</field>
+                        <field name="code">L10N_LU_TAX_337</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_337_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_337_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_337_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_337_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_337_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_337_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_115" model="account.report.line">
+                        <field name="name">34a. Expenses for work carried out by sub-contractors</field>
+                        <field name="code">L10N_LU_TAX_115</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_115_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_115_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_188" model="account.report.line">
+                        <field name="name">34b. Expenses for other work carried out by third parties</field>
+                        <field name="code">L10N_LU_TAX_188</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_188_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_188_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_188_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_188_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_188_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_188_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_343" model="account.report.line">
+                        <field name="name">35. Shipping and transport expenses</field>
+                        <field name="code">L10N_LU_TAX_343</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_343_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_343_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_343_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_343_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_343_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_343_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_345" model="account.report.line">
+                        <field name="name">36. Work clothes</field>
+                        <field name="code">L10N_LU_TAX_345</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_345_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_345_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_345_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_345_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_345_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_345_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_347" model="account.report.line">
+                        <field name="name">37. Advertising and publicity</field>
+                        <field name="code">L10N_LU_TAX_347</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_347_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_347_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_347_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_347_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_347_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_347_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_349" model="account.report.line">
+                        <field name="name">38. Packaging</field>
+                        <field name="code">L10N_LU_TAX_349</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_349_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_349_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_349_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_349_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_349_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_349_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_351" model="account.report.line">
+                        <field name="name">39. Repair and maintenance of equipment and machinery</field>
+                        <field name="code">L10N_LU_TAX_351</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_351_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_351_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_351_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_351_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_351_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_351_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_353" model="account.report.line">
+                        <field name="name">40. Other repairs</field>
+                        <field name="code">L10N_LU_TAX_353</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_353_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_353_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_353_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_353_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_353_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_353_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_355" model="account.report.line">
+                        <field name="name">41. New acquisitions (tools and equipment) if their cost can be fully allocated to the year of acquisition or creation</field>
+                        <field name="code">L10N_LU_TAX_355</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_355_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_355_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_355_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_355_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_355_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_355_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_357" model="account.report.line">
+                        <field name="name">42. Custom (name)</field>
+                        <field name="code">L10N_LU_TAX_357</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_357_total" model="account.report.expression">
+                                <field name="label">total</field>
+                                <field name="engine">external</field>
+                                <field name="figure_type">string</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_358" model="account.report.line">
+                        <field name="name">42. Custom (value)</field>
+                        <field name="code">L10N_LU_TAX_358</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_358_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_358_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_358_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_358_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_358_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_358_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- TODO this should be equal to the sum of the annex -->
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_361" model="account.report.line">
+                        <field name="name">43. Total 'Appendix to Operational expenditures' (brought forward from Operational expenditures)</field>
+                        <field name="code">L10N_LU_TAX_361</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_361_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_361_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lu_annual_tax_report_section_appendix_a_190" model="account.report.line">
+                        <field name="name">44. Car expenses</field>
+                        <field name="code">L10N_LU_TAX_190</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_190_vat_excluded_default" model="account.report.expression">
+                                <field name="label">_default_vat_excluded</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_190_vat_excluded</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_190_vat_excluded" model="account.report.expression">
+                                <field name="label">vat_excluded</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_190_vat_invoiced_default" model="account.report.expression">
+                                <field name="label">_default_vat_invoiced</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_l10n_lu_annual_vat</field>
+                                <field name="subformula">L10N_LU_TAX_190_vat_invoiced</field>
+                            </record>
+                            <record id="l10n_lu_annual_tax_report_section_appendix_a_190_vat_invoiced" model="account.report.expression">
+                                <field name="label">vat_invoiced</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

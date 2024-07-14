@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_parameter_comp_ac_threshold" model="hr.rule.parameter">
+        <field name="name">CH Comp AC: Threshold</field>
+        <field name="code">l10n_ch_comp_ac_threshold</field>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="rule_parameter_comp_ac_threshold_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">148200</field>
+        <field name="rule_parameter_id" ref="rule_parameter_comp_ac_threshold"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ac_threshold" model="hr.rule.parameter">
+        <field name="name">AC: Rate Threshold</field>
+        <field name="code">l10n_ch_ac_threshold</field>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="rule_parameter_ac_threshold_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">148200.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ac_threshold"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_avs_retired_exoneration" model="hr.rule.parameter">
+        <field name="name">AVS: Retired Employees Exoneration</field>
+        <field name="code">l10n_ch_avs_retired</field>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+    <record id="rule_parameter_avs_retired_exoneration_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">1400</field>
+        <field name="rule_parameter_id" ref="rule_parameter_avs_retired_exoneration"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+</odoo>

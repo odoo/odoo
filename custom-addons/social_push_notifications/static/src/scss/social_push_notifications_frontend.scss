@@ -1,0 +1,31 @@
+.o_social_push_notifications_permission_request {
+    bottom: 0;
+    z-index: $zindex-tooltip + 100;
+
+    @include media-breakpoint-up(sm) {
+        top: 0;
+        bottom: auto;
+        // Reach 91px position left compensating the container's padding
+        padding-left: 91px - ($grid-gutter-width * .5);
+
+        &.o_social_push_notifications_permission_with_menubar {
+            top: $o-navbar-height + 4px;
+        }
+
+        .o_social_push_notifications_permission_content {
+            max-width: $popover-max-width;
+        }
+    }
+
+    .close {
+        @include o-position-absolute(0, 0);
+    }
+
+    .dropdown-toggle:after {
+        display: none;
+    }
+
+    .o_social_push_notifications_permission_content {
+        min-width: 150px;
+    }
+}

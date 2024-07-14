@@ -1,0 +1,200 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_accountant_batch_payment
+# 
+# Translators:
+# Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Martin Trigaux, 2024
+# Hongu Cosmin <cosmin513@gmail.com>, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2024
+# Larisa_nexterp, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Larisa_nexterp, 2024\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_rejection_form
+msgid ""
+"<br/>\n"
+"                        <span>Do you want to cancel payments to retry them later or keep the batch open with unprocess payments, if you expect them later.</span>"
+msgstr ""
+"<br/>\n"
+"                        <span>Doriți să anulați plățile pentru a le reîncerca mai târziu sau să păstrați lotul deschis cu plăți neînregistrate, dacă le așteptați mai târziu.</span>"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model,name:account_accountant_batch_payment.model_bank_rec_widget
+msgid "Bank reconciliation widget for a single statement line"
+msgstr "Widget de reconciliere bancară pentru o singură linie de declarație"
+
+#. module: account_accountant_batch_payment
+#. odoo-python
+#: code:addons/account_accountant_batch_payment/models/account_batch_payment.py:0
+#: code:addons/account_accountant_batch_payment/models/bank_rec_widget.py:0
+#: model:ir.model,name:account_accountant_batch_payment.model_account_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_rejection_form
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_search_bank_rec_widget
+#, python-format
+msgid "Batch Payment"
+msgstr "Lot Plăți"
+
+#. module: account_accountant_batch_payment
+#. odoo-javascript
+#: code:addons/account_accountant_batch_payment/static/src/components/bank_reconciliation/bank_rec_form.xml:0
+#, python-format
+msgid "Batch Payments"
+msgstr "Lot Plăți"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_rejection_form
+msgid "Cancel"
+msgstr "Anulează"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_rejection_form
+msgid "Cancel Payments"
+msgstr "Anulează Plățile"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__create_uid
+msgid "Created by"
+msgstr "Creat de"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__create_date
+msgid "Created on"
+msgstr "Creat în"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_search_bank_rec_widget
+msgid "Date"
+msgstr "Dată"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_rejection_form
+msgid "Expect Payments Later"
+msgstr "Așteaptă Plăți Mai Târziu"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__in_reconcile_payment_ids
+msgid "In Reconcile Payment"
+msgstr "În Plăți Reconciliate"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__write_uid
+msgid "Last Updated by"
+msgstr "Ultima actualizare făcută de"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__write_date
+msgid "Last Updated on"
+msgstr "Ultima actualizare pe"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model,name:account_accountant_batch_payment.model_bank_rec_widget_line
+msgid "Line of the bank reconciliation widget"
+msgstr "Linia widget-ului de reconciliere bancară"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model,name:account_accountant_batch_payment.model_account_batch_payment_rejection
+msgid "Manage the payment rejection from batch payments"
+msgstr "Gestionează respingerea plății din loturi de plăți"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__nb_batch_payment_ids
+msgid "Nb Batch Payment"
+msgstr "Nr Lot Plăți"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__nb_rejected_payment_ids
+msgid "Nb Rejected Payment"
+msgstr "Nr Plăți Respinse"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_list_bank_rec_widget
+msgid "Open Amount"
+msgstr "Sumă Deschisă"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_list_bank_rec_widget
+msgid "Open Amount (in Currency)"
+msgstr "Sumă Deschisă (în Monedă)"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_search_bank_rec_widget
+msgid "Paid"
+msgstr "Plătit"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model,name:account_accountant_batch_payment.model_account_reconcile_model
+msgid ""
+"Preset to create journal entries during a invoices and payments matching"
+msgstr ""
+"Presetat pentru a crea intrări în jurnal în timpul unei potriviri de facturi"
+" și plăți"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_search_bank_rec_widget
+msgid "Received"
+msgstr "Primit"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_account_batch_payment_rejection__rejected_payment_ids
+msgid "Rejected Payment"
+msgstr "Plăți Respinse"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_bank_rec_widget__selected_batch_payment_ids
+msgid "Selected Batch Payment"
+msgstr "Loturi de Plăți Selectate"
+
+#. module: account_accountant_batch_payment
+#: model:ir.model.fields,field_description:account_accountant_batch_payment.field_bank_rec_widget_line__source_batch_payment_id
+msgid "Source Batch Payment"
+msgstr "Sursă Lot Plăți"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_list_bank_rec_widget
+msgid "Suggestions"
+msgstr "Sugestii"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_list_bank_rec_widget
+msgid "View"
+msgstr "Afișare"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_rejection_form
+msgid "batches have been removed."
+msgstr "loturi au fost eliminate."
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_rejection_form
+msgid "payments from"
+msgstr "plăți de la"
+
+#. module: account_accountant_batch_payment
+#: model_terms:ir.ui.view,arch_db:account_accountant_batch_payment.view_account_batch_payment_rejection_form
+msgid "payments from the batch have been removed."
+msgstr "plățile din lot au fost eliminate."

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="account_accountant.BankRecMonetaryField" t-inherit="web.MonetaryField" t-inherit-mode="primary">
+        <xpath expr="//input" position="before">
+            <span class="mx-1" t-if="props.hasForcedNegativeValue">-</span>
+        </xpath>
+    </t>
+
+</templates>

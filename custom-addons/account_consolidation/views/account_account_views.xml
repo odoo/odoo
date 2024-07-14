@@ -1,0 +1,60 @@
+<odoo>
+    <data>
+        <!-- TODO: fully rewrite the account.account views ? what ? -->
+        <!-- SEARCH -->
+        <record id="account_mapping_search" model="ir.ui.view">
+            <field name="name">consolidation.account_mapping.search</field>
+            <field name="model">account.account</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="consolidation_account_ids"/>
+                    <separator/>
+                    <filter string="Already Mapped" name="already_mapped"
+                            domain="[('consolidation_account_chart_filtered_ids', '!=', False)]"/>
+                    <filter string="Not Mapped" name="not_mapped"
+                            domain="[('consolidation_account_chart_filtered_ids', '=', False)]"/>
+                    <separator/>
+                    <filter string="Account with Entries" name="used" domain="[('used', '=', True)]"/>
+                </search>
+            </field>
+        </record>
+        <record id="account_mapping_from_period_action" model="ir.actions.act_window">
+            <field name="name">Account Mapping</field>
+            <field name="res_model">account.account</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="account_mapping_search"/>
+            <field name="target">current</field>
+            <field name="domain">[('company_id', '=', context.get('company_id'))]</field>
+        </record>
+        <!-- TREE -->
+        <record id="account_mapping_tree" model="ir.ui.view">
+            <field name="name">consolidation.account_mapping.tree</field>
+            <field name="model">account.account</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" create="false">
+                    <field name="code" readonly="1"/>
+                    <field name="name" readonly="1"/>
+                    <field column_invisible="context.get('no_mapping', False)"
+                           name="consolidation_account_chart_filtered_ids"
+                           string="Consolidated Accounts"
+                           context="{'from_mapping': True, 'default_chart_id': context.get('chart_id')}"
+                           domain="[('chart_id','=', context.get('chart_id'))]"
+                           widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+        <!-- ACTION -->
+        <record id="account_mapping_action" model="ir.actions.act_window">
+            <field name="name">Account Mapping</field>
+            <field name="res_model">account.account</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="account_mapping_tree"/>
+            <field name="search_view_id" ref="account_consolidation.account_mapping_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_neutral_face">No accounts have been found. Make sure you have installed a chart of account for this company or that you have access right to see the accounts of this company.</p>
+            </field>
+        </record>
+    </data>
+</odoo>

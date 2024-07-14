@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sign.SignRequestControlPanel">
+        <ControlPanel display="controlPanelDisplay">
+            <t t-set-slot="control-panel-always-buttons">
+                <div class="d-flex gap-1">
+                    <button t-if="signInfo.get('needToSign')" type="button" class="btn btn-primary me-2 o_sign_sign_directly" t-on-click="signDocument">Sign Document</button>
+                    <button t-if="nextTemplate &amp;&amp; nextTemplate.template" type="button" class="btn btn-primary me-2" t-on-click="goToNextDocument">Next Document</button>
+                    <a t-if="signInfo.get('signRequestState') == 'signed'" t-attf-href="/sign/download/{{signInfo.get('documentId')}}/{{signInfo.get('signRequestToken')}}/completed" class="btn btn-primary o_sign_download_document_button">Download Document</a>
+                    <a t-if="signInfo.get('signRequestState') == 'signed'" t-attf-href="/sign/download/{{signInfo.get('documentId')}}/{{signInfo.get('signRequestToken')}}/log" class="btn btn-secondary o_sign_download_log_button">Download Certificate</a>
+                </div>
+            </t>
+            <t t-set-slot="control-panel-navigation-additional">
+                <div class="signer-status">
+                    <t t-out="markupSignerStatus"/>
+                </div>
+            </t>
+        </ControlPanel>
+    </t>
+</templates>

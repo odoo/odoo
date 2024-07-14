@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="configure_optional_products" inherit_id="website_sale_product_configurator.configure_optional_products">
+        <xpath expr="//td[hasclass('td-price')]/div[1]" position="attributes">
+            <attribute name="t-if">not combination_info.get('is_rental')</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('oe_price')]" position="attributes">
+            <attribute name="t-out">combination_info.get('current_rental_price') if combination_info.get('is_rental') else combination_info['price']</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('oe_price')]" position="after">
+            <div class="o_renting_details">
+                <small t-if="combination_info.get('is_rental')" class="text-muted">
+                    <strong>
+                        <span class="o_renting_duration" t-out="combination_info['current_rental_duration']"/>
+                        <span class="o_renting_unit" t-out="combination_info['current_rental_unit']"/>
+                    </strong>
+                </small>
+            </div>
+        </xpath>
+        <xpath expr="//span[hasclass('js_price_total')]" position="attributes">
+            <attribute name="t-out">(combination_info.get('current_rental_price') if combination_info.get('is_rental') else combination_info['price']) * (add_qty or 1)</attribute>
+        </xpath>
+    </template>
+
+    <!-- modal: optional products -->
+    <template id="optional_product_items" inherit_id="website_sale_product_configurator.optional_product_items">
+        <xpath expr="//td[hasclass('td-price')]/div[1]" position="attributes">
+            <attribute name="t-if">not combination_info.get('is_rental')</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('oe_price')]" position="attributes">
+            <attribute name="t-out">combination_info.get('current_rental_price') if combination_info.get('is_rental') else combination_info['price']</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('oe_price')]" position="after">
+            <div class="o_renting_details">
+                <small t-if="combination_info.get('is_rental')" class="text-muted">
+                    <strong>
+                        <span class="o_renting_duration" t-out="combination_info['current_rental_duration']"/>
+                        <span class="o_renting_unit" t-out="combination_info['current_rental_unit']"/>
+                    </strong>
+                </small>
+            </div>
+        </xpath>
+        <xpath expr="//span[hasclass('js_raw_price')]" position="attributes">
+            <attribute name="t-out">combination_info.get('current_rental_price') if combination_info.get('is_rental') else combination_info['price']</attribute>
+        </xpath>
+    </template>
+</odoo>

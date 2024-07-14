@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="helpdesk_stage_view_tree_inherit_helpdesk_sms" model="ir.ui.view">
+        <field name="name">helpdesk.stage.view.tree.inherit.helpdesk.sms</field>
+        <field name="model">helpdesk.stage</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_stage_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="template_id" position="after">
+                <field name="sms_template_id" optional="hide" context="{'default_model': 'helpdesk.ticket'}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="helpdesk_stage_view_form_inherit_helpdesk_sms" model="ir.ui.view">
+        <field name="name">helpdesk.stage.stage.view.form.inherit.helpdesk.sms</field>
+        <field name="model">helpdesk.stage</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_stage_view_form"/>
+        <field name="arch" type="xml">
+            <field name="template_id" position="after">
+                <field name="sms_template_id" context="{'default_model': 'helpdesk.ticket'}" options="{'no_quick_create': True}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="helpdesk_stage_view_search_inherit_helpdesk_sms" model="ir.ui.view">
+        <field name="name">helpdesk.stage.view.search.inherit.helpdesk.sms</field>
+        <field name="model">helpdesk.stage</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_stage_view_search"/>
+        <field name="arch" type="xml">
+            <field name="template_id" position="after">
+                <field name="sms_template_id" domain="[('model', '=', 'helpdesk.ticket')]"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

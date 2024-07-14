@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_line_tree" model="ir.ui.view">
+        <field name="name">account.move.line.tree</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account_accountant.view_move_line_tree"/>
+        <field name="mode">extension</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="turn_as_asset" type="object" string="Create Asset" groups="account.group_account_user"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_form_asset_inherit" model="ir.ui.view">
+        <field name="name">account.account.form</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='accounting']" position="after">
+                <page string="Automation" name="page_automation" invisible="not can_create_asset">
+                    <group>
+                        <group>
+                            <field name="can_create_asset" invisible="1"/>
+                            <field name="form_view_ref" invisible="1"/>
+                            <td class="o_td_label">
+                                <label for="create_asset" string="Automate Asset"/>
+                            </td>
+                            <field name="create_asset" invisible="not can_create_asset" nolabel="1" widget="radio"/>
+                            <field name="multiple_assets_per_line" string="Manage Items" invisible="not can_create_asset or create_asset == 'no'"/>
+                            <td class="o_td_label" invisible="context.get('hide_model_on_account') or (create_asset == 'no' or not can_create_asset)">
+                                <label for="asset_model" string="Asset Model" invisible="create_asset == 'no' or not can_create_asset"/>
+                            </td>
+                            <field name="asset_model"
+                                   domain="[('state', '=', 'model')]"
+                                   invisible="context.get('hide_model_on_account') or (create_asset == 'no' or not can_create_asset)"
+                                   required="create_asset == 'validate' and can_create_asset"
+                                   nolabel="1"
+                                   context="{
+                                        'default_state': 'model',
+                                        'form_view_ref': form_view_ref,
+                                        'default_account_depreciation_id': id,
+                                   }"
+                                   options="{'no_quick_create': True}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

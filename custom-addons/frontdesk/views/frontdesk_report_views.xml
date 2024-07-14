@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="frontdesk_visitor_report_view_graph" model="ir.ui.view">
+        <field name="name">frontdesk.visitor.report.graph</field>
+        <field name="model">frontdesk.visitor</field>
+        <field name="arch" type="xml">
+            <graph string="Visitors" sample="1">
+                <field name="duration" invisible="1"/>
+                <field name="check_in" interval="day"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="frontdesk_drink_report_view_graph" model="ir.ui.view">
+        <field name="name">frontdesk.drink.report.graph</field>
+        <field name="model">frontdesk.visitor</field>
+        <field name="arch" type="xml">
+            <graph string="Drinks" sample="1">
+                <field name="duration" invisible="1"/>
+                <field name="drink_ids"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="frontdesk_station_report_view_graph" model="ir.ui.view">
+        <field name="name">frontdesk.station.report.graph</field>
+        <field name="model">frontdesk.visitor</field>
+        <field name="arch" type="xml">
+            <graph string="Visitors" sample="1">
+                <field name="duration" invisible="1"/>
+                <field name="check_in" interval="day"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_frontdesk_station_report" model="ir.actions.act_window">
+        <field name="name">Statistics</field>
+        <field name="res_model">frontdesk.visitor</field>
+        <field name="view_mode">graph</field>
+        <field name="domain">[("station_id", "=", active_id)]</field>
+        <field name="view_id" ref="frontdesk_station_report_view_graph"/>
+    </record>
+
+    <record id="action_frontdesk_visitors_report" model="ir.actions.act_window">
+        <field name="name">Visitors</field>
+        <field name="res_model">frontdesk.visitor</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="frontdesk_visitor_report_view_graph"/>
+    </record>
+
+    <record id="action_frontdesk_drinks_report" model="ir.actions.act_window">
+        <field name="name">Drinks</field>
+        <field name="res_model">frontdesk.visitor</field>
+        <field name="view_mode">graph</field>
+        <field name="domain">[('drink_ids', '!=', False)]</field>
+        <field name="view_id" ref="frontdesk_drink_report_view_graph"/>
+    </record>
+</odoo>

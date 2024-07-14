@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="iras_audit_file_company_infos">
+            <CompanyInfo>
+                <CompanyName><t t-out="Company['CompanyName']"/></CompanyName>
+                <CompanyUEN><t t-out="Company['CompanyUEN']"/></CompanyUEN>
+                <GSTNo><t t-out="Company['GSTNo']"/></GSTNo>
+                <PeriodStart><t t-out="Company['PeriodStart']"/></PeriodStart>
+                <PeriodEnd><t t-out="Company['PeriodEnd']"/></PeriodEnd>
+                <IAFCreationDate><t t-out="Company['IAFCreationDate']"/></IAFCreationDate>
+                <ProductVersion><t t-out="Company['ProductVersion']"/></ProductVersion>
+                <IAFVersion><t t-out="Company['IAFVersion']"/></IAFVersion>
+            </CompanyInfo>
+        </template>
+
+        <template id="iras_audit_file_purchases_infos">
+            <Purchase
+                t-att-PurchaseTotalSGD="Purchases['PurchaseTotalSGD']"
+                t-att-GSTTotalSGD="Purchases['GSTTotalSGD']"
+                t-att-TransactionCountTotal="Purchases['TransactionCountTotal']">
+                <t t-foreach="Purchases['lines']" t-as="line">
+                    <PurchaseLines>
+                        <SupplierName><t t-out="line['SupplierName']"/></SupplierName>
+                        <SupplierUEN><t t-out="line['SupplierUEN']"/></SupplierUEN>
+                        <InvoiceDate><t t-out="line['InvoiceDate']"/></InvoiceDate>
+                        <InvoiceNo><t t-out="line['InvoiceNo']"/></InvoiceNo>
+                        <t t-if="line['PermitNo']">
+                            <PermitNo><t t-out="line['PermitNo']"/></PermitNo>
+                        </t>
+                        <LineNo><t t-out="line['LineNo']"/></LineNo>
+                        <ProductDescription><t t-out="line['ProductDescription']"/></ProductDescription>
+                        <PurchaseValueSGD><t t-out="line['PurchaseValueSGD']"/></PurchaseValueSGD>
+                        <GSTValueSGD><t t-out="line['GSTValueSGD']"/></GSTValueSGD>
+                        <TaxCode><t t-out="line['TaxCode']"/></TaxCode>
+                        <FCYCode><t t-out="line['FCYCode']"/></FCYCode>
+                        <PurchaseFCY><t t-out="line['PurchaseFCY']"/></PurchaseFCY>
+                        <GSTFCY><t t-out="line['GSTFCY']"/></GSTFCY>
+                    </PurchaseLines>
+                </t>
+            </Purchase>
+        </template>
+
+        <template id="iras_audit_file_sales_infos">
+            <Supply
+                t-att-SupplyTotalSGD="Sales['SupplyTotalSGD']"
+                t-att-GSTTotalSGD="Sales['GSTTotalSGD']"
+                t-att-TransactionCountTotal="Sales['TransactionCountTotal']">
+                <t t-foreach="Sales['lines']" t-as="line">
+                    <SupplyLines>
+                        <CustomerName><t t-out="line['CustomerName']"/></CustomerName>
+                        <CustomerUEN><t t-out="line['CustomerUEN']"/></CustomerUEN>
+                        <InvoiceDate><t t-out="line['InvoiceDate']"/></InvoiceDate>
+                        <InvoiceNo><t t-out="line['InvoiceNo']"/></InvoiceNo>
+                        <LineNo><t t-out="line['LineNo']"/></LineNo>
+                        <ProductDescription><t t-out="line['ProductDescription']"/></ProductDescription>
+                        <SupplyValueSGD><t t-out="line['SupplyValueSGD']"/></SupplyValueSGD>
+                        <GSTValueSGD><t t-out="line['GSTValueSGD']"/></GSTValueSGD>
+                        <TaxCode><t t-out="line['TaxCode']"/></TaxCode>
+                        <t t-if="line['Country']">
+                            <Country><t t-out="line['Country']"/></Country>
+                        </t>
+                        <FCYCode><t t-out="line['FCYCode']"/></FCYCode>
+                        <SupplyFCY><t t-out="line['SupplyFCY']"/></SupplyFCY>
+                        <GSTFCY><t t-out="line['GSTFCY']"/></GSTFCY>
+                    </SupplyLines>
+                </t>
+            </Supply>
+        </template>
+
+        <template id="iras_audit_file_gldata_infos">
+            <GLData
+                t-att-TotalDebit="GlData['TotalDebit']"
+                t-att-TotalCredit="GlData['TotalCredit']"
+                t-att-TransactionCountTotal="GlData['TransactionCountTotal']"
+                t-att-GLTCurrency="GlData['GLTCurrency']">
+                <t t-foreach="GlData['lines']" t-as="line">
+                    <GLDataLines>
+                        <TransactionDate><t t-out="line['TransactionDate']"/></TransactionDate>
+                        <AccountID><t t-out="line['AccountID']"/></AccountID>
+                        <AccountName><t t-out="line['AccountName']"/></AccountName>
+                        <TransactionDescription><t t-out="line['TransactionDescription']"/></TransactionDescription>
+                        <t t-if="line['Name']">
+                            <Name><t t-out="line['Name']"/></Name>
+                        </t>
+                        <t t-if="line['TransactionID']">
+                            <TransactionID><t t-out="line['TransactionID']"/></TransactionID>
+                        </t>
+                        <t t-if="line['SourceDocumentID']">
+                            <SourceDocumentID><t t-out="line['SourceDocumentID']"/></SourceDocumentID>
+                        </t>
+                        <t t-if="line['SourceType']">
+                            <SourceType><t t-out="line['SourceType']"/></SourceType>
+                        </t>
+                        <Debit><t t-out="line['Debit']"/></Debit>
+                        <Credit><t t-out="line['Credit']"/></Credit>
+                        <Balance><t t-out="line['Balance']"/></Balance>
+                    </GLDataLines>
+                </t>
+            </GLData>
+        </template>
+
+        <template id="iras_audit_file_xml">
+            <Company>
+                <t t-call="l10n_sg_reports.iras_audit_file_company_infos"></t>
+                <t t-call="l10n_sg_reports.iras_audit_file_purchases_infos"></t>
+                <t t-call="l10n_sg_reports.iras_audit_file_sales_infos"></t>
+                <t t-call="l10n_sg_reports.iras_audit_file_gldata_infos"></t>
+            </Company>
+        </template>
+    </data>
+</odoo>
+

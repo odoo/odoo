@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pago20="http://www.sat.gob.mx/Pagos20" xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd http://www.sat.gob.mx/Pagos20 http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos20.xsd" Version="4.0" Sello="___ignore___" SubTotal="0" Moneda="XXX" Total="0" TipoDeComprobante="P" Fecha="___ignore___" Folio="___ignore___" Serie="___ignore___" NoCertificado="___ignore___" Certificado="___ignore___" Exportacion="01" LugarExpedicion="20914">
+	<cfdi:Emisor Rfc="EKU9003173C9" Nombre="ESCUELA KEMPER URGATE" RegimenFiscal="601"/>
+	<cfdi:Receptor UsoCFDI="CP01" Rfc="ICV060329BY0" Nombre="INMOBILIARIA CVA" DomicilioFiscalReceptor="33826" RegimenFiscalReceptor="601"/>
+	<cfdi:Conceptos>
+		<cfdi:Concepto ClaveProdServ="84111506" Cantidad="1" ClaveUnidad="ACT" Descripcion="Pago" ValorUnitario="0" ObjetoImp="01" Importe="0"/>
+	</cfdi:Conceptos>
+	<cfdi:Complemento>
+		<pago20:Pagos Version="2.0">
+			<pago20:Totales TotalTrasladosBaseIVA16="860.34" TotalTrasladosImpuestoIVA16="137.66" MontoTotalPagos="998.00"/>
+			<pago20:Pago FechaPago="___ignore___" FormaDePagoP="01" MonedaP="MXN" TipoCambioP="1" Monto="998.00" NumOperacion="___ignore___">
+				<pago20:DoctoRelacionado IdDocumento="___ignore___" Folio="___ignore___" Serie="___ignore___" MonedaDR="CHF" EquivalenciaDR="0.0726452906" NumParcialidad="1" ImpSaldoAnt="72.50" ImpPagado="72.50" ObjetoImpDR="02" ImpSaldoInsoluto="0.00">
+					<pago20:ImpuestosDR>
+						<pago20:TrasladosDR>
+							<pago20:TrasladoDR BaseDR="62.50" ImporteDR="10.00" ImpuestoDR="002" TipoFactorDR="Tasa" TasaOCuotaDR="0.160000"/>
+						</pago20:TrasladosDR>
+					</pago20:ImpuestosDR>
+				</pago20:DoctoRelacionado>
+				<pago20:ImpuestosP>
+					<pago20:TrasladosP>
+						<pago20:TrasladoP BaseP="860.34" ImporteP="137.66" ImpuestoP="002" TipoFactorP="Tasa" TasaOCuotaP="0.160000"/>
+					</pago20:TrasladosP>
+				</pago20:ImpuestosP>
+			</pago20:Pago>
+		</pago20:Pagos>
+		<tfd:TimbreFiscalDigital xmlns:tfd="http://www.sat.gob.mx/TimbreFiscalDigital" xsi:schemaLocation="http://www.sat.gob.mx/TimbreFiscalDigital http://www.sat.gob.mx/sitio_internet/cfd/TimbreFiscalDigital/TimbreFiscalDigitalv11.xsd" Version="1.1" UUID="___ignore___" FechaTimbrado="___ignore___" NoCertificadoSAT="___ignore___" RfcProvCertif="___ignore___" SelloCFD="___ignore___" SelloSAT="___ignore___"/>
+	</cfdi:Complemento>
+</cfdi:Comprobante>

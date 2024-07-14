@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_integrated_daily_wage" model="hr.salary.rule.category">
+        <field name="name">Integrated Daily Wage</field>
+        <field name="code">INTDAYWAGE</field>
+    </record>
+
+    <record id="hr_payroll_social_security_employee" model="hr.salary.rule.category">
+        <field name="name">IMSS (Employee)</field>
+        <field name="code">IMSSEMPLOYEE</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_social_security_employer" model="hr.salary.rule.category">
+        <field name="name">IMSS (Employer)</field>
+        <field name="code">IMSSEMPLOYER</field>
+    </record>
+
+    <record id="hr_payroll_social_security_employee_total" model="hr.salary.rule.category">
+        <field name="name">IMSS Total (Employee)</field>
+        <field name="code">IMSSEMPLOYEETOTAL</field>
+    </record>
+
+    <record id="hr_payroll_social_security_employer_total" model="hr.salary.rule.category">
+        <field name="name">IMSS Total (Employer)</field>
+        <field name="code">IMSSEMPLOYERTOTAL</field>
+    </record>
+</odoo>

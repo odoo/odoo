@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="save_spreadsheet_template_action" model="ir.actions.act_window">
+        <field name="name">Save as template</field>
+        <field name="res_model">save.spreadsheet.template</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="save_spreadsheet_template_view_form" model="ir.ui.view">
+        <field name="name">Save as template</field>
+        <field name="model">save.spreadsheet.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="template_name"/>
+                    <field name="spreadsheet_binary_data" invisible="1"/>
+                    <field name="thumbnail" invisible="1"/>
+                </group>
+                <div class="alert alert-info" role="alert">
+                    Any user will be able to create a new spreadsheet based on this template.
+                </div>
+                <footer>
+                    <button string="Confirm" close="1" name="save_template" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

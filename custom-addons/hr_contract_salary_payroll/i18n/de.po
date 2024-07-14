@@ -1,0 +1,148 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_contract_salary_payroll
+# 
+# Translators:
+# Wil Odoo, 2023
+# Larissa Manderfeld, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_contract_salary_payroll
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.salary_package_sidebar_payroll
+msgid ""
+"<option value=\"100\" selected=\"1\">Full Time</option>\n"
+"                <option value=\"90\">9/10</option>\n"
+"                <option value=\"80\">4/5</option>\n"
+"                <option value=\"60\">3/5</option>\n"
+"                <option value=\"50\">Half Time</option>\n"
+"                <option value=\"40\">2/5</option>\n"
+"                <option value=\"20\">1/5</option>"
+msgstr ""
+"<option value=\"100\" selected=\"1\">Vollzeit</option>\n"
+"                <option value=\"90\">9/10</option>\n"
+"                <option value=\"80\">4/5</option>\n"
+"                <option value=\"60\">3/5</option>\n"
+"                <option value=\"50\">Teilzeit</option>\n"
+"                <option value=\"40\">2/5</option>\n"
+"                <option value=\"20\">1/5</option>"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_resume__code
+msgid "Code"
+msgstr "Code"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.ui.menu,name:hr_contract_salary_payroll.menu_hr_payroll_configuration_contract
+msgid "Contracts"
+msgstr "Verträge"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.ui.menu,name:hr_contract_salary_payroll.hr_payroll_menu_contract_type
+msgid "Employment Types"
+msgstr "Anstellungsarten"
+
+#. module: hr_contract_salary_payroll
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.hr_contract_salary_resume_view_search_inherit
+msgid "Impacts Monthly Total"
+msgstr "Beeinflusst monatliche Gesamtsumme"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model.fields.selection,name:hr_contract_salary_payroll.selection__hr_contract_salary_resume__value_type__payslip
+msgid "Payslip Value"
+msgstr "Gehaltsabrechnungssumme"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model,name:hr_contract_salary_payroll.model_hr_payslip_worked_days
+msgid "Payslip Worked Days"
+msgstr "Gehaltsabrechnung gearbeitete Tage"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model.fields,help:hr_contract_salary_payroll.field_hr_contract_salary_resume__value_type
+msgid ""
+"Pick how the value of the information is computed:\n"
+"Fixed value: Set a determined value static for all links\n"
+"Contract value: Get the value from a field on the contract record\n"
+"Payslip value: Get the value from a field on the payslip record\n"
+"Sum of Benefits value: You can pick in all benefits and compute a sum of them\n"
+"Monthly Total: The information will be a total of all the informations in the category Monthly Benefits"
+msgstr ""
+"Wählen Sie aus, wie der Wert der Informationen berechnet werden soll:\n"
+"Fester Wert: Einen bestimmten Wert statisch für alle Links festlegen\n"
+"Vertragswert: Wert aus einem Feld des Vertragsdatensatzes erhalten\n"
+"Wert der Gehaltsabrechnung: Wert aus einem Feld des Gehaltsabrechnungsdatensatzes erhalten\n"
+"Summe der Vorteile: Sie können alle Vorteile auswählen und eine Summe daraus berechnen\n"
+"Monatliche Gesamtsumme: Die Information ist eine Summe aller Informationen in der Kategorie Monatliche Vorteile"
+
+#. module: hr_contract_salary_payroll
+#. odoo-javascript
+#: code:addons/hr_contract_salary_payroll/static/src/xml/brut2net_modal.xml:0
+#, python-format
+msgid ""
+"Please note that this information may be inaccurate and should be used for "
+"reference only."
+msgstr ""
+"Bitte beachten Sie, dass diese Informationen inkorrekt sein können und nur "
+"zur Referenz verwendet werden sollten."
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model,name:hr_contract_salary_payroll.model_hr_contract_salary_resume
+msgid "Salary Package Resume"
+msgstr "Zusammenfassung der Gehaltspakete"
+
+#. module: hr_contract_salary_payroll
+#: model:ir.ui.menu,name:hr_contract_salary_payroll.hr_payroll_menu_contract_templates
+msgid "Templates"
+msgstr "Vorlagen"
+
+#. module: hr_contract_salary_payroll
+#. odoo-javascript
+#: code:addons/hr_contract_salary_payroll/static/src/xml/brut2net_modal.xml:0
+#, python-format
+msgid "The amounts are calculated  based on a full time permanent contract."
+msgstr ""
+"Die Summen wurden auf Basis einer unbefristeten Vollzeitbeschäftigung "
+"berechnet."
+
+#. module: hr_contract_salary_payroll
+#. odoo-javascript
+#: code:addons/hr_contract_salary_payroll/static/src/xml/brut2net_modal.xml:0
+#, python-format
+msgid ""
+"There is no defined payroll structure for your contract. Please contact a "
+"responsible for more information."
+msgstr ""
+"Es ist keine Gehaltsabrechnungsstruktur für Ihren Vertrag definiert. Bitte "
+"kontaktieren Sie einen verantwortlichen Mitarbeiter für mehr Informationen."
+
+#. module: hr_contract_salary_payroll
+#. odoo-python
+#: code:addons/hr_contract_salary_payroll/controllers/main.py:0
+#, python-format
+msgid ""
+"This is the gross calculated for the current month with a total of %s hours."
+msgstr ""
+"Dies ist das für den aktuellen Monat berechnete Brutto mit einer Summe von "
+"%s Stunden."
+
+#. module: hr_contract_salary_payroll
+#: model:ir.model.fields,field_description:hr_contract_salary_payroll.field_hr_contract_salary_resume__value_type
+msgid "Value Type"
+msgstr "Werttyp"
+
+#. module: hr_contract_salary_payroll
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary_payroll.salary_package_sidebar_payroll
+msgid "Working Schedule"
+msgstr "Arbeitsplan"

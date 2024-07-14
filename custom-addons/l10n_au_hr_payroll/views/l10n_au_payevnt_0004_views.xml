@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_au_payevnt_0004_form_wizard" model="ir.ui.view">
+        <field name="name">l10n_au.payevent0004.form</field>
+        <field name="model">l10n_au.payevnt.0004</field>
+        <field name="arch" type="xml">
+            <form string="Create PayEvnt0004 Form">
+                <field name="state" invisible="1"/>
+                <field name="xml_filename" invisible="1"/>
+                <header>
+                    <button name="action_generate_xml" string="Create XML" type="object" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-warning" role="alert" invisible="not warning_message">
+                        <field name="warning_message" style="white-space: pre-wrap;"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="payevent_type"/>
+                            <field name="previous_report_id" invisible="payevent_type == 'submit'"
+                                required="payevent_type == 'update'"/>
+                            <field name="ffr" invisible="payevent_type == 'submit'"/>
+                            <field name="payslip_batch_id"/>
+                            <field name="currency_id"/>
+                        </group>
+                        <group>
+                            <field name="previous_id_bms"/>
+                            <field name="intermediary"/>
+                        </group>
+                    </group>
+                    <div invisible="state != 'get'">
+                        <h2>Generation Complete</h2>
+                        <p invisible="not xml_file">
+                            Download the 281.10 XML file: <field name="xml_file" readonly="1" filename="xml_filename"/>
+                            <field name="xml_validation_state" widget="state_selection" nolabel="1"/>
+                            <field name="error_message" invisible="xml_validation_state != 'invalid'" nolabel="1"/>
+                        </p>
+                    </div>
+                    <field name="payslip_ids">
+                        <tree no_open="1" editable="bottom">
+                            <field name="company_id" invisible="1"/>
+                            <field name="name"/>
+                            <field name="employee_id"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_au_payevent0004_action_view_tree" model="ir.ui.view">
+        <field name="name">l10n_au.payevent0004.tree</field>
+        <field name="model">l10n_au.payevnt.0004</field>
+        <field name="arch" type="xml">
+            <tree string="payevent0004 Forms">
+                <field name="payevent_type"/>
+                <field name="name"/>
+                <field name="payslip_batch_id"/>
+                <field name="currency_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_au_payevent0004_action" model="ir.actions.act_window">
+        <field name="name">Create payevent 0004 Form</field>
+        <field name="res_model">l10n_au.payevnt.0004</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem
+        id="menu_reporting_l10n_au"
+        name="Australia"
+        sequence="30"
+        parent="hr_payroll.menu_hr_payroll_report"/>
+
+    <menuitem
+        id="menu_l10n_au_l10n_au_payevent0004"
+        name="Payevnt0004 Sheet"
+        action="l10n_au_payevent0004_action"
+        parent="l10n_au_hr_payroll.menu_reporting_l10n_au"
+        sequence="150"
+    />
+
+</odoo>

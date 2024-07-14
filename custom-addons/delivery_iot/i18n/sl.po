@@ -1,0 +1,170 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_iot
+# 
+# Translators:
+# Grega Vavtar <grega@hbs.si>, 2023
+# Martin Trigaux, 2023
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2023\n"
+"Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. module: delivery_iot
+#: model:ir.actions.report,print_report_name:delivery_iot.action_report_shipping_docs
+#: model:ir.actions.report,print_report_name:delivery_iot.action_report_shipping_labels
+msgid "'Empty Report - Used for assigning IoT printer'"
+msgstr ""
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_stock_picking_type__auto_print_carrier_labels
+msgid "Auto Print Carrier Labels"
+msgstr ""
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_stock_picking_type__auto_print_export_documents
+msgid "Auto Print Export Documents"
+msgstr ""
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "Carrier Labels"
+msgstr ""
+
+#. module: delivery_iot
+#: model:ir.model.fields,help:delivery_iot.field_choose_delivery_package__available_scale_ids
+#: model:ir.model.fields,help:delivery_iot.field_stock_picking_type__iot_scale_ids
+msgid ""
+"Choose the scales you want to use for this operation type. Those scales can "
+"be used to weigh the packages created."
+msgstr ""
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "Connect Scale"
+msgstr ""
+
+#. module: delivery_iot
+#: model:ir.model,name:delivery_iot.model_choose_delivery_package
+msgid "Delivery Package Selection Wizard"
+msgstr ""
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__iot_ip
+msgid "Domain Address"
+msgstr ""
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "Export Documents"
+msgstr ""
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "How to connect scales?"
+msgstr ""
+
+#. module: delivery_iot
+#: model:ir.model,name:delivery_iot.model_iot_device
+msgid "IOT Device"
+msgstr ""
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__iot_device_identifier
+msgid "Identifier"
+msgstr "Identifikator"
+
+#. module: delivery_iot
+#: model:ir.model.fields,help:delivery_iot.field_stock_picking_type__auto_print_carrier_labels
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the carrier labels"
+" of the picking when they are created. Note this requires a printer to be "
+"assigned to this report."
+msgstr ""
+
+#. module: delivery_iot
+#: model:ir.model.fields,help:delivery_iot.field_stock_picking_type__auto_print_export_documents
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the export "
+"documents of the picking when they are created. Availability of export "
+"documents depends on the carrier and the destination. Note this requires a "
+"printer to be assigned to this report. "
+msgstr ""
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid ""
+"If you connect your scales through the IoT App, the\n"
+"                            weight of the package will be set automatically when\n"
+"                            you do a \"Put in Pack\" operation."
+msgstr ""
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.iot_device_view_form_inherit
+msgid "Linked Operation Types"
+msgstr ""
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__manual_measurement
+msgid "Manual Measurement"
+msgstr ""
+
+#. module: delivery_iot
+#: model:ir.model.fields,help:delivery_iot.field_choose_delivery_package__manual_measurement
+msgid "Manually read the measurement from the device"
+msgstr ""
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_iot_device__picking_type_ids
+msgid "Operation Types"
+msgstr "Tipi operacij"
+
+#. module: delivery_iot
+#: model:ir.model,name:delivery_iot.model_stock_picking_type
+msgid "Picking Type"
+msgstr "Tip zbirnika"
+
+#. module: delivery_iot
+#. odoo-javascript
+#: code:addons/delivery_iot/static/src/field_many2one_iot_scale.xml:0
+#, python-format
+msgid "Read weight"
+msgstr ""
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__iot_device_id
+msgid "Scale"
+msgstr "Tehtnica"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__available_scale_ids
+#: model:ir.model.fields,field_description:delivery_iot.field_stock_picking_type__iot_scale_ids
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "Scales"
+msgstr ""
+
+#. module: delivery_iot
+#: model:ir.actions.report,name:delivery_iot.action_report_shipping_docs
+msgid "Shipping Documents"
+msgstr ""
+
+#. module: delivery_iot
+#: model:ir.actions.report,name:delivery_iot.action_report_shipping_labels
+msgid "Shipping Labels"
+msgstr ""
+
+#. module: delivery_iot
+#: model:ir.model,name:delivery_iot.model_stock_picking
+msgid "Transfer"
+msgstr "Prenos"

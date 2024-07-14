@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="frontdesk.Many2One">
+        <div class="o_input_dropdown">
+            <AutoComplete
+                value="props.value || ''"
+                id="props.id"
+                placeholder="props.placeholder || 'Choose a Host'"
+                sources="sources"
+                onSelect.bind="onSelect"
+                dropdown="true"
+                autoSelect="true"
+                autofocus="true"
+            />
+        </div>
+    </t>
+    <t t-name="avatarAutoComplete">
+        <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
+            <img t-if="option.value" class="rounded me-1" t-attf-src="/web/image/hr.employee.public/{{option.value}}/avatar_128"/>
+            <t t-esc="option.label"/>
+        </span>
+    </t>
+</templates>

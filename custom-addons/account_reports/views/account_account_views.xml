@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_account_form" model="ir.ui.view">
+        <field name="name">account.account.reports.form</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <field name="currency_id" position="before">
+                <field name="non_trade" invisible="account_type not in ('liability_payable', 'asset_receivable')"/>
+            </field>
+        </field>
+    </record>
+</odoo>

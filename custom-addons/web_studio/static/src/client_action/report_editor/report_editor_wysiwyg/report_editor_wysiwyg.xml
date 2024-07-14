@@ -1,0 +1,115 @@
+<templates>
+
+<t t-name="web_studio.ReportEditorWysiwyg">
+    <t t-call="web_studio.ReportEditorWysiwyg.Sidebar" />
+    <div class="o-web-studio-report-editor-wysiwyg h-100 w-100 position-relative">
+      <UndoRedo state="undoRedoState"/>
+      <ReportEditorIframe iframeKey="reportEditorModel.reportQweb || ''" iframeSource="reportQweb" onIframeLoaded.bind="onIframeLoaded" />
+      <t t-if="state.wysiwygKey and this.iframeRef?.el and !this.reportEditorModel._errorMessage" t-component="this.Wysiwyg" t-props="wysiwygProps" t-key="state.wysiwygKey" />
+    </div>
+</t>
+
+<t t-name="web_studio.ReportEditorWysiwyg.Sidebar" >
+    <div class="o_web_studio_sidebar h-100 overflow-auto flex-grow-0 flex-shrink-0" style="flex-basis: 300px;">
+      <div class="o_web_studio_sidebar_content d-flex flex-column gap-3 mt-3">
+        <Record t-props="reportRecordProps" t-slot-scope="scope" onRecordChanged.alike="(rec) => this.reportEditorModel.reportData = rec.data">
+          <t t-set="record" t-value="scope.record" />
+
+          <div class="o_web_studio_sidebar_text">
+            <label for="name" class="mb-1">Report name</label>
+            <CharField name="'name'" record="record" id="'name'"/>
+          </div>
+
+          <div class="o_web_studio_sidebar_tags">
+            <label for="paperformat_id" class="mb-1">Paper format</label>
+            <Many2OneField record="record" name="'paperformat_id'" id="'paperformat_id'"/>
+          </div>
+
+          <div class="o_web_studio_sidebar_checkbox d-flex flex-row gap-1">
+            <BooleanField record="record" name="'display_in_print_menu'" id="'display_in_print_menu'"/>
+            <label for="display_in_print_menu">Show in print menu</label>
+          </div>
+
+          <div class="o_web_studio_sidebar_checkbox d-flex flex-row gap-1">
+            <BooleanField record="record" name="'attachment_use'" id="'attachment_use'"/>
+            <label for="attachment_use">Reload from attachment</label>
+          </div>
+
+          <div class="o_web_studio_sidebar_tags">
+            <label for="groups_id" class="mb-1">Limit visibility to groups</label>
+            <div class="o_field_widget o_field_many2many_tags" name="groups_id">
+              <Many2ManyTagsField id="'groups_id'" name="'groups_id'" record="record"/>
+            </div>
+          </div>
+
+        </Record>
+        <div class="grid gap-2 mt-4 pt-3 border-top border-secondary">
+          <button class="btn btn-info g-col-6 p-2" name="report_edit_sources" t-on-click="editSources">
+            <i class="fa fa-code me-2" />Edit sources
+          </button>
+          <button class="btn btn-danger g-col-6 p-2" name="report_reset_archs" t-on-click="resetReport">
+            Reset report
+          </button>
+          <t t-set="printTooltip">
+            <t t-if="!reportEditorModel.recordToDisplay">There is no record to preview</t>
+          </t>
+          <button class="btn btn-secondary g-col-6 p-2" name="report_print_preview" t-on-click="printPreview" t-att-data-tooltip="printTooltip">
+            <i t-if="!reportEditorModel.recordToDisplay" class="fa fa-exclamation-triangle me-2" />
+            <i t-else="" class="fa fa-print me-2" />
+            Print preview
+          </button>
+          <button class="btn btn-secondary g-col-6 p-2" t-if="env.debug" t-on-click="openReportFormView">
+            <i class="fa fa-cog me-2" />More
+          </button>
+        </div>
+      </div>
+    </div>
+</t>
+
+<t t-name="web_studio.FieldDynamicPlaceholder">
+  <div class="o-web-studio-field-dynamic-placeholder">
+    <div class="px-1 pt-3 bg-secondary" t-if="Object.keys(sortedVariables).length > 1">
+      <label class="text-small text-bold mb-2"  for="o_studio_report_field_model">Current model:</label>
+      <SelectMenu
+        choices="sortedVariables"
+        value="state.currentVar"
+        onSelect="(value) => state.currentVar = value"
+        required="true"
+        searchable="false"
+      />
+    </div>
+    <StudioDynamicPlaceholderPopover showOnlyX2ManyFields="props.showOnlyX2ManyFields" resModel="currentResModel" validate.bind="validate" close="props.close" t-key="currentResModel"/>
+  </div>
+</t>
+
+<t t-name="web_studio.ReportEditorWysiwyg.UndoRedo">
+  <t t-set="isActive" t-value="props.state.canUndo or props.state.canRedo" />
+  <div class="position-absolute top-0 start-0 ms-5 mt-4 rounded bg-white border border-2 d-flex flex-row o-web-studio-report-editor-undo-redo gap-2 align-items-center" t-att-class="{active: isActive}">
+    <button class="btn o_web_studio_undo_redo_button text-uppercase" t-attf-class="{{ !props.state.canUndo ? 'text-muted' : 'active' }}" t-on-click="props.state.undo">
+      <i class="fa fa-undo me-1"/>Undo
+    </button>
+    <div class="border" />
+    <button class="btn o_web_studio_undo_redo_button text-uppercase" t-attf-class="{{ !props.state.canRedo ? 'text-muted' : 'active' }}" t-on-click="props.state.redo">
+      <i class="fa fa-repeat me-1"/>Redo
+    </button>
+  </div>
+</t>
+
+<t t-name="web_studio.ReportEditorWysiwyg.ResetConfirmatiopnPopup" t-inherit="web.ConfirmationDialog" t-inherit-mode="primary">
+  <xpath expr="//p[@t-out='props.body']" position="replace">
+    <p>All changes done to the report's structure will be discarded and the report will be reset to its factory settings.</p>
+    <div class="o_setting_box">
+      <div class="o_setting_left_pane">
+        <input class="form-check-input" type="checkbox" id="includeHeaderFooter" name="includeHeaderFooter" t-model="props.state.includeHeaderFooter"/>
+      </div>
+      <div class="o_setting_right_pane">
+        <label for="includeHeaderFooter" class="o_form_label me-4">Include header and footer</label>
+          <div class="text-muted">
+              Header and footer are shared with other reports which may be impacted by the reset.
+          </div>
+      </div>
+  </div>
+  </xpath>
+</t>
+
+</templates>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportSearchBar">
+        <div class="o_searchview form-control d-print-contents d-flex align-items-center py-1 w-auto" role="search" aria-autocomplete="list">
+            <i class="o_searchview_icon d-print-none oi oi-search me-2"
+                role="img"
+                aria-label="Search..."
+                title="Search..."
+            />
+            <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1">
+                <input type="text"
+                    class="o_searchview_input o_input d-print-none flex-grow-1 w-auto border-0"
+                    accesskey="Q"
+                    placeholder="Search..."
+                    role="searchbox"
+                    t-ref="search_bar_input"
+                    t-on-input="() => this.search()"
+                />
+            </div>
+        </div>
+    </t>
+</templates>

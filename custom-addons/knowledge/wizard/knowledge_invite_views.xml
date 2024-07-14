@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="knowledge_invite_view_form" model="ir.ui.view">
+        <field name="name">knowledge.invite.view.form</field>
+        <field name="model">knowledge.invite</field>
+        <field name="arch" type="xml">
+            <form class="py-0">
+                <field name="article_id" invisible="1"/>
+                <field name="have_share_partners" invisible="1"/>
+                <div colspan="2" class="alert alert-info text-center" role="alert"
+                     invisible="not have_share_partners or permission != 'none'">
+                    <i class="fa fa-w fa-info-circle"/> All external users you selected won't be added to the members.
+                </div>
+                <sheet>
+                    <group>
+                        <field name="permission" class="w-100"/>
+                        <field name="partner_ids" widget="many2many_tags_email"
+                            class="o_knowledge_add_people_input w-100"
+                            placeholder="Add people or email addresses"
+                            options="{'no_quick_create': True}"
+                            context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
+                    </group>
+                    <field name="message" class="border" placeholder="Extra Comment" invisible="permission == 'none'"/>
+                </sheet>
+                <footer>
+                    <button string="Invite" type="object" name="action_invite_members" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="knowledge_invite_action_from_article" model="ir.actions.act_window">
+        <field name="name">Invite people</field>
+        <field name="res_model">knowledge.invite</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_article_id': active_id,
+            'dialog_size' : 'medium',
+        }</field>
+    </record>
+</odoo>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="wizard_account_withhold_form" model="ir.ui.view">
+        <field name="name">l10n_ec.wizard.account.withhold.form</field>
+        <field name="model">l10n_ec.wizard.account.withhold</field>
+        <field name="arch" type="xml">
+            <form string="Withholding">
+                <group>
+                    <group name="withhold">
+                        <field name="partner_id" readonly="1"/>
+                        <field name="date"/>
+                        <field name="journal_id"
+                               domain="[('l10n_ec_withhold_type', '=', withhold_type), ('company_id', '=', company_id)]"
+                               options="{'no_open': True, 'no_create': True}"/>
+                        <field name="manual_document_number" invisible="1"/>
+                        <field name="document_number"
+                               invisible="not manual_document_number"
+                               required="manual_document_number"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="withhold_type" invisible="1"/>
+                        <field name="related_invoices_count" invisible="1"/>
+                        <field name="partner_country_code" invisible="1"/>
+                        <field name="related_invoice_ids" invisible="1"/>
+                    </group>
+                    <group name="foreign-container" invisible="partner_country_code == 'EC' or withhold_type != 'in_withhold'">
+                        <field name="foreign_regime" required="partner_country_code != 'EC'"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page id="withhold_lines_tab" string="Withhold Lines" name="page_withhold_lines">
+                        <field name="withhold_line_ids" force_save="1" mode="tree">
+                            <tree editable="bottom">
+                                <field name="company_id" column_invisible="True"/>
+                                <field name="sequence" widget="handle"/>
+                                <field name="invoice_id"
+                                       domain="[('id', 'in', parent.related_invoice_ids)]"
+                                       options="{'no_create': True,'no_open': True}"
+                                       column_invisible="parent.related_invoices_count == 1"/>
+                                <field name="taxsupport_code"
+                                       column_invisible="parent.withhold_type != 'in_withhold'"/>
+                                <field name="tax_id"
+                                       domain="[('tax_group_id.l10n_ec_type', 'in', ('withhold_vat_purchase', 'withhold_income_purchase'))] if parent.withhold_type == 'in_withhold' else [('tax_group_id.l10n_ec_type', 'in', ('withhold_vat_sale', 'withhold_income_sale'))]"
+                                       options="{'no_create': True, 'no_open': True}
+                                       "/>
+                                <field name="base"/>
+                                <field name="amount" readonly="1"/> <!-- No functionality yet to adapt the calculated amount for rounding, but it could be done -->
+                            </tree>
+                        </field>
+                        <group class="oe_subtotal_footer">
+                            <field name="withhold_subtotals" widget="account-tax-totals-field-for-withhold" nolabel="1" colspan="2"/>
+                        </group>
+                    </page>
+                </notebook>
+                <footer>
+                    <button string="Create and Post" name="action_create_and_post_withhold" type="object" class="oe_highlight"/>
+                    <button string="Close" special="cancel" class="oe_link"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

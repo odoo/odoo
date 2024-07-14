@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_pricers" model="ir.ui.view">
+        <field name="name">product.template.view.form.inherit.pricers</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='description_sale']" position="after">
+                <group string="Pricer" name="description" groups="point_of_sale.group_pos_manager">
+                    <field name="pricer_store_id" />
+                    <!-- Use product id and its pricer store id as default values for its pricer tags -->
+                    <field name="pricer_tag_ids" widget="many2many_tags" invisible="not pricer_store_id"
+                    context="{
+                        'default_product_id': id,
+                        'default_pricer_store_id': pricer_store_id,
+                    }"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

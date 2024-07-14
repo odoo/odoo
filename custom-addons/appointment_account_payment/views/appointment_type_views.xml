@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="appointment_type_view_form" model="ir.ui.view">
+        <field name="name">appointment.type.view.form.inherit.appointment.account.payment</field>
+        <field name="model">appointment.type</field>
+        <field name="inherit_id" ref="appointment.appointment_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='options_left_details']" position="inside">
+                <label for="has_payment_step"/>
+                <div>
+                    <div class="o_row">
+                        <field name="has_payment_step"/>
+                        <field name="product_id" invisible="not has_payment_step" required="has_payment_step"
+                            context="{'default_detailed_type': 'booking_fees', 'default_purchase_ok': False}" placeholder="Pick a Product" class="oe_inline"/>
+                    </div>
+                    <div invisible="not has_payment_step" groups="base.group_system">
+                        <a type="action" name="%(payment.action_payment_provider)d" class="btn btn-link ps-0 pb-2" role="button">
+                            <i class="oi oi-fw o_button_icon oi-arrow-right"/> Configure Payment Providers
+                        </a>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>

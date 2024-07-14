@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<odoo>
+    <data>
+        <template id="dte_subtemplate" inherit_id="l10n_cl_edi.dte_subtemplate" >
+            <xpath expr="//TasaIVA" position="replace">
+                    <TasaIVA t-if="not move.l10n_latam_document_type_id._is_doc_type_electronic_ticket() and amounts['vat_percent']" t-out="amounts['vat_percent']"/>
+            </xpath>
+            <xpath expr="//DirRecep" position="replace">
+                <DirRecep t-if="not move.l10n_latam_document_type_id._is_doc_type_voucher()" t-out="format_length(move.partner_id.street or move.commercial_partner_id.street or '' + ' ' + move.partner_id.street2 or move.commercial_partner_id.street2 or '', 70)"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

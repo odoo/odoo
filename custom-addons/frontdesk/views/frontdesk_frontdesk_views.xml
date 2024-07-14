@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="frontdesk_frontdesk_view_form" model="ir.ui.view">
+        <field name="name">frontdesk.frontdesk.view.form</field>
+        <field name="model">frontdesk.frontdesk</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_open_kiosk" type="object" string="Open Kiosk" class="btn-primary" groups="frontdesk.frontdesk_group_user"/>
+                </header>
+                <sheet>
+                    <field name="active" invisible="1"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="image" class="oe_avatar m-0" widget="image"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Frontdesk"/></h1>
+                    </div>
+                    <group class="gx-0">
+                        <group>
+                            <field name="responsible_ids" widget="many2many_avatar_user"/>
+                            <field name="company_id"  groups="base.group_multi_company"/>
+                            <field name="access_token" groups="base.group_no_one"/>
+                            <field name="kiosk_url" widget="CopyClipboardChar"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Options" groups="frontdesk.frontdesk_group_user">
+                            <div class="row mt16 o_settings_container">
+                                <setting help="Allows the visitor to pick the host of the meeting from the list">
+                                    <field name="host_selection"/>
+                                </setting>
+                                <setting help="Show a QR code on the welcome screen to check-in from mobile">
+                                    <field name="self_check_in"/>
+                                </setting>
+                                <setting help="Request additional information upon registering">
+                                    <field name="authenticate_guest"/>
+                                    <group invisible="not authenticate_guest">
+                                        <field name="ask_email" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="ask_phone" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="ask_company" widget="radio" options="{'horizontal': true}"/>
+                                    </group>
+                                </setting>
+                                <setting help="Allow visitor to select a drink during registration">
+                                    <field name="drink_offer"/>
+                                    <div invisible="not drink_offer">
+                                        <field name="drink_ids" widget="many2many_tags" nolabel="1"/>
+                                        <div class="mt8">
+                                            <button name="%(frontdesk.action_frontdesk_drink)d"
+                                                icon="oi-arrow-right" type="action"
+                                                string="Configure Drinks" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </setting>
+                                <setting help="Notify the host on guest arrival" invisible="not host_selection">
+                                    <field name="notify_email"/>
+                                    <group invisible="not notify_email">
+                                        <field name="mail_template_id"/>
+                                    </group>
+                                </setting>
+                                <setting help="Open host chat window when guest arrives" invisible="not host_selection">
+                                    <field name="notify_discuss"/>
+                                </setting>
+                                <setting help="Send an SMS to the host on guest arrival" invisible="not host_selection">
+                                    <field name="notify_sms"/>
+                                    <group invisible="not notify_sms">
+                                        <field name="sms_template_id"/>
+                                    </group>
+                                </setting>
+                                <setting help="Select the color of the Desk">
+                                    <field name="theme" widget="radio" options="{'horizontal': true}"/>
+                                </setting>
+                            </div>
+                        </page>
+                        <page string="Side Message" groups="frontdesk.frontdesk_group_user">
+                            <field name="description" placeholder="Write message..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="frontdesk_frontdesk_view_tree" model="ir.ui.view">
+        <field name="name">frontdesk.frontdesk.view.tree</field>
+        <field name="model">frontdesk.frontdesk</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="responsible_ids" widget="many2many_avatar_user"/>
+                <field name="drink_offer"/>
+                <field name="notify_email" optional="show"/>
+                <field name="notify_sms" optional="show"/>
+                <field name="notify_discuss" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="frontdesk_frontdesk_view_kanban" model="ir.ui.view">
+        <field name="name">frontdesk.frontdesk.view.kanban</field>
+        <field name="model">frontdesk.frontdesk</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard" action="%(action_open_station_visitor)d" type="action">
+                <field name="guest_on_site"/>
+                <field name="pending"/>
+                <field name="drink_to_serve"/>
+                <templates>
+                    <t t-name="kanban-menu">
+                        <a role="menuitem" class="dropdown-item" name="action_open_kiosk"
+                            type="object">Kiosk</a>
+                        <a role="menuitem" class="dropdown-item" name="action_open_visitors"
+                            type="object">Visitors</a>
+                        <a role="menuitem" class="dropdown-item" name="%(action_frontdesk_station_report)d"
+                            type="action">Statistics</a>
+                        <a role="menuitem" type="edit" class="dropdown-item">Configuration</a>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div>
+                            <div class="o_kanban_card_content">
+                                <div class="o_kanban_card_header d-flex gap-1 align-items-baseline">
+                                    <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
+                                    <div class="o_kanban_card_header_title mb16">
+                                        <div class="o_primary">
+                                            <field name="name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <button class="btn btn-primary" name="action_open_kiosk" type="object"
+                                        groups="frontdesk.frontdesk_group_user">Open Desk</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <div t-if="record.guest_on_site.raw_value > 0">
+                                            <a name="%(action_open_guest_on_site_visitor)d" type="action"
+                                            class="oe_kanban_stock_picking_type_list">
+                                            <field name="guest_on_site"/> On Site</a>
+                                        </div>
+                                        <div t-if="record.pending.raw_value > 0">
+                                            <a name="%(action_open_planned_visitor)d" type="action"
+                                            class="oe_kanban_stock_picking_type_list">
+                                            <field name="pending"/> Planned</a>
+                                        </div>
+                                        <div t-if="record.drink_to_serve.raw_value > 0">
+                                            <a name="%(action_open_drink_to_serve_visitor)d" type="action"
+                                            class="oe_kanban_stock_picking_type_list">
+                                            <field name="drink_to_serve"/> Drinks to serve</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="oe_kanban_footer">
+                                <div class="o_kanban_record_bottom mt-3">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="latest_check_in"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="responsible_ids" widget="many2many_avatar_user"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="frontdesk_frontdesk_view_search" model="ir.ui.view">
+        <field name="name">frontdesk.frontdesk.view.search</field>
+        <field name="model">frontdesk.frontdesk</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Station Name"/>
+                <field name="responsible_ids" string="Responsible"/>
+                <filter string="My Station" name="my_station" domain="[('responsible_ids', '=', uid)]"/>
+                <filter string="Favorite" name="is_favorite" domain="[('is_favorite', '=', True)]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="By Responsible" name="group_by_responsible" context="{'group_by': 'responsible_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_frontdesk_frontdesk" model="ir.actions.act_window">
+        <field name="name">Stations</field>
+        <field name="res_model">frontdesk.frontdesk</field>
+        <field name="view_mode">kanban,form,tree</field>
+    </record>
+
+    <record id="action_frontdesk_frontdesk_tree" model="ir.actions.act_window">
+        <field name="name">Stations</field>
+        <field name="res_model">frontdesk.frontdesk</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+</odoo>

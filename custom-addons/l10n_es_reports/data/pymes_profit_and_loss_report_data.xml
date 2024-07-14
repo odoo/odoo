@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="financial_report_es_profit_and_loss" model="account.report">
+        <field name="name">Profit and Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_date_range" eval="True"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="False"/>
+        <field name="country_id" ref="base.es"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="financial_report_es_profit_and_loss_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="es_profit_and_loss_line_sum_a" model="account.report.line">
+                <field name="name">A) RESULTS FROM OPERATING ACTIVITIES (1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 + 11 + 12)</field>
+                <field name="code">es_profit_and_loss_sum_a</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="es_profit_and_loss_line_sum_a_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">es_profit_and_loss_line_1.balance + es_profit_and_loss_line_2.balance + es_profit_and_loss_line_3.balance + es_profit_and_loss_line_4.balance + es_profit_and_loss_line_5.balance + es_profit_and_loss_line_6.balance + es_profit_and_loss_line_7.balance + es_profit_and_loss_line_8.balance + es_profit_and_loss_line_9.balance + es_profit_and_loss_line_10.balance + es_profit_and_loss_line_11.balance + es_profit_and_loss_line_12.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="es_profit_and_loss_line_1" model="account.report.line">
+                        <field name="name">1. Revenue</field>
+                        <field name="code">es_profit_and_loss_line_1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-701 - 706 - 700 - 709 - 702 - 705 - 703 - 704 - 708</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="es_profit_and_loss_line_2" model="account.report.line">
+                        <field name="name">2. Changes in inventories of finished goods and work in progress</field>
+                        <field name="code">es_profit_and_loss_line_2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-71 - 6930 - 7930</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="es_profit_and_loss_line_3" model="account.report.line">
+                        <field name="name">3. Work carried out by the company for assets</field>
+                        <field name="code">es_profit_and_loss_line_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_3_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-73</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="es_profit_and_loss_line_4" model="account.report.line">
+                        <field name="name">4. Supplies</field>
+                        <field name="code">es_profit_and_loss_line_4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_4_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-608 - 602 - 601 - 606 - 6931 - 61 - 600 - 7933 - 6932 - 7932 - 7931 - 607 - 6933 - 609</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="es_profit_and_loss_line_5" model="account.report.line">
+                        <field name="name">5. Other operating income</field>
+                        <field name="code">es_profit_and_loss_line_5</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_5_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-747 - 740 - 75 - 95</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="es_profit_and_loss_line_6" model="account.report.line">
+                        <field name="name">6. Personnel expenses</field>
+                        <field name="code">es_profit_and_loss_line_6</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_6_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-64</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="es_profit_and_loss_line_7" model="account.report.line">
+                        <field name="name">7. Other operating expenses</field>
+                        <field name="code">es_profit_and_loss_line_7</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_7_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7954 - 639 - 636 - 634 - 694 - 65 - 85 - 695 - 62 - 794 - 631</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="es_profit_and_loss_line_8" model="account.report.line">
+                        <field name="name">8. Amortisation and depreciation</field>
+                        <field name="code">es_profit_and_loss_line_8</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_8_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-68</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="es_profit_and_loss_line_9" model="account.report.line">
+                        <field name="name">9. Non-financial and other capital grants</field>
+                        <field name="code">es_profit_and_loss_line_9</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_9_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.code','=like','746%'), ('account_id.code','not like','7461%')]"/>
+                                <field name="date_scope">normal</field>
+                                <field name="subformula">-sum</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="es_profit_and_loss_line_10" model="account.report.line">
+                        <field name="name">10. Provision surpluses</field>
+                        <field name="code">es_profit_and_loss_line_10</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_10_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7951 - 7956 - 7952 - 7957 - 7955 - 7950</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="es_profit_and_loss_line_11" model="account.report.line">
+                        <field name="name">11. Impairment and gains/losses on disposal of fixed assets</field>
+                        <field name="code">es_profit_and_loss_line_11</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_11_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-670 - 772 - 96 - 792 - 791 - 672 - 770 - 671 - 86 - 691 - 690 - 790 - 771</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="es_profit_and_loss_line_12" model="account.report.line">
+                        <field name="name">12. Other gains/losses</field>
+                        <field name="code">es_profit_and_loss_line_12</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_12_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-678 - 774 - 778</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="es_profit_and_loss_line_sum_b" model="account.report.line">
+                <field name="name">B) FINANCIAL RESULTS (13 + 14 + 15 + 16 + 17)</field>
+                <field name="code">es_profit_and_loss_sum_b</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="es_profit_and_loss_line_sum_b_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">es_profit_and_loss_line_13.balance + es_profit_and_loss_line_14.balance + es_profit_and_loss_line_15.balance + es_profit_and_loss_line_16.balance + es_profit_and_loss_line_17.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="es_profit_and_loss_line_13" model="account.report.line">
+                        <field name="name">13. Finance income</field>
+                        <field name="code">es_profit_and_loss_line_13</field>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_13_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">es_profit_and_loss_line_13a.balance + es_profit_and_loss_line_13b.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="es_profit_and_loss_line_13a" model="account.report.line">
+                                <field name="name">a) Allocation of subsidies, donations and legacies of financial nature</field>
+                                <field name="code">es_profit_and_loss_line_13a</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="es_profit_and_loss_line_13a_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-7461 - 72 - 84 - 94</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="es_profit_and_loss_line_13b" model="account.report.line">
+                                <field name="name">b) Other finance expenses</field>
+                                <field name="code">es_profit_and_loss_line_13b</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="es_profit_and_loss_line_13b_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-767 - 761 - 760 - 762 - 769</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="es_profit_and_loss_line_14" model="account.report.line">
+                        <field name="name">14. Finance expenses</field>
+                        <field name="code">es_profit_and_loss_line_14</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_14_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-661 - 669 - 662 - 660 - 664 - 665</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="es_profit_and_loss_line_15" model="account.report.line">
+                        <field name="name">15. Variation of fair value of financial instruments</field>
+                        <field name="code">es_profit_and_loss_line_15</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_15_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-80 - 763 - 90 - 663</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="es_profit_and_loss_line_16" model="account.report.line">
+                        <field name="name">16. Exchange gains/losses</field>
+                        <field name="code">es_profit_and_loss_line_16</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_16_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-82 - 768 - 92 - 668</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="es_profit_and_loss_line_17" model="account.report.line">
+                        <field name="name">17. Impairment and gains/losses on disposal of financial instruments</field>
+                        <field name="code">es_profit_and_loss_line_17</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_17_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-89 - 667 - 992 - 692 - 797 - 766 - 698 - 993 - 994 - 773 - 666 - 697 - 796 - 675 - 799 - 798 - 91 - 696 - 775 - 699 - 673 - 991 - 81</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="es_profit_and_loss_line_sum_c" model="account.report.line">
+                <field name="name">C) PROFIT/LOSS BEFORE INCOME TAX (A + B)</field>
+                <field name="code">es_profit_and_loss_sum_c</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="es_profit_and_loss_line_sum_c_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">es_profit_and_loss_sum_a.balance + es_profit_and_loss_sum_b.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="es_profit_and_loss_line_sum_d" model="account.report.line">
+                <field name="name">D) PROFIT/LOSS FOR THE PERIOD (C + 18)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">es_profit_and_loss_sum_d</field>
+                <field name="expression_ids">
+                    <record id="es_profit_and_loss_line_sum_d_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">es_profit_and_loss_sum_c.balance + es_profit_and_loss_line_18.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="es_profit_and_loss_line_18" model="account.report.line">
+                        <field name="name">18. Income tax expense</field>
+                        <field name="code">es_profit_and_loss_line_18</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="es_profit_and_loss_line_18_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-638 - 633 - 6301 - 83 - 6300</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

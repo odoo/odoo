@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    <!-- Recurrent payment emails -->
+    <record id="email_payment_close" model="mail.template">
+        <field name="name">Subscription: Payment Failure</field>
+        <field name="model_id" ref="sale_subscription.model_sale_order"/>
+        <field name="subject">Termination of subscription {{ object.client_order_ref or object.name }}</field>
+        <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.partner_id.email_formatted }}</field>
+        <field name="description">Sent to customer to indicate that subscription is automatically terminated</field>
+        <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <t t-set="company" t-value="object.company_id or object.user_id.company_id or user.company_id"/>
+                    <span style="font-size: 10px;">Your Subscription</span><br/>
+                    <span style="font-size: 20px; font-weight: bold;" t-out="object.name or ''">Office Cleaning Service</span>
+                </td></tr>
+                <tr><td valign="middle" align="right" t-if="not company.uses_default_logo">
+                    <img t-attf-src="/logo.png?company={{ company.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="company.name"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 13px;">
+                    Hello <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,<br/><br/>
+                    <t t-if="ctx.get('payment_token') and ctx.get('total_amount')">
+                        Our final attempt to process a payment for your subscription using your payment method
+                        <t t-out="ctx.get('payment_token') or ''">TOKEN</t>
+                        for <t t-out="ctx['total_amount'] or ''">100</t> <t t-out="ctx.get('currency') or ''">$</t> failed.
+                        <t t-if="ctx.get('error')">
+                            Your bank or credit institution gave the following details about the issue: <pre t-out="ctx['error'] or ''"></pre>.
+                        </t>
+                    </t>
+                    <t t-else="">
+                        Our final attempt to process a payment for your subscription failed because we have no payment method recorded for you.
+                    </t>
+                    <br/><br/>
+                    As your payment should have been made <strong><t t-out="ctx.get('auto_close_limit') or ''">5</t> days ago</strong>, your subscription has been terminated.
+                    Should you wish to resolve this issue, do not hesitate to contact us.<br/><br/>
+                    Thank you for choosing <t t-out="company.name or ''">YourCompany</t>!
+                    <div t-if="user.signature">
+                        <br/><br/>
+                        <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+                    </div>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle" align="left">
+                    <t t-out="company.name or ''">YourCompany</t>
+                </td></tr>
+                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                    <t t-if="company.phone">
+                        <t t-out="company.phone or ''">+1 650-123-4567</t> |
+                    </t>
+                    <t t-if="company.email">
+                        <a t-attf-href="'mailto:%s' % {{ company.email }}" style="text-decoration:none; color: #454748;" t-out="company.email or ''">info@yourcompany.com</a> |
+                    </t>
+                    <t t-if="company.website">
+                        <a t-attf-href="'%s' % {{ company.website }}" style="text-decoration:none; color: #454748;" t-out="company.website or ''">http://www.example.com</a>
+                    </t>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+      <tr><td style="text-align: center; font-size: 13px;">
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=mail" style="color: #875A7B;">Odoo</a>
+      </td></tr>
+    </table>
+</td></tr>
+</table>
+        </field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+</record>
+
+    <record id="email_payment_reminder" model="mail.template">
+        <field name="name">Subscription: Payment Reminder</field>
+        <field name="model_id" ref="sale_subscription.model_sale_order"/>
+        <field name="subject">Payment reminder for subscription {{ object.client_order_ref or object.name }}</field>
+        <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.partner_id.email_formatted }}</field>
+        <field name="description">Sent to customer when payment failed but subscription is not yet cancelled</field>
+        <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <t t-set="company" t-value="object.company_id or object.user_id.company_id or user.company_id"/>
+                    <span style="font-size: 10px;">Your Subscription</span><br/>
+                    <span style="font-size: 20px; font-weight: bold;" t-out="object.name or ''">Office Cleaning Service</span>
+                </td></tr>
+                <tr><td valign="middle" align="right" t-if="not company.uses_default_logo">
+                    <img t-attf-src="/logo.png?company={{ company.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="company.name"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 13px;">
+                    Hello <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,<br/><br/>
+                    <t t-if="ctx.get('payment_token') and ctx.get('total_amount')">
+                        We were unable to process a payment for your subscription using your payment method
+                        <t t-out="ctx['payment_token'] or ''">TOKEN</t>
+                        for <t t-out="ctx['total_amount'] or ''">10</t> <t t-out="ctx.get('currency_name') or ''">$</t>.
+                        <t t-if="ctx.get('error')">
+                            Your bank or credit institution gave the following details about the issue: <pre t-out="ctx['error'] or ''"></pre>.
+                        </t>
+                    </t>
+                    <t t-else="">
+                        We were unable to process a payment for your subscription because we have no payment method recorded for you.
+                    </t>
+                    <br/><br/>
+                    Your subscription <t t-out="ctx.get('code') or ''">CODE</t> is still valid but will be <strong>suspended</strong>
+                    on <t t-out="format_date(ctx.get('date_close')) or ''">05/05/2021</t> unless the payment succeeds in the mean time (we will retry once every day).
+                    Please double-check that you have sufficient funds.<br/><br/>
+                    If you have any questions, do not hesitate to contact us.<br/><br/>
+                    Thank you for choosing <t t-out="company.name or ''">YourCompany</t>!
+                    <div>
+                    <t t-if="user.signature">
+                        <br/><br/>
+                        <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+                    </t>
+                    </div>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle" align="left">
+                    <t t-out="company.name or ''">YourCompany</t>
+                </td></tr>
+                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                    <t t-if="company.phone">
+                        <t t-out="company.phone or ''">+1 650-123-4567</t> |
+                    </t>
+                    <t t-if="company.email">
+                        <a t-attf-href="'mailto:%s' % {{ company.email }}" style="text-decoration:none; color: #454748;" t-out="company.email or ''">info@yourcompany.com</a> |
+                    </t>
+                    <t t-if="company.website">
+                        <a t-attf-href="'%s' % {{ company.website }}" style="text-decoration:none; color: #454748;" t-out="company.website or ''">http://www.example.com</a>
+                    </t>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+      <tr><td style="text-align: center; font-size: 13px;">
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=mail" style="color: #875A7B;">Odoo</a>
+      </td></tr>
+    </table>
+</td></tr>
+</table>
+        </field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+</record>
+
+    <record id="email_payment_success" model="mail.template">
+        <field name="name">Subscription: Payment Success And Invoice</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="subject">Invoice for subscription {{ ctx.get('code', ctx.get('subscription_name')) }}</field>
+        <field name="email_from">{{ (object.invoice_user_id.email_formatted or object.company_id.email or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.partner_id.email_formatted }}</field>
+        <field name="description">Sent automatically with subscription invoice when payment is successful</field>
+        <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <t t-set="company" t-value="object.company_id or object.invoice_user_id.company_id or user.company_id"/>
+                    <span style="font-size: 10px;">Your Subscription</span><br/>
+                    <span style="font-size: 20px; font-weight: bold;" t-out="ctx.get('code', ctx.get('subscription_name')) or 'Document'">Document</span>
+                </td></tr>
+                <tr><td valign="middle" align="right" t-if="not company.uses_default_logo">
+                    <img t-attf-src="/logo.png?company={{ company.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="company.name"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 13px;">
+                    Dear <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,<br/><br/>
+                    Your Subscription (<t t-out="ctx.get('subscription_name') or ''">CODE</t>
+                    <t t-if="ctx.get('code')">
+                    , Reference: <t t-out="ctx.get('code')"/>
+                    </t>) has just been renewed
+                    <t t-if="ctx.get('total_amount') and ctx.get('payment_token')">
+                        via a payment of <t t-out="ctx.get('total_amount') or ''">100</t> <t t-out="ctx.get('currency_name') or ''">$</t> charged on <t t-out="ctx.get('payment_token') or ''">PAYMENT_TOKEN</t>.
+                    </t>
+                    <br/><br/>
+                    You will find your invoice attached.
+                    <t t-if="ctx.get('next_date')">
+                        Your next invoice will be on <t t-out="format_date(ctx.get('next_date')) or ''">05/05/2021</t>.
+                    </t>
+                    <br/><br/>
+                    If you have any questions, do not hesitate to contact us.
+                    <br/><br/>
+                    Thank you for choosing <t t-out="company.name or ''">YourCompany</t>!
+                    <div t-if="user.signature">
+                        <br/><br/>
+                        <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+                    </div>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle" align="left">
+                    <t t-out="company.name or ''">YourCompany</t>
+                </td></tr>
+                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                    <t t-if="company.phone">
+                        <t t-out="company.phone or ''">+1 650-123-4567</t> |
+                    </t>
+                    <t t-if="company.email">
+                        <a t-attf-href="'mailto:%s' % {{ company.email }}" style="text-decoration:none; color: #454748;" t-out="company.email or ''">info@yourcompany.com</a> |
+                    </t>
+                    <t t-if="company.website">
+                        <a t-attf-href="'%s' % {{ company.website }}" style="text-decoration:none; color: #454748;" t-out="company.website or ''">http://www.example.com</a>
+                    </t>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+      <tr><td style="text-align: center; font-size: 13px;">
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=mail" style="color: #875A7B;">Odoo</a>
+      </td></tr>
+    </table>
+</td></tr>
+</table>
+        </field>
+        <field name="report_template_ids" eval="[(4, ref('account.account_invoices'))]"/>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <!-- Mail sent to request a rating for a subscription -->
+    <record id="mail_template_subscription_rating" model="mail.template">
+        <field name="name">Subscription: Rating Request</field>
+        <field name="model_id" ref="sale_subscription.model_sale_order"/>
+        <field name="subject">{{ object.company_id.name }}: Service Rating Request</field>
+        <field name="email_from">{{ (object._rating_get_operator().email_formatted or user.email_formatted) }}</field>
+        <field name="partner_to" >{{ object._rating_get_partner().id }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="description">Set on subscription's stage (e.g. Closed, Upsell) to ask a rating to customers</field>
+        <field name="body_html" type="html">
+            <div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+            <t t-set="access_token" t-value="object._rating_get_access_token()"/>
+                <table style="width:600px;margin:5px auto;">
+                    <tbody>
+                        <tr><td t-if="not object.company_id.uses_default_logo">
+                            <a href="/"><img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="vertical-align:baseline;max-width:100px;" /></a>
+                        </td><td style="text-align:right;vertical-align:middle;">
+                                Satisfaction Survey
+                        </td></tr>
+                    </tbody>
+                </table>
+                <table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
+                    <tbody>
+                        <tr><td style="padding:15px 20px 10px 20px;">
+                            <p>Hello,</p>
+                            <p>Please take a moment to rate our services related to your subscription "<strong t-out="object.name or ''">Office Cleaning Service"</strong>"
+                               assigned to <strong t-out="object._rating_get_operator().name or ''">Mitchell Admin</strong>.</p>
+                            <p>We appreciate your feedback. It helps us to improve continuously.</p>
+                        </td></tr>
+                        <tr><td style="padding:10px 20px">
+                            <table summary="o_mail_notification" style="width:100%;border-top:1px solid #e1e1e1;">
+                                <tr>
+                                    <td style="text-align:center;">
+                                        <h2 style="font-weight:300;font-size:18px;">
+                                            Tell us how you feel about our services:
+                                        </h2>
+                                        <div style="text-color: #888888">(click on one of these smileys)</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:10px 10px;">
+                                        <table style="width:100%;text-align:center;">
+                                            <tr>
+                                                <td>
+                                                    <a t-attf-href="/rate/{{ access_token }}/5">
+                                                        <img alt="Satisfied" src="/rating/static/src/img/rating_5.png" title="Satisfied"/>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a t-attf-href="/rate/{{ access_token }}/3">
+                                                        <img alt="Okay" src="/rating/static/src/img/rating_3.png" title="Okay"/>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a t-attf-href="/rate/{{ access_token }}/1">
+                                                        <img alt="Dissatisfied" src="/rating/static/src/img/rating_1.png" title="Dissatisfied"/>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td></tr>
+                        <tr><td style="padding:15px 20px 10px 20px;" t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</td></tr>
+                    </tbody>
+                </table>
+                <table style="width:600px;margin:auto;text-align:center;font-size:12px;">
+                    <tbody>
+                        <tr><td style="padding-top:10px;color:#afafaf;">
+                            <p>Email automatically sent by <a target="_blank" href="https://www.odoo.com/app/subscriptions" style="color:#875A7B;text-decoration:none;">Odoo Subscription</a> for <a t-att-href="object.company_id.website" style="color:#875A7B;text-decoration:none;" t-out="object.company_id.name or ''">YourCompany</a></p>
+                        </td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </field>
+    </record>
+
+    <!-- Mail sent to request a rating for a subscription -->
+    <record id="mail_template_subscription_alert" model="mail.template">
+        <field name="name">Subscription: Default Email Alert</field>
+        <field name="model_id" ref="sale_subscription.model_sale_order"/>
+        <field name="subject">{{ object.company_id.name }}: Please check the subscription {{ object.name }}</field>
+        <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+        <field name="partner_to" >{{ object.partner_id.id }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="description">Template to be used on customized alerts for subscriptions requiring attention</field>
+        <field name="body_html" type="html">
+            <div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+                <table style="width:600px;margin:5px auto;">
+                    <tbody>
+                        <tr><td t-if="not object.company_id.uses_default_logo">
+                            <a href="/"><img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="vertical-align:baseline;max-width:100px;" /></a>
+                        </td><td style="text-align:right;vertical-align:middle;">
+                                Subscription Renewal
+                        </td></tr>
+                    </tbody>
+                </table>
+                <table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
+                    <tbody>
+                        <tr><td style="padding:15px 20px 10px 20px;">
+                            <p>Dear <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,</p>
+                            <p>Your subscription <strong t-out="object.name or ''">Office Cleaning Service"</strong> needs your attention.</p>
+                            <p>We invite you to renew it by clicking on the following link.</p>
+                            <p>Kind regards.</p>
+                        </td></tr>
+                        <tr><td style="padding:15px 20px 10px 20px;" t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+    </record>
+    </data>
+</odoo>

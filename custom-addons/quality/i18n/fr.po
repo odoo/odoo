@@ -1,0 +1,1077 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* quality
+# 
+# Translators:
+# Jolien De Paepe, 2023
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alert_count
+#: model:ir.model.fields,field_description:quality.field_quality_check__alert_count
+msgid "# Quality Alerts"
+msgstr "# Alertes qualité"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__check_count
+msgid "# Quality Checks"
+msgstr "# Contrôles qualité"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_defaults
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"Un dictionnaire Python qui sera interprété pour fournir les valeurs par "
+"défaut lors de la création de nouveaux enregistrements pour cet alias."
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_needaction
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_needaction
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_needaction
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_needaction
+msgid "Action Needed"
+msgstr "Nécessite une action"
+
+#. module: quality
+#: model:quality.alert.stage,name:quality.quality_alert_stage_2
+msgid "Action Proposed"
+msgstr "Action proposée"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_point__active
+msgid "Active"
+msgstr "Actif"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_ids
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_ids
+msgid "Activities"
+msgstr "Activités"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_exception_decoration
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Activité exception décoration"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_state
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_state
+msgid "Activity State"
+msgstr "Statut de l'activité"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_type_icon
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icône de type d'activité"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_check_view_activity
+msgid "Activity view"
+msgstr "Vue d'activité"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__additional_note
+msgid "Additional Note"
+msgstr "Note additionnelle"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_check__additional_note
+msgid "Additional remarks concerning this check."
+msgstr "Remarques additionnelles concernant ce contrôle."
+
+#. module: quality
+#: model:res.groups,name:quality.group_quality_manager
+msgid "Administrator"
+msgstr "Administrateur"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__done
+msgid "Alert Processed"
+msgstr "Alerte traitée"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__alert_ids
+msgid "Alerts"
+msgstr "Alertes"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_id
+msgid "Alias"
+msgstr "Alias"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_contact
+msgid "Alias Contact Security"
+msgstr "Alias Contact Securité"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_domain_id
+msgid "Alias Domain"
+msgstr "Alias de domaine"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_domain
+msgid "Alias Domain Name"
+msgstr "Nom d'alias de domaine"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_full_name
+msgid "Alias Email"
+msgstr "Alias de messagerie"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_name
+msgid "Alias Name"
+msgstr "Nom de l'alias"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_status
+msgid "Alias Status"
+msgstr "Statut de l'alias"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_status
+msgid "Alias status assessed on the last message received."
+msgstr "Statut de l'alias évalué sur le dernier message reçu."
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_model_id
+msgid "Aliased Model"
+msgstr "Modèle concerné"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_form
+msgid "Archived"
+msgstr "Archivé"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_attachment_count
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_attachment_count
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_attachment_count
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_attachment_count
+msgid "Attachment Count"
+msgstr "Nombre de pièces jointes"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_point__reason
+msgid "Cause"
+msgstr "Cause"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__check_id
+#: model:ir.model.fields,field_description:quality.field_quality_point__check_ids
+msgid "Check"
+msgstr "Contrôle"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_point__check_count
+msgid "Check Count"
+msgstr "Nombre de contrôles"
+
+#. module: quality
+#. odoo-javascript
+#: code:addons/quality/static/src/tablet_image_field/tablet_image_field.xml:0
+#, python-format
+msgid "Close"
+msgstr "Fermer"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__color
+msgid "Color"
+msgstr "Couleur"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_tag__color
+msgid "Color Index"
+msgstr "Couleur"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__company_id
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__company_id
+#: model:ir.model.fields,field_description:quality.field_quality_check__company_id
+#: model:ir.model.fields,field_description:quality.field_quality_point__company_id
+msgid "Company"
+msgstr "Société"
+
+#. module: quality
+#: model:quality.alert.stage,name:quality.quality_alert_stage_1
+msgid "Confirmed"
+msgstr "Confirmé"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__control_date
+msgid "Control Date"
+msgstr "Date de contrôle"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__point_id
+msgid "Control Point"
+msgstr "Point de contrôle"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__action_corrective
+msgid "Corrective Action"
+msgstr "Action corrective"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__create_uid
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__create_uid
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__create_uid
+#: model:ir.model.fields,field_description:quality.field_quality_check__create_uid
+#: model:ir.model.fields,field_description:quality.field_quality_point__create_uid
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__create_uid
+#: model:ir.model.fields,field_description:quality.field_quality_reason__create_uid
+#: model:ir.model.fields,field_description:quality.field_quality_tag__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__create_date
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__create_date
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__create_date
+#: model:ir.model.fields,field_description:quality.field_quality_check__create_date
+#: model:ir.model.fields,field_description:quality.field_quality_point__create_date
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__create_date
+#: model:ir.model.fields,field_description:quality.field_quality_reason__create_date
+#: model:ir.model.fields,field_description:quality.field_quality_tag__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Creation Date"
+msgstr "Date de création"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_bounced_content
+msgid "Custom Bounced Message"
+msgstr "Message de rejet personnalisé"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__date_assign
+msgid "Date Assigned"
+msgstr "Date d'attribution"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__date_close
+msgid "Date Closed"
+msgstr "Date de clôture"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_defaults
+msgid "Default Values"
+msgstr "Valeurs par défaut"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_point__test_type_id
+msgid "Defines the type of the quality control point."
+msgstr "Définit le type de point de contrôle qualité"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_form
+msgid "Describe the quality check to do..."
+msgstr "Décrivez le contrôle qualité à effectuer…"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_form
+msgid "Describe why you need to perform this quality check..."
+msgstr ""
+"Décrivez la raison pour laquelle vous devez effectuer ce contrôle qualité…"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__description
+msgid "Description"
+msgstr "Description"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__display_name
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__display_name
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__display_name
+#: model:ir.model.fields,field_description:quality.field_quality_check__display_name
+#: model:ir.model.fields,field_description:quality.field_quality_point__display_name
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__display_name
+#: model:ir.model.fields,field_description:quality.field_quality_reason__display_name
+#: model:ir.model.fields,field_description:quality.field_quality_tag__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Done"
+msgstr "Fait"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_email
+msgid "Email Alias"
+msgstr "Alias de messagerie"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__email_cc
+msgid "Email cc"
+msgstr "Email cc"
+
+#. module: quality
+#: model:ir.model.fields.selection,name:quality.selection__quality_check__quality_state__fail
+msgid "Failed"
+msgstr "Échec"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__folded
+msgid "Folded"
+msgstr "Replié"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_follower_ids
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_follower_ids
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_follower_ids
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_follower_ids
+msgid "Followers"
+msgstr "Abonnés"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_partner_ids
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_partner_ids
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_partner_ids
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Abonnés (Partenaires)"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__activity_type_icon
+#: model:ir.model.fields,help:quality.field_quality_check__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icône Font Awesome par ex. fa-tasks"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Future Activities"
+msgstr "Activités futures"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Group By"
+msgstr "Regrouper par"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__has_message
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__has_message
+#: model:ir.model.fields,field_description:quality.field_quality_check__has_message
+#: model:ir.model.fields,field_description:quality.field_quality_point__has_message
+msgid "Has Message"
+msgstr "A un message"
+
+#. module: quality
+#: model:ir.model.fields.selection,name:quality.selection__quality_alert__priority__2
+msgid "High"
+msgstr "Haute"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__id
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__id
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__id
+#: model:ir.model.fields,field_description:quality.field_quality_check__id
+#: model:ir.model.fields,field_description:quality.field_quality_point__id
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__id
+#: model:ir.model.fields,field_description:quality.field_quality_reason__id
+#: model:ir.model.fields,field_description:quality.field_quality_tag__id
+msgid "ID"
+msgstr "ID"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_parent_thread_id
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
+msgstr ""
+"ID de l'enregistrement parent qui définit l'alias (exemple : le projet qui "
+"contient l'alias lié à la tâche)"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_exception_icon
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_exception_icon
+msgid "Icon"
+msgstr "Icône"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__activity_exception_icon
+#: model:ir.model.fields,help:quality.field_quality_check__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Icône pour indiquer une activité d'exception."
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__message_needaction
+#: model:ir.model.fields,help:quality.field_quality_alert_team__message_needaction
+#: model:ir.model.fields,help:quality.field_quality_check__message_needaction
+#: model:ir.model.fields,help:quality.field_quality_point__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Si coché, de nouveaux messages demandent votre attention."
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__message_has_error
+#: model:ir.model.fields,help:quality.field_quality_alert__message_has_sms_error
+#: model:ir.model.fields,help:quality.field_quality_alert_team__message_has_error
+#: model:ir.model.fields,help:quality.field_quality_alert_team__message_has_sms_error
+#: model:ir.model.fields,help:quality.field_quality_check__message_has_error
+#: model:ir.model.fields,help:quality.field_quality_check__message_has_sms_error
+#: model:ir.model.fields,help:quality.field_quality_point__message_has_error
+#: model:ir.model.fields,help:quality.field_quality_point__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Si coché, certains messages ont une erreur de livraison."
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_bounced_content
+msgid ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
+msgstr ""
+"Si défini, ce contenu sera automatiquement envoyé à tous les utilisateurs "
+"non autorisés à la place du message par défaut."
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "In Progress"
+msgstr "En cours"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_form
+msgid "Instructions"
+msgstr "Instructions"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_is_follower
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_is_follower
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_is_follower
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_is_follower
+msgid "Is Follower"
+msgstr "Est un abonné"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__write_uid
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__write_uid
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__write_uid
+#: model:ir.model.fields,field_description:quality.field_quality_check__write_uid
+#: model:ir.model.fields,field_description:quality.field_quality_point__write_uid
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__write_uid
+#: model:ir.model.fields,field_description:quality.field_quality_reason__write_uid
+#: model:ir.model.fields,field_description:quality.field_quality_tag__write_uid
+msgid "Last Updated by"
+msgstr "Mis à jour par"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__write_date
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__write_date
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__write_date
+#: model:ir.model.fields,field_description:quality.field_quality_check__write_date
+#: model:ir.model.fields,field_description:quality.field_quality_point__write_date
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__write_date
+#: model:ir.model.fields,field_description:quality.field_quality_reason__write_date
+#: model:ir.model.fields,field_description:quality.field_quality_tag__write_date
+msgid "Last Updated on"
+msgstr "Mis à jour le"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Late Activities"
+msgstr "Activités en retard"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr "Détection de l'arrivée d'une partie locale"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__lot_id
+msgid "Lot"
+msgstr "Lot"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__lot_id
+msgid "Lot/Serial"
+msgstr "Lot/série"
+
+#. module: quality
+#: model:ir.model.fields.selection,name:quality.selection__quality_alert__priority__1
+msgid "Low"
+msgstr "Basse"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_has_error
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_has_error
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_has_error
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_has_error
+msgid "Message Delivery error"
+msgstr "Erreur d'envoi du message"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_ids
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_ids
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_ids
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_ids
+msgid "Messages"
+msgstr "Messages"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__my_activity_date_deadline
+#: model:ir.model.fields,field_description:quality.field_quality_check__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Échéance de mon activité"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "My Alerts"
+msgstr "Mes alertes"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__name
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__name
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__name
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__name
+#: model:ir.model.fields,field_description:quality.field_quality_reason__name
+msgid "Name"
+msgstr "Nom"
+
+#. module: quality
+#. odoo-python
+#: code:addons/quality/models/quality.py:0
+#: code:addons/quality/models/quality.py:0
+#: code:addons/quality/models/quality.py:0
+#: code:addons/quality/models/quality.py:0
+#: code:addons/quality/models/quality.py:0
+#: code:addons/quality/models/quality.py:0
+#: code:addons/quality/models/quality.py:0
+#: code:addons/quality/models/quality.py:0
+#: model:quality.alert.stage,name:quality.quality_alert_stage_0
+#, python-format
+msgid "New"
+msgstr "Nouveau"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_calendar_event_id
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Activité suivante de l'événement du calendrier"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_date_deadline
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Date limite de l'activité à venir"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_summary
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_summary
+msgid "Next Activity Summary"
+msgstr "Résumé de l'activité suivante"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_type_id
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_type_id
+msgid "Next Activity Type"
+msgstr "Type d'activités à venir"
+
+#. module: quality
+#. odoo-python
+#: code:addons/quality/models/quality.py:0
+#, python-format
+msgid ""
+"No quality team found for this company.\n"
+"Please go to configuration and create one first."
+msgstr ""
+"Aucun équipe qualité trouvée pour cette société.\n"
+"Veuillez aller à la configuration et en créer une."
+
+#. module: quality
+#: model:ir.model.fields.selection,name:quality.selection__quality_alert__priority__0
+msgid "Normal"
+msgstr "Normal"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__note
+#: model:ir.model.fields,field_description:quality.field_quality_point__note
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_form
+msgid "Note"
+msgstr "Note"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_form
+msgid "Notes"
+msgstr "Notes"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_needaction_counter
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_needaction_counter
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_needaction_counter
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Nombre d'actions"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_has_error_counter
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_has_error_counter
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_has_error_counter
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_has_error_counter
+msgid "Number of errors"
+msgstr "Nombre d'erreurs"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__message_needaction_counter
+#: model:ir.model.fields,help:quality.field_quality_alert_team__message_needaction_counter
+#: model:ir.model.fields,help:quality.field_quality_check__message_needaction_counter
+#: model:ir.model.fields,help:quality.field_quality_point__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Nombre de messages nécessitant une action"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__message_has_error_counter
+#: model:ir.model.fields,help:quality.field_quality_alert_team__message_has_error_counter
+#: model:ir.model.fields,help:quality.field_quality_check__message_has_error_counter
+#: model:ir.model.fields,help:quality.field_quality_point__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Nombre de messages avec des erreurs d'envoi"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_point__picking_type_ids
+msgid "Operation Types"
+msgstr "Types d'opérations"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_form
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_tree
+msgid "Operations"
+msgstr "Opérations"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_force_thread_id
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr ""
+"ID optionnel d'un fil (enregistrement) auquel tout message entrant sera "
+"rattaché, même s'il ne s'agissait pas d'une réponse à ce fil. Si renseigné, "
+"la création de nouveaux enregistrements sera complètement désactivée."
+
+#. module: quality
+#: model:quality.reason,name:quality.reason_other
+msgid "Others"
+msgstr "Autres"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_parent_model_id
+msgid "Parent Model"
+msgstr "Modèle parent"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_parent_thread_id
+msgid "Parent Record Thread ID"
+msgstr "Identifiant de la discussion de l'enregistrement parent"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_parent_model_id
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"Modèle parent de l'alias. Le modèle possédant la référence de l'alias n'est "
+"pas nécessairement le modèle donné par alias_model_id (exemple : project "
+"(parent_model) et task (model))"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__partner_id
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: quality
+#: model:quality.reason,name:quality.reason_parts
+msgid "Parts Quality"
+msgstr "Qualité des composants"
+
+#. module: quality
+#: model:ir.model.fields.selection,name:quality.selection__quality_check__quality_state__pass
+msgid "Passed"
+msgstr "Réussite"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__picking_id
+#: model:ir.model.fields,field_description:quality.field_quality_check__picking_id
+msgid "Picking"
+msgstr "Transfert"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__picture
+msgid "Picture"
+msgstr "Image"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
+"Politique de publication d'un message sur le document via la passerelle d'emails.\n"
+"- tout le monde : tout le monde peut publier\n"
+"- partenaires : seulement les partenaires authentifiés\n"
+"- abonnés : seulement les abonnés aux canaux suivis\n"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__action_preventive
+msgid "Preventive Action"
+msgstr "Action préventive"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__priority
+msgid "Priority"
+msgstr "Priorité"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__product_tmpl_id
+#: model:ir.model.fields,field_description:quality.field_quality_check__product_id
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Product"
+msgstr "Produit"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_point__product_category_ids
+msgid "Product Categories"
+msgstr "Catégories de produits"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__product_id
+msgid "Product Variant"
+msgstr "Variante de produit"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_point__product_ids
+msgid "Products"
+msgstr "Produits"
+
+#. module: quality
+#: model:ir.model,name:quality.model_quality_alert
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Quality Alert"
+msgstr "Alerte qualité"
+
+#. module: quality
+#: model:ir.model,name:quality.model_quality_alert_stage
+msgid "Quality Alert Stage"
+msgstr "Étape d'alerte qualité"
+
+#. module: quality
+#: model:ir.model,name:quality.model_quality_alert_team
+msgid "Quality Alert Team"
+msgstr "Équipe d'alerte qualité"
+
+#. module: quality
+#: model:ir.model,name:quality.model_quality_check
+msgid "Quality Check"
+msgstr "Contrôle qualité"
+
+#. module: quality
+#: model:ir.model,name:quality.model_quality_point
+msgid "Quality Control Point"
+msgstr "Point de contrôle qualité"
+
+#. module: quality
+#: model:ir.model,name:quality.model_quality_point_test_type
+msgid "Quality Control Test Type"
+msgstr "Type de test de contrôle qualité"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_point__product_category_ids
+msgid ""
+"Quality Point will apply to every Products in the selected Product "
+"Categories."
+msgstr ""
+"Le point de qualité s'appliquera à tous les produits des catégories de "
+"produits sélectionnées."
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_point__product_ids
+msgid "Quality Point will apply to every selected Products."
+msgstr "Le point de qualité s'appliquera à tous les produits sélectionnes. "
+
+#. module: quality
+#: model:ir.model,name:quality.model_quality_tag
+msgid "Quality Tag"
+msgstr "Étiquette de qualité"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Quality Team"
+msgstr "Équipe qualité"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__rating_ids
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__rating_ids
+#: model:ir.model.fields,field_description:quality.field_quality_check__rating_ids
+#: model:ir.model.fields,field_description:quality.field_quality_point__rating_ids
+msgid "Ratings"
+msgstr "Évaluations"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "ID de l'enregistrement du fil"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__name
+#: model:ir.model.fields,field_description:quality.field_quality_point__name
+msgid "Reference"
+msgstr "Référence"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__user_id
+#: model:ir.model.fields,field_description:quality.field_quality_check__user_id
+#: model:ir.model.fields,field_description:quality.field_quality_point__user_id
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Responsible"
+msgstr "Responsable"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__activity_user_id
+#: model:ir.model.fields,field_description:quality.field_quality_check__activity_user_id
+msgid "Responsible User"
+msgstr "Utilisateur responsable"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__reason_id
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Root Cause"
+msgstr "Cause première"
+
+#. module: quality
+#: model:ir.model,name:quality.model_quality_reason
+msgid "Root Cause for Quality Failure"
+msgstr "Cause première d'un échec qualité"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__message_has_sms_error
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__message_has_sms_error
+#: model:ir.model.fields,field_description:quality.field_quality_check__message_has_sms_error
+#: model:ir.model.fields,field_description:quality.field_quality_point__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Erreur d'envoi SMS"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__sequence
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__sequence
+#: model:ir.model.fields,field_description:quality.field_quality_point__sequence
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Montrez tous les enregistrements pour lesquels la date des prochaines "
+"actions est pour aujourd'hui ou avant. "
+
+#. module: quality
+#: model:quality.alert.stage,name:quality.quality_alert_stage_3
+msgid "Solved"
+msgstr "Résolu"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__stage_id
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Stage"
+msgstr "Étape"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__quality_state
+msgid "Status"
+msgstr "Statut"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__activity_state
+#: model:ir.model.fields,help:quality.field_quality_check__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Statut basé sur les activités\n"
+"En retard : la date d'échéance est déjà dépassée\n"
+"Aujourd'hui : la date d'activité est aujourd'hui\n"
+"Planifiée : activités futures"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_tag__name
+msgid "Tag Name"
+msgstr "Nom de l'étiquette"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__tag_ids
+msgid "Tags"
+msgstr "Étiquettes"
+
+#. module: quality
+#. odoo-javascript
+#: code:addons/quality/static/src/tablet_image_field/tablet_image_field.xml:0
+#, python-format
+msgid "Take a Picture"
+msgstr "Prendre une photo"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__team_id
+#: model:ir.model.fields,field_description:quality.field_quality_check__team_id
+#: model:ir.model.fields,field_description:quality.field_quality_point__team_id
+msgid "Team"
+msgstr "Équipe"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert_stage__team_ids
+msgid "Teams"
+msgstr "Équipes"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__test_type
+#: model:ir.model.fields,field_description:quality.field_quality_point__test_type
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__technical_name
+msgid "Technical name"
+msgstr "Nom technique"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__test_type_id
+#: model:ir.model.fields,field_description:quality.field_quality_point__test_type_id
+msgid "Test Type"
+msgstr "Type de test"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_model_id
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
+msgstr ""
+"Le modèle (type de document Odoo) auquel correspond cet alias. Chaque email "
+"entrant ne correspondant pas à un enregistrement existant entraînera la "
+"création d'un nouvel enregistrement de ce modèle (par ex. une tâche d'un "
+"projet)"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert_team__alias_name
+msgid ""
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
+msgstr ""
+"Le nom de l'alias, par exemple 'carrières' pour récupérer les emails de "
+"<carrières@example.odoo.com>"
+
+#. module: quality
+#: model:res.groups,comment:quality.group_quality_manager
+msgid "The quality manager manages the quality process"
+msgstr "Le responsable qualité gère le processus qualité"
+
+#. module: quality
+#: model:res.groups,comment:quality.group_quality_user
+msgid "The quality user uses the quality process"
+msgstr "L'utilisateur qualité utilise le processus qualité"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_check__title
+#: model:ir.model.fields,field_description:quality.field_quality_point__title
+msgid "Title"
+msgstr "Titre"
+
+#. module: quality
+#: model:ir.model.fields.selection,name:quality.selection__quality_check__quality_state__none
+msgid "To do"
+msgstr "À faire"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_alert_view_search
+msgid "Today Activities"
+msgstr "Activités du jour"
+
+#. module: quality
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_form
+#: model_terms:ir.ui.view,arch_db:quality.quality_point_view_tree
+msgid "Type"
+msgstr "Type"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__activity_exception_decoration
+#: model:ir.model.fields,help:quality.field_quality_check__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Type d'activité d'exception enregistrée."
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_tag__color
+msgid "Used in the kanban view"
+msgstr "Utilisé dans la vue Kanban"
+
+#. module: quality
+#: model:res.groups,name:quality.group_quality_user
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__partner_id
+msgid "Vendor"
+msgstr "Fournisseur"
+
+#. module: quality
+#: model:ir.model.fields.selection,name:quality.selection__quality_alert__priority__3
+msgid "Very High"
+msgstr "Très élevé"
+
+#. module: quality
+#. odoo-javascript
+#: code:addons/quality/static/src/tablet_image_field/tablet_image_field.xml:0
+#, python-format
+msgid "Viewer"
+msgstr "Visionneur"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_alert__website_message_ids
+#: model:ir.model.fields,field_description:quality.field_quality_alert_team__website_message_ids
+#: model:ir.model.fields,field_description:quality.field_quality_check__website_message_ids
+#: model:ir.model.fields,field_description:quality.field_quality_point__website_message_ids
+msgid "Website Messages"
+msgstr "Messages du site web"
+
+#. module: quality
+#: model:ir.model.fields,help:quality.field_quality_alert__website_message_ids
+#: model:ir.model.fields,help:quality.field_quality_alert_team__website_message_ids
+#: model:ir.model.fields,help:quality.field_quality_check__website_message_ids
+#: model:ir.model.fields,help:quality.field_quality_point__website_message_ids
+msgid "Website communication history"
+msgstr "Historique de communication du site web"
+
+#. module: quality
+#: model:quality.reason,name:quality.reason_wo
+msgid "Work Operation"
+msgstr "Opération de travail"
+
+#. module: quality
+#: model:quality.reason,name:quality.reason_workcenter
+msgid "Workcenter Failure"
+msgstr "Défaillance du poste de charge"
+
+#. module: quality
+#: model:ir.model.fields,field_description:quality.field_quality_point_test_type__active
+msgid "active"
+msgstr "actif"

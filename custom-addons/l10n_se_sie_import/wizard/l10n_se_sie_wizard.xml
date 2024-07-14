@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_open_load_sie" model="ir.actions.act_window">
+            <field name="name">Load SIE file</field>
+            <field name="res_model">l10n_se.sie.import.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="sie_import_view_form" model="ir.ui.view">
+            <field name="name">l10n_se.sie.import.wizard.form</field>
+            <field name="model">l10n_se.sie.import.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Import accounting data to SIE">
+                    <header string="Include for import"/>
+                    <group>
+                        <field name="attachment_id" colspan="2"/>
+                        <field name="include_embedded_documents" colspan="2"/>
+                    </group>
+                    <footer>
+                        <button name="action_import_sie" string="Import SIE file" type="object"
+                                class="btn-primary" data-hotkey="q"/>
+                        <button string="Close" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

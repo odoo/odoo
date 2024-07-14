@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_payment_view_search" model="ir.ui.view">
+        <field name="name">account.aba.credit.transfer.search</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='state_sent']" position="before">
+                <filter string="ABA Payments To Send" domain="[('payment_method_id.code', '=', 'aba_ct'), ('state','=','posted'), ('is_move_sent', '=', False), ('is_matched', '=', False)]" name="aba_to_send"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_payment_view_search_gb_ref" model="ir.ui.view">
+        <field name="name">account.payment.search</field>
+        <field name="model">account.payment</field>
+        <field name='inherit_id' ref="account.view_account_payment_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="." position="inside">
+                <filter string="Payment Reference" name="paymentreference" context="{'group_by': 'payment_reference'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

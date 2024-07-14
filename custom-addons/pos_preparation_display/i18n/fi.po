@@ -1,0 +1,520 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_preparation_display
+# 
+# Translators:
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Henri Komulainen <henri.komulainen@web-veistamo.fi>, 2023
+# Mikko Salmela <salmemik@gmail.com>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# a0002ef8927c0b0b9c58a7cc5f73028e_ba3d803 <aeb43a6499fcef2a5a423b3f4a45b153_32479>, 2023
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2023
+# Martin Trigaux, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Kim Asplund <kim.asplund@gmail.com>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "<span>Average time</span>"
+msgstr "<span>Keskimääräinen aika</span>"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "<span>In progress</span>"
+msgstr "<span>Valmistelussa</span>"
+
+#. module: pos_preparation_display
+#. odoo-python
+#: code:addons/pos_preparation_display/models/preparation_display.py:0
+#, python-format
+msgid "A preparation display must have a minimum of one step."
+msgstr "Valmisteenäytössä on oltava vähintään yksi vaihe."
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__access_token
+msgid "Access Token"
+msgstr "Pääsytunniste"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__alert_timer
+msgid "Alert timer (min)"
+msgstr "Hälytysajastin (min)"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/stages/stages.xml:0
+#, python-format
+msgid "All"
+msgstr "Kaikki"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+msgid "All PoS"
+msgstr "Kaikki kassat"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+msgid "All categories"
+msgstr "Kaikki kategoriat"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_order__order_stage_ids
+msgid "All the stage ids in which the order is placed"
+msgstr "Kaikkien vaiheiden tunnukset, joissa tilaus on tehty"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_reset_wizard
+msgid ""
+"Archive all preparation display's orders for a fresh start. This will not "
+"affect the PoS order history."
+msgstr ""
+"Arkistoi kaikki valmistelunäytön tilaukset uutta alkua varten. Tämä ei "
+"vaikuta PoS-tilaushistoriaan."
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_display__average_time
+msgid "Average time of all order that not in a done stage."
+msgstr ""
+"Keskimääräinen aika kaikkien niiden tilausten osalta, jotka eivät ole "
+"valmiissa vaiheessa."
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_reset_wizard
+msgid "Check products"
+msgstr "Valitse tuotteet"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Clear All Filters"
+msgstr "Tyhjennä kaikki suodattimet"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Close"
+msgstr "Sulje"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__color
+msgid "Color"
+msgstr "Väri"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__company_id
+msgid "Company"
+msgstr "Yritys"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "Configure"
+msgstr "Konfiguroi"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/order/order.xml:0
+#, python-format
+msgid "Delete"
+msgstr "Poista"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Delete All"
+msgstr "Poista kaikki"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_order__displayed
+msgid ""
+"Determines whether the order should be displayed on the preparation screen"
+msgstr "Määrittää, näytetäänkö tilaus valmisteluruudulla"
+
+#. module: pos_preparation_display
+#: model_terms:ir.actions.act_window,help:pos_preparation_display.action_preparation_display
+msgid ""
+"Different products and categories are sent to different tablets and screens."
+msgstr "Eri tuotteet ja luokat lähetetään eri tableteille ja näytöille."
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_reset_wizard
+msgid "Discard"
+msgstr "Hylkää"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Explore demo data"
+msgstr "Tutustu demotietoihin"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/override/point_of_sale/pos_store.js:0
+#, python-format
+msgid "Failed in sending the changes to preparation display"
+msgstr "Muutosten lähettäminen valmistelunäyttöön epäonnistui"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Filters"
+msgstr "Suotimet"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_order__pos_order_id
+msgid "ID of the original PoS order"
+msgstr "Alkuperäisen kassan tilauksen tunnus"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__internal_note
+msgid "Internal Note"
+msgstr "Sisäinen muistiinpano"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_orderline__internal_note
+msgid "Internal notes written at the time of the order"
+msgstr "Tilauksen tekohetkellä tehdyt sisäiset muistiinpanot"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__contains_bar_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_search
+msgid "Is a Bar/Restaurant"
+msgstr "On baari tai ravintola"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__done
+msgid "Is the order done"
+msgstr "Onko tilaus tehty"
+
+#. module: pos_preparation_display
+#: model:ir.actions.server,name:pos_preparation_display.action_pos_preparation_display_kitchen_display
+#: model:ir.ui.menu,name:pos_preparation_display.menu_point_kitchen_display_root
+msgid "Kitchen Display"
+msgstr "Keittiön näyttö"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Loading..."
+msgstr "Lataa..."
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__name
+msgid "Name"
+msgstr "Nimi"
+
+#. module: pos_preparation_display
+#: model_terms:ir.actions.act_window,help:pos_preparation_display.action_preparation_display
+msgid "Need a touchscreen interface to manage order ?"
+msgstr "Tarvitsetko kosketusnäytön käyttöliittymän tilauksen hallintaan ?"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "No data available."
+msgstr "Ei dataa saatavilla."
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+msgid "Offer"
+msgstr "Tarjous"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "Open Preparation Display"
+msgstr "Avaa valmistelunäyttö"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__order_id
+msgid "Order"
+msgstr "Tilaus"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__preparation_display_order_line_ids
+msgid "Order Lines"
+msgstr "Tilausrivit"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__order_stage_ids
+msgid "Order Stage"
+msgstr "Tilausvaihe"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__average_time
+msgid "Order average time"
+msgstr "Tilauksen keskimääräinen aika"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__order_count
+msgid "Order count"
+msgstr "Tilausmäärä"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__displayed
+msgid "Order is displayed"
+msgstr "Tilaus näytetään"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__pos_config_ids
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__pos_config_id
+msgid "Point of Sale"
+msgstr "Kassapääte"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Kassapäätteen tilaukset"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Kassapäätteen istunto"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_orderline
+msgid "Point of Sale preparation order line"
+msgstr "Kassan valmistelun tilausrivi"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_stage
+msgid "Point of Sale preparation stage"
+msgstr "Kassan valmisteluvaihe"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__pos_order_id
+msgid "Pos Order"
+msgstr "Kassatilaus"
+
+#. module: pos_preparation_display
+#: model:ir.actions.act_url,name:pos_preparation_display.action_pos_preparation_display_bar_restaurant_filter_link
+#: model:ir.actions.act_window,name:pos_preparation_display.action_preparation_display
+#: model:ir.actions.act_window,name:pos_preparation_display.action_preparation_display_bar_restaurant_filter
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__preparation_display_id
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_search
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_tree
+msgid "Preparation Display"
+msgstr "Kassa Valmistelunäyttö"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__preparation_display_order_id
+msgid "Preparation Display Order"
+msgstr "Valmistelun tilauksen näyttö"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__preparation_display_id
+msgid "Preparation display"
+msgstr "Valmistelun näyttö"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_order
+msgid "Preparation orders"
+msgstr "Valmistelun tilaukset"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__product_id
+msgid "Product ID"
+msgstr "Tuotteen ID"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__category_ids
+msgid "Product categories"
+msgstr "Tuoteryhmät"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_display__category_ids
+msgid "Product categories that will be displayed on this screen."
+msgstr "Tuoteryhmät, jotka näytetään tällä näytöllä."
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__product_cancelled
+msgid "Quantity of cancelled product"
+msgstr "Peruutetun tuotteen määrä"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__product_quantity
+msgid "Quantity of ordered product"
+msgstr "Tilattujen tuotteiden määrä"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Recall"
+msgstr "Palauta"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/order/order.xml:0
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_reset_wizard
+#, python-format
+msgid "Reset"
+msgstr "Palauta"
+
+#. module: pos_preparation_display
+#. odoo-python
+#: code:addons/pos_preparation_display/models/preparation_display.py:0
+#, python-format
+msgid "Reset Preparation Display"
+msgstr "Valmistelunäytön nollaus"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_reset_wizard
+msgid "Reset all current order in a preparation display"
+msgstr "Nollaa kaikki nykyiset tilaukset valmistelunäytössä"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "Reset all orders"
+msgstr "Nollaa kaikki tilaukset"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__attribute_value_ids
+msgid "Selected Attributes"
+msgstr "Valitut ominaisuudet"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/override/point_of_sale/pos_store.js:0
+#, python-format
+msgid "Send failed"
+msgstr "Lähetys epäonnistui"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__sequence
+msgid "Sequence"
+msgstr "Järjestys"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__stage_id
+msgid "Stage"
+msgstr "Vaihe"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_order_stage
+msgid "Stage of orders by preparation display"
+msgstr "Tilausten vaihe valmistusnäytön mukaan"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__stage_ids
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+msgid "Stages"
+msgstr "Vaiheet"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__todo
+msgid "Status of the orderline"
+msgstr "Tilausrivin tila"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_orderline__todo
+msgid "The status of a command line, todo or not"
+msgstr "Komentorivin tila, tehdäänkö vai ei"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_stage__alert_timer
+msgid "Timer after which the order will be highlighted"
+msgstr "Ajastin, jonka jälkeen tilaus korostetaan"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "or simply wait for orders to be sent for preparation."
+msgstr "tai vain odota, että tilaukset lähetetään valmistelua varten."
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/order/order.xml:0
+#, python-format
+msgid "products"
+msgstr "tuotteet"

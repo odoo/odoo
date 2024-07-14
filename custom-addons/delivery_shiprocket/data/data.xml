@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="product_product_delivery_shiprocket" model="product.product">
+            <field name="name">ShipRocket</field>
+            <field name="default_code">ShipRocket</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="delivery.product_category_deliveries"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0.0</field>
+            <field name="taxes_id" eval='[(5,)]'/>  <!-- no taxes -->
+        </record>
+
+        <record id="shiprocket_packaging_box_500g" model="stock.package.type">
+            <field name="name">Shiprocket 500GM</field>
+            <field name="shipper_package_code">SHPR500GM</field>
+            <field name="package_carrier_type">shiprocket</field>
+            <field name="packaging_length">5</field>
+            <field name="width">5</field>
+            <field name="height">5</field>
+            <field name="max_weight">0.5</field>
+        </record>
+
+        <record id="shiprocket_packaging_box_1kg" model="stock.package.type">
+            <field name="name">Shiprocket 1KG</field>
+            <field name="shipper_package_code">SHPR1KG</field>
+            <field name="package_carrier_type">shiprocket</field>
+            <field name="packaging_length">10</field>
+            <field name="width">10</field>
+            <field name="height">10</field>
+            <field name="max_weight">1</field>
+        </record>
+
+        <record id="shiprocket_packaging_box_2kg" model="stock.package.type">
+            <field name="name">Shiprocket 2KG</field>
+            <field name="shipper_package_code">SHPR2KG</field>
+            <field name="package_carrier_type">shiprocket</field>
+            <field name="packaging_length">20</field>
+            <field name="width">20</field>
+            <field name="height">20</field>
+            <field name="max_weight">2</field>
+        </record>
+
+        <record id="shiprocket_packaging_box_5kg" model="stock.package.type">
+            <field name="name">Shiprocket 5KG</field>
+            <field name="shipper_package_code">SHPR5KG</field>
+            <field name="package_carrier_type">shiprocket</field>
+            <field name="packaging_length">40</field>
+            <field name="width">40</field>
+            <field name="height">40</field>
+            <field name="max_weight">5</field>
+        </record>
+
+        <record id="shiprocket_packaging_box_10kg" model="stock.package.type">
+            <field name="name">Shiprocket 10KG</field>
+            <field name="shipper_package_code">SHPR10KG</field>
+            <field name="package_carrier_type">shiprocket</field>
+            <field name="packaging_length">80</field>
+            <field name="width">80</field>
+            <field name="height">80</field>
+            <field name="max_weight">10</field>
+        </record>
+
+        <record id="delivery_carrier_shiprocket" model="delivery.carrier">
+            <field name="name">ShipRocket Domestic</field>
+            <field name="product_id" ref="delivery_shiprocket.product_product_delivery_shiprocket"/>
+            <field name="delivery_type">shiprocket</field>
+            <field name="country_ids" eval="[(6, 0, [ref('base.in')])]"/>
+            <field name="shiprocket_default_package_type_id" ref="delivery_shiprocket.shiprocket_packaging_box_500g"/>
+        </record>
+
+    </data>
+</odoo>

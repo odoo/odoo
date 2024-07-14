@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- GENERATE JOURNALS FOR CONSOLIDATION -->
+        <function model="consolidation.period" name="action_generate_journals">
+            <value eval="[ref('first_period'), ref('second_period')]"/>
+        </function>
+    </data>
+</odoo>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form view: -->
+    <record id="knowledge_article_view_form" model="ir.ui.view">
+        <field name="name">knowledge.article.view.form.inherit.website</field>
+        <field name="model">knowledge.article</field>
+        <field name="inherit_id" ref="knowledge.knowledge_article_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form" position="inside">
+                <field name="website_published" invisible="1"/>
+                <field name="article_url" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- List view: -->
+    <record id="knowledge_article_view_tree" model="ir.ui.view">
+        <field name="name">knowledge.article.view.tree.inherit.website</field>
+        <field name="model">knowledge.article</field>
+        <field name="inherit_id" ref="knowledge.knowledge_article_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="last_edition_date" position="after">
+                <field name="website_published" string="Is Published" optional="hide"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="dashboard_accounting" model="spreadsheet.dashboard">
+        <field name="name">Accounting</field>
+        <field name="spreadsheet_binary_data" type="base64" file="spreadsheet_dashboard_account_accountant/data/files/accounting_dashboard.json"/>
+        <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_finance"/>
+        <field name="group_ids" eval="[Command.link(ref('account.group_account_readonly')), Command.link(ref('account.group_account_invoice'))]"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="dashboard_benchmark" model="spreadsheet.dashboard">
+        <field name="name">Benchmark</field>
+        <field name="spreadsheet_binary_data" type="base64" file="spreadsheet_dashboard_account_accountant/data/files/benchmark_dashboard.json"/>
+        <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_finance"/>
+        <field name="group_ids" eval="[Command.link(ref('account.group_account_readonly')), Command.link(ref('account.group_account_invoice'))]"/>
+        <field name="sequence">30</field>
+    </record>
+
+</odoo>

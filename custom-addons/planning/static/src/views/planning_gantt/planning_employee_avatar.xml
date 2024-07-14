@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="planning.PlanningEmployeeAvatar" t-inherit="mail.Avatar">
+        <xpath expr="//span[@t-esc='props.displayName']" position="attributes">
+            <attribute name="t-ref">displayName</attribute>
+        </xpath>
+    </t>
+
+</templates>

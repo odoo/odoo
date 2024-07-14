@@ -1,0 +1,648 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_budget
+# 
+# Translators:
+# Dávid Kováč, 2023
+# Wil Odoo, 2023
+# Tomáš Píšek, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Tomáš Píšek, 2024\n"
+"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/account_budget.py:0
+#, python-format
+msgid ""
+"\"End Date\" of the budget line should be included in the Period of the "
+"budget"
+msgstr ""
+"„Dátum ukončenia“ rozpočtového riadku by mal byť zahrnutý do rozpočtového "
+"obdobia"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/account_budget.py:0
+#, python-format
+msgid ""
+"\"Start Date\" of the budget line should be included in the Period of the "
+"budget"
+msgstr ""
+"„Dátum začatia“ rozpočtového riadku by mal byť zahrnutý do rozpočtového "
+"obdobia"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_kanban
+msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Period\"/>"
+msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Period\"/>"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
+msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+msgid "<span class=\"o_stat_text\">Budget</span>"
+msgstr "<span class=\"o_stat_text\">Rozpočet</span>"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__account_ids
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_post_form
+msgid "Accounts"
+msgstr "Účty"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__percentage
+msgid "Achievement"
+msgstr "Dosiahnutie"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_needaction
+msgid "Action Needed"
+msgstr "Potrebná akcia"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_ids
+msgid "Activities"
+msgstr "Aktivity"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Označenie výnimky v aktivite"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_state
+msgid "Activity State"
+msgstr "Stav aktivity"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikona typu aktivity"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget_lines__practical_amount
+msgid "Amount really earned/spent."
+msgstr "Suma skutočne zarobená / minutá."
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget_lines__theoritical_amount
+msgid "Amount you are supposed to have earned/spent at this date."
+msgstr "Suma, ktorú ste pravdepodobne zarobili / minuli k tomuto dátumu."
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget_lines__planned_amount
+msgid ""
+"Amount you plan to earn/spend. Record a positive amount if it is a revenue "
+"and a negative amount if it is a cost."
+msgstr ""
+"Suma, ktorú plánujete zarobiť / minúť. Zaznamenajte kladnú čiastku, ak ide o"
+" výnos, a zápornú čiastku, ak ide o náklad."
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_account_analytic_account
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__analytic_account_id
+msgid "Analytic Account"
+msgstr "Analytický účet"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__analytic_plan_id
+msgid "Analytic Plan"
+msgstr "Analytický plán"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Approve"
+msgstr "Schváliť"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_attachment_count
+msgid "Attachment Count"
+msgstr "Počet príloh"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_crossovered_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__crossovered_budget_id
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_tree
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Budget"
+msgstr "Rozpočet"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.act_account_analytic_account_cb_lines
+#: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+msgid "Budget Items"
+msgstr "Položky rozpočtu"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_crossovered_budget_lines
+msgid "Budget Line"
+msgstr "Riadok rozpočtu"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_analytic_account__crossovered_budget_line
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__crossovered_budget_line
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_tree
+msgid "Budget Lines"
+msgstr "Rozpočtové riadky"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__name
+msgid "Budget Name"
+msgstr "Názov rozpočtu"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__crossovered_budget_state
+msgid "Budget State"
+msgstr "Štát rozpočtu"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_account_budget_post
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__general_budget_id
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_post_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_post_search
+#: model_terms:ir.ui.view,arch_db:account_budget.view_budget_post_tree
+msgid "Budgetary Position"
+msgstr "Rozpočtová pozícia"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.open_budget_post_form
+#: model:ir.ui.menu,name:account_budget.menu_budget_post_form
+msgid "Budgetary Positions"
+msgstr "Rozpočtové pozície"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
+#: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+msgid "Budgets"
+msgstr "Rozpočty"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
+#: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
+msgid "Budgets Analysis"
+msgstr "Plnenie rozpočtu"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Cancel Budget"
+msgstr "Zrušiť rozpočet"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__crossovered_budget__state__cancel
+msgid "Cancelled"
+msgstr "Zrušené"
+
+#. module: account_budget
+#: model_terms:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid "Click to create a new budget."
+msgstr "Kliknite pre vytvorenie nového rozpočtu."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__company_id
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__company_id
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__company_id
+msgid "Company"
+msgstr "Spoločnosť"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget_lines__percentage
+msgid ""
+"Comparison between practical and theoretical amount. This measure tells you "
+"if you are below or over budget."
+msgstr ""
+"Porovnanie skutočnej a teoretickej sumy. Toto opatrenie vám povie, či ste "
+"pod alebo nad rozpočtom."
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Confirm"
+msgstr "Potvrdiť"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__crossovered_budget__state__confirm
+msgid "Confirmed"
+msgstr "Potvrdený"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__create_uid
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__create_uid
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__create_uid
+msgid "Created by"
+msgstr "Vytvoril"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__create_date
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__create_date
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__create_date
+msgid "Created on"
+msgstr "Vytvorené"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__currency_id
+msgid "Currency"
+msgstr "Mena"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+msgid "Date"
+msgstr "Dátum"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__display_name
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__display_name
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__display_name
+msgid "Display Name"
+msgstr "Zobrazovaný názov"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__crossovered_budget__state__done
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Done"
+msgstr "Hotové"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__crossovered_budget__state__draft
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Draft"
+msgstr "Návrh"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Draft Budgets"
+msgstr "Koncept rozpočtov"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__date_to
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__date_to
+msgid "End Date"
+msgstr "Dátum ukončenia"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Entries..."
+msgstr "Príspevky ..."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_follower_ids
+msgid "Followers"
+msgstr "Odberatelia"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Odberatelia (partneri)"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Úžasná ikona fronty napr. fa-tasks"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "From"
+msgstr "Od"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Future Activities"
+msgstr "Budúce aktivity"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+msgid "Group By"
+msgstr "Zoskupiť podľa"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__has_message
+msgid "Has Message"
+msgstr "Má správu"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__id
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__id
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_exception_icon
+msgid "Icon"
+msgstr "Ikona"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikona indikujúca výnimočnú aktivitu."
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ak označené, potom nové správy vyžadujú vašu pozornosť."
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_has_error
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Ak označené, potom majú niektoré správy chybu dodania."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__is_above_budget
+msgid "Is Above Budget"
+msgstr "Je nad rozpočtom"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_is_follower
+msgid "Is Follower"
+msgstr "Odberateľ"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__write_uid
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__write_uid
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__write_uid
+msgid "Last Updated by"
+msgstr "Naposledy upravoval"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__write_date
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__write_date
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__write_date
+msgid "Last Updated on"
+msgstr "Naposledy upravované"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Late Activities"
+msgstr "Omeškané aktivity"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_has_error
+msgid "Message Delivery error"
+msgstr "Chyba zobrazovania správ"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_ids
+msgid "Messages"
+msgstr "Správy"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Termín mojej aktivity"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post__name
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__name
+msgid "Name"
+msgstr "Meno"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Kalendár ďalších aktivít eventu"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Ďalší konečný termín aktivity"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_summary
+msgid "Next Activity Summary"
+msgstr "Zhrnutie ďalšej aktivity"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_type_id
+msgid "Next Activity Type"
+msgstr "Typ ďalšej aktivity"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+msgid "Not Cancelled"
+msgstr "Nie je zrušené"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Počet akcií"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_has_error_counter
+msgid "Number of errors"
+msgstr "Počet chýb"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Počet správ, ktoré vyžadujú akciu"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Počet doručených správ s chybou"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__paid_date
+msgid "Paid Date"
+msgstr "Dátum platenia"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Period"
+msgstr "Obdobie"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__planned_amount
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Planned Amount"
+msgstr "Plánované množstvo"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+msgid "Planned amount"
+msgstr "Plánovaná suma"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__practical_amount
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+msgid "Practical Amount"
+msgstr "Skutočná čiastka"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+msgid "Practical amount"
+msgstr "Skutočná čiastka"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__rating_ids
+msgid "Ratings"
+msgstr "Hodnotenia"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Reset to Draft"
+msgstr "Obnoviť návrh"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__user_id
+msgid "Responsible"
+msgstr "Zodpovedný"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__activity_user_id
+msgid "Responsible User"
+msgstr "Zodpovedný užívateľ"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Chyba doručenia SMS"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Show all records which has next action date is before today"
+msgstr "Zobraz všetky záznamy, ktorých následná aktivita je pred dnešným dňom"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__date_from
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__date_from
+msgid "Start Date"
+msgstr "Dátum začiatku"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__state
+msgid "Status"
+msgstr "Stav"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status založený na aktivitách\n"
+"Zmeškané: dátum už vypršal\n"
+"Dnes: dátum aktivity je dnes\n"
+"Plán: budúce aktivity"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/account_budget.py:0
+#, python-format
+msgid "The budget must have at least one account."
+msgstr "Rozpočet musí mať minimálne jeden účet."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines__theoritical_amount
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model_terms:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+msgid "Theoretical Amount"
+msgstr "Teoretické množstvo"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_graph
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_pivot
+msgid "Theoretical amount"
+msgstr "Teoretická suma"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "To"
+msgstr "Do"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "To Approve"
+msgstr "Na schválenie"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "To Approve Budgets"
+msgstr "Na schválenie rozpočtov"
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Today Activities"
+msgstr "Dnešné aktivity"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_analytic_account__total_planned_amount
+msgid "Total Planned Amount"
+msgstr "Celková plánovaná čiastka"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_analytic_account__total_practical_amount
+msgid "Total Practical Amount"
+msgstr "Celková skutočná čiastka"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Typ výnimočnej aktivity v zázname."
+
+#. module: account_budget
+#: model_terms:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid "Use budgets to compare actual with expected revenues and costs"
+msgstr ""
+"Použite rozpočty na porovnanie skutočných a očakávaných príjmov a nákladov"
+
+#. module: account_budget
+#: model:ir.model.fields.selection,name:account_budget.selection__crossovered_budget__state__validate
+msgid "Validated"
+msgstr "Schválený"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget__website_message_ids
+msgid "Website Messages"
+msgstr "Správy webstránok"
+
+#. module: account_budget
+#: model:ir.model.fields,help:account_budget.field_crossovered_budget__website_message_ids
+msgid "Website communication history"
+msgstr "História komunikácie webstránok"
+
+#. module: account_budget
+#. odoo-python
+#: code:addons/account_budget/models/account_budget.py:0
+#, python-format
+msgid ""
+"You have to enter at least a budgetary position or analytic account on a "
+"budget line."
+msgstr ""
+"Do rozpočtového riadku musíte zadať aspoň rozpočtovú pozíciu alebo "
+"analytický účet."
+
+#. module: account_budget
+#: model_terms:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "e.g. Budget 2023: Optimistic"
+msgstr "napr. Rozpočet 2023: optimistický"

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="datev_export_metadata">
+            <archive xmlns="http://xml.datev.de/bedi/tps/document/v06.0"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xsi:schemaLocation="http://xml.datev.de/bedi/tps/document/v06.0 Document_v060.xsd"
+                     version="6.0"
+                     generatingSystem="Odoo">
+                <header>
+                    <date t-out="date"/>
+                </header>
+                <content>
+                    <document t-foreach="documents" t-as="doc" t-att-guid="doc['guid']" t-att-processID="1" t-att-type="doc['type']">
+                        <extension xsi:type="File" t-att-name="doc['filename']"/>
+                    </document>
+                </content>
+            </archive>
+        </template>
+    </data>
+</odoo>

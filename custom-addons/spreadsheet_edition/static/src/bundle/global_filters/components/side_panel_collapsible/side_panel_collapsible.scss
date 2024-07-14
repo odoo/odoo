@@ -1,0 +1,17 @@
+
+.o_side_panel_collapsible_title {
+    font-size: 16px;
+    padding: 10px 0px;
+    font-weight: bold;
+    cursor: pointer;
+
+    .fa-angle-down{
+        font-size: 20px;
+        transition: transform 0.35s ease-in-out;
+        transform: rotate(0);
+    }
+
+    &[aria-expanded="false"] .fa-angle-down{
+        transform: rotate(-90deg);
+    }
+}

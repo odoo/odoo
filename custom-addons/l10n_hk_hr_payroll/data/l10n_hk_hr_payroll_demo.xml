@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- COMPANY -->
+    <record id="demo_company_hk" model="res.company">
+        <field name="name">My Hong Kong Company</field>
+        <field name="country_id" ref="base.hk"/>
+        <field name="currency_id" ref="base.HKD"/>
+        <field name="resource_calendar_id" ref="calendar_hk" />
+    </record>
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('l10n_hk_hr_payroll.demo_company_hk'))]"/>
+    </record>
+    <record id="base.user_demo" model="res.users">
+        <field name="company_ids" eval="[(4, ref('l10n_hk_hr_payroll.demo_company_hk'))]"/>
+    </record>
+    <record id="l10n_hk_hr_payroll.structure_type_employee_cap57" model="hr.payroll.structure.type">
+        <field name="default_resource_calendar_id" ref="calendar_hk" />
+    </record>
+    <record id="l10n_hk_hr_payroll.calendar_hk" model="resource.calendar">
+        <field name="company_id" ref="demo_company_hk" />
+    </record>
+
+    <!-- EMPLOYEE -->
+    <record id="demo_user_hk" model="res.users">
+        <field name="name">HK User</field>
+        <field name="login">test@test.com</field>
+        <field name="password">test@test.com</field>
+        <field name="company_ids" eval="[(4, ref('l10n_hk_hr_payroll.demo_company_hk'))]"/>
+        <field name="company_id" ref="demo_company_hk"/>
+        <field name="email">test@test.com</field>
+        <field name="tz">Asia/Hong_Kong</field>
+    </record>
+    <record id="demo_employee_hk" model="hr.employee">
+        <field name="name">Employee HK</field>
+        <field name="user_id" ref="demo_user_hk" />
+        <field name="company_id" ref="demo_company_hk"/>
+        <field name="resource_calendar_id" ref="calendar_hk"/>
+    </record>
+    <record id="demo_contract_hk" model="hr.contract">
+        <field name="name">Demo Contract HK</field>
+        <field name="date_start" eval="time.strftime('%Y-01-01')"/>
+        <field name="date_end" eval="time.strftime('%Y-12-31')"/>
+        <field name="wage">25000</field>
+        <field name="hr_responsible_id" ref="demo_user_hk" />
+        <field name="employee_id" ref="demo_employee_hk" />
+        <field name="company_id" ref="demo_company_hk"/>
+        <field name="resource_calendar_id" ref="calendar_hk"/>
+        <field name="structure_type_id" ref="structure_type_employee_cap57" />
+        <field name="state">open</field>
+    </record>
+    <record id="demo_rental_hk" model="l10n_hk.rental">
+        <field name="name">Demo Rental HK</field>
+        <field name="employee_id" ref="demo_employee_hk" />
+        <field name="company_id" ref="demo_company_hk" />
+        <field name="state">open</field>
+        <field name="date_start" eval="time.strftime('%Y-01-01')" />
+        <field name="amount">8000</field>
+        <field name="nature">flat</field>
+        <field name="address">1, Hong Kong Street</field>
+    </record>
+
+    <!-- PUBLIC HOLIDAYS -->
+    <record id="demo_public_holiday" model="resource.calendar.leaves">
+        <field name="name">The first day of January</field>
+        <field name="company_id" ref="demo_company_hk" />
+        <field name="calendar_id" ref="calendar_hk"/>
+        <field name="date_from" eval="time.strftime('%Y-01-01 07:00:00')" />
+        <field name="date_to" eval="time.strftime('%Y-01-01 16:00:00')" />
+        <field name="work_entry_type_id" ref="work_entry_type_statutory_holiday" />
+    </record>
+
+    <!-- LEAVES -->
+    <record id="demo_leave_allocation" model="hr.leave.allocation">
+        <field name="name">HK Paid Leaves Allocation</field>
+        <field name="holiday_status_id" ref="holiday_type_hk_annual_leave" />
+        <field name="number_of_days">20</field>
+        <field name="holiday_type">company</field>
+        <field name="mode_company_id" ref="demo_company_hk" />
+        <field name="date_from" eval="time.strftime('%Y-01-01')" />
+        <field name="date_to" eval="time.strftime('%Y-12-31')"/>
+    </record>
+    <record id="demo_unpaid_leave" model="hr.leave">
+        <field name="holiday_type">employee</field>
+        <field name="employee_id" ref="demo_employee_hk" />
+        <field name="request_date_from" eval="time.strftime('%Y-01-14')" />
+        <field name="request_date_to" eval="time.strftime('%Y-01-17')"/>
+        <field name="holiday_status_id" ref="holiday_type_hk_unpaid_leave" />
+    </record>
+    <record id="demo_annual_leave" model="hr.leave">
+        <field name="holiday_type">employee</field>
+        <field name="employee_id" ref="demo_employee_hk" />
+        <field name="request_date_from" eval="time.strftime('%Y-02-11')" />
+        <field name="request_date_to" eval="time.strftime('%Y-02-15')"/>
+        <field name="holiday_status_id" ref="holiday_type_hk_annual_leave" />
+    </record>
+
+    <!-- PAYSLIPS -->
+    <record id="demo_payslips_batch" model="hr.payslip.run">
+        <field name="name">Demo Batch</field>
+        <field name="company_id" ref="demo_company_hk" />
+        <field name="date_start" eval="time.strftime('%Y-01-01')" />
+        <field name="date_end" eval="time.strftime('%Y-12-31')" />
+    </record>
+    <record id="demo_payslip_1" model="hr.payslip">
+        <field name="employee_id" ref="demo_employee_hk" />
+        <field name="company_id" ref="demo_company_hk" />
+        <field name="payslip_run_id" ref="demo_payslips_batch" />
+        <field name="contract_id" ref="demo_contract_hk" />
+        <field name="date_from" eval="time.strftime('%Y-01-01')" />
+        <field name="date_to" eval="time.strftime('%Y-01-31')" />
+        <field name="name" eval="'Salary Slip - Employee HK - ' + time.strftime('January %Y')" />
+        <field name="input_line_ids" eval="[(5, 0, 0),
+            (0, 0, {'input_type_id': ref('l10n_hk_hr_payroll.input_commission'),'amount': 10489.81,}),
+        ]"/>
+    </record>
+    <record id="demo_payslip_2" model="hr.payslip">
+        <field name="employee_id" ref="demo_employee_hk" />
+        <field name="company_id" ref="demo_company_hk" />
+        <field name="payslip_run_id" ref="demo_payslips_batch" />
+        <field name="contract_id" ref="demo_contract_hk" />
+        <field name="date_from" eval="time.strftime('%Y-02-01')" />
+        <field name="date_to" eval="(datetime(datetime.now().year, 2, 1) + relativedelta(months=1, days=-1)).strftime('%Y-%m-%d')" />
+        <field name="name" eval="'Salary Slip - Employee HK - ' + time.strftime('February %Y')" />
+    </record>
+</odoo>

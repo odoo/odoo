@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.form</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract_salary.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(hr_contract_salary.generate_simulation_link_action)d']" position="before">
+                <field name="work_time_rate" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='%(hr_contract_salary.generate_simulation_link_action)d']" position="attributes">
+                <attribute name="invisible">not employee_id or country_code == 'BE' and time_credit and work_time_rate == 0</attribute>
+            </xpath>
+            <field name="image_1920" position="replace">
+                <field name="image_1920_filename" invisible="1"/>
+                <field name="image_1920" filename="image_1920_filename" class="oe_inline" widget="binaryContractFile"/>
+                <field name="id_card_filename" invisible="1"/>
+                <field name="id_card" class="oe_inline" filename="id_card_filename" widget="binaryContractFile"/>
+                <field name="driving_license_filename" invisible="1"/>
+                <field name="driving_license" filename="driving_license_filename" class="oe_inline" widget="binaryContractFile" invisible="not transport_mode_car"/>
+                <field name="mobile_invoice_filename" invisible="1"/>
+                <field name="mobile_invoice" class="oe_inline" filename="mobile_invoice_filename" widget="binaryContractFile" invisible="mobile == 0"/>
+                <field name="sim_card_filename" invisible="1"/>
+                <field name="sim_card" class="oe_inline" filename="sim_card_filename" widget="binaryContractFile" invisible="mobile == 0"/>
+                <field name="internet_invoice_filename" invisible="1"/>
+                <field name="internet_invoice" class="oe_inline" filename="internet_invoice_filename" widget="binaryContractFile" invisible="internet == 0"/>
+
+            </field>
+            <div name="div_wage_with_holidays" position="attributes">
+                <attribute name="invisible">holidays == 0.0 and l10n_be_group_insurance_rate == 0.0</attribute>
+            </div>
+            <label name="label_wage_with_holidays" position="attributes">
+                <attribute name="invisible">holidays == 0.0 and l10n_be_group_insurance_rate == 0.0</attribute>
+            </label>
+            <group name="transportation_right" position="inside">
+                <field name="has_bicycle"/>
+            </group>
+        </field>
+    </record>
+</odoo>

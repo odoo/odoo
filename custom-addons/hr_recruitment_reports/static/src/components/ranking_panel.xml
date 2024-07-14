@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="hr_recruitment_reports.RankingPanel">
+    <div>
+        <h3><span t-esc="props.ranked_list.title"/></h3>
+        <ol class="o_ranking_list">
+            <li class="o_ranking_item" t-foreach="props.ranked_list.ranking_list" t-as="ranked" t-key="ranked.name">
+                <span t-esc="ranked.name"/> (<span t-esc="ranked.score"/>)
+            </li>
+        </ol>
+    </div>
+</t>
+
+</templates>

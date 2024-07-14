@@ -1,0 +1,53 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* industry_fsm_sms
+# 
+# Translators:
+# Wil Odoo, 2023
+# Jolien De Paepe, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: industry_fsm_sms
+#: model:sms.template,name:industry_fsm_sms.sms_template_data_fsm_intervention
+msgid "Field Service: Intervention Planned"
+msgstr "Buitendienst : Interventie gepland"
+
+#. module: industry_fsm_sms
+#: model:sms.template,name:industry_fsm_sms.sms_template_data_fsm_onway
+msgid "Field Service: Our team is on its way to your location."
+msgstr "Buitendienst : Ons team is onderweg naar je locatie."
+
+#. module: industry_fsm_sms
+#: model:sms.template,body:industry_fsm_sms.sms_template_data_fsm_onway
+msgid "{{ object.company_id.name }}: We are on our way to your intervention."
+msgstr "{{ object.company_id.name }}: We zijn onderweg naar je interventie."
+
+#. module: industry_fsm_sms
+#: model:sms.template,body:industry_fsm_sms.sms_template_data_fsm_intervention
+msgid ""
+"{{ object.company_id.name }}: Your intervention is scheduled {{ 'from the ' "
+"+ format_datetime(object.planned_date_begin, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) + ' to the ' + "
+"format_datetime(object.date_deadline, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) if object.planned_date_begin and "
+"object.date_deadline else '' }}"
+msgstr ""
+"{{ object.company_id.name }}: Je interventie is gepland {{ 'van ' + "
+"format_datetime(object.planned_date_begin, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) + ' tot ' + "
+"format_datetime(object.date_deadline, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) if object.planned_date_begin and "
+"object.date_deadline else '' }}"

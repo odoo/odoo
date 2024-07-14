@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="ir_cron_clean_redundant_salary_data" model="ir.cron">
+            <field name="name">Archive/Delete redundant generated salary data</field>
+            <field name="model_id" ref="hr_contract.model_hr_contract"/>
+            <field name="state">code</field>
+            <field name="code">model._clean_redundant_salary_data()</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+
+        <record id="ir_cron_update_offer_state" model="ir.cron">
+            <field name="name">Salary Configurator: Update Offer State</field>
+            <field name="model_id" ref="hr_contract_salary.model_hr_contract_salary_offer"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_update_state()</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+    </data>
+</odoo>

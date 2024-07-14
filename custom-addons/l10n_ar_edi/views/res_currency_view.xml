@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_currency_form" model="ir.ui.view">
+        <field name="name">res.currency Form</field>
+        <field name="model">res.currency</field>
+        <field name="inherit_id" ref="l10n_ar.view_currency_form"/>
+        <field name="arch" type="xml">
+            <field name="l10n_ar_afip_code" position="replace">
+                <label for="l10n_ar_afip_code" invisible="'AR' not in fiscal_country_codes"/>
+                <div invisible="'AR' not in fiscal_country_codes">
+                    <field name="l10n_ar_afip_code" class="oe_inline"/>
+                    <button name="l10n_ar_action_get_afip_ws_currency_rate" string="⇒ Show latest AFIP Rate" type="object" invisible="not l10n_ar_afip_code" class="oe_link" help="This button let you view the last rate in AFIP for this currency. You can use this info to create manually your own rates in Odoo"/>
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>

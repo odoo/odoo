@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="hr_case_salesman0_mm" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_salesman0"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=27)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_salesman0_mtv1" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">Initial Qualification</field>
+        <field name="new_value_char">First Interview</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job1')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job2')"/>
+        <field name="mail_message_id" ref="hr_case_salesman0_mm"/>
+    </record>
+
+    <record id="hr_case_traineemca0_mm1" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_traineemca0"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=16)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_traineemca0_mtv1" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">Initial Qualification</field>
+        <field name="new_value_char">First Interview</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job1')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job2')"/>
+        <field name="mail_message_id" ref="hr_case_traineemca0_mm1"/>
+    </record>
+    <record id="hr_case_traineemca0_mm2" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_traineemca0"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=14)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_traineemca0_mtv2" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">First Interview</field>
+        <field name="new_value_char">Second Interview</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job2')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job3')"/>
+        <field name="mail_message_id" ref="hr_case_traineemca0_mm2"/>
+    </record>
+    <record id="hr_case_traineemca0_mm3" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_traineemca0"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=7)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_traineemca0_mtv3" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">Second Interview</field>
+        <field name="new_value_char">Contract Proposal</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job3')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job4')"/>
+        <field name="mail_message_id" ref="hr_case_traineemca0_mm3"/>
+    </record>
+
+    <record id="hr_case_traineemca1_mm1" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_traineemca1"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=60)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_traineemca1_mtv1" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">Initial Qualification</field>
+        <field name="new_value_char">First Interview</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job1')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job2')"/>
+        <field name="mail_message_id" ref="hr_case_traineemca1_mm1"/>
+    </record>
+    <record id="hr_case_traineemca1_mm2" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_traineemca1"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=54)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_traineemca1_mtv2" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">First Interview</field>
+        <field name="new_value_char">Second Interview</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job2')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job3')"/>
+        <field name="mail_message_id" ref="hr_case_traineemca1_mm2"/>
+    </record>
+    <record id="hr_case_traineemca1_mm3" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_traineemca1"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=45)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_traineemca1_mtv3" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">Second Interview</field>
+        <field name="new_value_char">Contract Proposal</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job3')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job4')"/>
+        <field name="mail_message_id" ref="hr_case_traineemca1_mm3"/>
+    </record>
+
+    <record id="hr_case_programmer_mm1" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_programmer"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=11)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_programmer_mtv1" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">Initial Qualification</field>
+        <field name="new_value_char">First Interview</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job1')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job2')"/>
+        <field name="mail_message_id" ref="hr_case_programmer_mm1"/>
+    </record>
+    <record id="hr_case_programmer_mm2" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_programmer"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=9)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_programmer_mtv2" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">First Interview</field>
+        <field name="new_value_char">Second Interview</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job2')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job3')"/>
+        <field name="mail_message_id" ref="hr_case_programmer_mm2"/>
+    </record>
+    <record id="hr_case_programmer_mm3" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_programmer"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=4)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_programmer_mtv3" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">Second Interview</field>
+        <field name="new_value_char">Contract Proposal</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job3')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job4')"/>
+        <field name="mail_message_id" ref="hr_case_programmer_mm3"/>
+    </record>
+
+    <record id="hr_case_marketingjob0_mm1" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_marketingjob0"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=30)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_marketingjob0_mtv1" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">Initial Qualification</field>
+        <field name="new_value_char">First Interview</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job1')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job2')"/>
+        <field name="mail_message_id" ref="hr_case_marketingjob0_mm1"/>
+    </record>
+    <record id="hr_case_marketingjob0_mm2" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_marketingjob0"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=24)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_marketingjob0_mtv2" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">First Interview</field>
+        <field name="new_value_char">Second Interview</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job2')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job3')"/>
+        <field name="mail_message_id" ref="hr_case_marketingjob0_mm2"/>
+    </record>
+    <record id="hr_case_marketingjob0_mm3" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_marketingjob0"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=20)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_marketingjob0_mtv3" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">Second Interview</field>
+        <field name="new_value_char">Contract Proposal</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job3')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job4')"/>
+        <field name="mail_message_id" ref="hr_case_marketingjob0_mm3"/>
+    </record>
+    <record id="hr_case_marketingjob0_mm4" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_marketingjob0"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=7)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_marketingjob0_mtv3" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">Contract Proposal</field>
+        <field name="new_value_char">Contract Signed</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job4')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job5')"/>
+        <field name="mail_message_id" ref="hr_case_marketingjob0_mm4"/>
+    </record>
+
+    <record id="hr_case_financejob1_mm1" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_financejob1"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=3)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_financejob1_mtv1" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">Initial Qualification</field>
+        <field name="new_value_char">First Interview</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job1')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job2')"/>
+        <field name="mail_message_id" ref="hr_case_financejob1_mm1"/>
+    </record>
+
+    <record id="hr_case_advertisement_mm1" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_advertisement"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=2)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_advertisement_mtv1" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">Initial Qualification</field>
+        <field name="new_value_char">First Interview</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job1')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job2')"/>
+        <field name="mail_message_id" ref="hr_case_advertisement_mm1"/>
+    </record>
+
+    <record id="hr_case_yrsexperienceinphp0_mm1" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_yrsexperienceinphp0"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=59)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_yrsexperienceinphp0_mtv1" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">Initial Qualification</field>
+        <field name="new_value_char">First Interview</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job1')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job2')"/>
+        <field name="mail_message_id" ref="hr_case_yrsexperienceinphp0_mm1"/>
+    </record>
+    <record id="hr_case_yrsexperienceinphp0_mm2" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_yrsexperienceinphp0"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=55)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_yrsexperienceinphp0_mtv2" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">First Interview</field>
+        <field name="new_value_char">Second Interview</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job2')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job3')"/>
+        <field name="mail_message_id" ref="hr_case_yrsexperienceinphp0_mm2"/>
+    </record>
+    <record id="hr_case_yrsexperienceinphp0_mm3" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_yrsexperienceinphp0"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=42)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_yrsexperienceinphp0_mtv3" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">Second Interview</field>
+        <field name="new_value_char">Contract Proposal</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job3')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job4')"/>
+        <field name="mail_message_id" ref="hr_case_yrsexperienceinphp0_mm3"/>
+    </record>
+    <record id="hr_case_yrsexperienceinphp0_mm4" model="mail.message">
+        <field name="model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_yrsexperienceinphp0"/>
+        <field name="message_type">notification</field>
+        <field name="date" eval="DateTime.now() - relativedelta(days=37)"/>
+        <field name="author_id" ref="base.partner_admin"/>
+    </record>
+    <record id="hr_case_yrsexperienceinphp0_mtv3" model="mail.tracking.value">
+        <field name="field_id" ref="hr_recruitment.field_hr_applicant__stage_id" />
+        <field name="old_value_char">Contract Proposal</field>
+        <field name="new_value_char">Contract Signed</field>
+        <field name="old_value_integer" eval="ref('hr_recruitment.stage_job4')"/>
+        <field name="new_value_integer" eval="ref('hr_recruitment.stage_job5')"/>
+        <field name="mail_message_id" ref="hr_case_yrsexperienceinphp0_mm4"/>
+    </record>
+</odoo>

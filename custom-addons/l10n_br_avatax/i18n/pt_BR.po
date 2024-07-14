@@ -1,0 +1,955 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_br_avatax
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-07-13 16:11+0000\n"
+"PO-Revision-Date: 2023-07-13 16:11+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+#. module: l10n_br_avatax
+#. odoo-python
+#: code:addons/l10n_br_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "%s has to use Brazilian Real to calculate taxes with Avatax."
+msgstr "%s deve usar Real para calcular impostos com Avatax."
+
+#. module: l10n_br_avatax
+#. odoo-python
+#: code:addons/l10n_br_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "- A product is required on each line when using Avatax."
+msgstr "- É necessário um produto em cada linha ao usar Avatax."
+
+#. module: l10n_br_avatax
+#. odoo-python
+#: code:addons/l10n_br_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "- Avatax Brazil doesn't support negative lines."
+msgstr "- O Avatax Brasil não suporta linhas negativas."
+
+#. module: l10n_br_avatax
+#. odoo-python
+#: code:addons/l10n_br_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "- Install the \"Brazilian Accounting EDI for services\" app to electronically invoice services."
+msgstr ""
+"Instale o aplicativo \"Brazilian Accounting EDI for services\" para faturar serviços eletronicamente."
+
+#. module: l10n_br_avatax
+#. odoo-python
+#: code:addons/l10n_br_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "- Please configure a Mercosul NCM Code on %s."
+msgstr "- Configure um Código NCM do Mercosul em %s."
+
+#. module: l10n_br_avatax
+#: model_terms:ir.ui.view,arch_db:l10n_br_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Create a new account\" role=\"img\" aria-label=\"Create a new "
+"account\" class=\"fa fa-plug fa-fw\"/>\n"
+"                                Create a new account"
+msgstr ""
+"<i title=\"Create a new account\" role=\"img\" aria-label=\"Create a new "
+"account\" class=\"fa fa-plug fa-fw\"/>\n"
+"                                Criar nova conta"
+
+#. module: l10n_br_avatax
+#: model_terms:ir.ui.view,arch_db:l10n_br_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Create account\" role=\"img\" aria-label=\"Create account\" "
+"class=\"fa fa-plug fa-fw\"/>\n"
+"                                Create account"
+msgstr ""
+"<i title=\"Create account\" role=\"img\" aria-label=\"Create account\" "
+"class=\"fa fa-plug fa-fw\"/>\n"
+"                                Criar conta"
+
+#. module: l10n_br_avatax
+#: model_terms:ir.ui.view,arch_db:l10n_br_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Show logs\" role=\"img\" aria-label=\"Show logs\" class=\"fa fa-"
+"file-text-o\"/>\n"
+"                            Show logs"
+msgstr ""
+"<i title=\"Show logs\" role=\"img\" aria-label=\"Show logs\" class=\"fa fa-"
+"file-text-o\"/>\n"
+"                            Exibir registros"
+
+#. module: l10n_br_avatax
+#: model_terms:ir.ui.view,arch_db:l10n_br_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Start logging for 30 minutes\" role=\"img\" aria-label=\"Start "
+"logging for 30 minutes\" class=\"fa fa-file-text-o\"/>\n"
+"                            Start logging for 30 minutes"
+msgstr ""
+"<i title=\"Start logging for 30 minutes\" role=\"img\" aria-label=\"Start "
+"logging for 30 minutes\" class=\"fa fa-file-text-o\"/>\n"
+"                            Iniciar criação de registros por 30 minutos"
+
+#. module: l10n_br_avatax
+#: model_terms:ir.ui.view,arch_db:l10n_br_avatax.res_config_settings_view_form
+msgid ""
+"<i title=\"Test connection\" role=\"img\" aria-label=\"Test connection\" "
+"class=\"fa fa-plug fa-fw\"/>\n"
+"                            Test connection"
+msgstr ""
+"<i title=\"Test connection\" role=\"img\" aria-label=\"Test connection\" "
+"class=\"fa fa-plug fa-fw\"/>\n"
+"                            Testar conexão"
+
+#. module: l10n_br_avatax
+#: model_terms:ir.ui.view,arch_db:l10n_br_avatax.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Transfer API credentials</span>"
+msgstr "<span class=\"o_form_label\">Transferir credenciais da API</span>"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,help:l10n_br_avatax.field_product_product__l10n_br_cest_code
+#: model:ir.model.fields,help:l10n_br_avatax.field_product_template__l10n_br_cest_code
+msgid ""
+"A tax classification code used to identify goods and products subject to tax "
+"substitution under ICMS regulations.It helps determine the applicable tax "
+"treatment and procedures for specific items.Check if your product is subject "
+"or not to this in https://www.codigocest.com.br/."
+msgstr ""
+"Um código de classificação fiscal usado para identificar bens e produtos "
+"sujeitos à substituição tributária sob as regulamentações do ICMS. Ele ajuda "
+"a determinar o tratamento e procedimentos fiscais aplicáveis para itens "
+"específicos. Verifique se o seu produto está sujeito ou não a isso em "
+"https://www.codigocest.com.br/."
+
+#. module: l10n_br_avatax
+#: model_terms:ir.ui.view,arch_db:l10n_br_avatax.res_config_settings_view_form
+msgid "API ID"
+msgstr "ID da API"
+
+#. module: l10n_br_avatax
+#: model_terms:ir.ui.view,arch_db:l10n_br_avatax.res_config_settings_view_form
+msgid "API Key"
+msgstr "Chave da API"
+
+#. module: l10n_br_avatax
+#: model:ir.model,name:l10n_br_avatax.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Modelo de plano da contas"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_use_type__agricultural_production
+msgid "Agricultural production"
+msgstr "Produção agrícola"
+
+#. module: l10n_br_avatax
+#: model_terms:ir.ui.view,arch_db:l10n_br_avatax.res_config_settings_view_form
+msgid "Automatically compute tax rates"
+msgstr "Calcular automaticamente as alíquotas de imposto"
+
+#. module: l10n_br_avatax
+#: model_terms:ir.ui.view,arch_db:l10n_br_avatax.res_config_settings_view_form
+msgid "AvaTax Brazil"
+msgstr "AvaTax Brasil"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_company__l10n_br_avatax_api_identifier
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_config_settings__l10n_br_avatax_api_identifier
+msgid "Avalara Brazil API ID"
+msgstr "ID de API da Avalara Brasil"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_company__l10n_br_avatax_api_key
+msgid "Avalara Brazil API KEY"
+msgstr "Chave de API da Avalara Brasil"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_config_settings__l10n_br_avatax_api_key
+msgid "Avalara Brazil API Key"
+msgstr "Chave de API da Avalara Brasil"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_company__l10n_br_avalara_environment
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_config_settings__l10n_br_avalara_environment
+msgid "Avalara Brazil Environment"
+msgstr "Ambiente Avalara Brasil"
+
+#. module: l10n_br_avatax
+#: model:ir.actions.act_window,name:l10n_br_avatax.ir_logging_avalara_action
+msgid "Avalara Logging"
+msgstr "Registros da Avalara"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_account_tax__l10n_br_avatax_code
+msgid "Avatax Code"
+msgstr "Código Avatax"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_company__l10n_br_avatax_portal_email
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_config_settings__l10n_br_avatax_portal_email
+#: model_terms:ir.ui.view,arch_db:l10n_br_avatax.res_config_settings_view_form
+msgid "Avatax Portal Email"
+msgstr "E-mail do portal Avatax"
+
+#. module: l10n_br_avatax
+#. odoo-python
+#: code:addons/l10n_br_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "Avatax requires at least one non-transport line."
+msgstr "O Avatax requer pelo menos uma linha de não transporte."
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,help:l10n_br_avatax.field_res_config_settings__l10n_br_tax_regime
+#: model:ir.model.fields,help:l10n_br_avatax.field_res_partner__l10n_br_tax_regime
+#: model:ir.model.fields,help:l10n_br_avatax.field_res_users__l10n_br_tax_regime
+msgid "Brazil: Contact FederalTax Regime"
+msgstr "Brasil: Regime de tributação federal do contato"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,help:l10n_br_avatax.field_product_product__l10n_br_sped_type
+#: model:ir.model.fields,help:l10n_br_avatax.field_product_template__l10n_br_sped_type
+msgid "Brazil: Fiscal product type according to SPED list table"
+msgstr "Brasil: Tipo de produto fiscal de acordo com a tabela da lista SPED"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,help:l10n_br_avatax.field_res_partner__l10n_br_activity_sector
+#: model:ir.model.fields,help:l10n_br_avatax.field_res_users__l10n_br_activity_sector
+msgid "Brazil: List of main Activity Sectors of the contact"
+msgstr "Brasil: Lista dos principais setores de atividade do contato"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,help:l10n_br_avatax.field_product_product__l10n_br_ncm_code_id
+#: model:ir.model.fields,help:l10n_br_avatax.field_product_template__l10n_br_ncm_code_id
+msgid ""
+"Brazil: NCM (Nomenclatura Comun do Mercosul) Code from the Mercosur List"
+msgstr ""
+"Brasil: Código NCM (Nomenclatura Comum do Mercosul) da Lista do Mercosul"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,help:l10n_br_avatax.field_product_product__l10n_br_source_origin
+#: model:ir.model.fields,help:l10n_br_avatax.field_product_template__l10n_br_source_origin
+msgid ""
+"Brazil: Product Source of Origin indicates if the product has a foreing or "
+"national origin with different variations and characteristics dependin on "
+"the product use case"
+msgstr ""
+"Brasil: 'Origem do produto' indica se o produto tem origem estrangeira ou "
+"nacional com diferentes variações e características, dependendo do caso de "
+"uso do produto"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,help:l10n_br_avatax.field_res_partner__l10n_br_taxpayer
+#: model:ir.model.fields,help:l10n_br_avatax.field_res_users__l10n_br_taxpayer
+msgid ""
+"Brazil: Taxpayer Type informs whether the contact is within the ICMS regime, "
+"if it is Exempt, or if it is a Non-Taxpayer"
+msgstr ""
+"Brasil: 'Tipo de contribuinte' informa se o contato está dentro do regime do "
+"ICMS, se é isento ou se é não contribuinte"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,help:l10n_br_avatax.field_product_product__l10n_br_use_type
+#: model:ir.model.fields,help:l10n_br_avatax.field_product_template__l10n_br_use_type
+msgid "Brazil: indicate what is the usage purpose for this product"
+msgstr "Brasil: indique qual é o propósito de uso deste produto"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,help:l10n_br_avatax.field_product_product__l10n_br_transport_cost_type
+#: model:ir.model.fields,help:l10n_br_avatax.field_product_template__l10n_br_transport_cost_type
+msgid ""
+"Brazil: select whether this product will be use to register Freight, "
+"Insurance or Other Costs amounts related to the transaction."
+msgstr ""
+"Brasil: selecione se este produto será usado para registrar valores de "
+"frete, seguro ou outros custos relacionados à transação."
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_product_product__l10n_br_cest_code
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_product_template__l10n_br_cest_code
+msgid "CEST Code"
+msgstr "Código CEST"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_l10n_br_ncm_code__code
+msgid "Code"
+msgstr "Código"
+
+#. module: l10n_br_avatax
+#: model:ir.model,name:l10n_br_avatax.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: l10n_br_avatax
+#: model:ir.model,name:l10n_br_avatax.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configurações"
+
+#. module: l10n_br_avatax
+#: model:ir.model,name:l10n_br_avatax.model_res_partner
+msgid "Contact"
+msgstr "Contato"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_l10n_br_ncm_code__create_uid
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_l10n_br_ncm_code__create_date
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: l10n_br_avatax
+#: model_terms:ir.ui.view,arch_db:l10n_br_avatax.res_config_settings_view_form
+msgid ""
+"Creating a new account will permanently remove your current Avatax account "
+"from Odoo, but it won't delete the account on the Avatax side. Do you wish "
+"to proceed?"
+msgstr ""
+"Criar uma nova conta removerá permanentemente sua conta Avatax atual do "
+"Odoo, mas não excluirá a conta do lado do Avatax. Tem certeza de que deseja "
+"continuar?"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_l10n_br_ncm_code__display_name
+msgid "Display Name"
+msgstr "Nome exibido"
+
+#. module: l10n_br_avatax
+#: model_terms:ir.ui.view,arch_db:l10n_br_avatax.res_config_settings_view_form
+msgid "Environment"
+msgstr "Ambiente"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_sped_type__feedstock
+msgid "Feedstock"
+msgstr "Matéria-prima"
+
+#. module: l10n_br_avatax
+#: model:ir.model,name:l10n_br_avatax.model_account_fiscal_position
+msgid "Fiscal Position"
+msgstr "Posição fiscal"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_sped_type__fixed_assets
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_use_type__fixed_assets
+msgid "Fixed assets"
+msgstr "Ativos fixos"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_sped_type__for_merchandise
+msgid "For merchandise"
+msgstr "Para mercadorias"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_sped_type__for_product
+msgid "For product"
+msgstr "Para produto"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_source_origin__2
+msgid ""
+"Foreign goods - Acquired in the internal market (inside Brazil), except "
+"those in code 7"
+msgstr ""
+"Bens estrangeiros - Adquiridos no mercado interno (dentro do Brasil), exceto "
+"aqueles no código 7"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_source_origin__7
+msgid ""
+"Foreign goods - Acquired inside Brazil, without a National Equivalent as "
+"listed by Comex and natural gas"
+msgstr ""
+"Bens estrangeiros - Adquiridos dentro do Brasil, sem um equivalente nacional "
+"listado pelo Comex e gás natural"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_source_origin__6
+msgid ""
+"Foreign goods - Directly imported by Seller, without a National Equivalent "
+"as listed by Comex and natural gas"
+msgstr ""
+"Bens estrangeiros - Importados diretamente pelo vendedor, sem um equivalente "
+"nacional listado pelo Comex e gás natural"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_source_origin__1
+msgid "Foreign goods - Imported directly by seller, except those in code 6"
+msgstr ""
+"Bens estrangeiros - Importados diretamente pelo vendedor, exceto aqueles no "
+"código 6"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_transport_cost_type__freight
+#: model:product.template,name:l10n_br_avatax.freight_transport_product_product_template
+msgid "Freight"
+msgstr "Frete"
+
+#. module: l10n_br_avatax
+#. odoo-python
+#: code:addons/l10n_br_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "Go to the configuration panel"
+msgstr "Acessar o painel de configuração"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_taxpayer__icms
+msgid "ICMS Taxpayer"
+msgstr "Contribuinte do ICMS"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_partner__l10n_br_taxpayer
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_users__l10n_br_taxpayer
+msgid "ICMS Taxpayer Type"
+msgstr "Tipo de contribuinte do ICMS"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_l10n_br_ncm_code__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_transport_cost_type__insurance
+#: model:product.template,name:l10n_br_avatax.insurance_transport_product_product_template
+msgid "Insurance"
+msgstr "Seguro"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_sped_type__intermediate_product
+msgid "Intermediate product"
+msgstr "Produto intermediário"
+
+#. module: l10n_br_avatax
+#: model:ir.model,name:l10n_br_avatax.model_account_move
+msgid "Journal Entry"
+msgstr "Lançamento de diário"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_config_settings__l10n_br_avatax_show_overwrite_warning
+msgid "L10N Br Avatax Show Overwrite Warning"
+msgstr "L10N Br Avatax - Mostrar aviso de substituição"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_l10n_br_ncm_code__write_uid
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_l10n_br_ncm_code__write_date
+msgid "Last Updated on"
+msgstr "Última atualização em"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_partner__l10n_br_activity_sector
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_users__l10n_br_activity_sector
+msgid "Main Activity Sector"
+msgstr "Setor da atividade principal"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_sped_type__material_for_usage_and_consumption
+msgid "Material for usage and consumption"
+msgstr "Material para uso e consumo"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_product_product__l10n_br_ncm_code_id
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_product_template__l10n_br_ncm_code_id
+msgid "Mercosul NCM Code"
+msgstr "Código NCM do Mercosul"
+
+#. module: l10n_br_avatax
+#: model:ir.model,name:l10n_br_avatax.model_account_external_tax_mixin
+msgid "Mixin to manage common parts of external tax calculation"
+msgstr ""
+
+#. module: l10n_br_avatax
+#: model:ir.model,name:l10n_br_avatax.model_l10n_br_ncm_code
+msgid "NCM Code"
+msgstr "Código NCM"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_l10n_br_ncm_code__name
+msgid "Name"
+msgstr "Nome"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_source_origin__3
+msgid ""
+"National goods - Merchandise or goods with imported content above 40% and "
+"with less than or equal to 70%"
+msgstr ""
+"Bens nacionais - Mercadorias ou bens com conteúdo importado acima de 40% e "
+"com menos ou igual a 70%"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_source_origin__8
+msgid ""
+"National goods - Merchandise or goods with imported content above 70% (pt)"
+msgstr ""
+"Bens nacionais - Mercadorias ou bens com conteúdo importado acima de 70%"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_source_origin__5
+msgid ""
+"National goods - Merchandise or goods with imported content equal or below "
+"40%"
+msgstr ""
+"Bens nacionais - Mercadorias ou bens com conteúdo importado igual ou abaixo "
+"de 40%"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_source_origin__0
+msgid "National goods - except those treated in codes 3,4, 5 and 8"
+msgstr "Bens nacionais - Exceto aqueles tratados nos códigos 3,4, 5 e 8"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_source_origin__4
+msgid ""
+"National goods from production following 'standard basic processes' as "
+"stablished by legislation (standard basic processes are devised to separate "
+"simple assembly from manufaturing processes)"
+msgstr ""
+"Bens nacionais provenientes de produção seguindo 'processos básicos padrão' "
+"conforme estabelecido pela legislação (processos básicos padrão são "
+"concebidos para separar a simples montagem de processos de fabricação)"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_sped_type__no_restriction
+msgid "No restriction"
+msgstr "Sem restrição"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_taxpayer__non
+msgid "Non-Taxpayer"
+msgstr "Não contribuinte"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_use_type__notapplicable
+msgid "Not applicable"
+msgstr "Não aplicável"
+
+#. module: l10n_br_avatax
+#. odoo-python
+#: code:addons/l10n_br_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "Odoo could not fetch the taxes related to %(document)s."
+msgstr "O Odoo não conseguiu buscar os impostos relacionados a %(document)s."
+
+#. module: l10n_br_avatax
+#. odoo-python
+#: code:addons/l10n_br_avatax/models/res_config_settings.py:0
+#, python-format
+msgid "Only administrators can ping Avatax."
+msgstr "Apenas administradores podem fazer ping no Avatax."
+
+#. module: l10n_br_avatax
+#: model:product.template,name:l10n_br_avatax.other_cost_transport_product_product_template
+msgid "Other Costs"
+msgstr "Outros custos"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_transport_cost_type__other
+msgid "Other costs"
+msgstr "Outros custos"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_sped_type__other_inputs
+msgid "Other inputs"
+msgstr "Outras entradas"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_sped_type__packaging
+msgid "Packaging"
+msgstr "Embalagem"
+
+#. module: l10n_br_avatax
+#. odoo-python
+#: code:addons/l10n_br_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "Please create an Avatax account"
+msgstr "Crie uma conta Avatax"
+
+#. module: l10n_br_avatax
+#: model:ir.model,name:l10n_br_avatax.model_product_template
+msgid "Product"
+msgstr "Produto"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_sped_type__product_in_process
+msgid "Product in process"
+msgstr "Produto em processo"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_use_type__production
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_company__l10n_br_avalara_environment__production
+msgid "Production"
+msgstr "Produção"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_product_product__l10n_br_use_type
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_product_template__l10n_br_use_type
+msgid "Purpose of Use"
+msgstr "Propósito de uso"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_use_type__resale
+msgid "Resale"
+msgstr "Revenda"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_product_product__l10n_br_sped_type
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_product_template__l10n_br_sped_type
+msgid "SPED Fiscal Product Type"
+msgstr "Tipo de produto fiscal SPED"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_company__l10n_br_avalara_environment__sandbox
+msgid "Sandbox"
+msgstr "Sandbox"
+
+#. module: l10n_br_avatax
+#. odoo-python
+#: code:addons/l10n_br_avatax/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Server Response:\n"
+"%s"
+msgstr ""
+"Resposta do servidor:\n"
+"%s"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_sped_type__service
+msgid "Service"
+msgstr "Serviço"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_company__l10n_br_icms_rate
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_config_settings__l10n_br_icms_rate
+msgid "Simplified Regime ICMS Rate"
+msgstr "Taxa de ICMS do regime simplificado"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_product_product__l10n_br_source_origin
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_product_template__l10n_br_source_origin
+msgid "Source of Origin"
+msgstr "Origem"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_sped_type__subproduct
+msgid "Subproduct"
+msgstr "Subproduto"
+
+#. module: l10n_br_avatax
+#: model:ir.model,name:l10n_br_avatax.model_account_tax
+msgid "Tax"
+msgstr "Imposto"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_config_settings__l10n_br_tax_regime
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_partner__l10n_br_tax_regime
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_res_users__l10n_br_tax_regime
+msgid "Tax Regime"
+msgstr "Regime tributário"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_taxpayer__exempt
+msgid "Taxpayer Exempt"
+msgstr "Contribuinte isento"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,help:l10n_br_avatax.field_account_tax__l10n_br_avatax_code
+msgid "Technical field containing the Avatax identifier for this tax."
+msgstr "Campo técnico contendo o identificador Avatax para este imposto."
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,help:l10n_br_avatax.field_res_config_settings__l10n_br_avatax_show_overwrite_warning
+msgid ""
+"Technical field used to determine whether or not the user is about to "
+"overwrite his current API credentialswith new ones, since the old "
+"credentials won't be recoverable we warn."
+msgstr ""
+"Campo técnico usado para determinar se o usuário está prestes a substituir "
+"suas credenciais atuais de API com credenciais novas. Já que as antigas "
+"credenciais não serão recuperáveis, um aviso é exibido."
+
+#. module: l10n_br_avatax
+#. odoo-python
+#: code:addons/l10n_br_avatax/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"The Avatax platform failed to create your account. Please ensure the address "
+"on your company is correct. If it is please contact support at odoo.com/help."
+msgstr ""
+"A plataforma Avatax falhou ao criar sua conta. Certifique-se de que o "
+"endereço da sua empresa esteja correto. Se estiver, entre em contato com o "
+"suporte em odoo.com/help."
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,help:l10n_br_avatax.field_res_config_settings__l10n_br_icms_rate
+#: model_terms:ir.ui.view,arch_db:l10n_br_avatax.res_config_settings_view_form
+msgid "This only applies if you are a simplified tax regime company."
+msgstr ""
+"Isso só se aplica se você for uma empresa do regime tributário simplificado."
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_product_product__l10n_br_transport_cost_type
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_product_template__l10n_br_transport_cost_type
+msgid "Transport Cost Type"
+msgstr "Tipo de custo de transporte"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields,field_description:l10n_br_avatax.field_account_fiscal_position__l10n_br_is_avatax
+msgid "Use Avatax Brazil API"
+msgstr "Use a API do Avatax Brasil"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__product_template__l10n_br_use_type__use_or_consumption
+msgid "Use or consumption"
+msgstr "Uso ou consumo"
+
+#. module: l10n_br_avatax
+#: model_terms:ir.ui.view,arch_db:l10n_br_avatax.res_config_settings_view_form
+msgid ""
+"Use this only when you already created an account in another Odoo instance "
+"and wish to reuse it."
+msgstr ""
+"Use isso apenas quando você já criou uma conta em outra instância do Odoo e "
+"deseja reutilizá-la."
+
+#. module: l10n_br_avatax
+#. odoo-python
+#: code:addons/l10n_br_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "What:"
+msgstr "O quê:"
+
+#. module: l10n_br_avatax
+#. odoo-python
+#: code:addons/l10n_br_avatax/models/account_external_tax_mixin.py:0
+#, python-format
+msgid "Where:"
+msgstr "Onde:"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__armedforces
+msgid "armedForces"
+msgstr "Forças Armadas"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__auctioneer
+msgid "auctioneer"
+msgstr "Leiloeiro"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__audiovisualindustry
+msgid "audiovisualIndustry"
+msgstr "Audiovisual"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__bondedwarehouse
+msgid "bondedWarehouse"
+msgstr "Armazém alfandegado"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__broadcastingindustry
+msgid "broadcastingIndustry"
+msgstr "Radiodifusão"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__commerce
+msgid "commerce"
+msgstr "Comércio"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__construction
+msgid "construction"
+msgstr "Construção civil"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__coops
+msgid "coops"
+msgstr "Cooperativa"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__distributioncenter
+msgid "distributionCenter"
+msgstr "Centro de distribuição"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__distributor
+msgid "distributor"
+msgstr "Distribuidor"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__electricitydistributor
+msgid "electricityDistributor"
+msgstr "Distribuidor de energia elétrica"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__energygeneration
+msgid "energyGeneration"
+msgstr "Gerador e produtor de energia elétrica"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_tax_regime__estimatedprofit
+msgid "estimatedProfit"
+msgstr "Lucro presumido"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__extractor
+msgid "extractor"
+msgstr "Extrator"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__farmcoop
+msgid "farmCoop"
+msgstr "Cooperativa de produtores"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__filmindustry
+msgid "filmIndustry"
+msgstr "Indústria cinematográfica"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__finalconsumer
+msgid "finalConsumer"
+msgstr "Consumidor final"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__fueldistributor
+msgid "fuelDistributor"
+msgstr "Distribuidor de combustível"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__generalwarehouse
+msgid "generalWarehouse"
+msgstr "Armazém geral"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__importer
+msgid "importer"
+msgstr "Importadora"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_tax_regime__individual
+msgid "individual"
+msgstr "Indivíduo"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__industry
+msgid "industry"
+msgstr "Indústria"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__itaipubinacional
+msgid "itaipubiNacional"
+msgstr "Itaipu Binacional"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__maritimeservice
+msgid "maritimeService"
+msgstr "Serviço marítimo"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__mealsupplier
+msgid "mealSupplier"
+msgstr "Fornecedor de refeição"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__nonprofitentity
+msgid "nonProfitEntity"
+msgstr "Entidade sem fins lucrativos"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_tax_regime__notapplicable
+msgid "notApplicable"
+msgstr "Não aplicável"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__pharmadistributor
+msgid "pharmaDistributor"
+msgstr "Distribuidor de medicamentos"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__publicagency
+msgid "publicAgency"
+msgstr "Órgão público"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_tax_regime__realprofit
+msgid "realProfit"
+msgstr "Lucro real"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__religiousestablishment
+msgid "religiousEstablishment"
+msgstr "Templo religioso"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__retail
+msgid "retail"
+msgstr "Varejo"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__ruralproducer
+msgid "ruralProducer"
+msgstr "Produtor rural"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__securitypublicagency
+msgid "securityPublicAgency"
+msgstr "Secretaria nacional de segurança pública"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__service
+msgid "service"
+msgstr "Serviço"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_tax_regime__simplified
+msgid "simplified"
+msgstr "Optante do SIMPLES"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_tax_regime__simplifiedentrepreneur
+msgid "simplifiedEntrepreneur"
+msgstr "Empreendedor do Simples Nacional"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_tax_regime__simplifiedovergrossthreshold
+msgid "simplifiedOverGrossthreshold"
+msgstr "Optante do SIMPLES com limite de faturamento bruto"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__stockwarehouse
+msgid "stockWarehouse"
+msgstr "Depósito fechado"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__telco
+msgid "telco"
+msgstr "Serviços de telecomunicações"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__transporter
+msgid "transporter"
+msgstr "Transportadora"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_tax_regime__variable
+msgid "variable"
+msgstr "Variável"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__waterdistributor
+msgid "waterDistributor"
+msgstr "Distribuidor de água"
+
+#. module: l10n_br_avatax
+#: model:ir.model.fields.selection,name:l10n_br_avatax.selection__res_partner__l10n_br_activity_sector__wholesale
+msgid "wholesale"
+msgstr "Atacado"

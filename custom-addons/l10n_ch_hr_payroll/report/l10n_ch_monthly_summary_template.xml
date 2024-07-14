@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="report_monthly_summary">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="wizard">
+                    <t t-call="web.external_layout_standard">
+                        <t t-foreach="line_values" t-as="aggreg_record">
+                            <t t-set="company" t-value="aggreg_record if wizard.aggregation_type == 'company' else aggreg_record.company_id"/>
+                            <div class="page">
+                                <div class="row border">
+                                    <div class="col-4 border-end">
+                                        <strong>Nr.</strong> <span t-esc="wizard.id"/>
+                                    </div>
+                                    <div class="col-4 border-end">
+                                        <strong>From:</strong> <span t-esc="date_start"/>
+                                    </div>
+                                    <div class="col-4">
+                                        <strong>To:</strong> <span t-esc="date_end"/>
+                                    </div>
+                                </div>
+                                <div class="row border border-top-0">
+                                    <div class="col-4 border-end">
+                                        <t t-if="wizard.aggregation_type == 'company'">
+                                            <strong>Company:</strong> <br/>
+                                            <span t-esc="company.name"/> <br/>
+                                            <span t-esc="company.street"/> <span t-esc="company.street2"/><br/>
+                                            <span t-esc="company.zip"/>,
+                                            <span t-esc="company.city"/> <br/>
+                                            <span t-esc="company.country_id.name"/> <br/>
+                                        </t>
+                                        <t t-else="">
+                                            <strong>Employee:</strong> <br/>
+                                            <span t-esc="aggreg_record.name"/> <br/>
+                                            <span t-esc="aggreg_record.private_street"/> <span t-esc="aggreg_record.private_street2"/><br/>
+                                            <span t-esc="aggreg_record.private_zip"/>,
+                                            <span t-esc="aggreg_record.private_city"/> <br/>
+                                            <span t-esc="aggreg_record.private_country_id.name"/> <br/>
+                                        </t>
+                                    </div>
+                                </div>
+                                <div class="row border border-top-0">
+                                    <div class="col-12 text-center text-uppercase fw-bold">
+                                        Monthly Wage Type Summary.
+                                    </div>
+                                </div>
+                                <table class="table table-sm">
+                                    <thead class="o_black_border">
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Name</th>
+                                            <th class="text-end">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <span t-foreach="line_values[aggreg_record]" t-as="rule">
+                                            <tr>
+                                                <td><span t-esc="rule.l10n_ch_code"/></td>
+                                                <td><span t-esc="rule.name"/></td>
+                                                <td class="text-end">
+                                                    <span t-esc="line_values[aggreg_record][rule]" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                                </td>
+                                            </tr>
+                                        </span>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p style="page-break-after: always;"/>
+                        </t>
+                     </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

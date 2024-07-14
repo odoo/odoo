@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_applicant_view_form" model="ir.ui.view">
+        <field name="name">hr.applicant.form</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_show_proposed_contracts" invisible="proposed_contracts_count == 0" class="oe_stat_button" icon="fa-book" type="object" help="Proposed Contracts" groups="hr_recruitment.group_hr_recruitment_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="proposed_contracts_count"/></span>
+                        <span class="o_stat_text">Contracts</span>
+                    </div>
+                </button>
+                <button name="action_show_offers" invisible="salary_offers_count == 0" class="oe_stat_button" icon="fa-handshake-o" type="object" help="Sent Offers" groups="hr_recruitment.group_hr_recruitment_user">
+                    <div class="o_field_widget o_stat_info ms-1">
+                        <span class="o_stat_value"><field name="salary_offers_count"/></span>
+                        <span class="o_stat_text">Offers</span>
+                    </div>
+                </button>
+            </div>
+            <button name="create_employee_from_applicant" position="before">
+                <button name="%(generate_offer_link_action)d" type="action" string="Generate Offer"
+                    class="oe_highlight" invisible="not active"
+                    data-hotkey="q" groups="hr_recruitment.group_hr_recruitment_user" />
+            </button>
+        </field>
+    </record>
+</odoo>

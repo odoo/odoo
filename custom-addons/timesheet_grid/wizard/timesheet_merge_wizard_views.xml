@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="timesheet_merge_wizard_view_form" model="ir.ui.view">
+            <field name="name">hr_timesheet.merge.wizard.form</field>
+            <field name="model">hr_timesheet.merge.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Merge Timesheet">
+                    <field name="timesheet_ids" invisible="1" />
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="project_id" required="1" options="{'no_create': 1, 'no_edit': 1, 'no_open': 1}" />
+                                <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]" />
+                                <field name="employee_id" required="1" groups="hr_timesheet.group_hr_timesheet_approver" />
+                            </group>
+                            <group>
+                                <field name="date" />
+                                <label for="unit_amount" string="Time Spent"/>
+                                <div class="o_row">
+                                    <field name="unit_amount" string="Time Spent" widget="timesheet_uom_timer" required="1"/>
+                                    <field name="encoding_uom_id" options="{'no_open': true}" />
+                                </div>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="name" placeholder="Describe your activity" widget="text" nolabel="1" colspan="2"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_merge" type="object" string="Merge" class="btn-primary" data-hotkey="q"/>
+                        <button name="cancel" special="cancel" data-hotkey="x" type="object" string="Discard" class="btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_settle_due.ActionpadWidget" t-inherit="point_of_sale.ActionpadWidget" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('set-partner')]" position="inside">
+            <i class="fa fa-warning" style="margin-left: 5px" t-if="props.partner and this.partnerInfos.overDue and this.partnerInfos.useLimit" />
+        </xpath>
+        <xpath expr="//button[hasclass('set-partner')]" position="attributes">
+            <attribute name="t-att-class">{'decentered': isLongName, 'partner-credit-limit-reached': this.partnerInfos.overDue and this.partnerInfos.useLimit}</attribute>
+        </xpath>
+    </t>
+ </templates>

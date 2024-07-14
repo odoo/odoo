@@ -1,0 +1,1704 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_referral
+# 
+# Translators:
+# Cristian Cruz, 2023
+# Jesus Alcober <alcober@gmail.com>, 2023
+# Arnau Ros, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2023
+# Harcogourmet, 2023
+# Susanna Pujol, 2023
+# Albert Parera, 2023
+# Carles Antoli <carlesantoli@hotmail.com>, 2023
+# M Palau <mpalau@tda.ad>, 2023
+# martioodo hola, 2023
+# eriiikgt, 2023
+# Quim - eccit <quim@eccit.com>, 2023
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2023
+# Josep Anton Belchi, 2023
+# Ivan Espinola, 2023
+# Jonatan Gk, 2023
+# Martin Trigaux, 2023
+# marcescu, 2023
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
+# jabiri7, 2023
+# RGB Consulting <odoo@rgbconsulting.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-03-05 15:02+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2023\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid ""
+" You've gained {gained} points with this progress.{new_line}It makes you a "
+"new total of {total} points. Visit {link1}this link{link2} to pick a gift!"
+msgstr ""
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_recruitment_report__referral_hired
+msgid "# Hired by Referral"
+msgstr "# Amagat per referència"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_applicant_employee_referral_kanban
+msgid "<b>Responsible: </b>"
+msgstr "<b>Responsable: </b>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_applicant_employee_referral_kanban
+msgid "<i class=\"fa fa-check me-2\" title=\"Hired\"/>"
+msgstr "<i class=\"fa fa-check me-2\" title=\"Hired\"/>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_applicant_employee_referral_kanban
+msgid "<i class=\"fa fa-square-o\" title=\"Open\"/>"
+msgstr "<i class=\"fa fa-square-o\" title=\"Open\"/>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_applicant_employee_referral_kanban
+msgid "<i class=\"text-danger fa fa-times\" title=\"Closed\"/>"
+msgstr "<i class=\"text-danger fa fa-times\" title=\"Closed\"/>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_applicant_employee_referral_kanban
+msgid "<i class=\"text-success fa fa-check\" title=\"Done\"/>"
+msgstr "<i class=\"text-success fa fa-check\" title=\"Done\"/>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_level_form
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_form
+msgid "<span class=\"ml8\">Points</span>"
+msgstr "<span class=\"ml8\">Punts</span>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_form
+msgid ""
+"<span class=\"o_stat_text\">\n"
+"                                    Awarded\n"
+"                                </span>"
+msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Adjudicat\n"
+"                                </span>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_kanban
+msgid ""
+"<span title=\"Buy\"><i class=\"fa fa-shopping-basket me-3\" role=\"img\" "
+"aria-label=\"Buy\"/>Buy</span>"
+msgstr ""
+"<span title=\"Buy\"><i class=\"fa fa-shopping-basket me-3\" role=\"img\" "
+"aria-label=\"Buy\"/>Compra</span>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "<span title=\"More info\">More info</span>"
+msgstr "<span title=\"More info\">Més informació</span>"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid ""
+"<span title=\"My Link to Share\"><i class=\"fa fa-lg fa-link\" role=\"img\" "
+"aria-label=\"My Link to Share\"/></span>"
+msgstr ""
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "<span title=\"Send by Mail\">Refer Friend</span>"
+msgstr "<span title=\"Send by Mail\">Recomanar a un amic</span>"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/wizard/hr_referral_alert_mail_wizard.py:0
+#, python-format
+msgid ""
+"A new alert has been added to the Referrals app! Check your <a "
+"href=%(url)s>dashboard</a> now!"
+msgstr ""
+"S'ha afegit una alerta nova a l'aplicació Referències! Comprova <a "
+"href=%(url)s>tauler de control</a> ara!"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_needaction
+msgid "Action Needed"
+msgstr "Acció necessària"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__active
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__active
+msgid "Active"
+msgstr "Actiu"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_ids
+msgid "Activities"
+msgstr "Activitats"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Activitat d'excepció de decoració"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_state
+msgid "Activity State"
+msgstr "Estat de l'activitat"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icona de tipus d'activitat"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__name
+msgid "Alert"
+msgstr "Alerta"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_alert
+msgid "Alert in Referral App"
+msgstr "Alerta en l'aplicació de referència"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.action_hr_referral_alert_configuration
+#: model:ir.ui.menu,name:hr_referral.menu_hr_referral_alert_configuration
+msgid "Alerts"
+msgstr "Alertes"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_referral_alert_configuration
+msgid ""
+"Alerts will be displayed on the first screen to give information or "
+"redirects the employees"
+msgstr ""
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_recruitment_stage__points
+msgid ""
+"Amount of points that the referent will receive when the applicant will "
+"reach this stage"
+msgstr ""
+"Quantitat de punts que rebrà el referent quan el sol·licitant arribi a "
+"aquesta fase"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__applicant_id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__applicant_id
+msgid "Applicant"
+msgstr "Candidat"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid "Applicant must have a company."
+msgstr "L'aspirant ha de tenir una empresa."
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__applicant_name
+msgid "Applicant's Name"
+msgstr "Nom del candidat"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_alert_view_search
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_alert_form
+msgid "Archived"
+msgstr "Arxivat"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_attachment_count
+msgid "Attachment Count"
+msgstr "Nombre d'adjunts"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_applicant_employee_referral_kanban
+msgid "Avatar"
+msgstr "Avatar"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_referral_reward.py:0
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__awarded_employees
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_backend_kanban
+#, python-format
+msgid "Awarded Employees"
+msgstr "Empleats premiats"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_friend__position__back
+msgid "Back"
+msgstr "Enrere"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.res_config_settings_view__form
+msgid "Background"
+msgstr "Fons"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.res_config_settings_view__form
+msgid "Background Image"
+msgstr "Imatge de fons "
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__body
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__body_html
+msgid "Body"
+msgstr "Cos del missatge"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_job__utm_campaign_id
+msgid "Campaign"
+msgstr "Campanya"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_alert_mail_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_send_mail_view_form
+msgid "Cancel"
+msgstr "Cancel·la"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__channel
+msgid "Channel"
+msgstr "Canal"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Choose an avatar for your new friend!"
+msgstr "¡Trieu un avatar per al vostre nou amic!"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Click to level up!"
+msgstr "Fes clic per a pujar de nivell."
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_link_to_share_view_form
+msgid "Close"
+msgstr "Tancar"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_res_company
+msgid "Companies"
+msgstr "Empreses"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__company_id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__company_id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__company_id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__company_id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__company_id
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_search
+msgid "Company"
+msgstr "Empresa"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paràmetres de configuració"
+
+#. module: hr_referral
+#: model:ir.ui.menu,name:hr_referral.menu_hr_referral_configuration
+msgid "Configuration"
+msgstr "Configuració"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__cost
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_form
+msgid "Cost"
+msgstr "Cost"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_referral_friend_configuration
+msgid "Create a new friend"
+msgstr ""
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_referral_level_configuration
+msgid "Create a new level"
+msgstr ""
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_referral_alert_configuration
+msgid "Create new alerts"
+msgstr "Crear noves alertes"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_referral_points
+msgid "Create new reward points"
+msgstr ""
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__create_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__create_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__create_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__create_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__create_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__create_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__create_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__create_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__create_uid
+msgid "Created by"
+msgstr "Creat per"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__create_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__create_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__create_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__create_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__create_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__create_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__create_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__create_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__create_date
+msgid "Created on"
+msgstr "Creat el"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.js:0
+#: code:addons/hr_referral/static/src/views/dashboard.js:0
+#: code:addons/hr_referral/static/src/views/dashboard.js:0
+#: model:ir.actions.client,name:hr_referral.action_hr_referral_welcome_screen
+#: model:ir.ui.menu,name:hr_referral.menu_hr_applicant_employee_referral_dashboard
+#, python-format
+msgid "Dashboard"
+msgstr "Tauler"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__image
+msgid "Dashboard Image"
+msgstr "Imatge del tauler de control"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_search
+msgid "Date"
+msgstr "Data"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__date_from
+msgid "Date From"
+msgstr "Data des de"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__date_to
+msgid "Date To"
+msgstr "Data fins"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_friend__position
+msgid ""
+"Define the position of the friend. If it's a small friend like a dog, you "
+"must select Front, it will be placed in the front of the dashboard, above "
+"superhero."
+msgstr ""
+"Defineix la posició de l'amic. Si és un amic petit com un gos, has de "
+"seleccionar Front, es col·locarà al davant del tauler, per sobre del "
+"superheroi."
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__department_id
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_search
+msgid "Department"
+msgstr "Departament"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__description
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_form
+msgid "Description"
+msgstr "Descripció"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_job__direct_clicks
+msgid "Direct Clicks"
+msgstr "Clics directes"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/report/hr_referral_report.py:0
+#, python-format
+msgid "Direct Referral"
+msgstr "Referència directa"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__dismissed_user_ids
+msgid "Dismissed User"
+msgstr "Usuari abandonat"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__display_name
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__display_name
+msgid "Display Name"
+msgstr "Nom mostrat"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/wizard/hr_referral_send_mail.py:0
+#, python-format
+msgid "Do not have access"
+msgstr "No teniu accés"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_kanban
+msgid ""
+"Do you want to confirm this reward? After confirmation an HR will contact "
+"you."
+msgstr ""
+"Voleu confirmar aquesta recompensa? Després de la confirmació un HR "
+"contactarà amb tu."
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__earned_points
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__earned_points
+msgid "Earned Points"
+msgstr "Punts guanyats"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__email_to
+msgid "Email"
+msgstr "Correu electrònic"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Email a friend"
+msgstr "Envia un correu electrònic a un amic"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_points__applicant_subject
+msgid "Email subject for applications sent via email"
+msgstr ""
+"Assumpte del correu electrònic per a les aplicacions enviades per correu "
+"electrònic"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_search
+msgid "Employee"
+msgstr "Empleat"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__employee_referral_hired
+msgid "Employee Referral Hired"
+msgstr "Referència del treballador contractat"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__employee_referral_refused
+msgid "Employee Referral Refused"
+msgstr "Referència del treballador refusada"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_report
+msgid "Employee Referral Report"
+msgstr "Informe de referència del treballador"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_form
+msgid "Employees"
+msgstr "Empleats"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_graph
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_pivot
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_report_view_form
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_report_view_tree
+msgid "Employees Analysis"
+msgstr "Anàlisi dels empleats"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.employee_referral_report_action
+msgid "Employees Referral Analysis"
+msgstr "Anàlisi de referència dels empleats"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_alert__url
+msgid ""
+"External links must start with 'http://www.'. For an internal url, you don't"
+" need to put domain name, you can just insert the path."
+msgstr ""
+"Els enllaços externs han de començar amb «http://www.». Per a un URL intern,"
+" no cal posar el nom del domini, només podeu inserir el camí."
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_link_to_share__channel__facebook
+msgid "Facebook"
+msgstr "Facebook"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_job__facebook_clicks
+msgid "Facebook Clicks"
+msgstr "Clics de Facebook"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_follower_ids
+msgid "Followers"
+msgstr "Seguidors"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seguidors (Partners)"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icona Font Awesome p.e. fa-tasks"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_onboarding_tree
+msgid "Force Onboarding"
+msgstr ""
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__friend_id
+msgid "Friend"
+msgstr "Amic"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__name
+msgid "Friend Name"
+msgstr "Nom de l'amic"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.action_hr_referral_friend_configuration
+#: model:ir.ui.menu,name:hr_referral.menu_hr_referral_friend_configuration
+msgid "Friends"
+msgstr "Amics"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_friend
+msgid "Friends for Referrals"
+msgstr "Amics per referències"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_friend__position__front
+msgid "Front"
+msgstr "Front"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Gather your team"
+msgstr "Reuniu el vostre equip"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Gather your team!"
+msgstr "Reuniu el vostre equip!"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__gift_manager_id
+msgid "Gift Responsible"
+msgstr "Regal responsable"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_points_filter
+msgid "Gifts"
+msgstr "Regals"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_alert__onclick__all_jobs
+msgid "Go to All Jobs"
+msgstr "Ves a totes les tasques"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_search
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_points_filter
+msgid "Group By"
+msgstr "Agrupar per"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_alert_view_search
+msgid "HR Referral Alert Search"
+msgstr "HR Cerca d'alertes de referència"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__has_message
+msgid "Has Message"
+msgstr "Té un missatge"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_recruitment_report__has_referrer
+msgid "Has Referrer"
+msgstr "Té referent"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/wizard/hr_referral_send_mail.py:0
+#, python-format
+msgid ""
+"Hello,<br><br>There are some amazing job offers in my company! Have a look, "
+"they  can be interesting for you<br><a href=\"%s\">See Job Offers</a>"
+msgstr ""
+"Hola,<br><br>Hi ha algunes ofertes de feina increïbles a la meva empresa! "
+"Doneu-vos un cop d'ull, poden ser interessants<br><a href=\"%s\">Vegeu "
+"Ofertes de feina</a>"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/wizard/hr_referral_send_mail.py:0
+#, python-format
+msgid ""
+"Hello,<br><br>There is an amazing job offer for %s in my company! It will be"
+" a fit for you<br><a href=\"%s\">See Job Offer</a>"
+msgstr ""
+"Hola,<br><br>Hi ha una oferta de feina increïble per a %s a la meva empresa!"
+" Us serà un ajust<br><a href=\"%s\">Vegeu Oferta de treball</a>"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_applicant__referral_state__hired
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_report__referral_state__hired
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_filter
+msgid "Hired"
+msgstr "Contractat"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_res_users__hr_referral_level_id
+msgid "Hr Referral Level"
+msgstr "Nivell de referència Hr"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_res_users__hr_referral_onboarding_page
+msgid "Hr Referral Onboarding Page"
+msgstr "Hr Refereix la pàgina d'Onboarding"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_exception_icon
+msgid "Icon"
+msgstr "Icona"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Icona que indica una activitat d'excepció."
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+"Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__message_has_error
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Si està marcat, alguns missatges tenen un error d'entrega."
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__image_head
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__image
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__image
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__image
+msgid "Image"
+msgstr "Imatge"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_applicant__referral_state__progress
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_report__referral_state__progress
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_filter
+msgid "In Progress"
+msgstr "En curs"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__is_accessible_to_current_user
+msgid "Is Accessible To Current User"
+msgstr ""
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_is_follower
+msgid "Is Follower"
+msgstr "És seguidor"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__job_id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__job_id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__job_id
+#: model_terms:ir.ui.view,arch_db:hr_referral.employee_referral_report_view_search
+msgid "Job"
+msgstr "Feina"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_job
+msgid "Job Position"
+msgstr "Lloc de treball"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.action_hr_job_employee_referral
+msgid "Job Positions"
+msgstr "Llocs de treball"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Job Referral Program"
+msgstr "Programa d'ajornament de treballs"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_job__job_open_date
+msgid "Job Start Recruitment Date"
+msgstr "Data d'inici de la tasca de contractació"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__write_date
+msgid "Last Update Date"
+msgstr "Data de la darrera actualització"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__write_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__write_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__write_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__write_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__write_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__write_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__write_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__write_uid
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__write_uid
+msgid "Last Updated by"
+msgstr "Última actualització per"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__write_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__write_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__write_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__write_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__write_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__write_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__write_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__write_date
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__write_date
+msgid "Last Updated on"
+msgstr "Última actualització el"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__last_valuable_stage_id
+msgid "Last Valuable Stage"
+msgstr "Última etapa valuosa"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_referral_reward_configuration
+msgid "Let's create Super Rewards to thank your employees."
+msgstr "Creem Super Rewards per donar les gràcies als vostres empleats."
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_referral_reward
+msgid "Let's create super Rewards to thank<br>your employees."
+msgstr ""
+"Creem súper Recompenses per donar les gràcies a<br>els vostres empleats."
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_applicant_employee_referral
+msgid "Let's share a job position."
+msgstr "Compartim un lloc de treball."
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Level"
+msgstr "Nivell"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__name
+msgid "Level Name"
+msgstr "Nom de nivell"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_level
+msgid "Level for referrals"
+msgstr "Nivell de referència"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.action_hr_referral_level_configuration
+#: model:ir.ui.menu,name:hr_referral.menu_hr_referral_level_configuration
+msgid "Levels"
+msgstr "Nivells"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_link_to_share__channel__direct
+msgid "Link"
+msgstr "Enllaç"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.hr_referral_link_to_share_action
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_link_to_share_view_form
+msgid "Link to Share"
+msgstr "Enllaç a compartir"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_link_to_share__channel__linkedin
+msgid "Linkedin"
+msgstr "Linkedin"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_job__linkedin_clicks
+msgid "Linkedin Clicks"
+msgstr "Clics d'enllaç"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__max_points
+#: model:ir.model.fields,field_description:hr_referral.field_hr_job__max_points
+msgid "Max Points"
+msgstr "Punts màxims"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__medium_id
+msgid "Medium"
+msgstr "Mitjà"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_has_error
+msgid "Message Delivery error"
+msgstr "Error d'entrega del missatge"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_ids
+msgid "Messages"
+msgstr "Missatges"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Venciment de l'activitat"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.action_hr_applicant_employee_referral
+msgid "My Referral"
+msgstr "El meu referent"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/wizard/hr_referral_alert_mail_wizard.py:0
+#, python-format
+msgid "New Alert In Referrals App"
+msgstr "Alerta nova a l'aplicació Referrals"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_referral_reward.py:0
+#, python-format
+msgid "New gift awarded for %s"
+msgstr "S'ha atorgat un regal nou per a %s"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Next"
+msgstr "Següent"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Proper esdeveniment del calendari d'activitats"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Data límit de la següent activitat"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_summary
+msgid "Next Activity Summary"
+msgstr "Resum de la següent activitat"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tipus de la següent activitat"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.employee_referral_report_action
+msgid "No data to display"
+msgstr "Sense dades per mostrar"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_job_employee_referral
+msgid "No job positions are available to share."
+msgstr "No hi ha llocs de treball disponibles per compartir."
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_alert__onclick__no
+msgid "Not Clickable"
+msgstr "No es pot fer clic"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_applicant__referral_state__closed
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_report__referral_state__closed
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_filter
+msgid "Not Hired"
+msgstr "No està disponible"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Nombre d'accions"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_has_error_counter
+msgid "Number of errors"
+msgstr "Nombre d'errors"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Nombre de missatges que requereixen una acció"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Nombre de missatges amb error d'entrega"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__onclick
+msgid "On Click"
+msgstr "En fer clic"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.action_hr_referral_onboarding_configuration
+#: model:ir.ui.menu,name:hr_referral.menu_hr_referral_onboarding_configuration
+msgid "Onboarding"
+msgstr "Onboarding"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Ongoing"
+msgstr "En marxa"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "Open Position"
+msgstr ""
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "Open Positions"
+msgstr ""
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_kanban
+msgid "Point icon"
+msgstr "Icona de punt"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.action_hr_referral_points
+#: model:ir.model.fields,field_description:hr_referral.field_hr_recruitment_stage__points
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_level__points
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__points
+#: model:ir.ui.menu,name:hr_referral.menu_hr_points_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_applicant_employee_referral_kanban
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_points_filter
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_backend_kanban
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_kanban
+msgid "Points"
+msgstr "Punts "
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__points_not_hired
+msgid "Points Given For Not Hired"
+msgstr "Punts donats per a no contractats"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__points_missing
+msgid "Points Missing"
+msgstr "Manquen punts"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Points Received"
+msgstr ""
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "Points icon"
+msgstr "Icona Punts"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_points
+msgid "Points line for referrals"
+msgstr "Línia de punts per a referències"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_kanban
+msgid "Points to buy this"
+msgstr "Apunta a comprar això"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Points to spend"
+msgstr ""
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_friend__position
+msgid "Position"
+msgstr "Posició"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_kanban
+msgid "Product"
+msgstr "Producte"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__name
+msgid "Product Name"
+msgstr "Nom producte"
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.action_hr_applicant_employee_referral
+msgid "Ready to receive points?"
+msgstr "Preparat per rebre punts?"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_recruitment_report
+msgid "Recruitment Analysis Report"
+msgstr "Informe d'anàlisi de la contractació"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_recruitment_stage
+msgid "Recruitment Stages"
+msgstr "Escales de reclutament"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_report_view_form
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_report_view_tree
+msgid "Referer"
+msgstr "Referència"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_points_filter
+msgid "Referral"
+msgstr "Referència"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_alert_mail_wizard
+msgid "Referral Alert Mail Wizard"
+msgstr "Assistent d'alerta de referència"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_res_company__hr_referral_background
+#: model:ir.model.fields,field_description:hr_referral.field_res_config_settings__hr_referral_background
+msgid "Referral Background"
+msgstr "Fons de la referència"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_link_to_share
+msgid "Referral Link To Share"
+msgstr "Enllaç de referència per compartir"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_res_users__referral_point_ids
+msgid "Referral Point"
+msgstr "Punt de referència"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__referral_points_ids
+msgid "Referral Points"
+msgstr "Punts de referència"
+
+#. module: hr_referral
+#: model:res.groups,name:hr_referral.group_hr_referral_reward_responsible_user
+msgid "Referral Reward Responsible User"
+msgstr "Referència Reenvia l'usuari responsable"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_send_mail
+msgid "Referral Send Mail"
+msgstr "Referència d'enviament de correu"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__referral_state
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__referral_state
+msgid "Referral State"
+msgstr "Estat de l'ajornament"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/wizard/hr_referral_link_to_share.py:0
+#, python-format
+msgid "Referral: %(job_url)s"
+msgstr ""
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid "Referral: %s"
+msgstr "Referència: %s"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid "Referral: %s (%s)"
+msgstr "Referència: %s (%s)"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#: model:ir.ui.menu,name:hr_referral.menu_hr_referral_root
+#: model_terms:ir.ui.view,arch_db:hr_referral.res_config_settings_view__form
+#, python-format
+msgid "Referrals"
+msgstr "Referències"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_applicant_view_search_bis_inherit_referral
+msgid "Referred By"
+msgstr "Referenciat per"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__ref_user_id
+msgid "Referred By User"
+msgstr "Referit per l'usuari"
+
+#. module: hr_referral
+#: model:ir.ui.menu,name:hr_referral.menu_report_employee_referral_all
+msgid "Reporting"
+msgstr "Informes"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_level_form
+msgid "Requirements"
+msgstr "Requisits"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__activity_user_id
+msgid "Responsible User"
+msgstr "Usuari responsable"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Restart Onboarding"
+msgstr "Reinicia l'onboarding"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.res_config_settings_view__form
+msgid "Restore Default"
+msgstr "Restaura el valor per defecte"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__hr_referral_reward_id
+#, python-format
+msgid "Reward"
+msgstr "Recompensa"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_reward
+msgid "Reward for Referrals"
+msgstr "Reenvia per a les refranys"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#: model:ir.actions.act_window,name:hr_referral.action_hr_referral_reward
+#: model:ir.actions.act_window,name:hr_referral.action_hr_referral_reward_configuration
+#: model:ir.ui.menu,name:hr_referral.menu_hr_referral_reward_configuration
+#, python-format
+msgid "Rewards"
+msgstr "Recompenses "
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Error de lliurament SMS"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_points_filter
+msgid "Search Points / Gifts"
+msgstr "Punts de cerca / Regals"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_filter
+msgid "Search Referral"
+msgstr "Cerca un referent"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_alert_mail_wizard_view_form
+msgid "Send"
+msgstr "Enviar"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.hr_referral_send_mail_action
+msgid "Send Job Offer by Mail"
+msgstr "Envia una oferta de feina per correu"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_send_mail_view_form
+msgid "Send Job by Mail"
+msgstr "Envia la tasca per correu"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.hr_referral_alert_mail_wizard_action
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_send_mail_view_form
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_alert_form
+msgid "Send Mail"
+msgstr "Enviar correu"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__sequence
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__sequence
+msgid "Sequence"
+msgstr "Seqüència"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__sequence_stage
+msgid "Sequence of stage"
+msgstr "Seqüència de l'escenari"
+
+#. module: hr_referral
+#: model:ir.actions.act_window,name:hr_referral.action_hr_referral_configuration
+#: model:ir.ui.menu,name:hr_referral.hr_referral_menu_configuration
+msgid "Settings"
+msgstr "Configuració"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Share"
+msgstr "Compartir"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "Share Now"
+msgstr "Comparteix ara"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "Share on {{ source.name }}"
+msgstr "Comparteix a {{ source.name }}"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "Share on {{source.name}}"
+msgstr "Comparteix amb {{source.name}}"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_applicant__shared_item_infos
+msgid "Shared Item Infos"
+msgstr "Informació dels elements compartits"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_recruitment_stage__use_in_referral
+msgid "Show in Referrals"
+msgstr "Mostra a les refaranes"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Skip"
+msgstr "Omet"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Skip and Start"
+msgstr "Omet i comença"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid "Sorry, your referral %s has been refused in the recruitment process."
+msgstr ""
+"Ho sentim, la vostra referència %s s'ha rebutjat en el procés de "
+"reclutament."
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_res_users__utm_source_id
+msgid "Source"
+msgstr "Font"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_alert__onclick__url
+msgid "Specify URL"
+msgstr "Especifica l'URL"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__stage_id
+msgid "Stage"
+msgstr "Etapa"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Start"
+msgstr "Inicia"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Start Now"
+msgstr "Comença ara"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Estat basat en activitats\n"
+"Sobrepassat: La data límit ja ha passat\n"
+"Avui: La data de l'activitat és avui\n"
+"Planificat: Activitats futures."
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__subject
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__subject
+msgid "Subject"
+msgstr "Assumpte"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__applicant_subject
+msgid "Subject / Application"
+msgstr "Assumpte / Aplicació"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Successful"
+msgstr "Èxit"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_onboarding__text
+msgid "Text"
+msgstr "Text"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_friend__image
+msgid ""
+"This field holds the image used as image for the friend on the dashboard, "
+"limited to 1024x1024px."
+msgstr ""
+"Aquest camp conté la imatge utilitzada com a imatge per a l'amic en el "
+"tauler, limitada a 1024x1024px."
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_friend__image_head
+msgid ""
+"This field holds the image used as image for the head's friend when the user"
+" must choose a new friend, limited to 1024x1024px."
+msgstr ""
+"Aquest camp conté la imatge utilitzada com a imatge per a l'amic del cap "
+"quan l'usuari ha de triar un amic nou, limitat a 1024x1024px."
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__image
+msgid ""
+"This field holds the image used as image for the product, limited to "
+"1024x1024px."
+msgstr ""
+"Aquest camp conte la imatge utilitzada pel producte, limitada a 1024x1024 "
+"px."
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.hr_referral_link_to_share_view_form
+msgid ""
+"This link contains a tracker so that people clicking on it will account to a"
+" referral for you, even if they apply on a position after a few days."
+msgstr ""
+"Aquest enllaç conté un seguidor de manera que la gent que hi faci clic "
+"tindrà en compte una referència per a vós, fins i tot si s'apliquen en una "
+"posició després d'uns dies."
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_recruitment_stage__use_in_referral
+msgid ""
+"This option is used in app 'Referrals'. If checked, the stage is displayed "
+"in 'Referrals Dashboard' and points are given to the employee."
+msgstr ""
+"Aquesta opció s'utilitza a l'aplicació «Referències». Si està marcada, "
+"l'escenari es mostrarà al tauler de referència i es donaran punts a "
+"l'empleat."
+
+#. module: hr_referral
+#: model_terms:ir.actions.act_window,help:hr_referral.employee_referral_report_action
+msgid "This reports allow you to follow the referrals and their evolution."
+msgstr ""
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_onboarding_tree
+msgid ""
+"This will make the onboarding visible to all employees who have already seen"
+" it. Do you want to continue?"
+msgstr ""
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "To Spend"
+msgstr "A gastar"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "Total"
+msgstr "Total"
+
+#. module: hr_referral
+#: model:ir.model.fields.selection,name:hr_referral.selection__hr_referral_link_to_share__channel__twitter
+msgid "Twitter"
+msgstr "Twitter"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_job__twitter_clicks
+msgid "Twitter Clicks"
+msgstr "Clics de Twitter"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Tipus d'activitat d'excepció registrada."
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert__url
+msgid "URL"
+msgstr "L'URL"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_utm_campaign
+msgid "UTM Campaign"
+msgstr "Campanya UTM"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_utm_source
+msgid "UTM Source"
+msgstr "Font UTM"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid ""
+"Unsupported search on field is_accessible_to_current_user: %s operator & %s "
+"value. Only = and != operator and boolean values are supported."
+msgstr ""
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_link_to_share__url
+msgid "Url"
+msgstr "Url"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_res_users
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_alert_mail_wizard__user_ids
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_points__ref_user_id
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_report__ref_user_id
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_points_filter
+msgid "User"
+msgstr "Usuari"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__gift_manager_id
+msgid "User responsible of this gift."
+msgstr "Usuari responsable d'aquest regal."
+
+#. module: hr_referral
+#: model:res.groups,name:hr_referral.group_hr_recruitment_referral_user
+msgid "User: Referral only"
+msgstr ""
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "View Jobs"
+msgstr "Visualitza els treballs"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_job.py:0
+#, python-format
+msgid "Visit Webpage"
+msgstr "Visita la pàgina web"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_reward__website_message_ids
+msgid "Website Messages"
+msgstr "Missatges del lloc web"
+
+#. module: hr_referral
+#: model:ir.model.fields,help:hr_referral.field_hr_referral_reward__website_message_ids
+msgid "Website communication history"
+msgstr "Historial de comunicacions del lloc web"
+
+#. module: hr_referral
+#: model:ir.model,name:hr_referral.model_hr_referral_onboarding
+msgid "Welcome Onboarding in Referral App"
+msgstr "Integració de benvinguda en l'aplicació de recomanacions"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid "You are not allowed to access applicant records."
+msgstr "No teniu permís per accedir als registres dels sol·licitants."
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid ""
+"You are not allowed to access this application record because you're not one"
+" of the interviewers of this application. If you think that's an error, "
+"please contact your administrator."
+msgstr ""
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/utm_campaign.py:0
+#, python-format
+msgid ""
+"You cannot delete these UTM Campaigns as they are linked to the following jobs in Referral:\n"
+"%(job_names)s"
+msgstr ""
+"No podeu suprimir aquestes campanyes de la UTM, ja que estan enllaçades a les següents tasques en Referència:\n"
+"%(job_names)s"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/utm_source.py:0
+#, python-format
+msgid ""
+"You cannot delete these UTM Sources as they are linked to the following users in Referral:\n"
+"%(employee_names)s"
+msgstr ""
+"No podeu suprimir aquestes fonts d'UTM perquè estan enllaçades als següents usuaris en Referència:\n"
+"%(employee_names)s"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_referral_reward.py:0
+#, python-format
+msgid ""
+"You do not have enough points in this company to buy this product. In this "
+"company, you have %s points."
+msgstr ""
+"No hi ha suficients punts en aquesta empresa per comprar aquest producte. En"
+" aquesta empresa teniu %s punts."
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_applicant_employee_referral_kanban
+msgid "You earned"
+msgstr "Us heu guanyat"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_reward_kanban
+msgid "You need another"
+msgstr "Necessites una altra"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid "Your referrer got a step further!"
+msgstr "El teu referent ha fet un pas més!"
+
+#. module: hr_referral
+#. odoo-python
+#: code:addons/hr_referral/models/hr_applicant.py:0
+#, python-format
+msgid "Your referrer is hired!"
+msgstr "El teu referent està contractat!"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_job_employee_referral_kanban
+msgid "click(s)"
+msgstr "clic(s)"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "has been hired!"
+msgstr "ha estat contractat!"
+
+#. module: hr_referral
+#: model_terms:ir.ui.view,arch_db:hr_referral.view_hr_referral_alert_form
+msgid "https://www.google.com"
+msgstr "https://www.google.com"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "reward"
+msgstr "recompensa"
+
+#. module: hr_referral
+#. odoo-javascript
+#: code:addons/hr_referral/static/src/views/dashboard.xml:0
+#, python-format
+msgid "share"
+msgstr "comparteix"
+
+#. module: hr_referral
+#: model:ir.model.fields,field_description:hr_referral.field_hr_referral_send_mail__url
+msgid "url"
+msgstr "url"

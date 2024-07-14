@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_task_user_view_pivot" model="ir.ui.view">
+        <field name="name">report.project.task.user.pivot</field>
+        <field name="model">report.project.task.user.fsm</field>
+        <field name="arch" type="xml">
+            <pivot string="Tasks Analysis" display_quantity="1" sample="1" disable_linking="1">
+                <field name="project_id" type="row"/>
+                <field name="effective_hours" widget="timesheet_uom" type="measure"/>
+                <field name="remaining_hours" widget="timesheet_uom" type="measure"/>
+                <field name="allocated_hours" widget="timesheet_uom" type="measure"/>
+                <field name="working_days_close" type="measure" string="Working Days to Close"/>
+                <field name="working_days_open" type="measure" string="working days to assign"/>
+                <field name="nbr" invisible="1"/>
+                <field name="delay_endings_days" invisible="1"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="project_task_user_view_graph" model="ir.ui.view">
+        <field name="name">report.project.task.user.graph</field>
+        <field name="model">report.project.task.user.fsm</field>
+        <field name="arch" type="xml">
+            <graph string="Tasks Analysis" sample="1" js_class="hr_timesheet_graphview" disable_linking="1">
+                <field name="project_id"/>
+                <field name="nbr" type="measure" invisible="1"/>
+                <field name="delay_endings_days" type="measure"/>
+                <field name="effective_hours" widget="timesheet_uom" type="measure"/>
+                <field name="remaining_hours" widget="timesheet_uom" type="measure"/>
+                <field name="working_days_close" type="measure" string="Working Days to Close"/>
+                <field name="working_days_open" type="measure" string="Working Days to Assign"/>
+                <field name="allocated_hours" widget="timesheet_uom" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="report_project_task_user_fsm_view_tree" model="ir.ui.view">
+        <field name="name">report.project.task.user.fsm.view.tree</field>
+        <field name="model">report.project.task.user.fsm</field>
+        <field name="arch" type="xml">
+            <tree string="Tasks Analysis" editable="top" delete="false">
+                <field name="name"/>
+                <field name="partner_id" optional="hide"/>
+                <field name="project_id" optional="show"/>
+                <field name="user_ids" optional="show" widget="many2many_avatar_user"/>
+                <field name="effective_hours" optional="show" widget="float_time" sum="Sum of Effective Hours"/>
+                <field name="company_id" optional="show" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="report_project_task_user_fsm_view_search" model="ir.ui.view">
+        <field name="name">report.project.task.user.fsm.search</field>
+        <field name="model">report.project.task.user.fsm</field>
+        <field name="inherit_id" ref="industry_fsm.project_task_view_search_fsm_base"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <search position="attributes">
+                <attribute name="string">Search Planning</attribute>
+            </search>
+        </field>
+    </record>
+
+    <record id="project_task_user_action_report_fsm" model="ir.actions.act_window">
+        <field name="name">Tasks Analysis</field>
+        <field name="res_model">report.project.task.user.fsm</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="search_view_id" ref="industry_fsm.report_project_task_user_fsm_view_search"/>
+        <field name="context">{
+            'group_by_no_leaf': 1,
+            'group_by': [],
+            'pivot_measures': ['__count__', 'allocated_hours', 'effective_hours', 'remaining_hours'],
+            'graph_measure': '__count__',
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data yet!
+            </p><p>
+                Analyze the progress of your tasks and the performance of your workers.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="fsm_menu_reporting_task_analysis"
+        name="Tasks Analysis"
+        sequence="10"
+        action="project_task_user_action_report_fsm"
+        parent="industry_fsm.fsm_menu_reporting"/>
+
+</odoo>

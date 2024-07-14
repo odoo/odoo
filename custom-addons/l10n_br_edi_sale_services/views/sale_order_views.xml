@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="order_form_inherit" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="l10n_br_edi_sale.order_form_inherit"/>
+            <field name="arch" type="xml">
+                <field name="l10n_br_edi_freight_model" position="before">
+                    <field name="l10n_br_is_service_transaction" invisible="1"/>
+                </field>
+                <field name="l10n_br_edi_freight_model" position="attributes">
+                    <attribute name="invisible" add="l10n_br_is_service_transaction" separator=" or "/>
+                </field>
+                <field name="l10n_br_edi_transporter_id" position="attributes">
+                    <attribute name="invisible" add="l10n_br_is_service_transaction" separator=" or "/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

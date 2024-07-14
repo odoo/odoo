@@ -1,0 +1,150 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* approvals_purchase
+# 
+# Translators:
+# Murat Durmuş <muratd@projetgrup.com>, 2023
+# Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2023
+# abc Def <hdogan1974@gmail.com>, 2023
+# Murat Kaplan <muratk@projetgrup.com>, 2023
+# Ediz Duman <neps1192@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Levent Karakaş <levent@mektup.at>, 2023
+# Enes Dayanç, 2023
+# Halil, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Halil, 2023\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,help:approvals_purchase.field_approval_category__approval_type
+msgid ""
+"Allows you to define which documents you would like to create once the "
+"request has been approved"
+msgstr ""
+"Talep onaylandıktan sonra hangi belgeleri oluşturmak istediğinizi "
+"tanımlamanıza olanak tanır"
+
+#. module: approvals_purchase
+#: model:ir.model,name:approvals_purchase.model_approval_category
+msgid "Approval Category"
+msgstr "Onay Kategorisi"
+
+#. module: approvals_purchase
+#: model:ir.model,name:approvals_purchase.model_approval_request
+msgid "Approval Request"
+msgstr "Onay Talebi"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_category__approval_type
+msgid "Approval Type"
+msgstr "Onay Türü"
+
+#. module: approvals_purchase
+#: model:approval.category,name:approvals_purchase.approval_category_data_rfq
+#: model:ir.model.fields.selection,name:approvals_purchase.selection__approval_category__approval_type__purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.approval_purchase_request_view_form_inherit
+msgid "Create RFQ's"
+msgstr "Teklif Talepleri Oluştur"
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid "Exception occurred: the Approval Request"
+msgstr "İstisna oluştu: Onay İsteği"
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid "Exception(s):"
+msgstr "İstisna(lar):"
+
+#. module: approvals_purchase
+#. odoo-python
+#: code:addons/approvals_purchase/models/approval_product_line.py:0
+#, python-format
+msgid "Please set a vendor on product(s) %s."
+msgstr "Lütfen ürün(ler) için bir satıcı belirleyin%s."
+
+#. module: approvals_purchase
+#: model:ir.model,name:approvals_purchase.model_approval_product_line
+msgid "Product Line"
+msgstr "Ürün Satırı"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_product_line__product_id
+msgid "Products"
+msgstr "Ürünler"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_request__purchase_order_count
+msgid "Purchase Order Count"
+msgstr "Satınalma Siparişi Sayısı"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_product_line__purchase_order_line_id
+msgid "Purchase Order Line"
+msgstr "Satınalma Sipariş Satırı"
+
+#. module: approvals_purchase
+#. odoo-python
+#: code:addons/approvals_purchase/models/approval_request.py:0
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.approval_purchase_request_view_form_inherit
+#, python-format
+msgid "Purchase Orders"
+msgstr "Satınalma Siparişleri"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_product_line__po_uom_qty
+msgid "Purchase UoM Quantity"
+msgstr "Satınalma Ölçü birimi Miktarı"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,help:approvals_purchase.field_approval_product_line__po_uom_qty
+msgid ""
+"The quantity converted into the UoM used by the product in Purchase Order."
+msgstr ""
+"Ürün tarafından Satınalma Siparişinde kullanılan ölçü birimine dönüştürülen "
+"miktar."
+
+#. module: approvals_purchase
+#. odoo-python
+#: code:addons/approvals_purchase/models/approval_request.py:0
+#, python-format
+msgid "You cannot create an empty purchase request."
+msgstr "Boş bir satın alma talebi oluşturamazsınız."
+
+#. module: approvals_purchase
+#. odoo-python
+#: code:addons/approvals_purchase/models/approval_request.py:0
+#, python-format
+msgid "You must select a product for each line of requested products."
+msgstr "Talep edilen ürünlerin her satırı için bir ürün seçmelisiniz."
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid "cancelled"
+msgstr "iptal edildi"
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid ""
+"has been canceled.\n"
+"            Manual actions may be needed."
+msgstr ""
+"iptal edildi.\n"
+"            Manuel işlemler gerekebilir."
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid "of"
+msgstr " ile ilgili"

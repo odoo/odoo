@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.deferred_report_warning_already_posted">
+        <span>
+            <a type="button" t-on-click="(ev) => controller.reportAction(ev, 'open_deferral_entries', {})">
+                Deferrals have already been generated.
+            </a>
+            The entry that will be generated will take them into account.
+        </span>
+    </t>
+</templates>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <template id="report_invoice_document"  inherit_id="account.report_invoice_document" primary="True">
+            <!-- Global variables -->
+             <xpath expr="//div[@id='partner_vat_address_same_as_shipping']//t[@id='inv_tax_id_label']" position="replace">
+                <t t-if="o.partner_id.l10n_latam_identification_type_id" t-out="o.partner_id.l10n_latam_identification_type_id.name" id="inv_tax_id_label"/>
+            </xpath>
+
+            <xpath expr="//h2[1]" position="before">
+                <t t-set="extra_edi_vals" t-value="o._l10n_pe_edi_get_extra_report_values()"/>
+                <t t-set="spot" t-value="o._l10n_pe_edi_get_spot()"/>
+            </xpath>
+
+            <xpath expr="//div[@t-if='not is_html_empty(o.narration)']" position="before">
+                <p>
+                    <span><b>SON:</b> <t t-out="extra_edi_vals.get('amount_to_text')"/></span>
+                </p>
+            </xpath>
+
+            <xpath expr="//h2/span[contains(@t-if, 'out_invoice') and contains(@t-if, 'posted')]" position="attributes">
+                <attribute name="t-out">o.l10n_latam_document_type_id.report_name</attribute>
+            </xpath>
+
+            <xpath expr="//h2/span[contains(@t-elif, 'out_refund') and contains(@t-elif, 'posted')]" position="attributes">
+                <attribute name="t-out">o.l10n_latam_document_type_id.report_name</attribute>
+            </xpath>
+
+            <xpath expr="//h2/span[@t-field='o.name']" position="replace">
+                <span t-if="o.name != '/'" t-out="o.name.replace(' ', '')"/>
+            </xpath>
+            <!-- QR-code -->
+            <xpath expr="//div[@id='qrcode']" position="after">
+                    <p t-if="spot" t-out="spot['spot_message']"/>
+                    <p>
+                        <img t-if="extra_edi_vals" class="border border-dark rounded" t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', extra_edi_vals['qr_str'], 100, 100)"/>
+                    </p>
+            </xpath>
+        </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+        <template id="report_invoice" inherit_id="account.report_invoice">
+            <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+                <t t-elif="o._get_name_invoice_report() == 'l10n_pe_edi.report_invoice_document'"
+                   t-call="l10n_pe_edi.report_invoice_document"
+                   t-lang="lang"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

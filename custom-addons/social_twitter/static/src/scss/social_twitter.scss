@@ -1,0 +1,91 @@
+.o_social_stream_post_twitter_stats {
+    .o_social_twitter_likes.o_social_twitter_user_likes {
+        @include o-hover-text-color($o-enterprise-color, darken($o-enterprise-color, 10%));
+    }
+    .o_social_twitter_retweet_icon i.active {
+        @include o-hover-text-color($primary, darken($primary, 10%));
+    }
+}
+
+.o_social_twitter_users_autocomplete {
+    padding: 0px;
+
+    .o_social_twitter_users_autocomplete_suggestion {
+        width: 400px;
+        padding: 0.5rem;
+
+        &.ui-state-active {
+            border: none;
+            background-color: #e9ecef;
+            color: $o-main-text-color;
+            margin: 0px;
+        }
+
+        img {
+            display: inline-block;
+            max-width: 48px;
+            max-height: 48px;
+            vertical-align: top;
+            overflow: hidden;
+        }
+
+        .o_twitter_users_autocomplete_info {
+            display: inline-block;
+            margin-top: 5px;
+            margin-left: 5px;
+
+            .o_twitter_users_autocomplete_info_name {
+                font-weight: bold;
+            }
+
+            span {
+                vertical-align: top;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                display: inline-block;
+                width: 320px;
+            }
+        }
+    }
+}
+
+.o_social_twitter_preview {
+    --social-twitter-color: #000000;
+    .o_social_preview_icon_wrapper {
+        color: var(--social-twitter-color);
+    }
+    .o_social_twitter_message_exceeding {
+        background-color: #fd9bb0;
+    }
+}
+
+.o_social_comments_modal_twitter {
+    --social-twitter-color: #000000;
+    a:not(.btn-outline-secondary):not(.o_social_comment_published_date):not(.o_social_post_published_date):not(.dropdown-item) {
+        color: var(--social-twitter-color);
+    }
+
+    a.o_social_original_post_author, a.o_social_comment_author_name {
+        color: #14171a;
+    }
+
+    a:not(.btn-outline-secondary):not(.o_social_comment_published_date:not(.o_social_post_published_date)), a.o_social_original_post_author, a.o_social_comment_author_name:not(.dropdown-item) {
+        &:hover, &:focus {
+            color: var(--social-twitter-color);
+            text-decoration: underline;
+        }
+    }
+}
+
+.o_social_original_post_twitter_stats {
+    .o_social_twitter_likes.o_social_twitter_user_likes {
+        color: #e0245e;
+    }
+}
+
+.o_social_comments_modal_twitter {
+    .o_social_comment_likes_total.badge {
+        color: #e0245e;
+    }
+}

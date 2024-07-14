@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_sepa_inherit_form" model="ir.ui.view">
+        <field name="name">res.partner.sepa.inherit.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='accounting_entries']" position="after">
+                <group name='accounting_misc' string='Miscellaneous'>
+                    <field name="account_sepa_lei"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

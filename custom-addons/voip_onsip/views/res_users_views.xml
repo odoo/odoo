@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="onsip_res_user_form" model="ir.ui.view">
+        <field name="name">VOIP OnSIP in User Form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="voip.res_user_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='voip_username']" position="after">
+                <field name="onsip_auth_username" class="oe_inline" readonly="0"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="onsip_res_users_view_form_preferences" model="ir.ui.view">
+        <field name="name">VOIP OnSIP in Preferences Form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='voip_username']" position="after">
+                <field name="onsip_auth_username" class="oe_inline" readonly="0"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

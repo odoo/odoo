@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="account_journal_dashboard_kanban_view" model="ir.ui.view">
+            <field name="name">account.journal.dashboard.kanban</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@id='new_misc_entry_button']" position="after">
+                    <widget name="account_file_uploader"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

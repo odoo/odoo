@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_be_codabox</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='account_vendor_bills']" position="after">
+                <block title="CODA &amp; SODA" invisible="country_code != 'BE'" id="l10n_be_codabox">
+                    <field name="l10n_be_codabox_fiduciary_vat" invisible="1"/>
+                    <setting string="CodaBox Connection"
+                             documentation="/applications/finance/fiscal_localizations/belgium.html#codabox">
+                        <div class="group-content">
+                            <div>
+                                <label for="l10n_be_codabox_fiduciary_vat" class="col-lg-3 o_light_label"/>
+                                <field name="l10n_be_codabox_fiduciary_vat"/>
+                            </div>
+                            <div>
+                                <label string="Access token" for="l10n_be_codabox_iap_token" class="col-lg-3 o_light_label"/>
+                                <field name="l10n_be_codabox_iap_token"/>
+                            </div>
+                        </div>
+                        <div class="group-content">
+                            <field name="l10n_be_codabox_is_connected" invisible="1"/>
+                            <label string="Status" for="l10n_be_codabox_is_connected" class="col-lg-3 o_light_label"/>
+
+                            <i class="fa fa-check text-success" invisible="not l10n_be_codabox_is_connected"/>
+                            <span class="text-success" invisible="not l10n_be_codabox_is_connected">Connected</span>
+
+                            <i class="fa fa-exclamation-triangle text-warning" invisible="l10n_be_codabox_is_connected"/>
+                            <span class="text-warning" invisible="l10n_be_codabox_is_connected">Not connected</span>
+                        </div>
+                        <div class="d-flex gap-1 l10n_be_codabox_action_buttons" colspan="3"/>
+                        <widget name="l10n_be_codabox_settings_buttons"/>
+                    </setting>
+                    <setting string="SODA Settings">
+                        <div class="group-content">
+                            <label for="l10n_be_codabox_soda_journal" class="col-lg-5 o_light_label" string="Import SODA's in"  invisible="not l10n_be_codabox_fiduciary_vat"/>
+                            <field name="l10n_be_codabox_soda_journal" domain="[('type', '=', 'general'), ('active', '=', True), ('company_id', '=', company_id)]" invisible="not l10n_be_codabox_fiduciary_vat"/>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

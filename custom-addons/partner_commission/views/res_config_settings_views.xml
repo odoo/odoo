@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.partner.commission</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="crm.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='crm']" position="inside">
+                <block title="Partners Commissions">
+                    <setting string="Automatic PO frequency" company_dependent="1" help="Frequency at which purchase orders will be automatically confirmed">
+                        <field name="commission_automatic_po_frequency"/>
+                    </setting>
+                    <setting string="Minimum PO amount total" company_dependent="1" help="The required minimum amount total needed to automatically confirm purchase orders">
+                        <field name="commission_po_minimum"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

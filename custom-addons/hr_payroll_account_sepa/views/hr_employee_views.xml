@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.actions.server" id="trust_employee_bank">
+        <field name="name">Trust Bank Account</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records._action_trust_bank_accounts()
+        </field>
+        <field name="groups_id" eval="[(4, ref('hr_payroll.group_hr_payroll_user'))]"/>
+    </record>
+</odoo>

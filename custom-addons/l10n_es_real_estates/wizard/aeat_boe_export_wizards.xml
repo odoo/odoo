@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="mod347_boe_wizard" model="ir.ui.view">
+            <field name="name">l10n_es_real_estates.aeat.boe.mod347.export.wizard.form</field>
+            <field name="model">l10n_es_reports.aeat.boe.mod347.export.wizard</field>
+            <field name="inherit_id" ref="l10n_es_reports.mod347_boe_wizard"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='cash_basis_mod347_data']" position="after">
+                    <field name="real_estates_vat_mod347_data"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mod347_inmuebles_vat_tree" model="ir.ui.view">
+            <field name="name">l10n_es_reports.aeat.boe.mod347.real.estates.vat.tree</field>
+            <field name="model">l10n_es_reports.aeat.mod347.real.estates.vat</field>
+            <field name="inherit_id" ref='l10n_es_reports.mod347_manual_partner_data_tree'/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="inside">
+                    <field name="trimester"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,169 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* documents_project_sale
+# 
+# Translators:
+# Fernanda Alvarez, 2023
+# Wil Odoo, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:11+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
+"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_419\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: documents_project_sale
+#: model_terms:ir.ui.view,arch_db:documents_project_sale.product_template_form_view_inherit_documents_project_sale
+msgid ""
+"<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Values set here are "
+"company-specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Los valores "
+"establecidos aquí son específicos de la empresa.\" "
+"groups=\"base.group_multi_company\"/>"
+
+#. module: documents_project_sale
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_product__documents_allowed_company_id
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_template__documents_allowed_company_id
+msgid "Documents Allowed Company"
+msgstr "Documentos empresariales permitidos"
+
+#. module: documents_project_sale
+#: model:ir.model,name:documents_project_sale.model_documents_folder
+msgid "Documents Workspace"
+msgstr "Espacio de trabajo de documentos"
+
+#. module: documents_project_sale
+#: model:documents.tag,name:documents_project_sale.documents_folder_facet_1_tag_3
+msgid "Done/Archived"
+msgstr "Listo/Archivado"
+
+#. module: documents_project_sale
+#: model:documents.tag,name:documents_project_sale.documents_folder_facet_1_tag_2
+msgid "In Use"
+msgstr "En uso"
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder_template_child_3
+msgid "Miscellaneous"
+msgstr "Varios"
+
+#. module: documents_project_sale
+#: model:documents.tag,name:documents_project_sale.documents_folder_facet_1_tag_1
+msgid "New/Unsorted"
+msgstr "Nuevo/Sin clasificar"
+
+#. module: documents_project_sale
+#: model:ir.model.fields,help:documents_project_sale.field_product_product__template_folder_id
+#: model:ir.model.fields,help:documents_project_sale.field_product_template__template_folder_id
+msgid ""
+"On sales order confirmation, a workspace will be automatically generated for"
+" the project based on this template."
+msgstr ""
+"Cuando se confirme una orden de compra se generará de manera automática un "
+"espacio de trabajo para el proyecto, con base en esta plantilla. "
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder_template_child_2
+msgid "Photos"
+msgstr "Fotos"
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder_template_child_1
+msgid "Plans"
+msgstr "Planes"
+
+#. module: documents_project_sale
+#: model:ir.model,name:documents_project_sale.model_product_template
+msgid "Product"
+msgstr "Producto"
+
+#. module: documents_project_sale
+#: model:ir.model.fields,field_description:documents_project_sale.field_documents_folder__product_template_ids
+msgid "Product Template"
+msgstr "Plantilla del producto"
+
+#. module: documents_project_sale
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_product__project_template_use_documents
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_template__project_template_use_documents
+msgid "Project Template - Documents"
+msgstr "Plantilla de proyecto - Documentos"
+
+#. module: documents_project_sale
+#: model:product.template,name:documents_project_sale.product_1
+msgid "Renovation Architect (Workspace Template)"
+msgstr "Arquitecto de renovación (Plantilla de espacio de trabajo)"
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder
+msgid "Renovation Projects"
+msgstr "Proyectos de renovación"
+
+#. module: documents_project_sale
+#: model:ir.model,name:documents_project_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Orden de venta"
+
+#. module: documents_project_sale
+#: model:documents.facet,name:documents_project_sale.documents_folder_facet_1
+msgid "Status"
+msgstr "Estado"
+
+#. module: documents_project_sale
+#: model:documents.folder,name:documents_project_sale.documents_folder_template
+msgid "Template"
+msgstr "Plantilla"
+
+#. module: documents_project_sale
+#. odoo-python
+#: code:addons/documents_project_sale/models/product_template.py:0
+#, python-format
+msgid ""
+"The \"%s\" workspace template should either be in the \"%s\" company like "
+"this product or be open to all companies."
+msgstr ""
+"La plantilla de espacio de trabajo \"%s\"  debe estar en la empresa \"%s\" "
+"como este producto o estar abierto para todas las empresas."
+
+#. module: documents_project_sale
+#. odoo-python
+#: code:addons/documents_project_sale/models/documents_folder.py:0
+#, python-format
+msgid ""
+"This workspace should remain in the same company as the \"%s\" product for "
+"which it is a template. Please update the company of the \"%s\" product, or "
+"leave the company of this workspace empty."
+msgstr ""
+"Este espacio de trabajo debe permanecer en la misma empresa que el producto "
+"\"%s\" para el cual es una plantilla. Actualice la empresa del producto "
+"\"%s\" o deje vacía la empresa de este espacio de trabajo."
+
+#. module: documents_project_sale
+#. odoo-python
+#: code:addons/documents_project_sale/models/documents_folder.py:0
+#, python-format
+msgid ""
+"This workspace should remain in the same company as the following products for which it is a template:\n"
+"%s\n"
+"\n"
+"Please update the company of those products, or leave the company of this workspace empty."
+msgstr ""
+"Este espacio de trabajo debe permanecer en la misma empresa que los siguientes productos para los cuales es una plantilla:\n"
+"%s\n"
+"\n"
+"Actualice a la empresa de esos productos o deja vacía la empresa de este espacio de trabajo."
+
+#. module: documents_project_sale
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_product__template_folder_id
+#: model:ir.model.fields,field_description:documents_project_sale.field_product_template__template_folder_id
+msgid "Workspace Template"
+msgstr "Plantilla de espacio de trabajo"

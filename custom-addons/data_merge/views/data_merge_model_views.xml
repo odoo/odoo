@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_data_merge_model_list">
+            <field name="name">Deduplication Model List</field>
+            <field name="model">data_merge.model</field>
+            <field name="arch" type="xml">
+                <tree decoration-muted="not active">
+                    <field name="name" />
+                    <field name="res_model_id" />
+                    <field name="merge_mode" groups="base.group_no_one" />
+                    <field name="active" widget="boolean_toggle" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_data_merge_model_form">
+            <field name="name">Deduplication Model Form</field>
+            <field name="model">data_merge.model</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_find_duplicates" type="object" string="Deduplicate" class="oe_highlight" />
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="open_records"
+                                    type="object" icon="fa-clone">
+                                <field name="records_to_merge_count" string="Duplicates" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="res_model_id" options="{'no_create': True, 'no_open': True}" />
+                                <field name="res_model_name" invisible="1" />
+                                <field name="domain" widget="domain" options="{'model': 'res_model_name'}" />
+                                <field name="mix_by_company" widget="boolean_toggle" groups="base.group_multi_company" />
+                                <field name="custom_merge_method" invisible="1" />
+                                <field name="removal_mode" widget="radio" options="{'horizontal': true}" invisible="custom_merge_method" />
+                                <label for="removal_mode" invisible="not custom_merge_method" />
+                                <span invisible="not custom_merge_method">Model specific</span>
+                            </group>
+                            <group>
+                                <field name="merge_mode" widget="radio" options="{'horizontal': true}" />
+
+                                <!-- Manual merge -->
+                                <label for="notify_user_ids" invisible="merge_mode == 'automatic'" />
+                                <div invisible="merge_mode == 'automatic'">
+                                    <field name="notify_user_ids" widget="many2many_tags" options="{'no_create': True, 'no_edit': True}" domain="[('share', '=', False)]" />
+                                    <div class="d-flex w-25" invisible="not notify_user_ids">
+                                        <span class="me-1">Every</span>
+                                        <field name="notify_frequency" required="notify_user_ids" />
+                                        <field name="notify_frequency_period" required="notify_user_ids" />
+                                    </div>
+                                </div>
+
+                                <!-- Automatic merge -->
+                                <label for="merge_threshold" invisible="merge_mode == 'manual'"/>
+                                <div invisible="merge_mode == 'manual'">
+                                    <field name="merge_threshold" class="oe_inline" required="merge_mode == 'automatic'" />
+                                    <span class="oe_inline">%</span>
+                                </div>
+
+                                <label for="create_threshold" />
+                                <div groups="base.group_no_one">
+                                    <field name="create_threshold" class="oe_inline" />
+                                    <span class="oe_inline">%</span>
+                                </div>
+                                <field name="active" widget="boolean_toggle" />
+                            </group>
+                        </group>
+                        <group invisible="res_model_id">
+                            <group>
+                                <div class="alert alert-info" role="alert" colspan="2">
+                                    Select a model to configure deduplication rules
+                                </div>
+                            </group>
+                        </group>
+                        <group invisible="not res_model_id">
+                            <field name="rule_ids" context="{'default_res_model_id': res_model_id}">
+                                <tree editable="bottom" string="Deduplication Rules">
+                                    <field name="res_model_id" column_invisible="True" />
+                                    <field name="sequence" widget="handle" />
+                                    <field name="field_id" options="{'no_create': True, 'no_open': True}" />
+                                    <field name="match_mode" />
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="data_merge_model_view_search" model="ir.ui.view">
+            <field name="name">data_merge.model.search</field>
+            <field name="model">data_merge.model</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <separator/>
+                    <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_data_merge_config">
+            <field name="name">Deduplication Rules</field>
+            <field name="res_model">data_merge.model</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_contextual_merge_action', '=', False), '|', ('active', '=', False), ('active', '=', True)]</field>
+        </record>
+    </data>
+</odoo>

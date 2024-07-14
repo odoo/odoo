@@ -1,0 +1,2438 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_contract_salary
+# 
+# Translators:
+# Emanuel Bruda, 2024
+# Claudia Baisan, 2024
+# Fenyedi Levente, 2024
+# Hongu Cosmin <cosmin513@gmail.com>, 2024
+# Cozmin Candea <office@terrabit.ro>, 2024
+# Martin Trigaux, 2024
+# Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# Betty Keresztesi, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Betty Keresztesi, 2024\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_personal_info__impacts_net_salary
+msgid ""
+" If checked, any change on this information will trigger a new computation "
+"of the gross-->net salary."
+msgstr ""
+" Dacă este bifată, orice modificare a acestor informații va declanșa o nouă "
+"calculare a salariului brut-->net."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__signatures_count
+msgid "# Signatures"
+msgstr "# Semnături"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_offer.py:0
+#, python-format
+msgid "%s manually set the Offer to Refused"
+msgstr "%s a setat manual oferta la Refuzat"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_offer.py:0
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#, python-format
+msgid "%s: Job Offer - %s"
+msgstr "%s: Oferta de muncă - %s"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,helper:hr_contract_salary.hr_contract_salary_personal_info_name
+msgid "(Lastname Firstname)"
+msgstr "(Nume Prenume)"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,placeholder:hr_contract_salary.hr_contract_salary_personal_info_identification_id
+msgid "00.00.00-000.00"
+msgstr "00.00.00-000.00"
+
+#. module: hr_contract_salary
+#: model:mail.template,body_html:hr_contract_salary.mail_template_send_offer
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <h2>Congratulations!</h2>\n"
+"    You can configure your salary package by clicking on the link below.<br>\n"
+"    The link will expire on the <t t-out=\"ctx.get('validity_end')\"></t>.\n"
+"    <div style=\"padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/salary_package/simulation/offer/{{ctx.get('offer_id')}}\" target=\"_blank\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Configure your package</a>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <h2>Congratulations!</h2>\n"
+"    You can configure your salary package by clicking on the link below.<br>\n"
+"    The link will expire on the <t t-out=\"ctx.get('validity_end')\"></t>.\n"
+"    <div style=\"padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/salary_package/simulation/offer/{{ctx.get('offer_id')}}\" target=\"_blank\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Configure your package</a>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+
+#. module: hr_contract_salary
+#: model:mail.template,body_html:hr_contract_salary.mail_template_send_offer_applicant
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <h2>Congratulations!</h2>\n"
+"    You can configure your salary package by clicking on the link below.<br>\n"
+"    The link will expire on the <t t-out=\"ctx.get('validity_end')\"></t>.\n"
+"    <div style=\"padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/salary_package/simulation/offer/{{ctx.get('offer_id')}}?token={{ctx.get('access_token')}}\" target=\"_blank\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Configure your package</a>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <h2>Congratulations!</h2>\n"
+"    You can configure your salary package by clicking on the link below.<br>\n"
+"    The link will expire on the <t t-out=\"ctx.get('validity_end')\"></t>.\n"
+"    <div style=\"padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/salary_package/simulation/offer/{{ctx.get('offer_id')}}?token={{ctx.get('access_token')}}\" target=\"_blank\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Configure your package</a>\n"
+"    </div>\n"
+"</div>\n"
+"        "
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_thank_you
+msgid "<i class=\"fa fa-check-circle-o mr8\"/>Congratulations"
+msgstr "<i class=\"fa fa-check-circle-o mr8\"/>Felicitări"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span class=\"ms-3\">/ month</span>"
+msgstr "<span class=\"ms-3\">/ lună</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span class=\"ms-3\">/ year</span>"
+msgstr "<span class=\"ms-3\">/ an</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span class=\"o_stat_text ml4\">Previous Contract</span>"
+msgstr "<span class=\"o_stat_text ml4\">Contract anterior</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_applicant_view_form
+msgid "<span class=\"o_stat_text\">Contracts</span>"
+msgstr "<span class=\"o_stat_text\">Contracte</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span class=\"o_stat_text\">Offers</span>"
+msgstr "<span class=\"o_stat_text\">Oferte</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span class=\"o_stat_text\">Reviews</span>"
+msgstr "<span class=\"o_stat_text\">Recenzii</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid ""
+"<span class=\"text-muted fst-italic\" invisible=\"contract_id\">An offer template need to be selected to have an offer link.</span>\n"
+"                        <span class=\"text-muted fst-italic\" invisible=\"not display_warning_message\">An applicant name needs to be set to have an offer link.</span>"
+msgstr ""
+"<span class=\"text-muted fst-italic\" invisible=\"contract_id\">Trebuie selectat un șablon de ofertă pentru a avea un link de ofertă.</span>\n"
+"                        <span class=\"text-muted fst-italic\" invisible=\"not display_warning_message\">Trebuie setat un nume de solicitant pentru a avea o legătură cu oferta.</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_thank_you
+msgid "<span class=\"text-muted mr4 ml4\">|</span>"
+msgstr "<span class=\"text-muted mr4 ml4\">|</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid ""
+"<span>\n"
+"                                    This field can only be modified by a server administrator, contact them if these field requires modifications.\n"
+"                                </span>\n"
+"                                <span invisible=\"requested_documents_fields_string\">\n"
+"                                    There are currently no requested fields.\n"
+"                                </span>"
+msgstr ""
+"<span>\n"
+"                                    Acest câmp poate fi modificat numai de către un administrator de server, contactați-l dacă acest câmp necesită modificări.\n"
+"\n"
+"                                </span>\n"
+"                                <span invisible=\"requested_documents_fields_string\">\n"
+"                                    În prezent nu există câmpuri solicitate.\n"
+"                                </span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid "<span> /year</span>"
+msgstr "<span> /an</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form_hr
+msgid "<span> days</span>"
+msgstr "<span>zile</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span>/ month</span>"
+msgstr "<span>/ luna</span>"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "<span>days / year</span>"
+msgstr "<span>zile / an</span>"
+
+#. module: hr_contract_salary
+#: model:ir.model.constraint,message:hr_contract_salary.constraint_hr_contract_salary_benefit_required_fold_res_field_id
+msgid "A folded field is required"
+msgstr "Este necesar un câmp pliat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__access_token
+msgid "Access Token"
+msgstr "Access Token"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_needaction
+msgid "Action Needed"
+msgstr "Intervenție necesară"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__active
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__active
+msgid "Active"
+msgstr "Activ"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_ids
+msgid "Activities"
+msgstr "Activități"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Activity"
+msgstr "Activitate"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__activity_creation
+msgid "Activity Creation"
+msgstr "Creare activitate"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__activity_creation_type
+msgid "Activity Creation Type"
+msgstr "Tip creare activitate"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Activitate Excepție Decorare"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_state
+msgid "Activity State"
+msgstr "Stare activitate"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__activity_type_id
+msgid "Activity Type"
+msgstr "Tip activitate"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Pictograma tipului de activitate"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Add a line"
+msgstr "Adăugă o linie"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Add a section"
+msgstr "Adaugă o secțiune"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__benefit_ids
+msgid ""
+"All benefits in this field need to be selected, as a condition for the "
+"current one to be editable. Before edition, the current benefit is always "
+"set to false."
+msgstr ""
+"Toate beneficiile din acest câmp trebuie să fie selectate, ca o condiție "
+"pentru ca beneficiul curent să poată fi editat. Înainte de editare, "
+"beneficiul curent este întotdeauna setat la fals."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__always
+msgid "Always Selected"
+msgstr "Întotdeauna selectat"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#, python-format
+msgid ""
+"An <a href='#' data-oe-model='hr.contract.salary.offer' data-oe-"
+"id='%s'>Offer</a> as been sent by %s to the applicant (mail: %s)"
+msgstr ""
+"Un <a href='#' data-oe-model='hr.contract.salary.offer' data-oe-"
+"id='%s'>Ofertă</a> a fost trimis de %s candidatului (e-mail: %s)"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#, python-format
+msgid ""
+"An <a href='#' data-oe-model='hr.contract.salary.offer' data-oe-"
+"id='%s'>Offer</a> as been sent by %s to the employee (mail: %s)"
+msgstr ""
+"Un <a href='#' data-oe-model='hr.contract.salary.offer' data-oe-"
+"id='%s'>Ofertă</a> a fost trimis de %s angajatului (e-mail: %s)"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_employee_report__final_yearly_costs
+msgid "Annual Employee Budget"
+msgstr "Bugetul anual al angajaților"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Annual Employer Cost"
+msgstr "Costul anual al angajatorului"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__applicant_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__applicant_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__applicant_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Applicant"
+msgstr "Candidat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__applicant_name
+msgid "Applicant's Name"
+msgstr "Numele candidatului"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Applicants"
+msgstr "Candidati"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__applies_on
+msgid "Applies On"
+msgstr "Aplică în"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_next_step_button
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_sidebar
+msgid "Apply Now"
+msgstr "Aplicați acum"
+
+#. module: hr_contract_salary
+#: model:ir.actions.server,name:hr_contract_salary.ir_cron_clean_redundant_salary_data_ir_actions_server
+msgid "Archive/Delete redundant generated salary data"
+msgstr "Arhivează / Șterge datele salariale generate redundante"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_search
+msgid "Archived"
+msgstr "Arhivat"
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/js/binary_field_contract.js:0
+#, python-format
+msgid "Are you sure you want to delete this file permanently ?"
+msgstr "Sunteți sigur că doriți să ștergeți acest fișier definitiv?"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__activity_responsible_id
+msgid "Assigned to"
+msgstr "Atribuit lui"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_attachment_count
+msgid "Attachment Count"
+msgstr "Număr atașamente"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_certificate_bachelor
+msgid "Bachelor"
+msgstr "Licență"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__applies_on__bank_account
+msgid "Bank Account"
+msgstr "Cont bancar"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_acc_number
+msgid "Bank account"
+msgstr "Cont bancar"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__benefit_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__benefit_ids
+msgid "Benefit"
+msgstr "Beneficiu"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__res_field_id
+msgid "Benefit Field"
+msgstr "Câmp de beneficii"
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.hr_contract_benefit_action
+#: model:ir.ui.menu,name:hr_contract_salary.salary_package_benefit
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Benefits"
+msgstr "Beneficii"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_benefit.py:0
+#, python-format
+msgid "Benefits that are not linked to a field should always be displayed."
+msgstr ""
+"Beneficiile care nu sunt legate de un câmp ar trebui să fie întotdeauna "
+"afișate."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__res_field_public
+msgid "Benefit Field"
+msgstr "Câmp de beneficii"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_birthdate
+msgid "Birthdate"
+msgstr "Zi de naștere"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__category_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_form
+msgid "Category"
+msgstr "Categorie"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_certificate
+msgid "Certificate"
+msgstr "Certificate"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_diff_email_template
+msgid "Changes summary since previous contract:"
+msgstr "Rezumatul modificărilor de la contractul anterior:"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__checkbox
+msgid "Checkbox"
+msgstr "Checkbox"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__child_ids
+msgid "Child"
+msgstr "Copil"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__activity_creation
+msgid ""
+"Choose when the activity is created:\n"
+"- Employee signs his contract: Activity is created as soon as the employee signed the contract\n"
+"- Contract is countersigned: HR responsible have signed the contract and conclude the process."
+msgstr ""
+"Alegeți când este creată activitatea:\n"
+"- Angajatul își semnează contractul: Activitatea este creată imediat ce angajatul a semnat contractul\n"
+"- Contractul este contrasemnat: Responsabilii de resurse umane au semnat contractul și încheie procesul."
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_city
+msgid "City"
+msgstr "Localitate"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__code
+msgid "Code"
+msgstr "Cod"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__color
+msgid "Color"
+msgstr "Culoare"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__company_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__company_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Company"
+msgstr "Companie"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_res_config_settings
+msgid "Config Settings"
+msgstr "Setări de configurare"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_benefit_type
+msgid "Contract Benefit Type"
+msgstr "Contract Tip de beneficiu"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_benefit_value
+msgid "Contract Benefit Value"
+msgstr "Valoare beneficiu contract"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Contract Information:"
+msgstr "Informații despre contract:"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__contract_start_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__contract_start_date
+msgid "Contract Start Date"
+msgstr "Data de început a contractului"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__contract_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__default_contract_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_history__default_contract_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__contract_template_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_job__default_contract_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Contract Template"
+msgstr "Sablon de Contract"
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.action_hr_contract_templates
+msgid "Contract Templates"
+msgstr "Model Contract"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Contract Type"
+msgstr "Tip de contract"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__contract_update_template_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_history__contract_update_template_id
+msgid "Contract Update Document Template"
+msgstr "Șablon de document de actualizare a contractului"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__value_type__contract
+msgid "Contract Value"
+msgstr "Valoare contract"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_employee_report
+msgid "Contract and Employee Analysis Report"
+msgstr "Raport privind contractele și analiza angajaților"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__res_field_id
+msgid "Contract field linked to this benefit"
+msgstr "Câmpul de contract asociat acestei beneficii"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__cost_res_field_id
+msgid ""
+"Contract field linked to this benefit cost. If not set, the benefit won't be"
+" taken into account when computing the employee budget."
+msgstr ""
+"Câmpul contractului legat de acest cost al beneficiului. Dacă nu este setat,"
+" beneficiul nu va fi luat în considerare la calcularea bugetului "
+"angajatului."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__fold_res_field_id
+msgid "Contract field used to fold this benefit."
+msgstr "Câmpul de contract utilizat pentru plierea acestei prestații."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__manual_res_field_id
+msgid "Contract field used to manually encode an benefit value."
+msgstr ""
+"Câmp contractual utilizat pentru codificarea manuală a valorii unei "
+"beneficii."
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_history
+msgid "Contract history"
+msgstr "Istoric contract"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__activity_creation__countersigned
+msgid "Contract is countersigned"
+msgstr "Contractul este contrasemnat"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Contracts Reviews"
+msgstr "Revizuiri de contracte"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__cost_res_field_id
+msgid "Cost Field"
+msgstr "Câmpul de cost"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__cost_field
+msgid "Cost Field Name"
+msgstr "Nume câmp de cost"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__cost_res_field_public
+msgid "Cost Field"
+msgstr "Câmp de cost"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__dropdown_selection__country
+msgid "Countries"
+msgstr "Tari"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_country
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__country_id
+msgid "Country"
+msgstr "Țară"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_country_of_birth
+msgid "Country of Birth"
+msgstr "Țara Natală"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_generate_simulation_link
+msgid "Create an Offer"
+msgstr "Creează o ofertă"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__hash_token
+msgid "Created From Token"
+msgstr "Creat din Token"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__create_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__create_uid
+msgid "Created by"
+msgstr "Creat de"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__create_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__create_date
+msgid "Created on"
+msgstr "Creat în"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__currency_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__currency_id
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__uom__currency
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__uom__currency
+msgid "Currency"
+msgstr "Monedă"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package
+msgid "Customize your salary"
+msgstr "Personalizați-vă salariul"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__date
+msgid "Date"
+msgstr "Dată"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__uom__days
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__uom__days
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_benefits
+#, python-format
+msgid "Days"
+msgstr "Zile"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_res_config_settings__access_token_validity
+msgid "Default Access Token Validity Duration"
+msgstr "Durata de validitate a jetonului de acces implicit"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_res_config_settings__employee_salary_simulator_link_validity
+msgid "Default Salary Configurator Link Validity Duration For Employees"
+msgstr ""
+"Durata implicită de valabilitate a legăturii cu configuratorul de salarii "
+"pentru angajați"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_job__default_contract_id
+msgid ""
+"Default contract used to generate an offer. If empty, benefits will be taken"
+" from current contract of the employee/nothing for an applicant."
+msgstr ""
+"Contractul implicit utilizat pentru a genera o ofertă. Dacă este gol, "
+"beneficiile vor fi preluate din contractul actual al angajatului/nimic "
+"pentru un candidat."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__default_contract_id
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_history__default_contract_id
+msgid "Default contract used when making an offer to an applicant."
+msgstr "Contract implicit utilizat la efectuarea unei oferte unui solicitant."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__sign_template_id
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_history__sign_template_id
+msgid ""
+"Default document that the applicant will have to sign to accept a contract "
+"offer."
+msgstr ""
+"Document implicit pe care solicitantul va trebui să îl semneze pentru a "
+"accepta o ofertă de contract."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__contract_update_template_id
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_history__contract_update_template_id
+msgid ""
+"Default document that the employee will have to sign to update his contract."
+msgstr ""
+"Document implicit pe care angajatul va trebui să-l semneze pentru a-și "
+"actualiza contractul."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__activity_creation_type
+msgid ""
+"Define when the system creates a new activity:\n"
+"- When the benefit is set: Unique creation the first time the employee will take the benefit\n"
+"- When the benefit is modified: Activity will be created for each change regarding the benefit."
+msgstr ""
+"Definiți momentul în care sistemul creează o nouă activitate:\n"
+"- Atunci când beneficiul este stabilit: Prima dată când angajatul va beneficia de prestație\n"
+"- Atunci când beneficiul este modificat: Activitatea va fi creată pentru fiecare modificare privind beneficiul."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__sign_frenquency
+msgid ""
+"Define when the system creates a new sign request:\n"
+"- When the benefit is set: Unique signature request the first time the employee will take the benefit\n"
+"- When the benefit is modified: Signature request will be created for each change regarding the benefit."
+msgstr ""
+"Definește momentul în care sistemul creează o nouă cerere de înscriere:\n"
+"- Atunci când prestația este stabilită: Cerere unică de semnătură prima dată când angajatul va beneficia de prestație\n"
+"- Atunci când beneficiul este modificat: Cererea de semnătură va fi creată pentru fiecare modificare privind beneficiul."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__department_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__department_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Department"
+msgstr "Departament"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__description
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Description"
+msgstr "Descriere"
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/xml/resume_sidebar.xml:0
+#, python-format
+msgid "Details"
+msgstr "Detalii"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid "Discard"
+msgstr "Abandonează"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "Display"
+msgstr "Afișare"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__display_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__display_type
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__display_type
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__display_type
+msgid "Display Type"
+msgstr "Tipul de afișare"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__display_warning_message
+msgid "Display Warning Message"
+msgstr "Afișare mesaj de avertizare"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_certificate_doctor
+msgid "Doctor"
+msgstr "Doctor"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__document
+msgid "Document"
+msgstr "Document"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__sign_template_id
+msgid ""
+"Documents selected here will be requested to the employee for additional "
+"signatures related to the benefit. eg: A company car policy to approve if "
+"you choose a company car."
+msgstr ""
+"Documentele selectate aici vor fi solicitate angajatului pentru semnături "
+"suplimentare legate de beneficiu. de ex: O poliță privind mașina de serviciu"
+" pentru a fi aprobată dacă alegeți o mașină de serviciu."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_sign_document_wizard__sign_template_ids
+msgid "Documents to sign"
+msgstr "Documente de semnat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_sign_document_wizard__sign_template_ids
+msgid ""
+"Documents to sign. Only documents with 1 or 2 different responsible are selectable.\n"
+"        Documents with 1 responsible will only have to be signed by the employee while documents with 2 different responsible will have to be signed by both the employee and the responsible.\n"
+"        "
+msgstr ""
+"Documente de semnat. Doar documentele cu 1 sau 2 responsabili diferiți pot fi selectate.\n"
+"        Documentele cu 1 responsabil vor trebui semnate doar de angajat, în timp ce documentele cu 2 responsabili diferiți vor trebui semnate atât de angajat, cât și de responsabil.\n"
+"        "
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__dropdown
+msgid "Dropdown"
+msgstr "Meniu derulant"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__dropdown-group
+msgid "Dropdown Group"
+msgstr "Grup derulant"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_email
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__email
+msgid "Email"
+msgstr "Email"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__email_to
+msgid "Email To"
+msgstr "Trimiteți un e-mail către"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__sign_copy_partner_id
+msgid "Email address to which to transfer the signature."
+msgstr "Adresa de e-mail la care se transferă semnătura."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__employee_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__employee_id
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__applies_on__employee
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Employee"
+msgstr "Angajat"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__employee_contract_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__employee_contract_id
+msgid "Employee Contract"
+msgstr "Contract angajat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__employee_job_id
+msgid "Employee Job"
+msgstr "Loc de muncă angajat"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Employee Name"
+msgstr "Nume angajat"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_image_1920
+msgid "Employee Photo"
+msgstr "Fotografie angajat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__activity_creation__running
+msgid "Employee signs his contract"
+msgstr "Angajatul semnează contractul"
+
+#. module: hr_contract_salary
+#: model:mail.template,name:hr_contract_salary.mail_template_send_offer
+msgid "Employee: Contract And Salary Package"
+msgstr "Angajat: Contract și pachet salarial"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Employees"
+msgstr "Angajați"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__final_yearly_costs
+msgid "Employer Budget"
+msgstr "Buget angajator"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid ""
+"Equals to the sum of the following values:\n"
+"\n"
+"%s"
+msgstr ""
+"Echivalează cu suma următoarelor valori:\n"
+"\n"
+"%s"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_offer__state__expired
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Expired"
+msgstr "Expirat"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.benefit,name:hr_contract_salary.benefit_extra_time_off
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__holidays
+msgid "Extra Time Off"
+msgstr "Timp liber suplimentar"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_gender_female
+msgid "Female"
+msgstr "Femeie"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__field
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__field
+msgid "Field Name"
+msgstr "Nume câmp"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_study_field
+msgid "Field of Study"
+msgstr "Domeniu de Studiu"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__fixed_value
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__value_type__fixed
+msgid "Fixed Value"
+msgstr "Valoare fixă"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__fold_field
+msgid "Fold Field Name"
+msgstr "Pliați numele câmpului"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__fold_label
+msgid "Fold Label"
+msgstr "Etichetă pliabilă"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__fold_res_field_id
+msgid "Fold Res Field"
+msgstr "Pliază Res Field"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__folded
+msgid "Folded"
+msgstr "Pliat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_follower_ids
+msgid "Followers"
+msgstr "Persoane interesate"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Urmăritori (Parteneri)"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Pictogramă minunată pentru font, de ex. fa-sarcini"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_offer__state__full_signed
+msgid "Fully Signed"
+msgstr "Complet semnat"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_gender
+msgid "Gender"
+msgstr "Sex"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Generate Offer"
+msgstr "Generare ofertă"
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.generate_offer_link_action
+#: model:ir.actions.act_window,name:hr_contract_salary.generate_simulation_link_action
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid "Generate a Simulation Link"
+msgstr "Generați un link de simulare"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_value__color__green
+msgid "Green"
+msgstr "Verde"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Group By"
+msgstr "Grupează după"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract.py:0
+#, python-format
+msgid ""
+"HR Responsible %s should be a User of Sign and have a valid email address "
+"when New Contract Document Template is specified"
+msgstr ""
+"Responsabilul HR %s trebuie să fie un utilizator al Sign și să aibă o adresă"
+" de e-mail validă atunci când este specificat un nou șablon de contract"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__has_admin_access
+msgid "Has Admin Access"
+msgstr "Are acces de administrator"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__has_message
+msgid "Has Message"
+msgstr "Are mesaj"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__helper
+msgid "Helper"
+msgstr "Ajutor"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_personal_information
+msgid "Hide <i class=\"oi oi-chevron-up\"/>"
+msgstr "Ascundeți <i class=\"oi oi-chevron-up\"/>"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__hide_children
+msgid "Hide Children"
+msgstr "Ascunde copii"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__hide_description
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__hide_description
+msgid "Hide Description"
+msgstr "Ascundere Descriere"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_personal_info_value__hide_children
+msgid "Hide children personal info when checked."
+msgstr ""
+"Ascundeți informațiile personale ale copiilor atunci când sunt bifate."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__hide_description
+msgid "Hide the description if the benefit is not taken."
+msgstr "Ascundeți descrierea dacă beneficiul nu este utilizat."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__icon
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_exception_icon
+msgid "Icon"
+msgstr "Pictogramă"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Pictograma pentru a indica o activitate de excepție."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__message_has_error
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Dacă este bifată, unele mesaje au o eroare de livrare."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_resume__impacts_monthly_total
+msgid ""
+"If checked, the value of this information will be computed in all "
+"information set as Monthly Total"
+msgstr ""
+"Dacă este bifată, valoarea acestei informații va fi calculată în toate "
+"seturile de informații ca Total lunar"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__image_1920
+msgid "Image"
+msgstr "Imagine"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__image_1920_filename
+msgid "Image 1920 Filename"
+msgstr "Imagine 1920 Denumire fișier"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__impacts_monthly_total
+msgid "Impacts Monthly Total"
+msgstr "Impacturi Total lunar"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__impacts_net_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__impacts_net_salary
+msgid "Impacts Net Salary"
+msgstr "Impactul asupra salariului net"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_offer__state__open
+msgid "In Progress"
+msgstr "În desfășurare"
+
+#. module: hr_contract_salary
+#: model_terms:hr.contract.salary.benefit,description:hr_contract_salary.benefit_extra_time_off
+msgid ""
+"In addition to your legal leaves, you can chose up to 30 extra days off.\n"
+"            The amount of annual time off (legal leaves) you get depends on your work schedule in the previous year. A full-time work schedule through the 12 months of the last year, under your contract, will grant you 20 annual time off (legal leaves)."
+msgstr ""
+"În plus față de concediile legale, puteți alege până la 30 de zile libere suplimentare.\n"
+"            Numărul de zile libere anuale (concedii legale) de care beneficiați depinde de programul dumneavoastră de lucru din anul precedent. Un program de lucru cu normă întreagă în cele 12 luni ale anului precedent, conform contractului dumneavoastră, vă va acorda 20 de zile libere anuale (concedii legale)."
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/js/hr_contract_salary.js:0
+#, python-format
+msgid ""
+"In order to choose %s, first you need to choose:\n"
+" %s"
+msgstr ""
+"Pentru a alege %s, mai întâi trebuie să alegeți:\n"
+" %s"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__info_type_id
+msgid "Info Type"
+msgstr "Tip informație"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_form
+msgid "Information"
+msgstr "Informații"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__integer
+msgid "Integer"
+msgstr "Întreg"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_is_follower
+msgid "Is Follower"
+msgstr "Este urmăritor"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__is_required
+msgid "Is Required"
+msgstr "Este necesar"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__is_origin_contract_template
+msgid "Is origin contract a contract template?"
+msgstr "Este contractul de origine un model de contract?"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: model:ir.model,name:hr_contract_salary.model_hr_job
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__employee_job_id
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+#, python-format
+msgid "Job Position"
+msgstr "Funcție"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__job_title
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__job_title
+#, python-format
+msgid "Job Title"
+msgstr "Funcție"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__dropdown_selection__lang
+msgid "Languages"
+msgstr "Limbi"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__write_uid
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__write_uid
+msgid "Last Updated by"
+msgstr "Ultima actualizare făcută de"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__write_date
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__write_date
+msgid "Last Updated on"
+msgstr "Ultima actualizare pe"
+
+#. module: hr_contract_salary
+#: model_terms:ir.actions.act_window,help:hr_contract_salary.action_hr_contract_templates
+msgid "Let's create one"
+msgstr "Să creăm unul"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_value__display_type__line
+msgid "Line"
+msgstr "Linie"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__url
+msgid "Link"
+msgstr "Link"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__validity
+msgid "Link Expiration Date"
+msgstr "Data expirării link-ului"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__position__left
+msgid "Main Panel"
+msgstr "Panou Principal"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_gender_male
+msgid "Male"
+msgstr "Barbat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__benefit_ids
+msgid "Mandatory Benefits"
+msgstr "Beneficii obligatorii"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__manual_field
+msgid "Manual Field Name"
+msgstr "Numele manual al câmpului"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__manual
+msgid "Manual Input"
+msgstr "Introducere manuală"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__manual_res_field_id
+msgid "Manual Res Field"
+msgstr "Manual Res Field"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_certificate_master
+msgid "Master"
+msgstr "Master"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_has_error
+msgid "Message Delivery error"
+msgstr "Eroare livrare mesaj"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_ids
+msgid "Messages"
+msgstr "Mesaje"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_personal_info.py:0
+#, python-format
+msgid ""
+"Mismatch between res_field_id %(field)s and model %(model)s for info "
+"%(personal_info)s"
+msgstr ""
+"Neconcordanță între res_field_id %(field)s și model %(model)s pentru info "
+"%(personal_info)s"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_type__periodicity__monthly
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume_category__periodicity__monthly
+msgid "Monthly"
+msgstr "Lunar"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_history_view_form
+msgid "Monthly Cost"
+msgstr "Cost lunar"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__monthly_yearly_costs
+msgid "Monthly Cost (Real)"
+msgstr "Cost lunar (real)"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Monthly Gross Salary"
+msgstr "Salariu brut lunar"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__value_type__monthly_total
+msgid "Monthly Total"
+msgstr "Total lunar"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_history__reference_monthly_wage
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_history_view_form
+msgid "Monthly Wage"
+msgstr "Salariu lunar"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Data limită a activității mele"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__name
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__name
+msgid "Name"
+msgstr "Nume"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_personal_info__res_field_id
+msgid "Name of the field related to this personal info."
+msgstr "Numele câmpului legat de aceste informații personale."
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_identification_id
+msgid "National Identification Number"
+msgstr "Cod Numeric Personal"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_country_id
+msgid "Nationality"
+msgstr "Naționalitate"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package
+msgid "Net calculation"
+msgstr "Calcul net"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__sign_template_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_history__sign_template_id
+msgid "New Contract Document Template"
+msgstr "Noul șablon de document de contract"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Următoarea activitate din calendar"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Data limită pentru următoarea activitate"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_summary
+msgid "Next Activity Summary"
+msgstr "Sumarul următoarei activități"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tip de activitate următoare"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "No"
+msgstr "Nu"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid ""
+"No HR responsible defined on the job position. Please contact an "
+"administrator."
+msgstr ""
+"Niciun responsabil de resurse umane nu este definit în funcție. Vă rugăm să "
+"contactați un administrator."
+
+#. module: hr_contract_salary
+#: model_terms:ir.actions.act_window,help:hr_contract_salary.action_hr_contract_templates
+msgid "No Template found"
+msgstr "Nu a fost găsit niciun șablon"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid ""
+"No signature template defined on the contract. Please contact the HR "
+"responsible."
+msgstr ""
+"Niciun șablon de semnătură nu este definit în contract. Vă rugăm să "
+"contactați responsabilul cu resurse umane."
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/js/hr_contract_salary.js:0
+#, python-format
+msgid "Not a valid e-mail address"
+msgstr "Nu este o adresă de e-mail validă"
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/js/hr_contract_salary.js:0
+#, python-format
+msgid "Not a valid input in integer field"
+msgstr "Nu este o intrare validă în câmpul de numere"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Număr de acțiuni"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__holidays
+msgid "Number of days of paid leaves the employee gets per year."
+msgstr "Numărul de zile de plăți plătite de angajat pe an."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_has_error_counter
+msgid "Number of errors"
+msgstr "Număr de erori"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Numărul de mesaje care necesită acțiune"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Numărul de mesaje cu eroare de livrare"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+msgid "Offer"
+msgstr "Ofertă"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__offer_end_date
+msgid "Offer Validity Date"
+msgstr "Data de validitate a ofertei"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_offer.py:0
+#, python-format
+msgid "Offer [%s] for %s / Budget: %s"
+msgstr "Ofertă [%s] pentru %s / Buget: %s"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#: code:addons/hr_contract_salary/wizard/generate_simulation_link.py:0
+#, python-format
+msgid "Offer link can not be send. The applicant needs to have a name."
+msgstr ""
+"Linkul ofertei nu poate fi trimis. Solicitantul trebuie să aibă un nume."
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.hr_contract_salary_offer_action
+#: model:ir.actions.act_window,name:hr_contract_salary.hr_contract_salary_offer_recruitment_action
+#: model:ir.ui.menu,name:hr_contract_salary.menu_hr_contract_salary_job_offer
+#: model:ir.ui.menu,name:hr_contract_salary.menu_salary_package_offer
+msgid "Offers"
+msgstr "Oferte"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Oops"
+msgstr "Oops"
+
+#. module: hr_contract_salary
+#: model:sign.template,redirect_url_text:hr_contract_salary.sign_template_cdi_developer
+msgid "Open Link"
+msgstr "Deschidere Link"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__origin_contract_id
+msgid "Origin Contract"
+msgstr "Contract de origine"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Original Link"
+msgstr "Link Original"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_certificate_other
+#: model:hr.contract.salary.personal.info.value,name:hr_contract_salary.hr_contract_salary_personal_info_gender_other
+msgid "Other"
+msgstr "Altele"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__parent_id
+msgid "Parent"
+msgstr "Părinte"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_offer__state__half_signed
+msgid "Partially Signed"
+msgstr "Semnat parțial"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__uom__percent
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__uom__percent
+msgid "Percent"
+msgstr "Procent"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__periodicity
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__periodicity
+msgid "Periodicity"
+msgstr "Periodicitate"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_emergency_contact
+msgid "Person to call"
+msgstr "Persoană de apelat"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Personal Documents"
+msgstr "Documente personale"
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.hr_contract_salary_personal_info_action
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__personal_info_id
+#: model:ir.ui.menu,name:hr_contract_salary.salary_package_personal_info
+msgid "Personal Info"
+msgstr "Informație personală"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Personal Information"
+msgstr "Informații Personale"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_phone
+msgid "Phone Number"
+msgstr "Număr telefon"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_emergency_phone
+msgid "Phone number"
+msgstr "Număr de telefon"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_resume__category_id
+msgid "Pick a category to display this information"
+msgstr "Alegeți o categorie pentru a afișa aceste informații"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_resume__value_type
+msgid ""
+"Pick how the value of the information is computed:\n"
+"Fixed value: Set a determined value static for all links\n"
+"Contract value: Get the value from a field on the contract record\n"
+"Payslip value: Get the value from a field on the payslip record\n"
+"Sum of Benefits value: You can pick in all benefits and compute a sum of them\n"
+"Monthly Total: The information will be a total of all the informations in the category Monthly Benefits"
+msgstr ""
+"Alegeți modul în care este calculată valoarea informațiilor:\n"
+"Valoare fixă: Setați o valoare determinată statică pentru toate linkurile\n"
+"Valoare contract: Obțineți valoarea dintr-un câmp al înregistrării contractului\n"
+"Valoarea fluturașului de salariu: Obține valoarea dintr-un câmp din înregistrarea fluturașului de salariu\n"
+"Sum of Benefits value (Suma prestațiilor): Puteți selecta toate prestațiile și să calculați o sumă a acestora\n"
+"Total lunar: Informația va fi un total al tuturor informațiilor din categoria Prestații lunare"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_place_of_birth
+msgid "Place of Birth"
+msgstr "Locul nașterii"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__placeholder
+msgid "Placeholder"
+msgstr "Substitut"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__position
+msgid "Position"
+msgstr "Poziție"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Previous Contract"
+msgstr "Contract anterior"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_private_license_plate
+msgid "Private License Plate"
+msgstr "Placă de înmatriculare privată"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_applicant.py:0
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_applicant__proposed_contracts
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_applicant_view_form
+#, python-format
+msgid "Proposed Contracts"
+msgstr "Contractele propuse"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_applicant__proposed_contracts_count
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__contract_reviews_count
+msgid "Proposed Contracts Count"
+msgstr "Numărul de contracte propuse"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__radio
+msgid "Radio"
+msgstr "Radio"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__radio
+msgid "Radio Buttons"
+msgstr "Butoane Radio"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__rating_ids
+msgid "Ratings"
+msgstr "Evaluări"
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/xml/resume_sidebar.xml:0
+#: code:addons/hr_contract_salary/static/src/xml/resume_sidebar.xml:0
+#, python-format
+msgid "Recompute"
+msgstr "Recalculați"
+
+#. module: hr_contract_salary
+#: model:mail.template,name:hr_contract_salary.mail_template_send_offer_applicant
+msgid "Recruitment: Your Salary Package"
+msgstr "Recrutare: Pachetul tău salarial"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_value__color__red
+msgid "Red"
+msgstr "Rosu"
+
+#. module: hr_contract_salary
+#: model:ir.actions.server,name:hr_contract_salary.action_refuse_salary_offer
+msgid "Refuse"
+msgstr "Refuzați"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_offer__state__refused
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Refused"
+msgstr "Respins"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__res_field_id
+msgid "Related Field"
+msgstr "Câmp asociat"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_form
+msgid "Related Model"
+msgstr "Model asociat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__benefit_type_id
+msgid "Related Type"
+msgstr "Tip asociat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__requested_documents_field_ids
+msgid "Requested Documents"
+msgstr "Documente necesare"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__requested_documents
+msgid "Requested Documents Fields"
+msgstr "Câmpuri pentru documentele solicitate"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__sign_request_ids
+msgid "Requested Signatures"
+msgstr "Semnături solicitate"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__requested_documents_fields_string
+msgid "Requested Documents"
+msgstr "Documente necesare"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__res_model
+msgid "Res Model"
+msgstr "Modelul de resurse"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__activity_user_id
+msgid "Responsible User"
+msgstr "Utilizator responsabil"
+
+#. module: hr_contract_salary
+#: model:ir.actions.act_window,name:hr_contract_salary.hr_contract_salary_resume_action
+#: model:ir.ui.menu,name:hr_contract_salary.salary_package_resume
+msgid "Resume"
+msgstr "Reluare"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_next_step_button
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_sidebar
+msgid "Review Contract &amp; Sign"
+msgstr "Revizuiți contractul &amp; Semnați"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Eroare livrare SMS"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_payroll_structure_type__salary_benefits_ids
+msgid "Salary Benefits"
+msgstr "Beneficii salariale"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form_hr
+msgid "Salary Configurator"
+msgstr "Configurator salariu"
+
+#. module: hr_contract_salary
+#: model:ir.actions.server,name:hr_contract_salary.ir_cron_update_offer_state_ir_actions_server
+msgid "Salary Configurator: Update Offer State"
+msgstr "Configurator de salarii: Actualizarea situației ofertei"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_applicant__salary_offer_ids
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__salary_offer_ids
+msgid "Salary Offer"
+msgstr "Ofertă salarială"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_applicant__salary_offers_count
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__salary_offers_count
+msgid "Salary Offers Count"
+msgstr "Numărul ofertelor salariale"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_benefit
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_tree
+msgid "Salary Package Benefit"
+msgstr "Pachetul de beneficii salariale"
+
+#. module: hr_contract_salary
+#: model:ir.ui.menu,name:hr_contract_salary.salary_package_menu
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form_hr
+msgid "Salary Package Configurator"
+msgstr "Configurator pachet salarial"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_offer
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+msgid "Salary Package Offer"
+msgstr "Ofertă de pachet salarial"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_tree
+msgid "Salary Package Offers"
+msgstr "Oferte de pachet salarial"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_personal_info
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_tree
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_tree
+msgid "Salary Package Personal Info"
+msgstr "Pachet salarial Informații personale"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_personal_info_type
+msgid "Salary Package Personal Info Type"
+msgstr "Pachet salarial Tip informații personale"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_personal_info_value
+msgid "Salary Package Personal Info Value"
+msgstr "Pachet salarial Valoare informații personale"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_resume
+msgid "Salary Package Resume"
+msgstr "Reluare Pachet Salarial"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_salary_resume_category
+msgid "Salary Package Resume Category"
+msgstr "Categorie reluare pachet salarial"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Salary Package Summary"
+msgstr "Rezumatul pachetului salarial"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_payroll_structure_type
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__structure_type_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__structure_type_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__structure_type_id
+msgid "Salary Structure Type"
+msgstr "Tip Structură Salar"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid "Save"
+msgstr "Salvează"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_study_school
+msgid "School"
+msgstr "Școală"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "Search Offers"
+msgstr "Căutare oferte"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_value__display_type__section
+msgid "Section"
+msgstr "Secțiune"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,placeholder:hr_contract_salary.hr_contract_salary_personal_info_country
+#: model:hr.contract.salary.personal.info,placeholder:hr_contract_salary.hr_contract_salary_personal_info_country_id
+#: model:hr.contract.salary.personal.info,placeholder:hr_contract_salary.hr_contract_salary_personal_info_country_of_birth
+msgid "Select a Country"
+msgstr "Selectați țara"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,placeholder:hr_contract_salary.hr_contract_salary_personal_info_state_id
+msgid "Select a State"
+msgstr "Selectare stat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__dropdown
+msgid "Selection"
+msgstr "Selecție"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__dropdown_selection
+msgid "Selection Nature"
+msgstr "Selecție Natura"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+msgid "Send By Email"
+msgstr "Trimis prin e-mail"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__sign_copy_partner_id
+msgid "Send a copy to"
+msgstr "Trimite o copie la"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Sent Offers"
+msgstr "Oferte trimise"
+
+#. module: hr_contract_salary
+#: model:mail.template,description:hr_contract_salary.mail_template_send_offer_applicant
+msgid "Sent automatically when you generate an offer for an application"
+msgstr "Trimis automat atunci când generați o cerere pentru o ofertă"
+
+#. module: hr_contract_salary
+#: model:mail.template,description:hr_contract_salary.mail_template_send_offer
+msgid ""
+"Sent manually when you generate a simulation link on the employee contract"
+msgstr ""
+"Trimis manual atunci când generați o legătură de simulare pe contractul "
+"angajatului"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_type__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_type__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__sequence
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume_category__sequence
+msgid "Sequence"
+msgstr "Secvență"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_personal_information
+msgid "Show <i class=\"oi oi-chevron-down\"/>"
+msgstr "Afișare <i class=\"oi oi-chevron-down\"/>"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__show_name
+msgid "Show Name"
+msgstr "Nume afișare"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__position__right
+msgid "Side Panel"
+msgstr "Panou lateral"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_view_form
+msgid "Sign"
+msgstr "Sign"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__sign_frenquency
+msgid "Sign Creation Type"
+msgstr "Tip creare semn"
+
+#. module: hr_contract_salary
+#: model:ir.model,name:hr_contract_salary.model_hr_contract_sign_document_wizard
+msgid "Sign document in contract"
+msgstr "Semnarea documentului în contract"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Signature Request - %s"
+msgstr "Cerere de semnare - %s"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__slider
+msgid "Slider"
+msgstr "Slider"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__slider_max
+msgid "Slider Max"
+msgstr "Slider Max"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__slider_min
+msgid "Slider Min"
+msgstr "Slider Min"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__slider_step
+msgid "Slider Step"
+msgstr "Slider Step"
+
+#. module: hr_contract_salary
+#. odoo-javascript
+#: code:addons/hr_contract_salary/static/src/js/hr_contract_salary.js:0
+#: code:addons/hr_contract_salary/static/src/js/hr_contract_salary.js:0
+#, python-format
+msgid "Some required fields are not filled"
+msgstr "Câteva câmpuri obligatorii nu sunt completate"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__dropdown_selection__specific
+msgid "Specific Values"
+msgstr "Valori Specifice"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_state_id
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__state
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_search
+msgid "State"
+msgstr "Stare"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__dropdown_selection__state
+msgid "States"
+msgstr "Stări"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Stare bazată pe activități\n"
+"Întârziată: data scadentă este deja trecută\n"
+"Astăzi: activității pentru astăzi\n"
+"Planificate: activități viitoare."
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_street
+msgid "Street"
+msgstr "Stradă"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_street2
+msgid "Street 2"
+msgstr "Strada 2"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_search
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_search
+msgid "Structure Type"
+msgstr "Tipul Structurii"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume__value_type__sum
+msgid "Sum of Benefits Values"
+msgstr "Valoarea beneficiilor"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__sign_template_id
+msgid "Template to Sign"
+msgstr "Șablon pentru semnare"
+
+#. module: hr_contract_salary
+#: model:ir.ui.menu,name:hr_contract_salary.hr_menu_contract_templates
+msgid "Templates"
+msgstr "Șabloane"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__display_type__text
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_personal_info__display_type__text
+msgid "Text"
+msgstr "Text"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__origin_contract_id
+msgid "The contract from which this contract has been duplicated."
+msgstr "Contractul din care a fost duplicat acest contract."
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "The current requested documents are the followings:"
+msgstr "Documentele solicitate sunt următoarele:"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.generate_simulation_link_view_form
+msgid ""
+"The employee does not have a valid work email set. The Simulation Link won't"
+" be able to be completed."
+msgstr ""
+"Angajatul nu are un e-mail de serviciu valid. Linkul de simulare nu va putea"
+" fi completat."
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid ""
+"The employee is not linked to an existing user, please contact the "
+"administrator.."
+msgstr ""
+"Angajatul nu este legat de un utilizator existent, vă rugăm să contactați "
+"administratorul.."
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/models/hr_contract_salary_benefit.py:0
+#, python-format
+msgid ""
+"The minimum value for the slider should be inferior to the maximum value."
+msgstr ""
+"Valoarea minimă a selectorului trebuie să fie inferioară valorii maxime."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__signatures_count
+msgid "The number of signatures on the pdf contract with the most signatures."
+msgstr "Numărul de semnături pe contractul pdf cu cele mai multe semnături."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__activity_type_id
+msgid ""
+"The type of activity that will be created automatically on the contract if "
+"this benefit is chosen by the employee."
+msgstr ""
+"Tipul de activitate care va fi creat automat pe contract în cazul în care "
+"acest beneficiu este ales de angajat."
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_benefits
+msgid "There is no available option to customize your salary"
+msgstr "Nu există nicio opțiune disponibilă pentru a vă personaliza salariul"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_diff_email_template
+msgid "There were no changes since previous contract."
+msgstr "Nu au existat modificări față de contractul anterior."
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_thank_you
+msgid ""
+"They will review your contract.<br/> Feel free to contact them if you have "
+"any questions."
+msgstr ""
+"Ei vă vor revizui contractul.<br/> Nu ezitați să îi contactați dacă aveți "
+"întrebări."
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid ""
+"This link is invalid. Please contact the HR Responsible to get a new one..."
+msgstr ""
+"Acest link nu este valabil. Vă rugăm să contactați responsabilul de resurse "
+"umane pentru a obține unul nou..."
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "This offer has been updated, please request an updated link.."
+msgstr ""
+"Această ofertă a fost actualizată, vă rugăm să solicitați un link "
+"actualizat.."
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "This offer is outdated, please request an updated link..."
+msgstr ""
+"Această ofertă este depășită, vă rugăm să solicitați un link actualizat..."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__display_name
+msgid "Title"
+msgstr "Titlu"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+msgid "To"
+msgstr "Către"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_offer_view_form
+msgid "Token"
+msgstr "Jeton"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__monthly_yearly_costs
+msgid "Total real monthly cost of the employee for the employer."
+msgstr "Costul lunar total real al angajatului pentru angajator."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__final_yearly_costs
+msgid "Total real yearly cost of the employee for the employer."
+msgstr "Costul total anual real al angajatului pentru angajator."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_history__reference_yearly_cost
+msgid "Total yearly cost of the employee for the employer."
+msgstr "Costul anual total al angajatului pentru angajator."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Tipul activității de excepție din înregistrare."
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__uom
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__uom
+msgid "Unit of Measure"
+msgstr "Unitatea de măsură"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form_hr
+msgid "Validity duration for salary package requests for employees"
+msgstr ""
+"Durata de valabilitate pentru cererile de pachete salariale pentru angajați"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.res_config_settings_view_form
+msgid "Validity duration for salary package requests for new applicants"
+msgstr ""
+"Durata valabilității cererilor de pachete salariale pentru noii solicitanți"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit__value_ids
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_benefit_value__value
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info__value_ids
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_personal_info_value__value
+msgid "Value"
+msgstr "Valoare"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_resume__value_type
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_search
+msgid "Value Type"
+msgstr "Tip Valoare"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Wage"
+msgstr "Salariu"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__wage_on_signature
+msgid "Wage on Payroll"
+msgstr "Salariul pe statul de plată"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract__wage_on_signature
+msgid "Wage on contract signature"
+msgstr "Salariu la semnarea contractului"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_history__reference_monthly_wage
+msgid "Wage update with holidays retenues"
+msgstr "Actualizarea salariilor cu venituri din concedii"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__wage_with_holidays
+msgid "Wage with Holidays"
+msgstr "Salariu cu sărbători"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_salary_offer__website_message_ids
+msgid "Website Messages"
+msgstr "Mesaje Website"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_offer__website_message_ids
+msgid "Website communication history"
+msgstr "Istoric comunicare website"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__activity_creation_type__onchange
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__sign_frenquency__always
+msgid "When the benefit is modified"
+msgstr "Atunci când beneficiul este modificat"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__activity_creation_type__always
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit__sign_frenquency__onchange
+msgid "When the benefit is set"
+msgstr "Atunci când beneficiul este stabilit"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,help:hr_contract_salary.field_hr_contract_salary_benefit__show_name
+msgid "Whether the name should be displayed in the Salary Configurator"
+msgstr "Dacă numele trebuie să fie afișat în configuratorul de salarii"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_benefit_type__periodicity__yearly
+#: model:ir.model.fields.selection,name:hr_contract_salary.selection__hr_contract_salary_resume_category__periodicity__yearly
+msgid "Yearly"
+msgstr "Anual"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_generate_simulation_link__final_yearly_costs
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract_history__reference_yearly_cost
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_history_view_form
+msgid "Yearly Cost"
+msgstr "Cost anual"
+
+#. module: hr_contract_salary
+#: model:ir.model.fields,field_description:hr_contract_salary.field_hr_contract__final_yearly_costs
+msgid "Yearly Cost (Real)"
+msgstr "Cost anual (real)"
+
+#. module: hr_contract_salary
+#. odoo-python
+#: code:addons/hr_contract_salary/controllers/main.py:0
+#, python-format
+msgid "Yes"
+msgstr "Da"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_personal_information
+msgid "Your Personal Information"
+msgstr "Informațiile dvs. personale"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package_thank_you
+msgid "Your contract has been sent to:"
+msgstr "Contractul dvs. a fost trimis la:"
+
+#. module: hr_contract_salary
+#: model:hr.contract.salary.personal.info,name:hr_contract_salary.hr_contract_salary_personal_info_zip
+msgid "Zip Code"
+msgstr "Cod poștal"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.salary_package
+msgid "close"
+msgstr "inchideți"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_personal_info_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_salary_resume_view_form
+msgid "e.g. Birthdate"
+msgstr "de exemplu. Data nașterii"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "e.g. Meal Vouchers"
+msgstr "de exemplu. Cupoane de masă"
+
+#. module: hr_contract_salary
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary.hr_contract_benefit_view_form
+msgid "sign"
+msgstr "semn"
+
+#. module: hr_contract_salary
+#: model:mail.template,subject:hr_contract_salary.mail_template_send_offer_applicant
+msgid ""
+"{{ object.company_id.name }}: Job Offer - {{ object.applicant_id.name }}"
+msgstr ""
+"{{ object.company_id.name }}}: Oferta de muncă - {{ object.applicant_id.name"
+" }}}"
+
+#. module: hr_contract_salary
+#: model:mail.template,subject:hr_contract_salary.mail_template_send_offer
+msgid ""
+"{{ object.company_id.name }}: Job Offer - {{ "
+"object.employee_contract_id.name }}"
+msgstr ""
+"{{ object.company_id.name }}}: Ofertă de muncă - {{ "
+"object.employee_contract_id.name }}}"

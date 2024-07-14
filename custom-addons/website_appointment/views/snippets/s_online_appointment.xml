@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="remove_external_snippets" inherit_id="website_enterprise.external_snippets">
+    <xpath expr="//t[@t-install='website_appointment']" position="replace"/>
+</template>
+
+<template id="website_online_appointment_snippet" inherit_id="website.snippets">
+    <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
+        <t t-snippet="website_appointment.s_online_appointment"
+           string="Appointment"
+           t-thumbnail="/website_enterprise/static/src/img/snippets_thumbs/s_appointment.svg"/>
+    </xpath>
+</template>
+
+<template id="s_online_appointment" name="Appointment">
+    <button type="button" class="btn btn-primary s_online_appointment mb-3 d-inline-block" data-display="inline"
+            data-target-types="all" data-appointment-types="[]" data-target-users="all" data-staff-users="[]">
+        Book an Appointment
+    </button>
+</template>
+
+<template id="website_appointment.s_online_appointment_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js="OnlineAppointmentOptions" data-selector=".s_online_appointment" data-no-preview="true">
+            <we-select string="Appointments" data-attribute-name="targetTypes" data-no-preview="true"
+                       data-attribute-default-value="all">
+                <we-button data-select-data-attribute="all" title="All Types">All Types</we-button>
+                <we-button data-select-data-attribute="specify" title="Specific Types">Specific Types</we-button>
+            </we-select>
+            <t t-set="current_website" t-value="request.env['website'].get_current_website()"/>
+            <we-many2many class="align-items-start" string=" ⌙ Specify" data-name="appointment_types_opt"
+                          data-model="appointment.type" data-m2o-field="name" data-fakem2m="true"
+                          data-attribute-name="appointmentTypes" data-no-preview="true" data-set-app-types=""
+                          t-attf-data-domain='[["category", "in", ["punctual", "recurring"]],
+                                        ["website_published", "=", true],
+                                        ["staff_user_ids", "!=", false],
+                                        "|", ["website_id", "=", {{current_website.id}}], ["website_id", "=", false]
+                                       ]'/>
+            <we-select string=" ⌙ Users" data-attribute-name="targetUsers" data-no-preview="true"
+                       data-attribute-default-value="all">
+                <we-button data-select-data-attribute="all" title="All assigned users">All assigned users</we-button>
+                <we-button data-select-data-attribute="specify" title="Specific users">Specific users</we-button>
+            </we-select>
+            <we-many2many class="align-items-start" string="  ⌙ Specify" data-name="staff_users_opt"
+                          id="staff_users_opt" data-model="appointment.type" data-m2o-field="staff_user_ids"
+                          data-filter-in="" data-attribute-name="staffUsers" data-no-preview="true"
+                          data-set-staff-users=""/>
+        </div>
+    </xpath>
+</template>
+
+<record id="website_appointment.s_online_appointment_000_js" model="ir.asset">
+    <field name="name">Appointment 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website_appointment/static/src/snippets/s_online_appointment/000.js</field>
+</record>
+
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="whatsapp.Chatter" t-inherit="mail.Chatter" t-inherit-mode="extension">
+        <xpath expr="//*[contains(@class, 'o-mail-Chatter-activity')]" position="before">
+            <button t-if="state.thread.canSendWhatsapp"
+                class="btn btn-secondary text-nowrap me-1"
+                t-att-class="{'my-2': !props.compactHeight }"
+                data-hotkey="shift+w"
+                t-on-click="sendWhatsapp"
+            >
+                <span>WhatsApp</span>
+            </button>
+        </xpath>
+    </t>
+</templates>

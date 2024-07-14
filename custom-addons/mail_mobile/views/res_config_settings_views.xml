@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.mail.mobile</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block id="user_default_rights" position="after">
+                <div id="mobile_settings" groups="base.group_no_one">
+                    <block title="Mobile">
+                        <setting help="Receive notifications on Android and iOS application">
+                                <field name="enable_ocn"/>
+                        </setting>
+                        <setting help="If disabled, you won't be able to open external URL's in the Android/iOS mobile app (e.g. &quot;View Task&quot; button in email).">
+                                <field name="disable_redirect_firebase_dynamic_link"/>
+                        </setting>
+                    </block>
+                </div>
+            </block>
+        </field>
+    </record>
+</odoo>

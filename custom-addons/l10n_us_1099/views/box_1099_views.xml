@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="box_1099_view_tree" model="ir.ui.view">
+            <field name="name">1099 Box</field>
+            <field name="model">l10n_us.1099_box</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="1099 Boxes">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="box_1099_action" model="ir.actions.act_window">
+            <field name="name">1099 Boxes</field>
+            <field name="res_model">l10n_us.1099_box</field>
+        </record>
+
+        <menuitem id="box_1099_menu" parent="account.account_account_menu" action="box_1099_action"/>
+    </data>
+</odoo>

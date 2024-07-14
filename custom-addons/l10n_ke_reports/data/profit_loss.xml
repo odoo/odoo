@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data auto_sequence="1">
+    <record id="account_financial_report_ke_profitandloss0" model="account.report">
+        <field name="name">Profit and Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.ke"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_ke_profitandloss0_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_ke_operating_revenue" model="account.report.line">
+                <field name="name">Operating Revenues</field>
+                <field name="code">KE_O_R</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ke_operating_revenue_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KE_S_R.balance + KE_O_O_I.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ke_sales_revenue" model="account.report.line">
+                        <field name="name">Sales Revenue</field>
+                        <field name="code">KE_S_R</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ke_sales_revenue_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-4001 - 4002 - 4004 - 4003</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ke_other_operating_income" model="account.report.line">
+                        <field name="name">Other Operating Income</field>
+                        <field name="code">KE_O_O_I</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ke_other_operating_income_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-4008 - 4007 - 4010</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ke_operating_costs" model="account.report.line">
+                <field name="name">Operating Costs</field>
+                <field name="code">KE_O_C</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ke_operating_costs_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KE_C_O_S.balance + KE_D.balance + KE_O_O_E.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ke_cost_of_sales" model="account.report.line">
+                        <field name="name">Cost of Sales</field>
+                        <field name="code">KE_C_O_S</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ke_cost_of_sales_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-500</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ke_depreciations" model="account.report.line">
+                        <field name="name">Depreciations</field>
+                        <field name="code">KE_D</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ke_depreciations_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-52</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ke_other_operating_expenses" model="account.report.line">
+                        <field name="name">Other Operating Expenses</field>
+                        <field name="code">KE_O_O_E</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ke_other_operating_expenses_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-511 - 512 - 5141 - 5140 - 513 - 510 - 5142</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ke_operating_profit" model="account.report.line">
+                <field name="name">Operating Profit</field>
+                <field name="code">KE_O_P</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ke_operating_profit_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KE_O_R.balance + KE_O_C.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ke_other_revenues_expenses" model="account.report.line">
+                <field name="name">Other Revenues and Expenses</field>
+                <field name="code">KE_O_R_E</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ke_other_revenues_expenses_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KE_F_I.balance + KE_F_E.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ke_financial_income" model="account.report.line">
+                        <field name="name">Financial Income</field>
+                        <field name="code">KE_F_I</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ke_financial_income_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-4005 - 4006</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ke_financial_expenses" model="account.report.line">
+                        <field name="name">Financial Expenses</field>
+                        <field name="code">KE_F_E</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ke_financial_expenses_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-5144 - 5145 - 5146</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ke_profit_loss_before_taxes" model="account.report.line">
+                <field name="name">Profit/Loss Before Taxes</field>
+                <field name="code">KE_P_L_B_T</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ke_profit_loss_before_taxes_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KE_O_P.balance + KE_O_R_E.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ke_income_tax_expense" model="account.report.line">
+                <field name="name">Corporation Tax Expense</field>
+                <field name="code">KE_C_T_E</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ke_income_tax_expense_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-5143</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ke_profit_loss" model="account.report.line">
+                <field name="name">Net profit/Loss for the Year</field>
+                <field name="code">KE_P_L</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ke_profit_loss_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KE_P_L_B_T.balance + KE_C_T_E.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                    <record id="account_financial_report_ke_profit_loss__control_balance" model="account.report.expression">
+                        <field name="label">_control_balance</field>
+                        <field name="engine">domain</field>
+                        <field name="formula" eval="['|', ('account_id.internal_group', '=', 'income'), ('account_id.internal_group', '=', 'expense')]"/>
+                        <field name="date_scope">normal</field>
+                        <field name="subformula">sum</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</data>
+<data>
+    <record id="action_account_report_ke_pnl" model="ir.actions.client">
+        <field name="name">Profit and Loss</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'model': 'account.report', 'report_id': ref('account_financial_report_ke_profitandloss0')}"/>
+    </record>
+    <record id="account_financial_report_ke_bs_B_1_earnings" model="account.report.line">
+        <field name="action_id" ref="action_account_report_ke_pnl"/>
+    </record>
+</data>
+</odoo>

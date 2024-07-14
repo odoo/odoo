@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SieEntry xmlns="http://www.sie.se/sie5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.sie.se/sie5 http://www.sie.se/sie5.xsd">
+    <FileInfo>
+        <FileCreation time="2015-10-30T09:45:00" by="Lars Hansson"/>
+        <Company organizationId="555555-5555"/>
+        <SoftwareProduct name="Edison Ekonomi Byrå" version="5.0"/>
+    </FileInfo>
+    <Accounts>
+        <Account id="1220" name="Inventarier" type="asset"/>
+        <Account id="1510" name="Kundfordringar" type="asset"/>
+        <Account id="3010" name="Försäljning lösgodis" type="income">
+            <Budget month="2014-01" amount="-300"/>
+        </Account>
+        <Account id="3020" name="Försäljning mjukglass" type="income">
+            <Budget amount="-34000">
+                <ObjectReference dimId="3" objectId="C"/>
+            </Budget>
+        </Account>
+    </Accounts>
+    <Dimensions>
+        <Dimension id="3">
+            <Object id="C" name="Centrumkiosken"/>
+            <Object id="V" name="Vivallakiosken"/>
+        </Dimension>
+    </Dimensions>
+    <CustomerInvoices primaryAccountId="1510">
+        <CustomerInvoice id="453" customerId="14"/>
+        <CustomerInvoice id="455" customerId="7"/>
+    </CustomerInvoices>
+    <Customers>
+        <Customer id="7" name="Svenska Statoil AB" organizationId="556334-3689"></Customer>
+        <Customer id="14" name="Hyresvärden AB"></Customer>
+    </Customers>
+    <SupplierInvoices primaryAccountId="2440">
+        <SupplierInvoice id="1" supplierId="950-6221"/>
+    </SupplierInvoices>
+    <Suppliers>
+        <Supplier id="950-6221" name="Godisgrossisten AB"></Supplier>
+    </Suppliers>
+    <FixedAssets primaryAccountId="1220" name="Inventarier">
+        <FixedAsset id="GL33" name="Glassmaskin GL-33 Pro"/>
+    </FixedAssets>
+    <GeneralSubdividedAccount primaryAccountId="1469" name="Lager av veteranbilar">
+        <GeneralObject id="GNH383" name="Volkswagen 1301-65, ljusblå"/>
+        <GeneralObject id="SXS313" name="BMW Z3-97, monacoblå"/>
+    </GeneralSubdividedAccount>
+    <Journal>
+        <JournalEntry journalDate="2015-08-19" text="Ett rött paket">
+            <LedgerEntry accountId="6071" amount="15.75"/>
+            <LedgerEntry accountId="1940" amount="-15.75"/>
+            <VoucherReference documentId="2"/>
+        </JournalEntry>
+    </Journal>
+    <Documents>
+        <FileReference id="2" URI="C:\Lagerinventering.xls"/>
+        <FileReference id="3" URI="C:\Omföringar2.xls"/>
+    </Documents>
+</SieEntry>

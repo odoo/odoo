@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="resource_resource_form_tags_view_inherit" model="ir.ui.view">
+        <field name="inherit_id" ref="resource.resource_resource_form" />
+        <field name="model">resource.resource</field>
+        <field name="mode">primary</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='time_efficiency']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="resource_resource_with_employee_form_view_inherit" model="ir.ui.view">
+        <field name="inherit_id" ref="resource.resource_resource_form" />
+        <field name="model">resource.resource</field>
+        <field name="mode">primary</field>
+        <field name="priority">70</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='time_efficiency']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="resource_resource_form_view_inherit" model="ir.ui.view">
+        <field name="inherit_id" ref="resource_resource_with_employee_form_view_inherit" />
+        <field name="model">resource.resource</field>
+        <field name="mode">primary</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">resource_form_view</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="placeholder">e.g. Crane</attribute>
+            </xpath>
+            <xpath expr="//field[@name='resource_type']" position="before">
+                <field name="color" widget="color_picker" />
+            </xpath>
+            <xpath expr="//field[@name='resource_type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="resource_resource_tree_view_inherit" model="ir.ui.view">
+        <field name="inherit_id" ref="resource.resource_resource_tree"/>
+        <field name="model">resource.resource</field>
+        <field name="mode">primary</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">resource_list_view</attribute>
+                <attribute name="editable">bottom</attribute>
+                <attribute name="sample">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='time_efficiency']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='resource_type']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='resource_type']" position="after">
+                <field name="color" widget="color_picker" optional="hide"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="role_ids" widget="many2many_tags" optional="show" options="{'color_field': 'color'}"/>
+                <field name="default_role_id" optional="show"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="placeholder">e.g. Crane</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="resource_resource_search_view_roles" model="ir.ui.view">
+        <field name="name">resource.resource.search.view.roles</field>
+        <field name="model">resource.resource</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="resource.view_resource_resource_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='working_period']" position="before">
+                <field name="role_ids" filter_domain="['|', ('role_ids', 'in', [self]), ('role_ids', '=', False)]"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="resource_resource_search_view_inherit" model="ir.ui.view">
+        <field name="inherit_id" ref="resource.view_resource_resource_search"/>
+        <field name="model">resource.resource</field>
+        <field name="mode">primary</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="default_role_id"/>
+                <field name="role_ids"/>
+            </xpath>
+            <xpath expr="//group/filter[@name='working_period']" position="before">
+                <filter string="Roles" name="role_ids" context="{'group_by': 'role_ids'}"/>
+                <filter string="Default Roles" name="default_role_id" context="{'group_by': 'default_role_id'}"/>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="replace"/>
+            <xpath expr="//field[@name='resource_type']" position="replace"/>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="calendar_id" position="move"/>
+            </xpath>
+            <xpath expr="//filter[@name='user']" position="replace"/>
+            <xpath expr="//filter[@name='human']" position="replace"/>
+            <xpath expr="//filter[@name='material']" position="replace"/>
+            <xpath expr="//filter[@name='type']" position="replace"/>
+        </field>
+    </record>
+
+    <record id="resource_resource_kanban_view" model="ir.ui.view">
+        <field name="model">resource.resource</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard" sample="1">
+                <field name="color" invisible="1" />
+                <templates>
+                    <t t-name="kanban-menu">
+                        <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <div class="o_kanban_record_title">
+                                        <field name="name" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-truncate">
+                                <field name="calendar_id" />
+                            </div>
+                            <div class="text-truncate">
+                                Timezone: <field name="tz" />
+                            </div>
+                            <div class="text-truncate" groups="base.group_multi_company">
+                                <field name="company_id" />
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="planning_action_resources" model="ir.actions.act_window">
+        <field name="name">Materials</field>
+        <field name="res_model">resource.resource</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('resource_type', '=', 'material')]</field>
+        <field name="context">{'default_resource_type': 'material'}</field>
+        <field name="search_view_id" ref="resource_resource_search_view_inherit"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('resource_resource_tree_view_inherit')}),
+                (0, 0, {'view_mode': 'kanban'}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('resource_resource_form_view_inherit')}),
+            ]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No material resources found. Let's create one!
+            </p>
+            <p>
+                Distribute your material resources across projects and sales orders.
+            </p>
+        </field>
+    </record>
+</odoo>

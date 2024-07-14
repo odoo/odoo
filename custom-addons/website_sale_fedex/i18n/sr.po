@@ -1,0 +1,86 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_sale_fedex
+# 
+# Translators:
+# Jelena Stamatović, 2024
+# コフスタジオ, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:22+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: コフスタジオ, 2024\n"
+"Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sr\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: website_sale_fedex
+#: model:ir.model.fields,help:website_sale_fedex.field_delivery_carrier__fedex_use_locations
+msgid ""
+"Allows the ecommerce user to choose a pick-up point as delivery address."
+msgstr ""
+"Omogućava korisniku elektronske trgovine da odabere mesto preuzimanja kao "
+"adresu dostave."
+
+#. module: website_sale_fedex
+#. odoo-python
+#: code:addons/website_sale_fedex/models/fedex_locations_request.py:0
+#, python-format
+msgid "Fedex Server Not Found"
+msgstr "Fedex Server Nije pronađen"
+
+#. module: website_sale_fedex
+#: model:ir.model.fields,field_description:website_sale_fedex.field_delivery_carrier__fedex_locations_radius_unit
+msgid "Locations Distance Unit"
+msgstr "Locations Distance Unit"
+
+#. module: website_sale_fedex
+#: model:ir.model.fields,field_description:website_sale_fedex.field_delivery_carrier__fedex_locations_radius_value
+msgid "Locations Radius"
+msgstr "Radijus lokacija"
+
+#. module: website_sale_fedex
+#: model:ir.model.fields,help:website_sale_fedex.field_delivery_carrier__fedex_locations_radius_value
+msgid "Maximum locations distance radius."
+msgstr "Maksimalni radijus udaljenosti lokacija."
+
+#. module: website_sale_fedex
+#. odoo-python
+#: code:addons/website_sale_fedex/models/fedex_locations_request.py:0
+#, python-format
+msgid "No Fedex pick-up points available for that shipping address"
+msgstr ""
+
+#. module: website_sale_fedex
+#. odoo-javascript
+#: code:addons/website_sale_fedex/static/src/xml/fedex_pickup_locations.xml:0
+#, python-format
+msgid "Select this location"
+msgstr "Select this location"
+
+#. module: website_sale_fedex
+#: model:ir.model,name:website_sale_fedex.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "Metode isporuke"
+
+#. module: website_sale_fedex
+#. odoo-python
+#: code:addons/website_sale_fedex/models/fedex_locations_request.py:0
+#, python-format
+msgid ""
+"There was an error retrieving Fedex localisations:\n"
+"%s"
+msgstr ""
+"Greška prilikom učitavanja  FedEx lokalizacije:\n"
+"%s"
+
+#. module: website_sale_fedex
+#: model:ir.model.fields,field_description:website_sale_fedex.field_delivery_carrier__fedex_use_locations
+msgid "Use Fedex Locations"
+msgstr "Koristite Fedex lokacije"

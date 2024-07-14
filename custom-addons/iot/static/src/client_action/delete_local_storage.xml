@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="iot.delete_printer">
+        <div class="container mt-4">
+            <h2>Clear automatic reports</h2>
+            <div class="mt-3">
+                <t t-if="!report_list.length">
+                    <p>No report to display</p>
+                </t>
+                <t t-foreach="report_list" t-as="item" t-key="item.id">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h5 class="card-title"><t t-esc="item.name"/></h5>
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-danger float-end" t-on-click="(ev) => this.removeFromLocal(item.id)">Unlink</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

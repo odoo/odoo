@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="appointment.CalendarController" t-inherit="calendar.AttendeeCalendarController" t-inherit-mode="extension">
+        <xpath expr="//t[@t-set-slot='control-panel-additional-actions']" position="inside">
+            <div id="scheduling_box" class="position-fixed position-md-static start-0 bottom-0 w-100 px-3">
+                <div t-if="env.calendarState.mode === 'slots-creation' || appointmentState.lastAppointment.url" class="o_appointment_scheduling_message_box alert-primary d-flex flex-wrap p-1 rounded-1">
+                    <div class="d-flex align-items-center pe-2 py-0 lh-1">
+                        <button t-attf-class="btn btn-link o_appointment_get_link ${this.appointmentState.lastAppointment.url || this.hasSlotEvents() ? '' : 'disabled pe-none'}" title="Get Share Link" aria-label="Get Share Link"
+                            t-on-click="onClickGetShareLink" t-ref="copyLinkRef">
+                            <i class="fa fa-link"/>
+                        </button>
+                        <t t-if="appointmentState.lastAppointment.url">
+                            Link Copied in your clipboard!
+                        </t>
+                        <b t-else="">
+                            Pick your availabilities
+                        </b>
+                    </div>
+                    <div class="d-flex gap-1 flex-grow-1">
+                        <button t-attf-class="btn btn-sm btn-primary px-2 flex-grow-1 text-nowrap o_appointment_open_form ${this.appointmentState.lastAppointment.id || this.hasSlotEvents() ? '' : 'disabled pe-none'}"
+                                aria-label="Open" t-on-click="onClickOpenForm">
+                            <i class="fa fa-external-link"/> Open
+                        </button>
+                        <button class="btn btn-link o_appointment_discard_slots" aria-label="Discard"
+                            t-on-click="onClickDiscard">
+                            <i class="fa fa-times"/>
+                        </button>
+                    </div>
+                </div>
+                <div t-else="" class="btn-group px-0 o_appointment_calendar_group_buttons w-100">
+                    <t t-set="appointments" t-value="appointmentState.data.appointment_types_info"/>
+                    <button t-if="isAppointmentUser" t-on-click="onClickSelectAvailabilities" class="btn btn-secondary o_appointment_select_slots" aria-label="Share Availabilities" title="Share Availabilities">
+                        Share Availabilities
+                    </button>
+
+                    <Dropdown t-if="isAppointmentUser or (!isAppointmentUser and appointments.length)" togglerClass="'btn btn-secondary dropdownAppointmentLink'" showCaret="isAppointmentUser" class="'btn-group'">
+                        <t t-if="!isAppointmentUser and appointments.length" t-set-slot="toggler">
+                            <button class="btn btn-secondary o_appointment_select_slots">Share Appointment Link</button>
+                        </t>
+                        <button t-if="isAppointmentUser" t-on-click="onClickSelectAvailabilities" id="select_availabilities" class="o_appointment_select_slots dropdown-item">
+                            <span class="align-bottom">Select Dates</span>
+                        </button>
+                        <button t-if="isAppointmentUser" t-on-click="onClickSearchCreateAnytimeAppointment"
+                            class="o_appointment_button_link o_appointment_search_create_anytime_appointment dropdown-item">
+                            <span class="align-bottom">Any Time</span>
+                        </button>
+                        <button t-on-click="onClickCustomLink" class="dropdown-item">
+                            <span class="align-bottom">Custom Link</span>
+                        </button>
+                        <div t-if="appointments.length > 0" role="separator" class="dropdown-divider"/>
+                        <t t-foreach="appointments" t-as="appointment" t-key="appointment.id">
+                            <button t-att-title="appointment.name" t-on-click.stop.prevent="() => this.onClickGetAppointmentUrl(appointment.id)"
+                                class="o_appointment_button_link o_appointment_appointment_link_clipboard dropdown-item text-truncate">
+                                <span class="align-bottom" t-out="appointment.name"/>
+                            </button>
+                        </t>
+                    </Dropdown>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

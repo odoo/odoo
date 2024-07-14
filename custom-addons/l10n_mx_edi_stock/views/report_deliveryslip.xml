@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="l10n_mx_edi_cartaporte_report_delivery_document" inherit_id="stock.report_delivery_document">
+        <xpath expr="//div[@name='signature']" position="after">
+            <t t-if="o.l10n_mx_edi_cfdi_state == 'sent'">
+                <t t-set="cfdi_values" t-value="o._l10n_mx_edi_get_extra_picking_report_values()"/>
+                <div id="delivery_guide_details"
+                     class="row border-top mt-3"
+                     t-if="o.l10n_mx_edi_transport_type == '01' and o.l10n_mx_edi_vehicle_id">
+                    <div class="col-12">
+                        <div class="row pt-3" id="mx_edi_row_1">
+                            <div class="col-2">
+                                <strong>Licence Plate</strong>
+                                <p t-field="o.l10n_mx_edi_vehicle_id.vehicle_licence"/>
+                            </div>
+                            <div class="col-2">
+                                <strong>SCT Permit No</strong>
+                                <p t-field="o.l10n_mx_edi_vehicle_id.name"/>
+                            </div>
+                            <div class="col-2">
+                                <strong>Insurer</strong>
+                                <p t-field="o.l10n_mx_edi_vehicle_id.transport_insurer"/>
+                            </div>
+                            <div class="col-2">
+                                <strong>Policy No</strong>
+                                <p t-field="o.l10n_mx_edi_vehicle_id.transport_insurance_policy"/>
+                            </div>
+                            <div class="col-2">
+                                <strong>Model</strong>
+                                <p t-field="o.l10n_mx_edi_vehicle_id.vehicle_model"/>
+                            </div>
+                            <div class="col-2">
+                                <strong>Distance (KM)</strong>
+                                <p t-field="o.l10n_mx_edi_distance"/>
+                            </div>
+                        </div>
+                        <div class="row mt-3" id="mx_edi_row_2">
+                            <div t-att-class="'col-6' if not o.l10n_mx_edi_external_trade else 'col-4'">
+                                <strong>SCT Permit Type</strong>
+                                <p t-field="o.l10n_mx_edi_vehicle_id.transport_perm_sct"/>
+                            </div>
+                            <div t-att-class="'col-6' if not o.l10n_mx_edi_external_trade else 'col-5'">
+                                <strong>Vehicle Configuration</strong>
+                                <p t-field="o.l10n_mx_edi_vehicle_id.vehicle_config"/>
+                            </div>
+                        </div>
+                        <div class="row mt-3" id="mx_edi_row_3">
+                            <div class="col-5">
+                                <strong>Trailers</strong>
+                                <table class="table">
+                                    <tr>
+                                        <th>Plate</th>
+                                        <th>Type</th>
+                                    </tr>
+                                    <t t-foreach="o.l10n_mx_edi_vehicle_id.trailer_ids" t-as="trailer">
+                                        <tr>
+                                            <td><t t-esc="trailer.name"/></td>
+                                            <td><t t-esc="trailer.sub_type"/></td>
+                                        </tr>
+                                    </t>
+                                </table>
+                            </div>
+                            <div class="col-7">
+                                <strong>Intermediaries</strong>
+                                <table class="table">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Operator</th>
+                                        <th>License</th>
+                                        <th>Parts</th>
+                                    </tr>
+                                    <t t-foreach="o.l10n_mx_edi_vehicle_id.figure_ids" t-as="figure">
+                                        <tr>
+                                            <td t-esc="figure.type"/>
+                                            <td t-esc="figure.operator_id.display_name"/>
+                                            <td t-esc="figure.operator_id.l10n_mx_edi_operator_licence"
+                                                t-if="figure.type == '01'"/>
+                                            <td t-esc="', '.join(figure.part_ids.mapped('code'))"
+                                                t-if="figure.type in ('02', '03')"/>
+                                        </tr>
+                                    </t>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row border-bottom mt-3 pt-2 pb-3" id='complement'>
+                    <div class="barcode col-3">
+                        <img alt="Barcode" t-att-src="cfdi_values['barcode_src']"/>
+                    </div>
+                    <div class="complement-details col-9">
+                        <div class="digital-stamp">
+                            <span>Digital stamp of the emitter</span>
+                        </div>
+                        <div class="digital-stamp-content">
+                            <span t-out="cfdi_values['sello_sat']"/>
+                        </div>
+                        <div class="digital-stamp">
+                            <span>Digital stamp SAT</span>
+                        </div>
+                        <div class="digital-stamp-content">
+                            <span t-out="cfdi_values['sello_sat']"/>
+                        </div>
+                        <div class="digital-stamp">
+                            <span>Original chain complement of digital certification SAT</span>
+                        </div>
+                        <div class="digital-stamp-content">
+                            <span class="nowrap" t-out="cfdi_values['cadena']"/>
+                        </div>
+                        <div class="digital-stamp">
+                            <span>Extra Info</span>
+                        </div>
+                        <div class="digital-stamp-content">
+                            <span>Emitter certificate:</span> <span t-out="cfdi_values['certificate_number']"/>
+                            <span> | SAT Certificate:</span> <span t-out="cfdi_values['certificate_sat_number']"/>
+                            <span> | Expedition place:</span> <span t-out="cfdi_values['expedition']"/>
+                            <span> | Fiscal Regime:</span><span t-out="cfdi_values['fiscal_regime']"/>
+                            <span> | Emission Date:</span> <span t-out="cfdi_values['emission_date_str']"/>
+                            <span> | Certification Date:</span> <span t-out="cfdi_values['stamp_date']"/>
+                            <span> | Fiscal Folio:</span> <span t-out="cfdi_values['uuid']"/>
+                        </div>
+                        <div class="digital-stamp-content text-center">
+                            <strong>This document is a printed representation of a CFDI</strong>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//th[@name='th_sml_product']" position="before">
+            <t t-if="o.l10n_mx_edi_cfdi_state == 'sent'">
+                <th name="th_sm_product_unspsc_code"><strong>Code</strong></th>
+            </t>
+        </xpath>
+        <xpath expr="//th[@name='th_sml_quantity']" position="after">
+            <t t-if="o.l10n_mx_edi_cfdi_state == 'sent'">
+                <th name="th_sm_uom_unspsc_code"><strong>UOM</strong></th>
+                <th name="th_sm_weight"><strong>Weight</strong></th>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="l10n_mx_edi_cartaporte_report_delivery_has_serial_move_line" inherit_id="stock.stock_report_delivery_has_serial_move_line">
+         <xpath expr="//td" position="before">
+            <t t-if="o.l10n_mx_edi_cfdi_state == 'sent'">
+                <td>
+                    <span t-field="move_line.product_id.unspsc_code_id.code"/>
+                </td>
+            </t>
+        </xpath>
+        <xpath expr="//td[@name='move_line_lot_quantity']" position="after">
+            <t t-if="o.l10n_mx_edi_cfdi_state == 'sent'">
+                <td>
+                    <span t-field="move_line.product_uom_id.unspsc_code_id.code"/>
+                </td>
+                <td>
+                    <span t-field="move_line.l10n_mx_edi_weight"/>
+                    <span t-field="o.weight_uom_name"/>
+                </td>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="l10n_mx_edi_cartaporte_report_delivery_aggregated_move_lines" inherit_id="stock.stock_report_delivery_aggregated_move_lines">
+        <xpath expr="//td" position="before">
+            <t t-if="o.l10n_mx_edi_cfdi_state == 'sent'">
+                <td>
+                    <span t-esc="aggregated_lines[line]['product'].unspsc_code_id.code"/>
+                </td>
+            </t>
+        </xpath>
+        <xpath expr="//td[@name='move_line_aggregated_quantity']" position="after">
+            <t t-if="o.l10n_mx_edi_cfdi_state == 'sent'">
+                <td>
+                    <span t-esc="aggregated_lines[line]['product_uom'].unspsc_code_id.code"/>
+                </td>
+                <td>
+                    <span t-esc="aggregated_lines[line]['weight']" t-options='{"widget": "float", "decimal_precision": "Stock Weight"}'/>
+                    <span t-field="o.weight_uom_name"/>
+                </td>
+            </t>
+        </xpath>
+    </template>
+</odoo>

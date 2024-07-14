@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="appointment_invite_view_form" model="ir.ui.view">
+        <field name="name">appointment.invite.view.form.inherit.website</field>
+        <field name="model">appointment.invite</field>
+        <field name="inherit_id" ref="appointment.appointment_invite_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='appointment_type_ids']" position="before">
+                <field name="website_id" options="{'no_open': True, 'no_create': True}" groups="website.group_multi_website"/>
+                <field name="website_id" invisible='1'/>
+            </xpath>
+            <field name="appointment_type_ids" position="attributes">
+                <attribute name="domain">['&amp;', ('category', 'in', ['punctual', 'recurring']), '|', ('website_id', '=?', website_id), ('website_id', '=', False)]</attribute>
+                <attribute name="default_focus">1</attribute>
+            </field>
+            <xpath expr="//div[hasclass('alert-warning')][last()]" position="after">
+                <div class="alert alert-warning" role="alert" invisible="not appointment_type_warning_msg">
+                    <field name="appointment_type_warning_msg" nolabel="1"/>
+                </div>
+            </xpath>
+        </field>    
+    </record>
+
+</data>
+</odoo>

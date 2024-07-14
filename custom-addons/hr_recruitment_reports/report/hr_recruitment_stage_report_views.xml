@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="recruitment_stage_report_view_graph" model="ir.ui.view">
+        <field name="model">hr.recruitment.stage.report</field>
+        <field name="arch" type="xml">
+            <graph string="Time In Stage Analysis" type="line" stacked="0" sample="1">
+                <field name="stage_id"/>
+                <field name="job_id"/>
+                <field name="days_in_stage" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="recruitment_stage_report_view_pivot" model="ir.ui.view">
+        <field name="model">hr.recruitment.stage.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Time In Stage Analysis" sample="1" disable_linking="1">
+                <field name="job_id" type="row"/>
+                <field name="stage_id" type="col"/>
+                <field name="days_in_stage" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="recruitment_stage_report_view_search" model="ir.ui.view">
+        <field name="model">hr.recruitment.stage.report</field>
+        <field name="arch" type="xml">
+            <search string="Time In Stage Analysis">
+                <field name="company_id" filter_domain="[('company_id', 'ilike', self)]"/>
+                <field name="job_id"/>
+                <field name="date_begin"/>
+                <field name="date_end"/>
+                <filter string="Last 365 Days Applicant" name="year" domain="[
+                    ('date_begin', '>=', (context_today() + relativedelta(days=-365)).strftime('%Y-%m-%d')),
+                    ('date_begin', '&lt;', (context_today() + relativedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="filter_date_begin" date="date_begin"/>
+                <group expand="1" string="Group By">
+                    <filter string="State" name="groupby_state" context="{'group_by': 'state'}"/>
+                    <filter string="Job Position" name="groupby_job" context="{'group_by':'job_id'}"/>
+                    <filter string="Stage" name="groupby_stage" context="{'group_by':'stage_id'}"/>
+                    <separator/>
+                    <filter string="Applicant Name" name="groupby_name" context="{'group_by':'name'}"/>
+                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="recruitment_stage_report_action" model="ir.actions.act_window">
+        <field name="name">Time In Stage Analysis</field>
+        <field name="res_model">hr.recruitment.stage.report</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="search_view_id" ref="recruitment_stage_report_view_search"/>
+        <field name="context">{
+            'search_default_year': True,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data to display
+            </p>
+            <p>
+                This reports allow you to check the more time-consuming stages of your pipes and optimize your recruitment flow.
+            </p>
+        </field>
+    </record>
+
+    <record id="recruitment_stage_report_job_action" model="ir.actions.act_window">
+        <field name="name">Time In Stage Analysis</field>
+        <field name="res_model">hr.recruitment.stage.report</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="search_view_id" ref="recruitment_stage_report_view_search"/>
+        <field name="context">{
+            'search_default_year': True,
+            'search_default_job_id': active_id,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data to display
+            </p>
+            <p>
+                This reports allow you to check the more time-consuming stages of your pipes and optimize your recruitment flow.
+            </p>
+        </field>
+    </record>
+
+    <record id="hr_recruitment_report_inherit_kanban_view" model="ir.ui.view">
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='o_kanban_job_reporting']" position="replace">
+                <div role="menuitem" name="o_kanban_job_reporting">
+                    <a name="%(hr_recruitment_reports.recruitment_report_job_action)d" type="action">Analysis</a>
+                </div>
+                <div role="menuitem">
+                    <a name="%(hr_recruitment_reports.recruitment_report_source_job_action)d" type="action">Source</a>
+                </div>
+                <div role="menuitem">
+                    <a name="%(hr_recruitment_reports.recruitment_stage_report_job_action)d" type="action">Time By Stages</a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem id="hr_applicant_stage_report_menu"
+        parent="hr_recruitment.report_hr_recruitment"
+        action="recruitment_stage_report_action" sequence="3"/>
+</odoo>

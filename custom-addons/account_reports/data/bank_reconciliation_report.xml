@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="bank_reconciliation_report" model="account.report">
+        <field name="name">Bank Reconciliation Report</field>
+        <field name="filter_show_draft" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_hide_0_lines">by_default</field>
+        <field name="search_bar" eval="True"/>
+        <field name="default_opening_date_filter">today</field>
+        <field name="custom_handler_model_id" ref="model_account_bank_reconciliation_report_handler"/>
+        <field name="column_ids">
+            <record id="bank_reconciliation_report_date" model="account.report.column">
+                <field name="name">Date</field>
+                <field name="expression_label">date</field>
+                <field name="figure_type">date</field>
+            </record>
+            <record id="bank_reconciliation_report_label" model="account.report.column">
+                <field name="name">Label</field>
+                <field name="expression_label">label</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="bank_reconciliation_report_amount_currency" model="account.report.column">
+                <field name="name">Amount Currency</field>
+                <field name="expression_label">amount_currency</field>
+                <field name="figure_type">monetary</field>
+            </record>
+            <record id="bank_reconciliation_report_currency" model="account.report.column">
+                <field name="name">Currency</field>
+                <field name="expression_label">currency</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="bank_reconciliation_report_amount" model="account.report.column">
+                <field name="name">Amount</field>
+                <field name="expression_label">amount</field>
+                <field name="figure_type">monetary</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="balance_bank" model="account.report.line">
+                <field name="name">Balance of Bank</field>
+                <field name="code">balance_bank</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="balance_bank_expr" model="account.report.expression">
+                        <field name="label">amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">last_statement_balance.amount + transaction_without_statement.amount + misc_operations.amount</field>
+                        <field name="auditable" eval="True"/>
+                    </record>
+                    <record id="balance_bank_expr_forced_currency_amount" model="account.report.expression">
+                        <field name="label">_currency_amount</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_forced_currency_amount</field>
+                        <field name="subformula">amount_currency_id</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="last_statement_balance" model="account.report.line">
+                        <field name="name">Last statement balance</field>
+                        <field name="code">last_statement_balance</field>
+                        <field name="expression_ids">
+                            <record id="last_statement_balance_amount" model="account.report.expression">
+                                <field name="label">amount</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_last_statement_balance_amount</field>
+                                <field name="subformula">amount</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="last_statement_balance_forced_currency_amount" model="account.report.expression">
+                                <field name="label">_currency_amount</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_last_statement_balance_amount</field>
+                                <field name="subformula">amount_currency_id</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="unreconciled_last_statement_receipts" model="account.report.line">
+                                <field name="name">Including Unreconciled Receipts</field>
+                                <field name="code">last_statement_receipts</field>
+                                <field name="groupby">id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="unreconciled_last_statement_receipts_date" model="account.report.expression">
+                                        <field name="label">date</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_last_statement_receipts</field>
+                                        <field name="subformula">date</field>
+                                        <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="unreconciled_last_statement_receipts_label" model="account.report.expression">
+                                        <field name="label">label</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_last_statement_receipts</field>
+                                        <field name="subformula">label</field>
+                                        <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="unreconciled_last_statement_receipts_amount_currency" model="account.report.expression">
+                                        <field name="label">amount_currency</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_last_statement_receipts</field>
+                                        <field name="subformula">amount_currency</field>
+                                        <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="unreconciled_last_statement_receipts_forced_currency_amount_currency" model="account.report.expression">
+                                        <field name="label">_currency_amount_currency</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_last_statement_receipts</field>
+                                        <field name="subformula">amount_currency_currency_id</field>
+                                    </record>
+                                    <record id="unreconciled_last_statement_receipts_currency" model="account.report.expression">
+                                      <field name="label">currency</field>
+                                      <field name="engine">custom</field>
+                                      <field name="formula">_report_custom_engine_unreconciled_last_statement_receipts</field>
+                                      <field name="subformula">currency</field>
+                                      <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="unreconciled_last_statement_receipts_amount" model="account.report.expression">
+                                      <field name="label">amount</field>
+                                      <field name="engine">custom</field>
+                                      <field name="formula">_report_custom_engine_unreconciled_last_statement_receipts</field>
+                                      <field name="subformula">amount</field>
+                                      <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="unreconciled_last_statement_receipts_forced_currency_amount" model="account.report.expression">
+                                        <field name="label">_currency_amount</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_last_statement_receipts</field>
+                                        <field name="subformula">amount_currency_id</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="unreconciled_last_statement_payments" model="account.report.line">
+                                <field name="name">Including Unreconciled Payments</field>
+                                <field name="code">last_statement_payments</field>
+                                <field name="groupby">id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="unreconciled_last_statement_payments_date" model="account.report.expression">
+                                        <field name="label">date</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_last_statement_payments</field>
+                                        <field name="subformula">date</field>
+                                        <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="unreconciled_last_statement_payments_label" model="account.report.expression">
+                                        <field name="label">label</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_last_statement_payments</field>
+                                        <field name="subformula">label</field>
+                                        <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="unreconciled_last_statement_payments_amount_currency" model="account.report.expression">
+                                        <field name="label">amount_currency</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_last_statement_payments</field>
+                                        <field name="subformula">amount_currency</field>
+                                        <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="unreconciled_last_statement_payments_forced_currency_amount_currency" model="account.report.expression">
+                                        <field name="label">_currency_amount_currency</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_last_statement_payments</field>
+                                        <field name="subformula">amount_currency_currency_id</field>
+                                    </record>
+                                    <record id="unreconciled_last_statement_payments_currency" model="account.report.expression">
+                                      <field name="label">currency</field>
+                                      <field name="engine">custom</field>
+                                      <field name="formula">_report_custom_engine_unreconciled_last_statement_payments</field>
+                                      <field name="subformula">currency</field>
+                                      <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="unreconciled_last_statement_payments_amount" model="account.report.expression">
+                                      <field name="label">amount</field>
+                                      <field name="engine">custom</field>
+                                      <field name="formula">_report_custom_engine_unreconciled_last_statement_payments</field>
+                                      <field name="subformula">amount</field>
+                                      <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="unreconciled_last_statement_payments_forced_currency_amount" model="account.report.expression">
+                                        <field name="label">_currency_amount</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_last_statement_payments</field>
+                                        <field name="subformula">amount_currency_id</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="transaction_without_statement" model="account.report.line">
+                        <field name="name">Transactions without statement</field>
+                        <field name="code">transaction_without_statement</field>
+                        <field name="expression_ids">
+                            <record id="transaction_without_statement_expr" model="account.report.expression">
+                                <field name="label">amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">unreconciled_receipt.amount + unreconciled_payments.amount</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="transaction_without_statement_expr_forced_currency_amount" model="account.report.expression">
+                                <field name="label">_currency_amount</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_forced_currency_amount</field>
+                                <field name="subformula">amount_currency_id</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="no_statement_unreconciled_receipt" model="account.report.line">
+                                <field name="name">Including Unreconciled Receipts</field>
+                                <field name="code">unreconciled_receipt</field>
+                                <field name="groupby">id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="no_statement_unreconciled_receipt_date" model="account.report.expression">
+                                        <field name="label">date</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_receipts</field>
+                                        <field name="subformula">date</field>
+                                        <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="no_statement_unreconciled_receipt_label" model="account.report.expression">
+                                        <field name="label">label</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_receipts</field>
+                                        <field name="subformula">label</field>
+                                        <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="no_statement_unreconciled_receipt_amount_currency" model="account.report.expression">
+                                        <field name="label">amount_currency</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_receipts</field>
+                                        <field name="subformula">amount_currency</field>
+                                        <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="no_statement_unreconciled_receipt_forced_currency_amount_currency" model="account.report.expression">
+                                        <field name="label">_currency_amount_currency</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_receipts</field>
+                                        <field name="subformula">amount_currency_currency_id</field>
+                                    </record>
+                                    <record id="no_statement_unreconciled_receipt_currency" model="account.report.expression">
+                                      <field name="label">currency</field>
+                                      <field name="engine">custom</field>
+                                      <field name="formula">_report_custom_engine_unreconciled_receipts</field>
+                                      <field name="subformula">currency</field>
+                                      <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="no_statement_unreconciled_receipt_amount" model="account.report.expression">
+                                      <field name="label">amount</field>
+                                      <field name="engine">custom</field>
+                                      <field name="formula">_report_custom_engine_unreconciled_receipts</field>
+                                      <field name="subformula">amount</field>
+                                      <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="no_statement_unreconciled_receipt_forced_currency_amount" model="account.report.expression">
+                                        <field name="label">_currency_amount</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_receipts</field>
+                                        <field name="subformula">amount_currency_id</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="no_statement_unreconciled_payments" model="account.report.line">
+                                <field name="name">Including Unreconciled Payments</field>
+                                <field name="code">unreconciled_payments</field>
+                                <field name="groupby">id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="no_statement_unreconciled_payments_date" model="account.report.expression">
+                                        <field name="label">date</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_payments</field>
+                                        <field name="subformula">date</field>
+                                        <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="no_statement_unreconciled_payments_label" model="account.report.expression">
+                                        <field name="label">label</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_payments</field>
+                                        <field name="subformula">label</field>
+                                        <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="no_statement_unreconciled_payments_amount_currency" model="account.report.expression">
+                                        <field name="label">amount_currency</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_payments</field>
+                                        <field name="subformula">amount_currency</field>
+                                        <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="no_statement_unreconciled_payments_forced_currency_amount_currency" model="account.report.expression">
+                                        <field name="label">_currency_amount_currency</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_payments</field>
+                                        <field name="subformula">amount_currency_currency_id</field>
+                                    </record>
+                                    <record id="no_statement_unreconciled_payments_currency" model="account.report.expression">
+                                      <field name="label">currency</field>
+                                      <field name="engine">custom</field>
+                                      <field name="formula">_report_custom_engine_unreconciled_payments</field>
+                                      <field name="subformula">currency</field>
+                                      <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="no_statement_unreconciled_payments_amount" model="account.report.expression">
+                                      <field name="label">amount</field>
+                                      <field name="engine">custom</field>
+                                      <field name="formula">_report_custom_engine_unreconciled_payments</field>
+                                      <field name="subformula">amount</field>
+                                      <field name="auditable" eval="False"/>
+                                    </record>
+                                    <record id="no_statement_unreconciled_payments_forced_currency_amount" model="account.report.expression">
+                                        <field name="label">_currency_amount</field>
+                                        <field name="engine">custom</field>
+                                        <field name="formula">_report_custom_engine_unreconciled_payments</field>
+                                        <field name="subformula">amount_currency_id</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="misc_operations" model="account.report.line">
+                        <field name="name">Misc. operations</field>
+                        <field name="code">misc_operations</field>
+                        <field name="expression_ids">
+                            <record id="misc_operations_amount" model="account.report.expression">
+                                <field name="label">amount</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_misc_operations</field>
+                                <field name="subformula">amount</field>
+                                <field name="auditable" eval="True"/>
+                            </record>
+                            <record id="misc_operations_amount_forced_currency_amount" model="account.report.expression">
+                                <field name="label">_currency_amount</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_misc_operations</field>
+                                <field name="subformula">amount_currency_id</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="outstanding" model="account.report.line">
+                <field name="name">Outstanding Receipts/Payments</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="outstanding_expr" model="account.report.expression">
+                        <field name="label">amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">outstanding_receipts.amount + outstanding_payments.amount</field>
+                        <field name="auditable" eval="False"/>
+                    </record>
+                    <record id="outstanding_expr_forced_currency_amount" model="account.report.expression">
+                        <field name="label">_currency_amount</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_custom_engine_forced_currency_amount</field>
+                        <field name="subformula">amount_currency_id</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="outstanding_receipts" model="account.report.line">
+                        <field name="name">(+) Outstanding Receipts</field>
+                        <field name="code">outstanding_receipts</field>
+                        <field name="groupby">id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="outstanding_receipts_date" model="account.report.expression">
+                                <field name="label">date</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_outstanding_receipts</field>
+                                <field name="subformula">date</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="outstanding_receipts_label" model="account.report.expression">
+                                <field name="label">label</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_outstanding_receipts</field>
+                                <field name="subformula">label</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="outstanding_receipts_amount_currency" model="account.report.expression">
+                                <field name="label">amount_currency</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_outstanding_receipts</field>
+                                <field name="subformula">amount_currency</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="outstanding_receipts_forced_currency_amount_currency" model="account.report.expression">
+                                <field name="label">_currency_amount_currency</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_outstanding_receipts</field>
+                                <field name="subformula">amount_currency_currency_id</field>
+                            </record>
+                            <record id="outstanding_receipts_currency" model="account.report.expression">
+                              <field name="label">currency</field>
+                              <field name="engine">custom</field>
+                              <field name="formula">_report_custom_engine_outstanding_receipts</field>
+                              <field name="subformula">currency</field>
+                              <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="outstanding_receipts_amount" model="account.report.expression">
+                              <field name="label">amount</field>
+                              <field name="engine">custom</field>
+                              <field name="formula">_report_custom_engine_outstanding_receipts</field>
+                              <field name="subformula">amount</field>
+                              <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="outstanding_receipts_forced_currency_amount" model="account.report.expression">
+                                <field name="label">_currency_amount</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_outstanding_receipts</field>
+                                <field name="subformula">amount_currency_id</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="outstanding_payments" model="account.report.line">
+                        <field name="name">(-) Outstanding Payments</field>
+                        <field name="code">outstanding_payments</field>
+                        <field name="groupby">id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="outstanding_payments_date" model="account.report.expression">
+                                <field name="label">date</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_outstanding_payments</field>
+                                <field name="subformula">date</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="outstanding_payments_label" model="account.report.expression">
+                                <field name="label">label</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_outstanding_payments</field>
+                                <field name="subformula">label</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="outstanding_payments_amount_currency" model="account.report.expression">
+                                <field name="label">amount_currency</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_outstanding_payments</field>
+                                <field name="subformula">amount_currency</field>
+                                <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="outstanding_payments_forced_currency_amount_currency" model="account.report.expression">
+                                <field name="label">_currency_amount_currency</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_outstanding_payments</field>
+                                <field name="subformula">amount_currency_currency_id</field>
+                            </record>
+                            <record id="outstanding_payments_currency" model="account.report.expression">
+                              <field name="label">currency</field>
+                              <field name="engine">custom</field>
+                              <field name="formula">_report_custom_engine_outstanding_payments</field>
+                              <field name="subformula">currency</field>
+                              <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="outstanding_payments_amount" model="account.report.expression">
+                              <field name="label">amount</field>
+                              <field name="engine">custom</field>
+                              <field name="formula">_report_custom_engine_outstanding_payments</field>
+                              <field name="subformula">amount</field>
+                              <field name="auditable" eval="False"/>
+                            </record>
+                            <record id="outstanding_payments_forced_currency_amount" model="account.report.expression">
+                                <field name="label">_currency_amount</field>
+                                <field name="engine">custom</field>
+                                <field name="formula">_report_custom_engine_outstanding_payments</field>
+                                <field name="subformula">amount_currency_id</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

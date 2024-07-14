@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="timesheet_grid.TimesheetValidationPivotView.Buttons" t-inherit="web.PivotView.Buttons">
+        <xpath expr="//div[hasclass('btn-group')][1]" position="before">
+            <button type="button" t-attf-class="btn btn-{{ displayValidateButtonPrimary ? 'primary' : 'secondary' }}" t-on-click.stop="onValidateButtonClicked">
+                Validate
+            </button>
+        </xpath>
+    </t>
+
+</templates>

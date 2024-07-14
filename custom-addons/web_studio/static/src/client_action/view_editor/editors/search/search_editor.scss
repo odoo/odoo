@@ -1,0 +1,91 @@
+.o_web_studio_editor_manager .o_web_studio_view_renderer {
+    .o_web_studio_search_view_editor {
+        min-width: 700px;
+        max-width: 900px;
+        position: relative;
+        padding: 0 $grid-gutter-width/2;
+        display: flex;
+
+        .o-web-studio-search--drop-disable {
+            opacity: 50%;
+        }
+
+        .o-web-studio-editor--element-clickable {
+            &:hover {
+                cursor: pointer;
+                outline: 1px dashed $o-brand-primary;
+            }
+            &.o-web-studio-editor--element-clicked {
+                outline: 2px solid $o-brand-primary;
+            }
+        }
+
+        .o_web_studio_search_container {
+            margin-top: 85px;
+            box-shadow: 0 15px 15px -9px rgba(black, 0.55);
+        }
+
+        .o_web_studio_search_sub_item {
+            min-width: 220px;
+        }
+
+        > .o_web_studio_search_sample_ui {
+            border-radius: $border-radius-sm;
+            box-shadow: 0 15px 15px -9px rgba(black, 0.55);
+            background: rgba(white, 0.95);
+            padding: 20px 15px;
+            height: 125px;
+            z-index: -1;
+            @include o-position-absolute(15px,15px,0,15px);
+            hr {
+                border-top-color: inherit;
+                border-top-width: 2px;
+                margin-top: 10px;
+            }
+            i {
+                display: block;
+                font-size: 1.5em;
+            }
+        }
+
+        .o_web_studio_blurred_childs > *{
+            opacity: 0.1;
+        }
+
+        .o_web_studio_search_autocompletion_container {
+            @include o-position-absolute(0px, -300px);
+            max-width: 320px;
+            box-shadow: 0 15px 15px -9px rgba(black, 0.55);
+            margin: 20px 15px;
+            background-color: $o-web-studio-bg-light;
+
+            .o-web-studio-editor--element-clickable {
+                //padding: 0.50rem !important;
+                background-color: white;
+            }
+        }
+
+        .o_web_studio_hook {
+            :first-child {
+                line-height: 0px;
+            }
+            span.o_web_studio_hook_separator {
+                display: block;
+                position: relative;
+                padding: 4px 0;
+                border: 0px dashed transparent;
+                transition: all 0.2s cubic-bezier(0.215, 0.610, 0.355, 1.000) 0s;
+            }
+        }
+        .o_web_studio_hook.o_web_studio_nearest_hook {
+            cursor: pointer !important;
+            outline: none;
+            span.o_web_studio_hook_separator {
+                background-color: rgba($o-brand-primary, 0.02);
+                border: 1px dashed rgba($o-brand-primary, 0.5);
+                padding: 20px;
+                margin: 4px 0;
+            }
+        }
+    }
+}

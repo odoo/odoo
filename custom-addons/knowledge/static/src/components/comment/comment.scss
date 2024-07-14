@@ -1,0 +1,56 @@
+.o_knowledge_comment_box {
+    width: max-content;
+    max-width: 400px;
+    transition: background-color .2s ease-in-out;
+    background-color: $o-gray-100;
+
+    ul.o_knowledge_comment_anchor {
+        max-height: 4rem;
+        > li {
+            border-left: 2px solid darkgoldenrod;
+        }
+        overflow-y: hidden;
+    }
+
+    &:not(.commenting) .o_knowledge_comment_box_thread, &:not(.commenting) ul {
+        cursor: pointer;
+    }
+
+    &.o_knowledge_comment_resolved {
+        background-color: $o-gray-300;
+    }
+
+    &.focused-comment, &.commenting {
+        background-color: $o-gray-200;
+        z-index: auto;
+    }
+
+    & > div {
+        overflow: auto;
+        max-height: 50vh;
+    }
+
+    & .o_knowledge_comment_small_ui img, i.o-mail-Message-avatar {
+        width: 40px;
+        height: 40px;
+    }
+    .o-mail-Message-avatarContainer {
+        background-color: transparent !important;
+    }
+
+    .o_knowledge_comments_buttons {
+        background-color: $o-gray-200;
+    }
+}
+
+.card .o_knowledge_comment_box {
+    max-width: none !important;
+    width: 100%;
+}
+
+.o_knowledge_comments_popover {
+    width: max-content;
+    max-width: 50vw;
+    max-height: 50vh;
+    z-index: 1000;
+}

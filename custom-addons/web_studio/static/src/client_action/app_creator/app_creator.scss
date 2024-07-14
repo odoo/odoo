@@ -1,0 +1,199 @@
+// App creator - style
+.o_web_studio_app_creator {
+  @include o-web-studio-app-creator-background;
+
+  .o_web_studio_app_creator_box {
+    box-shadow: 0 16px 13px -8px rgba(#000, 0.5);
+    color: $o-web-studio-bg-dark;
+
+    .o_web_studio_app_creator_left {
+      background-color: white;
+      h2.o_web_studio_welcome {
+        font-weight: 200;
+        margin-top: 70px;
+      }
+
+      h1 {
+        font-size: 3.5em;
+        letter-spacing: -1px;
+        margin-bottom: 0.3em;
+      }
+
+      h5 {
+        font-size: 13px;
+        position: absolute;
+      }
+
+      .o_web_studio_app_creator_name .o_web_studio_app_creator_menu {
+        margin-top: 50px;
+      }
+
+      .o_web_studio_app_creator_model_choice {
+        margin-top: 25px;
+        @include o-web-studio-checkbox(
+          $body-color,
+          $o-web-studio-bg-medium,
+          $o-web-studio-bg-dark,
+          white,
+          map-get($grays, "600")
+        );
+      }
+
+      .o_web_studio_app_creator_model .o_field_many2one_selection {
+        display: flex;
+        flex-wrap: nowrap;
+      }
+
+      .o_web_studio_app_creator_model .o_input_dropdown {
+        flex-grow: 1;
+      }
+
+      .o_web_studio_app_creator_model .o_external_button {
+        color: $body-color;
+        padding-right: 0;
+
+        &:hover,
+        &:focus,
+        &:active {
+          background-color: transparent;
+          color: $o-web-studio-bg-dark;
+        }
+      }
+    }
+
+    .o_web_studio_app_creator_right {
+      background-color: $o-web-studio-bg-dark;
+
+      .o_web_studio_welcome_image {
+        width: 183px;
+        height: 183px;
+        border-radius: 20px;
+        box-shadow: 0 7px 16px -5px #000;
+      }
+    }
+
+    .o_web_studio_app_creator_next,
+    .o_web_studio_app_creator_previous {
+      background-color: white;
+      border: 1px solid $o-web-studio-text-inactive;
+      border-radius: 2px;
+      color: $o-web-studio-text-inactive;
+      font-size: 11px;
+      font-weight: 500;
+      opacity: 0.5;
+      padding: 7px 15px;
+      text-transform: uppercase;
+
+      > span {
+        transition: opacity 0.35s ease 0s;
+      }
+
+      &:hover,
+      &:focus {
+        border-color: $o-web-studio-text-inactive;
+        color: $o-web-studio-text-inactive;
+      }
+    }
+
+    .o_web_studio_app_creator_next {
+      cursor: no-drop;
+
+      &.is_ready {
+        cursor: pointer;
+        background-color: $o-brand-primary;
+        border-color: darken($o-brand-primary, 3%);
+        color: white;
+        opacity: 1;
+        transition: all 0.3s ease 0s;
+        transition-property: padding, background;
+
+        > span {
+          opacity: 1;
+          padding-right: 15px;
+          transition: opacity 0.1s ease 0s;
+        }
+
+        &:hover,
+        &:focus {
+          background-color: lighten($o-brand-primary, 2%);
+          border-color: $o-brand-primary;
+          color: white;
+        }
+      }
+    }
+
+    .o_web_studio_app_creator_previous {
+      padding: 7px 15px 6px;
+    }
+
+    .o_field_widget.o_field_many2one {
+      width: 100%;
+    }
+  }
+}
+
+// App creator - layout
+.o_web_studio_app_creator {
+  min-height: 100%;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  overflow: auto;
+
+  .o_web_studio_app_creator_box {
+    min-height: 350px;
+    margin: auto;
+    position: relative;
+    width: 700px;
+    display: flex;
+    &.wide {
+      width: 800px;
+    }
+
+    .o_web_studio_app_creator_left,
+    .o_web_studio_app_creator_right {
+      float: left;
+      height: 100%;
+      padding: 16px 32px;
+      width: 50%;
+      min-height: 350px;
+      &.wide {
+        width: 100%;
+      }
+    }
+
+    .o_web_studio_app_creator_left {
+      border-radius: 3px 0 0 3px;
+      display: flex;
+      flex-flow: column nowrap;
+
+      .o_web_studio_app_creator_left_content {
+        flex: 1 1 100%;
+        padding-top: 20px;
+
+        .o_field_many2one {
+          width: 100%;
+        }
+      }
+
+      .o_web_studio_app_creator_buttons {
+        flex: 0 0 auto;
+
+        .o_web_studio_app_creator_next {
+          float: right;
+        }
+      }
+    }
+
+    .o_web_studio_app_creator_right {
+      align-items: center;
+      border-radius: 0 3px 3px 0;
+      display: flex;
+      justify-content: center;
+
+      .o_web_studio_app_creator_right {
+        height: 200px;
+        width: 200px;
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock_picking_form_inherit_l10n_mx_edi_stock_extended_30" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.l10n_mx_edi_stock_extended_30</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <field name="l10n_mx_edi_customs_no" position="replace"/>
+            <field name="l10n_mx_edi_gross_vehicle_weight" position="after">
+                <field name="l10n_mx_edi_customs_document_type_code" invisible="1"/>
+                <field name="l10n_mx_edi_customs_regime_id"
+                       invisible="not l10n_mx_edi_is_delivery_guide_needed or not l10n_mx_edi_external_trade"
+                       domain="[('goods_direction', 'in', ('import' if picking_type_code == 'incoming' else 'export', 'both'))]"
+                       options="{'create': False}"/>
+                <field name="l10n_mx_edi_customs_document_type_id"
+                       invisible="not l10n_mx_edi_is_delivery_guide_needed or not l10n_mx_edi_external_trade"
+                       domain="[('goods_direction', 'in', ('import' if picking_type_code == 'incoming' else 'export', 'both'))]"
+                       options="{'create': False}"/>
+                <field name="l10n_mx_edi_pedimento_number"
+                       invisible="not l10n_mx_edi_is_delivery_guide_needed or not l10n_mx_edi_external_trade or l10n_mx_edi_customs_document_type_code != '01' or picking_type_code != 'incoming'"/>
+                <field name="l10n_mx_edi_customs_doc_identification"
+                       invisible="not l10n_mx_edi_is_delivery_guide_needed or not l10n_mx_edi_external_trade or l10n_mx_edi_customs_document_type_code == '01'"/>
+                <field name="l10n_mx_edi_importer_id"
+                       invisible="not l10n_mx_edi_is_delivery_guide_needed or not l10n_mx_edi_external_trade or l10n_mx_edi_customs_document_type_code != '01' or picking_type_code !='incoming'"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

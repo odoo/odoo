@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="partner_view_buttons">
+            <field name="name">partner.view.buttons</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="13"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button type="object"
+                        groups="account.group_account_invoice"
+                        class="oe_stat_button"
+                        id="partner_ledger_button"
+                        icon="fa-pencil-square-o"
+                        name="open_partner_ledger"
+                        title="Partner Ledger"
+                        context="{'default_partner_id': id}">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Partner Ledger</span>
+                        </div>
+                    </button>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

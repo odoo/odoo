@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_hk_rental_view_form" model="ir.ui.view">
+        <field name="name">l10n_hk.rental.form</field>
+        <field name="model">l10n_hk.rental</field>
+        <field name="arch" type="xml">
+            <form string="Rental">
+                <header invisible="not id">
+                    <field name="state" groups="!hr.group_hr_manager" widget="statusbar"/>
+                    <field name="state" groups="hr.group_hr_manager" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_rentals_list" type="object" class="oe_stat_button" icon="fa-home" groups="hr.group_hr_user">
+                            <field name="rentals_count" string="Rentals" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+                    <div class="oe_title pe-0 w-100 mw-100" name="title">
+                        <h1 class="d-flex flex-row justify-content-between">
+                            <field name="name" class="text-truncate" placeholder="Rental Reference"/>
+                        </h1>
+                    </div>
+                    <group name="top_info">
+                        <group name="top_info_left">
+                            <field name="active" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="employee_id" widget="many2one_avatar_user"/>
+                            <field name="date_start" string="Rental Start Date"/>
+                            <field name="date_end" string="Rental End Date"/>
+                        </group>
+                        <group name="top_info_right">
+                            <field name="nature"/>
+                            <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="address"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_hk_rental_view_tree" model="ir.ui.view">
+        <field name="name">l10n_hk.rental.tree</field>
+        <field name="model">l10n_hk.rental</field>
+        <field name="arch" type="xml">
+            <tree string="Rentals" multi_edit="1" sample="1" default_order='date_start DESC'>
+                <field name="currency_id" invisible="1"/>
+                <field name="employee_id" readonly="1" widget="many2one_avatar_employee"/>
+                <field name="name" readonly="1"/>
+                <field name="date_start" readonly="1"/>
+                <field name="date_end" readonly="1"/>
+                <field name="amount" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="nature" readonly="1"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'close'" decoration-success="state == 'open'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_l10n_hk_rental" model="ir.actions.act_window">
+        <field name="name">Rentals</field>
+        <field name="res_model">l10n_hk.rental</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('employee_id', '!=', False)]</field>
+        <field name="context">{'search_default_group_by_state': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new rental
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="appointment_validated" inherit_id="appointment.appointment_validated">
+    <xpath expr="//a[hasclass('o_appointment_validation_cancel_btn')]" position="attributes">
+        <attribute name="t-if">appointment_type and not appointment_type.has_payment_step</attribute>
+    </xpath>
+</template>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="project_enterprise.ProjectRightSidePanelSection" t-inherit="project.ProjectRightSidePanelSection" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_rightpanel_title')]" position="inside">
+            <span class="me-2" t-if="env.isSmall and props.canBeClosed"><i t-attf-class="fa {{state.isClosed ? 'fa-caret-right' : 'fa-caret-down'}}"></i></span>
+        </xpath>
+        <xpath expr="//div[hasclass('o_rightpanel_header')]" position="attributes">
+            <attribute name="t-on-click">toggleSection</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_rightpanel_data')]" position="attributes">
+            <attribute name="t-attf-class" separator=" " add="{{state.isClosed ? 'o_rightpanel_hidden d-none' : ''}}"/>
+        </xpath>
+    </t>
+
+</templates>

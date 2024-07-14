@@ -1,0 +1,363 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_planning
+# 
+# Translators:
+# Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:12+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.view_order_form_inherit_sale_planning
+msgid "<span class=\"o_stat_text\">Planned</span>"
+msgstr "<span class=\"o_stat_text\">Đã lập kế hoạch</span>"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_form_inherit_sale_planning
+msgid "<span class=\"o_stat_text\">Sales Order</span>"
+msgstr "<span class=\"o_stat_text\">Đơn bán hàng</span>"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.view_order_form_inherit_sale_planning
+msgid "<span class=\"o_stat_text\">To Plan</span>"
+msgstr "<span class=\"o_stat_text\">Cần lập kế hoạch</span>"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.product_template_form_view_invoice_policy_inherit_sale_planning
+msgid ""
+"<span invisible=\"not planning_enabled\" class=\"oe_inline me-2\">\n"
+"                        as\n"
+"                    </span>"
+msgstr ""
+"<span invisible=\"not planning_enabled\" class=\"oe_inline me-2\">\n"
+"                        as\n"
+"                    </span>"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_gantt_inherit_sale_planning
+msgid "<strong>Sales Order Item  — </strong>"
+msgstr "<strong>Hạng mục đơn bán hàng  — </strong>"
+
+#. module: sale_planning
+#. odoo-javascript
+#: code:addons/sale_planning/static/src/views/planning_hooks.js:0
+#, python-format
+msgid ""
+"All open shifts and sales orders have already been assigned, or there are no"
+" resources available to take them at this time."
+msgstr ""
+"Tất cả đơn bán hàng và ca làm việc mở đã được phân công hoặc không có nhân "
+"viên rảnh để thực hiện chúng vào lúc này."
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__allocated_hours
+msgid "Allocated Time"
+msgstr "Thời gian được phân bổ"
+
+#. module: sale_planning
+#: model:ir.ui.menu,name:sale_planning.sale_planning_menu_schedule_by_sale_order
+msgid "By Sales Order"
+msgstr "Theo đơn bán hàng"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__partner_id
+msgid "Customer"
+msgstr "Khách hàng"
+
+#. module: sale_planning
+#: model:product.template,name:sale_planning.developer_product_product_template
+msgid "Developer (Plan services)"
+msgstr "Nhà phát triển (Dịch vụ kế hoạch)"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__end_datetime
+msgid "End Date"
+msgstr "Ngày kết thúc"
+
+#. module: sale_planning
+#: model:planning.role,name:sale_planning.planning_role_tester
+msgid "Functional Tester"
+msgstr "Chuyên viên kiểm thử tính năng"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.view_order_form_inherit_sale_planning
+msgid "Hours"
+msgstr "Giờ"
+
+#. module: sale_planning
+#: model:product.template,name:sale_planning.technical_maintainance_product_product_template
+msgid "IT Technical Maintenance (Plan services)"
+msgstr "Bảo trì kỹ thuật CNTT (Dịch vụ kế hoạch)"
+
+#. module: sale_planning
+#: model:planning.role,name:sale_planning.planning_role_technician
+msgid "IT Technician"
+msgstr "Kỹ thuật viên CNTT"
+
+#. module: sale_planning
+#: model:ir.model.fields,help:sale_planning.field_planning_slot__sale_line_plannable
+#: model:ir.model.fields,help:sale_planning.field_product_product__planning_enabled
+#: model:ir.model.fields,help:sale_planning.field_product_template__planning_enabled
+msgid ""
+"If enabled, a shift will automatically be generated for the selected role "
+"when confirming the Sales Order. Only employees with this role will "
+"automatically be assigned shifts for Sales Orders containing this service."
+msgstr ""
+"Nếu được bật, một ca làm sẽ tự động được tạo cho vai trò đã chọn khi xác "
+"nhận đơn bán hàng. Chỉ những nhân viên có vai trò này mới tự động được giao "
+"ca làm cho các đơn bán hàng có chứa dịch vụ này."
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_search_inherit_sale_planning
+msgid "My Sales Orders"
+msgstr "Đơn hàng bán của tôi"
+
+#. module: sale_planning
+#: model_terms:ir.actions.act_window,help:sale_planning.sale_planning_action_schedule_by_sale_order
+msgid "No shifts found. Let's create one!"
+msgstr "Không tìm thấy ca làm nào. Hãy tạo một ca!"
+
+#. module: sale_planning
+#: model:ir.model.constraint,message:sale_planning.constraint_planning_slot_check_datetimes_set_or_plannable_slot
+msgid ""
+"Only slots linked to a sale order with a plannable service can be "
+"unscheduled."
+msgstr ""
+"Chỉ có thể hủy lịch cho khung giờ liên kết với đơn bán hàng chứa dịch vụ có "
+"thể lập kế hoạch. "
+
+#. module: sale_planning
+#: model_terms:product.template,description:sale_planning.developer_product_product_template
+msgid "Our developer will help you to add new features to your Software."
+msgstr ""
+"Nhà phát triển của chúng tôi sẽ giúp bạn thêm tính năng mới vào phần mềm. "
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__sale_line_plannable
+#: model:ir.model.fields,field_description:sale_planning.field_product_product__planning_enabled
+#: model:ir.model.fields,field_description:sale_planning.field_product_template__planning_enabled
+msgid "Plan Services"
+msgstr "Lập kế hoạch dịch vụ "
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.product_template_form_view_invoice_policy_inherit_sale_planning
+msgid "Plan shifts for your orders for employees who have this role."
+msgstr ""
+"Lập kế hoạch ca làm việc cho đơn hàng đối với những nhân viên có vai trò "
+"này."
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/models/product.py:0
+#, python-format
+msgid ""
+"Plannable services should be a service product, product\n"
+"%s."
+msgstr ""
+"Dịch vụ có thể lập kế hoạch nên là sản phẩm dịch vụ, sản phẩm\n"
+"%s. "
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/models/product.py:0
+#, python-format
+msgid "Plannable services should use an UoM within the %s category."
+msgstr "Dịch vụ có thể lập kế hoạch nên dùng đơn vị tính trong danh mục %s. "
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_planning_analysis_report
+msgid "Planning Analysis Report"
+msgstr "Báo cáo phân tích kế hoạch"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order__planning_first_sale_line_id
+msgid "Planning First Sale Line"
+msgstr "Lập kế hoạch dòng bán hàng đầu tiên"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order__planning_hours_planned
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order_line__planning_hours_planned
+msgid "Planning Hours Planned"
+msgstr "Số giờ đã được lập kế hoạch"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order__planning_hours_to_plan
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order_line__planning_hours_to_plan
+msgid "Planning Hours To Plan"
+msgstr "Số giờ cần lập kế hoạch"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order__planning_initial_date
+msgid "Planning Initial Date"
+msgstr "Lập kế hoạch ngày đầu tiên"
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_planning_role
+#: model:ir.model.fields,field_description:sale_planning.field_product_product__planning_role_id
+#: model:ir.model.fields,field_description:sale_planning.field_product_template__planning_role_id
+msgid "Planning Role"
+msgstr "Lập kế hoạch vai trò"
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_planning_slot
+msgid "Planning Shift"
+msgstr "Lập kế hoạch ca làm"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order_line__planning_slot_ids
+msgid "Planning Slot"
+msgstr "Khung giờ kế hoạch"
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_product_template
+msgid "Product"
+msgstr "Sản phẩm"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_analysis_report__role_product_ids
+msgid "Role Product"
+msgstr "Sản phẩm vai trò"
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_sale_order
+#: model:ir.model.fields,field_description:sale_planning.field_planning_analysis_report__sale_order_id
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__sale_order_id
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_search_inherit_sale_planning
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_analysis_report__sale_line_id
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__sale_line_id
+#: model_terms:ir.ui.view,arch_db:sale_planning.open_slots_list_template
+#: model_terms:ir.ui.view,arch_db:sale_planning.period_report_template
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_search_inherit_sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.resource_sale_planning
+msgid "Sales Order Item"
+msgstr "Hạng mục đơn bán hàng"
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Dòng đơn bán hàng"
+
+#. module: sale_planning
+#: model:ir.model.fields,help:sale_planning.field_planning_slot__sale_line_id
+msgid ""
+"Sales order item for which this shift will be performed. When sales orders "
+"are automatically planned, the remaining hours of the sales order item, as "
+"well as the role defined on the service, are taken into account."
+msgstr ""
+"Hạng mục đơn bán hàng mà ca làm này sẽ được thực hiện. Khi đơn bán hàng được"
+" lên kế hoạch tự động, số giờ còn lại của hạng mục đơn bán hàng cũng như vai"
+" trò đã xác định đối với dịch vụ sẽ được tính đến."
+
+#. module: sale_planning
+#: model:ir.actions.act_window,name:sale_planning.sale_planning_action_schedule_by_sale_order
+msgid "Schedule by Sales Order"
+msgstr "Lập kế hoạch theo đơn bán hàng"
+
+#. module: sale_planning
+#: model_terms:ir.actions.act_window,help:sale_planning.sale_planning_action_schedule_by_sale_order
+msgid ""
+"Schedule your human and material resources across roles, projects and sales "
+"orders."
+msgstr ""
+"Lên lịch cho nguồn nhân lực và vật lực của bạn theo vai trò, dự án và đơn "
+"bán hàng."
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_role__product_ids
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__role_product_ids
+msgid "Services"
+msgstr "Dịch vụ"
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/controllers/main.py:0
+#, python-format
+msgid "Shift"
+msgstr "Ca làm"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__start_datetime
+msgid "Start Date"
+msgstr "Ngày bắt đầu"
+
+#. module: sale_planning
+#: model_terms:product.template,description:sale_planning.technical_maintainance_product_product_template
+msgid "Take a rest. We'll do our best."
+msgstr "Bạn hãy nghỉ ngơi đi. Chúng tôi sẽ làm tốt nhất có thể. "
+
+#. module: sale_planning
+#. odoo-javascript
+#: code:addons/sale_planning/static/src/views/planning_hooks.js:0
+#, python-format
+msgid "The open shifts and sales orders have been successfully assigned."
+msgstr "Các đơn bán hàng và ca làm việc mở đã được phân công thành công. "
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/models/planning_slot.py:0
+#, python-format
+msgid ""
+"This Sale Order Item doesn't have a target value of planned hours. Planned "
+"hours :"
+msgstr ""
+"Hạng mục đơn bán hàng này không có giá trị đích của số giờ đã lập kế hoạch. "
+"Số giờ đã lập kế hoạch:"
+
+#. module: sale_planning
+#. odoo-javascript
+#: code:addons/sale_planning/static/src/views/sale_planning_gantt/sale_planning_gantt_renderer.js:0
+#, python-format
+msgid ""
+"This resource is not available for this shift during the selected period."
+msgstr "Nguồn lực không có sẵn cho ca làm này vào khoảng thời gian đã chọn. "
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_view_form_in_gantt_inherit_sale_planning
+msgid "Unschedule"
+msgstr "Huỷ lịch trình"
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/models/sale_order.py:0
+#, python-format
+msgid "View Planning"
+msgstr "Xem kế hoạch"
+
+#. module: sale_planning
+#: model:planning.role,name:sale_planning.planning_role_planner
+msgid "Work Planner"
+msgstr "Người lập kế hoạch công việc"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_role_view_tree_inherit_sale_planning
+msgid "e.g. Cleaning Services"
+msgstr "VD: Dịch vụ dọn vệ sinh"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.product_template_form_view_invoice_policy_inherit_sale_planning
+msgid "e.g. Consultant"
+msgstr "VD: Chuyên viên tư vấn"
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/models/sale_order_line.py:0
+#, python-format
+msgid "remaining"
+msgstr "còn lại"

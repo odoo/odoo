@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_allocating_paid_time_off_view_form" model="ir.ui.view">
+        <field name="name">hr.payroll.alloc.paid.leave.view.form</field>
+        <field name="model">hr.payroll.alloc.paid.leave</field>
+        <field name="arch" type="xml">
+            <form string="Paid Time Off Allocation">
+                <group>
+                    <group>
+                        <field name="year"/>
+                        <field name="structure_type_id" options="{'no_create_edit': True}"/>
+                        <field name="department_id" />
+                        <field name="company_id" invisible="1"/>
+                    </group>
+                </group>
+                <field name="alloc_employee_ids" colspan="4" nolabel="1"/>
+                <group>
+                    <group>
+                        <field name="holiday_status_id" options="{'no_create_edit': True}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="generate_allocation" string="Generate Time Off Allocations" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="allocating_paid_time_off_wizard_action" model="ir.actions.act_window">
+        <field name="name">Paid Time Off Allocation</field>
+        <field name="res_model">hr.payroll.alloc.paid.leave</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="view_hr_payroll_alloc_employee_view_tree" model="ir.ui.view">
+        <field name="name">hr.payroll.alloc.employee.view.tree</field>
+        <field name="model">hr.payroll.alloc.employee</field>
+        <field name="arch" type="xml">
+            <tree string="Employee" editable="bottom" create="false" delete="true">
+                <field name="employee_id"/>
+                <field name="paid_time_off" string="For The Period"/>
+                <field name="contract_next_year_id" column_invisible="True" />
+                <field name="resource_calendar_id"/>
+                <field name="paid_time_off_to_allocate" string="To Allocate"/>
+            </tree>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_hr_allocating_paid_time_off_view"
+        name="Paid Time Off Allocation"
+        action="allocating_paid_time_off_wizard_action"
+        parent="l10n_be_hr_payroll.menu_reporting_l10n_be"
+        sequence="40"
+    />
+
+</odoo>

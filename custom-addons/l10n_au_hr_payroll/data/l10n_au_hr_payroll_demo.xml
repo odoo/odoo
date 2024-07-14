@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_res_company_au" model="res.partner">
+        <field name="name">My Australian Company</field>
+        <field name="street">Australian Street</field>
+        <field name="zip">1234</field>
+        <field name="city">Sydney</field>
+        <field name="country_id" ref="base.au"/>
+    </record>
+
+    <record id="res_company_au" model="res.company">
+        <field name="name">My Australian Company</field>
+        <field name="currency_id" ref="base.AUD"/>
+        <field name="partner_id" ref="partner_res_company_au"/>
+        <field name="resource_calendar_id" ref="l10n_au_hr_payroll.resource_calendar_au_38"/>
+        <field name="vat">83 914 571 673</field>
+    </record>
+
+    <record id="res_partner_employee_au" model="res.partner">
+        <field name="name">Harrison Hampton</field>
+        <field name="company_id" ref="l10n_au_hr_payroll.res_company_au"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('l10n_au_hr_payroll.res_company_au'))]"/>
+        <field name="tz">Australia/Sydney</field>
+    </record>
+
+    <record id="hr_employee_au" model="hr.employee">
+        <field name="company_id" ref="l10n_au_hr_payroll.res_company_au"/>
+        <field name="resource_calendar_id" ref="l10n_au_hr_payroll.resource_calendar_au_38"/>
+        <field name="work_contact_id" ref="l10n_au_hr_payroll.res_partner_employee_au"/>
+        <field name="name">Roger</field>
+        <field name="work_phone">123456789</field>
+        <field name="private_street">Australian Street</field>
+        <field name="private_city">Sydney</field>
+        <field name="birthday" eval="datetime(1970, 3, 21).date()"/>
+        <field name="l10n_au_tfn_declaration">provided</field>
+        <field name="l10n_au_tfn">123456789</field>
+        <field name="l10n_au_training_loan">True</field>
+        <field name="l10n_au_nat_3093_amount">150</field>
+        <field name="l10n_au_child_support_garnishee">percentage</field>
+        <field name="l10n_au_child_support_garnishee_amount">0.1</field>
+        <field name="l10n_au_child_support_deduction">150</field>
+        <field name="gender">male</field>
+    </record>
+
+    <record id="hr_contract_au" model="hr.contract">
+        <field name="company_id" ref="l10n_au_hr_payroll.res_company_au"/>
+        <field name="resource_calendar_id" ref="l10n_au_hr_payroll.resource_calendar_au_38"/>
+        <field name="employee_id" ref="l10n_au_hr_payroll.hr_employee_au"/>
+        <field name="name">Roger Contract</field>
+        <field name="date_start" eval="datetime(1975, 1, 1).date()"/>
+        <field name="wage">5000</field>
+        <field name="structure_type_id" ref="l10n_au_hr_payroll.structure_type_schedule_1"/>
+        <field name="l10n_au_leave_loading">regular</field>
+        <field name="l10n_au_leave_loading_rate">5</field>
+        <field name="l10n_au_workplace_giving">100</field>
+        <field name="l10n_au_salary_sacrifice_superannuation">20</field>
+        <field name="l10n_au_salary_sacrifice_other">20</field>
+        <field name="state">open</field>
+    </record>
+
+    <function model="hr.employee" name="generate_work_entries">
+        <value model="hr.employee" eval="obj().search([]).ids"/>
+        <value eval="datetime(2023, 7, 1).date()"/>
+        <value eval="datetime(2023, 9, 30).date()"/>
+    </function>
+
+    <record id="hr_payslip_0_au" model="hr.payslip">
+        <field name="company_id" ref="l10n_au_hr_payroll.res_company_au"/>
+        <field name="employee_id" ref="l10n_au_hr_payroll.hr_employee_au"/>
+        <field name="name">Roger Payslip Return To Work</field>
+        <field name="date_from" eval="datetime(2023, 7, 1).date()"/>
+        <field name="date_to" eval="datetime(2023, 7, 31).date()"/>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_return_to_work"/>
+        <field name="input_line_ids" eval="[(5, 0, 0),
+            (0, 0, {'input_type_id': ref('l10n_au_hr_payroll.input_b2work'), 'amount': 15000})
+        ]"/>
+    </record>
+    <record id="hr_payslip_1_au" model="hr.payslip">
+        <field name="company_id" ref="l10n_au_hr_payroll.res_company_au"/>
+        <field name="employee_id" ref="l10n_au_hr_payroll.hr_employee_au"/>
+        <field name="name">Roger Payslip July</field>
+        <field name="date_from" eval="datetime(2023, 7, 1).date()"/>
+        <field name="date_to" eval="datetime(2023, 7, 31).date()"/>
+    </record>
+    <record id="hr_payslip_2_au" model="hr.payslip">
+        <field name="company_id" ref="l10n_au_hr_payroll.res_company_au"/>
+        <field name="employee_id" ref="l10n_au_hr_payroll.hr_employee_au"/>
+        <field name="name">Roger Payslip August</field>
+        <field name="date_from" eval="datetime(2023, 8, 1).date()"/>
+        <field name="date_to" eval="datetime(2023, 8, 31).date()"/>
+        <field name="input_line_ids" eval="[(5, 0, 0),
+            (0, 0, {'input_type_id': ref('hr_payroll.input_child_support'), 'amount': 200})
+        ]"/>
+    </record>
+    <record id="hr_payslip_3_au" model="hr.payslip">
+        <field name="company_id" ref="l10n_au_hr_payroll.res_company_au"/>
+        <field name="employee_id" ref="l10n_au_hr_payroll.hr_employee_au"/>
+        <field name="name">Roger Payslip September Termination</field>
+        <field name="date_from" eval="datetime(2023, 9, 1).date()"/>
+        <field name="date_to" eval="datetime(2023, 9, 30).date()"/>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_termination"/>
+        <field name="input_line_ids" eval="[(5, 0, 0),
+            (0, 0, {'input_type_id': ref('l10n_au_hr_payroll.input_severance_pay'), 'amount': 15000}),
+            (0, 0, {'input_type_id': ref('l10n_au_hr_payroll.input_golden_handshake'), 'amount': 20000}),
+            (0, 0, {'input_type_id': ref('l10n_au_hr_payroll.input_genuine_redundancy'), 'amount': 5000}),
+        ]"/>
+    </record>
+
+    <function model="hr.payslip" name="compute_sheet" eval="[[ref('l10n_au_hr_payroll.hr_payslip_0_au')]]"/>
+    <function model="hr.payslip" name="compute_sheet" eval="[[ref('l10n_au_hr_payroll.hr_payslip_1_au')]]"/>
+    <function model="hr.payslip" name="compute_sheet" eval="[[ref('l10n_au_hr_payroll.hr_payslip_2_au')]]"/>
+    <function model="hr.payslip" name="compute_sheet" eval="[[ref('l10n_au_hr_payroll.hr_payslip_3_au')]]"/>
+
+    <function model="hr.payslip" name="action_payslip_done" eval="[[ref('l10n_au_hr_payroll.hr_payslip_0_au')]]"/>
+    <function model="hr.payslip" name="action_payslip_done" eval="[[ref('l10n_au_hr_payroll.hr_payslip_1_au')]]"/>
+    <function model="hr.payslip" name="action_payslip_done" eval="[[ref('l10n_au_hr_payroll.hr_payslip_2_au')]]"/>
+
+    <record id="hr_leave_type_annual_au" model="hr.leave.type">
+        <field name="company_id" ref="l10n_au_hr_payroll.res_company_au"/>
+        <field name="name">Annual Leave</field>
+        <field name="l10n_au_leave_type">annual</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_legal_leave"/>
+    </record>
+    <record id="hr_leave_type_long_service" model="hr.leave.type">
+        <field name="company_id" ref="l10n_au_hr_payroll.res_company_au"/>
+        <field name="name">Long Service Leave</field>
+        <field name="l10n_au_leave_type">long_service</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_legal_leave"/>
+    </record>
+
+    <record id="hr_leave_allocation_long_service_pre_78" model="hr.leave.allocation">
+        <field name="date_from" eval="datetime(1975, 7, 1).date()"/>
+        <field name="holiday_status_id" ref="l10n_au_hr_payroll.hr_leave_type_long_service"/>
+        <field name="number_of_days">10</field>
+        <field name="state">confirm</field>
+        <field name="validation_type">no</field>
+        <field name="holiday_type">employee</field>
+        <field name="employee_id" ref="l10n_au_hr_payroll.hr_employee_au"/>
+    </record>
+    <record id="hr_leave_allocation_long_service_78_to_93" model="hr.leave.allocation">
+        <field name="date_from" eval="datetime(1980, 7, 1).date()"/>
+        <field name="holiday_status_id" ref="l10n_au_hr_payroll.hr_leave_type_long_service"/>
+        <field name="number_of_days">10</field>
+        <field name="state">confirm</field>
+        <field name="validation_type">no</field>
+        <field name="holiday_type">employee</field>
+        <field name="employee_id" ref="l10n_au_hr_payroll.hr_employee_au"/>
+    </record>
+    <record id="hr_leave_allocation_long_service_post_93" model="hr.leave.allocation">
+        <field name="date_from" eval="datetime(1994, 7, 1).date()"/>
+        <field name="holiday_status_id" ref="l10n_au_hr_payroll.hr_leave_type_long_service"/>
+        <field name="number_of_days">10</field>
+        <field name="state">confirm</field>
+        <field name="validation_type">no</field>
+        <field name="holiday_type">employee</field>
+        <field name="employee_id" ref="l10n_au_hr_payroll.hr_employee_au"/>
+    </record>
+    <record id="hr_leave_allocation_annual_pre_93" model="hr.leave.allocation">
+        <field name="date_from" eval="datetime(1980, 7, 1).date()"/>
+        <field name="holiday_status_id" ref="l10n_au_hr_payroll.hr_leave_type_annual_au"/>
+        <field name="number_of_days">10</field>
+        <field name="state">confirm</field>
+        <field name="validation_type">no</field>
+        <field name="holiday_type">employee</field>
+        <field name="employee_id" ref="l10n_au_hr_payroll.hr_employee_au"/>
+    </record>
+    <record id="hr_leave_allocation_annual_post_93" model="hr.leave.allocation">
+        <field name="date_from" eval="datetime(1994, 7, 1).date()"/>
+        <field name="holiday_status_id" ref="l10n_au_hr_payroll.hr_leave_type_annual_au"/>
+        <field name="number_of_days">10</field>
+        <field name="state">confirm</field>
+        <field name="validation_type">no</field>
+        <field name="holiday_type">employee</field>
+        <field name="employee_id" ref="l10n_au_hr_payroll.hr_employee_au"/>
+    </record>
+
+    <function model="hr.leave.allocation" name="action_validate" eval="[ref('l10n_au_hr_payroll.hr_leave_allocation_long_service_pre_78')]" />
+    <function model="hr.leave.allocation" name="action_validate" eval="[ref('l10n_au_hr_payroll.hr_leave_allocation_long_service_78_to_93')]" />
+    <function model="hr.leave.allocation" name="action_validate" eval="[ref('l10n_au_hr_payroll.hr_leave_allocation_long_service_post_93')]" />
+    <function model="hr.leave.allocation" name="action_validate" eval="[ref('l10n_au_hr_payroll.hr_leave_allocation_annual_pre_93')]" />
+    <function model="hr.leave.allocation" name="action_validate" eval="[ref('l10n_au_hr_payroll.hr_leave_allocation_annual_post_93')]" />
+
+    <record id="hr_leave_long_service_pre_78" model="hr.leave">
+        <field name="request_date_from" eval="datetime(1975, 8, 2).date()"/>
+        <field name="request_date_to" eval="datetime(1975, 8, 4).date()"/>
+        <field name="number_of_days">2</field>
+        <field name="holiday_status_id" ref="l10n_au_hr_payroll.hr_leave_type_long_service"/>
+        <field name="employee_id" ref="l10n_au_hr_payroll.hr_employee_au"/>
+        <field name="state">confirm</field>
+    </record>
+    <record id="hr_leave_long_service_78_to_93" model="hr.leave">
+        <field name="request_date_from" eval="datetime(1980, 9, 2).date()"/>
+        <field name="request_date_to" eval="datetime(1980, 9, 4).date()"/>
+        <field name="number_of_days">2</field>
+        <field name="holiday_status_id" ref="l10n_au_hr_payroll.hr_leave_type_long_service"/>
+        <field name="employee_id" ref="l10n_au_hr_payroll.hr_employee_au"/>
+        <field name="state">confirm</field>
+    </record>
+    <record id="hr_leave_long_service_post_93" model="hr.leave">
+        <field name="request_date_from" eval="datetime(1994, 10, 2).date()"/>
+        <field name="request_date_to" eval="datetime(1994, 10, 4).date()"/>
+        <field name="number_of_days">2</field>
+        <field name="holiday_status_id" ref="l10n_au_hr_payroll.hr_leave_type_long_service"/>
+        <field name="employee_id" ref="l10n_au_hr_payroll.hr_employee_au"/>
+        <field name="state">confirm</field>
+    </record>
+    <record id="hr_leave_annual_pre_93" model="hr.leave">
+        <field name="request_date_from" eval="datetime(1980, 11, 2).date()"/>
+        <field name="request_date_to" eval="datetime(1980, 11, 4).date()"/>
+        <field name="number_of_days">2</field>
+        <field name="holiday_status_id" ref="l10n_au_hr_payroll.hr_leave_type_annual_au"/>
+        <field name="employee_id" ref="l10n_au_hr_payroll.hr_employee_au"/>
+        <field name="state">confirm</field>
+    </record>
+    <record id="hr_leave_annual_post_93" model="hr.leave">
+        <field name="request_date_from" eval="datetime(1994, 12, 2).date()"/>
+        <field name="request_date_to" eval="datetime(1994, 12, 4).date()"/>
+        <field name="number_of_days">2</field>
+        <field name="holiday_status_id" ref="l10n_au_hr_payroll.hr_leave_type_annual_au"/>
+        <field name="employee_id" ref="l10n_au_hr_payroll.hr_employee_au"/>
+        <field name="state">confirm</field>
+    </record>
+
+    <function model="hr.leave" name="action_validate" eval="[ref('l10n_au_hr_payroll.hr_leave_long_service_pre_78')]" />
+    <function model="hr.leave" name="action_validate" eval="[ref('l10n_au_hr_payroll.hr_leave_long_service_78_to_93')]" />
+    <function model="hr.leave" name="action_validate" eval="[ref('l10n_au_hr_payroll.hr_leave_long_service_post_93')]" />
+    <function model="hr.leave" name="action_validate" eval="[ref('l10n_au_hr_payroll.hr_leave_annual_pre_93')]" />
+    <function model="hr.leave" name="action_validate" eval="[ref('l10n_au_hr_payroll.hr_leave_annual_post_93')]" />
+
+    <record id="l10n_au_payevent_transaction_sequence_demo" model="ir.sequence">
+        <field name="company_id" ref="l10n_au_hr_payroll.res_company_au"/>
+        <field name="name">PayEvent.0004 Transaction Sequence demo</field>
+        <field name="code">payevent0004.transaction</field>
+        <field name="implementation">standard</field>
+        <field name="prefix">PAYEVENT0004</field>
+        <field name="padding">10</field>
+        <field name="number_increment">1</field>
+        <field name="number_next_actual">1</field>
+    </record>
+
+    <record id="hr_payroll_super_fund_partner" model="res.partner">
+        <field name="name">Fund A Partner</field>
+    </record>
+
+    <record id="hr_payroll_super_fund" model="l10n_au.super.fund">
+        <field name="display_name">Fund A</field>
+        <field name="abn">2345678912</field>
+        <field name="address_id" eval="ref('l10n_au_hr_payroll.hr_payroll_super_fund_partner')"/>
+    </record>
+
+    <record id="hr_payroll_super_account" model="l10n_au.super.account">
+        <field name="date_from" eval="datetime(2023, 9, 1).date()"/>
+        <field name="employee_id" ref="l10n_au_hr_payroll.hr_employee_au"/>
+        <field name="fund_id" ref="l10n_au_hr_payroll.hr_payroll_super_fund"/>
+    </record>
+
+    <record id="l10n_au_payslip_employee_bank_account" model="res.partner.bank">
+        <field name="acc_number">23455432</field>
+        <field name="acc_type">aba</field>
+        <field name="allow_out_payment" eval="True"/>
+        <field name="partner_id" ref="l10n_au_hr_payroll.res_partner_employee_au"/>
+        <field name="company_id" ref="l10n_au_hr_payroll.res_company_au"/>
+    </record>
+
+    <record id="l10n_au_hr_payroll.hr_employee_au" model="hr.employee">
+        <field name="bank_account_id" ref="l10n_au_hr_payroll.l10n_au_payslip_employee_bank_account"/>
+    </record>
+</odoo>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_meal_vouchers_employee" model="hr.salary.rule.category">
+        <field name="name">Meal Vouchers (Employee)</field>
+        <field name="code">MEALEMPLOYEE</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+
+    <record id="hr_payroll_meal_vouchers_employer" model="hr.salary.rule.category">
+        <field name="name">Meal Vouchers (Employer)</field>
+        <field name="code">MEALEMPLOYER</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+
+    <record id="hr_payroll_social_security_employee" model="hr.salary.rule.category">
+        <field name="name">Social Security (Employee)</field>
+        <field name="code">SOCIALEMPLOYEE</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_social_security_employer" model="hr.salary.rule.category">
+        <field name="name">Social Security (Employer)</field>
+        <field name="code">SOCIALEMPLOYER</field>
+    </record>
+
+    <record id="hr_payroll_social_security_employee_total" model="hr.salary.rule.category">
+        <field name="name">Social Security Total (Employee)</field>
+        <field name="code">SOCIALEMPLOYEETOTAL</field>
+    </record>
+
+    <record id="hr_payroll_social_security_employer_total" model="hr.salary.rule.category">
+        <field name="name">Social Security Total (Employer)</field>
+        <field name="code">SOCIALEMPLOYERTOTAL</field>
+    </record>
+
+    <record id="hr_payroll_income_tax_employee" model="hr.salary.rule.category">
+        <field name="name">Income Tax</field>
+        <field name="code">INCOMETAX</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_payroll_income_tax_employee_total" model="hr.salary.rule.category">
+        <field name="name">Income Tax Total</field>
+        <field name="code">INCOMETAXTOTAL</field>
+    </record>
+</odoo>

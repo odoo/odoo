@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="voip.CallMethodSelectionDialog">
+        <Dialog t-props="dialogProps">
+            <fieldset class="mb-3" t-ref="fieldset">
+                <legend>Tell us how to make the call:</legend>
+                <div class="ms-3">
+                    <input type="radio" id="voip" name="call-method" value="voip" checked="checked"/>
+                    <label for="voip" class="ps-1">Using VoIP</label>
+                </div>
+                <div class="ms-3">
+                    <input type="radio" id="phone" name="call-method" value="phone"/>
+                    <label for="phone" class="ps-1">Using device's phone</label>
+                </div>
+            </fieldset>
+            <input type="checkbox" id="remember" name="remember" t-ref="rememberCheckbox"/>
+            <label for="remember" class="ps-1">Remember?</label>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="onClickConfirm">Confirm</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

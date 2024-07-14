@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_asset_inherit" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <field name="asset_id" invisible="1"/>
+                <field name="count_asset" invisible="1"/>
+                <field name="draft_asset_exists" invisible="1"/>
+                <button name="open_asset_view"
+                    invisible="not asset_id"
+                    class="oe_stat_button"
+                    icon="fa-cube"
+                    type="object">
+                    <field name="asset_id_display_name" nolabel="1"/>
+                </button>
+                <button name="action_open_asset_ids"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-id-card-o"
+                    invisible="count_asset == 0 or draft_asset_exists">
+                    <field string="Asset(s)" name="count_asset" widget="statinfo"/>
+                </button>
+                <button name="action_open_asset_ids"
+                    type="object"
+                    class="oe_stat_button text-danger"
+                    icon="fa-id-card-o"
+                    invisible="count_asset == 0 or not draft_asset_exists">
+                    <field string="Asset(s)" name="count_asset" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_line_form_asset_inherit" model="ir.ui.view">
+        <field name="name">account.move.line.form</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_form"/>
+        <field name="arch" type="xml">
+            <field name="move_id" position="after">
+                <group string="Related Assets" invisible="not asset_ids">
+                    <field name="asset_ids" nolabel="1" colspan="2"/>
+                </group>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_account_aml_to_asset">
+        <field name="name">Create Asset</field>
+        <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
+        <field name="model_id" ref="account.model_account_move_line"/>
+        <field name="binding_model_id" ref="account.model_account_move_line" />
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    action = records.turn_as_asset()
+        </field>
+    </record>
+</odoo>

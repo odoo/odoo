@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_recruitment_extract_view_form" model="ir.ui.view">
+        <field name="name">hr.applicant.extract.view.form</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_manual_send_for_digitization" class="oe_highlight" string="Digitize document" type="object"
+                    invisible="not extract_can_show_send_button" data-hotkey="s"/>
+            </xpath>
+            <xpath expr="//header" position='after'>
+                <field name="extract_state" invisible="1"/>
+                <field name="extract_can_show_send_button" invisible="1"/>
+                <field name="is_in_extractable_state" invisible="1"/>
+                <div role="status" class="alert alert-danger text-center"
+                     invisible="not is_in_extractable_state or extract_state != 'not_enough_credit'">
+                    You don't have enough credit to extract data from your Resume.
+                    <button type="object" name="buy_credits" class="btn btn-link">
+                        <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                        Buy credits
+                    </button>
+                    <button type="object" name="action_manual_send_for_digitization" class="btn btn-link">
+                        <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                        Retry
+                    </button>
+                </div>
+                <div role="status" class="alert alert-info text-center"
+                     invisible="not is_in_extractable_state or extract_state != 'waiting_extraction'">
+                    All fields will be automated by Artificial Intelligence, it might take 5 seconds.
+                    <button type="object" name="check_ocr_status" class="btn btn-link">
+                        <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                        Refresh
+                    </button>
+                </div>
+                <field name="extract_status" invisible="1"/>
+                <div role="status" class="alert alert-info text-center"
+                     invisible="not is_in_extractable_state or extract_state != 'extract_not_ready'">
+                    The data extraction is not finished yet. The extraction usually takes between 5 and 10 seconds.
+                    <button type="object" name="check_ocr_status" class="btn btn-link">
+                        <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                        Refresh
+                    </button>
+                </div>
+                <div role="status" class="alert alert-danger text-center"
+                     invisible="not is_in_extractable_state or extract_state != 'error_status'">
+                    <field name="extract_error_message" class="oe_inline" style="width:auto !important;"/>
+                    <button type="object" name="action_manual_send_for_digitization" class="btn btn-link">
+                        <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                        Retry
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='department_id']" position='after'>
+                <field name="extract_document_uuid" groups="base.group_no_one" widget="CopyClipboardChar"
+                       invisible="not extract_document_uuid"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_recruitment_extract_view_list" model="ir.ui.view">
+        <field name="name">hr.applicant.extract.view.list</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-muted">extract_state_processed</attribute>
+            </xpath>
+            <xpath expr="//tree" position="inside">
+                <field name="extract_state_processed" column_invisible="True"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

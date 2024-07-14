@@ -1,0 +1,153 @@
+$map-table-row-padding: 25px;
+$map-table-line-padding: 20px;
+$map-number-color: white;
+$map-number-font-size: 19px;
+$map-marker-color: #2c8397;
+
+.o-map-renderer {
+    height: 100%;
+    @include media-breakpoint-down(md) {
+        height: calc(100% - #{$o-navbar-height});
+    }
+    &--popup-table {
+        &-content-name {
+            line-height: $map-table-row-padding;
+        }
+        &-space {
+            padding-left: $map-table-line-padding;
+        }
+    }
+
+    &--popup-buttons-divider {
+        width: 5px;
+    }
+
+    &--pin-list {
+        &-container {
+            padding: 8px $o-horizontal-padding !important;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            
+            @include media-breakpoint-up(md) {
+                border-right: $border-width solid $border-color;
+            }
+        }
+
+        &-group {
+
+            &-header {
+                height: $o-navbar-height;
+                color: $headings-color;
+            }
+
+            svg {
+                height: 1.25rem;
+                margin-right: 0.5rem;
+            }
+
+            > i {
+                width: 0.5rem;
+            }
+
+            > .o-map-renderer--pin-list-details {
+                margin-left: 2rem;
+            }
+        }
+
+        &-header {
+            color: $headings-color;
+        }
+
+        &-details {
+
+            a {
+                color: $gray-900;
+            }
+
+            > li {
+                list-style-position: inside;
+
+                &.o-map-renderer--pin-located:hover {
+                    text-decoration: none;
+                    background-color: $o-gray-100;
+                }
+
+                &:not(.o-map-renderer--pin-located) {
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+
+    ul.o-map-renderer--pin-list-details {
+        list-style: none;
+        cursor: default;
+        padding-bottom: 2px;
+    }
+
+    &--marker {
+        //the height and width correspond to the height and width of the custom icon png file
+        height: 40px !important;
+        width: 30px !important;
+        margin-top: -40px !important;
+        margin-left: -15px !important;
+        color: $map-marker-color;
+
+        &-badge {
+            @include o-position-absolute($top: -8px, $right: -10px);
+            font-size: 12px;
+        }
+
+        &-number {
+            top: -40px;
+            color: $map-number-color;
+            font-size: $map-number-font-size;
+            margin-top: 10%;
+        }
+    }
+
+    &--alert {
+        z-index: 401; // leaflet have 400
+    }
+
+    .leaflet-fade-anim .leaflet-popup {
+        // used to disabled opening animation for the popups.
+        transition: none;
+        .leaflet-popup-content-wrapper {
+            border-radius: 10px;
+            .leaflet-popup-content {
+                margin: 24px 20px 20px 20px;
+            }
+        }
+        .leaflet-popup-close-button {
+            color: #666666;
+        }
+    }
+
+    .leaflet-top,
+    .leaflet-bottom {
+        // used to not overlap dropdown menu.
+        z-index: $zindex-dropdown - 1;
+    }
+}
+.o-sm-pin-list-container {
+    @include media-breakpoint-down(md) {
+        height: $o-navbar-height;
+    }
+}
+
+/* Fix opw-2124233, preventing rtlcss to reverse the map position */
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+    left: 0 #{"/*rtl:ignore*/"};
+    right: auto #{"/*rtl:ignore*/"};
+}

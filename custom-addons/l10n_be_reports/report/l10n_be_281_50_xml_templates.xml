@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="report_281_50_xml">
+            <t t-foreach="docs" t-as="o">
+<!--            Belcotax has made its validation application available to run in standalone.  -->
+<!--            1) Go to https://finances.belgium.be/fr/E-services/Belcotaxonweb/documentation-technique  -->
+<!--            2) download the "Module de validation revenus 2020" file by right clicking on it and open   -->
+<!--            in a new window and refresh to download the "belcotax.jnlp" file.  -->
+<!--            3) install what is required to run java web start application on your system.  -->
+<!--            Linux mint: sudo apt install icedtea-netx  -->
+<!--            4) run your file in terminal this way:  -->
+<!--            javaws belcotax.jnlp  -->
+<Verzendingen>
+    <Verzending>
+        <v0002_inkomstenjaar><t t-out="data['V0002']"/></v0002_inkomstenjaar>
+        <v0010_bestandtype><t t-out="data['V0010']"/></v0010_bestandtype>
+        <v0011_aanmaakdatum><t t-out="data['V0011']"/></v0011_aanmaakdatum>
+        <v0014_naam><t t-out="data['V0014']"/></v0014_naam>
+        <v0015_adres><t t-out="data['V0015']"/></v0015_adres>
+        <v0016_postcode><t t-out="data['V0016']"/></v0016_postcode>
+        <v0017_gemeente><t t-out="data['V0017']"/></v0017_gemeente>
+        <v0018_telefoonnummer><t t-out="data['V0018']"/></v0018_telefoonnummer>
+        <v0021_contactpersoon><t t-out="data['V0021']"/></v0021_contactpersoon>
+        <v0022_taalcode><t t-out="data['V0022']"/></v0022_taalcode>
+        <v0023_emailadres><t t-out="data['V0023']"/></v0023_emailadres>
+        <v0024_nationaalnr><t t-out="data['V0024']"/></v0024_nationaalnr>
+        <v0025_typeenvoi><t t-out="data['V0025']"/></v0025_typeenvoi>
+        <Aangiften>
+            <Aangifte>
+                <a1002_inkomstenjaar><t t-out="data['A1002']"/></a1002_inkomstenjaar>
+                <a1005_registratienummer><t t-out="data['A1005']"/></a1005_registratienummer>
+                <a1011_naamnl1><t t-out="data['A1011']"/></a1011_naamnl1>
+                <a1013_adresnl><t t-out="data['A1013']"/></a1013_adresnl>
+                <a1014_postcodebelgisch><t t-out="data['A1014']"/></a1014_postcodebelgisch>
+                <a1015_gemeente><t t-out="data['A1015']"/></a1015_gemeente>
+                <a1016_landwoonplaats><t t-out="data['A1016']"/></a1016_landwoonplaats>
+                <a1020_taalcode><t t-out="data['A1020']"/></a1020_taalcode>
+                <Opgaven>
+                    <Opgave32550>
+                        <t t-foreach="data['Fiches28150']" t-as="fiche">
+                            <Fiche28150>
+                                <f2002_inkomstenjaar><t t-out="fiche['F2002']"/></f2002_inkomstenjaar>
+                                <f2005_registratienummer><t t-out="fiche['F2005']"/></f2005_registratienummer>
+                                <f2008_typefiche><t t-out="fiche['F2008']"/></f2008_typefiche>
+                                <f2009_volgnummer><t t-out="fiche['F2009']"/></f2009_volgnummer>
+                                <f2013_naam><t t-out="fiche['F2013']"/></f2013_naam>
+                                <f2015_adres><t t-out="fiche['F2015']"/></f2015_adres>
+                                <f2016_postcodebelgisch><t t-out="fiche['F2016']"/></f2016_postcodebelgisch>
+                                <f2017_gemeente><t t-out="fiche['F2017']"/></f2017_gemeente>
+                                <f2018_landwoonplaats><t t-out="fiche['F2018']"/></f2018_landwoonplaats>
+                                <f2028_typetraitement><t t-out="fiche['F2028']"/></f2028_typetraitement>
+                                <f2029_enkelopgave325><t t-out="fiche['F2029']"/></f2029_enkelopgave325>
+                                <f2105_birthplace><t t-out="fiche['F2105']"/></f2105_birthplace>
+                                <f2112_buitenlandspostnummer><t t-out="fiche['F2112']"/></f2112_buitenlandspostnummer>
+                                <f2114_voornamen><t t-out="fiche['F2114']"/></f2114_voornamen>
+                                <f50_2030_aardpersoon><t t-out="fiche['F50_2030']"/></f50_2030_aardpersoon>
+                                <f50_2031_nihil><t t-out="fiche['F50_2031']"/></f50_2031_nihil>
+                                <f50_2059_totaalcontrole><t t-out="fiche['F50_2059']"/></f50_2059_totaalcontrole>
+                                <f50_2060_commissies><t t-out="fiche['F50_2060']"/></f50_2060_commissies>
+                                <f50_2061_erelonenofvacatie><t t-out="fiche['F50_2061']"/></f50_2061_erelonenofvacatie>
+                                <f50_2062_voordelenaardbedrag><t t-out="fiche['F50_2062']"/></f50_2062_voordelenaardbedrag>
+                                <f50_2063_kosten><t t-out="fiche['F50_2063']"/></f50_2063_kosten>
+                                <f50_2064_totaal><t t-out="fiche['F50_2064']"/></f50_2064_totaal>
+                                <f50_2065_werkelijkbetaaldb><t t-out="fiche['F50_2065']"/></f50_2065_werkelijkbetaaldb>
+                                <f50_2066_sportremuneration><t t-out="fiche['F50_2066']"/></f50_2066_sportremuneration>
+                                <f50_2067_managerremuneration><t t-out="fiche['F50_2067']"/></f50_2067_managerremuneration>
+                                <f50_2099_comment><t t-out="fiche['F50_2099']"/></f50_2099_comment>
+                                <f50_2103_advantagenature><t t-out="fiche['F50_2103']"/></f50_2103_advantagenature>
+                                <f50_2107_uitgeoefendberoep><t t-out="fiche['F50_2107']"/></f50_2107_uitgeoefendberoep>
+                                <f50_2109_fiscaalidentificat><t t-out="fiche['F50_2109']"/></f50_2109_fiscaalidentificat>
+                                <f50_2110_kbonbr><t t-out="fiche['F50_2110']"/></f50_2110_kbonbr>
+                            </Fiche28150>
+                        </t>
+                    </Opgave32550>
+                </Opgaven>
+                <r8002_inkomstenjaar><t t-out="data['R8002']"/></r8002_inkomstenjaar>
+                <r8005_registratienummer><t t-out="data['R8005']"/></r8005_registratienummer>
+                <r8010_aantalrecords><t t-out="data['R8010']"/></r8010_aantalrecords>
+                <r8011_controletotaal><t t-out="data['R8011']"/></r8011_controletotaal>
+                <r8012_controletotaal><t t-out="data['R8012']"/></r8012_controletotaal>
+            </Aangifte>
+        </Aangiften>
+        <r9002_inkomstenjaar><t t-out="data['R9002']"/></r9002_inkomstenjaar>
+        <r9010_aantallogbestanden><t t-out="data['R9010']"/></r9010_aantallogbestanden>
+        <r9011_totaalaantalrecords><t t-out="data['R9011']"/></r9011_totaalaantalrecords>
+        <r9012_controletotaal><t t-out="data['R9012']"/></r9012_controletotaal>
+        <r9013_controletotaal><t t-out="data['R9013']"/></r9013_controletotaal>
+    </Verzending>
+</Verzendingen>
+            </t>
+        </template>
+    </data>
+</odoo>

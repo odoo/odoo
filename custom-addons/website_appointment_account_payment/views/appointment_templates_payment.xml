@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="appointment_payment" inherit_id="appointment_account_payment.appointment_payment">
+    <xpath expr="//t[@t-call='portal.portal_layout']" position="attributes">
+        <attribute name="t-call">website.layout</attribute>
+    </xpath>
+    <xpath expr="//t[@t-set='o_portal_fullwidth_alert']" position="replace"/>
+    <xpath expr="//div[@id='wrap']" position="attributes">
+        <attribute name="class">o_wappointment_wrap</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('o_appointment')]" position="before">
+        <div class="container">
+            <nav class="o_wappointment_navbar d-print-none d-flex justify-content-between mt-4">
+                <a t-if="appointment_type.category in ['punctual', 'recurring']"
+                    class="o_wappointment_navbar_link"
+                    t-attf-href="/appointment?#{keep_query('filter_appointment_type_ids', 'filter_resource_ids', 'filter_staff_user_ids', 'invite_token')}">
+                    <i class="fa fa-long-arrow-left me-2"/>All Appointments
+                </a>
+                <t t-call="website_appointment.appointment_progress_bar">
+                    <t t-set="step" t-value="35"/>
+                </t>
+            </nav>
+        </div>
+    </xpath>
+</template>
+</odoo>

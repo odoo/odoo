@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+    	Task Views in Project and FSM app
+	-->
+
+    <record id="view_task_form2_inherit" model="ir.ui.view">
+        <field name="name">view.task.form2.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_timer_start'][hasclass('btn-primary')]" position='after'>
+                <field name="allow_timesheets" invisible="1"/>
+                <field name="is_fsm" invisible="1"/>
+                <field name="fsm_done" invisible="1"/>
+                <field name="display_timesheet_timer" invisible="1"/>
+                <field name="display_enabled_conditions_count" invisible="1"/>
+                <field name="display_satisfied_conditions_count" invisible="1"/>
+                <field name="display_mark_as_done_primary" invisible="1"/>
+                <field name="display_mark_as_done_secondary" invisible="1"/>
+                <button class="btn-primary" name="action_fsm_validate" type="object" string="Mark as done"
+                        invisible="not display_mark_as_done_primary" data-hotkey="v"/>
+                <button class="btn-secondary" name="action_fsm_validate" type="object" string="Mark as done"
+                        invisible="not display_mark_as_done_secondary" data-hotkey="v"/>
+            </xpath>
+            <xpath expr="//label[@for='date_deadline'][1]" position="attributes">
+                <attribute name="invisible">is_fsm or planned_date_begin</attribute>
+            </xpath>
+            <xpath expr="//label[@for='date_deadline'][2]" position="attributes">
+                <attribute name="invisible">not is_fsm and not planned_date_begin</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_deadline']" position="attributes">
+                <attribute name="invisible">is_fsm</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_deadline']" position="after">
+                <field name="date_deadline" widget="daterange" options="{'start_date_field': 'planned_date_begin', 'always_range': '1'}" nolabel="1" invisible="not is_fsm" required="is_fsm and (date_deadline or planned_date_begin)"/>
+            </xpath>
+            <xpath expr="//field[@name='planned_date_begin']" position="attributes">
+                <attribute name="required">is_fsm and date_deadline</attribute>
+            </xpath>
+            <xpath expr="//page[@name='extra_info']" position="attributes">
+                <attribute name="groups">base.group_no_one</attribute>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="d-sm-flex d-md-none oe_stat_button" name="action_view_timesheets" type="object" icon="fa-clock-o" help="Time recorded on this task" invisible="not is_fsm or not allow_timesheets or not display_timesheet_timer">
+                    <div class="o_stat_info">
+                        <div class="o_stat_text">Time</div>
+                        <span class="o_stat_value">
+                            <field name="total_hours_spent" widget="float_time" nolabel="1" class="me-1" />
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+            <field name="is_fsm" string="is FSM?" invisible="1"/>
+            <field name="partner_id" position="attributes">
+                <attribute name="context">{'show_address_if_fsm': 1, 'res_partner_search_mode': 'customer'}</attribute>
+                <attribute name="invisible">not project_id</attribute>
+                <attribute name="required">is_fsm</attribute>
+            </field>
+            <xpath expr="//field[@name='depend_on_ids']/tree/field[@name='partner_id']" position="after">
+                <field name="is_fsm" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//field[@name='depend_on_ids']/tree/field[@name='partner_id']" position="attributes">
+                <attribute name="required">is_fsm</attribute>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="after">
+                <field name="is_fsm" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="attributes">
+                <attribute name="column_invisible">parent.is_fsm and not parent.partner_id</attribute>
+                <attribute name="required">is_fsm and parent.partner_id</attribute>
+            </xpath>
+            <field name="partner_id" position="after">
+                <label for="action_fsm_navigate" invisible="not is_fsm or not partner_id"/>
+                <div invisible="not is_fsm or not partner_id">
+                    <button
+                        name="action_fsm_navigate" type="object" class="btn btn-link ps-0 pt-0 pb-2"
+                        icon="oi-arrow-right" string="View Itinerary" colspan="2"/>
+                </div>
+                <field name="is_task_phone_update" invisible="1"/>
+                <label for="partner_phone" invisible="not is_fsm"/>
+                <div class="o_row o_row_readonly" invisible="not is_fsm">
+                    <field name="partner_phone" widget="phone"/>
+                    <span class="fa fa-exclamation-triangle text-warning oe_edit_only"
+                        title="By saving this change, the customer phone number will also be updated." invisible="not partner_id or not is_task_phone_update"/>
+                </div>
+            </field>
+            <field name="project_id" position="attributes">
+                <attribute name="context">{
+                    'default_is_fsm': context.get('fsm_mode'),
+                }
+                </attribute>
+                <attribute name="domain">[
+                    ('active', '=', True),
+                    '|',
+                    ('company_id', '=', False),
+                    ('company_id', '=?', company_id),
+                    ('is_fsm', '=?', context.get('fsm_mode')),
+                    ('is_internal_project', '=', False),
+                ]</attribute>
+            </field>
+            <xpath expr="//group/field[@name='project_id']" position="attributes">
+                <attribute name="context">{
+                    'default_is_fsm': context.get('fsm_mode'),
+                }
+                </attribute>
+                <attribute name="domain">[
+                    ('active', '=', True),
+                    '|',
+                    ('company_id', '=', False),
+                    ('company_id', '=?', company_id),
+                    ('is_fsm', '=?', context.get('fsm_mode')),
+                    ('is_internal_project', '=', False),
+                ]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!--
+    	Project Views (in project app)
+	-->
+
+    <record id="quick_create_task_form_fsm" model="ir.ui.view">
+        <field name="name">project.task.form.quick_create</field>
+        <field name="model">project.task</field>
+        <field name="priority">1000</field>
+        <field name="inherit_id" ref="project.quick_create_task_form"/>
+        <field name="arch" type="xml">
+            <field name="user_ids" position="attributes">
+                <attribute name="widget">many2many_avatar_user</attribute>
+            </field>
+            <field name="user_ids" position="before">
+                <field name="is_fsm" invisible="1"/>
+                <field name="partner_id" invisible="not is_fsm" required="is_fsm" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer'}"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Quick create for the kanban view in Project when the user selects a project in the main view of project app -->
+    <!-- TODO: Remove me in master -->
+    <record id="quick_create_task_in_project" model="ir.ui.view">
+        <field name="name">project.task.quick_create_in_project.view.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="quick_create_task_form_fsm"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside"/>
+        </field>
+    </record>
+
+    <!-- TODO: Remove me in master -->
+    <record id="project_task_in_project_view_kanban" model="ir.ui.view">
+        <field name="name">project.task.in.project.kanban</field>
+        <field name="model">project.task</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="project_enterprise.view_task_kanban_inherited"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="quick_create_view">industry_fsm.quick_create_task_in_project</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_view_form_inherit" model="ir.ui.view">
+        <field name="name">project.view.form.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath  expr="//group[@name='group_documents_analytics']" position="after">
+                <group name="group_field_service" string="Field Service" col="1" class="row mt16 o_settings_container col-lg-6">
+                    <div>
+                        <setting class="col-lg-12" help="Manage tasks in the Field Service module" groups="base.group_no_one">
+                            <field name="is_fsm"/>
+                        </setting>
+                     </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project.project_task_kanban_action_view" model="ir.actions.act_window.view">
+        <field name="view_id" ref="industry_fsm.project_task_in_project_view_kanban"/>
+    </record>
+</odoo>

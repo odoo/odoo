@@ -1,0 +1,31 @@
+.o_documents_search_panel {
+    .o_search_panel_label:not(:hover) .o_documents_search_panel_section_edit {
+        display: none;
+    }
+    .o_search_panel_group_header {
+        padding-right: 6px;
+    }
+    .o_documents_search_panel_section_edit {
+        cursor: pointer;
+    }
+    .o_documents_search_panel_editable:hover .o_search_panel_counter {
+        display: none;
+    }
+    .o_search_panel_category {
+        ul {
+            padding-inline-start: 0
+        }
+        > ul {
+            margin-right: 10px;
+            > li {
+                padding-left: 0;
+            }
+        }
+        li {
+            padding-left: var(--treeEntry-padding-h, 1.5rem);
+            &:not(.o_has_treeEntry) .o_toggle_fold {
+                visibility: hidden;
+            }
+        }
+    }
+}

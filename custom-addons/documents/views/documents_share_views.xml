@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="share_view_search" model="ir.ui.view">
+        <field name="name">share search</field>
+        <field name="model">documents.share</field>
+        <field name="arch" type="xml">
+        <search>
+            <field name="name"/>
+            <field name="document_ids"/>
+            <field name="folder_id"/>
+            <field name="partner_id"/>
+         </search>
+        </field>
+    </record>
+
+    <record id="share_view_tree" model="ir.ui.view">
+        <field name="name">share tree</field>
+        <field name="model">documents.share</field>
+        <field name="arch" type="xml">
+            <tree create="false" default_order="create_date desc" decoration-muted="state == 'expired'">
+                <header>
+                    <button name="action_delete_shares" type="object" string="Delete"/>
+                </header>
+                <field name="folder_id"/>
+                <field name="name"/>
+                <field name="type"/>
+                <field name="action"/>
+                <field name="create_uid" widget="many2one_avatar_user"/>
+                <field name="create_date"/>
+                <field name="state" widget="badge" decoration-success="state == 'live'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="share_view_form" model="ir.ui.view">
+        <field name="name">Share form</field>
+        <field name="model">documents.share</field>
+        <field name="arch" type="xml">
+            <form class="o_share_form" create="false">
+                <sheet class="o_share_sheet">
+                    <group class="o_url_group">
+                        <field name="full_url" widget="CopyClipboardChar" readonly="1"/>
+                    </group>
+                    <group>
+                        <group>
+                        <field name="can_upload" invisible="1"/>
+                        <field name="type" invisible="1"/>
+                        <field name="name" placeholder="Name of the share link"/>
+                        <field name="action" widget="radio" invisible="type == 'ids' or not can_upload"/>
+                        </group>
+                        <group>
+                            <field name="date_deadline" widget="date"/>
+                            <label for="email_drop" invisible="action == 'download'"/>
+                            <div invisible="action == 'download'">
+                                <field name="email_drop"/>
+                                <div invisible="not email_drop" class="oe_inline">
+                                    <div name="alias_def">
+                                        <field name="alias_id" class="oe_read_only oe_inline" required="0"/>
+                                        <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" dir="ltr">
+                                            <field name="alias_name" class="oe_inline"/>@
+                                            <field name="alias_domain_id" class="oe_inline" placeholder="e.g. domain.com"
+                                                   options="{'no_create': True, 'no_open': True}"/>
+                                        </div>
+                                    </div>
+                                    <div class="content-group" invisible="alias_domain_id">
+                                        <button name="%(settings_action)d" icon="oi-arrow-right" type="action"
+                                                string="Choose or Configure Email Servers" class="btn btn-sm btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <field name="folder_id" readonly="1" invisible="type == 'ids'"/>
+                            <field name="include_sub_folders" readonly="1" invisible="type == 'ids'"/>
+                            <field name="tag_ids" groups="base.group_no_one" widget="many2many_tags" readonly="1" invisible="type == 'ids'"/>
+                        </group>
+                    </group>
+                    <group string="Default values for uploaded documents" invisible="action == 'download'">
+                        <group>
+                            <field name="owner_id"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="activity_option"/>
+                        </group>
+                    </group>
+                    <group string="Activity" name="next_activity" autofocus="autofocus" invisible="not activity_option">
+                        <group>
+                            <field name="activity_type_id" options="{'no_create': True, 'no_open': True}" required="activity_option"/>
+                            <field name="activity_summary" placeholder="e.g. Discuss proposal"/>
+                        </group>
+                        <group>
+                            <label for="activity_date_deadline_range"/>
+                            <div class="o_row">
+                                <field name="activity_date_deadline_range"/>
+                                <field name="activity_date_deadline_range_type"/>
+                            </div>
+                            <field name="activity_user_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="activity_note" placeholder="Log a note..."/>
+                    </group>
+                    <field name="document_ids" groups="base.group_no_one" readonly="1"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="share_view_form_popup" model="ir.ui.view">
+        <field name="name">Share Document</field>
+        <field name="model">documents.share</field>
+        <field name="arch" type="xml">
+            <form class="o_share_form">
+                <sheet class="o_share_sheet">
+                    <field name="type" invisible="1"/>
+                    <field name="can_upload" invisible="1"/>
+                    <field name="links_count" invisible="1"/>
+                    <div class="alert alert-warning" role="alert" invisible="links_count == 0">
+                        Links cannot be shared and therefore will be excluded.
+                    </div>
+                    <group class="o_url_group">
+                        <field name="full_url" widget="CopyClipboardChar" readonly="1"/>
+                    </group>
+                    <group invisible="type != 'ids'">
+                        <field name="document_ids" widget="many2many_tags" readonly="1" options="{'no_edit_color': True}"/>
+                    </group>
+                    <group invisible="type != 'domain'">
+                        <group>
+                            <label string="Shared" for="folder_id"/>
+                            <div class="o_documents_content d-flex align-items-baseline">
+                                <i class="fa fa fa-folder text-primary me-2" title="Workspace"/>
+                                <field name="folder_id" readonly="1" options="{'no_open': True}" class="w-100"/>
+                                <i class="fa fa-tag o_documents_tag_color ms-2" invisible="not tag_ids" title="Tags"/>
+                                <field name="tag_ids" readonly="1" widget="many2many_tags" options="{'no_edit_color': True}"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="include_sub_folders"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="name" placeholder="Name of the share link"/>
+                            <field name="action" widget="radio" invisible="type == 'ids' or not can_upload"/>
+                        </group>
+                        <group>
+                            <field name="date_deadline" widget="date" placeholder="No limit"/>
+                        </group>
+                    </group>
+                    <group string="Upload by email" invisible="action != 'downloadupload'">
+                        <div class="content-group" invisible="alias_domain_id" colspan="2">
+                            <button name="%(settings_action)d" icon="oi-arrow-right" type="action"
+                                    string="Choose or Configure Email Servers" class="btn btn-sm btn-link"/>
+                        </div>
+                        <label for="alias_name" string="Email Alias"/>
+                        <span class="oe_edit_only" dir="ltr">
+                            <field name="alias_name" class="oe_inline"/>@
+                            <field name="alias_domain_id" class="oe_inline" placeholder="e.g. domain.com"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                        </span>
+                    </group>
+                    <group string="Default values for uploaded documents" invisible="action == 'download'">
+                        <group>
+                            <field name="owner_id"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="activity_option"/>
+                        </group>
+                    </group>
+                    <group string="Activity" name="next_activity" autofocus="autofocus" invisible="not activity_option">
+                        <group>
+                            <field name="activity_type_id" options="{'no_create': True, 'no_open': True}" required="activity_option"/>
+                            <field name="activity_summary" placeholder="e.g. Discuss proposal"/>
+                        </group>
+                        <group>
+                            <label for="activity_date_deadline_range"/>
+                            <div class="o_row">
+                                <field name="activity_date_deadline_range"/>
+                                <field name="activity_date_deadline_range_type"/>
+                            </div>
+                            <field name="activity_user_id"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button special="save" data-hotkey="q" string="Share" class="btn btn-primary"/>
+                        <button special="cancel" string="Discard" class="btn btn-secondary" data-hotkey="x"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="share_action" model="ir.actions.act_window">
+        <field name="name">Share links</field>
+        <field name="res_model">documents.share</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': False}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('documents.share_view_form')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No shared links
+            </p>
+        </field>
+    </record>
+</odoo>

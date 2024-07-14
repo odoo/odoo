@@ -1,0 +1,60 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_external_tax
+# 
+# Translators:
+# Jolien De Paepe, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: account_external_tax
+#: model_terms:ir.ui.view,arch_db:account_external_tax.move_form_inherit
+msgid "Compute Taxes"
+msgstr "Calculer les taxes"
+
+#. module: account_external_tax
+#: model:ir.model,name:account_external_tax.model_payment_link_wizard
+msgid "Generate Sales Payment Link"
+msgstr "Générer le lien de paiement des ventes"
+
+#. module: account_external_tax
+#: model:ir.model.fields,field_description:account_external_tax.field_account_bank_statement_line__is_tax_computed_externally
+#: model:ir.model.fields,field_description:account_external_tax.field_account_external_tax_mixin__is_tax_computed_externally
+#: model:ir.model.fields,field_description:account_external_tax.field_account_move__is_tax_computed_externally
+#: model:ir.model.fields,field_description:account_external_tax.field_account_payment__is_tax_computed_externally
+msgid "Is Tax Computed Externally"
+msgstr "La taxe est calculée en externe"
+
+#. module: account_external_tax
+#: model:ir.model,name:account_external_tax.model_account_move
+msgid "Journal Entry"
+msgstr "Pièce comptable"
+
+#. module: account_external_tax
+#: model:ir.model,name:account_external_tax.model_account_external_tax_mixin
+msgid "Mixin to manage common parts of external tax calculation"
+msgstr "Mixin pour calculer les parties communes du calcul de l'impôt externe"
+
+#. module: account_external_tax
+#: model:ir.model.fields,help:account_external_tax.field_account_bank_statement_line__is_tax_computed_externally
+#: model:ir.model.fields,help:account_external_tax.field_account_external_tax_mixin__is_tax_computed_externally
+#: model:ir.model.fields,help:account_external_tax.field_account_move__is_tax_computed_externally
+#: model:ir.model.fields,help:account_external_tax.field_account_payment__is_tax_computed_externally
+msgid ""
+"Technical field to determine if tax is calculated using an external service "
+"instead of Odoo."
+msgstr ""
+"Champ technique pour déterminer si la taxe est calculée à l'aide d'un "
+"service externe au lieu d'Odoo."

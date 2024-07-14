@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="ir_rule_worksheet_template_project" model="ir.rule">
+            <field name="name">Worksheet Template: Project Only</field>
+            <field name="model_id" ref="model_worksheet_template"/>
+            <field name="groups" eval="[(4, ref('project.group_project_user')), (4, ref('project.group_project_manager'))]"/>
+            <field name="domain_force">[('res_model', '=', 'project.task')]</field>
+        </record>
+    </data>
+</odoo>

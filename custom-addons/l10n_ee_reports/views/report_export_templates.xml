@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="vat_report_xml">
+            <vatDeclaration>
+                <taxPayerRegCode t-out="tax_payer_reg_code"/>
+                <submitterPersonCode t-if="submitter_person_code" t-out="submitter_person_code"/>
+                <year t-out="year"/>
+                <month t-out="month"/>
+                <declarationType t-out="declaration_type"/>
+                <version>KMD4</version>
+                <declarationBody>
+                    <noSales t-if="sale_lines and len(sale_lines) > 0">false</noSales>
+                    <noSales t-else="">true</noSales>
+                    <noPurchases t-if="purchase_lines and len(purchase_lines) > 0">false</noPurchases>
+                    <noPurchases t-else="">true</noPurchases>
+                    <sumPerPartnerSales>false</sumPerPartnerSales>
+                    <sumPerPartnerPurchases>false</sumPerPartnerPurchases>
+                    <transactions22 t-if="line_1" t-out="line_1"/>
+                    <transactions20 t-if="line_1_1" t-out="line_1_1"/>
+                    <transactions9 t-if="line_2" t-out="line_2"/>
+                    <transactions5 t-if="line_2_1" t-out="line_2_1"/>
+                    <transactionsZeroVat t-if="line_3" t-out="line_3"/>
+                    <euSupplyInclGoodsAndServicesZeroVat t-if="line_3_1" t-out="line_3_1"/>
+                    <euSupplyGoodsZeroVat t-if="line_3_1_1" t-out="line_3_1_1"/>
+                    <exportZeroVat t-if="line_3_2" t-out="line_3_2"/>
+                    <salePassengersWithReturnVat t-if="line_3_2_1" t-out="line_3_2_1"/>
+                    <inputVatTotal t-if="line_5" t-out="line_5"/>
+                    <importVat t-if="line_5_1" t-out="line_5_1"/>
+                    <fixedAssetsVat t-if="line_5_2" t-out="line_5_2"/>
+                    <carsVat t-if="line_5_3" t-out="line_5_3"/>
+                    <numberOfCars t-if="line_5_3_cars" t-out="line_5_3_cars"/>
+                    <carsPartialVat t-if="line_5_4" t-out="line_5_4"/>
+                    <numberOfCarsPartial t-if="line_5_4_cars" t-out="line_5_4_cars"/>
+                    <euAcquisitionsGoodsAndServicesTotal t-if="line_6" t-out="line_6"/>
+                    <euAcquisitionsGoods t-if="line_6_1" t-out="line_6_1"/>
+                    <acquisitionOtherGoodsAndServicesTotal t-if="line_7" t-out="line_7"/>
+                    <acquisitionImmovablesAndScrapMetalAndGold t-if="line_7_1" t-out="line_7_1"/>
+                    <supplyExemptFromTax t-if="line_8" t-out="line_8"/>
+                    <supplySpecialArrangements t-if="line_9" t-out="line_9"/>
+                    <adjustmentsPlus t-if="line_10" t-out="line_10"/>
+                    <adjustmentsMinus t-if="line_11" t-out="line_11"/>
+                </declarationBody>
+                <salesAnnex t-if="sale_lines and len(sale_lines) > 0">
+                    <saleLine t-foreach="sale_lines" t-as="sale_line">
+                        <buyerRegCode t-if="'partner_reg_code' in sale_line and sale_line['partner_reg_code']" t-out="sale_line['partner_reg_code']"/>
+                        <buyerName t-if="'partner_name' in sale_line and sale_line['partner_name']" t-out="sale_line['partner_name']"/>
+                        <invoiceNumber t-if="'invoice_number' in sale_line and sale_line['invoice_number']" t-out="sale_line['invoice_number']"/>
+                        <invoiceDate t-if="'invoice_date' in sale_line and sale_line['invoice_date']" t-out="sale_line['invoice_date']"/>
+                        <invoiceSum t-out="sale_line['invoice_total']"/>
+                        <taxRate t-out="sale_line['tax_rate']"/>
+                        <sumForRateInPeriod t-if="'sum_for_rate_in_period' in sale_line and sale_line['sum_for_rate_in_period']" t-out="sale_line['sum_for_rate_in_period']"/>
+                        <comments t-if="'comments' in sale_line and sale_line['comments']" t-out="sale_line['comments']"/>
+                    </saleLine>
+                </salesAnnex>
+                <purchasesAnnex t-if="purchase_lines and len(purchase_lines) > 0">
+                    <purchaseLine t-foreach="purchase_lines" t-as="purchase_line">
+                        <sellerRegCode t-if="'partner_reg_code' in purchase_line and purchase_line['partner_reg_code']" t-out="purchase_line['partner_reg_code']"/>
+                        <sellerName t-if="'partner_name' in purchase_line and purchase_line['partner_name']" t-out="purchase_line['partner_name']"/>
+                        <invoiceNumber t-if="'invoice_number' in purchase_line and purchase_line['invoice_number']" t-out="purchase_line['invoice_number']"/>
+                        <invoiceDate t-if="'invoice_date' in purchase_line and purchase_line['invoice_date']" t-out="purchase_line['invoice_date']"/>
+                        <invoiceSumVat t-out="purchase_line['invoice_total']"/>
+                        <vatInPeriod t-out="purchase_line['vat_in_period']"/>
+                        <comments t-if="'comments' in purchase_line and purchase_line['comments']" t-out="purchase_line['comments']"/>
+                    </purchaseLine>
+                </purchasesAnnex>
+            </vatDeclaration>
+        </template>
+
+        <template id="ec_sales_report_xml">
+            <v1:VD_deklaratsioon xmlns:v1="http://www.emta.ee/VD/xsd/webimport/v1">
+                <deklareerijaKood t-out="tax_payer_reg_code"/>
+                <perioodAasta t-out="year"/>
+                <perioodKuu t-out="month"/>
+                <aruandeRead>
+                    <aruandeRida t-foreach="rows" t-as="row">
+                        <kmkrKood t-att-riik="row['country_code']" t-out="row['vat_number']"/>
+                        <kaup t-if="row['goods']" t-out="row['goods']"/>
+                        <kolmnurktehing t-if="row['triangular']" t-out="row['triangular']"/>
+                        <teenusteMyyk t-if="row['services']" t-out="row['services']"/>
+                    </aruandeRida>
+                </aruandeRead>
+            </v1:VD_deklaratsioon>
+        </template>
+    </data>
+</odoo>

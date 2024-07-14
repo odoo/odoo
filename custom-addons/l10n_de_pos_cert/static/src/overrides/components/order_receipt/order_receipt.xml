@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_de_pos_cert.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('before-footer')]" position="inside">
+            <t t-if="'tss' in props.data">
+                <t t-foreach="props.data.tss" t-as="info" t-key="info">
+                    <div class="tss-info">
+                        <span t-esc="info_value.name"/>
+                        <span t-esc='info_value.value' t-attf-class="{{ (info_value.name == 'TSE-Seriennummer' or info_value.name == 'TSE-Signatur' or info_value.name == 'TSE-PublicKey') ? 'tss-info-long-value' : 'pos-receipt-right-align' }}"/>
+                    </div>
+                </t>
+            </t>
+            <t t-elif="props.data['test_environment']">
+                This is a TEST receipt. Go to your company settings to be in a production environment.
+            </t>
+            <t t-elif="props.data['tss_issue']">
+                This receipt is invalid because of TSS issue.
+            </t>
+        </xpath>
+    </t>
+</templates>

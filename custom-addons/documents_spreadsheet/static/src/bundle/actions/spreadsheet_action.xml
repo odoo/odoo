@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<div t-name="documents_spreadsheet.SpreadsheetAction" class="o_spreadsheet_action">
+    <DocumentsSpreadsheetControlPanel
+        t-props="controlPanelProps"
+        onSpreadsheetShared.bind="shareSpreadsheet"
+        isReadonly="isReadonly || !!accessToken"
+        onFavoriteToggled.bind="_onSpreadSheetFavoriteToggled"
+        isFavorited="state.isFavorited"
+    />
+    <SpreadsheetComponent model="model"/>
+</div>
+
+</templates>

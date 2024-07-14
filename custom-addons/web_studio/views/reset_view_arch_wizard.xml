@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="reset_view_arch_wizard_view" model="ir.ui.view">
+        <field name="model">reset.view.arch.wizard</field>
+        <field name="inherit_id" ref="base.reset_view_arch_wizard_view" />
+        <field name="arch" type="xml">
+            <xpath expr="/form" position="inside">
+                <div name="button_box">
+                    <button string="Reset View" name="reset_view_button" type="object" class="oe_stat_button" invisible="not has_diff or not context.get('studio_report_diff')" data-hotkey="q" icon="fa-eraser"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

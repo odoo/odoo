@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="helpdesk_team_view_form_inherit" model="ir.ui.view">
+        <field name="name">helpdesk.team.form.inherit.timesheet</field>
+        <field name="model">helpdesk.team</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='project_id']" position='attributes'>
+                <attribute name="context">{'default_allow_timesheets': 1, 'default_allow_billable': use_helpdesk_sale_timesheet}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

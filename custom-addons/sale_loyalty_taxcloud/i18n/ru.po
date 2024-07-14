@@ -1,0 +1,83 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_loyalty_taxcloud
+# 
+# Translators:
+# Martin Trigaux, 2023
+# Константин Коровин <korovin74@gmail.com>, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
+# Collex100, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Collex100, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: sale_loyalty_taxcloud
+#. odoo-python
+#: code:addons/sale_loyalty_taxcloud/models/sale_order.py:0
+#, python-format
+msgid ""
+"Any order that has discounts and uses TaxCloud must be invoiced all at once to prevent faulty tax computation with Taxcloud.\n"
+"The following orders must be completely invoiced:\n"
+"%s"
+msgstr ""
+"Любой заказ, который имеет скидки и использует TaxCloud, должен быть выставлен сразу, чтобы избежать неправильного расчета налогов в Taxcloud.\n"
+"Следующие заказы должны быть выставлены полностью:\n"
+"%s"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model.fields,field_description:sale_loyalty_taxcloud.field_account_move_line__reward_id
+msgid "Discount reward"
+msgstr "Вознаграждение за скидку"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model,name:sale_loyalty_taxcloud.model_account_move
+msgid "Journal Entry"
+msgstr "Запись журнала"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model,name:sale_loyalty_taxcloud.model_account_move_line
+msgid "Journal Item"
+msgstr "Элемент журнала"
+
+#. module: sale_loyalty_taxcloud
+#. odoo-python
+#: code:addons/sale_loyalty_taxcloud/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"Orders with coupons or promotions programs that use TaxCloud for automatic tax computation cannot be modified after having been invoiced.\n"
+"To modify this order, you must first cancel or refund all existing invoices."
+msgstr ""
+"Заказы с купонами или промо-программами, использующими TaxCloud для автоматического расчета налогов, не могут быть изменены после выставления счета.\n"
+"Чтобы изменить этот заказ, необходимо сначала отменить или вернуть все существующие счета-фактуры."
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model,name:sale_loyalty_taxcloud.model_sale_order
+msgid "Sales Order"
+msgstr "Заказ на продажу"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model,name:sale_loyalty_taxcloud.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Позиция заказа на продажу"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model.fields,field_description:sale_loyalty_taxcloud.field_account_move_line__price_taxcloud
+#: model:ir.model.fields,field_description:sale_loyalty_taxcloud.field_sale_order_line__price_taxcloud
+msgid "Taxcloud Price"
+msgstr "Цена Taxcloud"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model.fields,help:sale_loyalty_taxcloud.field_account_move_line__reward_id
+msgid "The loyalty reward that created this line."
+msgstr "Награда за лояльность, благодаря которой появилась эта линия."

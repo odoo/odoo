@@ -1,0 +1,368 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* iap_extract
+# 
+# Translators:
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2023
+# Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2023
+# Sanna Edelman <direct@generare.com>, 2023
+# Jussi Lehto <jussi@gulfeo.com>, 2023
+# Sari Mäyrä <sari.mayra@sv-oy.fi>, 2023
+# Johanna Valkonen <miujohanna@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:46+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: iap_extract
+#: model:mail.template,body_html:iap_extract.iap_extract_no_credit
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p>Dear,<br></p>\n"
+"    <p>There are no more credits on your IAP OCR account.<br>\n"
+"    You can charge your IAP OCR account in the settings page.</p>\n"
+"    <p>Best regards,<br></p>\n"
+"    <p>Odoo S.A.</p>\n"
+"</div>"
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p>Hyvä,<br></p>\n"
+"    <p>Sovelluksen sisäisten hahmontunnistukseen käytettävien krediittien (IAP OCR) tililläsi ei ole enää krediittejä.<br>\n"
+"    Voit ladata lisää IAP OCR -krediittejä tiliisi asetussivulla.</p>\n"
+"    <p>Ystävällisin terveisin,<br></p>\n"
+"    <p>Odoo S.A.</p>\n"
+"</div>"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__message_needaction
+msgid "Action Needed"
+msgstr "Vaatii toimenpiteitä"
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#: model:ir.model.fields.selection,name:iap_extract.selection__account_move__extract_state__error_status
+#: model:ir.model.fields.selection,name:iap_extract.selection__extract_mixin__extract_state__error_status
+#: model:ir.model.fields.selection,name:iap_extract.selection__hr_applicant__extract_state__error_status
+#: model:ir.model.fields.selection,name:iap_extract.selection__hr_expense__extract_state__error_status
+#, python-format
+msgid "An error occurred"
+msgstr "Tapahtui virhe"
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#, python-format
+msgid "An error occurred during the upload"
+msgstr "Ladatessa tapahtui virhe"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__message_attachment_count
+msgid "Attachment Count"
+msgstr "Liitteiden määrä"
+
+#. module: iap_extract
+#: model:ir.model,name:iap_extract.model_extract_mixin
+msgid "Base class to extract data from documents"
+msgstr "Perusluokka tietojen poimimiseen asiakirjoista"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__extract_can_show_send_button
+msgid "Can show the ocr send button"
+msgstr "Voi näyttää tekstintunnistuksen lähetyspainikkeen"
+
+#. module: iap_extract
+#: model:ir.model.fields.selection,name:iap_extract.selection__account_move__extract_state__done
+#: model:ir.model.fields.selection,name:iap_extract.selection__extract_mixin__extract_state__done
+#: model:ir.model.fields.selection,name:iap_extract.selection__hr_applicant__extract_state__done
+#: model:ir.model.fields.selection,name:iap_extract.selection__hr_expense__extract_state__done
+msgid "Completed flow"
+msgstr "Valmistunut ajo"
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#, python-format
+msgid "Document is being digitized"
+msgstr "Asiakirjaa digitoidaan"
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#, python-format
+msgid "Document sent for digitization"
+msgstr "Asiakirja lähetetään digitoitavaksi"
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#, python-format
+msgid "Documents sent for digitization"
+msgstr "Digitoitavaksi lähetetyt asiakirjat"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__extract_error_message
+msgid "Error message"
+msgstr "Virheilmoitus"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__extract_state_processed
+msgid "Extract State Processed"
+msgstr "Hae käsittelyn tila"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__extract_state
+msgid "Extract state"
+msgstr "Hae tila"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__extract_status
+msgid "Extract status"
+msgstr "Hae status"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__message_follower_ids
+msgid "Followers"
+msgstr "Seuraajat"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seuraajat (kumppanit)"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__has_message
+msgid "Has Message"
+msgstr "Sisältää viestin"
+
+#. module: iap_extract
+#: model:mail.template,name:iap_extract.iap_extract_no_credit
+#: model:mail.template,subject:iap_extract.iap_extract_no_credit
+msgid "IAP Extract Notification"
+msgstr "IAP käyttöilmoitus"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__extract_document_uuid
+msgid "ID of the request to IAP-OCR"
+msgstr "IAP-OCR:lle osoitetun pyynnön tunniste"
+
+#. module: iap_extract
+#: model:ir.model.fields,help:iap_extract.field_extract_mixin__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jos valittu, uudet viestit vaativat huomiotasi."
+
+#. module: iap_extract
+#: model:ir.model.fields,help:iap_extract.field_extract_mixin__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#, python-format
+msgid "Invalid PDF (Conversion error)"
+msgstr "Virheellinen PDF-tiedosto (Muunnosvirhe)"
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#, python-format
+msgid "Invalid PDF (Unable to get page count)"
+msgstr "Virheellinen PDF-tiedosto (sivumäärää ei saada)"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__message_is_follower
+msgid "Is Follower"
+msgstr "On seuraaja"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__is_in_extractable_state
+msgid "Is In Extractable State"
+msgstr "On haettavassa tilassa"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Pääliitetiedosto"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__message_has_error
+msgid "Message Delivery error"
+msgstr "Ongelma viestin toimituksessa"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__message_ids
+msgid "Messages"
+msgstr "Viestit"
+
+#. module: iap_extract
+#: model:ir.model.fields.selection,name:iap_extract.selection__account_move__extract_state__no_extract_requested
+#: model:ir.model.fields.selection,name:iap_extract.selection__extract_mixin__extract_state__no_extract_requested
+#: model:ir.model.fields.selection,name:iap_extract.selection__hr_applicant__extract_state__no_extract_requested
+#: model:ir.model.fields.selection,name:iap_extract.selection__hr_expense__extract_state__no_extract_requested
+msgid "No extract requested"
+msgstr "Ei pyydettyä otetta"
+
+#. module: iap_extract
+#: model:ir.model.fields.selection,name:iap_extract.selection__account_move__extract_state__not_enough_credit
+#: model:ir.model.fields.selection,name:iap_extract.selection__extract_mixin__extract_state__not_enough_credit
+#: model:ir.model.fields.selection,name:iap_extract.selection__hr_applicant__extract_state__not_enough_credit
+#: model:ir.model.fields.selection,name:iap_extract.selection__hr_expense__extract_state__not_enough_credit
+msgid "Not enough credits"
+msgstr "Ei tarpeeksi krediittejä"
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#, python-format
+msgid "Not enough credits for data extraction"
+msgstr "Tietojen poimintaan ei ole riittävästi krediittejä"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Toimenpiteiden määrä"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__message_has_error_counter
+msgid "Number of errors"
+msgstr "Virheiden määrä"
+
+#. module: iap_extract
+#: model:ir.model.fields,help:iap_extract.field_extract_mixin__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Toimenpiteitä vaativien viestien määrä"
+
+#. module: iap_extract
+#: model:ir.model.fields,help:iap_extract.field_extract_mixin__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Toimitusvirheellisten viestien määrä"
+
+#. module: iap_extract
+#: model:ir.model.fields,field_description:iap_extract.field_extract_mixin__rating_ids
+msgid "Ratings"
+msgstr "Arviointi"
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#, python-format
+msgid "Server is currently under maintenance. Please retry later"
+msgstr "Palvelimella on huoltokatko. Yritä myöhemmin uudelleen"
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#, python-format
+msgid "Server not available. Please retry later"
+msgstr "Palvelin ei ole käytettävissä. Yritä myöhemmin uudelleen"
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#, python-format
+msgid "Some documents were skipped as they were already digitized"
+msgstr "Joitakin asiakirjoja jätettiin pois, koska ne oli jo digitoitu"
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#, python-format
+msgid ""
+"The 'invoice_ocr' IAP account token is invalid. Please delete it to let Odoo"
+" generate a new one or fill it with a valid token."
+msgstr ""
+"IAP-tilin 'invoice_ocr' tunniste on virheellinen. Poista se, jotta Odoo voi "
+"luoda uuden, tai täytä kenttä voimassa olevalla tunnuksella."
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#, python-format
+msgid "The document could not be found"
+msgstr "Asiakirjaa ei löytynyt"
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#, python-format
+msgid "The document has been rejected because it is too small"
+msgstr "Asiakirja on hylätty, koska se on liian pieni"
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#, python-format
+msgid "The selected documents are already digitized"
+msgstr "Valitut asiakirjat on jo digitoitu"
+
+#. module: iap_extract
+#: model:ir.model.fields.selection,name:iap_extract.selection__account_move__extract_state__to_validate
+#: model:ir.model.fields.selection,name:iap_extract.selection__extract_mixin__extract_state__to_validate
+#: model:ir.model.fields.selection,name:iap_extract.selection__hr_applicant__extract_state__to_validate
+#: model:ir.model.fields.selection,name:iap_extract.selection__hr_expense__extract_state__to_validate
+msgid "To validate"
+msgstr "Vahvistettava"
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#, python-format
+msgid "Unsupported image format"
+msgstr "Ei tuettu kuvaformaatti"
+
+#. module: iap_extract
+#: model:ir.model.fields.selection,name:iap_extract.selection__account_move__extract_state__waiting_extraction
+#: model:ir.model.fields.selection,name:iap_extract.selection__extract_mixin__extract_state__waiting_extraction
+#: model:ir.model.fields.selection,name:iap_extract.selection__hr_applicant__extract_state__waiting_extraction
+#: model:ir.model.fields.selection,name:iap_extract.selection__hr_expense__extract_state__waiting_extraction
+msgid "Waiting extraction"
+msgstr "Odottaa hakua"
+
+#. module: iap_extract
+#: model:ir.model.fields.selection,name:iap_extract.selection__account_move__extract_state__waiting_validation
+#: model:ir.model.fields.selection,name:iap_extract.selection__extract_mixin__extract_state__waiting_validation
+#: model:ir.model.fields.selection,name:iap_extract.selection__hr_applicant__extract_state__waiting_validation
+#: model:ir.model.fields.selection,name:iap_extract.selection__hr_expense__extract_state__waiting_validation
+msgid "Waiting validation"
+msgstr "Odotetaan tarkistusta"
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#, python-format
+msgid ""
+"Your PDF file is protected by a password. The OCR can't extract data from it"
+msgstr ""
+"PDF-tiedostosi on suojattu salasanalla. Tekstintunnistus ei voi poimia siitä"
+" tietoja"
+
+#. module: iap_extract
+#. odoo-python
+#: code:addons/iap_extract/models/extract_mixin.py:0
+#, python-format
+msgid "Your document contains too many pages"
+msgstr "Asiakirjassasi on liian monta sivua"
+
+#. module: iap_extract
+#: model:ir.model.fields.selection,name:iap_extract.selection__account_move__extract_state__extract_not_ready
+#: model:ir.model.fields.selection,name:iap_extract.selection__extract_mixin__extract_state__extract_not_ready
+#: model:ir.model.fields.selection,name:iap_extract.selection__hr_applicant__extract_state__extract_not_ready
+#: model:ir.model.fields.selection,name:iap_extract.selection__hr_expense__extract_state__extract_not_ready
+msgid "waiting extraction, but it is not ready"
+msgstr "odotetaan hakua, mutta se ei ole valmis"

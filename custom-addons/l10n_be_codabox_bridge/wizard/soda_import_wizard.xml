@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="soda_import_wizard_view_form_codabox" model="ir.ui.view">
+        <field name="name">soda.import.wizard.view.codabox.form</field>
+        <field name="model">soda.import.wizard</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="l10n_be_soda.soda_import_wizard_view_form"/>
+        <field name="arch" type="xml">
+            <field name="soda_account_mapping_ids" position="attributes">
+                <attribute name="options">{'unlink': false}</attribute>
+            </field>
+            <field name="account_id" position="attributes">
+                <attribute name="required">0</attribute>
+            </field>
+            <button name="action_save_and_import" position="attributes">
+                <attribute name="string">Save</attribute>
+            </button>
+            <xpath expr="//div[hasclass('alert-info')]" position="replace">
+                <div class="alert alert-info" role="alert">
+                    The accounts in the SODA file will be mapped to the accounts listed below. If you change any of
+                    them, your choice will be the default one for future imports. The Suspense Account (499000) will
+                    be used for accounts that are not mapped.
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

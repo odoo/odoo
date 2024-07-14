@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="documents_expense_rule" model="documents.workflow.rule" forcecreate="0">
+            <field name="sequence">5</field>
+            <field name="name">Create an Expense</field>
+            <field name="create_model">hr.expense</field>
+            <field name="condition_type">domain</field>
+            <field name="domain" eval="[('res_model', '!=', 'hr.expense'), '|', ('mimetype', 'ilike', 'image'), ('mimetype', 'ilike', 'pdf')]"/>
+            <field name="domain_folder_id" ref="documents.documents_internal_folder"/>
+        </record>
+    </data>
+</odoo>

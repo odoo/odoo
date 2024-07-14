@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_move_line_list_bank_rec_widget" model="ir.ui.view">
+            <field name="name">account.move.line.list.bank_rec_widget</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account_accountant.view_account_move_line_list_bank_rec_widget"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="check_number"
+                           optional="hidden"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_move_line_search_bank_rec_widget" model="ir.ui.view">
+            <field name="name">account.move.line.search.bank_rec_widget</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account_accountant.view_account_move_line_search_bank_rec_widget"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="check_number"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

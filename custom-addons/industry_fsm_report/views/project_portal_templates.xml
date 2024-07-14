@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_task" inherit_id="industry_fsm.portal_my_task">
+        <xpath expr="//div[@t-if='timesheets and allow_timesheets']" position="after">
+            <li t-if="task.worksheet_count and task.worksheet_template_id.report_view_id and worksheet_map.get(task.id) and task.allow_worksheets" class="nav-item">
+                <a class="nav-link p-0" href="#task_worksheet">Worksheet</a>
+            </li>
+        </xpath>
+        <xpath expr="//div[@id='card_body']" position="inside">
+            <t t-if="task.worksheet_count and task.worksheet_template_id.report_view_id and worksheet_map.get(task.id) and task.allow_worksheets">
+                <div name="worksheet_map" style="page-break-inside: avoid">
+                    <hr class="mt-4 mb-4"/>
+                    <h5 id="task_worksheet" class="mt-2 mb-2" data-anchor="true">Worksheet</h5>
+                    <t t-set="worksheet" t-value="worksheet_map.get(task.id)"/>
+                    <t t-call="#{task.worksheet_template_id.report_view_id.id}"/>
+                </div>
+            </t>
+            <div t-if="task.worksheet_signature" t-attf-class="{{ 'col-12 col-lg-3' if report_type != 'html' else 'col-sm-7 col-md-4' }} ms-auto text-end" style="page-break-inside: avoid">
+                <h5>Signature</h5>
+                <img t-att-src="image_data_uri(task.worksheet_signature)" style="max-height: 6rem; max-width: 100%; color:black;"/><br/>
+                <span t-field="task.worksheet_signed_by"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='nav-report']" position="attributes">
+            <attribute name="t-if">(not task.is_fsm and timesheets and allow_timesheets) or (task.is_fsm and task.allow_worksheets and task.worksheet_count)</attribute>
+        </xpath>
+        <xpath expr="//div[@id='nav-report']" position="before">
+            <div t-if="task.is_fsm and (task.display_sign_report_primary or task.display_sign_report_secondary)" class="d-grid flex-grow-1 align-items-center mb-2">
+                <t t-call="industry_fsm.portal_task_sign_button"/>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

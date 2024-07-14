@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Main menu -->
+
+    <record id="stock_barcode_action_main_menu" model="ir.actions.client">
+        <field name="name">Barcode</field>
+        <field name="tag">stock_barcode_main_menu</field>
+        <field name="target">fullscreen</field>
+    </record>
+
+    <menuitem
+        id="stock_barcode_menu"
+        action="stock_barcode_action_main_menu"
+        web_icon="stock_barcode,static/description/icon.png"
+        sequence="155"
+        groups="stock.group_stock_user" />
+
+
+    <!-- Actions -->
+
+    <!-- TODO: delete in master, appears to be unused -->
+    <record id="stock_picking_action_form" model="ir.actions.act_window">
+        <field name="name">Picking</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">form</field>
+    </record>
+
+    <record id="stock_picking_kanban" model="ir.ui.view">
+        <field name="name">stock.barcode.picking.kanban</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.stock_picking_kanban"/>
+        <field name="mode">primary</field>
+        <!--High priority to not be the standard view of pickings in inventory app-->
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban[hasclass('o_kanban_mobile')]" position="attributes">
+                <attribute name="js_class">stock_barcode_list_kanban</attribute>
+                <attribute name="import">false</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_picking_action_kanban" model="ir.actions.act_window">
+        <field name="name">Operations</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="stock_barcode.stock_picking_kanban"/>
+        <field name="context">{
+            'contact_display': 'partner_address',
+            'search_default_available': 1,
+            'search_default_to_do_transfers': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new transfer
+            </p><p>
+                Transfers allow you to move products from one location to another.
+            </p>
+        </field>
+    </record>
+
+    <!-- Kanban view to access operations by operation type -->
+
+    <record id="stock_picking_type_kanban" model="ir.ui.view">
+        <field name="name">stock.picking.type.kanban</field>
+        <field name="model">stock.picking.type</field>
+        <field name="mode">primary</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile o_emphasize_colors" create="0" sample="1" action="get_action_picking_tree_ready_kanban" type="object">
+                <field name="display_name"/>
+                <field name="color"/>
+                <field name="count_picking_ready"/>
+                <field name="code"/>
+                <field name="is_barcode_picking_type" invisible="1"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-if="record.is_barcode_picking_type" t-attf-class="o_barcode_picking_type oe_kanban_card #{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click">
+                            <span class="oe_kanban_color_help" t-attf-title="In #{kanban_getcolorname(record.color.raw_value)}" role="img" t-attf-aria-label="In #{kanban_getcolorname(record.color.raw_value)}"/>
+                            <div class="o_kanban_card_header">
+                                <div class="o_primary o_kanban_record_title">
+                                    <field name="name"/>
+                                </div>
+                                <div class="o_secondary">
+                                    <field name="warehouse_id" readonly="1" groups="stock.group_stock_multi_warehouses"/>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content o_kanban_button">
+                                <span class="row text-muted" name="get_action_picking_tree_ready_kanban" type="object">
+                                    <t t-esc="record.count_picking_ready.value"/> To Process
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="stock_picking_type_action_kanban" model="ir.actions.act_window">
+        <field name="name">Operations</field>
+        <field name="res_model">stock.picking.type</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="domain">[('code', 'in', ('incoming', 'outgoing', 'internal'))]</field>
+        <field name="view_id" ref="stock_picking_type_kanban"/>
+    </record>
+
+
+    <!-- Editable list to set product barcodes -->
+
+    <record id="product_view_list_barcodes" model="ir.ui.view">
+        <field name="name">product.list.barcodes</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <tree string="Product Barcodes" editable="top" create="false" delete="false">
+                <field name="name" readonly="1"/>
+                <field name="code" readonly="1"/>
+                <field name="barcode"/>
+                <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_action_barcodes" model="ir.actions.act_window">
+        <field name="name">Product Barcodes</field>
+        <field name="res_model">product.product</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="product_view_list_barcodes"/>
+    </record>
+
+</odoo>

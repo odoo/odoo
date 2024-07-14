@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="consolidated_balance_report" model="account.report">
+        <field name="name">Consolidated Balance</field>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_show_draft" eval="False"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="custom_handler_model_id" ref="model_consolidation_trial_balance_report_handler"/>
+    </record>
+
+</odoo>

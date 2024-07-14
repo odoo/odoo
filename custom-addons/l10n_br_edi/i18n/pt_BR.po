@@ -1,0 +1,720 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_br_edi
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-12-05 22:48+0000\n"
+"PO-Revision-Date: 2023-12-06 01:42-0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.4.1\n"
+
+#. module: l10n_br_edi
+#. odoo-python
+#: code:addons/l10n_br_edi/models/account_move.py:0
+#, python-format
+msgid "%s on partner %s is required for e-invoicing"
+msgstr "%s no parceiro %s é necessário para faturamento eletrônico"
+
+#. module: l10n_br_edi
+#: model:mail.template,body_html:l10n_br_edi.mail_template_move_update
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+"        Dear\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br><br>\n"
+"\n"
+"        We hope you are well. We want to inform you about an update regarding\n"
+"        invoice <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (with reference: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        dated <t t-out=\"format_date(object.invoice_date) or ''\">01/01/2024</t>.\n"
+"        <br><br>\n"
+"\n"
+"        This invoice has been\n"
+"        <t t-if=\"ctx.get('wizard_mode') == 'cancel'\">cancelled.</t>\n"
+"        <t t-else=\"\">corrected.</t>\n"
+"        Please review the attached documents for details.\n"
+"        <br><br>\n"
+"\n"
+"        Do not hesitate to contact us if you have any questions.\n"
+"        <br><br>\n"
+"        Best regards,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+"        Olá\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Breno Oliveira</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Breno Oliveira</t>,\n"
+"        </t>\n"
+"        <br><br>\n"
+"\n"
+"        Esperamos que você esteja bem. Gostaríamos de informá-lo sobre uma atualização referente à\n"
+"        fatura <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">FAT/2021/05/0005</span>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (com a referência: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        com a data de <t t-out=\"format_date(object.invoice_date) or ''\">01/01/2024</t>.\n"
+"        <br><br>\n"
+"\n"
+"        Esta fatura foi\n"
+"        <t t-if=\"ctx.get('wizard_mode') == 'cancel'\">cancelada.</t>\n"
+"        <t t-else=\"\">corrigida.</t>\n"
+"        Consulte os documentos em anexo para mais detalhes.\n"
+"        <br><br>\n"
+"\n"
+"        Em caso de dúvidas, entre em contato conosco.\n"
+"        <br><br>\n"
+"        Atenciosamente,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Michel Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
+
+#. module: l10n_br_edi
+#: model_terms:ir.ui.view,arch_db:l10n_br_edi.account_move_form_inherit_l10n_br_edi
+msgid ""
+"<i class=\"fa fa-warning\" role=\"img\" title=\"EDI (Brazil)\"/>\n"
+"                            <span class=\"mx-1\">E-invoicing (Brazil)</span>"
+msgstr ""
+"<i class=\"fa fa-warning\" role=\"img\" title=\"EDI (Brazil)\"/>\n"
+"                            <span class=\"mx-1\">Fatura eletrônica (Brasil)</span>"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_last_edi_status__accepted
+msgid "Accepted"
+msgstr "Aceito"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_bank_statement_line__l10n_br_access_key
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_move__l10n_br_access_key
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_payment__l10n_br_access_key
+msgid "Access Key"
+msgstr "Chave de acesso"
+
+#. module: l10n_br_edi
+#: model:ir.model,name:l10n_br_edi.model_account_move_send
+msgid "Account Move Send"
+msgstr "Envio de movimentação de conta"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_res_country__l10n_br_edi_code
+msgid "BR Country Code"
+msgstr "Código de país BR"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_payment_method__16
+msgid "Bank Deposit"
+msgstr "Depósito bancário"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_payment_method__18
+msgid "Bank transfer, Digital Wallet"
+msgstr "Transferência bancária, carteira digital"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_payment_method__15
+msgid "Boleto Bancario"
+msgstr "Boleto bancário"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_last_correction_number
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_move__l10n_br_edi_last_correction_number
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_payment__l10n_br_edi_last_correction_number
+msgid "Brazil Correction Number"
+msgstr "Brasil: valor de correção"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_error
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_move__l10n_br_edi_error
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_payment__l10n_br_edi_error
+msgid "Brazil E-Invoice Error"
+msgstr "Brasil: erro de fatura eletrônica"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_bank_statement_line__l10n_br_last_edi_status
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_move__l10n_br_last_edi_status
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_payment__l10n_br_last_edi_status
+msgid "Brazil E-Invoice Status"
+msgstr "Brasil: status da fatura eletrônica"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_xml_attachment_id
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_move__l10n_br_edi_xml_attachment_id
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_payment__l10n_br_edi_xml_attachment_id
+msgid "Brazil E-Invoice XML"
+msgstr "Brasil: XML da fatura eletrônica"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_xml_attachment_file
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_move__l10n_br_edi_xml_attachment_file
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_payment__l10n_br_edi_xml_attachment_file
+msgid "Brazil E-Invoice XML File"
+msgstr "Brasil: arquivo XML da fatura eletrônica"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_res_country__l10n_br_edi_code
+msgid "Brazil: Country Code used in NF-e"
+msgstr "Brasil: código do país usado na NF-e"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_account_bank_statement_line__l10n_br_access_key
+#: model:ir.model.fields,help:l10n_br_edi.field_account_move__l10n_br_access_key
+#: model:ir.model.fields,help:l10n_br_edi.field_account_payment__l10n_br_access_key
+msgid "Brazil: access key associated with the electronic document. Can be used to get invoice information directly from the government."
+msgstr ""
+"Brasil: chave de acesso associada ao documento eletrônico. Pode ser utilizada para obter informações sobre a fatura diretamente do "
+"governo."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_error
+#: model:ir.model.fields,help:l10n_br_edi.field_account_move__l10n_br_edi_error
+#: model:ir.model.fields,help:l10n_br_edi.field_account_payment__l10n_br_edi_error
+msgid "Brazil: error details for invoices in the 'error' state."
+msgstr "Brasil: detalhes do erro para faturas com status de \"erro\"."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_payment_method
+#: model:ir.model.fields,help:l10n_br_edi.field_account_move__l10n_br_edi_payment_method
+#: model:ir.model.fields,help:l10n_br_edi.field_account_payment__l10n_br_edi_payment_method
+msgid "Brazil: expected payment method to be used."
+msgstr "Brasil: método de pagamento esperado a ser usado."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_transporter_id
+#: model:ir.model.fields,help:l10n_br_edi.field_account_move__l10n_br_edi_transporter_id
+#: model:ir.model.fields,help:l10n_br_edi.field_account_payment__l10n_br_edi_transporter_id
+msgid "Brazil: if you use a transport company, add its company contact here."
+msgstr "Brasil: se você usa uma transportadora, adicione o contato da empresa aqui."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_xml_attachment_file
+#: model:ir.model.fields,help:l10n_br_edi.field_account_move__l10n_br_edi_xml_attachment_file
+#: model:ir.model.fields,help:l10n_br_edi.field_account_payment__l10n_br_edi_xml_attachment_file
+msgid "Brazil: technical field holding the e-invoice XML data for security reasons."
+msgstr "Brasil: campo técnico que mantém os dados XML da fatura eletrônica por motivos de segurança."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_last_correction_number
+#: model:ir.model.fields,help:l10n_br_edi.field_account_move__l10n_br_edi_last_correction_number
+#: model:ir.model.fields,help:l10n_br_edi.field_account_payment__l10n_br_edi_last_correction_number
+msgid "Brazil: technical field that holds the latest correction that happened to this invoice"
+msgstr "Brasil: campo técnico que contém a última correção que ocorreu nessa fatura."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_avatax_data
+#: model:ir.model.fields,help:l10n_br_edi.field_account_move__l10n_br_edi_avatax_data
+#: model:ir.model.fields,help:l10n_br_edi.field_account_payment__l10n_br_edi_avatax_data
+msgid "Brazil: technical field that remembers the last tax summary returned by Avatax."
+msgstr "Brasil: campo técnico que lembra o último resumo de imposto retornado pelo Avatax."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_account_move_send__l10n_br_edi_is_visible
+msgid "Brazil: technical field to determine if the option to submit a Brazilian electronic invoice is visible."
+msgstr "Brasil: campo técnico para determinar se a opção de enviar uma fatura eletrônica brasileira está visível."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_is_needed
+#: model:ir.model.fields,help:l10n_br_edi.field_account_move__l10n_br_edi_is_needed
+#: model:ir.model.fields,help:l10n_br_edi.field_account_payment__l10n_br_edi_is_needed
+msgid "Brazil: technical field to determine if this invoice is eligible to be e-invoiced."
+msgstr "Brasil: campo técnico para determinar se essa fatura está qualificada para ser faturada eletronicamente."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_xml_attachment_id
+#: model:ir.model.fields,help:l10n_br_edi.field_account_move__l10n_br_edi_xml_attachment_id
+#: model:ir.model.fields,help:l10n_br_edi.field_account_payment__l10n_br_edi_xml_attachment_id
+msgid "Brazil: the most recent e-invoice XML returned by Avalara."
+msgstr "Brasil: o XML mais recente da fatura eletrônica retornado pela Avalara."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_account_bank_statement_line__l10n_br_last_edi_status
+#: model:ir.model.fields,help:l10n_br_edi.field_account_move__l10n_br_last_edi_status
+#: model:ir.model.fields,help:l10n_br_edi.field_account_payment__l10n_br_last_edi_status
+msgid "Brazil: the state of the most recent e-invoicing attempt."
+msgstr "Brasil: o status da mais recente tentativa de faturamento eletrônico."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_freight_model
+#: model:ir.model.fields,help:l10n_br_edi.field_account_move__l10n_br_edi_freight_model
+#: model:ir.model.fields,help:l10n_br_edi.field_account_payment__l10n_br_edi_freight_model
+msgid "Brazil: used to determine the freight model used on this transaction."
+msgstr "Brasil: usado para determinar o modelo de frete usado nessa transação."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_account_move_send__l10n_br_edi_is_enabled
+msgid "Brazil: used to determine whether to submit this e-invoice."
+msgstr "Brasil: usado para determinar se essa fatura eletrônica deve ser enviada."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_account_move_send__l10n_br_edi_warning
+msgid "Brazil: used to display warnings in the wizard before sending."
+msgstr "Brazil: usado para exibir avisos no assistente antes do envio."
+
+#. module: l10n_br_edi
+#. odoo-python
+#: code:addons/l10n_br_edi/wizard/account_move_send.py:0
+#, python-format
+msgid ""
+"Brazilian e-invoicing was enabled but the following invoices cannot be e-invoiced:\n"
+"%s\n"
+"If this is not intended, please check if an Avatax fiscal position is used on those invoices and if the invoice isn't already e-invoiced."
+msgstr ""
+"O faturamento eletrônico brasileiro foi ativado, mas as seguintes faturas não podem ser faturadas eletronicamente:\n"
+"%s\n"
+"Se isso não for intencional, verifique se uma posição fiscal do Avatax está sendo usada nessas faturas e se a fatura não já foi faturada "
+"eletronicamente."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__l10n_br_edi_invoice_update__mode__cancel
+#: model_terms:ir.ui.view,arch_db:l10n_br_edi.l10n_br_edi_cancel_range_form
+#: model_terms:ir.ui.view,arch_db:l10n_br_edi.l10n_br_edi_invoice_update_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_last_edi_status__cancelled
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#. module: l10n_br_edi
+#. odoo-python
+#: code:addons/l10n_br_edi/wizard/l10n_br_edi_cancel_range.py:0
+#, python-format
+msgid "Cancelled range %s - %s for document type %s for reason \"%s\"."
+msgstr "Intervalo cancelado %s - %s para o documento do tipo %s pelo motivo \"%s\"."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_payment_method__02
+msgid "Check"
+msgstr "Cheque"
+
+#. module: l10n_br_edi
+#: model_terms:ir.ui.view,arch_db:l10n_br_edi.l10n_br_edi_cancel_range_form
+#: model_terms:ir.ui.view,arch_db:l10n_br_edi.l10n_br_edi_invoice_update_form
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_freight_model__thirdparty
+msgid "Contracting Freight on behalf of third parties"
+msgstr "Contratação de frete em nome de terceiros"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_freight_model__fob
+msgid "Contracting of freight on behalf of the recipient/sender (FOB)"
+msgstr "Contratação de frete em nome do destinatário/remetente (FOB)"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__l10n_br_edi_invoice_update__mode__correct
+msgid "Correct"
+msgstr "Corrigir"
+
+#. module: l10n_br_edi
+#: model_terms:ir.ui.view,arch_db:l10n_br_edi.account_move_form_inherit_l10n_br_edi
+msgid "Correction Letter"
+msgstr "Carta de correção"
+
+#. module: l10n_br_edi
+#: model:ir.model,name:l10n_br_edi.model_res_country
+msgid "Country"
+msgstr "País"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_cancel_range__create_uid
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_invoice_update__create_uid
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_cancel_range__create_date
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_invoice_update__create_date
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_payment_method__03
+msgid "Credit Card"
+msgstr "Cartão de crédito"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_payment_method__04
+msgid "Debit Card"
+msgstr "Cartão de débito"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_cancel_range__display_name
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_invoice_update__display_name
+msgid "Display Name"
+msgstr "Nome exibido"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_cancel_range__document_type_id
+msgid "Document Type"
+msgstr "Tipo de documento"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_payment_method__14
+msgid "Duplicate Mercantil"
+msgstr "Duplicata mercantil"
+
+#. module: l10n_br_edi
+#. odoo-python
+#: code:addons/l10n_br_edi/wizard/l10n_br_edi_invoice_update.py:0
+#, python-format
+msgid "E-invoice cancelled successfully."
+msgstr "Fatura eletrônica cancelada com sucesso."
+
+#. module: l10n_br_edi
+#. odoo-python
+#: code:addons/l10n_br_edi/wizard/l10n_br_edi_invoice_update.py:0
+#, python-format
+msgid "E-invoice corrected successfully for reason \"%s\"."
+msgstr "A fatura eletrônica foi corrigida com sucesso pelo motivo \"%s\"."
+
+#. module: l10n_br_edi
+#. odoo-python
+#: code:addons/l10n_br_edi/models/account_move.py:0
+#, python-format
+msgid "E-invoice submitted successfully."
+msgstr "Fatura eletrônica enviada com sucesso."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_invoice_update__send_email
+msgid "Email"
+msgstr "E-mail"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_cancel_range__end_number
+msgid "End number"
+msgstr "Número final"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_last_edi_status__error
+msgid "Error"
+msgstr "Erro"
+
+#. module: l10n_br_edi
+#. odoo-python
+#: code:addons/l10n_br_edi/wizard/account_move_send.py:0
+#, python-format
+msgid "Errors when submitting the e-invoice:"
+msgstr "Erros ao enviar a fatura eletrônica:"
+
+#. module: l10n_br_edi
+#. odoo-python
+#: code:addons/l10n_br_edi/models/account_move.py:0
+#, python-format
+msgid "Fiscal Document Cancellation"
+msgstr "Cancelamento de documento fiscal"
+
+#. module: l10n_br_edi
+#. odoo-python
+#: code:addons/l10n_br_edi/models/account_move.py:0
+#, python-format
+msgid "Fiscal Document Correction"
+msgstr "Correção de documento fiscal"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_payment_method__10
+msgid "Food voucher"
+msgstr "Vale-alimentação"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_freight_model__freeshipping
+msgid "Free shipping"
+msgstr "Frete grátis"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_freight_model
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_move__l10n_br_edi_freight_model
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_payment__l10n_br_edi_freight_model
+msgid "Freight Model"
+msgstr "Modelo de frete"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_freight_model__cif
+msgid "Freight contracting on behalf of the Sender (CIF)"
+msgstr "Contratação de frete em nome do remetente (CIF)"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_payment_method__13
+msgid "Fuel Voucher"
+msgstr "Vale-combustível"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_payment_method__12
+msgid "Gift certificate"
+msgstr "Vale-presente"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_cancel_range__id
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_invoice_update__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_br_edi
+#: model:ir.model,name:l10n_br_edi.model_l10n_br_edi_invoice_update
+msgid "Implements both correcting and cancelling an invoice."
+msgstr "Implementa a correção e o cancelamento de uma fatura."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_payment_method__17
+msgid "Instant Payment (PIX)"
+msgstr "Pix"
+
+#. module: l10n_br_edi
+#: model:ir.actions.act_window,name:l10n_br_edi.l10n_br_edi_cancel_range_action_view_form
+msgid "Invalidate Number Range (BR)"
+msgstr "Invalidar intervalo de números (BR)"
+
+#. module: l10n_br_edi
+#: model:mail.template,name:l10n_br_edi.mail_template_move_update
+msgid "Invoice: Brazilian EDI correction"
+msgstr "Fatura: correção de EDI brasileiro"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_cancel_range__journal_id
+msgid "Journal"
+msgstr "Diário"
+
+#. module: l10n_br_edi
+#: model:ir.model,name:l10n_br_edi.model_account_move
+msgid "Journal Entry"
+msgstr "Lançamento de diário"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_avatax_data
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_move__l10n_br_edi_avatax_data
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_payment__l10n_br_edi_avatax_data
+msgid "L10N Br Edi Avatax Data"
+msgstr "L10N Br: Dados de EDI do Avatax"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_is_needed
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_move__l10n_br_edi_is_needed
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_payment__l10n_br_edi_is_needed
+msgid "L10N Br Edi Is Needed"
+msgstr "L10N Br: EDI é necessário"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_move_send__l10n_br_edi_is_visible
+msgid "L10N Br Edi Is Visible"
+msgstr "L10N Br: EDI está visível"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_cancel_range__write_uid
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_invoice_update__write_uid
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_cancel_range__write_date
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_invoice_update__write_date
+msgid "Last Updated on"
+msgstr "Última atualização em"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_payment_method__19
+msgid "Loyalty program, Cashback, Virtual Credit"
+msgstr "Programa de fidelidade, cashback, crédito virtual"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_payment_method__11
+msgid "Meal Voucher"
+msgstr "Vale-refeição"
+
+#. module: l10n_br_edi
+#: model:ir.model,name:l10n_br_edi.model_account_external_tax_mixin
+msgid "Mixin to manage common parts of external tax calculation"
+msgstr "Mixin para gerenciar partes comuns do cálculo de impostos externos"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_invoice_update__mode
+msgid "Mode"
+msgstr "Modo"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_payment_method__01
+msgid "Money"
+msgstr "Dinheiro"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_invoice_update__move_id
+msgid "Move To Cancel"
+msgstr "Movimentação a ser cancelada"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_payment_method__90
+msgid "No Payment"
+msgstr "Nenhum pagamento"
+
+#. module: l10n_br_edi
+#. odoo-python
+#: code:addons/l10n_br_edi/models/account_move.py:0
+#, python-format
+msgid "Other"
+msgstr "Outro"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_payment_method__99
+msgid "Others"
+msgstr "Outros"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_freight_model__receivervehicle
+msgid "Own transport on behalf of the recipient"
+msgstr "Transporte próprio em nome do destinatário"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_freight_model__sendervehicle
+msgid "Own transport on behalf of the sender"
+msgstr "Transporte próprio em nome do remetente"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_payment_method
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_move__l10n_br_edi_payment_method
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_payment__l10n_br_edi_payment_method
+msgid "Payment Method Brazil"
+msgstr "Brasil: Forma de pagamento"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_move_send__l10n_br_edi_is_enabled
+msgid "Process e-invoice"
+msgstr "Processar fatura eletrônica"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_cancel_range__reason
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_invoice_update__reason
+msgid "Reason"
+msgstr "Motivo"
+
+#. module: l10n_br_edi
+#: model:mail.template,description:l10n_br_edi.mail_template_move_update
+msgid "Sent to customers when a Brazilian e-invoice is corrected or cancelled."
+msgstr "Enviado aos clientes quando uma fatura eletrônica brasileira é corrigida ou cancelada."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_l10n_br_edi_cancel_range__start_number
+msgid "Start number"
+msgstr "Número inicial"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields.selection,name:l10n_br_edi.selection__account_move__l10n_br_edi_payment_method__05
+msgid "Store Credit"
+msgstr "Crédito na loja"
+
+#. module: l10n_br_edi
+#. odoo-python
+#: code:addons/l10n_br_edi/models/account_move.py:0
+#, python-format
+msgid "Tax has never been calculated on this invoice, please \"Reset to Draft\" and re-post."
+msgstr "O imposto não foi calculado nessa fatura. Redefina-a como provisória e publique novamente."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_l10n_br_edi_invoice_update__mode
+msgid "Technical field to determine whether the move is cancelled or corrected."
+msgstr "Campo técnico para determinar se a movimentação é 'cancelada' ou 'corrigida'."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_l10n_br_edi_cancel_range__document_type_id
+msgid "The document type for which to invalidate the range."
+msgstr "O tipo de documento para o qual o intervalo deve ser invalidado."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_l10n_br_edi_cancel_range__start_number
+msgid "The first number that should be invalidated."
+msgstr "O primeiro número que deve ser invalidado."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_l10n_br_edi_cancel_range__journal_id
+msgid "The journal for which to invalidate the range."
+msgstr "O diário para o qual o intervalo deve ser invalidado."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_l10n_br_edi_invoice_update__reason
+msgid "The justification for altering this move."
+msgstr "A justificativa para alterar essa movimentação."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_l10n_br_edi_cancel_range__end_number
+msgid "The last number that should be invalidated."
+msgstr "O último número que deve ser invalidado."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_l10n_br_edi_invoice_update__move_id
+msgid "The move to be cancelled."
+msgstr "A movimentação a ser cancelada."
+
+#. module: l10n_br_edi
+#. odoo-python
+#: code:addons/l10n_br_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"The originating invoice (%s) must have an access key before electronically invoicing %s. The access key can be set manually or by "
+"electronically invoicing %s."
+msgstr ""
+"A fatura de origem (%s) deve ter uma chave de acesso antes de faturar eletronicamente %s. A chave de acesso pode ser definida "
+"manualmente ou pelo faturamento eletrônico de %s."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_l10n_br_edi_cancel_range__reason
+msgid "The reason for invalidating this range."
+msgstr "O motivo para invalidar esse intervalo."
+
+#. module: l10n_br_edi
+#: model:ir.model,name:l10n_br_edi.model_l10n_br_edi_cancel_range
+msgid "This allows a user to inform the government a range of sequence numbers won't be used."
+msgstr "Isso permite que um usuário informe ao governo que um intervalo de números de sequência não será usado."
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_bank_statement_line__l10n_br_edi_transporter_id
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_move__l10n_br_edi_transporter_id
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_payment__l10n_br_edi_transporter_id
+msgid "Transporter Brazil"
+msgstr "Transportadora Brasil"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,field_description:l10n_br_edi.field_account_move_send__l10n_br_edi_warning
+msgid "Warning"
+msgstr "Aviso"
+
+#. module: l10n_br_edi
+#: model:ir.model.fields,help:l10n_br_edi.field_l10n_br_edi_invoice_update__send_email
+msgid "When checked an email will be sent informing the customer of the changes and the new EDI documents."
+msgstr "Quando a caixa estiver marcada, será enviado um e-mail informando o cliente sobre as alterações e os novos documentos EDI."
+
+#. module: l10n_br_edi
+#: model:mail.template,subject:l10n_br_edi.mail_template_move_update
+msgid "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }}): Important Update"
+msgstr "{{ object.company_id.name }} Fatura (Ref. {{ object.name or 'n/d' }}): Atualização importante"

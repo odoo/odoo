@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="shop_mug" model="hr.referral.reward">
+            <field name="name">Mug</field>
+            <field name="cost">100</field>
+            <field name="description">Beautiful mug</field>
+            <field name="image" type="base64" file="hr_referral/static/src/img/mug.jpeg"/>
+        </record>
+
+        <record id="shop_voucher" model="hr.referral.reward">
+            <field name="name">Amazon Vouchers</field>
+            <field name="cost">750</field>
+            <field name="description">Buy what you want on Amazon!</field>
+            <field name="image" type="base64" file="hr_referral/static/src/img/amazon-vouchers.png"/>
+        </record>
+
+        <record id="hr_recruitment.hr_case_financejob1" model="hr.applicant">
+            <field name="ref_user_id" ref="base.user_admin"/>
+            <field name="medium_id" ref="utm.utm_medium_direct"/>
+        </record>
+
+        <record id="hr_recruitment.hr_case_marketingjob0" model="hr.applicant">
+            <field name="source_id" ref="utm.utm_source_facebook"/>
+        </record>
+
+        <record id="hr_recruitment.hr_case_salesman0" model="hr.applicant">
+            <field name="source_id" ref="utm.utm_source_linkedin"/>
+        </record>
+
+        <record id="hr_referral_point_1" model="hr.referral.points">
+            <field name="applicant_id" ref="hr_recruitment.hr_case_marketingjob0"/>
+            <field name="ref_user_id" ref="base.user_admin"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="stage_id" ref="hr_recruitment.stage_job1"/>
+            <field name="sequence_stage">1</field>
+            <field name="points">5</field>
+        </record>
+
+        <record id="hr_referral_point_2" model="hr.referral.points">
+            <field name="applicant_id" ref="hr_recruitment.hr_case_marketingjob0"/>
+            <field name="ref_user_id" ref="base.user_admin"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="stage_id" ref="hr_recruitment.stage_job2"/>
+            <field name="sequence_stage">2</field>
+            <field name="points">10</field>
+        </record>
+
+        <record id="hr_referral_point_3" model="hr.referral.points">
+            <field name="applicant_id" ref="hr_recruitment.hr_case_marketingjob0"/>
+            <field name="ref_user_id" ref="base.user_admin"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="stage_id" ref="hr_recruitment.stage_job3"/>
+            <field name="sequence_stage">3</field>
+            <field name="points">15</field>
+        </record>
+
+        <record id="hr_referral_point_4" model="hr.referral.points">
+            <field name="applicant_id" ref="hr_recruitment.hr_case_marketingjob0"/>
+            <field name="ref_user_id" ref="base.user_admin"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="stage_id" ref="hr_recruitment.stage_job4"/>
+            <field name="sequence_stage">4</field>
+            <field name="points">20</field>
+        </record>
+
+        <record id="hr_referral_point_5" model="hr.referral.points">
+            <field name="applicant_id" ref="hr_recruitment.hr_case_marketingjob0"/>
+            <field name="ref_user_id" ref="base.user_admin"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="stage_id" ref="hr_recruitment.stage_job5"/>
+            <field name="sequence_stage">5</field>
+            <field name="points">50</field>
+        </record>
+
+        <record id="hr_referral_point_6" model="hr.referral.points">
+            <field name="applicant_id" ref="hr_recruitment.hr_case_salesman0"/>
+            <field name="ref_user_id" ref="base.user_admin"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="stage_id" ref="hr_recruitment.stage_job1"/>
+            <field name="sequence_stage">1</field>
+            <field name="points">1</field>
+        </record>
+
+        <record id="hr_referral_point_7" model="hr.referral.points">
+            <field name="applicant_id" ref="hr_recruitment.hr_case_financejob1"/>
+            <field name="ref_user_id" ref="base.user_admin"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="stage_id" ref="hr_recruitment.stage_job1"/>
+            <field name="sequence_stage">1</field>
+            <field name="points">1</field>
+        </record>
+
+        <record id="hr_referral_point_8" model="hr.referral.points">
+            <field name="applicant_id" ref="hr_recruitment.hr_case_financejob1"/>
+            <field name="ref_user_id" ref="base.user_admin"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="stage_id" ref="hr_recruitment.stage_job2"/>
+            <field name="sequence_stage">2</field>
+            <field name="points">20</field>
+        </record>
+    </data>
+</odoo>

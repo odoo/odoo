@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_l10n_mx_payment_method_form" model="ir.ui.view">
+            <field name="name">view.l10n_mx.payment.method.form</field>
+            <field name="model">l10n_mx_edi.payment.method</field>
+            <field name="arch" type="xml">
+                <form string="Payment Way">
+                    <sheet string="Payment Way">
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_l10n_mx_payment_method_tree" model="ir.ui.view">
+            <field name="name">view.l10n_mx.payment.method.tree</field>
+            <field name="model">l10n_mx_edi.payment.method</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Way">
+                    <field name="code"/>
+                    <field name="name" select="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_l10n_mx_payment_method" model="ir.actions.act_window">
+            <field name="name">Payment Way</field>
+            <field name="res_model">l10n_mx_edi.payment.method</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            id="cfd_22_metodos_pago" name="Payment Way Codes (MX)" parent='account.root_payment_menu' sequence="50"
+            action='action_l10n_mx_payment_method'
+        />
+    </data>
+</odoo>

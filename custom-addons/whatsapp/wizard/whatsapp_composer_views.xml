@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="whatsapp_composer_view_form" model="ir.ui.view">
+        <field name="name">whatsapp.composer.view.form</field>
+        <field name="model">whatsapp.composer</field>
+        <field name="arch" type="xml">
+            <form string="Send WhatsApp">
+                <field name="invalid_phone_number_count" invisible="1"/>
+                <t invisible="invalid_phone_number_count == 0">
+                    <div class="alert alert-danger text-center" role="alert" invisible="batch_mode">
+                        <p class="my-0">
+                            <strong>Invalid number: </strong>
+                            <span>make sure to set a country on the Contact or to specify the country code.</span>
+                        </p>
+                    </div>
+                    <div class="alert alert-info text-center" role="alert" invisible="not batch_mode">
+                        <p class="my-0">
+                            <field class="oe_inline fw-bold" name="invalid_phone_number_count"/> recipients have an invalid phone number and will be skipped.
+                        </p>
+                    </div>
+                </t>
+                <sheet>
+                    <group>
+                    <group>
+                        <field name="res_model" invisible="1"/>
+                        <field name="number_of_free_text" invisible="1"/>
+                        <field name="number_of_free_text_button" invisible="1"/>
+                        <field name="is_header_free_text" invisible="1"/>
+                        <field name="is_button_dynamic" invisible="1"/>
+                        <field name="batch_mode" invisible="1"/>
+                        <field name="wa_template_id"
+                            options="{'no_create_edit': True, 'no_create': True, 'no_open': True}"
+                            domain="[('model', '=', res_model), ('status', '=', 'approved')]"/>
+                        <field name="phone" invisible="batch_mode" required="not batch_mode"/>
+                        <field name="header_text_1" invisible="not is_header_free_text" required="is_header_free_text" readonly="0"/>
+                        <field name="free_text_1" invisible="number_of_free_text &lt; 1" required="number_of_free_text &gt;= 1" readonly="0"/>
+                        <field name="free_text_2" invisible="number_of_free_text &lt; 2" required="number_of_free_text &gt;= 2" readonly="0"/>
+                        <field name="free_text_3" invisible="number_of_free_text &lt; 3" required="number_of_free_text &gt;= 3" readonly="0"/>
+                        <field name="free_text_4" invisible="number_of_free_text &lt; 4" required="number_of_free_text &gt;= 4" readonly="0"/>
+                        <field name="free_text_5" invisible="number_of_free_text &lt; 5" required="number_of_free_text &gt;= 5" readonly="0"/>
+                        <field name="free_text_6" invisible="number_of_free_text &lt; 6" required="number_of_free_text &gt;= 6" readonly="0"/>
+                        <field name="free_text_7" invisible="number_of_free_text &lt; 7" required="number_of_free_text &gt;= 7" readonly="0"/>
+                        <field name="free_text_8" invisible="number_of_free_text &lt; 8" required="number_of_free_text &gt;= 8" readonly="0"/>
+                        <field name="free_text_9" invisible="number_of_free_text &lt; 9" required="number_of_free_text &gt;= 9" readonly="0"/>
+                        <field name="free_text_10" invisible="number_of_free_text &lt; 10" required="number_of_free_text &gt;= 10" readonly="0"/>
+                        <field name="button_dynamic_url_1" invisible="number_of_free_text_button &lt; 1" required="number_of_free_text_button &gt;= 1" readonly="0"/>
+                        <field name="button_dynamic_url_2" invisible="number_of_free_text_button &lt; 2" required="number_of_free_text_button &gt;= 2" readonly="0"/>
+                    </group>
+                    <group>
+                        <div colspan="2">
+                            <field name="preview_whatsapp" no_label="1" invisible="not preview_whatsapp"/>
+                        </div>
+                    </group>
+                </group>
+                </sheet>
+                <footer>
+                    <button string="Send Message" type="object" class="oe_highlight" name="action_send_whatsapp_template"/>
+                    <button name="cancel" special="cancel" data-hotkey="z" string="Close" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

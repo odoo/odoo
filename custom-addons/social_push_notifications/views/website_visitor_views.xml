@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <!-- website visitor views -->
+    <record id="website_visitor_view_form" model="ir.ui.view">
+        <field name="name">website.visitor.view.form.inherit.social.push.notifications</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="has_push_notifications" invisible="1"/>
+                <button name="action_send_push_notification" string="Send Push Notification" type="object" class="oe_highlight"
+                    invisible="not has_push_notifications"/>
+            </xpath>
+            <xpath expr="//field[@name='lang_id']" position="after">
+                <field name="has_push_notifications" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="website_visitor_view_tree" model="ir.ui.view">
+        <field name="name">website.visitor.view.tree.inherit.social.push.notifications</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="has_push_notifications" column_invisible="True"/>
+                <button name="action_send_push_notification" string="Send Push Notification" type="object" icon="fa-bell"
+                   invisible="not has_push_notifications"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="website_visitor_view_kanban" model="ir.ui.view">
+        <field name="name">website.visitor.view.kanban.inherit.social.push.notifications</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_kanban"/>
+        <field name="arch" type="xml">
+            <field name="page_ids" position="after">
+                <field name="has_push_notifications"/>
+            </field>
+            <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="inside">
+                <button name="action_send_push_notification" type="object" class="btn btn-secondary"
+                        invisible="not has_push_notifications">Push
+                </button>
+            </xpath>
+            <xpath expr="//div[hasclass('w_visitor_kanban_actions_ungrouped')]" position="inside">
+                <button name="action_send_push_notification" type="object" class="btn btn-secondary border"
+                        invisible="not has_push_notifications">Push
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="website_visitor_view_search" model="ir.ui.view">
+        <field name="name">website.visitor.view.search.inherit.social.push.notifications</field>
+        <field name="model">website.visitor</field>
+        <field name="inherit_id" ref="website.website_visitor_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='filter_is_connected']" position="after">
+                <filter string="Push Notification On" name="filter_push_notification_enabled" domain="[('has_push_notifications', '!=', False)]"/>
+                <filter string="Push Notification Off" name="filter_push_notification_disabled" domain="[('has_push_notifications', '=', False)]"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="social_send_push_notifications_action_server" model="ir.actions.server">
+        <field name="name">Send Push Notifications</field>
+        <field name="model_id" ref="model_website_visitor"/>
+        <field name="binding_model_id" ref="model_website_visitor"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_send_push_notification()
+        </field>
+    </record>
+
+    <menuitem
+        id="social_visitor"
+        name="Visitors"
+        parent="social.menu_social_global"
+        action="website.website_visitors_action"
+        sequence="25"
+        groups="website.group_website_restricted_editor"/>
+</data></odoo>

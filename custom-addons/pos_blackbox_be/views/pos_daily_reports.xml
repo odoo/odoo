@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="sale_report_sequenceX" model="ir.sequence">
+        <field name="name">Sales report sequence</field>
+        <field name="code">report.point_of_sale.report_saledetails.sequenceX</field>
+        <field name="prefix">S</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="sale_report_sequenceZ" model="ir.sequence">
+        <field name="name">Sales report sequence</field>
+        <field name="code">report.point_of_sale.report_saledetails.sequenceZ</field>
+        <field name="prefix">S</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="sale_report_sequenceZUser" model="ir.sequence">
+        <field name="name">Sales report sequence</field>
+        <field name="code">report.point_of_sale.report_saledetails.sequenceZUser</field>
+        <field name="prefix">S</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="sale_report_sequenceXUser" model="ir.sequence">
+        <field name="name">Sales report sequence</field>
+        <field name="code">report.point_of_sale.report_saledetails.sequenceXUser</field>
+        <field name="prefix">S</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <template id="daily_report" inherit_id="point_of_sale.report_saledetails" name="Daily Report">
+        <xpath expr="//div[@id='sales']/h3" position="replace">
+            <h3>Sales (NS)</h3>
+        </xpath>
+
+        <xpath expr="//t[@id='refunds']/h3" position="replace">
+            <h3>Refunds (NR)</h3>
+        </xpath>
+
+        <xpath expr="//div[hasclass('text-center')]" position="after">
+            <t t-if="isBelgium">
+                <h2>
+                    <t t-if='state == "closed"'>Z</t>
+                    <t t-else="">X</t>
+                    FINANCIAL
+                    (<t t-esc="sequence"/> )
+                </h2>
+                <h5>VAT: <t t-esc="CompanyVAT"/></h5>
+                <h5><t t-esc="cashRegisterID"/> (<t t-esc="fdmID"/>)- <t t-esc="cashier_name"/> (<t t-esc="insz_or_bis_number"/>)</h5>
+                <h5>
+                    <t t-esc="date_start" t-options="{'widget': 'datetime'}"/>
+                    <t t-if="date_stop">
+                        to <t t-esc="date_stop" t-options="{'widget': 'datetime'}"/>
+                    </t>
+                </h5>
+                <h5>Time of reporting: <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%d/%Y %H:%M:%S')"/></h5>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('text-center')]" position="replace">
+            <strong>THIS IS NOT A VALID VAT TICKET</strong>
+            <h2 t-if="state == 'closed' or state == 'opened'">Daily Report
+                <t t-if="state == 'closed'">Z</t>
+                <t t-else="">X</t>
+            </h2>
+            <h2 t-else="">Multiple Report</h2>
+        </xpath>
+
+        <xpath expr="//t[@id='taxe_sales']/h3" position="attributes">
+            <attribute name="t-if">not isBelgium</attribute>
+        </xpath>
+
+        <xpath expr="//t[@id='taxe_sales']/table/thead/tr/th[1]" position="after">
+            <t t-if="isBelgium">
+                <th>VAT Letter</th>
+            </t>
+        </xpath>
+
+        <xpath expr="//t[@id='taxe_sales']/table/tbody/tr/td[1]" position="after">
+            <t t-if="isBelgium">
+                <td>
+                    <t t-esc="tax['identification_letter']"/>
+                </td>
+            </t>
+        </xpath>
+
+        <xpath expr="//t[@id='taxe_sales']/table/tbody/tr[last()]" position="attributes">
+            <attribute name="t-if">not isBelgium</attribute>
+        </xpath>
+
+        <xpath expr="//t[@id='taxe_refunds']" position="attributes">
+            <attribute name="t-if" add="refund_products" separator=" and "></attribute>
+        </xpath>
+
+        <xpath expr="//t[@id='taxe_refunds']/h3" position="attributes">
+            <attribute name="t-if">not isBelgium</attribute>
+        </xpath>
+
+        <xpath expr="//t[@id='taxe_refunds']/table/thead/tr/th[1]" position="after">
+            <t t-if="isBelgium">
+                <th>VAT Letter</th>
+            </t>
+        </xpath>
+
+        <xpath expr="//t[@id='taxe_refunds']/table/tbody/tr/td[1]" position="after">
+            <t t-if="isBelgium">
+                <td>
+                    <t t-esc="tax['identification_letter']"/>
+                </td>
+            </t>
+        </xpath>
+
+        <xpath expr="//t[@id='taxe_refunds']/table/tbody/tr[last()]" position="attributes">
+            <attribute name="t-if">not isBelgium</attribute>
+        </xpath>
+
+        <xpath expr="//div[hasclass('page')]" position="inside">
+            <t t-if="isBelgium">
+                <table class="table table-sm" style="page-break-after: avoid;">
+                    <thead><tr>
+                        <th class="text-start">Name</th>
+                        <th class="text-end">Value</th>
+                    </tr></thead>
+                    <tbody>
+                        <tr>
+                            <td>Number of NS</td>
+                            <td class="text-end"><t t-esc="NS_number"/></td>
+                        </tr>
+                         <tr>
+                            <td>Number of NR</td>
+                            <td class="text-end"><t t-esc="NR_number"/></td>
+                        </tr>
+                        <tr>
+                            <td>NS discounts</td>
+                            <td class="text-end"><t t-esc="Positive_discount_number"/></td>
+                        </tr>
+                        <tr>
+                            <td>Amount of NS discounts</td>
+                            <td class="text-end"><t t-esc="Positive_discount_amount" t-options="{'widget': 'float', 'precision': currency_precision}"/></td>
+                        </tr>
+                        <tr>
+                            <td>NR discounts</td>
+                            <td class="text-end"><t t-esc="Negative_discount_number"/></td>
+                        </tr>
+                        <tr>
+                            <td>Amount of NR discounts</td>
+                            <td class="text-end"><t t-esc="Negative_discount_amount" t-options="{'widget': 'float', 'precision': currency_precision}"/></td>
+                        </tr>
+                        <tr>
+                            <td>Number of PRO FORMA (PS)</td>
+                            <td class="text-end"><t t-esc="PS_number"/></td>
+                        </tr>
+                        <tr>
+                            <td>Amount of PRO FORMA (PS)</td>
+                            <td class="text-end"><t t-esc="PS_amount" t-options="{'widget': 'float', 'precision': currency_precision}"/></td>
+                        </tr>
+                        <tr>
+                            <td>Number of PRO FORMA (PR)</td>
+                            <td class="text-end"><t t-esc="PR_number"/></td>
+                        </tr>
+                        <tr>
+                            <td>Amount of PRO FORMA (PR)</td>
+                            <td class="text-end"><t t-esc="PR_amount" t-options="{'widget': 'float', 'precision': currency_precision}"/></td>
+                        </tr>
+                        <tr>
+                            <td>Number of correction</td>
+                            <td class="text-end"><t t-esc="Correction_number"/></td>
+                        </tr>
+                        <tr>
+                            <td>Amount of correction</td>
+                            <td class="text-end"><t t-esc="Correction_amount" t-options="{'widget': 'float', 'precision': currency_precision}"/></td>
+                        </tr>
+                        <tr>
+                            <td>Cash Starting Amount</td>
+                            <td class="text-end"><t t-esc="CashBoxStartAmount"/></td>
+                        </tr>
+                        <tr>
+                            <td>Cash Ending Amount</td>
+                            <td class="text-end"><t t-esc="CashBoxEndAmount"/></td>
+                        </tr>
+                        <tr>
+                            <td>Cash box opening number</td>
+                            <td class="text-end"><t t-esc="CashBoxOpening"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[@id='sales']/table//th[last()]" position="replace">
+            <th class="text-end">Total (Tax included)</th>
+        </xpath>
+
+        <xpath expr="//div[@id='sales']/table/tbody/tr/tr/td[last()]" position="replace">
+            <td class="text-end">
+                <t t-if="currency['position']">
+                    <span t-out='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}">567789</span>
+                    <span t-out='currency["symbol"]'>$</span>
+                </t>
+                <t t-else="">
+                    <span t-out='currency["symbol"]'>$</span>
+                    <span t-out='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}">567789</span>
+                </t>
+
+                <t t-if='line["discount"] != 0'>
+                    Disc: <span t-out='line["discount"]'>45</span>%
+                </t>
+            </td>
+        </xpath>
+
+        <xpath expr="//t[@id='refunds']/table//th[last()]" position="replace">
+            <th class="text-end">Total (Tax included)</th>
+        </xpath>
+
+        <xpath expr="//t[@id='refunds']/table/tbody/tr/tr/td[last()]" position="replace">
+            <td class="text-end">
+                <t t-if="currency['position']">
+                    <span t-out='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span>
+                    <span t-out='currency["symbol"]'>$</span>
+                </t>
+                <t t-else="">
+                    <span t-out='currency["symbol"]'>$</span>
+                    <span t-out='line["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span>
+                </t>
+                <t t-if='line["discount"] != 0'>
+                    Disc: <span t-out='line["discount"]'>0</span>%
+                </t>
+            </td>
+        </xpath>
+
+        <xpath expr="//t[@id='other_payments']/table" position="attributes">
+            <attribute name="style">page-break-inside: avoid;</attribute>
+        </xpath>
+
+        <xpath expr="//t[@id='other_payments']/table" position="inside">
+            <tfoot>
+                <tr>
+                    <td class="text-start">
+                        <strong>Total Payments:</strong>
+                    </td>
+                    <td class="text-end">
+                        <strong>
+                            <t t-out='total_paid' t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                        </strong>
+                    </td>
+                </tr>
+            </tfoot>
+        </xpath>
+
+        <xpath expr="//div[@id='discounts']" position="attributes">
+            <attribute name="t-if">not isBelgium</attribute>
+        </xpath>
+
+        <xpath expr="//t[@id='closing_session']//div[hasclass('oe_structure')]/following-sibling::div[1]" position="replace">
+            <table class="table table-sm" style="page-break-inside: avoid;">
+                <thead>
+                    <tr>
+                        <th class="text-start">Name</th>
+                        <th class="text-end">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Total without rounding</td>
+                        <td class="text-end">
+                            <span t-if="currency['position']">
+                                <span t-out='currency["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}">99.99</span>
+                                <span t-out='currency["symbol"]'>$</span>
+                            </span>
+                            <span t-else="">
+                                <span t-out='currency["symbol"]'>$</span>
+                                <span t-out='currency["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}">99.99</span>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Total with rounding</td>
+                        <td class="text-end">
+                            <span t-if="currency['position']">
+                                <span t-out="total_paid" t-options="{'widget': 'float', 'precision': currency['precision']}">99.99</span>
+                                <span t-out='currency["symbol"]'>$</span>
+                            </span>
+                            <span t-else="">
+                                <span t-out='currency["symbol"]'>$</span>
+                                <span t-out='total_paid' t-options="{'widget': 'float', 'precision': currency['precision']}">99.99</span>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Rounding difference</td>
+                        <td class="text-end">
+                            <span t-if="currency['position']">
+                                <span t-out="currency['total_paid'] - total_paid" t-options="{'widget': 'float', 'precision': currency['precision']}">99.99</span>
+                                <span t-out='currency["symbol"]'>$</span>
+                            </span>
+                            <span t-else="">
+                                <span t-out="currency['symbol']">$</span>
+                                <span t-out='currency["total_paid"] - total_paid' t-options="{'widget': 'float', 'precision': currency['precision']}">99.99</span>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </xpath>
+
+        <xpath expr="//t[@id='closing_session']/table" position="attributes">
+            <attribute name="style">page-break-inside: avoid;</attribute>
+        </xpath>
+    </template>
+
+    <record id="action_report_pos_user" model="ir.actions.report">
+        <field name="name">User-Report</field>
+        <field name="model">pos.session</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pos_blackbox_be.user_report_template</field>
+        <field name="report_file">pos_blackbox_be.user_report_template</field>
+        <field name="print_report_name">(object.name + '_user_report')</field>
+        <field name="attachment_use">True</field>
+    </record>
+
+    <record model="ir.ui.view" id="view_pos_session_form">
+        <field name="name">pos.session.form.view</field>
+        <field name="model">pos.session</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" name="%(action_report_pos_user)d" type="action" icon="fa-file-text-o">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">User Report</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button" name="action_report_journal_file" type="object" icon="fa-file-text-o">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Journal File</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <template id="user_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <strong>THIS IS NOT A VALID VAT TICKET</strong>
+                        <t t-if="o.stop_at">
+                            <h2>Z USERS</h2>
+                        </t>
+                        <t t-if="not o.stop_at">
+                            <h2>X USERS</h2>
+                        </t>
+                        <div class="row">
+                            Sequence: <t t-esc="o._get_sequence_number()"/>
+                        </div>
+                        <div class="row">
+                            VAT: <t t-esc="o.company_id.vat"/>
+                        </div>
+                        <div class="row">
+                            Time of reporting: <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%d/%Y %H:%M:%S')"/>
+                        </div>
+                        <div class="row">
+                            <t t-esc="context_timestamp(o.start_at).strftime('%m/%d/%Y %H:%M:%S')"/>
+                            <t t-if="o.stop_at">
+                                to <t t-esc="context_timestamp(o.stop_at).strftime('%m/%d/%Y %H:%M:%S')"/>
+                            </t>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <strong>POS Session:</strong>
+                                <span t-field="o.name"/>
+                            </div>
+                        </div>
+
+                        <div class="row mt32 mb32">
+                            <div class="col-4">
+                                <strong>Point of Sale</strong>:<br/>
+                                <span t-field="o.config_id"/>
+                            </div>
+                            <div class="col-4">
+                                <strong>From</strong>:<br/>
+                                <span t-field="o.start_at"/>
+                            </div>
+                            <div class="col-4">
+                                <strong>To</strong>:<br/>
+                                <t t-if="o.stop_at">
+                                    <span t-field="o.stop_at"/>
+                                </t>
+                                <t t-if="not o.stop_at">
+                                    <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%m/%d/%Y %H:%M:%S')"/>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="row zero_min_height">
+                            <div class="col-12">
+                                <div style="border-bottom: 1px solid black;"></div>
+                            </div>
+                        </div>
+
+                        <t t-foreach="o._get_user_report_data().values()" t-as="inzs">
+                            <t t-foreach="inzs" t-as="user">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <strong><span t-esc="user['login'] + ' (INSZ/BIS: ' + user['insz_or_bis_number'] + ')'"/></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <strong>fdm identifier: <span t-esc="user['fdmIdentifier']"/></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <strong>Amount of money in cash register</strong>:
+                                        <span t-field="o.cash_register_balance_end"
+                                              t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <strong>Revenue (NS): </strong>
+                                        <span t-esc="user['revenue']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <strong>Cash rounding applied: <span t-esc="user['cash_rounding_applied']"/></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        Revenue per category (NS):
+                                        <t t-foreach="user['revenue_per_category']" t-as="category">
+                                            <div class="category-row">
+                                                <span class="category-name"><t t-esc="category[0]"/>:</span>
+                                                <span class="category-amount" t-esc="category[1]"
+                                                      t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        First ticket time (NS): <span t-esc="context_timestamp(user['first_ticket_time']).strftime('%m/%d/%Y %H:%M:%S')"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <t t-if="user['last_ticket_time']">
+                                            Last ticket time (NS): <span t-esc="context_timestamp(user['last_ticket_time']).strftime('%m/%d/%Y %H:%M:%S')"/>
+                                        </t>
+                                        <t t-else="">
+                                            Last ticket time (NS): In Progress
+                                        </t>
+                                    </div>
+                                </div>
+                                <div class="row zero_min_height">
+                                    <div class="col-12">
+                                        <div style="border-bottom: 1px solid black;"></div>
+                                    </div>
+                                </div>
+                            </t>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

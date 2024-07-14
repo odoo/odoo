@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<odoo>
+
+<record id="appointment_pages_tree_view" model="ir.ui.view">
+    <field name="name">Appointments Pages Tree</field>
+    <field name="model">appointment.type</field>
+    <field name="priority">99</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="appointment.appointment_type_view_tree"/>
+    <field name="arch" type="xml">
+        <xpath expr="//tree" position="attributes">
+            <attribute name="js_class">website_pages_list</attribute>
+            <attribute name="type">object</attribute>
+            <attribute name="action">open_website_url</attribute>
+        </xpath>
+
+        <field name="name" position="after">
+            <field name="website_url"/>
+        </field>
+        <xpath expr="//tree">
+            <field name="is_seo_optimized"/>
+            <field name="is_published"/>
+        </xpath>
+    </field>
+</record>
+
+<record id="appointment_pages_kanban_view" model="ir.ui.view">
+    <field name="name">Appointments Pages Kanban</field>
+    <field name="model">appointment.type</field>
+    <field name="priority">99</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="appointment_type_view_kanban"/>
+    <field name="arch" type="xml">
+        <kanban position="attributes">
+            <attribute name="js_class">website_pages_kanban</attribute>
+            <attribute name="type">object</attribute>
+            <attribute name="action">open_website_url</attribute>
+        </kanban>
+        <xpath expr="//t/a[@name='action_customer_preview']" position="replace">
+            <a role="menuitem" class="dropdown-item" name="action_customer_preview" type="object">
+                <span class="fa fa-globe" title="website"/> <field name="website_url"/>
+            </a>
+        </xpath>
+    </field>
+</record>
+
+<record id="action_appointment_pages_list" model="ir.actions.act_window">
+    <field name="name">Appointment Pages</field>
+    <field name="res_model">appointment.type</field>
+    <field name="view_mode">tree,kanban</field>
+    <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('appointment_pages_tree_view')}),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('appointment_pages_kanban_view')}),
+    ]"/>
+    <field name="context">{'create_action': 'website_appointment.appointment_type_action_add_simplified'}</field>
+</record>
+
+<menuitem id="menu_appointment_pages"
+    parent="website.menu_content"
+    sequence="60"
+    name="Appointments"
+    action="action_appointment_pages_list"/>
+
+</odoo>

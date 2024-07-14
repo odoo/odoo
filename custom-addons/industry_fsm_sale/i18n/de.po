@@ -1,0 +1,608 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* industry_fsm_sale
+# 
+# Translators:
+# Wil Odoo, 2023
+# Larissa Manderfeld, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:11+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid "<b>Invoice your time and material</b> to your customer."
+msgstr "<b>Berechnen Sie Arbeitszeit und Material</b> an Ihre Kunden."
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/project_task.py:0
+#, python-format
+msgid ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                            No products found. Let's create one!\n"
+"                        </p><p>\n"
+"                            Keep track of the products you are using to complete your tasks, and invoice your customers for the goods.\n"
+"                            Tip: using kits, you can add multiple products at once.\n"
+"                        </p><p>\n"
+"                            When your task is marked as done, your stock will be updated automatically. Simply choose a warehouse\n"
+"                            in your profile from where to draw stock.\n"
+"                        </p>"
+msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                            Keine Produkte gefunden. Erstellen wir eins!\n"
+"                        </p><p>\n"
+"                            Behalten Sie den Überblick über die Produkte, die Sie zur Erfüllung Ihrer Aufgaben verwenden, und stellen Sie Ihren Kunden die Waren in Rechnung.\n"
+"                            Tipp: Mit Bausätzen können Sie mehrere Produkte auf einmal hinzufügen.\n"
+"                        </p><p>\n"
+"                            Wenn Ihre Aufgabe als erledigt markiert ist, wird Ihr Bestand automatisch aktualisiert. Wählen Sie einfach ein Lager\n"
+"                            in Ihrem Profil aus, aus dem Sie Produkte nehmen möchten.\n"
+"                        </p>"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "<span>Disc.%</span>"
+msgstr "<span>Rabatt %</span>"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_sharing_project_task_inherit_view_form
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.view_task_form2_inherit
+msgid "<span>Products</span>"
+msgstr "<span>Produkte</span>"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "<strong class=\"mr16\">Subtotal</strong>"
+msgstr "<strong class=\"mr16\">Zwischensumme</strong>"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "<strong>Amount Due: </strong>"
+msgstr "<strong>Fälliger Betrag:</strong>"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "<strong>Taxes</strong>"
+msgstr "<strong>Steuern</strong>"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "<strong>Total</strong>"
+msgstr "<strong>Gesamt</strong>"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "<strong>Untaxed amount</strong>"
+msgstr "<strong>Nettobetrag</strong>"
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/project_task.py:0
+#: code:addons/industry_fsm_sale/models/project_task.py:0
+#, python-format
+msgid "A customer should be set on the task to generate a worksheet."
+msgstr ""
+"Es sollte ein Kunde für die Aufgabe eingestellt werden, um ein Arbeitsblatt "
+"zu erstellen."
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.industry_fsm_sale_product_catalog_inherit_search_view
+msgid "Added Products"
+msgstr "Hinzugefügte Produkte"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "Amount"
+msgstr "Betrag"
+
+#. module: industry_fsm_sale
+#: model:ir.model.constraint,message:industry_fsm_sale.constraint_project_project_fsm_imply_task_rate
+msgid "An FSM project must be billed at task rate or employee rate."
+msgstr ""
+"Ein Außendienstprojekt muss zum Aufgabensatz oder Mitarbeiterstundensatz "
+"abgerechnet werden."
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "An invoice has been created: %s"
+msgstr "Ein Rechnung wurde erstellt: %s"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_account_analytic_line
+msgid "Analytic Account"
+msgstr "Kostenstelle"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_project__allow_billable
+msgid "Billable"
+msgstr "Abrechenbar"
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/project_task.py:0
+#, python-format
+msgid ""
+"By saving this change, all timesheet entries will be linked to the selected "
+"Sales Order Item without distinction."
+msgstr ""
+"Wenn Sie diese Änderung speichern, werden alle Zeiterfassungseinträge ohne "
+"Unterscheidung mit der ausgewählten Verkaufsauftragsposition verknüpft."
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/project_task.py:0
+#, python-format
+msgid "Choose Products"
+msgstr "Produkte auswählen"
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid ""
+"Choose a <b>name</b> for your product <i>(e.g. Bolts, Screws, Boiler, "
+"etc.).</i>"
+msgstr ""
+"Wählen Sie einen <b>Namen</b> für Ihr Produkt <i> (z. B. Bolzen, Schrauben, "
+"Boiler usw.).</i>"
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid ""
+"Click on a product to add it to your <b>list of materials</b>. <i>Tip: for "
+"large quantities, click on the number to edit it directly.</i>"
+msgstr ""
+"Klicken Sie auf ein Produkt, um es zu Ihrer <b>Materialliste</b> "
+"hinzuzufügen. <i>Tipp: Klicken Sie bei großen Mengen auf die Nummer, um "
+"direkt bearbeiten zu können.</i>"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurationseinstellungen"
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid "Confirm the creation of your <b>invoice</b>."
+msgstr "Bestätigen Sie die Erstellung Ihrer <b>Rechnung</b>."
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_task_view_list_fsm_sale_inherit
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.view_task_form2_inherit
+msgid "Create Invoice"
+msgstr "Rechnung erstellen"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_view_form_inherit
+msgid "Create new quotations directly from tasks"
+msgstr "Neue Angebote direkt aus den Aufgaben erstellen"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__currency_id
+msgid "Currency"
+msgstr "Währung"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_view_form_inherit
+msgid "Default Service"
+msgstr "Standard-Service"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_sale_order_line__delivered_price_subtotal
+msgid "Delivered Subtotal"
+msgstr "Geliefert Zwischensumme"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_sale_order_line__delivered_price_total
+msgid "Delivered Total"
+msgstr "Geliefert Gesamt"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_sale_order_line__delivered_price_tax
+msgid "Delivered Total Tax"
+msgstr "Geliefert Gesamtsteuer"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__display_create_invoice_primary
+msgid "Display Create Invoice Primary"
+msgstr "„Rechnung erstellen“ primär anzeigen"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__display_create_invoice_secondary
+msgid "Display Create Invoice Secondary"
+msgstr "„Rechnung erstellen“ sekundär anzeigen"
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/sale_order.py:0
+#, python-format
+msgid "Extra Quotation Created: %s"
+msgstr "Zusätzliches Angebot erstellt: %s"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_project__allow_quotations
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__allow_quotations
+msgid "Extra Quotations"
+msgstr "Zusätzliche Angebote"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_report_project_task_user_fsm
+msgid "FSM Tasks Analysis"
+msgstr "Analyse der Außendienstaufgaben"
+
+#. module: industry_fsm_sale
+#: model:product.template,name:industry_fsm_sale.field_service_product_product_template
+msgid "Field Service"
+msgstr "Außendienst"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_product_product__fsm_partner_price_currency_id
+msgid "Fsm Partner Price Currency"
+msgstr "Währung des Partnerpreises für Dienstleistungen im Außendienst"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields.selection,name:industry_fsm_sale.selection__report_project_task_user_fsm__invoice_status__invoiced
+msgid "Fully Invoiced"
+msgstr "Komplett abgerechnet"
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/product_product.py:0
+#, python-format
+msgid "Invalid operator: %s"
+msgstr "Ungültiger Operator: %s"
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/product_product.py:0
+#, python-format
+msgid "Invalid value: %s"
+msgstr "Ungültiger Wert: %s"
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/project_task.py:0
+#, python-format
+msgid "Invoice"
+msgstr "Rechnung"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__portal_invoice_count
+msgid "Invoice Count"
+msgstr "Anzahl Rechnungen"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__invoice_status
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_report_project_task_user_fsm__invoice_status
+msgid "Invoice Status"
+msgstr "Rechnungsstatus"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.actions.act_window,help:industry_fsm_sale.project_task_action_to_invoice_fsm
+msgid ""
+"Invoice your time and material to your customers once your tasks are done."
+msgstr ""
+"Stellen Sie Ihren Kunden Arbeitszeit und Material in Rechnung, sobald Ihre "
+"Aufgaben erledigt sind."
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/project_task.py:0
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_sharing_project_task_inherit_view_form
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.view_task_form2_inherit
+#, python-format
+msgid "Invoices"
+msgstr "Rechnungen"
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid "Let's <b>track the material</b> you use for your task."
+msgstr ""
+"<b>Verfolgen Sie das Material</b>, das Sie für Ihre Aufgabe verwenden."
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid "Let's create a new <b>product</b>."
+msgstr "Erstellen Sie ein neues <b>Produkt</b>."
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__material_line_product_count
+msgid "Material Line Product Count"
+msgstr "Produktanzahl der Materiallinie"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__material_line_total_price
+msgid "Material Line Total Price"
+msgstr "Gesamtpreis der Materiallinie"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_product_product__fsm_quantity
+msgid "Material Quantity"
+msgstr "Materialmenge"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.view_task_form2_inherit
+msgid "New Quotation"
+msgstr "Neues Angebot"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.actions.act_window,help:industry_fsm_sale.product_action_fsm
+msgid "No products found. Let's create one!"
+msgstr "Keine Produkte gefunden. Erstellen Sie eins!"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.actions.act_window,help:industry_fsm_sale.project_task_action_to_invoice_fsm
+msgid "No tasks found. Let's create one!"
+msgstr "Keine Aufgabe gefunden. Erstellen Sie eine!"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields.selection,name:industry_fsm_sale.selection__report_project_task_user_fsm__invoice_status__no
+msgid "Nothing to Invoice"
+msgstr "Nichts abzurechnen"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__invoice_count
+msgid "Number of invoices"
+msgstr "Anzahl Rechnungen"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_product_product__fsm_partner_price
+msgid "Partner Price"
+msgstr "Partnerpreis"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__portal_quotation_count
+msgid "Portal Quotation Count"
+msgstr "Anzahl Portalangebote"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__pricelist_id
+msgid "Pricelist"
+msgstr "Preisliste"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_product_template
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.industry_fsm_sale_product_catalog_kanban_view
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "Product"
+msgstr "Produkt"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_product_product
+msgid "Product Variant"
+msgstr "Produktvariante"
+
+#. module: industry_fsm_sale
+#: model:ir.actions.act_window,name:industry_fsm_sale.product_action_fsm
+#: model:ir.ui.menu,name:industry_fsm_sale.fsm_menu_settings_product
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.view_task_form2_inherit
+msgid "Products"
+msgstr "Produkte"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_project__allow_material
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__allow_material
+msgid "Products on Tasks"
+msgstr "Produkte für Aufgaben"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_project_project
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_product_product__project_id
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_product_template__project_id
+msgid "Project"
+msgstr "Projekt"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_project_sale_line_employee_map
+msgid "Project Sales line, employee mapping"
+msgstr "Verkaufszeile des Projekts, Zuordnung des Mitarbeiters"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "Quantity"
+msgstr "Menge"
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/controllers/portal.py:0
+#, python-format
+msgid "Quotation"
+msgstr "Angebot"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__quotation_count
+msgid "Quotation Count"
+msgstr "Anzahl Angebote"
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_sharing_project_task_inherit_view_form
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.view_task_form2_inherit
+#, python-format
+msgid "Quotations"
+msgstr "Angebote"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.view_order_form_inherit_sale_project
+msgid "Related Task"
+msgstr "Verknüpfte Aufgaben"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_sale_advance_payment_inv
+msgid "Sales Advance Payment Invoice"
+msgstr "Vorauszahlungsrechnung"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Verkaufsauftrag"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_project__sale_line_id
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__sale_line_id
+msgid "Sales Order Item"
+msgstr "Verkaufsauftragsposition"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,help:industry_fsm_sale.field_project_task__sale_line_id
+msgid ""
+"Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
+"By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
+"Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
+msgstr ""
+"Verkaufsauftragsposition, zu der die für diese Aufgabe aufgewendete Zeit hinzugefügt wird, um sie Ihrem Kunden in Rechnung zu stellen.\n"
+"Standardmäßig wird die für das Projekt festgelegte Verkaufsauftragsposition ausgewählt. Ist dies nicht der Fall, wird die letzte vorausbezahlte Verkaufsauftragsposition verwendet, die noch Zeit übrig hat.\n"
+"Entfernen Sie die Verkaufsauftragsposition, um diese Aufgabe nicht abrechenbar zu machen. Sie können die Verkaufsauftragsposition auch für jeden Zeiterfassungseintrag einzeln ändern oder entfernen."
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Verkaufsauftragszeile"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,help:industry_fsm_sale.field_project_project__sale_line_id
+msgid ""
+"Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
+"It can be modified on each task and timesheet entry individually if necessary."
+msgstr ""
+"Verkaufsauftragsposition, die standardmäßig auf den Aufgaben und Zeiterfassungsbögen dieses Projekts ausgewählt wird, es sei denn, der auf den Zeiterfassungsbögen eingestellte Mitarbeiter ist ausdrücklich mit einer anderen Verkaufsauftragsposition des Projekts verknüpft.\n"
+"Er kann bei Bedarf für jede Aufgabe und jeden Zeiterfassungseintrag einzeln geändert werden."
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_sale_line_employee_map__timesheet_product_id
+msgid "Service"
+msgstr "Dienstleistung"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_project_task
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_sale_order__task_id
+msgid "Task"
+msgstr "Aufgabe"
+
+#. module: industry_fsm_sale
+#: model:ir.model,name:industry_fsm_sale.model_project_task_recurrence
+msgid "Task Recurrence"
+msgstr "Aufgabenwiederholung"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,help:industry_fsm_sale.field_sale_order__task_id
+msgid "Task from which this quotation have been created"
+msgstr "Aufgabe, aus der dieses Angebot erstellt wurde"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "Taxes"
+msgstr "Steuern"
+
+#. module: industry_fsm_sale
+#: model:ir.model.constraint,message:industry_fsm_sale.constraint_project_project_material_imply_billable
+msgid "The material can be allowed only when the task can be billed."
+msgstr ""
+"Das Material kann nur zur Verfügung gestellt werden, wenn die Aufgabe "
+"verrechnet werden kann."
+
+#. module: industry_fsm_sale
+#: model:ir.model.constraint,message:industry_fsm_sale.constraint_project_project_timesheet_product_required_if_billable_and_time
+msgid ""
+"The timesheet product is required when the fsm project can be billed and "
+"timesheets are allowed."
+msgstr ""
+"Das Zeiterfassungsprodukt wird benötigt, wenn das Außendienstprojekt "
+"abgerechnet werden kann und Zeiterfassungen erlaubt sind."
+
+#. module: industry_fsm_sale
+#. odoo-python
+#: code:addons/industry_fsm_sale/models/sale_order.py:0
+#, python-format
+msgid "This Sales Order has been created from Task: %s"
+msgstr "Dieser Verkaufsauftrag wurde aus einer Ausgabe erstellt: %s"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.portal_my_task
+msgid "Time &amp; Material"
+msgstr "Zeit &amp; Material"
+
+#. module: industry_fsm_sale
+#: model:ir.actions.act_window,name:industry_fsm_sale.project_task_action_to_invoice_fsm
+#: model:ir.model.fields.selection,name:industry_fsm_sale.selection__report_project_task_user_fsm__invoice_status__to_invoice
+#: model:ir.ui.menu,name:industry_fsm_sale.fsm_menu_all_tasks_invoice
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_task_view_search_fsm_inherit_sale
+msgid "To Invoice"
+msgstr "Abzurechnen"
+
+#. module: industry_fsm_sale
+#: model_terms:ir.actions.act_window,help:industry_fsm_sale.product_action_fsm
+msgid "Track and bill the material used to complete your tasks."
+msgstr ""
+"Verfolgen und fakturieren Sie das für die Erledigung Ihrer Aufgaben "
+"verwendete Material."
+
+#. module: industry_fsm_sale
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.project_view_form_inherit
+msgid "Track the material used to complete tasks"
+msgstr "Verfolgen Sie das genutzte Material, um Aufgaben abzuschließen."
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_sale_line_employee_map__price_unit
+#: model_terms:ir.ui.view,arch_db:industry_fsm_sale.worksheet_time_and_material
+msgid "Unit Price"
+msgstr "Einzelpreis"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields.selection,name:industry_fsm_sale.selection__report_project_task_user_fsm__invoice_status__upselling
+msgid "Upselling Opportunity"
+msgstr "Upselling-Verkaufschance"
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid "Use the breadcrumbs to navigate to your <b>list of products</b>."
+msgstr ""
+"Verwenden Sie die Brotkrümelnavigation, um zu Ihrer <b>Produktliste</b> zu "
+"gelangen."
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid "Use the breadcrumbs to return to your <b>task</b>."
+msgstr ""
+"Verwenden Sie die Brotkrümelnavigation, um zurück zu Ihrer <b>Aufgabe</b> zu"
+" gelangen."
+
+#. module: industry_fsm_sale
+#. odoo-javascript
+#: code:addons/industry_fsm_sale/static/src/js/tours/industry_fsm_sale_tour.js:0
+#, python-format
+msgid "Wait for the invoice to show up"
+msgstr "Warten, bis die Rechnung angezeigt wird"
+
+#. module: industry_fsm_sale
+#: model:ir.model.fields,field_description:industry_fsm_sale.field_project_task__warning_message
+msgid "Warning Message"
+msgstr "Warnmeldung"

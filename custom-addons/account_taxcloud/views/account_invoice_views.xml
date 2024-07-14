@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="invoice_form_inherit" model="ir.ui.view">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <form position="inside">
+                <field name="is_taxcloud" invisible="1"/>
+                <field name="is_taxcloud_configured" invisible="1"/>
+            </form>
+            <xpath expr="//header" position="after">
+                <div class="alert alert-info text-center" role="alert"
+                     invisible="is_taxcloud_configured or not is_taxcloud or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')">
+                    Please enter your Taxcloud credentials to compute tax rates automatically.
+                    <a class="alert-link" href="/web#action=account.action_account_config" role="button">Go to Settings.</a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

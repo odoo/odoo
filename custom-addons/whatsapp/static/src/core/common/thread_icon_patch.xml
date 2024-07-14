@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="whatsapp.ThreadIcon" t-inherit="mail.ThreadIcon" t-inherit-mode="extension">
+        <xpath expr="//*[contains(@class, 'o-mail-ThreadIcon')]" position="inside">
+            <t t-if="props.thread.type === 'whatsapp'">
+                <t name="whatsapp">
+                    <t name="whatsapp_static">
+                        <div class="fa fa-whatsapp text-success" title="WhatsApp" />
+                    </t>
+                </t>
+            </t>
+        </xpath>
+    </t>
+</templates>

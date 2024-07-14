@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="account_accountant.MoveLineListView" t-inherit="web.ListView">
+        <xpath expr="//div[@t-ref='root']" position="attributes" type="add">
+            <attribute name="class" add="o_move_line_list_view" separator=" "/>
+        </xpath>
+        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="setSelectedRecord.bind">this.setSelectedRecord</attribute>
+        </xpath>
+        <xpath expr="//Layout" position="inside">
+            <t t-if="this.attachmentPreviewState.previewEnabled">
+                <t t-call="account_accountant.AttachmentPreview"/>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="account_accountant.AttachmentPreview">
+        <div class="o_attachment_preview" t-att-class="{'hidden': !attachmentPreviewState.displayAttachment}">
+            <t t-if="this.attachmentPreviewState.displayAttachment">
+                <t t-if="this.attachmentPreviewState.thread and this.attachmentPreviewState.thread.attachmentsInWebClientView.length > 0">
+                    <AttachmentView
+                        threadId="this.attachmentPreviewState.thread.id"
+                        threadModel="this.attachmentPreviewState.thread.model"
+                    />
+                </t>
+                <t t-elif="!this.attachmentPreviewState.selectedRecord">
+                    <p class="text-center">Choose a line to preview its attachments.</p>
+                </t>
+                <t t-else="">
+                    <p class="text-center">No attachments linked.</p>
+                </t>
+            </t>
+            <div class="o_attachment_control" t-on-click="togglePreview"/>
+        </div>
+    </t>
+</templates>

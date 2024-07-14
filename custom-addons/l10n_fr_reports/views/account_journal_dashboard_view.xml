@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_view_account_journal_dashboard_kanban" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='json_activity_data']" position="after">
+                <div class="row">
+                    <a t-if="dashboard.l10n_fr_has_rejected_tax_report" class="text-warning" name="show_rejected_tax_reports" type="object">
+                        <i class="fa fa-exclamation-triangle"/>
+                        Tax export(s) rejected
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

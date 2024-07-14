@@ -1,0 +1,569 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_timesheet_enterprise
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:12+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.js:0
+#, python-format
+msgid " days"
+msgstr " 天"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.js:0
+#, python-format
+msgid " hours"
+msgstr " 小時"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.js:0
+#, python-format
+msgid "%(billableTime)s / %(billable_time_target)s (%(billingRate)s%)"
+msgstr "%(billableTime)s / %(billable_time_target)s (%(billingRate)s%)"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.js:0
+#, python-format
+msgid "%(currentBillableTimeText)s / %(currentTargetTotalTimeText)s "
+msgstr "%(currentBillableTimeText)s / %(currentTargetTotalTimeText)s "
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.js:0
+#, python-format
+msgid "%(percentage)s%"
+msgstr "%(percentage)s%"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.js:0
+#, python-format
+msgid "%(totalTime)s "
+msgstr "%(totalTime)s "
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.js:0
+#, python-format
+msgid "(%(percentage)s%)"
+msgstr "(%(percentage)s%)"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.view_employee_form
+msgid ""
+"<span class=\"w-100\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">per month</span>"
+msgstr ""
+"<span class=\"w-100\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">每月</span>"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.sale_timesheet_enterprise_advance_payment_inv_timesheet_view_form
+msgid ""
+"<span>\n"
+"                            Some employees currently have active timers for the timesheets you are trying to invoice.\n"
+"                            Creating the invoice will automatically stop these timers.\n"
+"                        </span>"
+msgstr ""
+"<span>\n"
+"                            你嘗試開立發票的工時表中，目前有部份員工仍有生效的計時器。\n"
+"                            若建立發票，這些計時器將會自動停止。\n"
+"                        </span>"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.res_config_settings_view_form
+msgid "<span>%</span>"
+msgstr "<span>%</span>"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields.selection,name:sale_timesheet_enterprise.selection__res_config_settings__invoiced_timesheet__all
+msgid "All recorded timesheets"
+msgstr "所有已記錄工時表"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_account_analytic_line
+msgid "Analytic Account"
+msgstr "分析帳戶"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/many2one_avatar_rank_field/many2one_avatar_rank_field.xml:0
+#: code:addons/sale_timesheet_enterprise/static/src/components/many2one_avatar_rank_field/many2one_avatar_rank_field.xml:0
+#: code:addons/sale_timesheet_enterprise/static/src/components/many2one_avatar_rank_field/many2one_avatar_rank_field.xml:0
+#, python-format
+msgid "Avatar"
+msgstr "頭像"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.js:0
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_res_config_settings__group_use_timesheet_leaderboard
+#, python-format
+msgid "Billing Rate Leaderboard"
+msgstr "收費率排行榜"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_res_company__billing_rate_target
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_res_config_settings__group_timesheet_leaderboard_show_rates
+msgid "Billing Rate Target"
+msgstr "收費率目標"
+
+#. module: sale_timesheet_enterprise
+#: model:res.groups,name:sale_timesheet_enterprise.group_timesheet_leaderboard_show_rates
+msgid "Billing Rate/Total Time indicators"
+msgstr "收費率/總工時指標"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_hr_employee__billable_time_target
+msgid "Billing Time Target"
+msgstr "收費工時目標"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_res_config_settings__billing_rate_target
+msgid "Billing rate target for the employees"
+msgstr "員工的收費率目標"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.xml:0
+#, python-format
+msgid "Billing:"
+msgstr "計費："
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.res_config_settings_view_form
+msgid ""
+"Boost productivity and competitiveness by displaying a leaderboard based on "
+"the billing rates."
+msgstr "按收費率顯示排行榜，提升競爭環境及生產力."
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.xml:0
+#, python-format
+msgid "Close"
+msgstr "關閉"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.ui.menu,name:sale_timesheet_enterprise.hr_timesheet_menu_configuration_settings
+msgid "Configuration"
+msgstr "配置"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_hr_timesheet_tip__create_uid
+msgid "Created by"
+msgstr "建立人員"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_hr_timesheet_tip__create_date
+msgid "Created on"
+msgstr "建立於"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.timesheet_view_grid_by_invoice_type
+msgid "Day"
+msgstr "日"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_overtime_indication/timesheet_overtime_indication.js:0
+#, python-format
+msgid ""
+"Difference between the number of %s ordered on the sales order item and the "
+"number of %s delivered"
+msgstr "銷售訂單項目訂購的 %s 數量與實際交付的 %s 數量，兩者之間的差異"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_hr_timesheet_tip__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_project_task__portal_progress
+msgid "Display progress of current task."
+msgstr "顯示目前任務的進度。"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_res_config_settings__group_timesheet_leaderboard_show_rates
+msgid "Display the Billing Rate on My Timesheets view"
+msgstr "在「我的工時表」檢視畫面顯示收費率"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_hr_employee
+msgid "Employee"
+msgstr "員工"
+
+#. module: sale_timesheet_enterprise
+#: model:hr.timesheet.tip,name:sale_timesheet_enterprise.timesheet_tip_5
+msgid ""
+"Even small tasks like answering an email should be recorded and rounded up "
+"to a quarter of an hour."
+msgstr "即使如回覆電郵這樣的小工作，也應該記錄，並四捨五入至一刻鐘（15 分鐘）計算。"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.project_sharing_inherit_project_task_view_tree
+msgid "Hours Spent"
+msgstr "已工作時數"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.project_sharing_inherit_project_task_view_tree
+msgid "Hours Spent on Sub-Tasks"
+msgstr "子任務工作時數"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_hr_timesheet_tip__id
+msgid "ID"
+msgstr "識別號"
+
+#. module: sale_timesheet_enterprise
+#: model:hr.timesheet.tip,name:sale_timesheet_enterprise.timesheet_tip_2
+msgid ""
+"If you help a colleague on a project, your time should be recorded on this "
+"project's timesheet as well."
+msgstr "如果你在某專案上幫助了同事，你的工作時間也應該記錄在專案的工時表上。"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.res_config_settings_view_form
+msgid "Invoice"
+msgstr "應收憑單"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.res_config_settings_view_form
+msgid "Invoicing Policy"
+msgstr "開立應收憑單策略"
+
+#. module: sale_timesheet_enterprise
+#: model:hr.timesheet.tip,name:sale_timesheet_enterprise.timesheet_tip_3
+msgid ""
+"It's part of the job to search for information. A customer can't expect you "
+"to know everything on the spot. These hours should also be billable."
+msgstr "搜尋資訊是工作的一部份。客戶不應指望你能夠即場知道所有事情。這些時間也應該收費。"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_account_move_line
+msgid "Journal Item"
+msgstr "日記賬項目"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_hr_timesheet_tip__write_uid
+msgid "Last Updated by"
+msgstr "最後更新者"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_hr_timesheet_tip__write_date
+msgid "Last Updated on"
+msgstr "最後更新於"
+
+#. module: sale_timesheet_enterprise
+#: model:res.groups,name:sale_timesheet_enterprise.group_use_timesheet_leaderboard
+msgid "Leaderboard"
+msgstr "排行榜"
+
+#. module: sale_timesheet_enterprise
+#. odoo-python
+#: code:addons/sale_timesheet_enterprise/models/res_company.py:0
+#: model:hr.timesheet.tip,name:sale_timesheet_enterprise.timesheet_tip_4
+#, python-format
+msgid "Make it a habit to record timesheets every day."
+msgstr "養成每天記錄工時表的習慣。"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.timesheet_view_grid_by_invoice_type
+msgid "Month"
+msgstr "月"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.actions.act_window,help:sale_timesheet_enterprise.hr_timesheet_tip_action
+msgid "Motivate employees to fill timesheets with these tips."
+msgstr "運用這些提示，鼓勵員工填寫工時表。"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.actions.act_window,help:sale_timesheet_enterprise.hr_timesheet_tip_action
+msgid "No tips found. Let's create one!"
+msgstr "未找到小費。讓我們建立一個吧！"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_project_task__portal_effective_hours
+msgid "Portal Effective Hours"
+msgstr "客戶頁面有效工時"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_project_task__portal_progress
+msgid "Portal Progress"
+msgstr "客戶頁面進度"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_project_task__portal_remaining_hours
+msgid "Portal Remaining Hours"
+msgstr "客戶頁面剩餘工時"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_project_task__portal_subtask_effective_hours
+msgid "Portal Subtask Effective Hours"
+msgstr "客戶頁面子任務有效工時"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_project_task__portal_total_hours_spent
+msgid "Portal Total Hours Spent"
+msgstr "客戶頁面總工作時數"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.project_sharing_inherit_project_task_view_tree
+msgid "Progress"
+msgstr "專案進度"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_project_project
+msgid "Project"
+msgstr "專案"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.xml:0
+#, python-format
+msgid "Record timesheets to determine your billing rate!"
+msgstr "記錄工時表，以確定收費率。"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.xml:0
+#, python-format
+msgid "Record timesheets to earn your rank!"
+msgstr "記錄工時表，以贏取排名！"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.project_sharing_inherit_project_task_view_tree
+msgid "Remaining Hours"
+msgstr "剩餘時數"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "銷售訂單明細"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.res_config_settings_view_form
+msgid ""
+"Set a target billing rate for your employees. If their current rate falls "
+"below the target, it will be highlighted in red."
+msgstr "為員工設立目標收費率。如果他們目前的收費率低於目標值，會以紅色突出顯示。"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.res_config_settings_view_form
+msgid "Set employee billing time targets"
+msgstr "設立員工收費工時目標"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.xml:0
+#, python-format
+msgid "Show less"
+msgstr "顯示部分"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.xml:0
+#, python-format
+msgid "Show more"
+msgstr "顯示更多"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_res_config_settings__group_use_timesheet_leaderboard
+msgid "Show the leaderboard on My Timesheets view"
+msgstr "在「我的工時表」檢視畫面顯示排行榜"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_res_config_settings__billing_rate_target
+msgid "Target"
+msgstr "目標"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_project_task
+msgid "Task"
+msgstr "任務"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.constraint,message:sale_timesheet_enterprise.constraint_hr_employee_check_billable_time_target
+msgid "The billable time target cannot be negative."
+msgstr "收費工時目標不可為負數。"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.constraint,message:sale_timesheet_enterprise.constraint_res_company_check_billing_rate
+msgid "The billing rate target percentage must be between 0 and 100."
+msgstr "收費率目標百分比，必須介乎 0 至 100 之間。"
+
+#. module: sale_timesheet_enterprise
+#. odoo-python
+#: code:addons/sale_timesheet_enterprise/models/project_task.py:0
+#, python-format
+msgid ""
+"This Sale Order Item doesn't have a target value of planned hours. Planned "
+"hours :"
+msgstr "此銷售訂單項目沒有預算工時的目標值。 預算工時："
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.xml:0
+#, python-format
+msgid "This month"
+msgstr "本月"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_project_task__portal_subtask_effective_hours
+msgid "Time spent on the sub-tasks (and their own sub-tasks) of this task."
+msgstr "在此任務的子任務（以及他們自己的子任務）上花費的時間。"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_project_task__portal_effective_hours
+msgid "Time spent on this task, excluding its sub-tasks."
+msgstr "花費在此任務上的時間，不包括其子任務。"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_project_task__portal_total_hours_spent
+msgid "Time spent on this task, including its sub-tasks."
+msgstr "花費在此任務上的時間，包括其子任務。"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.timesheet_view_grid_by_invoice_type
+msgid "Timesheets"
+msgstr "工時表"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_res_config_settings__invoiced_timesheet
+msgid "Timesheets Invoicing"
+msgstr "工時表開立發票"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_hr_timesheet_tip
+msgid "Timesheets Leaderboard Tip"
+msgstr "工時表排行榜小費"
+
+#. module: sale_timesheet_enterprise
+#: model:hr.timesheet.tip,name:sale_timesheet_enterprise.timesheet_tip_1
+msgid ""
+"Timesheets are the lifeblood of our company; they have a direct impact on "
+"revenues."
+msgstr "工時表是公司的命脈，對收入有直接影響。"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.res_config_settings_view_form
+msgid "Timesheets taken into account when invoicing your time"
+msgstr "為您的耗時開立憑單時考慮的工時表"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_hr_timesheet_tip__name
+msgid "Tip Name"
+msgstr "小費名稱"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.xml:0
+#, python-format
+msgid "Tip of the day"
+msgstr "今日小提示"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.actions.act_window,name:sale_timesheet_enterprise.hr_timesheet_tip_action
+#: model:ir.ui.menu,name:sale_timesheet_enterprise.hr_timesheet_menu_configuration_tips
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.hr_timesheet_tip_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.hr_timesheet_tip_view_tree
+msgid "Tips"
+msgstr "小費"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.project_sharing_inherit_project_task_view_tree
+msgid "Total Hours"
+msgstr "總時數"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.js:0
+#, python-format
+msgid "Total Time Leaderboard"
+msgstr "總工時排行榜"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_project_task__portal_remaining_hours
+msgid ""
+"Total remaining time, can be re-estimated periodically by the assignee of "
+"the task."
+msgstr "總剩餘時間，任務執行者可定期重估。"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.xml:0
+#, python-format
+msgid "Total:"
+msgstr "總計:"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.js:0
+#, python-format
+msgid "Total: %(totalTime)s"
+msgstr "總計：%(totalTime)s"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields.selection,name:sale_timesheet_enterprise.selection__res_config_settings__invoiced_timesheet__approved
+msgid "Validated timesheets only"
+msgstr "只限已驗證工時表"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.timesheet_view_grid_by_invoice_type
+msgid "Week"
+msgstr "星期"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_res_config_settings__invoiced_timesheet
+msgid ""
+"With the 'all recorded timesheets' option, all timesheets will be invoiced without distinction, even if they haven't been validated. Additionally, all timesheets will be accessible in your customers' portal. \n"
+"When you choose the 'validated timesheets only' option, only the validated timesheets will be invoiced and appear in your customers' portal."
+msgstr ""
+"若選用「所有已記錄工時表」選項，所有工時表都會開立發票，不加區別，即使尚未驗證的工時表亦如是。此外，客戶將可在客戶頁面存取所有工時表資料。\n"
+"若選擇「只限已驗證工時表」選項，只有已通過驗證的工時表才會開立發票及顯示在客戶頁面。"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.hr_timesheet_tip_view_tree
+msgid "e.g. Make it a habit to record timesheets every day."
+msgstr "例：養成每天記錄工時表的習慣。"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.xml:0
+#, python-format
+msgid "o_timesheet_leaderboard_confetti"
+msgstr "o_timesheet_leaderboard_confetti"

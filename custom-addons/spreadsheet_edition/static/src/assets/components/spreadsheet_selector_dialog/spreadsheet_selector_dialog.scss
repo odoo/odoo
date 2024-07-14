@@ -1,0 +1,111 @@
+.o_spreadsheet_selector_dialog {
+    .o-sp-dialog-meta-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding-bottom: 20px;
+        .o-sp-dialog-meta-name {
+            display: flex;
+            width: 45%;
+
+            .o-sp-dialog-meta-name-label {
+                flex-shrink: 0;
+                padding-right: 5px;
+            }
+        }
+        .o-sp-dialog-meta-threshold {
+            display: flex;
+            width: 45%;
+
+            .o-sp-dialog-meta-threshold-input {
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+
+            .o-sp-dialog-meta-threshold-text {
+                flex-shrink: 0;
+            }
+        }
+    }
+
+    .o-sp-dialog-cp {
+        padding-top: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        .o-sp-searchview {
+            width: 50%;
+            border-bottom: 1px solid $o-gray-300;
+            display: flex;
+            flex-direction: row;
+
+            .o-sp-searchview-input {
+                border: none;
+            }
+
+            .o-sp-searchview-icon {
+                padding-top: 8px;
+            }
+        }
+    }
+
+    .o-sp-dialog-items {
+        display: flex;
+        flex-flow: row wrap;
+        overflow-y: auto;
+        overflow-x: hidden;
+        max-height: 60vh;
+
+
+        .o-sp-dialog-item {
+            flex: 1 1 0;
+            min-width: 150px;
+            margin: 15px;
+
+            &.o-sp-dialog-ghost-item{
+                margin: 0px 15px;
+            }
+
+            .o-sp-dialog-item-img {
+                max-height: 150px;
+                overflow: hidden;
+                border: 1px solid #ced4da;
+                width: 100%;
+
+                &:focus {
+                    outline: none;
+                }
+
+                &.selected {
+                    border-color: $o-brand-primary;
+                    box-shadow: 0 0 0 2px $o-brand-primary;
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    border-color: $o-brand-primary;
+                    box-shadow: 0 0 0 2px $o-brand-primary;
+                }
+
+                img, &.o-sp-dialog-no-preview{
+                    width: 100%;
+                    aspect-ratio: 1/1;
+                }
+            }
+
+            &.o-sp-dialog-item-blank {
+                img {
+                    padding: 1.5rem;
+                }
+            }
+
+            .o-sp-dialog-item-label {
+                margin-top: 0.25rem;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                user-select: none;
+            }
+        }
+    }
+}

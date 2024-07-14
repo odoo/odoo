@@ -1,0 +1,1351 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_fr_reports
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.1alpha1+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-12-29 08:06+0000\n"
+"PO-Revision-Date: 2022-12-29 08:06+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/wizard/l10n_fr_send_vat_report.py:0
+#, python-format
+msgid "%s has an invalid siret: %s."
+msgstr "%s comporte un siret invalide: %s."
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/wizard/l10n_fr_send_vat_report.py:0
+#, python-format
+msgid "%s is required on %s"
+msgstr "%s est requis sur %s"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.p_n_l_1_resultat_exploitation
+msgid "1-Operating result (I-II)"
+msgstr "1-Résultat d'exploitation (I-II)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.p_n_l_2_resultat_financier_v_vi
+msgid "2.financial result (V-VI)"
+msgstr "2.Résultat financier (V-VI)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.p_n_l_3_resultat_courant_avant_impots_i_ii_iii_iv_v_vi
+msgid "3.current result before taxes(I-II+III-IV+V-VI)"
+msgstr "3.Résultat courant avant impôts(I-II+III-IV+V-VI)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.p_n_l_4_resultat_exceptionnel_vii_viii
+msgid "4. extraordinary result (VII-VIII)"
+msgstr "4.Résultat exceptionnel (VII-VIII)"
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "<b> The report has been fully processed by the recipient </b>"
+msgstr "<b> Le rapport a été entièrement traité par le destinataire. </b>"
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "<b> The report has been rejected </b>"
+msgstr "<b> Le rapport a été rejeté </b>"
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "<b> Warning, the report has not been fully processed by the recipient yet </b>"
+msgstr "<b> Attention, le rapport n'a pas encore été entièrement traité par le destinataire. </b>"
+
+#. module: l10n_fr_reports
+#: model_terms:ir.ui.view,arch_db:l10n_fr_reports.inherit_view_account_journal_dashboard_kanban
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                        Tax export(s) rejected"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                        Export(s) de taxes rejeté(s)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_bilan_actif_passif_total
+msgid "ACTIVE - PASSIVE"
+msgstr "ACTIF - PASSIF"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields.selection,name:l10n_fr_reports.selection__account_report_async_export__state__accepted
+#: model_terms:ir.ui.view,arch_db:l10n_fr_reports.view_account_report_async_export_search
+msgid "Accepted"
+msgstr "Accepté"
+
+#. module: l10n_fr_reports
+#: model:ir.model,name:l10n_fr_reports.model_account_report_async_export
+msgid "Account Report Async Export"
+msgstr ""
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,help:l10n_fr_reports.field_res_config_settings__l10n_fr_rounding_difference_loss_account_id
+msgid "Account used for losses from rounding the lines of French tax reports"
+msgstr "Compte à utiliser pour les écarts (pertes) causés par l'arrondi dans les rapports de taxe français"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,help:l10n_fr_reports.field_res_config_settings__l10n_fr_rounding_difference_profit_account_id
+msgid "Account used for profits from rounding the lines of French tax reports"
+msgstr "Compte à utiliser pour les écarts (gains) causés par l'arrondi dans les rapports de taxe français"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_04_0_fr_bilan_actif
+msgid "Adjustment account"
+msgstr "Compte de regularisation"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_1_0_7_fr_bilan_actif
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_2_0_6_fr_bilan_actif
+msgid "Advance payments"
+msgstr "Avances et acomptes"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_3_1_7_fr_bilan_actif
+msgid "Advances and deposits paid on orders"
+msgstr "Avances et acomptes versés sur commandes"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_05_0_5_fr_bilan_passif
+msgid "Advances and deposits received on orders in progress"
+msgstr "Avances et acomptes reçus sur commandes en cours"
+
+#. module: l10n_fr_reports
+#: model:account.report.column,name:l10n_fr_reports.account_financial_report_l10n_fr_bilan_column01
+msgid "Amort. & Prov"
+msgstr "Amort. & Prov"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_g
+msgid "Amortization, depreciation and operating provisions (g)"
+msgstr "Dotations aux amort., dépréciations et provisions d'exploitation (g)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_0_1_fr_bilan_passif
+msgid "Amount of equity issues"
+msgstr "Montant des émissions de titres participatifs"
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "An error has occurred when trying to verify your subscription."
+msgstr "Une erreur s'est produite lors de la vérification de votre abonnement."
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "An error occurred while getting the attachments: "
+msgstr "Une erreur s'est produite lors de l'obtention des pièces jointes :"
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "An error occurred while getting the declaration details: "
+msgstr "Une erreur s'est produite lors de l'obtention des détails de la déclaration :"
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "An error occurred while getting the interchange details: "
+msgstr "Une erreur s'est produite lors de l'obtention des détails de l'interchange :"
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "An error occurred while trying to send the document: "
+msgstr "Une erreur s'est produite lors de l'envoi du document :"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__attachment_ids
+msgid "Attachment"
+msgstr "Pièce jointe"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_01_3_2_fr_bilan_actif
+msgid "Availability"
+msgstr "Disponibilités"
+
+#. module: l10n_fr_reports
+#: model:account.report.column,name:l10n_fr_reports.account_financial_report_l10n_fr_cdr_column
+#: model:account.report.column,name:l10n_fr_reports.l10n_fr_pl_imb_column_balance
+msgid "Balance"
+msgstr "Balance"
+
+#. module: l10n_fr_reports
+#: model:account.report,name:l10n_fr_reports.account_financial_report_l10n_fr_bilan
+msgid "Balance sheet"
+msgstr "Bilan comptable"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_05_0_3_fr_bilan_passif
+msgid "Borrowings and debts with credit institutions"
+msgstr "Emprunts et dettes auprès des établissements de crédit"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_05_0_4_fr_bilan_passif
+msgid "Borrowings and other financial liabilities"
+msgstr "Emprunts et dettes financières diverses"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_2_0_2_fr_bilan_actif
+msgid "Buildings"
+msgstr "Constructions"
+
+#. module: l10n_fr_reports
+#: model_terms:ir.ui.view,arch_db:l10n_fr_reports.view_l10n_fr_reports_report_form
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrp4
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_5
+msgid "Capitalized production"
+msgstr "Production immobilisée"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc2
+msgid "Change in inventories (goods)"
+msgstr "Variation de stocks (marchandises)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc4
+msgid "Changes in inventories (raw materials and supplies)"
+msgstr "Variations de stocks (matières premières et approvisionnements)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_01_2_fr_bilan_actif
+msgid "Claims"
+msgstr "Créances"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_1_0_4_fr_bilan_actif
+msgid "Commercial fund"
+msgstr "Fonds commercial"
+
+#. module: l10n_fr_reports
+#: model:ir.model,name:l10n_fr_reports.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_1_0_3_fr_bilan_actif
+msgid "Concessions, patents, licences, trademarks, rights and similar assets"
+msgstr "Concessions, brevets, licences, marques, droits et valeurs similaires"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_0_2_fr_bilan_passif
+msgid "Conditional advances"
+msgstr "Avances conditionnées"
+
+#. module: l10n_fr_reports
+#: model:ir.model,name:l10n_fr_reports.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paramètres de configuration"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_III
+msgid "Consumption during the year from third parties (III)"
+msgstr "Consommations de l'exercice en provenance de tiers (III)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_05_0_1_fr_bilan_passif
+msgid "Convertible bonds"
+msgstr "Emprunts obligataires convertibles"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__create_uid
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_l10n_fr_reports_send_vat_report__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__create_date
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_l10n_fr_reports_send_vat_report__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_0_fr_bilan_actif
+msgid "Current assets"
+msgstr "Actif circulant"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_VII
+msgid "Current result before tax VII (VI+i+j-k-l)"
+msgstr "Résultat courant avant impôt VII (VI+i+j-k-l)"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields.selection,name:l10n_fr_reports.selection__account_report_async_export__recipient__dgi_edi_tva
+#: model:ir.model.fields.selection,name:l10n_fr_reports.selection__l10n_fr_reports_send_vat_report__recipient__dgi_edi_tva
+msgid "DGFiP"
+msgstr ""
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__date_from
+msgid "Date From"
+msgstr ""
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__date_to
+msgid "Date To"
+msgstr ""
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_05_0_fr_bilan_passif
+msgid "Debts"
+msgstr "Dettes"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_05_0_8_fr_bilan_passif
+msgid "Debts on fixed assets and related accounts"
+msgstr "Dettes sur immobilisations et comptes rattachés"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__declaration_uid
+msgid "Declaration Uid"
+msgstr ""
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_04_01_2_fr_bilan_actif
+msgid "Deferred charges (III)"
+msgstr "Charges à répartir sur plusieurs exercices (III)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_05_1_0_fr_bilan_passif
+msgid "Deferred income"
+msgstr "Produits constatés d'avance"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__deposit_uid
+msgid "Deposit Uid"
+msgstr ""
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc17
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc23
+msgid "Depreciation and provisions"
+msgstr "Dotations aux amortissements et provisions"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc13
+msgid "Depreciation and provisions on current assets: provisions"
+msgstr "Dotations aux amortissements et aux provisions sur actif circulant : dotations aux provisions"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc11
+msgid "Depreciation and provisions on fixed assets: depreciation allowances"
+msgstr "Dotations aux amortissements et aux provisions sur immobilisations : dotations aux amortissements"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc12
+msgid "Depreciation and provisions on fixed assets: provisions"
+msgstr "Dotations aux amortissements et aux provisions sur immobilisations : dotations aux provisions"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc14
+msgid "Depreciation, amortisation and provisions for liabilities and charges: provisions"
+msgstr "Dotations aux amortissements et aux provisions pour risques et charges: dotations aux provisions"
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/tax_report.py:0
+#, python-format
+msgid "Difference from rounding taxes"
+msgstr "Écart d'arrondi de taxe"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__display_name
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_l10n_fr_reports_send_vat_report__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/tax_report.py:0
+#, python-format
+msgid "EDI VAT"
+msgstr "EDI TVA"
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_journal_dashboard.py:0
+#: model:ir.actions.act_window,name:l10n_fr_reports.action_account_report_async_export
+#: model:ir.ui.menu,name:l10n_fr_reports.menu_action_account_report_async_export
+#, python-format
+msgid "EDI exports"
+msgstr "Exports EDI"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_o
+msgid "Employee participation (o)"
+msgstr "Participation des salariés (o)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_fr_cdr24
+msgid "Employee profit-sharing (IX)"
+msgstr "Participation des salariés aux résultats de l'entreprise (IX)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_0_fr_bilan_passif
+msgid "Equity"
+msgstr "Capitaux Propres"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_0_5_fr_bilan_passif
+msgid "Equity difference"
+msgstr "Écart d'équivalence"
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/wizard/l10n_fr_send_vat_report.py:0
+#, python-format
+msgid "Error occured while sending the report to the government : '%s'"
+msgstr "Une erreur s'est produite lors de l'envoi du rapport au gouvernement: '%s'"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_1_0_1_fr_bilan_actif
+msgid "Establishment costs"
+msgstr "Frais d'établissement"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_fr_cdr_char_exc
+msgid "Exceptional expenses (VIII)"
+msgstr "Charges exceptionnels (VIII)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_n
+msgid "Exceptional expenses (n)"
+msgstr "Charges exceptionnelles (n)"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields.selection,name:l10n_fr_reports.selection__account_report_async_export__recipient__cec_edi_tva
+#: model:ir.model.fields.selection,name:l10n_fr_reports.selection__l10n_fr_reports_send_vat_report__recipient__cec_edi_tva
+msgid "Expert Accountant"
+msgstr "Expert Comptable"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.p_n_l_produits_exceptionnels
+msgid "Extraordinary income"
+msgstr "Produits exceptionnels"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_fr_cdr_prod_exc
+msgid "Extraordinary income (VII)"
+msgstr "Produits exceptionnels (VII)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_m
+msgid "Extraordinary income (m)"
+msgstr "Produits exceptionnels (m)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_VIII
+msgid "Extraordinary result VIII (m-n)"
+msgstr "Résultat exceptionnel VIII (m-n)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_3_fr_bilan_actif
+msgid "Financial assets"
+msgstr "Immobilisations financières"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_fr_cdr_char_fin
+msgid "Financial charges (VI)"
+msgstr "Charges financières (VI)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_l
+msgid "Financial charges (l)"
+msgstr "Charges financières (l)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_fr_cdr_prod_fin
+msgid "Financial income (V)"
+msgstr "Produits financiers (V)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_j
+msgid "Financial income (j)"
+msgstr "Produits financiers (j)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_0_fr_bilan_actif
+msgid "Fixed assets"
+msgstr "Actif immobilisé"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_3_0_3_fr_bilan_actif
+msgid "Fixed assets of the portfolio activity"
+msgstr "Titres immobilisés de l'activité de portefeuille"
+
+#. module: l10n_fr_reports
+#: model:ir.model,name:l10n_fr_reports.model_l10n_fr_report_handler
+msgid "French Report Custom Handler"
+msgstr ""
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_3_1_5_fr_bilan_actif
+msgid "Goods"
+msgstr "Marchandises"
+
+#. module: l10n_fr_reports
+#: model:account.report.column,name:l10n_fr_reports.account_financial_report_l10n_fr_bilan_column00
+msgid "Gross"
+msgstr "Brut"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_V
+msgid "Gross operating surplus V (IV+a-b-c)"
+msgstr "Excédent Brut d'Exploitation V (IV+a-b-c)"
+
+#. module: l10n_fr_reports
+#: model_terms:ir.ui.view,arch_db:l10n_fr_reports.view_account_report_async_export_search
+msgid "Group By"
+msgstr ""
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__id
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_l10n_fr_reports_send_vat_report__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_fr_reports
+#: model:account.report,name:l10n_fr_reports.l10n_fr_pl_imb_account_financial_report
+msgid "IMB - Intermediate management balances"
+msgstr "SIG - Soldes intermédiaires de Gestion"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_fr_cdr25
+msgid "Income tax (X)"
+msgstr "Impôts sur les bénéfices (X)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_p
+msgid "Income tax (p)"
+msgstr "Impôt sur les bénéfices (p)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_1_0_fr_bilan_actif
+msgid "Intangible assets"
+msgstr "Immobilisations incorporelles"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_1_0_6_fr_bilan_actif
+msgid "Intangible assets in progress"
+msgstr "Immobilisations incorporelles en cours"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc18
+msgid "Interest and similar charges"
+msgstr "Intérêts et charges assimilées"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_3_1_3_fr_bilan_actif
+msgid "Intermediate and finished products"
+msgstr "Produits intermédiaires et finis"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_0_8_fr_bilan_passif
+msgid "Investment grants"
+msgstr "Subventions d'investissement"
+
+#. module: l10n_fr_reports
+#: model:ir.model,name:l10n_fr_reports.model_account_journal
+msgid "Journal"
+msgstr ""
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_2_0_1_fr_bilan_actif
+msgid "Land"
+msgstr "Terrains"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__write_uid
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_l10n_fr_reports_send_vat_report__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__write_date
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_l10n_fr_reports_send_vat_report__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_0_1_fr_bilan_passif
+msgid "Legal reserve"
+msgstr "Réserve légale"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_0_3_fr_bilan_passif
+msgid "Liaison accounts"
+msgstr "Comptes de liaison"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_04_01_3_fr_bilan_actif
+msgid "Loan repayment premiums (IV)"
+msgstr "Primes de remboursement des emprunts (IV)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_3_0_5_fr_bilan_actif
+msgid "Loans"
+msgstr "Prêts"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.p_n_l_pertes_supportee_ou_benefice_transfere_iv
+msgid "Losses incurred or profit transferred (IV)"
+msgstr "Pertes supportée ou bénéfice transféré (IV)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_01_3_1_fr_bilan_actif
+msgid "Marketable securities"
+msgstr "Valeurs mobilières de placement"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__message
+msgid "Message"
+msgstr ""
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__name
+msgid "Name"
+msgstr ""
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc19
+msgid "Negative exchange rate differences"
+msgstr "Différences négatives de change"
+
+#. module: l10n_fr_reports
+#: model:account.report.column,name:l10n_fr_reports.account_financial_report_l10n_fr_bilan_column02
+msgid "Net"
+msgstr "Net"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc20
+msgid "Net expenses on disposals of investment property"
+msgstr "Charges nettes sur cessions de valeurs immobilières de placement"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrp14
+msgid "Net income from sales of marketable securities"
+msgstr "Produits nets sur cessions de valeurs mobilières de placement"
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "No declaration_uid was provided."
+msgstr "Aucun declaration_uid n'a été fourni."
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "No deposit_uid was provided."
+msgstr "Aucun deposit_uid n'a été fourni."
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields.selection,name:l10n_fr_reports.selection__account_report_async_export__recipient__oga_edi_tva
+#: model:ir.model.fields.selection,name:l10n_fr_reports.selection__l10n_fr_reports_send_vat_report__recipient__oga_edi_tva
+msgid "OGA"
+msgstr ""
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrp9
+msgid "Of participations"
+msgstr "De participations"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_fr_off_sheet
+msgid "Off-balance sheet accounts"
+msgstr "Comptes hors bilan"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc22
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrp16
+msgid "On capital transactions"
+msgstr "Sur opérations au capital"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc21
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrp15
+msgid "On management operations"
+msgstr "Sur opérations de gestion"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.p_n_l_charges_fiducie
+#: model:account.report.line,name:l10n_fr_reports.p_n_l_produits_fiducie
+msgid "On trust transactions"
+msgstr "Sur opérations liées à la fiducie"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_f
+msgid "Operating expense transfers (f)"
+msgstr "Transferts de charges d'exploitation (f)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_fr_cdr_char_exp
+msgid "Operating expenses (II)"
+msgstr "Charges d'exploitation (II)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_fr_cdr_prod_exp_A
+msgid "Operating income (I)"
+msgstr "Produits d'exploitation (I)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_VI
+msgid "Operating result VI (V+d+e+f-g-h)"
+msgstr "Résultat d'Exploitation VI (V+d+e+f-g-h)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrp5
+msgid "Operating subsidies"
+msgstr "Subventions d'exploitation"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_a
+msgid "Operating subsidies (a)"
+msgstr "Subventions d'exploitation (a)"
+
+#. module: l10n_fr_reports
+#: model_terms:ir.ui.view,arch_db:l10n_fr_reports.view_l10n_fr_reports_report_form
+msgid "Options"
+msgstr ""
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_3_0_6_fr_bilan_actif
+msgid "Other"
+msgstr "Autres"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_05_0_2_fr_bilan_passif
+msgid "Other bonds"
+msgstr "Autres emprunts obligataires"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_05_0_9_fr_bilan_passif
+msgid "Other debts"
+msgstr "Autres dettes"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_h
+msgid "Other expenses (h)"
+msgstr "Autres charges (h)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_3_0_4_fr_bilan_actif
+msgid "Other fixed assets"
+msgstr "Autres titres immobilisés"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrp11
+msgid "Other interest and similar income"
+msgstr "Autres intérêts et produits assimilés"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_d
+msgid "Other operating income (d)"
+msgstr "Autre produits d'exploitation (d)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_0_fr_bilan_passif
+msgid "Other own funds"
+msgstr "Autres fonds propres"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrp7
+msgid "Other products"
+msgstr "Autres produits"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc5
+msgid "Other purchases and external charges"
+msgstr "Autres achats et charges externes"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_01_2_2_fr_bilan_actif
+msgid "Other receivables"
+msgstr "Autres créances"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_0_5_fr_bilan_passif
+msgid "Other reserves"
+msgstr "Autres réserves"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrp10
+msgid "Other securities and receivables in fixed assets"
+msgstr "D'autres valeurs mobilières et créances de l'actif immobilisé"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_5_2_fr_bilan_actif
+msgid "Other titles"
+msgstr "Autres titres"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_1_0_5_fr_bilan_actif
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_2_0_4_fr_bilan_actif
+msgid "Others"
+msgstr "Autres"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_5_1_fr_bilan_actif
+msgid "Own shares"
+msgstr "Actions propres"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_c
+msgid "Personnel costs (c)"
+msgstr "Charges de personnel (c)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrp13
+msgid "Positive exchange rate differences"
+msgstr "Différences positives de change"
+
+#. module: l10n_fr_reports
+#: model_terms:ir.ui.view,arch_db:l10n_fr_reports.res_config_settings_view_form
+msgid "Post difference from rounding tax closing entries in:"
+msgstr "Comptabiliser les écarts d'arrondi d'écritures de clôture TVA dans:"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_04_01_1_fr_bilan_actif
+msgid "Prepaid expenses"
+msgstr "Charges constatés d'avance"
+
+#. module: l10n_fr_reports
+#: model_terms:ir.ui.view,arch_db:l10n_fr_reports.view_account_report_async_export_form
+msgid "Process now"
+msgstr "Traiter maintenant"
+
+#. module: l10n_fr_reports
+#: model:ir.actions.server,name:l10n_fr_reports.ir_cron_l10n_fr_reports_ir_actions_server
+msgid "Process the pending async exports"
+msgstr "Traiter les exports asynchrones en attente"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_II
+msgid "Production for the year (II)"
+msgstr "Production de l'exercice (II)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_3
+msgid "Production sold"
+msgstr "Production vendue"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrp2
+msgid "Production sold (goods and services)"
+msgstr "Production vendue (biens et service)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrp8
+msgid "Profit allocated or loss transferred (III)"
+msgstr "Bénéfice attribué ou perte de transférée (III)"
+
+#. module: l10n_fr_reports
+#: model:account.report,name:l10n_fr_reports.account_financial_report_l10n_fr_cdr
+#: model:ir.actions.client,name:l10n_fr_reports.account_financial_report_l10n_fr_cdr_action
+msgid "Profit and loss account"
+msgstr "Compte de résultats"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_fr_cdr_tot
+msgid "Profit or loss"
+msgstr "Bénéfice ou perte"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_2_fr_bilan_actif
+msgid "Property, plant and equipment"
+msgstr "Immobilisations corporelles"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_2_0_5_fr_bilan_actif
+msgid "Property, plant and equipment in progress"
+msgstr "Immobilisations corporelles en cours"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_04_0_fr_bilan_passif
+msgid "Provisions"
+msgstr "Provisions"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_04_0_2_fr_bilan_passif
+msgid "Provisions for charges"
+msgstr "Provisions pour charges"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_04_0_1_fr_bilan_passif
+msgid "Provisions for risks"
+msgstr "Provisions pour risques"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_2
+msgid "Purchase cost of goods sold"
+msgstr "Cout d'achat des marchandises vendues"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc1
+msgid "Purchases of goods"
+msgstr "Achats de marchandise"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc3
+msgid "Purchases of raw materials and other supplies"
+msgstr "Achats de matières premières et autres approvisionnements"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_3_1_1_fr_bilan_actif
+msgid "Raw materials and other supplies"
+msgstr "Matières premières et autres approvisionnements"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_3_0_2_fr_bilan_actif
+msgid "Receivables from participating interests"
+msgstr "Créances rattachées à des participations"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__recipient
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_l10n_fr_reports_send_vat_report__recipient
+msgid "Recipient"
+msgstr "Destinataire"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_0_9_fr_bilan_passif
+msgid "Regulated provisions"
+msgstr "Provisions réglementées"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_0_2_fr_bilan_passif
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_0_4_fr_bilan_passif
+msgid "Regulated reserves"
+msgstr "Réserves réglementées"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields.selection,name:l10n_fr_reports.selection__account_report_async_export__state__rejected
+#: model_terms:ir.ui.view,arch_db:l10n_fr_reports.view_account_report_async_export_search
+msgid "Rejected"
+msgstr "Rejeté"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__report_id
+msgid "Report"
+msgstr "Rapport"
+
+#. module: l10n_fr_reports
+#: model_terms:ir.ui.view,arch_db:l10n_fr_reports.view_account_report_async_export_tree
+msgid "Reports"
+msgstr "Rapports"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_1_0_2_fr_bilan_actif
+msgid "Research and development costs"
+msgstr "Frais de recherche et de développement"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_0_fr_bilan_passif
+msgid "Reserves"
+msgstr "Réserves"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_0_7_fr_bilan_passif
+msgid "Result for the year"
+msgstr "Résultat de l'exercice"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_IX
+msgid "Result for the year IX (VII+VIII-o-p)"
+msgstr "Résultat de l'exercice IX (VII+VIII-o-p)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_0_6_fr_bilan_passif
+msgid "Retained earnings"
+msgstr "Report à nouveau"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_0_4_fr_bilan_passif
+msgid "Revaluation differences"
+msgstr "Écarts de réévaluation"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_e
+msgid "Reversals of depreciations and operating provisions (e)"
+msgstr "Reprises sur dépreciations et provisions d'exploitations (e)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrp6
+msgid "Reversals of provisions (and depreciation), expense transfers"
+msgstr "Reprises sur provisions (et amortissements), transfert de charges"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrp12
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrp17
+msgid "Reversals of provisions and expense transfers"
+msgstr "Reprises sur provisions et transferts de charges"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_1
+msgid "Sale of goods"
+msgstr "Ventes de marchandises"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrp1
+msgid "Sales of goods"
+msgstr "Ventes de marchandises"
+
+#. module: l10n_fr_reports
+#: model_terms:ir.ui.view,arch_db:l10n_fr_reports.view_l10n_fr_reports_report_form
+msgid "Send VAT Report"
+msgstr "Envoyer le rapport de TVA"
+
+#. module: l10n_fr_reports
+#: model:ir.model,name:l10n_fr_reports.model_l10n_fr_reports_send_vat_report
+msgid "Send VAT Report Wizard"
+msgstr "Wizard d'envoi du rapport de TVA"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields.selection,name:l10n_fr_reports.selection__account_report_async_export__state__sent
+#: model_terms:ir.ui.view,arch_db:l10n_fr_reports.view_account_report_async_export_search
+msgid "Sent"
+msgstr "Envoyé"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_k
+msgid "Share of profit from joint operations (k)"
+msgstr "Quote-part de résultat sur opérations faites en commun (k)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_fr_cdr16
+msgid "Share of profit on joint operations"
+msgstr "Quotes-part de résultat sur opérations faites en commun"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_i
+msgid "Share of profit on joint operations (i)"
+msgstr "Quote-part de résultat sur opérations faites en commun (i)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_0_1_fr_bilan_passif
+msgid "Share or individual capital"
+msgstr "Capital social ou individuel"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_0_3_fr_bilan_passif
+msgid "Share premium, merger premium, contribution premium"
+msgstr "Primes d'émission, de fusion, d'apport"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_3_0_1_fr_bilan_actif
+msgid "Shareholdings"
+msgstr "Participations"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc10
+msgid "Social security charges"
+msgstr "Charges sociales"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__state
+#: model_terms:ir.ui.view,arch_db:l10n_fr_reports.view_account_report_async_export_search
+msgid "State"
+msgstr "Etat"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_0_3_fr_bilan_passif
+msgid "Statutory or contractual reservations"
+msgstr "Réserves statutaires ou contractuelles"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__step_1_logs
+msgid "Step 1 Logs"
+msgstr ""
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_account_report_async_export__step_2_logs
+msgid "Step 2 Logs"
+msgstr ""
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_01_1_fr_bilan_actif
+msgid "Stock in progress"
+msgstr "Stock en cours"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_4
+msgid "Stocked production"
+msgstr "Production stockée"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_3_1_4_fr_bilan_actif
+msgid "Stocks from fixed assets"
+msgstr "Stocks provenant d'immobilisations"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_3_1_6_fr_bilan_actif
+msgid "Stocks in transit"
+msgstr "Stocks en voie d'acheminement"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrp3
+msgid "Stored production"
+msgstr "Production Stockée"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_01_2_3_fr_bilan_actif
+msgid "Subscribed capital - called, not paid"
+msgstr "Capital souscrit - appelé , non versé"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_0_fr_bilan_actif
+msgid "Subscribed capital - uncalled"
+msgstr "Capital souscrit - non appelé"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc15
+msgid "Sundry expenses"
+msgstr "Charges diverses"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_fr_bilan_actif_total
+msgid "TOTAL ACTIVE (I + II + III + IV + V)"
+msgstr "TOTAL ACTIF (I + II + III + IV + V)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_fr_bilan_passif_total
+msgid "TOTAL PASSIVE (I + II + III + IV + V)"
+msgstr "TOTAL PASSIF (I + II + III + IV + V)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_05_0_7_fr_bilan_passif
+msgid "Tax and social security liabilities"
+msgstr "Dettes fiscales et sociales"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc8
+msgid "Taxes and duties"
+msgstr "Impôts et taxes"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_b
+msgid "Taxes and similar payments (b)"
+msgstr "Impots, taxes et versements assimilés (b)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_02_2_0_3_fr_bilan_actif
+msgid "Technical installations, equipment and tools"
+msgstr "Installations techniques,matériel et outillage"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_l10n_fr_reports_send_vat_report__test_interchange
+msgid "Test Interchange"
+msgstr "Interchange de test"
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "The structure of the xml document is invalid."
+msgstr "La structure du document xml n'est pas valide."
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/wizard/l10n_fr_send_vat_report.py:0
+#, python-format
+msgid "The tax report is empty."
+msgstr "Le rapport de taxes est vide."
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/wizard/l10n_fr_send_vat_report.py:0
+#, python-format
+msgid "The xml file generated contains an invalid character: '%s'"
+msgstr "Le fichier xml généré contient un caractère invalide: '%s'"
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "This declaration is unknown from Odoo."
+msgstr "Cette déclaration est inconnue d'Odoo."
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "This deposit is unknown from Odoo."
+msgstr "Ce dépôt est inconnu d'Odoo."
+
+#. module: l10n_fr_reports
+#: model_terms:ir.ui.view,arch_db:l10n_fr_reports.view_account_report_async_export_form
+msgid "This export will be processed asynchronously"
+msgstr "Cet export sera traité de manière asynchrone"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields.selection,name:l10n_fr_reports.selection__account_report_async_export__state__to_send
+#: model_terms:ir.ui.view,arch_db:l10n_fr_reports.view_account_report_async_export_search
+msgid "To send"
+msgstr "A envoyer"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_fr_cdr_char
+msgid "Total expenses (II+IV+VI+VIII+IX+X)"
+msgstr "Total des charges (II+IV+VI+VIII+IX+X)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_fr_cdr_prod
+msgid "Total income (I+III+V+VII)"
+msgstr "Total des produits (I+III+V+VII)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_I
+msgid "Trade margin (I)"
+msgstr "Marge commerciale (I)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_05_0_6_fr_bilan_passif
+msgid "Trade payables and related accounts"
+msgstr "Dettes fournisseurs et comptes rattachés"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_01_2_1_fr_bilan_actif
+msgid "Trade receivables and related accounts"
+msgstr "Clients et comptes rattachés"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_04_01_4_fr_bilan_actif
+msgid "Translation adjustment assets (V)"
+msgstr "Écarts de conversion actif (V)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_5_3_fr_bilan_actif
+msgid "Treasury instruments"
+msgstr "Instruments de trésorerie"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_01_0_2_fr_bilan_passif
+msgid "Trust funds"
+msgstr "Fonds fiduciaires"
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid ""
+"Unexpected response from proxy: '%s %s'.\n"
+"Please contact the support."
+msgstr ""
+"Réponse inattendue du proxy : '%s %s'.\n"
+"Veuillez contacter le support."
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "Unexpected result: the interchange should contain at most one declarationId."
+msgstr "Résultat inattendu : l'échange devrait contenir au plus un declarationId."
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "Unexpected result: the response should contain an interchange."
+msgstr "Résultat inattendu : la réponse devrait contenir un échange."
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "Unexpected result: the response should contain at most one interchange."
+msgstr "Résultat inattendu : la réponse devrait contenir au plus un interchange."
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_06_0_fr_bilan_passif
+msgid "Unrealized foreign exchange gains and losses (V)"
+msgstr "Écarts de conversion passif (V)"
+
+#. module: l10n_fr_reports
+#: model_terms:ir.ui.view,arch_db:l10n_fr_reports.view_account_report_async_export_form
+msgid "VAT Report"
+msgstr "Rapport de TVA"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_res_config_settings__l10n_fr_rounding_difference_loss_account_id
+msgid "VAT Rounding Loss Account"
+msgstr "Compte de pertes d'arrondi TVA"
+
+#. module: l10n_fr_reports
+#: model:ir.model.fields,field_description:l10n_fr_reports.field_res_config_settings__l10n_fr_rounding_difference_profit_account_id
+msgid "VAT Rounding Profit Account"
+msgstr "Compte de gains d'arrondi TVA"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.l10n_fr_pl_imb_IV
+msgid "Value Added IV (I+II-III)"
+msgstr "Valeur Ajoutée IV (I+II-III)"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_01_3_fr_bilan_actif
+msgid "Various"
+msgstr "Divers"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_fr_cdrc9
+msgid "Wages and salaries"
+msgstr "Salaires et traitements"
+
+#. module: l10n_fr_reports
+#: model:account.report.line,name:l10n_fr_reports.account_financial_report_line_03_3_1_2_fr_bilan_actif
+msgid "Work in progress [goods and services]"
+msgstr "En-cours de production [biens et services]"
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "You do not have an Odoo enterprise subscription."
+msgstr "Vous n'avez pas d'abonnement Odoo enterprise."
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "Your database is not used for a production environment."
+msgstr "Votre base de données n'est pas utilisée dans un environnement de production."
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "Your database is not yet activated."
+msgstr "Votre base de données n'est pas encore activée."
+
+#. module: l10n_fr_reports
+#. odoo-python
+#: code:addons/l10n_fr_reports/models/account_report_async_export.py:0
+#, python-format
+msgid "Your database uuid does not exist"
+msgstr "L'identifiant de votre base de données n'existe pas."

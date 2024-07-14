@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_consolidation.ConsolidationReportFilters" t-inherit="account_reports.AccountReportFiltersCustomizable">
+        <xpath expr="//div[@id='filter_extra_options']" position="before">
+            <!-- Comparison filter -->
+            <t t-if="controller.options.periods.length > 0">
+                <Dropdown togglerClass="'btn btn-secondary me-1'">
+                    <t t-set-slot="toggler">
+                        <span class="fa fa-bar-chart"/>Comparison: <t t-esc="selectedComparisonName"/>
+                    </t>
+
+                    <t t-foreach="controller.options.periods" t-as="period" t-key="period_index">
+                        <DropdownItem
+                            class="{ 'selected': controller.options.periods[period_index].selected }"
+                            onSelected="() => this.toggleFilter('periods.' + period_index + '.selected')"
+                        >
+                            <t t-esc="period.name"/>
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </t>
+
+            <!-- Journal filter -->
+            <t t-if="controller.options.consolidation_journals and !hasSelectedPeriod">
+                <Dropdown togglerClass="'btn btn-secondary me-1'">
+                    <t t-set-slot="toggler">
+                        <span class="fa fa-bar-book"/>Journals: <t t-esc="selectedJournalName"/>
+                    </t>
+
+                    <t t-foreach="controller.options.consolidation_journals" t-as="journal" t-key="journal_index">
+                        <DropdownItem
+                            class="{ 'selected': controller.options.consolidation_journals[journal_index].selected }"
+                            onSelected="() => this.toggleFilter('consolidation_journals.' + journal_index + '.selected')"
+                        >
+                            <t t-esc="journal.name"/>
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </t>
+        </xpath>
+
+        <!-- Extra options filter -->
+        <xpath expr="//div[@id='filter_extra_options']" position="replace">
+            <t t-call="account_consolidation.ConsolidationReportFilterExtraOptions"/>
+        </xpath>
+    </t>
+</templates>

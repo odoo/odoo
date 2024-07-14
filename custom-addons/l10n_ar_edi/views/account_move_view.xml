@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_move_form"/>
+        <field name="arch" type="xml">
+            <form>
+                <field name="l10n_ar_afip_verification_type" invisible="1"/>
+            </form>
+            <form position="inside">
+                <field name="l10n_ar_afip_ws" invisible="1"/>
+            </form>
+            <field name="l10n_latam_document_type_id" position="attributes">
+                <attribute name="colspan">1</attribute>
+            </field>
+
+            <field name="l10n_latam_document_number" position="after">
+                <field name='l10n_ar_afip_result' readonly="state != 'draft'" invisible="country_code != 'AR'"/>
+                <label for="l10n_ar_afip_auth_code" invisible="l10n_ar_afip_verification_type == 'not_available' or move_type not in ('in_invoice', 'in_refund', 'in_receipt')"/>
+                <div class="oe_inline" invisible="l10n_ar_afip_verification_type == 'not_available' or move_type not in ('in_invoice', 'in_refund', 'in_receipt')">
+                    <field name="l10n_ar_afip_auth_mode" class="oe_inline" readonly="state != 'draft'"/> -
+                    <field name="l10n_ar_afip_auth_code" class="oe_inline" readonly="state != 'draft'" required="l10n_ar_afip_auth_mode" placeholder="Code"/> -
+                    <field name="l10n_ar_afip_verification_result" class="oe_inline"/>
+                    <button name="l10n_ar_verify_on_afip" type="object" invisible="not l10n_ar_afip_auth_mode" string="⇒ Verify on AFIP" class="oe_inline oe_link" groups="base.group_user"/>
+                </div>
+            </field>
+            <notebook>
+                <page string="AFIP" name="afip" invisible="not l10n_ar_afip_ws">
+                    <group>
+                        <label for="l10n_ar_afip_auth_code" string="AFIP authorization"/>
+                        <div class="oe_inline">
+                            <field name="l10n_ar_afip_auth_mode" class="oe_inline" readonly="state != 'draft'"/> -
+                            <field name="l10n_ar_afip_auth_code" class="oe_inline" readonly="state != 'draft'" required="l10n_ar_afip_auth_mode" placeholder="Code"/>
+                            <field name="l10n_ar_afip_verification_result" class="oe_inline"/>
+                        </div>
+                        <field name='l10n_ar_afip_auth_code_due' readonly="state != 'draft'"/>
+                        <field name='l10n_ar_afip_xml_request' groups="base.group_no_one" widget="code"/>
+                        <field name='l10n_ar_afip_xml_response' groups="base.group_no_one" widget="code"/>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <record id="view_move_form_ar" model="ir.ui.view">
+        <field name="name">account.move.form.2</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_ar.view_move_form"/>
+        <field name="arch" type="xml">
+            <group name="sale_info_group" position="inside">
+                <field name="l10n_ar_afip_fce_is_cancellation" readonly="state != 'draft'" invisible="country_code != 'AR'"/>
+                <!-- l10n_ar_fce_transmission_type only visible if mipyme document is selected -->
+                <field name="l10n_latam_document_type_id_code" invisible="1"/>
+                <field name="l10n_ar_fce_transmission_type"
+                       invisible="l10n_latam_document_type_id_code not in ('201', '206', '211') or country_code != 'AR'"
+                       readonly="state != 'draft'"
+                       required="l10n_latam_document_type_id_code in ('201', '206', '211')"/>
+            </group>
+        </field>
+    </record>
+
+</odoo>

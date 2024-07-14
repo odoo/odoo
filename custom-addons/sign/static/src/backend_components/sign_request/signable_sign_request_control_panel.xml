@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="sign.SignSignableRequestControlPanel" t-inherit="sign.SignRequestControlPanel">
+        <xpath expr="//button[@t-if='nextTemplate &amp;&amp; nextTemplate.template']" position="after">
+            <button t-if="signInfo.get('refusalAllowed')" type="button" class="o_sign_refuse_document_button btn btn-secondary" t-on-click="refuseDocument">Refuse Document</button>
+            <button t-if="signInfo.get('editWhileSigning')" type="button" class="o_sign_edit_button btn btn-secondary mobile-tablet-hide" t-on-click="toggleEditBar">Edit</button>
+        </xpath>
+    </t>
+</templates>

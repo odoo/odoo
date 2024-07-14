@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="sale_timesheet_enterprise_advance_payment_inv_timesheet_view_form" model="ir.ui.view">
+        <field name="name">sale_timesheet_enterprise.sale.advance.payment.inv.view.form</field>
+        <field name="model">sale.advance.payment.inv</field>
+        <field name="inherit_id" ref="sale.view_sale_advance_payment_inv"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form//group" position="before">
+                <field name="has_timer_running" invisible="1"/>
+                <div role="alert" class="alert alert-warning text-center" invisible="advance_payment_method != 'delivered' or not has_timer_running">
+                    <p class="align-middle"
+                        style="margin-bottom: 4.5px; margin-top: 5px">
+                        <span>
+                            Some employees currently have active timers for the timesheets you are trying to invoice.
+                            Creating the invoice will automatically stop these timers.
+                        </span>
+                    </p>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-inherit="timesheet_grid.TimesheetTimerHeader" t-inherit-mode="extension">
+        <xpath expr='//Field[@name="&apos;task_id&apos;"]' position="after">
+            <Field
+                name="'helpdesk_ticket_id'"
+                class="'mt-3 mt-md-0 px-md-2 flex-grow-1'"
+                record="props.timesheet"
+                attrs="props.fields['helpdesk_ticket_id'].attrs"
+                placeholder="'Ticket'"
+                t-if="hasHelpdeskProject"
+                domain="getDomain('helpdesk_ticket_id')"
+            />
+        </xpath>
+        <xpath expr='//Field[@name="&apos;task_id&apos;"]' position="attributes">
+            <attribute name="t-if">!hasHelpdeskProject</attribute>
+        </xpath>
+    </t>
+</templates>

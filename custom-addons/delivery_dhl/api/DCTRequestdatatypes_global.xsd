@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://www.dhl.com/DCTRequestdatatypes" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.dhl.com/DCTRequestdatatypes" elementFormDefault="unqualified"
+	attributeFormDefault="unqualified">
+	<xsd:element name="DCTRequestDataTypes">
+		<xsd:annotation>
+			<xsd:documentation>Comment describing your root element</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="DCTFrom">
+		<xsd:sequence>
+			<xsd:element name="CountryCode" minOccurs="1">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="2" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="Postalcode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="12" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="City" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="45" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="Suburb" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="45" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>			
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="BkgDetailsType">
+		<xsd:sequence>
+			<xsd:element name="PaymentCountryCode" minOccurs="1">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="2" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="Date" minOccurs="1">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:date" />
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ReadyTime">
+				<xsd:simpleType>
+					<xsd:annotation>
+						<xsd:documentation>Time in hours and minutes (HH:MM)</xsd:documentation>
+					</xsd:annotation>
+					<xsd:restriction base="xsd:duration" />
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ReadyTimeGMTOffset" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:annotation>
+						<xsd:documentation>
+							Time in hours and minutes (HH:MM)
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="0"></xsd:minLength>
+						<xsd:maxLength value="6"></xsd:maxLength>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="DimensionUnit" minOccurs="1">
+				<xsd:simpleType>
+					<xsd:annotation>
+						<xsd:documentation>
+							Dimension Unit I (inches);Centimeters (CM)
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="IN" />
+						<xsd:enumeration value="CM" />
+						<xsd:maxLength value="3"></xsd:maxLength>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="WeightUnit" minOccurs="1">
+				<xsd:simpleType>
+					<xsd:annotation>
+						<xsd:documentation>
+							Kilogram (KG),Pounds (LB)
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="KG" />
+						<xsd:enumeration value="LB" />
+						<xsd:maxLength value="3"></xsd:maxLength>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="NumberOfPieces" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:positiveInteger">
+						<xsd:minInclusive value="1" />
+						<xsd:maxInclusive value="999" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ShipmentWeight" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="15" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="Volume" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="15" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MaxPieceWeight" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="15" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MaxPieceHeight" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="10" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MaxPieceDepth" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="10" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MaxPieceWidth" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="10" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="Pieces" minOccurs="0">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Piece" type="PieceType" maxOccurs="999" minOccurs="1">
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="PaymentAccountNumber" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+
+						<xsd:maxLength value="12"></xsd:maxLength>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="IsDutiable" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:annotation>
+						<xsd:documentation>
+							Y - Dutiable/Non-Doc, 
+							N - Non-dutiable/Doc
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="1" />
+						<xsd:enumeration value="Y" />
+						<xsd:enumeration value="N" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="NetworkTypeCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="2" />
+						<xsd:enumeration value="DD" />
+						<xsd:enumeration value="TD" />
+						<xsd:enumeration value="AL" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="QtdShp" minOccurs="0" maxOccurs="unbounded" type="QtdShpType" />			
+			<xsd:element name="InsuredValue" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="InsuredCurrency" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3"></xsd:length>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="PaymentType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Payment type - by method of payment ( DHL account)</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="D" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="AcctPickupCloseTime" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Account's Pickup Close Time to be retrieved from GCDB or specified by customer</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:dateTime"/>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="DCTTo">
+		<xsd:sequence>
+			<xsd:element name="CountryCode" minOccurs="1">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="2" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="Postalcode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="12" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="City" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="45" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="Suburb" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="45" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>			
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="DCTDutiable">
+		<xsd:sequence>
+			<xsd:element name="DeclaredCurrency" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="DeclaredValue" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:float">
+						<xsd:minInclusive value="0.000" />
+						<xsd:maxInclusive value="999999999999999999.999" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="PieceType">
+		<xsd:sequence>
+			<xsd:element name="PieceID" minOccurs="1">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+
+						<xsd:pattern value="[0-9]+"></xsd:pattern>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="PackageTypeCode" default="BOX" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3" />
+						<xsd:enumeration value="FLY" />
+						<xsd:enumeration value="COY" />
+						<xsd:enumeration value="NCY" />
+						<xsd:enumeration value="PAL" />
+						<xsd:enumeration value="DBL" />
+						<xsd:enumeration value="BOX" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="Height" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>required if width and depth are specified</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="10" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="Depth" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>required if width and height are specified</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="10" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="Width" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>required if height and depth are specified</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="10" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="Weight" minOccurs="1">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="15" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="QtdShpType">
+		<xsd:sequence>
+			<xsd:element name="GlobalProductCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:pattern value="[A-Z0-9]+"></xsd:pattern>
+						<xsd:minLength value="0"></xsd:minLength>
+						<xsd:maxLength value="6"></xsd:maxLength>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="LocalProductCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:minLength value="0"></xsd:minLength>
+						<xsd:maxLength value="6"></xsd:maxLength>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+
+			<xsd:element name="QtdShpExChrg" minOccurs="0" maxOccurs="unbounded" type="QtdShpExChrgType">
+
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="QtdShpExChrgType">
+		<xsd:sequence>
+			<xsd:element name="SpecialServiceType" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="6"></xsd:maxLength>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="LocalSpecialServiceType" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="3"></xsd:maxLength>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="GenReq">
+		<xsd:sequence>
+			<xsd:element name="OSINFO" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="1" />
+						<xsd:enumeration value="Y" />
+						<xsd:enumeration value="N" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="NXTPU" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="1" />
+						<xsd:enumeration value="Y" />
+						<xsd:enumeration value="N" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="FCNTWTYCD" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="2" />
+						<xsd:enumeration value="DD" />
+						<xsd:enumeration value="TD" />
+						<xsd:enumeration value="AL" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="CUSTAGRIND" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="1" />
+						<xsd:enumeration value="Y" />
+						<xsd:enumeration value="N" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>	
+			<xsd:element name="VLDTRT_DD" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="1" />
+						<xsd:enumeration value="Y" />
+						<xsd:enumeration value="N" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>		
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

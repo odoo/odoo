@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="contract_employee_report_view_pivot" model="ir.ui.view">
+            <field name="name">contract.employee.report.view.pivot</field>
+            <field name="model">hr.contract.employee.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Employees Analysis" sample="1" js_class="contract_employee_report_pivot">
+                    <field name="department_id" type="row"/>
+                    <field name="employee_id" type="row"/>
+                    <field name="wage" type="measure"/>
+                    <field name="count_new_employee" type="measure"/>
+                    <field name="count_employee_exit" type="measure"/>
+                    <field name="employee_count" invisible="1"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="contract_employee_report_view_graph" model="ir.ui.view">
+            <field name="name">contract.employee.report.view.graph</field>
+            <field name="model">hr.contract.employee.report</field>
+            <field name="arch" type="xml">
+                <graph string="Employees Analysis" type="line" sample="1" js_class="contract_employee_report_graph">
+                    <field name="date"/>
+                    <field name="count_new_employee" type="measure"/>
+                    <field name="employee_count" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="hr_contract_employee_report_view_tree" model="ir.ui.view">
+            <field name="name">hr.contract.employee.report.view.tree</field>
+            <field name="model">hr.contract.employee.report</field>
+            <field name="arch" type="xml">
+                <tree string="Employees Analysis">
+                    <field name="employee_id" widget="many2one_avatar_employee"/>
+                    <field name="department_id" optional="show"/>
+                    <field name="date" optional="show"/>
+                    <field name="company_id" optional="show" groups="base.group_multi_company"/>
+                    <field name="wage" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="contract_employee_report_view_search" model="ir.ui.view">
+            <field name="name">contract.employee.report.view.search</field>
+            <field name="model">hr.contract.employee.report</field>
+            <field name="arch" type="xml">
+                <search string="Employees Analysis">
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="employee_id" filter_domain="[('employee_id', 'ilike', self)]"/>
+                    <field name="department_id" filter_domain="[('department_id', 'ilike', self)]"/>
+                    <field name="date"/>
+                    <filter string="Last 365 Days" name="year" domain="[
+                        ('date', '>', (context_today() + relativedelta(days=-365)).strftime('%Y-%m-%d')),
+                        ('date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <separator/>
+                    <filter name="filter_date" date="date"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Employee" name="employee_id" context="{'group_by':'employee_id'}"/>
+                        <filter string="Department" name="department_id" context="{'group_by':'department_id'}"/>
+                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="contract_employee_report_action" model="ir.actions.act_window">
+            <field name="name">Employees Analysis</field>
+            <field name="res_model">hr.contract.employee.report</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="search_view_id" ref="contract_employee_report_view_search"/>
+            <field name="context">{
+                'search_default_year': True
+            }</field>
+            <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data to display
+            </p>
+        </field>
+        </record>
+
+
+        <menuitem id="menu_report_contract_employee_all"
+            name="Contracts"
+            action="contract_employee_report_action"
+            parent="hr.hr_menu_hr_reports"
+            groups="hr_contract.group_hr_contract_manager"
+            sequence="1"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.l10n_hk_hr_payroll</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='personal_information']/group" position="inside">
+                <group string='Autopay' invisible="company_country_code != 'HK'">
+                    <field name="l10n_hk_autopay_account_type" />
+                    <field name="l10n_hk_autopay_svid"
+                           placeholder="0240402"
+                           invisible="l10n_hk_autopay_account_type != 'svid'"
+                           required="l10n_hk_autopay_account_type == 'svid'"/>
+                    <field name="l10n_hk_autopay_emal"
+                           placeholder="susan.wong@abc.com.hk"
+                           invisible="l10n_hk_autopay_account_type != 'emal'"
+                           required="l10n_hk_autopay_account_type == 'emal'"/>
+                    <field name="l10n_hk_autopay_mobn"
+                           placeholder="+852-92223333"
+                           invisible="l10n_hk_autopay_account_type != 'mobn'"
+                           required="l10n_hk_autopay_account_type == 'mobn'"/>
+                    <field name="l10n_hk_autopay_ref" />
+                </group>
+            </xpath>
+            <xpath expr="//page[@name='personal_information']//label[@for='private_street']" position="before">
+                <field name="l10n_hk_surname" invisible="company_country_code != 'HK'" />
+                <field name="l10n_hk_given_name" invisible="company_country_code != 'HK'" />
+                <field name="l10n_hk_name_in_chinese" invisible="company_country_code != 'HK'" />
+            </xpath>
+            <xpath expr="//field[@name='private_car_plate']" position="after">
+                <label for="l10n_hk_rental_id"/>
+                <div class="o_row">
+                    <field name="l10n_hk_rental_id" readonly="1" invisible="company_country_code != 'HK'"/>
+                    <button class="btn btn-link" type="object" name="action_open_rentals">
+                        <span class="fa fa-arrow-right"></span><span> History</span>
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='personal_information']//field[@name='spouse_birthdate']" position="after">
+                <field name="l10n_hk_spouse_identification_id" invisible="company_country_code != 'HK' or marital not in ['married', 'cohabitant']" />
+                <field name="l10n_hk_spouse_passport_id" invisible="company_country_code != 'HK' or marital not in ['married', 'cohabitant']" />
+                <field name="l10n_hk_spouse_passport_place_of_issue" invisible="company_country_code != 'HK' or marital not in ['married', 'cohabitant']" />
+            </xpath>
+            <xpath expr="//page[@name='personal_information']//field[@name='passport_id']" position="after">
+                <field name="l10n_hk_passport_place_of_issue" invisible="company_country_code != 'HK'" />
+            </xpath>
+            <xpath expr="//page[@name='hr_settings']/group" position="inside">
+                <group name="mpf" string="MPF" invisible="company_country_code != 'HK'">
+                    <field name="l10n_hk_mpf_vc_option" />
+                    <field name="l10n_hk_mpf_vc_percentage" widget="percentage" invisible="l10n_hk_mpf_vc_option != 'custom'" />
+                    <field name="l10n_hk_mpf_manulife_account" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

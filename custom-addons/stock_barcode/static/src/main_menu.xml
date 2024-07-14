@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div t-name="stock_barcode.MainMenu" class="o_stock_barcode_main_menu_container o_home_menu_background">
+        <div class="o_stock_barcode_main_menu position-relative bg-view">
+            <a href="#" class="o_stock_barcode_menu d-block float-start" t-on-click="() => this.home.toggle(true)">
+                <i class="oi oi-chevron-left"/>
+            </a>
+            <h1 class="mb-4">Barcode Scanning</h1>
+
+            <div t-if="state.displayDemoMessage" class="message_demo_barcodes alert alert-info alert-dismissible text-start" role="status">
+                <button t-on-click="removeDemoMessage" type="button" class="btn-close" title="Close"/>
+                We have created a few demo data with barcodes for you to explore the features. Print the
+                <a href="/stock_barcode/static/img/barcodes_demo.pdf" target="_blank">stock barcodes sheet</a>
+                    to check out what this module can do! You can also print the barcode
+                <a class="o_stock_inventory_commands_download" href="stock_barcode/print_inventory_commands?barcode_type=barcode_commands_and_operation_types" target="_blank" aria-label="Download" title="Download">commands and operation types</a>.
+            </div>
+
+            <div class="o_stock_barcode_container position-relative d-inline-block mt-4 mb-5">
+                <div t-if='mobileScanner' class="o_stock_mobile_barcode_container">
+                    <button class="btn btn-primary o_stock_mobile_barcode" t-on-click="openMobileScanner">
+                        <i class="fa fa-camera fa-2x o_mobile_barcode_camera"/> Tap to scan
+                    </button>
+                    <img src="/barcodes/static/img/barcode.png" alt="Barcode" class="img-fluid mb-1 mt-1"/>
+                </div>
+                <img t-else="" src="/barcodes/static/img/barcode.png" alt="Barcode" class="img-fluid mb-1 mt-1"/>
+                <span class="o_stock_barcode_laser"/>
+            </div>
+
+            <ul class="text-start mb-sm-5 ps-4">
+                <li>Scan an <b>operation type</b> to create a new transfer.</li>
+                <li t-if="locationsEnabled">Scan a <b>location</b> to create a new transfer from this location.</li>
+                <li>Scan a <b>document</b> to open it.</li>
+                <li>Scan a <b>product</b> to show its location and quantity.</li>
+                <li t-if="packagesEnabled">Scan a <b>package</b> to know its content.</li>
+            </ul>
+
+            <hr class="mb-4 d-none d-sm-block"/>
+
+            <div class="o_main_menu_buttons row">
+                <div class="col">
+                    <button class="button_operations btn btn-block btn-primary mb-4 w-100"
+                            t-on-click="() => this.actionService.doAction('stock_barcode.stock_picking_type_action_kanban')">
+                        Operations
+                    </button>
+                </div>
+                <div class="col">
+                    <button class="button_inventory btn btn-block btn-primary mb-4 w-100"
+                            t-on-click="() => this.actionService.doAction('stock_barcode.stock_barcode_inventory_client_action')">
+                        Inventory Adjustments (<t t-out="this.quantCount"/>)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</templates>

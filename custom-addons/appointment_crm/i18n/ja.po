@@ -1,0 +1,100 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* appointment_crm
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:22+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: appointment_crm
+#: model:crm.tag,name:appointment_crm.appointment_crm_tag
+msgid "Appointment"
+msgstr "予約"
+
+#. module: appointment_crm
+#: model:ir.model,name:appointment_crm.model_appointment_invite
+msgid "Appointment Invite"
+msgstr "アポイントメント招待"
+
+#. module: appointment_crm
+#: model:ir.model,name:appointment_crm.model_appointment_type
+msgid "Appointment Type"
+msgstr "予約タイプ"
+
+#. module: appointment_crm
+#: model:ir.model,name:appointment_crm.model_calendar_event
+msgid "Calendar Event"
+msgstr "カレンダーイベント"
+
+#. module: appointment_crm
+#. odoo-javascript
+#: code:addons/appointment_crm/static/src/views/appointment_calendar/appointment_crm_calendar_controller.xml:0
+#, python-format
+msgid "Click in your calendar to pick meeting time proposals for"
+msgstr "カレンダをクリックして以下のためのミーティング時間の候補を選択します:"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_appointment_type__lead_create
+msgid "Create Opportunities"
+msgstr "案件作成"
+
+#. module: appointment_crm
+#: model:ir.model.fields,help:appointment_crm.field_appointment_type__lead_create
+msgid ""
+"For each scheduled appointment, create a new opportunity and assign it to "
+"the responsible user."
+msgstr "予定された各アポイントメント用に新規案件を作成し、担当ユーザを割当てます。"
+
+#. module: appointment_crm
+#: model_terms:ir.ui.view,arch_db:appointment_crm.appointment_type_view_form
+msgid "Leads"
+msgstr "リード"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_appointment_type__lead_count
+msgid "Leads Count"
+msgstr "リード数"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_appointment_type__lead_ids
+msgid "Leads/Opportunity"
+msgstr "リード/案件"
+
+#. module: appointment_crm
+#: model:ir.model.fields,help:appointment_crm.field_appointment_invite__opportunity_id
+msgid ""
+"Link an opportunity/lead to the appointment invite created.\n"
+"Used when creating an invitation from the Meeting action in the crm form view."
+msgstr ""
+"作成されたアポイントメント招待状に案件/リードをリンクします。\n"
+"CRMフォームビューのミーティングアクションから招待状を作成する際に使用します。"
+
+#. module: appointment_crm
+#. odoo-python
+#: code:addons/appointment_crm/models/calendar_event.py:0
+#, python-format
+msgid "Meeting linked to Lead/Opportunity %s"
+msgstr "リード/案件 %sにリンクしたミーティング"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_calendar_event__opportunity_id
+msgid "Opportunity"
+msgstr "案件"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_appointment_invite__opportunity_id
+msgid "Opportunity/Lead"
+msgstr "案件/リード"

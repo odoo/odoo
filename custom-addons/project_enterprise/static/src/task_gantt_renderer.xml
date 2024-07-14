@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="project_enterprise.TaskGanttRenderer.RowHeader" t-inherit="web_gantt.GanttRenderer.RowHeader">
+        <xpath expr="//t[@t-esc='row.name']" position="replace">
+            <Avatar t-if="hasAvatar(row)" t-props="getAvatarProps(row)"/>
+            <t t-else="" t-esc="row.name"/>
+        </xpath>
+    </t>
+
+    <t t-name="project_enterprise.TaskGanttRenderer.Header" t-inherit="web_gantt.GanttRenderer.Header">
+        <xpath expr="//t[@t-foreach='columns']/div" position="inside">
+            <t t-set="columnInfo" t-value="columnMilestones[column.id]"/>
+            <t t-if="columnInfo.milestones.length">
+                <div class="o_project_milestone_diamond"
+                    t-att-class="{ 'o_unreached_milestones': columnInfo.hasDeadLineExceeded, 'edge_slot': column_last }"
+                    t-on-mouseenter="(ev) => this.onMilestoneMouseEnter(ev, columnInfo.milestones)"
+                    t-on-mouseleave="onMilestoneMouseLeave"
+                    >
+                    <i class="fa fa-check o_milestones_reached" t-att-class="{ 'edge_slot': column_last }" t-if="columnInfo.allReached"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="project_enterprise.TaskGanttRenderer.ColoredCellBorder">
+        <t t-set="columnInfo" t-value="columnMilestones[column.id]"/>
+        <t t-if="columnInfo.milestones.length">
+            <div class="o_project_milestone" t-att-style="coloredCellBorderStyle" t-att-class="{ 'o_unreached_milestones': columnInfo.hasDeadLineExceeded }"/>
+        </t>
+    </t>
+
+    <t t-name="project_enterprise.TaskGanttRenderer.RowContent" t-inherit="web_gantt.GanttRenderer.RowContent">
+        <xpath expr="//div[hasclass('o_gantt_cell')]" position="after">
+            <t t-call="project_enterprise.TaskGanttRenderer.ColoredCellBorder">
+                <t t-set="coloredCellBorderStyle" t-value="getGridPosition({ column: column.grid.column, row: row.grid.row })"/>
+            </t>
+        </xpath>
+    </t>
+
+     <t t-name="project_enterprise.TaskGanttRenderer.TotalRow" t-inherit="web_gantt.GanttRenderer.TotalRow">
+        <xpath expr="//div[hasclass('o_gantt_cell')]" position="after">
+            <t t-call="project_enterprise.TaskGanttRenderer.ColoredCellBorder">
+                <t t-set="coloredCellBorderStyle" t-value="getGridPosition({ column: column.grid.column, row: 1 })"/>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="project_enterprise.TaskGanttRenderer.Pill" t-inherit="web_gantt.GanttRenderer.Pill">
+        <xpath expr="//div[hasclass('o_gantt_lock')]" position="before">
+            <div t-if="!renderConnectors" class="o_gantt_forbidden fa fa-ban ms-auto me-2" />
+        </xpath>
+    </t>
+
+</templates>

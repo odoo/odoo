@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_task_burndown_chart_report_view_search_fsm" model="ir.ui.view">
+        <field name="name">project.task.burndown.chart.report.view.search.fsm</field>
+        <field name="model">project.task.burndown.chart.report</field>
+        <field name="inherit_id" ref="project.project_task_burndown_chart_report_view_search"/>
+        <field name="arch" type="xml">
+            <field name="project_id" position="after">
+                <field name="worksheet_template_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>

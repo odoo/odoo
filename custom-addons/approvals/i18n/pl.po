@@ -1,0 +1,1208 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* approvals
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
+msgid "<span class=\"fa fa-warning\" title=\"Invalid minimum approvals\"/>"
+msgstr "<span class=\"fa fa-warning\" title=\"Invalid minimum approvals\"/>"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__message_needaction
+msgid "Action Needed"
+msgstr "Wymagane działanie"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__active
+msgid "Active"
+msgstr "Aktywne"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__activity_ids
+msgid "Activities"
+msgstr "Czynności"
+
+#. module: approvals
+#: model:ir.model,name:approvals.model_mail_activity
+msgid "Activity"
+msgstr "Czynność"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Dekoracja wyjątku aktywności"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__activity_state
+msgid "Activity State"
+msgstr "Stan aktywności"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikona typu aktywności"
+
+#. module: approvals
+#: model:ir.model.fields,help:approvals.field_approval_category__has_product
+#: model:ir.model.fields,help:approvals.field_approval_request__has_product
+msgid "Additional products that should be specified on the request."
+msgstr "Dodatkowe produkty które powinny zostać wyszczególnione w zapytaniu."
+
+#. module: approvals
+#: model:res.groups,name:approvals.group_approval_manager
+msgid "Administrator"
+msgstr "Administrator"
+
+#. module: approvals
+#: model:ir.actions.act_window,name:approvals.approval_request_action_all
+#: model:ir.ui.menu,name:approvals.approvals_approval_menu_all
+msgid "All Approvals"
+msgstr "Wszystkie zaakceptowane"
+
+#. module: approvals
+#: model:ir.model.fields,help:approvals.field_approval_category__approval_type
+#: model:ir.model.fields,help:approvals.field_approval_request__approval_type
+msgid ""
+"Allows you to define which documents you would like to create once the "
+"request has been approved"
+msgstr ""
+"Pozwala zdefiniować które dokumenty chcesz utworzyć gdy zapytanie zostanie "
+"zaakceptowane."
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__amount
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
+msgid "Amount"
+msgstr "Kwota"
+
+#. module: approvals
+#: model:ir.model.fields,help:approvals.field_approval_category__has_reference
+#: model:ir.model.fields,help:approvals.field_approval_request__has_reference
+msgid "An additional reference that should be specified on the request."
+msgstr "Dodatkowa referencja która powinny być wyszczególniona."
+
+#. module: approvals
+#. odoo-python
+#: code:addons/approvals/models/approval_category.py:0
+#, python-format
+msgid "An user may not be in the approver list multiple times."
+msgstr "Użytkownik nie może być w liście zatwierdzających wiele razy."
+
+#. module: approvals
+#: model:mail.activity.type,name:approvals.mail_activity_data_approval
+msgid "Approval"
+msgstr "Zgoda"
+
+#. module: approvals
+#: model:ir.model,name:approvals.model_approval_category
+msgid "Approval Category"
+msgstr "Kategoria zatwierdzenia"
+
+#. module: approvals
+#: model:ir.model,name:approvals.model_approval_request
+#: model:ir.model.fields,field_description:approvals.field_approval_product_line__approval_request_id
+msgid "Approval Request"
+msgstr "Wniosek o zatwierdzenie"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__name
+msgid "Approval Subject"
+msgstr "Temat zatwierdzenia"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__approval_type
+#: model:ir.model.fields,field_description:approvals.field_approval_category_approver__category_id
+#: model:ir.model.fields,field_description:approvals.field_approval_request__approval_type
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
+msgid "Approval Type"
+msgstr "Typ zatwierdzenia"
+
+#. module: approvals
+#: model:ir.model,name:approvals.model_approval_category_approver
+msgid "Approval Type Approver"
+msgstr "Zatwierdzenie Typ Zatwierdzający"
+
+#. module: approvals
+#: model:ir.ui.menu,name:approvals.approvals_menu_root
+msgid "Approvals"
+msgstr "Akceptacje"
+
+#. module: approvals
+#: model:ir.actions.act_window,name:approvals.approval_category_action
+#: model:ir.ui.menu,name:approvals.approvals_category_menu_config
+msgid "Approvals Types"
+msgstr "Rodzaje zatwierdzeń"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_kanban
+msgid "Approvals Types Image"
+msgstr "Typy zatwierdzeń Obraz"
+
+#. module: approvals
+#: model:ir.actions.act_window,name:approvals.approval_request_action_to_review
+#: model:ir.ui.menu,name:approvals.approvals_approval_menu_to_review
+msgid "Approvals to Review"
+msgstr "Zatwierdzenia do przeglądu"
+
+#. module: approvals
+#: model:ir.actions.act_window,name:approvals.approval_request_action_to_review_category
+msgid "Approvals to review"
+msgstr "Zatwierdzenia do przeglądu"
+
+#. module: approvals
+#. odoo-javascript
+#: code:addons/approvals/static/src/web/activity/approval.xml:0
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_kanban
+#, python-format
+msgid "Approve"
+msgstr "Akceptuj"
+
+#. module: approvals
+#: model:ir.model.fields.selection,name:approvals.selection__approval_approver__status__approved
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__request_status__approved
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_status__approved
+msgid "Approved"
+msgstr "Zaaprobowane"
+
+#. module: approvals
+#: model:ir.model,name:approvals.model_approval_approver
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+msgid "Approver"
+msgstr "Zatwierdzający"
+
+#. module: approvals
+#. odoo-python
+#: code:addons/approvals/models/approval_category.py:0
+#, python-format
+msgid ""
+"Approver Sequence can only be activated with at least 1 minimum approver."
+msgstr ""
+"Sekwencję zatwierdzających można aktywować tylko z co najmniej 1 minimalnym "
+"zatwierdzającym."
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__user_ids
+msgid "Approver Users"
+msgstr "Użytkownicy zatwierdzenia"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+msgid "Approver(s)"
+msgstr "Zatwierdzający"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__approver_ids
+#: model:ir.model.fields,field_description:approvals.field_approval_request__approver_ids
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
+msgid "Approvers"
+msgstr "Zatwierdzający"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__approver_sequence
+#: model:ir.model.fields,field_description:approvals.field_approval_request__approver_sequence
+msgid "Approvers Sequence?"
+msgstr "Sekwencja zatwierdzających?"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_search
+msgid "Archived"
+msgstr "Zarchiwizowane"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+msgid "Attach Document"
+msgstr "Załącz dokument"
+
+#. module: approvals
+#: model:ir.model,name:approvals.model_ir_attachment
+msgid "Attachment"
+msgstr "Załącznik"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__message_attachment_count
+msgid "Attachment Count"
+msgstr "Liczba załączników"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__automated_sequence
+#: model:ir.model.fields,field_description:approvals.field_approval_request__automated_sequence
+msgid "Automated Sequence?"
+msgstr "Zautomatyzowana sekwencja?"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+msgid "Back To Draft"
+msgstr "Powrót do projektu"
+
+#. module: approvals
+#: model:approval.category,name:approvals.approval_category_data_borrow_items
+msgid "Borrow Items"
+msgstr "Pożyczanie przedmiotów"
+
+#. module: approvals
+#: model:approval.category,name:approvals.approval_category_data_business_trip
+msgid "Business Trip"
+msgstr "Podróż służbowa"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__change_request_owner
+msgid "Can Change Request Owner"
+msgstr "Może zmienić właściciela zapytania"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_approver__can_edit
+msgid "Can Edit"
+msgstr "Może edytować"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_approver__can_edit_user_id
+msgid "Can Edit User"
+msgstr ""
+
+#. module: approvals
+#: model:ir.model.fields.selection,name:approvals.selection__approval_approver__status__cancel
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__request_status__cancel
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_status__cancel
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+msgid "Cancel"
+msgstr "Anuluj"
+
+#. module: approvals
+#: model:approval.category,name:approvals.approval_category_data_car_rental_application
+msgid "Car Rental Application"
+msgstr "Wniosek o wypożyczenie samochodu"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_product_line__product_uom_category_id
+#: model:ir.model.fields,field_description:approvals.field_approval_request__category_id
+msgid "Category"
+msgstr "Kategoria"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_approver__category_approver
+msgid "Category Approver"
+msgstr "Zatwierdzacz kategorii"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__sequence_code
+msgid "Code"
+msgstr "Kod"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_approver__company_id
+#: model:ir.model.fields,field_description:approvals.field_approval_category__company_id
+#: model:ir.model.fields,field_description:approvals.field_approval_category_approver__company_id
+#: model:ir.model.fields,field_description:approvals.field_approval_product_line__company_id
+#: model:ir.model.fields,field_description:approvals.field_approval_request__company_id
+msgid "Company"
+msgstr "Firma"
+
+#. module: approvals
+#: model:ir.ui.menu,name:approvals.approvals_menu_config
+msgid "Configuration"
+msgstr "Konfiguracja"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__partner_id
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: approvals
+#: model:approval.category,name:approvals.approval_category_data_contract_approval
+msgid "Contract Approval"
+msgstr "Zatwierdzacz umowy"
+
+#. module: approvals
+#: model:ir.model.fields,help:approvals.field_approval_product_line__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Konwersja pomiędzy jednostkami miary (JM) może nastąpić tylko pomiędzy "
+"jednostkami z tej samej kategorii. Do konwersji jest stosowany przelicznik."
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_approver__create_uid
+#: model:ir.model.fields,field_description:approvals.field_approval_category__create_uid
+#: model:ir.model.fields,field_description:approvals.field_approval_category_approver__create_uid
+#: model:ir.model.fields,field_description:approvals.field_approval_product_line__create_uid
+#: model:ir.model.fields,field_description:approvals.field_approval_request__create_uid
+msgid "Created by"
+msgstr "Utworzył(a)"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_approver__create_date
+#: model:ir.model.fields,field_description:approvals.field_approval_category__create_date
+#: model:ir.model.fields,field_description:approvals.field_approval_category_approver__create_date
+#: model:ir.model.fields,field_description:approvals.field_approval_product_line__create_date
+#: model:ir.model.fields,field_description:approvals.field_approval_request__create_date
+msgid "Created on"
+msgstr "Data utworzenia"
+
+#. module: approvals
+#: model:ir.actions.act_window,name:approvals.approval_category_action_new_request
+msgid "Dashboard"
+msgstr "Konsola"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__date
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+msgid "Date"
+msgstr "Data"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__date_confirmed
+msgid "Date Confirmed"
+msgstr "Data potwierdzenia"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__date_end
+msgid "Date end"
+msgstr "Data zakończenia"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__date_start
+msgid "Date start"
+msgstr "Data początkowa"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_kanban
+msgid "Delete"
+msgstr "Usuń"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__description
+#: model:ir.model.fields,field_description:approvals.field_approval_product_line__description
+#: model:ir.model.fields,field_description:approvals.field_approval_request__reason
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+msgid "Description"
+msgstr "Opis"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_approver__display_name
+#: model:ir.model.fields,field_description:approvals.field_approval_category__display_name
+#: model:ir.model.fields,field_description:approvals.field_approval_category_approver__display_name
+#: model:ir.model.fields,field_description:approvals.field_approval_product_line__display_name
+#: model:ir.model.fields,field_description:approvals.field_approval_request__display_name
+msgid "Display Name"
+msgstr "Nazwa wyświetlana"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
+msgid "Document"
+msgstr "Dokument"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__requirer_document
+#: model:ir.model.fields,field_description:approvals.field_approval_request__requirer_document
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+msgid "Documents"
+msgstr "Dokumenty"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+msgid "E.g: Expenses Paris business trip"
+msgstr "Np. wydatki na podróż służbową do Paryża."
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_kanban
+msgid "Edit Request"
+msgstr "Edytuj zapytanie"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__manager_approval
+msgid "Employee's Manager"
+msgstr "Manager pracownika"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_approver__existing_request_user_ids
+msgid "Existing Request User"
+msgstr "Istniejący użytkownik zapytania"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category_approver__existing_user_ids
+msgid "Existing User"
+msgstr "Istniejący użytkownik"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
+msgid "Fields"
+msgstr "Pola"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__message_follower_ids
+msgid "Followers"
+msgstr "Obserwatorzy"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Obserwatorzy (partnerzy)"
+
+#. module: approvals
+#: model:ir.model.fields,help:approvals.field_approval_request__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Ikona Font awesome np. fa-tasks"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+msgid "From:"
+msgstr "Od:"
+
+#. module: approvals
+#: model:approval.category,name:approvals.approval_category_data_general_approval
+msgid "General Approval"
+msgstr "Ogólne zatwierdzenie"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__has_access_to_request
+msgid "Has Access To Request"
+msgstr "Ma dostęp do zapytania"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__has_amount
+#: model:ir.model.fields,field_description:approvals.field_approval_request__has_amount
+msgid "Has Amount"
+msgstr "Ma kwotę"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__has_partner
+#: model:ir.model.fields,field_description:approvals.field_approval_request__has_partner
+msgid "Has Contact"
+msgstr "Ma kontakt"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__has_date
+#: model:ir.model.fields,field_description:approvals.field_approval_request__has_date
+msgid "Has Date"
+msgstr "Ma datę"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__has_location
+#: model:ir.model.fields,field_description:approvals.field_approval_request__has_location
+msgid "Has Location"
+msgstr "Ma lokalizację"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__has_message
+msgid "Has Message"
+msgstr "Ma wiadomość"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__has_payment_method
+#: model:ir.model.fields,field_description:approvals.field_approval_request__has_payment_method
+msgid "Has Payment"
+msgstr "Ma płatność"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__has_period
+#: model:ir.model.fields,field_description:approvals.field_approval_request__has_period
+msgid "Has Period"
+msgstr "Ma okres"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__has_product
+#: model:ir.model.fields,field_description:approvals.field_approval_request__has_product
+msgid "Has Product"
+msgstr "Ma Produkt"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__has_quantity
+#: model:ir.model.fields,field_description:approvals.field_approval_request__has_quantity
+msgid "Has Quantity"
+msgstr "Ma Ilość"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__has_reference
+#: model:ir.model.fields,field_description:approvals.field_approval_request__has_reference
+msgid "Has Reference"
+msgstr "Posiada referencję"
+
+#. module: approvals
+#: model:ir.model.fields,help:approvals.field_approval_category__manager_approval
+msgid ""
+"How the employee's manager interacts with this type of approval.\n"
+"\n"
+"        Empty: do nothing\n"
+"        Is Approver: the employee's manager will be in the approver list\n"
+"        Is Required Approver: the employee's manager will be required to approve the request.\n"
+"    "
+msgstr ""
+"W jaki sposób przełożony pracownika reaguje na ten rodzaj zatwierdzenia.\n"
+"\n"
+"Puste: nic nie rób\n"
+"Is Approver: menedżer pracownika będzie na liście osób zatwierdzających.\n"
+"Is Required Approver: menedżer pracownika będzie musiał zatwierdzić wniosek."
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_approver__id
+#: model:ir.model.fields,field_description:approvals.field_approval_category__id
+#: model:ir.model.fields,field_description:approvals.field_approval_category_approver__id
+#: model:ir.model.fields,field_description:approvals.field_approval_product_line__id
+#: model:ir.model.fields,field_description:approvals.field_approval_request__id
+msgid "ID"
+msgstr "ID"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__activity_exception_icon
+msgid "Icon"
+msgstr "Ikona"
+
+#. module: approvals
+#: model:ir.model.fields,help:approvals.field_approval_request__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikona wskazująca na wyjątek aktywności."
+
+#. module: approvals
+#: model:ir.model.fields,help:approvals.field_approval_request__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jeśli zaznaczone, nowe wiadomości wymagają twojej uwagi."
+
+#. module: approvals
+#: model:ir.model.fields,help:approvals.field_approval_request__message_has_error
+#: model:ir.model.fields,help:approvals.field_approval_request__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+"Jeśli zaznaczone, niektóre wiadomości napotkały błędy podczas doręczenia."
+
+#. module: approvals
+#: model:ir.model.fields,help:approvals.field_approval_category__automated_sequence
+#: model:ir.model.fields,help:approvals.field_approval_request__automated_sequence
+msgid ""
+"If checked, the Approval Requests will have an automated generated name "
+"based on the given code."
+msgstr ""
+"W przypadku zaznaczenia tej opcji, wnioski o zatwierdzenie będą miały "
+"automatycznie wygenerowaną nazwę na podstawie podanego kodu."
+
+#. module: approvals
+#: model:ir.model.fields,help:approvals.field_approval_category__approver_sequence
+#: model:ir.model.fields,help:approvals.field_approval_request__approver_sequence
+msgid ""
+"If checked, the approvers have to approve in sequence (one after the other)."
+" If Employee's Manager is selected as approver, they will be the first in "
+"line."
+msgstr ""
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__image
+#: model:ir.model.fields,field_description:approvals.field_approval_request__category_image
+msgid "Image"
+msgstr "Obraz"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__invalid_minimum
+msgid "Invalid Minimum"
+msgstr "Nieprawidłowe minimum"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__invalid_minimum_warning
+msgid "Invalid Minimum Warning"
+msgstr "Ostrzeżenie o nieprawidłowym minimum"
+
+#. module: approvals
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__manager_approval__approver
+msgid "Is Approver"
+msgstr "Jest zatwierdzającym"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__message_is_follower
+msgid "Is Follower"
+msgstr "Jest obserwatorem"
+
+#. module: approvals
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__manager_approval__required
+msgid "Is Required Approver"
+msgstr "Jest wymaganym zatwierdzającym"
+
+#. module: approvals
+#: model:approval.category,name:approvals.approval_category_data_job_referral_award
+msgid "Job Referral Award"
+msgstr "Nagroda za polecenie pracy"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_approver__write_uid
+#: model:ir.model.fields,field_description:approvals.field_approval_category__write_uid
+#: model:ir.model.fields,field_description:approvals.field_approval_category_approver__write_uid
+#: model:ir.model.fields,field_description:approvals.field_approval_product_line__write_uid
+#: model:ir.model.fields,field_description:approvals.field_approval_request__write_uid
+msgid "Last Updated by"
+msgstr "Ostatnio aktualizowane przez"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_approver__write_date
+#: model:ir.model.fields,field_description:approvals.field_approval_category__write_date
+#: model:ir.model.fields,field_description:approvals.field_approval_category_approver__write_date
+#: model:ir.model.fields,field_description:approvals.field_approval_product_line__write_date
+#: model:ir.model.fields,field_description:approvals.field_approval_request__write_date
+msgid "Last Updated on"
+msgstr "Data ostatniej aktualizacji"
+
+#. module: approvals
+#: model_terms:ir.actions.act_window,help:approvals.approval_request_action
+#: model_terms:ir.actions.act_window,help:approvals.approval_request_action_all
+msgid "Let's go to the"
+msgstr "Przejdźmy do"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__location
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
+msgid "Location"
+msgstr "Miejsce"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Główny załącznik"
+
+#. module: approvals
+#: model:ir.ui.menu,name:approvals.approvals_menu_manager
+msgid "Manager"
+msgstr "Menedżer"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__message_has_error
+msgid "Message Delivery error"
+msgstr "Błąd doręczenia wiadomości"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__message_ids
+msgid "Messages"
+msgstr "Wiadomości"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__approval_minimum
+#: model:ir.model.fields,field_description:approvals.field_approval_request__approval_minimum
+msgid "Minimum Approval"
+msgstr "Minimalne zatwierdzenie"
+
+#. module: approvals
+#. odoo-python
+#: code:addons/approvals/models/approval_category.py:0
+#, python-format
+msgid ""
+"Minimum Approval must be equal or superior to the sum of required Approvers."
+msgstr ""
+"Minimalne zatwierdzenie musi być równe lub wyższe od sumy wymaganych "
+"zatwierdzających."
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Ostateczny terminin moich aktywności"
+
+#. module: approvals
+#: model:ir.ui.menu,name:approvals.approvals_approval_menu
+msgid "My Approvals"
+msgstr "Moje zatwierdzenia"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_search_view_search
+msgid "My Approvals to Review"
+msgstr "Moje zatwierdzenia do przeglądu"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_search_view_search
+msgid "My Request"
+msgstr "Mój wniosek"
+
+#. module: approvals
+#: model:ir.actions.act_window,name:approvals.approval_request_action
+#: model:ir.ui.menu,name:approvals.approvals_request_menu_my
+msgid "My Requests"
+msgstr "Moje wnioski"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__name
+msgid "Name"
+msgstr "Nazwa"
+
+#. module: approvals
+#. odoo-python
+#: code:addons/approvals/models/approval_category.py:0
+#: model:ir.model.fields.selection,name:approvals.selection__approval_approver__status__new
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_status__new
+#, python-format
+msgid "New"
+msgstr "Nowe"
+
+#. module: approvals
+#: model:ir.ui.menu,name:approvals.approvals_category_menu_new
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_kanban
+msgid "New Request"
+msgstr "Nowe zgłoszenie"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Termin kolejnej czynności"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__activity_summary
+msgid "Next Activity Summary"
+msgstr "Podsumowanie kolejnej czynności"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__activity_type_id
+msgid "Next Activity Type"
+msgstr "Typ następnej czynności"
+
+#. module: approvals
+#: model_terms:ir.actions.act_window,help:approvals.approval_request_action_all
+msgid "No Approvals"
+msgstr "Brak zatwierdzeń"
+
+#. module: approvals
+#: model_terms:ir.actions.act_window,help:approvals.approval_request_action
+msgid "No Approvals Requests"
+msgstr "Brak wniosków o zatwierdzenie"
+
+#. module: approvals
+#: model_terms:ir.actions.act_window,help:approvals.approval_request_action_to_review
+#: model_terms:ir.actions.act_window,help:approvals.approval_request_action_to_review_category
+msgid "No new approvals to review"
+msgstr "Brak nowych zatwierdzeń do przeglądu"
+
+#. module: approvals
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_amount__no
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_date__no
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_location__no
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_partner__no
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_payment_method__no
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_period__no
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_product__no
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_quantity__no
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_reference__no
+msgid "None"
+msgstr "Brak"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Liczba akcji"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__attachment_number
+msgid "Number of Attachments"
+msgstr "Ilość załączników"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__message_has_error_counter
+msgid "Number of errors"
+msgstr "Liczba błędów"
+
+#. module: approvals
+#: model:ir.model.fields,help:approvals.field_approval_request__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Liczba wiadomości wymagających akcji"
+
+#. module: approvals
+#: model:ir.model.fields,help:approvals.field_approval_request__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Liczba wiadomości z błędami przy doręczeniu"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__request_to_validate_count
+msgid "Number of requests to validate"
+msgstr "Liczba żądań walidacji"
+
+#. module: approvals
+#: model:res.groups,name:approvals.group_approval_user
+msgid "Officer: Approve all requests"
+msgstr ""
+
+#. module: approvals
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_amount__optional
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_date__optional
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_location__optional
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_partner__optional
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_payment_method__optional
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_period__optional
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_product__optional
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_quantity__optional
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_reference__optional
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__requirer_document__optional
+msgid "Optional"
+msgstr "Opcjonalnie"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
+msgid "Options"
+msgstr "Opcje"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
+msgid "Payment"
+msgstr "Płatność"
+
+#. module: approvals
+#: model:approval.category,name:approvals.approval_category_data_payment_application
+msgid "Payment Application"
+msgstr "Wniosek o płatność"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+msgid "Period"
+msgstr "Okres"
+
+#. module: approvals
+#: model:approval.category,name:approvals.approval_category_data_procurement
+msgid "Procurement"
+msgstr "Zapotrzebowanie"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
+msgid "Product"
+msgstr "Produkt"
+
+#. module: approvals
+#: model:ir.model,name:approvals.model_approval_product_line
+#: model:ir.model.fields,field_description:approvals.field_approval_request__product_line_ids
+msgid "Product Line"
+msgstr "Linia produktu"
+
+#. module: approvals
+#: model:ir.ui.menu,name:approvals.approvals_menu_product_variant
+msgid "Product Variants"
+msgstr "Warianty produktu"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_product_line__product_id
+#: model:ir.ui.menu,name:approvals.approvals_menu_product
+#: model:ir.ui.menu,name:approvals.approvals_menu_product_template
+#: model_terms:ir.ui.view,arch_db:approvals.approval_product_kanban_mobile_view
+#: model_terms:ir.ui.view,arch_db:approvals.approval_product_line_view_form
+#: model_terms:ir.ui.view,arch_db:approvals.approval_product_line_view_tree
+#: model_terms:ir.ui.view,arch_db:approvals.approval_product_line_view_tree_independent
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+msgid "Products"
+msgstr "Produkty"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_product_line__quantity
+#: model:ir.model.fields,field_description:approvals.field_approval_request__quantity
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
+msgid "Quantity"
+msgstr "Ilość"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__reference
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
+msgid "Reference"
+msgstr "Odnośnik"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_category__sequence_id
+msgid "Reference Sequence"
+msgstr "Numeracja"
+
+#. module: approvals
+#. odoo-javascript
+#: code:addons/approvals/static/src/web/activity/approval.xml:0
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_kanban
+#, python-format
+msgid "Refuse"
+msgstr "Odmów"
+
+#. module: approvals
+#: model:ir.model.fields.selection,name:approvals.selection__approval_approver__status__refused
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__request_status__refused
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_status__refused
+msgid "Refused"
+msgstr "Odmówiono"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_approver__request_id
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+msgid "Request"
+msgstr "Zgłoszenie"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.res_users_view_form
+msgid "Request Approval"
+msgstr "Wniosek o zatwierdzenie"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__request_owner_id
+msgid "Request Owner"
+msgstr "Właściciel wniosku"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__request_status
+msgid "Request Status"
+msgstr "Status wniosku"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_approver__required
+#: model:ir.model.fields,field_description:approvals.field_approval_category_approver__required
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_amount__required
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_date__required
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_location__required
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_partner__required
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_payment_method__required
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_period__required
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_product__required
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_quantity__required
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__has_reference__required
+#: model:ir.model.fields.selection,name:approvals.selection__approval_category__requirer_document__required
+msgid "Required"
+msgstr "Wymagane"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__activity_user_id
+msgid "Responsible User"
+msgstr "Użytkownik odpowiedzialny"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Błąd dostarczenia wiadomości SMS"
+
+#. module: approvals
+#. odoo-python
+#: code:addons/approvals/models/approval_category.py:0
+#: code:addons/approvals/models/approval_category.py:0
+#: model:ir.model.fields,field_description:approvals.field_approval_approver__sequence
+#: model:ir.model.fields,field_description:approvals.field_approval_category__sequence
+#: model:ir.model.fields,field_description:approvals.field_approval_category_approver__sequence
+#, python-format
+msgid "Sequence"
+msgstr "Sekwencja"
+
+#. module: approvals
+#: model:ir.model.fields,help:approvals.field_approval_approver__can_edit_user_id
+msgid ""
+"Simple users should not be able to remove themselves as approvers because "
+"they will lose access to the record if they misclick."
+msgstr ""
+
+#. module: approvals
+#. odoo-python
+#: code:addons/approvals/models/approval_request.py:0
+#, python-format
+msgid "Start date should precede the end date."
+msgstr ""
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_approver__status
+msgid "Status"
+msgstr "Status"
+
+#. module: approvals
+#: model:ir.model.fields,help:approvals.field_approval_request__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status na podstawie czynności\n"
+"Zaległe: Termin już minął\n"
+"Dzisiaj: Data czynności przypada na dzisiaj\n"
+"Zaplanowane: Przyszłe czynności."
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+msgid "Submit"
+msgstr "Wyślij"
+
+#. module: approvals
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__request_status__pending
+msgid "Submitted"
+msgstr "Wysłane"
+
+#. module: approvals
+#: model:res.groups,comment:approvals.group_approval_user
+msgid "The user will be able to access all requests and approve/refuse them."
+msgstr ""
+"Użytkownik będzie miał dostęp do wszystkich wniosków i będzie mógł je "
+"zatwierdzić/odrzucić."
+
+#. module: approvals
+#: model:res.groups,comment:approvals.group_approval_manager
+msgid "The user will have access to the approvals configuration."
+msgstr "Użytkownik będzie miał dostęp do konfiguracji zatwierdzeń."
+
+#. module: approvals
+#. odoo-python
+#: code:addons/approvals/models/approval_request.py:0
+#, python-format
+msgid ""
+"This request needs to be approved by your manager. There is no manager "
+"linked to your employee profile."
+msgstr ""
+"Wniosek ten musi zostać zatwierdzony przez przełożonego. Z profilem "
+"pracownika nie jest powiązany żaden menedżer."
+
+#. module: approvals
+#. odoo-python
+#: code:addons/approvals/models/approval_request.py:0
+#, python-format
+msgid ""
+"This request needs to be approved by your manager. There is no user linked "
+"to your manager."
+msgstr ""
+"Wniosek ten musi zostać zatwierdzony przez przełożonego. Nie ma użytkownika "
+"powiązanego z menedżerem."
+
+#. module: approvals
+#. odoo-python
+#: code:addons/approvals/models/approval_request.py:0
+#, python-format
+msgid ""
+"This request needs to be approved by your manager. Your manager is not in "
+"the approvers list."
+msgstr ""
+"Wniosek ten musi zostać zatwierdzony przez przełożonego. Twój menedżer nie "
+"znajduje się na liście osób zatwierdzających."
+
+#. module: approvals
+#. odoo-javascript
+#: code:addons/approvals/static/src/web/activity/approval.xml:0
+#: model:ir.model.fields.selection,name:approvals.selection__approval_approver__status__pending
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_status__pending
+#, python-format
+msgid "To Approve"
+msgstr "Do zatwierdzenia"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_kanban
+msgid "To Review:"
+msgstr "Do sprawdzenia:"
+
+#. module: approvals
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__request_status__new
+msgid "To Submit"
+msgstr "Do wysłania"
+
+#. module: approvals
+#: model:ir.model.fields,help:approvals.field_approval_request__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Typ wyjątku działania na rekordzie."
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_product_line__product_uom_id
+msgid "Unit of Measure"
+msgstr "Jednostka miary"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_approver__user_id
+#: model:ir.model.fields,field_description:approvals.field_approval_category_approver__user_id
+msgid "User"
+msgstr "Użytkownik"
+
+#. module: approvals
+#: model:ir.model.fields,field_description:approvals.field_approval_request__user_status
+msgid "User Status"
+msgstr "Status użytkownika"
+
+#. module: approvals
+#: model:ir.model.fields.selection,name:approvals.selection__approval_approver__status__waiting
+#: model:ir.model.fields.selection,name:approvals.selection__approval_request__user_status__waiting
+msgid "Waiting"
+msgstr "Oczekiwanie"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_kanban
+msgid "Withdraw"
+msgstr "Wycofać się"
+
+#. module: approvals
+#. odoo-python
+#: code:addons/approvals/models/approval_request.py:0
+#, python-format
+msgid "You cannot approve before the previous approver."
+msgstr "Nie można zatwierdzić przed poprzednim zatwierdzającym."
+
+#. module: approvals
+#. odoo-python
+#: code:addons/approvals/models/approval_request.py:0
+#, python-format
+msgid ""
+"You cannot assign the same approver multiple times on the same request."
+msgstr "Nie można zatwierdzić przed poprzednim zatwierdzającym."
+
+#. module: approvals
+#. odoo-python
+#: code:addons/approvals/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"You cannot unlink an attachment which is linked to a validated, refused or "
+"cancelled approval request."
+msgstr ""
+"Nie można odłączyć załącznika, który jest powiązany z zatwierdzonym, "
+"odrzuconym lub anulowanym wnioskiem o zatwierdzenie."
+
+#. module: approvals
+#. odoo-python
+#: code:addons/approvals/models/approval_request.py:0
+#, python-format
+msgid "You have to add at least %s approvers to confirm your request."
+msgstr ""
+"Aby zatwierdzić wniosek, należy dodać co najmniej %s osoby zatwierdzające."
+
+#. module: approvals
+#. odoo-python
+#: code:addons/approvals/models/approval_request.py:0
+#, python-format
+msgid "You have to attach at least one document."
+msgstr ""
+
+#. module: approvals
+#. odoo-python
+#: code:addons/approvals/models/approval_category.py:0
+#, python-format
+msgid "Your minimum approval exceeds the total of default approvers."
+msgstr ""
+"Twoje minimalne zatwierdzenie przekracza sumę domyślnych zatwierdzających."
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+msgid "e.g. Brussels"
+msgstr "np. Bruksela"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_category_view_form
+msgid "e.g. Procurement"
+msgstr "np. Zamówienia"
+
+#. module: approvals
+#: model_terms:ir.actions.act_window,help:approvals.approval_request_action
+#: model_terms:ir.actions.act_window,help:approvals.approval_request_action_all
+msgid "menu"
+msgstr "menu"
+
+#. module: approvals
+#: model_terms:ir.actions.act_window,help:approvals.approval_request_action
+#: model_terms:ir.actions.act_window,help:approvals.approval_request_action_all
+msgid "new request"
+msgstr "nowy wniosek"
+
+#. module: approvals
+#: model_terms:ir.ui.view,arch_db:approvals.approval_request_view_form
+msgid "to:"
+msgstr "do:"

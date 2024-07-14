@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+  <t t-name="spreadsheet_edition.VersionHistory">
+    <div 
+      class="o-version-history"
+      tabindex="0"
+      t-ref="container"
+      t-on-keydown.self="onKeyDown"
+      >
+      <VersionHistoryItem
+        t-foreach="loadedRevisions"
+        t-as="revision"
+        t-key="revision.nextRevisionId"
+        active="state.currentRevisionId === revision.nextRevisionId"
+        onActivation.bind="onRevisionClick"
+        revision="revision"
+        onBlur.bind="focus"
+      />
+
+      <div t-if="state.loaded &lt; revisions.length"
+        class="d-flex justify-content-center o-version-history-load-more-container">
+        <div class="o-sidePanelButtons">
+          <button t-on-click="onLoadMoreClicked" class="o-button o-version-history-load-more">
+            Load More
+          </button>
+        </div>
+      </div>
+
+      <t t-if="!revisions.length">
+        <div class="o-section">There are no prior revisions for this spreadsheet.</div>
+        <div class="o-sidePanelButtons">
+          <button t-on-click="props.onCloseSidePanel" class="o-button">Back</button>
+        </div>
+      </t>
+    </div>
+  </t>
+</templates>

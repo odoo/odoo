@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="spreadsheet.DocumentsViews.Buttons" t-inherit="documents.DocumentsViews.ControlPanel" t-inherit-mode="extension">
+        <xpath expr="//ul" position="inside">
+            <button type="button" class="btn btn-link dropdown-item o_documents_kanban_spreadsheet"
+                t-att-disabled="folder.id and !folder.has_write_access"
+                t-on-click.stop.prevent="onClickCreateSpreadsheet" data-hotkey="x">
+                New Spreadsheet
+            </button>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,40 @@
+.o_whatsapp_preview {
+    background: url("/whatsapp/static/img/bgimg.jpg");
+    max-width: 320px;
+
+    .o_whatsapp_message {
+        border-radius: 8px;
+        border-top-left-radius: 0;
+        background-color: $white;
+
+        &:after {
+            position: absolute;
+            content: "";
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0px 10px 10px 0;
+            border-color: transparent $white transparent transparent;
+            top: 0;
+            left: -8px;
+        }
+    }
+
+    .o-whatsapp-font-11 {
+        font-size: 11px;
+    }
+
+    .o-whatsapp-font-9 {
+        font-size: 9px;
+    }
+
+    .o_whatsapp_message_link{
+        color: $blue-500;
+    }
+
+    .o_whatsapp_btn {
+        color: $blue-400;
+        min-width: calc(50% - 4px);
+        background-color: $white;
+    }
+}

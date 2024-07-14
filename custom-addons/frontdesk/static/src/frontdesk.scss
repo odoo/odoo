@@ -1,0 +1,62 @@
+:root {
+    @include media-breakpoint-up(lg) {
+        // Allow to handle root font size whether or not the website is installed
+        --bs-root-font-size: #{$o-frontdesk-font-size-root-lg};
+        --root-font-size: #{$o-frontdesk-font-size-root-lg};
+    }
+
+    @include media-breakpoint-up(xxl) {
+        --bs-root-font-size: #{$o-frontdesk-font-size-root-xxl};
+        --root-font-size: #{$o-frontdesk-font-size-root-xxl};
+    }
+
+    // UW
+    @media (min-width: 2560px) {
+        --bs-root-font-size: #{$o-frontdesk-font-size-root-uw};
+        --root-font-size: #{$o-frontdesk-font-size-root-uw};
+    }
+
+    //4K
+    @media screen and (min-width: 3839px), (min-height: 3839px) {
+        --bs-root-font-size: #{$o-frontdesk-font-size-root-4k};
+        --root-font-size: #{$o-frontdesk-font-size-root-4k};
+    }
+}
+
+// Prevents page editing with the web editor
+.o_frontdesk .o_frontend_to_backend_nav {
+    display: none !important;
+}
+
+.o_frontdesk {
+    #wrapwrap {
+        // prevent website's background image to be displayed
+        background-image: none;
+    }
+
+    .o_main_bg_img {
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .o_company_logo {
+        max-height: 2.5rem;
+    }
+
+    .o_frontdesk_wrap {
+        min-height: 100%;
+    }
+
+    .o_qrcode {
+        max-width: 10rem;
+    }
+
+    &.o_dark {
+        --o-input-placeholder-color: #{rgba($white, .5)};
+
+        .form-select {
+            background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='%23FFFFFF' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/></svg>");
+        }
+    }
+}

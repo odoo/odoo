@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_274_XX_view_form" model="ir.ui.view">
+        <field name="name">l10n_be.274_xx.view.form</field>
+        <field name="model">l10n_be.274_xx</field>
+        <field name="arch" type="xml">
+            <form string="274.XX Sheets">
+                <header>
+                    <button name="action_generate_pdf" string="Create 274.XX Sheets" type="object" class="btn-primary" invisible="state not in ('draft', 'waiting')"/>
+                    <button name="action_generate_xml" string="Export XML file" type="object" class="btn-secondary" invisible="state not in ('draft', 'waiting')"/>
+                    <button name="action_generate_xls" string="Export XLSX details" type="object" class="btn-secondary" invisible="state not in ('draft', 'waiting')"/>
+                    <button name="action_generate_pdf" string="Create 274.XX Sheets" type="object" invisible="state != 'done'"/>
+                    <button name="action_generate_xml" string="Export XML file" type="object" invisible="state != 'done'"/>
+                    <button name="action_generate_xls" string="Export XLSX details" type="object" invisible="state != 'done'"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="year" class="o_hr_narrow_field" options="{'type': 'number'}"/>
+                            <field name="month" class="o_hr_narrow_field"/>
+                            <label for="date_start" string="Reference Period" invisible="1"/>
+                            <div invisible="1">
+                                From<field name="date_start" class="oe_inline col-sm-5"/>
+                                to<field name="date_end" class="oe_inline col-sm-5"/>
+                            </div>
+                            <field name="company_id" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="state" invisible="1"/>
+                            <field name="sheet_274_10_filename" invisible="1"/>
+                            <field name="xml_filename" invisible="1"/>
+                            <field name="xls_filename" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Total">
+                            <field name="taxable_amount" string="Taxable Amount" options="{'currency_field': 'currency_id'}"/>
+                            <field name="pp_amount" string="Withholding Taxes"/>
+                            <field name="deducted_amount" string="Exempted Amount"/>
+                        </group>
+                        <group string="Doctors / Civil Engineers">
+                            <field name="taxable_amount_32" string="Taxable Amount" options="{'currency_field': 'currency_id'}"/>
+                            <field name="pp_amount_32" string="Withholding Taxes"/>
+                            <field name="deducted_amount_32" string="Exempted Amount"/>
+                        </group>
+                        <group string="Masters">
+                            <field name="taxable_amount_33" string="Taxable Amount" options="{'currency_field': 'currency_id'}"/>
+                            <field name="pp_amount_33" string="Withholding Taxes"/>
+                            <field name="deducted_amount_33" string="Exempted Amount"/>
+                        </group>
+                        <group string="Bachelors">
+                            <field name="taxable_amount_34" string="Taxable Amount" options="{'currency_field': 'currency_id'}"/>
+                            <field name="pp_amount_34" string="Withholding Taxes"/>
+                            <field name="deducted_amount_34" string="Exempted Amount"/>
+                            <field name="capped_amount_34"/>
+                        </group>
+                        <field name="line_ids" readonly="1">
+                            <tree>
+                                <field name="employee_id" widget="many2one_avatar_user"/>
+                                <field name="certificate"/>
+                                <field name="taxable_amount"/>
+                                <field name="amount" options="{'currency_field': 'currency_id'}"/>
+                                <field name="company_id" column_invisible="True"/>
+                                <field name="currency_id" column_invisible="True"/>
+                            </tree>
+                        </field>
+                        <div invisible="state not in ('waiting', 'done')">
+                            <h2 invisible="not sheet_274_10 and not xml_file and not xls_file">Generation Complete</h2>
+                            <p invisible="not sheet_274_10">
+                                Download the 274.XX PDF file: <field name="sheet_274_10" readonly="1" filename="sheet_274_10_filename"/>
+                            </p>
+                            <p invisible="not xml_file" class="oe_inline">
+                                Download the XML Export file: <field name="xml_file" readonly="1" filename="xml_filename"/>
+                                Payment Structured Communication: <field name="payment_reference" readonly="1" invisible="not payment_reference"/> 
+                                <field name="xml_validation_state" widget="state_selection" nolabel="1"/>
+                                <field name="error_message" invisible="xml_validation_state != 'invalid'" nolabel="1"/>
+                            </p>
+                            <p invisible="not xls_file" class="oe_inline" name="xls_file">
+                                Download the XLSX details file: <field name="xls_file" readonly="1" filename="xls_filename"/>
+                            </p>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_be_274_XX_action" model="ir.actions.act_window">
+        <field name="name">274.XX Sheets</field>
+        <field name="res_model">l10n_be.274_xx</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+    </record>
+
+    <record id="l10n_be_274_XX_view_tree" model="ir.ui.view">
+        <field name="name">l10n_be.274_xx.view.tree</field>
+        <field name="model">l10n_be.274_xx</field>
+        <field name="arch" type="xml">
+            <tree string="274.XX Sheets">
+                <field name="month"/>
+                <field name="year"/>
+                <field name="date_start" column_invisible="True"/>
+                <field name="date_end" column_invisible="True"/>
+            </tree>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_be_274_XX"
+        name="274.XX Sheets"
+        action="l10n_be_274_XX_action"
+        parent="l10n_be_hr_payroll.menu_reporting_l10n_be"
+        sequence="91"
+    />
+</odoo>

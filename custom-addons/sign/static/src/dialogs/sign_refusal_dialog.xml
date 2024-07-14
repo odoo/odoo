@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="sign.SignRefusalDialog">
+        <Dialog t-props="dialogProps">
+            <div>
+                <h3>Reason</h3>
+                <textarea class="o_sign_refuse_confirm_message"
+                    placeholder="Why do you refuse to sign this document?"
+                    t-ref="refuse-reason"
+                    t-on-change="checkForChanges"
+                    t-on-keyup="checkForChanges"
+                    t-on-paste="checkForChanges"
+                />
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary refuse-button" t-on-click="refuse" t-ref="refuse-button" disabled="disabled">Refuse</button>
+                <button class="btn btn-secondary" t-on-click="props.close">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

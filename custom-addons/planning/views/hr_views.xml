@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_employee_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.planning</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='o_work_employee_main']" position="inside">
+                <group name="planning" string="Planning">
+                    <field name="planning_role_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="default_planning_role_id" />
+                </group>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="has_slots" invisible="1"/>
+                <button invisible="not has_slots" class="oe_stat_button" icon="fa-tasks" name="action_view_planning" type="object">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Planning</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_employee_filter_inherit_hr" model="ir.ui.view">
+        <field name="name">hr.employee.view.search.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="before">
+                <filter name="fixed_hours" string="Fixed Hours" domain="[('resource_calendar_id', '!=', False)]" />
+                <filter name="flexible_hours" string="Flexible Hours" domain="[('resource_calendar_id', '=', False)]" />
+                <separator/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="planning_role_ids" string="Roles"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_employee_view_form_simplified" model="ir.ui.view">
+        <field name="name">hr.employee.public.view.form</field>
+        <field name="model">hr.employee.public</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="user_id" invisible="1" />
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_128"}'/>
+                    <div class="oe_title">
+                        <label for="name" string="Employee Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. John Doe" required="True"/>
+                            <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" invisible="not context.get('chat_icon') or not user_id" role="button"><i class="fa fa-comments"/></a>
+                        </h1>
+                        <h2>
+                            <field name="job_title" placeholder="Job Title" />
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="mobile_phone" widget="phone" options="{'enable_sms': false}"/>
+                            <field name="work_phone" widget="phone" options="{'enable_sms': false}"/>
+                            <field name="work_email" widget="email" required="context.get('force_email', False)"/>
+                        </group>
+                        <group>
+                            <field name="department_id"/>
+                            <field name="parent_id"/>
+                            <field name="coach_id"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="model_hr_employee_action_planning_view" model="ir.actions.server">
+        <field name="name">View Planning</field>
+        <field name="model_id" ref="planning.model_hr_employee"/>
+        <field name="binding_model_id" ref="planning.model_hr_employee"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_view_planning()</field>
+    </record>
+
+    <record id="model_hr_employee_public_action_planning_view" model="ir.actions.server">
+        <field name="name">View Planning</field>
+        <field name="model_id" ref="hr.model_hr_employee_public"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee_public"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_view_planning()</field>
+    </record>
+
+</odoo>

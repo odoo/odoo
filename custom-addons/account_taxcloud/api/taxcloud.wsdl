@@ -1,0 +1,1299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://taxcloud.net" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://taxcloud.net" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">TaxCloud Web Service</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://taxcloud.net">
+      <s:element name="VerifyAddress">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="uspsUserID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="address1" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="address2" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="city" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="state" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="zip5" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="zip4" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="VerifyAddressResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="VerifyAddressResult" type="tns:VerifiedAddress" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="VerifiedAddress">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Address">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="ErrNumber" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ErrDescription" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="Address">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Address1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Zip5" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Zip4" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="LookupForDate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiLoginID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="apiKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="customerID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cartID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cartItems" type="tns:ArrayOfCartItem" />
+            <s:element minOccurs="0" maxOccurs="1" name="origin" type="tns:Address" />
+            <s:element minOccurs="0" maxOccurs="1" name="destination" type="tns:Address" />
+            <s:element minOccurs="1" maxOccurs="1" name="deliveredBySeller" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="exemptCert" type="tns:ExemptionCertificate" />
+            <s:element minOccurs="1" maxOccurs="1" name="useDate" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfCartItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CartItem" nillable="true" type="tns:CartItem" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CartItem">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Index" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ItemID" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TIC" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Price" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="Qty" type="s:float" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ExemptionCertificate">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CertificateID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Detail" type="tns:ExemptionCertificateDetail" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ExemptionCertificateDetail">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ExemptStates" type="tns:ArrayOfExemptState" />
+          <s:element minOccurs="1" maxOccurs="1" name="SinglePurchase" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="SinglePurchaseOrderNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PurchaserFirstName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PurchaserLastName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PurchaserTitle" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PurchaserAddress1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PurchaserAddress2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PurchaserCity" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PurchaserState" type="tns:State" />
+          <s:element minOccurs="0" maxOccurs="1" name="PurchaserZip" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PurchaserTaxID" type="tns:TaxID" />
+          <s:element minOccurs="1" maxOccurs="1" name="PurchaserBusinessType" type="tns:BusinessType" />
+          <s:element minOccurs="0" maxOccurs="1" name="PurchaserBusinessTypeOtherValue" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PurchaserExemptionReason" type="tns:ExemptionReason" />
+          <s:element minOccurs="0" maxOccurs="1" name="PurchaserExemptionReasonValue" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="CreatedDate" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfExemptState">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ExemptState" nillable="true" type="tns:ExemptState" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ExemptState">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="StateAbbr" type="tns:State" />
+          <s:element minOccurs="0" maxOccurs="1" name="ReasonForExemption" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="IdentificationNumber" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="State">
+        <s:restriction base="s:string">
+          <s:enumeration value="AL" />
+          <s:enumeration value="AK" />
+          <s:enumeration value="AZ" />
+          <s:enumeration value="AR" />
+          <s:enumeration value="CA" />
+          <s:enumeration value="CO" />
+          <s:enumeration value="CT" />
+          <s:enumeration value="DE" />
+          <s:enumeration value="DC" />
+          <s:enumeration value="FL" />
+          <s:enumeration value="GA" />
+          <s:enumeration value="HI" />
+          <s:enumeration value="ID" />
+          <s:enumeration value="IL" />
+          <s:enumeration value="IN" />
+          <s:enumeration value="IA" />
+          <s:enumeration value="KS" />
+          <s:enumeration value="KY" />
+          <s:enumeration value="LA" />
+          <s:enumeration value="ME" />
+          <s:enumeration value="MD" />
+          <s:enumeration value="MA" />
+          <s:enumeration value="MI" />
+          <s:enumeration value="MN" />
+          <s:enumeration value="MS" />
+          <s:enumeration value="MO" />
+          <s:enumeration value="MT" />
+          <s:enumeration value="NE" />
+          <s:enumeration value="NV" />
+          <s:enumeration value="NH" />
+          <s:enumeration value="NJ" />
+          <s:enumeration value="NM" />
+          <s:enumeration value="NY" />
+          <s:enumeration value="NC" />
+          <s:enumeration value="ND" />
+          <s:enumeration value="OH" />
+          <s:enumeration value="OK" />
+          <s:enumeration value="OR" />
+          <s:enumeration value="PA" />
+          <s:enumeration value="RI" />
+          <s:enumeration value="SC" />
+          <s:enumeration value="SD" />
+          <s:enumeration value="TN" />
+          <s:enumeration value="TX" />
+          <s:enumeration value="UT" />
+          <s:enumeration value="VT" />
+          <s:enumeration value="VA" />
+          <s:enumeration value="WA" />
+          <s:enumeration value="WV" />
+          <s:enumeration value="WI" />
+          <s:enumeration value="WY" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="TaxID">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="TaxType" type="tns:TaxIDType" />
+          <s:element minOccurs="0" maxOccurs="1" name="IDNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StateOfIssue" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="TaxIDType">
+        <s:restriction base="s:string">
+          <s:enumeration value="SSN" />
+          <s:enumeration value="FEIN" />
+          <s:enumeration value="StateIssued" />
+          <s:enumeration value="ForeignDiplomat" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="BusinessType">
+        <s:restriction base="s:string">
+          <s:enumeration value="AccommodationAndFoodServices" />
+          <s:enumeration value="Agricultural_Forestry_Fishing_Hunting" />
+          <s:enumeration value="Construction" />
+          <s:enumeration value="FinanceAndInsurance" />
+          <s:enumeration value="Information_PublishingAndCommunications" />
+          <s:enumeration value="Manufacturing" />
+          <s:enumeration value="Mining" />
+          <s:enumeration value="RealEstate" />
+          <s:enumeration value="RentalAndLeasing" />
+          <s:enumeration value="RetailTrade" />
+          <s:enumeration value="TransportationAndWarehousing" />
+          <s:enumeration value="Utilities" />
+          <s:enumeration value="WholesaleTrade" />
+          <s:enumeration value="BusinessServices" />
+          <s:enumeration value="ProfessionalServices" />
+          <s:enumeration value="EducationAndHealthCareServices" />
+          <s:enumeration value="NonprofitOrganization" />
+          <s:enumeration value="Government" />
+          <s:enumeration value="NotABusiness" />
+          <s:enumeration value="Other" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="ExemptionReason">
+        <s:restriction base="s:string">
+          <s:enumeration value="FederalGovernmentDepartment" />
+          <s:enumeration value="StateOrLocalGovernmentName" />
+          <s:enumeration value="TribalGovernmentName" />
+          <s:enumeration value="ForeignDiplomat" />
+          <s:enumeration value="CharitableOrganization" />
+          <s:enumeration value="ReligiousOrEducationalOrganization" />
+          <s:enumeration value="Resale" />
+          <s:enumeration value="AgriculturalProduction" />
+          <s:enumeration value="IndustrialProductionOrManufacturing" />
+          <s:enumeration value="DirectPayPermit" />
+          <s:enumeration value="DirectMail" />
+          <s:enumeration value="Other" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="LookupForDateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LookupForDateResult" type="tns:LookupRsp" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="LookupRsp">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ResponseBase">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="CartID" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CartItemsResponse" type="tns:ArrayOfCartItemResponse" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ResponseBase">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ResponseType" type="tns:MessageType" />
+          <s:element minOccurs="0" maxOccurs="1" name="Messages" type="tns:ArrayOfResponseMessage" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="MessageType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Error" />
+          <s:enumeration value="Warning" />
+          <s:enumeration value="Informational" />
+          <s:enumeration value="OK" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfResponseMessage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ResponseMessage" nillable="true" type="tns:ResponseMessage" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ResponseMessage">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ResponseType" type="tns:MessageType" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfCartItemResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CartItemResponse" nillable="true" type="tns:CartItemResponse" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CartItemResponse">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="CartItemIndex" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="TaxAmount" type="s:float" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Lookup">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiLoginID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="apiKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="customerID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cartID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cartItems" type="tns:ArrayOfCartItem" />
+            <s:element minOccurs="0" maxOccurs="1" name="origin" type="tns:Address" />
+            <s:element minOccurs="0" maxOccurs="1" name="destination" type="tns:Address" />
+            <s:element minOccurs="1" maxOccurs="1" name="deliveredBySeller" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="exemptCert" type="tns:ExemptionCertificate" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LookupResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LookupResult" type="tns:LookupRsp" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Authorized">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiLoginID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="apiKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="customerID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cartID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="orderID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="dateAuthorized" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AuthorizedResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AuthorizedResult" type="tns:AuthorizedRsp" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AuthorizedRsp">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ResponseBase" />
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="AuthorizedWithCapture">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiLoginID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="apiKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="customerID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cartID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="orderID" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="dateAuthorized" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="dateCaptured" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AuthorizedWithCaptureResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AuthorizedWithCaptureResult" type="tns:AuthorizedRsp" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Captured">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiLoginID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="apiKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="orderID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CapturedResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CapturedResult" type="tns:CapturedRsp" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CapturedRsp">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ResponseBase" />
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="Returned">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiLoginID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="apiKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="orderID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cartItems" type="tns:ArrayOfCartItem" />
+            <s:element minOccurs="1" maxOccurs="1" name="returnedDate" type="s:dateTime" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ReturnedResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ReturnedResult" type="tns:ReturnedRsp" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ReturnedRsp">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ResponseBase" />
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="AddTransactions">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiLoginID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="apiKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="transactions" type="tns:ArrayOfTransaction" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfTransaction">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Transaction" nillable="true" type="tns:Transaction" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Transaction">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="customerID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="cartID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="orderID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="cartItems" type="tns:ArrayOfTransactionCartItem" />
+          <s:element minOccurs="0" maxOccurs="1" name="origin" type="tns:Address" />
+          <s:element minOccurs="0" maxOccurs="1" name="destination" type="tns:Address" />
+          <s:element minOccurs="1" maxOccurs="1" name="deliveredBySeller" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="exemptCert" type="tns:ExemptionCertificate" />
+          <s:element minOccurs="1" maxOccurs="1" name="dateTransaction" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="dateAuthorized" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="dateCaptured" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfTransactionCartItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TransactionCartItem" nillable="true" type="tns:TransactionCartItem" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TransactionCartItem">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:CartItem">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="Rate" type="s:double" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="AddTransactionsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddTransactionsResult" type="tns:AddTransactionsRsp" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AddTransactionsRsp">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ResponseBase" />
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="GetTICGroups">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiLoginID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="apiKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTICGroupsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTICGroupsResult" type="tns:GetTICGroupsRsp" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetTICGroupsRsp">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ResponseBase">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="TICGroups" type="tns:ArrayOfTICGroup" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfTICGroup">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TICGroup" nillable="true" type="tns:TICGroup" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TICGroup">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="GroupID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetTICs">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiLoginID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="apiKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTICsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTICsResult" type="tns:GetTICsRsp" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetTICsRsp">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ResponseBase">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="TICs" type="tns:ArrayOfTIC" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfTIC">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TIC" nillable="true" type="tns:TIC" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TIC">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="TICID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetTICsByGroup">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiLoginID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="apiKey" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="ticGroup" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTICsByGroupResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTICsByGroupResult" type="tns:GetTICsRsp" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddExemptCertificate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiLoginID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="apiKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="customerID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="exemptCert" type="tns:ExemptionCertificate" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddExemptCertificateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddExemptCertificateResult" type="tns:AddCertificateRsp" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AddCertificateRsp">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ResponseBase">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="CertificateID" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="DeleteExemptCertificate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiLoginID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="apiKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="certificateID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteExemptCertificateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DeleteExemptCertificateResult" type="tns:DeleteCertificateRsp" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DeleteCertificateRsp">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ResponseBase" />
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="GetExemptCertificates">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiLoginID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="apiKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="customerID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetExemptCertificatesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetExemptCertificatesResult" type="tns:GetCertificatesRsp" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetCertificatesRsp">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ResponseBase">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="ExemptCertificates" type="tns:ArrayOfExemptionCertificate" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfExemptionCertificate">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ExemptionCertificate" nillable="true" type="tns:ExemptionCertificate" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Ping">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="apiLoginID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="apiKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PingResult" type="tns:PingRsp" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PingRsp">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ResponseBase" />
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="VerifiedAddress" nillable="true" type="tns:VerifiedAddress" />
+      <s:element name="AuthorizedRsp" nillable="true" type="tns:AuthorizedRsp" />
+      <s:element name="CapturedRsp" nillable="true" type="tns:CapturedRsp" />
+      <s:element name="GetTICGroupsRsp" nillable="true" type="tns:GetTICGroupsRsp" />
+      <s:element name="GetTICsRsp" nillable="true" type="tns:GetTICsRsp" />
+      <s:element name="DeleteCertificateRsp" nillable="true" type="tns:DeleteCertificateRsp" />
+      <s:element name="GetCertificatesRsp" nillable="true" type="tns:GetCertificatesRsp" />
+      <s:element name="PingRsp" nillable="true" type="tns:PingRsp" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="VerifyAddressSoapIn">
+    <wsdl:part name="parameters" element="tns:VerifyAddress" />
+  </wsdl:message>
+  <wsdl:message name="VerifyAddressSoapOut">
+    <wsdl:part name="parameters" element="tns:VerifyAddressResponse" />
+  </wsdl:message>
+  <wsdl:message name="LookupForDateSoapIn">
+    <wsdl:part name="parameters" element="tns:LookupForDate" />
+  </wsdl:message>
+  <wsdl:message name="LookupForDateSoapOut">
+    <wsdl:part name="parameters" element="tns:LookupForDateResponse" />
+  </wsdl:message>
+  <wsdl:message name="LookupSoapIn">
+    <wsdl:part name="parameters" element="tns:Lookup" />
+  </wsdl:message>
+  <wsdl:message name="LookupSoapOut">
+    <wsdl:part name="parameters" element="tns:LookupResponse" />
+  </wsdl:message>
+  <wsdl:message name="AuthorizedSoapIn">
+    <wsdl:part name="parameters" element="tns:Authorized" />
+  </wsdl:message>
+  <wsdl:message name="AuthorizedSoapOut">
+    <wsdl:part name="parameters" element="tns:AuthorizedResponse" />
+  </wsdl:message>
+  <wsdl:message name="AuthorizedWithCaptureSoapIn">
+    <wsdl:part name="parameters" element="tns:AuthorizedWithCapture" />
+  </wsdl:message>
+  <wsdl:message name="AuthorizedWithCaptureSoapOut">
+    <wsdl:part name="parameters" element="tns:AuthorizedWithCaptureResponse" />
+  </wsdl:message>
+  <wsdl:message name="CapturedSoapIn">
+    <wsdl:part name="parameters" element="tns:Captured" />
+  </wsdl:message>
+  <wsdl:message name="CapturedSoapOut">
+    <wsdl:part name="parameters" element="tns:CapturedResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReturnedSoapIn">
+    <wsdl:part name="parameters" element="tns:Returned" />
+  </wsdl:message>
+  <wsdl:message name="ReturnedSoapOut">
+    <wsdl:part name="parameters" element="tns:ReturnedResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddTransactionsSoapIn">
+    <wsdl:part name="parameters" element="tns:AddTransactions" />
+  </wsdl:message>
+  <wsdl:message name="AddTransactionsSoapOut">
+    <wsdl:part name="parameters" element="tns:AddTransactionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTICGroupsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTICGroups" />
+  </wsdl:message>
+  <wsdl:message name="GetTICGroupsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTICGroupsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTICsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTICs" />
+  </wsdl:message>
+  <wsdl:message name="GetTICsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTICsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTICsByGroupSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTICsByGroup" />
+  </wsdl:message>
+  <wsdl:message name="GetTICsByGroupSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTICsByGroupResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddExemptCertificateSoapIn">
+    <wsdl:part name="parameters" element="tns:AddExemptCertificate" />
+  </wsdl:message>
+  <wsdl:message name="AddExemptCertificateSoapOut">
+    <wsdl:part name="parameters" element="tns:AddExemptCertificateResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteExemptCertificateSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteExemptCertificate" />
+  </wsdl:message>
+  <wsdl:message name="DeleteExemptCertificateSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteExemptCertificateResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetExemptCertificatesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetExemptCertificates" />
+  </wsdl:message>
+  <wsdl:message name="GetExemptCertificatesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetExemptCertificatesResponse" />
+  </wsdl:message>
+  <wsdl:message name="PingSoapIn">
+    <wsdl:part name="parameters" element="tns:Ping" />
+  </wsdl:message>
+  <wsdl:message name="PingSoapOut">
+    <wsdl:part name="parameters" element="tns:PingResponse" />
+  </wsdl:message>
+  <wsdl:message name="VerifyAddressHttpPostIn">
+    <wsdl:part name="uspsUserID" type="s:string" />
+    <wsdl:part name="address1" type="s:string" />
+    <wsdl:part name="address2" type="s:string" />
+    <wsdl:part name="city" type="s:string" />
+    <wsdl:part name="state" type="s:string" />
+    <wsdl:part name="zip5" type="s:string" />
+    <wsdl:part name="zip4" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="VerifyAddressHttpPostOut">
+    <wsdl:part name="Body" element="tns:VerifiedAddress" />
+  </wsdl:message>
+  <wsdl:message name="AuthorizedHttpPostIn">
+    <wsdl:part name="apiLoginID" type="s:string" />
+    <wsdl:part name="apiKey" type="s:string" />
+    <wsdl:part name="customerID" type="s:string" />
+    <wsdl:part name="cartID" type="s:string" />
+    <wsdl:part name="orderID" type="s:string" />
+    <wsdl:part name="dateAuthorized" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AuthorizedHttpPostOut">
+    <wsdl:part name="Body" element="tns:AuthorizedRsp" />
+  </wsdl:message>
+  <wsdl:message name="AuthorizedWithCaptureHttpPostIn">
+    <wsdl:part name="apiLoginID" type="s:string" />
+    <wsdl:part name="apiKey" type="s:string" />
+    <wsdl:part name="customerID" type="s:string" />
+    <wsdl:part name="cartID" type="s:string" />
+    <wsdl:part name="orderID" type="s:string" />
+    <wsdl:part name="dateAuthorized" type="s:string" />
+    <wsdl:part name="dateCaptured" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AuthorizedWithCaptureHttpPostOut">
+    <wsdl:part name="Body" element="tns:AuthorizedRsp" />
+  </wsdl:message>
+  <wsdl:message name="CapturedHttpPostIn">
+    <wsdl:part name="apiLoginID" type="s:string" />
+    <wsdl:part name="apiKey" type="s:string" />
+    <wsdl:part name="orderID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CapturedHttpPostOut">
+    <wsdl:part name="Body" element="tns:CapturedRsp" />
+  </wsdl:message>
+  <wsdl:message name="GetTICGroupsHttpPostIn">
+    <wsdl:part name="apiLoginID" type="s:string" />
+    <wsdl:part name="apiKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTICGroupsHttpPostOut">
+    <wsdl:part name="Body" element="tns:GetTICGroupsRsp" />
+  </wsdl:message>
+  <wsdl:message name="GetTICsHttpPostIn">
+    <wsdl:part name="apiLoginID" type="s:string" />
+    <wsdl:part name="apiKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTICsHttpPostOut">
+    <wsdl:part name="Body" element="tns:GetTICsRsp" />
+  </wsdl:message>
+  <wsdl:message name="GetTICsByGroupHttpPostIn">
+    <wsdl:part name="apiLoginID" type="s:string" />
+    <wsdl:part name="apiKey" type="s:string" />
+    <wsdl:part name="ticGroup" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTICsByGroupHttpPostOut">
+    <wsdl:part name="Body" element="tns:GetTICsRsp" />
+  </wsdl:message>
+  <wsdl:message name="DeleteExemptCertificateHttpPostIn">
+    <wsdl:part name="apiLoginID" type="s:string" />
+    <wsdl:part name="apiKey" type="s:string" />
+    <wsdl:part name="certificateID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DeleteExemptCertificateHttpPostOut">
+    <wsdl:part name="Body" element="tns:DeleteCertificateRsp" />
+  </wsdl:message>
+  <wsdl:message name="GetExemptCertificatesHttpPostIn">
+    <wsdl:part name="apiLoginID" type="s:string" />
+    <wsdl:part name="apiKey" type="s:string" />
+    <wsdl:part name="customerID" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetExemptCertificatesHttpPostOut">
+    <wsdl:part name="Body" element="tns:GetCertificatesRsp" />
+  </wsdl:message>
+  <wsdl:message name="PingHttpPostIn">
+    <wsdl:part name="apiLoginID" type="s:string" />
+    <wsdl:part name="apiKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="PingHttpPostOut">
+    <wsdl:part name="Body" element="tns:PingRsp" />
+  </wsdl:message>
+  <wsdl:portType name="TaxCloudSoap">
+    <wsdl:operation name="VerifyAddress">
+      <wsdl:input message="tns:VerifyAddressSoapIn" />
+      <wsdl:output message="tns:VerifyAddressSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LookupForDate">
+      <wsdl:input message="tns:LookupForDateSoapIn" />
+      <wsdl:output message="tns:LookupForDateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Lookup">
+      <wsdl:input message="tns:LookupSoapIn" />
+      <wsdl:output message="tns:LookupSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Authorized">
+      <wsdl:input message="tns:AuthorizedSoapIn" />
+      <wsdl:output message="tns:AuthorizedSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AuthorizedWithCapture">
+      <wsdl:input message="tns:AuthorizedWithCaptureSoapIn" />
+      <wsdl:output message="tns:AuthorizedWithCaptureSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Captured">
+      <wsdl:input message="tns:CapturedSoapIn" />
+      <wsdl:output message="tns:CapturedSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Returned">
+      <wsdl:input message="tns:ReturnedSoapIn" />
+      <wsdl:output message="tns:ReturnedSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddTransactions">
+      <wsdl:input message="tns:AddTransactionsSoapIn" />
+      <wsdl:output message="tns:AddTransactionsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTICGroups">
+      <wsdl:input message="tns:GetTICGroupsSoapIn" />
+      <wsdl:output message="tns:GetTICGroupsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTICs">
+      <wsdl:input message="tns:GetTICsSoapIn" />
+      <wsdl:output message="tns:GetTICsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTICsByGroup">
+      <wsdl:input message="tns:GetTICsByGroupSoapIn" />
+      <wsdl:output message="tns:GetTICsByGroupSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddExemptCertificate">
+      <wsdl:input message="tns:AddExemptCertificateSoapIn" />
+      <wsdl:output message="tns:AddExemptCertificateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteExemptCertificate">
+      <wsdl:input message="tns:DeleteExemptCertificateSoapIn" />
+      <wsdl:output message="tns:DeleteExemptCertificateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetExemptCertificates">
+      <wsdl:input message="tns:GetExemptCertificatesSoapIn" />
+      <wsdl:output message="tns:GetExemptCertificatesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <wsdl:input message="tns:PingSoapIn" />
+      <wsdl:output message="tns:PingSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="TaxCloudHttpPost">
+    <wsdl:operation name="VerifyAddress">
+      <wsdl:input message="tns:VerifyAddressHttpPostIn" />
+      <wsdl:output message="tns:VerifyAddressHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Authorized">
+      <wsdl:input message="tns:AuthorizedHttpPostIn" />
+      <wsdl:output message="tns:AuthorizedHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AuthorizedWithCapture">
+      <wsdl:input message="tns:AuthorizedWithCaptureHttpPostIn" />
+      <wsdl:output message="tns:AuthorizedWithCaptureHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Captured">
+      <wsdl:input message="tns:CapturedHttpPostIn" />
+      <wsdl:output message="tns:CapturedHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTICGroups">
+      <wsdl:input message="tns:GetTICGroupsHttpPostIn" />
+      <wsdl:output message="tns:GetTICGroupsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTICs">
+      <wsdl:input message="tns:GetTICsHttpPostIn" />
+      <wsdl:output message="tns:GetTICsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTICsByGroup">
+      <wsdl:input message="tns:GetTICsByGroupHttpPostIn" />
+      <wsdl:output message="tns:GetTICsByGroupHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteExemptCertificate">
+      <wsdl:input message="tns:DeleteExemptCertificateHttpPostIn" />
+      <wsdl:output message="tns:DeleteExemptCertificateHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetExemptCertificates">
+      <wsdl:input message="tns:GetExemptCertificatesHttpPostIn" />
+      <wsdl:output message="tns:GetExemptCertificatesHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <wsdl:input message="tns:PingHttpPostIn" />
+      <wsdl:output message="tns:PingHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="TaxCloudSoap" type="tns:TaxCloudSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="VerifyAddress">
+      <soap:operation soapAction="http://taxcloud.net/VerifyAddress" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LookupForDate">
+      <soap:operation soapAction="http://taxcloud.net/LookupForDate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Lookup">
+      <soap:operation soapAction="http://taxcloud.net/Lookup" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Authorized">
+      <soap:operation soapAction="http://taxcloud.net/Authorized" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AuthorizedWithCapture">
+      <soap:operation soapAction="http://taxcloud.net/AuthorizedWithCapture" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Captured">
+      <soap:operation soapAction="http://taxcloud.net/Captured" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Returned">
+      <soap:operation soapAction="http://taxcloud.net/Returned" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddTransactions">
+      <soap:operation soapAction="http://taxcloud.net/AddTransactions" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTICGroups">
+      <soap:operation soapAction="http://taxcloud.net/GetTICGroups" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTICs">
+      <soap:operation soapAction="http://taxcloud.net/GetTICs" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTICsByGroup">
+      <soap:operation soapAction="http://taxcloud.net/GetTICsByGroup" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddExemptCertificate">
+      <soap:operation soapAction="http://taxcloud.net/AddExemptCertificate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteExemptCertificate">
+      <soap:operation soapAction="http://taxcloud.net/DeleteExemptCertificate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetExemptCertificates">
+      <soap:operation soapAction="http://taxcloud.net/GetExemptCertificates" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <soap:operation soapAction="http://taxcloud.net/Ping" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="TaxCloudSoap12" type="tns:TaxCloudSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="VerifyAddress">
+      <soap12:operation soapAction="http://taxcloud.net/VerifyAddress" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LookupForDate">
+      <soap12:operation soapAction="http://taxcloud.net/LookupForDate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Lookup">
+      <soap12:operation soapAction="http://taxcloud.net/Lookup" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Authorized">
+      <soap12:operation soapAction="http://taxcloud.net/Authorized" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AuthorizedWithCapture">
+      <soap12:operation soapAction="http://taxcloud.net/AuthorizedWithCapture" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Captured">
+      <soap12:operation soapAction="http://taxcloud.net/Captured" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Returned">
+      <soap12:operation soapAction="http://taxcloud.net/Returned" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddTransactions">
+      <soap12:operation soapAction="http://taxcloud.net/AddTransactions" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTICGroups">
+      <soap12:operation soapAction="http://taxcloud.net/GetTICGroups" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTICs">
+      <soap12:operation soapAction="http://taxcloud.net/GetTICs" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTICsByGroup">
+      <soap12:operation soapAction="http://taxcloud.net/GetTICsByGroup" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddExemptCertificate">
+      <soap12:operation soapAction="http://taxcloud.net/AddExemptCertificate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteExemptCertificate">
+      <soap12:operation soapAction="http://taxcloud.net/DeleteExemptCertificate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetExemptCertificates">
+      <soap12:operation soapAction="http://taxcloud.net/GetExemptCertificates" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <soap12:operation soapAction="http://taxcloud.net/Ping" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="TaxCloudHttpPost" type="tns:TaxCloudHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="VerifyAddress">
+      <http:operation location="/VerifyAddress" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Authorized">
+      <http:operation location="/Authorized" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AuthorizedWithCapture">
+      <http:operation location="/AuthorizedWithCapture" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Captured">
+      <http:operation location="/Captured" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTICGroups">
+      <http:operation location="/GetTICGroups" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTICs">
+      <http:operation location="/GetTICs" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTICsByGroup">
+      <http:operation location="/GetTICsByGroup" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteExemptCertificate">
+      <http:operation location="/DeleteExemptCertificate" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetExemptCertificates">
+      <http:operation location="/GetExemptCertificates" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <http:operation location="/Ping" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="TaxCloud">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">TaxCloud Web Service</wsdl:documentation>
+    <wsdl:port name="TaxCloudSoap" binding="tns:TaxCloudSoap">
+      <soap:address location="https://api.taxcloud.net/1.0/TaxCloud.asmx" />
+    </wsdl:port>
+    <wsdl:port name="TaxCloudSoap12" binding="tns:TaxCloudSoap12">
+      <soap12:address location="https://api.taxcloud.net/1.0/TaxCloud.asmx" />
+    </wsdl:port>
+    <wsdl:port name="TaxCloudHttpPost" binding="tns:TaxCloudHttpPost">
+      <http:address location="https://api.taxcloud.net/1.0/TaxCloud.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

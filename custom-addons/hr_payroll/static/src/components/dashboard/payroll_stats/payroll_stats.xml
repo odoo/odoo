@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <t t-name="hr_payroll.DashboardStats">
+        <div class="o_hr_payroll_dashboard_block o_hr_payroll_dashboard_block_stats card d-flex align-items-stretch flex-column h-100">
+            <div class="card-header d-flex flex-wrap justify-content-between align-items-center w-100 border-0 bg-view">
+                <h2 class="card-title" t-out="props.title"></h2>
+                <i class="fa fa-question-circle-o" t-if="props.help"
+                    data-tooltip-template="hr_payroll.Tooltip" t-att-data-tooltip-info="tooltipInfo"/>
+                <div class="d-flex" id="period_selection_toggle">
+                    Annually
+                    <div class="o_boolean_toggle cursor-pointer form-check form-switch o_switch_toggle ms-2" t-on-click.stop.prevent="toggle">
+                        <input type="checkbox" class="form-check-input" role="switch" t-att-checked="state.monthly"/>
+                    </div>
+                    Monthly
+                </div>
+            </div>
+            <div class="card-body d-flex flex-column justify-content-between">
+                <t t-foreach="props.actions" t-as="action" t-key="action_index">
+                    <a t-if="action.count > 0" class="d-flex w-100" href="#" t-on-click="() => this.actionService.doAction(action.action)">
+                        <span class="me-1" t-out="action.count"></span>
+                        <t t-esc="action.string"/>
+                    </a>
+                </t>
+                <div t-att-class="'canvas-container mt-auto d-flex align-items-end ' + (props.type === 'line' ? 'payroll_line' : 'payroll_bar')">
+                    <canvas t-ref="canvas" class="w-100"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="hr_payroll.Tooltip">
+        <div class="o-tooltip px-2 py-1">
+            <p t-out="help"/>
+        </div>
+    </t>
+</odoo>

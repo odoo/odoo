@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="documents_spreadsheet.share_page" name="Multiple Documents Share with Spreadsheets" inherit_id="documents.share_workspace_page">
+    <xpath expr="//article" position="before">
+        <t t-set="isSpreadsheet" t-value="document.mimetype == 'application/o-spreadsheet'"/>
+    </xpath>
+    <xpath expr="//article" position="before">
+        <t t-if="isSpreadsheet" t-set="title">Odoo Spreadsheets not available for download</t>
+        <t t-else="" t-set="title" t-value="''"/>
+    </xpath>
+    <xpath expr="//article" position="attributes">
+        <attribute name="t-attf-class" separator=" " add="#{isSpreadsheet and 'spreadsheet_fade' or ''}"/>
+        <attribute name="t-att-title" >title</attribute>
+    </xpath>
+    <xpath expr="//article//h6/span[contains(@t-if, 'document_request')]" position="after">
+        <span t-elif="isSpreadsheet" t-esc="document.name"/>
+    </xpath>
+    <xpath expr="//article/div[hasclass('o_card_right')]/a[contains(@t-if, 'not document_request')]" position="attributes">
+        <attribute name="t-if" separator=" " add="and not isSpreadsheet"/>
+    </xpath>
+</template>
+
+</odoo>

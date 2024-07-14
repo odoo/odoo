@@ -1,0 +1,184 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_iot
+# 
+# Translators:
+# Ekaterina <nawsikaya@bk.ru>, 2023
+# Collex100, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
+# Martin Trigaux, 2023
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: delivery_iot
+#: model:ir.actions.report,print_report_name:delivery_iot.action_report_shipping_docs
+#: model:ir.actions.report,print_report_name:delivery_iot.action_report_shipping_labels
+msgid "'Empty Report - Used for assigning IoT printer'"
+msgstr "'Пустой отчет - используется для назначения принтера IoT'"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_stock_picking_type__auto_print_carrier_labels
+msgid "Auto Print Carrier Labels"
+msgstr "Автоматическая печать этикеток для носителей"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_stock_picking_type__auto_print_export_documents
+msgid "Auto Print Export Documents"
+msgstr "Автоматическая печать Экспорт документов"
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "Carrier Labels"
+msgstr "Этикетки для носителей"
+
+#. module: delivery_iot
+#: model:ir.model.fields,help:delivery_iot.field_choose_delivery_package__available_scale_ids
+#: model:ir.model.fields,help:delivery_iot.field_stock_picking_type__iot_scale_ids
+msgid ""
+"Choose the scales you want to use for this operation type. Those scales can "
+"be used to weigh the packages created."
+msgstr ""
+"Выберите весы, которые вы хотите использовать для этого типа операций. Эти "
+"весы можно использовать для взвешивания созданных пакетов."
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "Connect Scale"
+msgstr "Масштаб соединения"
+
+#. module: delivery_iot
+#: model:ir.model,name:delivery_iot.model_choose_delivery_package
+msgid "Delivery Package Selection Wizard"
+msgstr "Мастер выбора пакета поставки"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__iot_ip
+msgid "Domain Address"
+msgstr "Адрес домена"
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "Export Documents"
+msgstr "Экспорт документов"
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "How to connect scales?"
+msgstr "Как соединить шкалы?"
+
+#. module: delivery_iot
+#: model:ir.model,name:delivery_iot.model_iot_device
+msgid "IOT Device"
+msgstr "IOT-устройство"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__iot_device_identifier
+msgid "Identifier"
+msgstr "Идентификатор"
+
+#. module: delivery_iot
+#: model:ir.model.fields,help:delivery_iot.field_stock_picking_type__auto_print_carrier_labels
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the carrier labels"
+" of the picking when they are created. Note this requires a printer to be "
+"assigned to this report."
+msgstr ""
+"Если этот флажок отмечен, Odoo будет автоматически печатать этикетки "
+"носителей при создании комплектации. Обратите внимание, что для этого отчета"
+" должен быть назначен принтер."
+
+#. module: delivery_iot
+#: model:ir.model.fields,help:delivery_iot.field_stock_picking_type__auto_print_export_documents
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the export "
+"documents of the picking when they are created. Availability of export "
+"documents depends on the carrier and the destination. Note this requires a "
+"printer to be assigned to this report. "
+msgstr ""
+"Если этот флажок отмечен, Odoo будет автоматически печатать экспортные "
+"документы комплектации при их создании. Наличие экспортных документов "
+"зависит от перевозчика и пункта назначения. Обратите внимание, что для этого"
+" отчета должен быть назначен принтер."
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid ""
+"If you connect your scales through the IoT App, the\n"
+"                            weight of the package will be set automatically when\n"
+"                            you do a \"Put in Pack\" operation."
+msgstr ""
+"Если вы подключите весы через приложение IoT App, то\n"
+"                            вес упаковки будет устанавливаться автоматически при\n"
+"                            при выполнении операции \"Положить в пакет\"."
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.iot_device_view_form_inherit
+msgid "Linked Operation Types"
+msgstr "Связанные типы операций"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__manual_measurement
+msgid "Manual Measurement"
+msgstr "Ручное измерение"
+
+#. module: delivery_iot
+#: model:ir.model.fields,help:delivery_iot.field_choose_delivery_package__manual_measurement
+msgid "Manually read the measurement from the device"
+msgstr "Ручное считывание результатов измерений с устройства"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_iot_device__picking_type_ids
+msgid "Operation Types"
+msgstr "Типы операций"
+
+#. module: delivery_iot
+#: model:ir.model,name:delivery_iot.model_stock_picking_type
+msgid "Picking Type"
+msgstr "Тип комплектования"
+
+#. module: delivery_iot
+#. odoo-javascript
+#: code:addons/delivery_iot/static/src/field_many2one_iot_scale.xml:0
+#, python-format
+msgid "Read weight"
+msgstr "Читать вес"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__iot_device_id
+msgid "Scale"
+msgstr "Масштаб"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__available_scale_ids
+#: model:ir.model.fields,field_description:delivery_iot.field_stock_picking_type__iot_scale_ids
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "Scales"
+msgstr "Чешуя"
+
+#. module: delivery_iot
+#: model:ir.actions.report,name:delivery_iot.action_report_shipping_docs
+msgid "Shipping Documents"
+msgstr "Грузовые документы"
+
+#. module: delivery_iot
+#: model:ir.actions.report,name:delivery_iot.action_report_shipping_labels
+msgid "Shipping Labels"
+msgstr "Этикетки для доставки"
+
+#. module: delivery_iot
+#: model:ir.model,name:delivery_iot.model_stock_picking
+msgid "Transfer"
+msgstr "Перевод"

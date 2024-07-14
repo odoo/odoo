@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_account_report_cs" model="ir.actions.client">
+            <field name="name">Cash Flow Statement</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_reports.cash_flow_report')}"/>
+        </record>
+
+        <record id="action_account_report_bs" model="ir.actions.client">
+            <field name="name">Balance Sheet</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_reports.balance_sheet')}"/>
+        </record>
+
+        <record id="action_account_report_exec_summary" model="ir.actions.client">
+            <field name="name">Executive Summary</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_reports.executive_summary')}"/>
+        </record>
+
+        <record id="action_account_report_pl" model="ir.actions.client">
+            <field name="name">Profit and Loss</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_reports.profit_and_loss')}"/>
+        </record>
+
+        <record id="action_account_report_gt" model="ir.actions.client">
+            <field name="name">Tax Report</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account.generic_tax_report')}"/>
+        </record>
+
+        <record id="action_account_report_ja" model="ir.actions.client">
+            <field name="name">Journal Report</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_reports.journal_report')}"/>
+        </record>
+
+        <record id="action_account_report_general_ledger" model="ir.actions.client">
+            <field name="name">General Ledger</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_reports.general_ledger_report')}"/>
+        </record>
+
+        <record id="action_account_report_multicurrency_revaluation" model="ir.actions.client">
+            <field name="name">Unrealized Currency Gains/Losses</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_reports.multicurrency_revaluation_report')}"/>
+        </record>
+
+        <record id="action_account_report_ar" model="ir.actions.client">
+            <field name="name">Aged Receivable</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_reports.aged_receivable_report')}" />
+        </record>
+
+        <record id="action_account_report_ap" model="ir.actions.client">
+            <field name="name">Aged Payable</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_reports.aged_payable_report')}" />
+        </record>
+
+        <record id="action_account_report_coa" model="ir.actions.client">
+            <field name="name">Trial Balance</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_reports.trial_balance_report')}"/>
+        </record>
+
+        <record id="action_account_report_partner_ledger" model="ir.actions.client">
+            <field name="name">Partner Ledger</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_reports.partner_ledger_report')}"/>
+        </record>
+
+        <record id="action_account_report_sales" model="ir.actions.client">
+            <field name="name">EC Sales List</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_reports.generic_ec_sales_report')}"/>
+        </record>
+
+        <record id="action_account_report_deferred_expense" model="ir.actions.client">
+            <field name="name">Deferred Expense</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_reports.deferred_expense_report')}"/>
+        </record>
+        <record id="action_account_report_deferred_revenue" model="ir.actions.client">
+            <field name="name">Deferred Revenue</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_reports.deferred_revenue_report')}"/>
+        </record>
+
+        <record id="account_financial_current_year_earnings_line_1" model="account.report.line">
+            <field name="action_id" ref="action_account_report_pl"/>
+        </record>
+
+        <record id="account_financial_report_executivesummary_profitability0" model="account.report.line">
+            <field name="action_id" ref="action_account_report_pl"/>
+        </record>
+
+        <record id="account_financial_report_executivesummary_balancesheet0" model="account.report.line">
+            <field name="action_id" ref="action_account_report_bs"/>
+        </record>
+
+        <record id="action_create_report_menu" model="ir.actions.server">
+            <field name="name">Create Menu Item</field>
+            <field name="model_id" ref="account.model_account_report"/>
+            <field name="binding_model_id" ref="account.model_account_report" />
+            <field name="state">code</field>
+            <field name="binding_view_types">form</field>
+            <field name="code">
+if records:
+    action = records._create_menu_item_for_report()
+            </field>
+        </record>
+
+        <record id="action_account_report_tree" model="ir.actions.act_window">
+            <field name="name">Accounting Reports</field>
+            <field name="res_model">account.report</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="account_report_tree"/>
+            <field name="search_view_id" ref="view_account_report_search"/>
+        </record>
+
+        <record id="action_account_report_horizontal_groups" model="ir.actions.act_window">
+            <field name="name">Horizontal Groups</field>
+            <field name="res_model">account.report.horizontal.group</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="account_report_horizontal_group_tree"/>
+        </record>
+
+        <record id="action_account_report_bank_reconciliation" model="ir.actions.client">
+            <field name="name">Bank Reconciliation</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_reports.bank_reconciliation_report')}"/>
+        </record>
+
+    </data>
+</odoo>

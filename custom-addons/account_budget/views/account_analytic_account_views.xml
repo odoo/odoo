@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record model="ir.ui.view" id="view_account_analytic_account_form_inherit_budget">
+            <field name="name">account.analytic.account.form.inherit.budget</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="priority" eval="50"/>
+            <field name="arch" type="xml">
+                <xpath  expr="//group[@name='main']" position='after'>
+                    <notebook  groups="account.group_account_readonly">
+                        <page string="Budget Items" name="budget_items">
+                                <field name="crossovered_budget_line" widget="one2many" colspan="4" nolabel="1" mode="tree">
+                                    <tree string="Budget Items" editable="top">
+                                        <field name="crossovered_budget_id" optional="show"/>
+                                        <field name="general_budget_id" optional="show"/>
+                                        <field name="date_from"/>
+                                        <field name="date_to"/>
+                                        <field name="paid_date" optional="hide"/>
+                                        <field name="planned_amount" widget="monetary"/>
+                                        <field name="practical_amount" sum="Practical Amount" widget="monetary"/>
+                                        <field name="theoritical_amount" sum="Theoretical Amount" widget="monetary" optional="hide"/>
+                                        <field name="percentage" widget="percentage"/>
+                                        <field name="currency_id" column_invisible="True"/>
+                                    </tree>
+                                    <form string="Budget Items">
+                                        <group>
+                                        <field name="crossovered_budget_id"/>
+                                        <field name="general_budget_id"/>
+                                        <field name="date_from"/>
+                                        <field name="date_to"/>
+                                        <field name="paid_date"/>
+                                        <field name="planned_amount" widget="monetary"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        </group>
+                                    </form>
+                                </field>
+                        </page>
+                    </notebook>
+                </xpath>
+                <xpath expr="//button[@name='%(analytic.account_analytic_line_action)d']" position="before">
+                    <button class="oe_stat_button" type="action" name="
+                        %(act_account_analytic_account_cb_lines)d" icon="fa-usd">
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_text">Budget</span>
+                            <span class="o_stat_value">
+                                <field name="total_planned_amount" widget='monetary'/>
+                            </span>
+                        </div>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+</odoo>

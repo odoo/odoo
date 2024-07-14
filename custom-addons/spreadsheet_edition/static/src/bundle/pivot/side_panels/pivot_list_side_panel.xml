@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="spreadsheet_edition.PivotSidePanel" class="o_spreadsheet_pivot_side_panel">
+        <t t-set="pivotId" t-value="env.model.getters.getSelectedPivotId()"/>
+        <t t-if="pivotId">
+            <PivotDetailsSidePanel pivotId="pivotId"/>
+            <div class="o-sidePanelButtons">
+                <button t-on-click="() => this.delete(pivotId)" class="o-button o_delete_element">Delete</button>
+                <button t-on-click="resetSelectedPivot" class="o-button o_pivot_cancel">Back</button>
+            </div>
+        </t>
+        <t t-else="1">
+            <div t-on-click="() => this.selectPivot(pivotId)" t-foreach="env.model.getters.getPivotIds()" t-as="pivotId" t-key="pivotId">
+                <div class="o_side_panel_select">
+                    <span t-esc="env.model.getters.getPivotDisplayName(pivotId)"/>
+                </div>
+            </div>
+        </t>
+    </div>
+</templates>

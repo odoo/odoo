@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <template id="report_timesheet" inherit_id="hr_timesheet.report_timesheet">
+        <xpath expr="//t[@t-set='show_project']" position="after">
+            <t t-set="show_ticket" t-value="bool(docs.helpdesk_ticket_id)"/>
+        </xpath>
+    </template>
+
+    <template id="timesheet_project_task_page" inherit_id="hr_timesheet.timesheet_project_task_page">
+        <xpath expr="//t[@t-set='show_task']" position="after">
+            <t t-set="show_ticket" t-value="bool(doc.timesheet_ids.helpdesk_ticket_id)"/>
+        </xpath>
+    </template>
+
+    <!-- Inherit timesheet table to add ticket column -->
+    <template id="timesheet_table" inherit_id="hr_timesheet.timesheet_table">
+        <xpath expr="//thead/tr/t" position="after">
+            <t t-if="show_ticket">
+                <t t-if="show_task" t-set="timesheet_record_label">Task/Ticket</t>
+                <t t-elif="not (show_task or show_project)" t-set="timesheet_record_label">Ticket</t>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-elif='show_task']" position="after">
+            <t t-if="show_ticket and line.helpdesk_ticket_id" class="align-middle">
+                <span t-if="show_project" t-set="timesheet_record_info" t-value="'%s / %s' % (timesheet_record_info, line.helpdesk_ticket_id.sudo().name)">Issue with new portal system</span>
+                <span t-else="" t-set="timesheet_record_info" t-value="line.helpdesk_ticket_id.sudo().name">Issue with new portal system</span>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Helpdesk Ticket Timesheet Report for given timesheets -->
+    <template id="report_timesheet_ticket">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-set="company" t-value="docs.company_id if len(docs) == 1 else docs.env.company"/>
+                <div class="page">
+                    <t t-foreach="docs" t-as="doc">
+                        <div class="oe_structure"/>
+                        <div class="row mt8">
+                            <div class="col-12">
+                                <t t-if="doc.use_helpdesk_timesheet and doc.timesheet_ids">
+                                    <h1 class="my-4">
+                                        <t t-if="not show_ticket">
+                                            Ticket: <span t-field="doc.name"/>
+                                        </t>
+                                    </h1>
+                                    <h2>
+                                        <span>Timesheets
+                                            <t t-if="show_ticket">
+                                                for the <t t-out="doc.name"/> Ticket
+                                            </t>
+                                        </span>
+                                    </h2>
+                                    <t t-set='lines' t-value='doc.timesheet_ids'/>
+                                    <t t-call="hr_timesheet.timesheet_table"/>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="timesheet_report_ticket" model="ir.actions.report">
+        <field name="name">Timesheets</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">helpdesk_timesheet.report_timesheet_ticket</field>
+        <field name="binding_model_id" ref="model_helpdesk_ticket"/>
+    </record>
+</odoo>

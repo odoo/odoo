@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="cfdi_cartaporte_comex_30" inherit_id="l10n_mx_edi_stock_30.cfdi_cartaporte_30">
+
+        <xpath expr="//*[name()='cartaporte20:CartaPorte']" position="attributes">
+            <attribute name="t-att-RegimenAduanero">regimen_aduanero</attribute>
+            <attribute name="t-att-EntradaSalidaMerc">entrada_salida_merc</attribute>
+        </xpath>
+
+        <xpath expr="//*[name()='cfdi:InformacionAduanera']" position="replace"/>
+
+        <xpath expr="//*[name()='cartaporte20:Mercancia']" position="attributes">
+            <attribute name="t-att-TipoMateria">move.product_id.l10n_mx_edi_material_type if record.l10n_mx_edi_external_trade else None</attribute>
+            <attribute name="t-att-DescripcionMateria">move.product_id.l10n_mx_edi_material_description if (record.l10n_mx_edi_external_trade and move.product_id.l10n_mx_edi_material_type == '05') else None</attribute>
+        </xpath>
+
+        <xpath expr="//*[name()='cartaporte20:CantidadTransporta']" position="before">
+            <cartaporte30:DocumentacionAduanera
+                xmlns:cartaporte30="http://www.sat.gob.mx/CartaPorte30"
+                t-if="record.l10n_mx_edi_external_trade"
+                t-att-TipoDocumento="tipo_documento"
+                t-att-NumPedimento="num_pedimento"
+                t-att-IdentDocAduanero="ident_doc_aduanero"
+                t-att-RFCImpo="rfc_impo"
+            />
+        </xpath>
+    </template>
+</odoo>

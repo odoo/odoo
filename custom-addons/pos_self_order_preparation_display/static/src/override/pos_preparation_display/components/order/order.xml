@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_preparation_display.Order" t-inherit="pos_preparation_display.Order" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_pdis_table')]" position="replace">
+            <div class="o_pdis_table pe-1">
+                <t t-if="this.props.order.take_away">OUT </t>
+                <t t-elif="this.props.order.table_stand_number or (this.props.order.table and this.props.order.table.name)">T<t t-if="this.props.order.table_stand_number" t-esc="this.props.order.table_stand_number"/><t t-else="" t-esc="this.props.order.table.name"/> </t>
+                <t t-else="">IN </t>
+            </div>
+        </xpath>
+    </t>
+</templates>

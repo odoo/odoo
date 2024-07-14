@@ -1,0 +1,350 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_planning
+# 
+# Translators:
+# Wil Odoo, 2024
+# Sarah Park, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:12+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Sarah Park, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.view_order_form_inherit_sale_planning
+msgid "<span class=\"o_stat_text\">Planned</span>"
+msgstr "<span class=\"o_stat_text\">계획 완료</span>"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_form_inherit_sale_planning
+msgid "<span class=\"o_stat_text\">Sales Order</span>"
+msgstr "<span class=\"o_stat_text\">판매 주문</span>"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.view_order_form_inherit_sale_planning
+msgid "<span class=\"o_stat_text\">To Plan</span>"
+msgstr "<span class=\"o_stat_text\">계획 예정</span>"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.product_template_form_view_invoice_policy_inherit_sale_planning
+msgid ""
+"<span invisible=\"not planning_enabled\" class=\"oe_inline me-2\">\n"
+"                        as\n"
+"                    </span>"
+msgstr ""
+"<span invisible=\"not planning_enabled\" class=\"oe_inline me-2\">\n"
+"                        역할\n"
+"                    </span>"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_gantt_inherit_sale_planning
+msgid "<strong>Sales Order Item  — </strong>"
+msgstr "<strong>판매 주문 항목  — </strong>"
+
+#. module: sale_planning
+#. odoo-javascript
+#: code:addons/sale_planning/static/src/views/planning_hooks.js:0
+#, python-format
+msgid ""
+"All open shifts and sales orders have already been assigned, or there are no"
+" resources available to take them at this time."
+msgstr "진행 중인 전체 전환 항목 및 판매주문서가 이미 배정이 완료되었거나 현재 사용할 수 있는 자원이 없습니다."
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__allocated_hours
+msgid "Allocated Time"
+msgstr "할당된 시간"
+
+#. module: sale_planning
+#: model:ir.ui.menu,name:sale_planning.sale_planning_menu_schedule_by_sale_order
+msgid "By Sales Order"
+msgstr "판매주문서별"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__partner_id
+msgid "Customer"
+msgstr "고객"
+
+#. module: sale_planning
+#: model:product.template,name:sale_planning.developer_product_product_template
+msgid "Developer (Plan services)"
+msgstr "개발자 (플랜 서비스)"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__end_datetime
+msgid "End Date"
+msgstr "종료일"
+
+#. module: sale_planning
+#: model:planning.role,name:sale_planning.planning_role_tester
+msgid "Functional Tester"
+msgstr "기능 테스터"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.view_order_form_inherit_sale_planning
+msgid "Hours"
+msgstr "시간"
+
+#. module: sale_planning
+#: model:product.template,name:sale_planning.technical_maintainance_product_product_template
+msgid "IT Technical Maintenance (Plan services)"
+msgstr "IT 기술 유지 보수 (플랜 서비스)"
+
+#. module: sale_planning
+#: model:planning.role,name:sale_planning.planning_role_technician
+msgid "IT Technician"
+msgstr "IT 기술자"
+
+#. module: sale_planning
+#: model:ir.model.fields,help:sale_planning.field_planning_slot__sale_line_plannable
+#: model:ir.model.fields,help:sale_planning.field_product_product__planning_enabled
+#: model:ir.model.fields,help:sale_planning.field_product_template__planning_enabled
+msgid ""
+"If enabled, a shift will automatically be generated for the selected role "
+"when confirming the Sales Order. Only employees with this role will "
+"automatically be assigned shifts for Sales Orders containing this service."
+msgstr ""
+"활성화할 경우, 판매주문서가 확정되면 선택한 역할대로 교대조가 자동 생성됩니다. 이 역할이 분장된 직원에게만 판매주문서(해당 서비스 "
+"포함)와 관련된 교대 근무가 자동으로 배정됩니다. "
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_search_inherit_sale_planning
+msgid "My Sales Orders"
+msgstr "나의 판매 주문"
+
+#. module: sale_planning
+#: model_terms:ir.actions.act_window,help:sale_planning.sale_planning_action_schedule_by_sale_order
+msgid "No shifts found. Let's create one!"
+msgstr "교대 근무가 없습니다. 새로 생성해 주세요."
+
+#. module: sale_planning
+#: model:ir.model.constraint,message:sale_planning.constraint_planning_slot_check_datetimes_set_or_plannable_slot
+msgid ""
+"Only slots linked to a sale order with a plannable service can be "
+"unscheduled."
+msgstr "계획할 수 있는 서비스에 대한 판매주문서와 연결되어 있는 슬롯만 예약을 취소할 수 있습니다."
+
+#. module: sale_planning
+#: model_terms:product.template,description:sale_planning.developer_product_product_template
+msgid "Our developer will help you to add new features to your Software."
+msgstr "소프트웨어에 새로운 기능을 추가하는데 저희 개발자가 도와드릴 것입니다."
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__sale_line_plannable
+#: model:ir.model.fields,field_description:sale_planning.field_product_product__planning_enabled
+#: model:ir.model.fields,field_description:sale_planning.field_product_template__planning_enabled
+msgid "Plan Services"
+msgstr "서비스 계획"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.product_template_form_view_invoice_policy_inherit_sale_planning
+msgid "Plan shifts for your orders for employees who have this role."
+msgstr "해당 업무를 담당하는 직원의 주문과 관련하여 교대 근무를 계획하세요."
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/models/product.py:0
+#, python-format
+msgid ""
+"Plannable services should be a service product, product\n"
+"%s."
+msgstr ""
+"계획 가능한 서비스는 서비스 품목,\n"
+"%s 품목이어야 합니다."
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/models/product.py:0
+#, python-format
+msgid "Plannable services should use an UoM within the %s category."
+msgstr "계획 가능한 서비스는 %s 카테고리 내에 있는 측정 단위를 사용해야 합니다."
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_planning_analysis_report
+msgid "Planning Analysis Report"
+msgstr "계획 분석 보고서"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order__planning_first_sale_line_id
+msgid "Planning First Sale Line"
+msgstr "첫번째 판매 항목 계획"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order__planning_hours_planned
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order_line__planning_hours_planned
+msgid "Planning Hours Planned"
+msgstr "계획 시간 계획 완료"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order__planning_hours_to_plan
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order_line__planning_hours_to_plan
+msgid "Planning Hours To Plan"
+msgstr "계획 시간 계획 예정"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order__planning_initial_date
+msgid "Planning Initial Date"
+msgstr "초기 날짜 계획"
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_planning_role
+#: model:ir.model.fields,field_description:sale_planning.field_product_product__planning_role_id
+#: model:ir.model.fields,field_description:sale_planning.field_product_template__planning_role_id
+msgid "Planning Role"
+msgstr "역할 계획"
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_planning_slot
+msgid "Planning Shift"
+msgstr "교대 근무 계획"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order_line__planning_slot_ids
+msgid "Planning Slot"
+msgstr "슬롯 계획"
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_product_template
+msgid "Product"
+msgstr "품목"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_analysis_report__role_product_ids
+msgid "Role Product"
+msgstr "역할 품목"
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_sale_order
+#: model:ir.model.fields,field_description:sale_planning.field_planning_analysis_report__sale_order_id
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__sale_order_id
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_search_inherit_sale_planning
+msgid "Sales Order"
+msgstr "판매 주문"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_analysis_report__sale_line_id
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__sale_line_id
+#: model_terms:ir.ui.view,arch_db:sale_planning.open_slots_list_template
+#: model_terms:ir.ui.view,arch_db:sale_planning.period_report_template
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_search_inherit_sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.resource_sale_planning
+msgid "Sales Order Item"
+msgstr "판매 주문 항목"
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "판매 주문 내역"
+
+#. module: sale_planning
+#: model:ir.model.fields,help:sale_planning.field_planning_slot__sale_line_id
+msgid ""
+"Sales order item for which this shift will be performed. When sales orders "
+"are automatically planned, the remaining hours of the sales order item, as "
+"well as the role defined on the service, are taken into account."
+msgstr ""
+"이 근무조에서 시행할 판매 주문 항목입니다. 판매 주문이 자동으로 계획되면 판매 주문 항목의 잔여 시간뿐 아니라 서비스에 정의되어 있는 "
+"업무가 함께 계산됩니다."
+
+#. module: sale_planning
+#: model:ir.actions.act_window,name:sale_planning.sale_planning_action_schedule_by_sale_order
+msgid "Schedule by Sales Order"
+msgstr "판매주문서별 스케줄"
+
+#. module: sale_planning
+#: model_terms:ir.actions.act_window,help:sale_planning.sale_planning_action_schedule_by_sale_order
+msgid ""
+"Schedule your human and material resources across roles, projects and sales "
+"orders."
+msgstr "역할, 프로젝트 및 판매 주문 전반에 걸쳐 인적 자원과 물적 자원을 계획하십시오."
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_role__product_ids
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__role_product_ids
+msgid "Services"
+msgstr "서비스"
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/controllers/main.py:0
+#, python-format
+msgid "Shift"
+msgstr "교대 근무"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__start_datetime
+msgid "Start Date"
+msgstr "시작일"
+
+#. module: sale_planning
+#: model_terms:product.template,description:sale_planning.technical_maintainance_product_product_template
+msgid "Take a rest. We'll do our best."
+msgstr "휴식 시간을 가지십시오. 저희가 최선을 다하고 있겠습니다."
+
+#. module: sale_planning
+#. odoo-javascript
+#: code:addons/sale_planning/static/src/views/planning_hooks.js:0
+#, python-format
+msgid "The open shifts and sales orders have been successfully assigned."
+msgstr "진행 중인 근무조 및 판매 주문이 성공적으로 배정 완료되었습니다."
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/models/planning_slot.py:0
+#, python-format
+msgid ""
+"This Sale Order Item doesn't have a target value of planned hours. Planned "
+"hours :"
+msgstr "이 판매 주문 항목에는 예정 시간의 목표 값이 없습니다. 예정시간 :"
+
+#. module: sale_planning
+#. odoo-javascript
+#: code:addons/sale_planning/static/src/views/sale_planning_gantt/sale_planning_gantt_renderer.js:0
+#, python-format
+msgid ""
+"This resource is not available for this shift during the selected period."
+msgstr "이 자원은 선택한 기간 동안 해당 근무조에 사용할 수 없습니다."
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_view_form_in_gantt_inherit_sale_planning
+msgid "Unschedule"
+msgstr "일정 취소"
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/models/sale_order.py:0
+#, python-format
+msgid "View Planning"
+msgstr "계획 보기"
+
+#. module: sale_planning
+#: model:planning.role,name:sale_planning.planning_role_planner
+msgid "Work Planner"
+msgstr "작업 계획"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_role_view_tree_inherit_sale_planning
+msgid "e.g. Cleaning Services"
+msgstr "예. 클리닝 서비스"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.product_template_form_view_invoice_policy_inherit_sale_planning
+msgid "e.g. Consultant"
+msgstr "예: 컨설턴트"
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/models/sale_order_line.py:0
+#, python-format
+msgid "remaining"
+msgstr "잔여"

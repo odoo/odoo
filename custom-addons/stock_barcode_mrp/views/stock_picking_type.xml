@@ -1,0 +1,45 @@
+<odoo>
+    <record id="stock_mrp_picking_type_kanban" model="ir.ui.view">
+        <field name="name">stock.mrp.picking.type.kanban</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock_barcode.stock_picking_type_kanban"/>
+        <field name="arch" type="xml">
+            <field name="count_picking_ready" position="after">
+                <field name="count_mo_confirmed" />
+            </field>
+            <span name="get_action_picking_tree_ready_kanban" position="replace">
+                <span class="row text-muted" name="get_action_picking_tree_ready_kanban" type="object">
+                    <t t-if="record.code.raw_value == 'mrp_operation'" t-esc="record.count_mo_confirmed.value"/>
+                    <t t-else="" t-esc="record.count_picking_ready.value"/>
+                    To Process
+                </span>
+            </span>
+        </field>
+    </record>
+
+    <record id="stock_barcode.stock_picking_type_action_kanban" model="ir.actions.act_window">
+        <field name="domain">[('code', 'in', ('incoming', 'outgoing', 'internal', 'mrp_operation'))]</field>
+    </record>
+
+    <record id="view_picking_type_form" model="ir.ui.view">
+        <field name="name">Operation Types</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock_barcode.stock_barcode_view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <field name="restrict_put_in_pack" position="attributes">
+                <attribute name="invisible">code == 'mrp_operation'</attribute>
+            </field>
+            <field name="barcode_validation_all_product_packed" position="attributes">
+                <attribute name="invisible">code == 'mrp_operation'</attribute>
+            </field>
+            <field name="barcode_validation_full" position="replace">
+                <field name="barcode_validation_full"
+                    invisible="restrict_scan_product or code == 'mrp_operation'"/>
+                <field name="barcode_validation_full" string="Allow full order validation"
+                    help="Allow user to produce all even if no components were scanned"
+                    invisible="restrict_scan_product or code != 'mrp_operation'"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

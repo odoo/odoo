@@ -1,0 +1,81 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_mx_edi_landing
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-06-17 14:06+0000\n"
+"PO-Revision-Date: 2021-06-17 14:06+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_mx_edi_landing
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_landing.view_stock_landed_cost_form_l10n_mx_stock
+msgid "15  48  3009  0001234"
+msgstr ""
+
+#. module: l10n_mx_edi_landing
+#: model:ir.model.fields,field_description:l10n_mx_edi_landing.field_stock_landed_cost__l10n_mx_edi_customs_number
+msgid "Customs number"
+msgstr ""
+
+#. module: l10n_mx_edi_landing
+#. odoo-python
+#: code:addons/l10n_mx_edi_landing/models/stock_landed_cost.py:0
+#, python-format
+msgid ""
+"Error!, The format of the customs number is incorrect. \n"
+"%s\n"
+"For example: 15  48  3009  0001234"
+msgstr ""
+
+#. module: l10n_mx_edi_landing
+#: model:ir.model,name:l10n_mx_edi_landing.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_mx_edi_landing
+#: model:ir.model.fields,help:l10n_mx_edi_landing.field_stock_landed_cost__l10n_mx_edi_customs_number
+msgid ""
+"Optional field for entering the customs information in the case of first-hand sales of imported goods or in the case of foreign trade operations with goods or services.\n"
+"The format must be:\n"
+" - 2 digits of the year of validation followed by two spaces.\n"
+" - 2 digits of customs clearance followed by two spaces.\n"
+" - 4 digits of the serial number followed by two spaces.\n"
+" - 1 digit corresponding to the last digit of the current year, except in case of a consolidated customs initiated in the previous year of the original request for a rectification.\n"
+" - 6 digits of the progressive numbering of the custom."
+msgstr ""
+
+#. module: l10n_mx_edi_landing
+#: model:ir.model.fields,help:l10n_mx_edi_landing.field_stock_move__move_orig_fifo_ids
+msgid "Optional: previous stock move when chaining them"
+msgstr ""
+
+#. module: l10n_mx_edi_landing
+#: model:ir.model.fields,field_description:l10n_mx_edi_landing.field_stock_move__move_orig_fifo_ids
+msgid "Original Fifo Move"
+msgstr ""
+
+#. module: l10n_mx_edi_landing
+#: model:ir.model,name:l10n_mx_edi_landing.model_stock_landed_cost
+msgid "Stock Landed Cost"
+msgstr ""
+
+#. module: l10n_mx_edi_landing
+#: model:ir.model,name:l10n_mx_edi_landing.model_stock_move
+msgid "Stock Move"
+msgstr ""
+
+#. module: l10n_mx_edi_landing
+#. odoo-python
+#: code:addons/l10n_mx_edi_landing/models/stock_landed_cost.py:0
+#: model:ir.model.constraint,message:l10n_mx_edi_landing.constraint_stock_landed_cost_l10n_mx_edi_customs_number
+#, python-format
+msgid "The custom number must be unique!"
+msgstr ""

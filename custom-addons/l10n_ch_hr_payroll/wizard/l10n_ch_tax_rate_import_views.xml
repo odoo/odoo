@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ch_tax_rate_import_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.tax.rate.import.wizard.view.form</field>
+        <field name="model">l10n.ch.tax.rate.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Tax Rate File">
+                <sheet>
+                    <span class="text-muted">Tax files (.txt format) can be found at https://www.estv.admin.ch/estv/fr/accueil/impot-federal-direct/impot-a-la-source/baremes-cantonaux.html</span>
+                    <group>
+                        <field name="tax_file_ids" widget="many2many_binary" colspan="2" nolabel="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Import Tax Rates" name="action_import_file" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button special="cancel" data-hotkey="z" string="Close" type="object" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_ch_tax_rate_import_wizard_action" model="ir.actions.act_window">
+        <field name="name">Import Tax Rates</field>
+        <field name="res_model">l10n.ch.tax.rate.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

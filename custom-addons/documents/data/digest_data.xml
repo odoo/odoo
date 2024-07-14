@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <record id="digest_tip_documents_0" model="digest.tip">
+            <field name="name">Tip: Become a paperless company</field>
+            <field name="sequence">300</field>
+            <field name="group_id" ref="documents.group_documents_user" />
+            <field name="tip_description" type="html">
+<div>
+    <t t-set="record" t-value="object.env['documents.share'].search([('alias_name', '!=', False), ('alias_domain_id', '!=', False)], limit=1)" />
+    <b class="tip_title">Tip: Become a paperless company</b>
+    <t t-if="record.alias_email">
+        <p class="tip_content">An easy way to process incoming mails is to configure your scanner to send PDFs to <t t-out="record.alias_email"/>. Scanned files will appear automatically in your workspace. Then, process your documents in bulk with the split tool: launch user defined actions, request a signature, convert to vendor bills with AI, etc.</p>
+    </t>
+    <t t-else="">
+        <p class="tip_content">An easy way to process incoming mails is to configure your scanner to send PDFs to your workspace email. Scanned files will appear automatically in your workspace. Then, process your documents in bulk with the split tool: launch user defined actions, request a signature, convert to vendor bills with AI, etc.</p>
+    </t>
+    <img src="https://download.odoocdn.com/digests/documents/static/src/img/documents-paperless.png" width="540" class="illustration_border" />
+</div>
+            </field>
+        </record>
+    </data>
+</odoo>

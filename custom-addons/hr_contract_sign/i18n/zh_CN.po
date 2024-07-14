@@ -1,0 +1,381 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_contract_sign
+# 
+# Translators:
+# Wil Odoo, 2023
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/wizard/hr_contract_sign_document_wizard.py:0
+#, python-format
+msgid "%(user_name)s requested a new signature on the following documents:"
+msgstr "%(user_name)s要求在下列文档上重新签字："
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/wizard/hr_contract_sign_document_wizard.py:0
+#, python-format
+msgid "%s and %s are the signatories."
+msgstr "%s和%s是签署人。"
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/wizard/hr_contract_sign_document_wizard.py:0
+#, python-format
+msgid "%s does not have a private email set."
+msgstr "%s没有设置私人电子邮件。"
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/wizard/hr_contract_sign_document_wizard.py:0
+#, python-format
+msgid "%s does not have a work email set."
+msgstr "%s还没有设置工作电子邮件。"
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.hr_contract_sign_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.hr_employee_sign_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.res_users_request_sign_view_form
+msgid "<span class=\"o_stat_text\">Signature Requests</span>"
+msgstr "<span class=\"o_stat_text\">签字请求</span>"
+
+#. module: hr_contract_sign
+#: model:ir.model,name:hr_contract_sign.model_mail_activity_plan_template
+msgid "Activity plan template"
+msgstr "活动计划模板"
+
+#. module: hr_contract_sign
+#: model:ir.model,name:hr_contract_sign.model_mail_activity_schedule
+msgid "Activity schedule plan Wizard"
+msgstr "活动日程计划向导"
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+msgid "Attach a file"
+msgstr "附文件"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__attachment_ids
+msgid "Attachment"
+msgstr "附件"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__contract_id
+msgid "Contract"
+msgstr "合同"
+
+#. module: hr_contract_sign
+#: model:ir.model,name:hr_contract_sign.model_hr_contract_history
+msgid "Contract history"
+msgstr "合同历史"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__cc_partner_ids
+msgid "Copy to"
+msgstr "拷贝到"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__create_date
+msgid "Created on"
+msgstr "创建日期"
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+msgid "Discard"
+msgstr "丢弃"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: hr_contract_sign
+#: model:ir.actions.act_window,name:hr_contract_sign.sign_contract_wizard_action
+msgid "Document Signature"
+msgstr "文档签字"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_mail_activity_plan_template__sign_template_id
+msgid "Document to sign"
+msgstr "要签署的文档"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__sign_template_ids
+msgid "Documents to sign"
+msgstr "没有要签署的文档"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,help:hr_contract_sign.field_hr_contract_sign_document_wizard__sign_template_ids
+msgid ""
+"Documents to sign. Only documents with 1 or 2 different responsible are selectable.\n"
+"        Documents with 1 responsible will only have to be signed by the employee while documents with 2 different responsible will have to be signed by both the employee and the responsible.\n"
+"        "
+msgstr ""
+"要签署的文件。只有有1个或2个不同负责人的文件可以选择。\n"
+"        只有一个负责人的文件必须由雇员签字，而有两个不同负责人的文件必须由雇员和负责人签字。\n"
+"        "
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__mail_to
+msgid "Email"
+msgstr "电子邮件"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,help:hr_contract_sign.field_hr_contract_sign_document_wizard__mail_to
+msgid ""
+"Email used to send the signature request.\n"
+"                - Work takes the email defined in \"work email\"\n"
+"                - Private takes the email defined in Private Information\n"
+"                - If the selected email is not defined, the available one will be used."
+msgstr ""
+"用于发送签名请求的电子邮件。\n"
+"                - 工作时使用 \"工作电子邮件 \"中定义的电子邮件\n"
+"                - 私人信息 \"中定义的电子邮件\n"
+"                - 如果所选电子邮件未定义，则将使用可用的电子邮件。"
+
+#. module: hr_contract_sign
+#: model:ir.model,name:hr_contract_sign.model_hr_employee
+msgid "Employee"
+msgstr "员工"
+
+#. module: hr_contract_sign
+#: model:ir.model,name:hr_contract_sign.model_hr_contract
+msgid "Employee Contract"
+msgstr "员工合同"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__employee_role_id
+#: model:ir.model.fields,field_description:hr_contract_sign.field_mail_activity_plan_template__employee_role_id
+msgid "Employee Role"
+msgstr "员工任务"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,help:hr_contract_sign.field_hr_contract_sign_document_wizard__employee_role_id
+#: model:ir.model.fields,help:hr_contract_sign.field_mail_activity_plan_template__employee_role_id
+msgid ""
+"Employee's role on the templates to sign. The same role must be present in "
+"all the templates"
+msgstr "员工在模板上的角色要签名。同一角色必须出现在所有的模板中"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__employee_ids
+msgid "Employees"
+msgstr "员工"
+
+#. module: hr_contract_sign
+#: model:sign.item.role,name:hr_contract_sign.sign_item_role_job_responsible
+msgid "HR Responsible"
+msgstr "人力资源主管"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__has_both_template
+msgid "Has Both Template"
+msgstr "同时拥有两种模板"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_mail_activity_plan_template__is_signature_request
+msgid "Is Signature Request"
+msgstr "是签字请求"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__write_date
+msgid "Last Updated on"
+msgstr "上次更新日期"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__mail_displayed
+msgid "Mail Displayed"
+msgstr "显示的邮件"
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+msgid "Mail Options"
+msgstr "邮件选项"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__message
+msgid "Message"
+msgstr "消息"
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/wizard/hr_contract_sign_document_wizard.py:0
+#, python-format
+msgid ""
+"No appropriate template could be found, please make sure you configured them"
+" properly."
+msgstr "没有找到合适的模板，请确保你正确配置了它们。"
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+msgid "No template available"
+msgstr "没有可用的模板。"
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/wizard/hr_contract_sign_document_wizard.py:0
+#, python-format
+msgid "Only %s has to sign."
+msgstr "只有%s要签名。"
+
+#. module: hr_contract_sign
+#: model:sign.template,redirect_url_text:hr_contract_sign.template_sign_termination
+msgid "Open Link"
+msgstr "打开链接"
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+msgid "Optional Message..."
+msgstr "可选消息…"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__possible_template_ids
+msgid "Possible Template"
+msgstr "可能的模板"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields.selection,name:hr_contract_sign.selection__hr_contract_sign_document_wizard__mail_to__private
+msgid "Private"
+msgstr "私密"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract__sign_request_ids
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_employee__sign_request_ids
+msgid "Requested Signatures"
+msgstr "请签字"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__responsible_id
+msgid "Responsible"
+msgstr "负责人"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_mail_activity_plan_template__responsible_count
+msgid "Responsible Count"
+msgstr "责任数"
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+msgid "Send"
+msgstr "发送"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract__sign_request_count
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_employee__sign_request_count
+#: model:ir.model.fields,field_description:hr_contract_sign.field_res_users__sign_request_count
+msgid "Sign Request Count"
+msgstr "签名请求计数"
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+msgid "Sign Request Options"
+msgstr "签名要求选项"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__sign_template_responsible_ids
+#: model:ir.model.fields,field_description:hr_contract_sign.field_mail_activity_plan_template__sign_template_responsible_ids
+msgid "Sign Template Responsible"
+msgstr "负责人签名模板"
+
+#. module: hr_contract_sign
+#: model:ir.model,name:hr_contract_sign.model_hr_contract_sign_document_wizard
+msgid "Sign document in contract"
+msgstr "在合同文件上签字"
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/wizard/mail_activity_schedule.py:0
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.hr_contract_history_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.hr_employee_sign_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+#, python-format
+msgid "Signature Request"
+msgstr "签字请求"
+
+#. module: hr_contract_sign
+#: model:ir.actions.server,name:hr_contract_sign.action_signature_request_wizard
+msgid "Signature request"
+msgstr "签名申请"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__subject
+msgid "Subject"
+msgstr "主题"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__template_warning
+msgid "Template Warning"
+msgstr "模板警告"
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/models/hr_contract.py:0
+#, python-format
+msgid ""
+"This sign request has been canceled due to the cancellation of the related "
+"contract."
+msgstr "相关合同已取消，此签名请求因此也被取消。"
+
+#. module: hr_contract_sign
+#: model:ir.model,name:hr_contract_sign.model_res_users
+msgid "User"
+msgstr "用户"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields.selection,name:hr_contract_sign.selection__hr_contract_sign_document_wizard__mail_to__work
+msgid "Work"
+msgstr "工作"
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+msgid "Write email or search contact..."
+msgstr "撰写邮件或者搜索联系人"
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/models/hr_contract.py:0
+#, python-format
+msgid ""
+"You can't delete a contract linked to a signed document, archive it instead."
+msgstr "不能删除关联到已签名的合同啦，您可以将其归档存档。"
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.hr_contract_history_view_form
+msgid "document"
+msgstr "单据"
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.hr_contract_history_view_form
+msgid "documents"
+msgstr "文档"

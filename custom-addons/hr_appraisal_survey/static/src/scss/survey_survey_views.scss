@@ -1,0 +1,5 @@
+// This module adds the option appraisal for survey.survey_type that we don't want to be selectable in the survey form.
+// We use the following class to hide that selection in the form view.
+.o_survey_form .o_radio_item:has(.form-check-input[data-value='appraisal']) {
+    display: none;
+}

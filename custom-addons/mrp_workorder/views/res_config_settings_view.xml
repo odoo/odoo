@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.mrp.workorder</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="mrp.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="workorder_settings_workcenters" position="before">
+                <div id="workorder_settings_barcode_commands" class="mt8">
+                    <a href="/mrp_workorder/static/src/pdf/barcodes_actions_Manufacturing.pdf" class="oe_link" target="_blank">
+                        <i class="fa fa-print"/> Print barcode commands
+                    </a>
+                </div>
+            </div>
+            <setting id="process_mrp_barcodes" position="before">
+                <setting id="mrp_wo_shop_floor" help="Manage your manufacturing orders from the shop floor app">
+                    <field name="group_mrp_wo_shop_floor"/>
+                </setting>
+                <setting invisible="not group_mrp_routings" id="mrp_wo_tablet_view_timer" help="Show the timer on the work order screen">
+                    <field name="group_mrp_wo_tablet_timer"/>
+                </setting>
+            </setting>
+        </field>
+    </record>
+</odoo>

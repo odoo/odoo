@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_structure_mx_employee_salary" model="hr.payroll.structure">
+        <field name="name">Mexico: Regular Pay</field>
+        <field name="code">MXMONTHLY</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="type_id" ref="l10n_mx_hr_payroll.structure_type_employee_mx"/>
+        <field name="report_id" ref="l10n_mx_hr_payroll.action_report_payslip_mx"/>
+    </record>
+    <record id="l10n_mx_hr_payroll.structure_type_employee_mx" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_mx_employee_salary"/>
+    </record>
+
+    <record id="hr_payroll_structure_mx_christmas_bonus" model="hr.payroll.structure">
+        <field name="name">Mexico: Christmas Bonus</field>
+        <field name="code">MXCHRISTMAS</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="use_worked_day_lines" eval="False"/>
+        <field name="type_id" ref="l10n_mx_hr_payroll.structure_type_employee_mx"/>
+        <field name="report_id" ref="l10n_mx_hr_payroll.action_report_payslip_mx"/>
+    </record>
+</odoo>

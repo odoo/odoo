@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<odoo>
+  <data noupdate="1">
+
+    <record id="ir_cron_sale_ebay_categories" model="ir.cron">
+      <field name="name">Ebay: update categories</field>
+      <field name="model_id" ref="sale_ebay.model_ebay_category"/>
+      <field name="state">code</field>
+      <field name="code">model._cron_sync(True)</field>
+      <field name="active" eval="True"/>
+      <field name="user_id" ref="base.user_root" />
+      <field name="interval_number">1</field>
+      <field name="interval_type">days</field>
+      <field name="numbercall">-1</field>
+      <field name="doall" eval="False"/>
+    </record>
+
+    <record id="ir_cron_sale_ebay_orders_sync" model="ir.cron">
+      <field name="name">Ebay: get new orders</field>
+      <field name="model_id" ref="product.model_product_template"/>
+      <field name="state">code</field>
+      <field name="code">model.synchronize_orders_from_last_sync()</field>
+      <field name="active" eval="True"/>
+      <field name="user_id" ref="base.user_root" />
+      <field name="interval_number">15</field>
+      <field name="interval_type">minutes</field>
+      <field name="numbercall">-1</field>
+      <field name="doall" eval="False"/>
+    </record>
+
+    <record id="ir_cron_sale_ebay_stock_sync" model="ir.cron">
+      <field name="name">Ebay: synchronise stock</field>
+      <field name="model_id" ref="product.model_product_template"/>
+      <field name="state">code</field>
+      <field name="code">
+pts_to_sync = env['product.template'].search([('ebay_use', '=', True)])
+for pt in pts_to_sync:
+    try:
+        pt.sync_available_qty()
+        env.cr.commit()
+    except Exception as e:
+        pass
+      </field>
+      <field name="active" eval="True"/>
+      <field name="user_id" ref="base.user_root" />
+      <field name="interval_number">1</field>
+      <field name="interval_type">hours</field>
+      <field name="numbercall">-1</field>
+      <field name="doall" eval="False"/>
+    </record>
+
+    <record id="ebay_last_sync_param" model="ir.config_parameter">
+            <field name="key">ebay_last_sync</field>
+            <field name="value" eval="DateTime.now().strftime('%Y-%m-%d')"/>
+    </record>
+
+    <record id="ir_cron_sale_ebay_orders_recovery" model="ir.actions.server">
+      <field name="name">Ebay: orders recovery</field>
+      <field name="model_id" ref="product.model_product_template"/>
+      <field name="state">code</field>
+      <field name="code"># set the correct date to recover the orders from a given time range.
+# the recovered orders are not automatically confirmed
+# dates should be strings of the form "YYYY-MM-DD"
+date_from = False
+date_to = False
+if not (date_from and date_to):
+    raise Warning('Please modify this server action with the proper dates for recovery')
+model.synchronize_orders_recovery(date_from, date_to)</field>
+    </record>
+
+  </data>
+</odoo>

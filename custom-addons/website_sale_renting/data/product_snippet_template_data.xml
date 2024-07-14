@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="price_dynamic_filter_template_product_product"
+                inherit_id="website_sale.price_dynamic_filter_template_product_product">
+        <xpath expr="//span[@t-esc='record_price']" position="before">
+            <span t-if="record.rent_ok" class="fw-bold">From</span>
+        </xpath>
+        <xpath expr="//del" position="attributes">
+            <attribute name="t-if">not record.rent_ok and data.get('has_discounted_price')</attribute>
+        </xpath>
+        <xpath expr="//del" position="after">
+            <span t-if="record.rent_ok" class="fw-bold">
+                <span>/</span>
+                <span t-esc="data.get('rental_duration')"/>
+                <span t-esc="data.get('rental_unit')"/>
+            </span>
+        </xpath>
+    </template>
+
+</odoo>

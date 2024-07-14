@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+  <data noupdate="0">
+    <template id="bpost_shipping_request" name="bpost shipping request">
+      <tns:order xmlns:tns="http://schema.post.be/shm/deepintegration/v3/" xmlns="http://schema.post.be/shm/deepintegration/v3/national" xmlns:common="http://schema.post.be/shm/deepintegration/v3/common" xmlns:international="http://schema.post.be/shm/deepintegration/v3/international" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schema.post.be/shm/deepintegration/v3/">
+        <tns:accountId t-esc="accountId"/>
+        <tns:reference t-esc="reference[:50]"/>
+        <t t-foreach="boxes" t-as="box">
+          <tns:box>
+            <tns:sender>
+              <common:name t-esc="sender['_record'].name[:40]"/>
+              <common:company t-esc="sender['_record'].name[:40]"/>
+              <common:address>
+                <common:streetName t-esc="sender['streetName']"/>
+                <common:number t-if="sender['number']" t-esc="sender['number']"/>
+                <common:postalCode t-esc="sender['_record'].zip"/>
+                <common:locality t-esc="sender['_record'].city"/>
+                <common:countryCode t-esc="sender['_record'].country_id.code"/>
+              </common:address>
+              <common:emailAddress t-if="sender['_record'].email" t-esc="sender['_record'].email[:50]"/>
+              <common:phoneNumber t-if="sender['_record'].phone" t-esc="sender['_record'].phone[:20]"/>
+            </tns:sender>
+            <tns:nationalBox t-if="is_domestic">
+              <atHome>
+                <product t-esc="product"/>
+                <options t-if="saturday">
+                  <common:saturdayDelivery/>
+                </options>
+                <weight t-esc="box['weight']"/>
+                <receiver>
+                  <common:name t-esc="(receiver['_record'].name or receiver['_record'].display_name)[:40]"/>
+                  <common:company t-esc="receiver['company'][:40]"/>
+                  <common:address>
+                    <common:streetName t-esc="receiver['streetName']"/>
+                    <common:number t-if="receiver['number']" t-esc="receiver['number']"/>
+                    <common:postalCode t-esc="receiver['postalCode']"/>
+                    <common:locality t-esc="receiver['locality'][:40]"/>
+                    <common:countryCode t-esc="receiver['_record'].country_id.code"/>
+                  </common:address>
+                  <common:emailAddress t-if="receiver['_record'].email" t-esc="receiver['_record'].email[:50]"/>
+                  <common:phoneNumber t-if="receiver['_record'].phone" t-esc="receiver['_record'].phone[:20]"/>
+                </receiver>
+              </atHome>
+            </tns:nationalBox>
+            <tns:internationalBox t-if="not is_domestic">
+              <international:international>
+                <international:product t-esc="international_product"/>
+                <international:receiver>
+                  <common:name t-esc="(receiver['_record'].name or receiver['_record'].display_name)[:40]"/>
+                  <common:company t-esc="receiver['company'][:40]"/>
+                  <common:address>
+                    <common:streetName t-esc="receiver['streetName']"/>
+                    <common:number t-if="receiver['number']" t-esc="receiver['number']"/>
+                    <common:postalCode t-esc="receiver['postalCode']"/>
+                    <common:locality t-esc="receiver['locality']"/>
+                    <common:countryCode t-esc="receiver['_record'].country_id.code"/>
+                  </common:address>
+                  <common:emailAddress t-if="receiver['_record'].email" t-esc="receiver['_record'].email[:50]"/>
+                  <common:phoneNumber t-if="receiver['_record'].phone" t-esc="receiver['_record'].phone[:20]"/>
+                </international:receiver>
+                <international:parcelWeight t-esc="box['weight']"/>
+                <international:customsInfo>
+                  <international:parcelValue t-esc="box['parcelValue']"/>
+                  <international:contentDescription t-esc="box['contentDescription']"/>
+                  <international:shipmentType t-esc="shipmentType"/>
+                  <international:parcelReturnInstructions t-esc="parcelReturnInstructions"/>
+                  <international:privateAddress t-esc="'true' if receiver['_record'].is_company else 'false'"/>
+                </international:customsInfo>
+              </international:international>
+            </tns:internationalBox>
+          </tns:box>
+        </t>
+      </tns:order>
+    </template>
+  </data>
+</odoo>

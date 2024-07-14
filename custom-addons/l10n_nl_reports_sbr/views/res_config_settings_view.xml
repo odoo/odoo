@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="res_config_settings_view_form">
+        <field name="name">res.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_nl.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <div id="dutch_localization_section" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </div>
+
+            <xpath expr="//block[@id='dutch_localization']" position="inside">
+                <setting company_dependent="1" string="SBR Services">
+                    <div class="row mt16">
+                        <label for="l10n_nl_reports_sbr_cert" class="col-lg-3 o_light_label"/>
+                        <field name="l10n_nl_reports_sbr_cert" widget="binary" class="oe_inline" filename="l10n_nl_reports_sbr_cert_filename" help="Upload here the PKI-certificate that identifies you to the Digipoort services. You can buy one from KPN or Quovadis."/>
+                        <field name="l10n_nl_reports_sbr_cert_filename" invisible="1"/>
+                    </div>
+                    <div class="row mt16">
+                        <label for="l10n_nl_reports_sbr_key" class="col-lg-3 o_light_label"/>
+                        <field name="l10n_nl_reports_sbr_key" widget="binary" class="oe_inline" filename="l10n_nl_reports_sbr_key_filename" help="Upload here your Private Key. If your certificate file ends with .p12 or .pfx, the Private Key is already included."/>
+                        <field name="l10n_nl_reports_sbr_key_filename" invisible="1"/>
+                    </div>
+                    <div class="row mt16">
+                        <label for="l10n_nl_reports_sbr_password" class="col-lg-3 o_light_label"/>
+                        <field name="l10n_nl_reports_sbr_password" password="1" class="oe_inline"/>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

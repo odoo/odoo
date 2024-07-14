@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_hr_referral_reward_backend_kanban" model="ir.ui.view">
+        <field name="name">hr.referral.reward.employee.referral.backend.kanban</field>
+        <field name="model">hr.referral.reward</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="id"/>
+                <field name="name"/>
+                <field name="cost"/>
+                <field name="awarded_employees"/>
+                <field name="description"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div t-attf-class="oe_kanban_card">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </strong>
+                                <span class="o_kanban_record_subtitle"><field name="cost"/> Points</span>
+                                <field name="awarded_employees"/> Awarded Employees
+                                <div><field name="description"/></div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_hr_referral_reward_kanban" model="ir.ui.view">
+        <field name="name">hr.referral.reward.employee.referral.kanban</field>
+        <field name="model">hr.referral.reward</field>
+        <field name="arch" type="xml">
+            <kanban js_class="referral_kanban">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="cost"/>
+                <field name="description"/>
+                <field name="image"/>
+                <field name="points_missing"/>
+                <field name="company_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card">
+                            <div class="ratio ratio-16x9 overflow-hidden mb-3">
+                                <div class="embed-responsive-item d-flex align-items-center">
+                                    <img t-att-src="kanban_image('hr.referral.reward', 'image', record.id.raw_value)" class="img w-100" alt="Product"/>
+                                </div>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <div t-attf-class="o_kanban_referral_top_right bg-view fw-bold #{(record.points_missing.raw_value &lt; 1) ? '' : 'text-danger'}">
+                                            <img src="/hr_referral/static/src/img/points.svg" class="me-2" height="20px" alt="Point icon"/>
+                                            <span><field name="cost"/> Points</span>
+                                        </div>
+                                        <div class="o_text_title_left">
+                                            <strong class="o_kanban_record_title">
+                                                <field name="name"/>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <t t-out="record.description.value"/>
+                                </div>
+                                <div groups="base.group_multi_company">
+                                    <i><field name="company_id"/></i>
+                                </div>
+
+                                <div>
+                                    <t t-if="record.points_missing.raw_value &lt; 1">
+                                        <button name="buy" type="object" class="btn btn-primary w-100 " confirm="Do you want to confirm this reward? After confirmation an HR will contact you.">
+                                            <span title='Buy'><i class='fa fa-shopping-basket me-3' role="img" aria-label="Buy"/>Buy</span>
+                                        </button>
+                                    </t>
+                                    <t t-else="">
+                                        <div role="alertdialog" class="alert text-center alert-danger">You need another <field name="points_missing"/> Points to buy this</div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_hr_referral_reward_form">
+        <field name="name">hr.referral.reward.form</field>
+        <field name="model">hr.referral.reward</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="active" invisible="1"/>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_get_employee_awarded" class="oe_stat_button" icon="fa-user"
+                            type="object" invisible="awarded_employees == 0">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="awarded_employees"/> Employees
+                                </span>
+                                <span class="o_stat_text">
+                                    Awarded
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <field name="image" widget='image' class="oe_avatar" nolabel="1"/>
+                    <group>
+                        <group name="main_details">
+                            <field name="name"/>
+                            <label for="cost" string="Cost"/>
+                            <div>
+                                <field name="cost" nolabel="1" class="w-25"/>
+                                <span class="ml8">Points</span>
+                            </div>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="gift_manager_id" options="{'no_create': True}"/>
+                        </group>
+                        <group name="image" />
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" widget="html" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_hr_referral_reward_tree">
+        <field name="name">hr.referral.reward.tree</field>
+        <field name="model">hr.referral.reward</field>
+        <field name="arch" type="xml">
+            <tree sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="cost"/>
+                <field name="activity_ids" widget="list_activity" optional="show"/>
+                <field name="awarded_employees"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_hr_referral_reward_configuration">
+        <field name="name">Rewards</field>
+        <field name="res_model">hr.referral.reward</field>
+        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="groups_id" eval="[(4, ref('hr_recruitment.group_hr_recruitment_manager'))]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Let's create Super Rewards to thank your employees.
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_hr_referral_reward">
+        <field name="name">Rewards</field>
+        <field name="res_model">hr.referral.reward</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="hr_referral.view_hr_referral_reward_kanban"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_referral_kanban">
+                Let's create super Rewards to thank<br/>your employees.
+            </p>
+        </field>
+    </record>
+
+    <menuitem parent="menu_hr_referral_configuration" id="menu_hr_referral_reward_configuration" action="action_hr_referral_reward_configuration" sequence="2"/>
+
+
+</odoo>

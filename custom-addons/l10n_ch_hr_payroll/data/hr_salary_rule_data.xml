@@ -1,0 +1,1927 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary')),
+            ('code', '=', 'BASIC')]"/>
+        <value eval="{'l10n_ch_code': '1000', 'l10n_ch_aanp_included': True, 'l10n_ch_ac_included': True, 'l10n_ch_comp_ac_included': True, 'l10n_ch_ijm_included': True, 'l10n_ch_source_tax_included': True, 'l10n_ch_wage_statement': '1', 'l10n_ch_yearly_statement': 'I', 'l10n_ch_october_statement': 'I', 'l10n_ch_13th_month_included': True, 'condition_select': 'python', 'condition_python': 'result = payslip.wage_type == &quot;monthly&quot;'}"/>
+    </function>
+
+    <record id="l10n_ch_employees_basic_hourly" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="name">Basic Hourly Salary</field>
+        <field name="code">BASICHOURLY</field>
+        <field name="l10n_ch_code">1005</field>
+        <field name="sequence">1</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = payslip.wage_type == 'hourly'</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = payslip.paid_amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">1</field>
+        <field name="l10n_ch_yearly_statement">I</field>
+        <field name="l10n_ch_october_statement">I</field>
+        <field name="l10n_ch_13th_month_included" eval="True"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_advance" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Advance</field>
+        <field name="code">ADVANCE</field>
+        <field name="l10n_ch_code">1110</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'ADVANCE' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['ADVANCE'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">1</field>
+        <field name="l10n_ch_yearly_statement">I</field>
+        <field name="l10n_ch_october_statement">I</field>
+        <field name="l10n_ch_13th_month_included" eval="True"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_departure_time_off" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Holidays payment after departure</field>
+        <field name="code">HOLDEP</field>
+        <field name="l10n_ch_code">1163</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'HOLDEP' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['HOLDEP'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">1</field>
+        <field name="l10n_ch_yearly_statement">P</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_thirteen_month_provision" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll.hr_salary_rule_category_thirteen_month"/>
+        <field name="name">Thirteen Month Provision</field>
+        <field name="code">13THMONTHPROVISION</field>
+        <field name="l10n_ch_code">1199</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.l10n_ch_thirteen_month</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = payslip._get_contract_wage() / 12.0
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_gratification" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Gratification</field>
+        <field name="code">GRAT</field>
+        <field name="l10n_ch_code">1201</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'GRAT' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['GRAT'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">3</field>
+        <field name="l10n_ch_yearly_statement">Q</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_bonus" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Bonus</field>
+        <field name="code">BONUS</field>
+        <field name="l10n_ch_code">1210</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'BONUS' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['BONUS'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">3</field>
+        <field name="l10n_ch_yearly_statement">Q</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_commission" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Commission</field>
+        <field name="code">COMMISSION</field>
+        <field name="l10n_ch_code">1218</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'COMMISSION' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['COMMISSION'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">3</field>
+        <field name="l10n_ch_yearly_statement">Q</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_jubilee_gift" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Jubilee Gift</field>
+        <field name="code">JUBILEE</field>
+        <field name="l10n_ch_code">1231</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'JUBILEE' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['JUBILEE'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">3</field>
+        <field name="l10n_ch_yearly_statement">Q</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_sick_wage" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Salary in case of illness</field>
+        <field name="code">SICKWAGE</field>
+        <field name="l10n_ch_code">1300</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'SICKWAGE' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['SICKWAGE'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">1</field>
+        <field name="l10n_ch_yearly_statement">I</field>
+        <field name="l10n_ch_october_statement">I</field>
+        <field name="l10n_ch_13th_month_included" eval="True"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_accident_wage" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Salary in case of accident</field>
+        <field name="code">ACCIDENTWAGE</field>
+        <field name="l10n_ch_code">1301</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'ACCIDENTWAGE' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['ACCIDENTWAGE'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">1</field>
+        <field name="l10n_ch_yearly_statement">I</field>
+        <field name="l10n_ch_october_statement">I</field>
+        <field name="l10n_ch_13th_month_included" eval="True"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_military_wage" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Military Wage</field>
+        <field name="code">MILITARYWAGE</field>
+        <field name="l10n_ch_code">1302</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'MILITARYWAGE' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['MILITARYWAGE'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">1</field>
+        <field name="l10n_ch_yearly_statement">I</field>
+        <field name="l10n_ch_october_statement">I</field>
+        <field name="l10n_ch_13th_month_included" eval="True"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_ca_fee" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">CA Fee</field>
+        <field name="code">CAFEE</field>
+        <field name="l10n_ch_code">1500</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'CAFEE' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['CAFEE'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">6</field>
+        <field name="l10n_ch_yearly_statement">Q</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_free_meals" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Free Meals</field>
+        <field name="code">MEALS</field>
+        <field name="l10n_ch_code">1900</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'MEALS' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['MEALS'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">2.1</field>
+        <field name="l10n_ch_yearly_statement">R</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_free_room" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Free Room</field>
+        <field name="code">ROOM</field>
+        <field name="l10n_ch_code">1901</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'ROOM' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['ROOM'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">2.3</field>
+        <field name="l10n_ch_yearly_statement">R</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_free_housing" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Free Housing</field>
+        <field name="code">HOUSING</field>
+        <field name="l10n_ch_code">1902</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'HOUSING' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['HOUSING'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">2.3</field>
+        <field name="l10n_ch_yearly_statement">R</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_company_car_employee" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Company Car (Employee Part)</field>
+        <field name="code">COMPCAR</field>
+        <field name="l10n_ch_code">1910</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'COMPCAR' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['COMPCAR'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">2.2</field>
+        <field name="l10n_ch_yearly_statement">R</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_optional_ijm" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Optional employer part IJM</field>
+        <field name="code">OPTIJM</field>
+        <field name="l10n_ch_code">1971</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'OPTIJM' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['OPTIJM'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">7</field>
+        <field name="l10n_ch_yearly_statement">T</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_optional_lpp" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Optional employer part LPP</field>
+        <field name="code">OPTLPP</field>
+        <field name="l10n_ch_code">1972</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'OPTLPP' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['OPTLPP'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">7</field>
+        <field name="l10n_ch_yearly_statement">T</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_optional_lpp_redemption" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Optional employer part LPP Redemption</field>
+        <field name="code">OPTLPPRED</field>
+        <field name="l10n_ch_code">1973</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'OPTLPPRED' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['OPTLPPRED'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">7</field>
+        <field name="l10n_ch_yearly_statement">T</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_optional_cm" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Optional employer part CM</field>
+        <field name="code">OPTCM</field>
+        <field name="l10n_ch_code">1974</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'OPTCM' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['OPTCM'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">7</field>
+        <field name="l10n_ch_yearly_statement">T</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_optional_aanp" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Optional employer part AANP</field>
+        <field name="code">OPTAANP</field>
+        <field name="l10n_ch_code">1975</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'OPTAANP' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['OPTAANP'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">7</field>
+        <field name="l10n_ch_yearly_statement">T</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_optional_laac" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Optional employer part LAAC</field>
+        <field name="code">OPTLAAC</field>
+        <field name="l10n_ch_code">1976</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'OPTLAAC' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['OPTLAAC'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">7</field>
+        <field name="l10n_ch_yearly_statement">T</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_indemnity_apg" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Indemnity APG</field>
+        <field name="code">INDAPG</field>
+        <field name="l10n_ch_code">2000</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'INDAPG' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['INDAPG'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">1</field>
+        <field name="l10n_ch_yearly_statement">J</field>
+        <field name="l10n_ch_october_statement">J</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_indemnity_ai" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Indemnity AI</field>
+        <field name="code">INDAI</field>
+        <field name="l10n_ch_code">2025</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'INDAI' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['INDAI'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">1</field>
+        <field name="l10n_ch_yearly_statement">J</field>
+        <field name="l10n_ch_october_statement">J</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_annuities_ai" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Annuities AI</field>
+        <field name="code">ANNAI</field>
+        <field name="l10n_ch_code">2026</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'ANNAI' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['ANNAI'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">1</field>
+        <field name="l10n_ch_yearly_statement">J</field>
+        <field name="l10n_ch_october_statement">J</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_indemnity_accident" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Accident Indemnity</field>
+        <field name="code">INDACC</field>
+        <field name="l10n_ch_code">2030</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'INDACC' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -inputs['INDACC'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">1</field>
+        <field name="l10n_ch_yearly_statement">J</field>
+        <field name="l10n_ch_october_statement">J</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_indemnity_illness" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Illness Indemnity</field>
+        <field name="code">INDSICK</field>
+        <field name="l10n_ch_code">2035</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'INDSICK' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -inputs['INDSICK'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">1</field>
+        <field name="l10n_ch_yearly_statement">J</field>
+        <field name="l10n_ch_october_statement">J</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_indemnity_maternity" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Maternity Indemnity</field>
+        <field name="code">INDMAT</field>
+        <field name="l10n_ch_code">2040</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'INDMAT' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -inputs['INDMAT'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">1</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_child_allowance" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Child Allowance</field>
+        <field name="code">CHILDALW</field>
+        <field name="l10n_ch_code">3000</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'CHILDALW' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['CHILDALW'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">1</field>
+        <field name="l10n_ch_yearly_statement">K</field>
+        <field name="l10n_ch_october_statement">K</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_professional_training_allowance" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Professional Training Allowance</field>
+        <field name="code">TRAININGALW</field>
+        <field name="l10n_ch_code">3010</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'TRAININGALW' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['TRAININGALW'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">1</field>
+        <field name="l10n_ch_yearly_statement">K</field>
+        <field name="l10n_ch_october_statement">K</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_birth_allowance" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Birth Allowance</field>
+        <field name="code">BIRTHALW</field>
+        <field name="l10n_ch_code">3034</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'BIRTHALW' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['BIRTHALW'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">3</field>
+        <field name="l10n_ch_yearly_statement">Q</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_marriage_allowance" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Marriage Allowance</field>
+        <field name="code">MARRIAGEALW</field>
+        <field name="l10n_ch_code">3035</field>
+        <field name="sequence">10</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'MARRIAGEALW' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['MARRIAGEALW'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">3</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+        <field name="l10n_ch_yearly_statement">K</field>
+        <field name="l10n_ch_october_statement">K</field>
+    </record>
+
+    <record id="l10n_ch_employees_thirteen_month" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Thirteen Month</field>
+        <field name="code">13THMONTH</field>
+        <field name="l10n_ch_code">1200</field>
+        <field name="sequence">20</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.l10n_ch_thirteen_month and payslip.payslip_run_id.l10n_ch_pay_13th_month</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+last_13th_month_payslip = payslip.search([
+    ('employee_id', '=', payslip.employee_id.id),
+    ('date_to', '&lt;', payslip.date_from),
+    ('payslip_run_id.l10n_ch_pay_13th_month', '=', True),
+    ('state', 'in', ['done', 'paid']),
+    ('struct_id.code', '=', 'CHMONTHLY'),
+], order="date_from desc", limit=1)
+if last_13th_month_payslip:
+    date_from = last_13th_month_payslip.date_to + relativedelta(days=1)
+else:
+    date_from = contract.employee_id.first_contract_date
+provision_payslips = payslip.search([
+    ('employee_id', '=', payslip.employee_id.id),
+    ('date_from', '&gt;=', date_from),
+    ('date_to', '&lt;=', payslip.date_to),
+    ('state', 'in', ['done', 'paid']),
+    ('struct_id.code', '=', 'CHMONTHLY'),
+])
+provision_amount = provision_payslips._get_line_values(['13THMONTHPROVISION'], compute_sum=True)['13THMONTHPROVISION']['sum']['total']
+provision_amount += categories['13THMONTH']
+result = provision_amount
+        </field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="l10n_ch_aanp_included" eval="True"/>
+        <field name="l10n_ch_ac_included" eval="True"/>
+        <field name="l10n_ch_comp_ac_included" eval="True"/>
+        <field name="l10n_ch_ijm_included" eval="True"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">1</field>
+        <field name="l10n_ch_yearly_statement">O</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary')),
+            ('code', '=', 'GROSS')]"/>
+        <value eval="{'l10n_ch_code': '5000', 'l10n_ch_source_tax_included': False, 'l10n_ch_wage_statement': '8', 'amount_python_compute': &quot;result = categories['BASIC'] + categories['ALW']&quot;}"/>
+    </function>
+
+    <record id="l10n_ch_employees_avs_salary" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll.hr_salary_rule_category_avs_salary"/>
+        <field name="name">AVS Salary</field>
+        <field name="code">AVSSALARY</field>
+        <field name="sequence">104</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['GROSS']
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_avs" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">AVS</field>
+        <field name="code">AVS</field>
+        <field name="l10n_ch_code">5010</field>
+        <field name="sequence">105</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+start = contract.employee_id.birthday
+if start:
+    start += relativedelta(years=1, month=1, day=1)
+    end = payslip.date_from
+    age = end.year - start.year - ((end.month, end.day) &lt; (start.month, start.day))
+    result = age >= 17
+else:
+    result = True
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['AVSSALARY']
+start = contract.employee_id.birthday
+if start:
+    start += relativedelta(years=1, month=1, day=1)
+    end = payslip.date_from
+    age = end.year - start.year - ((end.month, end.day) &lt; (start.month, start.day))
+    if age >= 65:
+        result = max(0, result - payslip._rule_parameter('l10n_ch_avs_retired'))
+result_rate = -contract.l10n_ch_social_insurance_id._get_avs_rates(payslip.date_from)[0]</field>
+        <field name="note">Old Age &amp; Survivor's Insurance, Disability Insurance &amp; Loss of Earnings</field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_wage_statement">9</field>
+        <field name="l10n_ch_yearly_statement">L</field>
+        <field name="l10n_ch_october_statement">L</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_avs_comp" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll.hr_salary_rule_category_comp_part"/>
+        <field name="name">AVS (Comp. Part.)</field>
+        <field name="code">AVS.COMP</field>
+        <field name="sequence">106</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+start = contract.employee_id.birthday
+if start:
+    start += relativedelta(years=1, month=1, day=1)
+    end = payslip.date_from
+    age = end.year - start.year - ((end.month, end.day) &lt; (start.month, start.day))
+    result = age >= 17
+else:
+    result = True
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['AVSSALARY']
+result_rate = contract.l10n_ch_social_insurance_id._get_avs_rates(payslip.date_from)[1]</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="note">Old Age &amp; Survivor's Insurance, Disability Insurance &amp; Loss of Earnings</field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_ac_salary" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll.hr_salary_rule_category_ac_salary"/>
+        <field name="name">AC Salary</field>
+        <field name="code">ACSALARY</field>
+        <field name="sequence">108</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+ac_included_rules = payslip.struct_id.rule_ids.filtered('l10n_ch_ac_included')
+ac_included_codes = ac_included_rules.mapped('code')
+
+payslips_values = previous_payslips._get_line_values(ac_included_codes + ['ACSALARY'], compute_sum=True)
+previous_ac_base = sum([payslips_values[code]['sum']['total'] for code in ac_included_codes])
+current_ac_base = sum(result_rules[rule.code]['total'] for rule in payslip.struct_id.rule_ids if rule.l10n_ch_ac_included)
+ac_base = previous_ac_base + current_ac_base
+
+threshold = payslip._rule_parameter('l10n_ch_ac_threshold') / 12.0
+previous_ac_threshold = sum([threshold if p.gross_wage else 0 for p in previous_payslips])
+current_ac_threshold = threshold if categories['GROSS'] else 0
+ac_threshold = previous_ac_threshold + current_ac_threshold
+
+previous_ac_salary = payslips_values['ACSALARY']['sum']['total']
+ac_salary = max(min(ac_base, ac_threshold), 0) - previous_ac_salary
+result = ac_salary
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_ac" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">AC</field>
+        <field name="code">AC</field>
+        <field name="l10n_ch_code">5020</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+payslips_values = previous_payslips._get_line_values(
+    ['ACSALARY', 'AC'],
+    vals_list=['amount', 'total'],
+    compute_sum=True)
+previous_ac_salary = payslips_values['ACSALARY']['sum']['total']
+previous_ac_deduction = payslips_values['AC']['sum']['amount']
+
+ac_salary = previous_ac_salary + categories['ACSALARY']
+result = ac_salary - previous_ac_deduction
+result_rate = - contract.l10n_ch_social_insurance_id._get_ac_rates(payslip.date_from)[0]
+        </field>
+        <field name="note">
+Unemployment Insurance
+Source: https://www.cvcicaisseavs.ch/en/employer/unemployment-insurance-ac.html
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_wage_statement">9</field>
+        <field name="l10n_ch_yearly_statement">L</field>
+        <field name="l10n_ch_october_statement">L</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_ac_comp" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll.hr_salary_rule_category_comp_part"/>
+        <field name="name">AC (Comp. Part.)</field>
+        <field name="code">AC.COMP</field>
+        <field name="sequence">111</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+payslips_values = previous_payslips._get_line_values(
+    ['ACSALARY', 'AC.COMP'],
+    vals_list=['amount', 'total'],
+    compute_sum=True)
+previous_ac_salary = payslips_values['ACSALARY']['sum']['total']
+previous_ac_deduction = payslips_values['AC.COMP']['sum']['amount']
+
+ac_salary = previous_ac_salary + categories['ACSALARY']
+result = ac_salary - previous_ac_deduction
+result_rate = contract.l10n_ch_social_insurance_id._get_ac_rates(payslip.date_from)[1]
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="note">
+Unemployment Insurance
+Source: https://www.cvcicaisseavs.ch/en/employer/unemployment-insurance-ac.html
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_acc_salary" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll.hr_salary_rule_category_acc_salary"/>
+        <field name="name">ACC Salary</field>
+        <field name="code">ACCSALARY</field>
+        <field name="sequence">113</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+acc_included_rules = payslip.struct_id.rule_ids.filtered('l10n_ch_comp_ac_included')
+acc_included_codes = acc_included_rules.mapped('code')
+
+payslips_values = previous_payslips._get_line_values(acc_included_codes + ['ACCSALARY'], compute_sum=True)
+previous_acc_base = sum([payslips_values[code]['sum']['total'] for code in acc_included_codes])
+current_acc_base = sum(result_rules[rule.code]['total'] for rule in payslip.struct_id.rule_ids if rule.l10n_ch_ac_included)
+acc_base = previous_acc_base + current_acc_base
+
+threshold = payslip._rule_parameter('l10n_ch_ac_threshold') / 12.0
+previous_acc_threshold = sum([threshold if p.gross_wage else 0 for p in previous_payslips])
+current_acc_threshold = threshold if categories['GROSS'] else 0
+acc_threshold = previous_acc_threshold + current_acc_threshold
+
+previous_acc_salary = payslips_values['ACCSALARY']['sum']['total']
+acc_salary = max(acc_base - acc_threshold, 0) - previous_acc_salary
+result = acc_salary
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_compl_ac" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">ACC</field>
+        <field name="code">ACC</field>
+        <field name="l10n_ch_code">5030</field>
+        <field name="sequence">115</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+payslips_values = previous_payslips._get_line_values(
+    ['ACCSALARY', 'ACC'],
+    vals_list=['amount', 'total'],
+    compute_sum=True)
+previous_acc_salary = payslips_values['ACCSALARY']['sum']['total']
+previous_acc_deduction = payslips_values['ACC']['sum']['amount']
+
+ac_salary = previous_acc_salary + categories['ACCSALARY']
+result = ac_salary - previous_acc_deduction
+result_rate = - contract.l10n_ch_social_insurance_id._get_additional_ac_rates(payslip.date_from)[0]
+        </field>
+        <field name="note">Additional Unemployment Insurance</field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_wage_statement">9</field>
+        <field name="l10n_ch_yearly_statement">L</field>
+        <field name="l10n_ch_october_statement">L</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_compl_ac_comp" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll.hr_salary_rule_category_comp_part"/>
+        <field name="name">Compl. AC (Comp. Part.)</field>
+        <field name="code">ACC.COMP</field>
+        <field name="sequence">116</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+payslips_values = previous_payslips._get_line_values(
+    ['ACCSALARY', 'ACC.COMP'],
+    vals_list=['amount', 'total'],
+    compute_sum=True)
+previous_acc_salary = payslips_values['ACCSALARY']['sum']['total']
+previous_acc_deduction = payslips_values['ACC.COMP']['sum']['amount']
+
+ac_salary = previous_acc_salary + categories['ACCSALARY']
+result = ac_salary - previous_acc_deduction
+result_rate = contract.l10n_ch_social_insurance_id._get_additional_ac_rates(payslip.date_from)[1]
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="note">Additional Unemployment Insurance</field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_aanp_salary" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll.hr_salary_rule_category_aanp_salary"/>
+        <field name="name">AANP Salary</field>
+        <field name="code">AANPSALARY</field>
+        <field name="sequence">119</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+aanp_included_rules = payslip.struct_id.rule_ids.filtered('l10n_ch_aanp_included')
+aanp_included_codes = aanp_included_rules.mapped('code')
+
+payslips_values = previous_payslips._get_line_values(aanp_included_codes + ['AANPSALARY'], compute_sum=True)
+previous_aanp_base = sum([payslips_values[code]['sum']['total'] for code in aanp_included_codes])
+current_aanp_base = sum(result_rules[rule.code]['total'] for rule in payslip.struct_id.rule_ids if rule.l10n_ch_aanp_included)
+aanp_base = previous_aanp_base + current_aanp_base
+
+threshold = contract.l10n_ch_accident_insurance_line_id._get_threshold(payslip.date_from) / 12.0
+previous_aanp_threshold = sum([threshold if p.gross_wage else 0 for p in previous_payslips])
+current_aanp_threshold = threshold if categories['GROSS'] else 0
+aanp_threshold = previous_aanp_threshold + current_aanp_threshold
+
+previous_aanp_salary = payslips_values['AANPSALARY']['sum']['total']
+aanp_salary = max(min(aanp_base, aanp_threshold), 0) - previous_aanp_salary
+result = aanp_salary
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_aanp" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">AANP</field>
+        <field name="code">AANP</field>
+        <field name="l10n_ch_code">5040</field>
+        <field name="sequence">120</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+solution_number = contract.l10n_ch_accident_insurance_line_id.solution_number
+result_rate = 0
+if solution_number == "1":
+    rate, employer_part = contract.l10n_ch_accident_insurance_line_id._get_non_occupational_rates(
+        payslip.date_from,
+        contract.employee_id.gender)
+    result_rate = - rate * (100 - employer_part) / 100.0
+
+payslips_values = previous_payslips._get_line_values(
+    ['AANPSALARY', 'AANP'],
+    vals_list=['amount', 'total'],
+    compute_sum=True)
+previous_aanp_salary = payslips_values['AANPSALARY']['sum']['total']
+previous_aanp_deduction = payslips_values['AANP']['sum']['amount']
+aanp_salary = previous_aanp_salary + categories['AANPSALARY']
+result = aanp_salary - previous_aanp_deduction
+        </field>
+        <field name="note">Accident Insurance (Non Occupational Rates)</field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_wage_statement">9</field>
+        <field name="l10n_ch_yearly_statement">L</field>
+        <field name="l10n_ch_october_statement">L</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_aap_comp" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll.hr_salary_rule_category_comp_part"/>
+        <field name="name">AAP (Comp. Part.)</field>
+        <field name="code">AAP.COMP</field>
+        <field name="sequence">121</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+solution_number = contract.l10n_ch_accident_insurance_line_id.solution_number
+result_rate = 0
+if solution_number in ["1", "2", "3"]:
+    rate, employer_part = contract.l10n_ch_accident_insurance_line_id._get_occupational_rates(
+        payslip.date_from,
+        contract.employee_id.gender)
+    result_rate = (rate * employer_part / 100.0)
+
+payslips_values = previous_payslips._get_line_values(
+    ['AANPSALARY', 'AAP.COMP'],
+    vals_list=['amount', 'total'],
+    compute_sum=True)
+previous_aap_salary = payslips_values['AANPSALARY']['sum']['total']
+previous_aap_deduction = payslips_values['AAP.COMP']['sum']['amount']
+aap_salary = previous_aap_salary + categories['AANPSALARY']
+result = aap_salary - previous_aap_deduction
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="note">Accident Insurance (Occupational Rates)</field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_aanp_comp" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll.hr_salary_rule_category_comp_part"/>
+        <field name="name">AANP (Comp. Part.)</field>
+        <field name="code">AANP.COMP</field>
+        <field name="sequence">121</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+solution_number = contract.l10n_ch_accident_insurance_line_id.solution_number
+result_rate = 0
+if solution_number in ["1", "2"]:
+    rate, employer_part = contract.l10n_ch_accident_insurance_line_id._get_non_occupational_rates(
+        payslip.date_from,
+        contract.employee_id.gender)
+    result_rate = 0.081 + (rate * employer_part / 100.0)
+
+payslips_values = previous_payslips._get_line_values(
+    ['AANPSALARY', 'AANP.COMP'],
+    vals_list=['amount', 'total'],
+    compute_sum=True)
+previous_aanp_salary = payslips_values['AANPSALARY']['sum']['total']
+previous_aanp_deduction = payslips_values['AANP.COMP']['sum']['amount']
+aanp_salary = previous_aanp_salary + categories['AANPSALARY']
+result = aanp_salary - previous_aanp_deduction
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="note">Accident Insurance (Non Occupational Rates)</field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_laac_salary" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll.hr_salary_rule_category_laac_salary"/>
+        <field name="name">LAAC Salary</field>
+        <field name="code">LAACSALARY</field>
+        <field name="sequence">122</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+laac_included_rules = payslip.struct_id.rule_ids.filtered('l10n_ch_aanp_included')
+laac_included_codes = laac_included_rules.mapped('code')
+
+payslips_values = previous_payslips._get_line_values(laac_included_codes + ['LAACSALARY'], compute_sum=True)
+previous_laac_base = sum([payslips_values[code]['sum']['total'] for code in laac_included_codes])
+current_laac_base = sum(result_rules[rule.code]['total'] for rule in payslip.struct_id.rule_ids if rule.l10n_ch_aanp_included)
+laac_base = previous_laac_base + current_laac_base
+
+threshold = contract.l10n_ch_additional_accident_insurance_line_ids._get_threshold(payslip.date_from) / 12.0
+previous_laac_threshold = sum([threshold if p.gross_wage else 0 for p in previous_payslips])
+current_laac_threshold = threshold if categories['GROSS'] else 0
+laac_threshold = previous_laac_threshold + current_laac_threshold
+
+previous_laac_salary = payslips_values['LAACSALARY']['sum']['total']
+laac_salary = max(min(laac_base, laac_threshold), 0) - previous_laac_salary
+result = laac_salary
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_laac" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">LAAC</field>
+        <field name="code">LAAC</field>
+        <field name="l10n_ch_code">5060</field>
+        <field name="sequence">123</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+payslips_values = previous_payslips._get_line_values(
+    ['LAACSALARY', 'LAAC'],
+    vals_list=['amount', 'total'],
+    compute_sum=True)
+previous_laac_salary = payslips_values['LAACSALARY']['sum']['total']
+previous_laac_deduction = payslips_values['LAAC']['sum']['amount']
+laac_salary = previous_laac_salary + categories['LAACSALARY']
+taxable = laac_salary - previous_laac_deduction
+
+if len(contract.l10n_ch_additional_accident_insurance_line_ids) > 1:
+    total = 0
+    for line in contract.l10n_ch_additional_accident_insurance_line_ids:
+        solution_number = line.solution_number
+        if solution_number != "0":
+            wage_from, wage_to, rate, employer_part = line._get_rates(
+                payslip.date_from,
+                contract.employee_id.gender)
+            line_taxable = max(min(wage_to, taxable) - wage_from, 0)
+            total += - (rate * (100 - employer_part) / 100.0) * line_taxable
+    result = total
+else:
+    result_rate = 0
+    solution_number = contract.l10n_ch_additional_accident_insurance_line_ids.solution_number
+    if solution_number != "0":
+        wage_from, wage_to, rate, employer_part = contract.l10n_ch_additional_accident_insurance_line_ids._get_rates(
+            payslip.date_from,
+            contract.employee_id.gender)
+        result_rate = - rate * (100 - employer_part) / 100.0
+        taxable = max(min(wage_to, taxable) - wage_from, 0)
+    result = taxable
+        </field>
+        <field name="note">Additional Accident Insurance (LAAC)</field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_wage_statement">9</field>
+        <field name="l10n_ch_yearly_statement">L</field>
+        <field name="l10n_ch_october_statement">L</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_laac_comp" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll.hr_salary_rule_category_comp_part"/>
+        <field name="name">LAAC (Comp. Part.)</field>
+        <field name="code">LAAC.COMP</field>
+        <field name="sequence">124</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+payslips_values = previous_payslips._get_line_values(
+    ['LAACSALARY', 'LAAC.COMP'],
+    vals_list=['amount', 'total'],
+    compute_sum=True)
+previous_laac_salary = payslips_values['LAACSALARY']['sum']['total']
+previous_laac_deduction = payslips_values['LAAC.COMP']['sum']['amount']
+laac_salary = previous_laac_salary + categories['LAACSALARY']
+taxable = laac_salary - previous_laac_deduction
+
+if len(contract.l10n_ch_additional_accident_insurance_line_ids) > 1:
+    total = 0
+    for line in contract.l10n_ch_additional_accident_insurance_line_ids:
+        solution_number = line.solution_number
+        if solution_number != "0":
+            wage_from, wage_to, rate, employer_part = line._get_rates(
+                payslip.date_from,
+                contract.employee_id.gender)
+            line_taxable = max(min(wage_to, taxable) - wage_from, 0)
+            total += (rate * employer_part / 100.0) * line_taxable
+    result = total
+else:
+    result_rate = 0
+    solution_number = contract.l10n_ch_additional_accident_insurance_line_ids.solution_number
+    if solution_number != "0":
+        wage_from, wage_to, rate, employer_part = contract.l10n_ch_additional_accident_insurance_line_ids._get_rates(
+            payslip.date_from,
+            contract.employee_id.gender)
+        result_rate = rate * employer_part / 100.0
+        taxable = max(min(wage_to, taxable) - wage_from, 0)
+    result = taxable
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="note">Additional Accident Insurance (LAAC)</field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_ijm_salary" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll.hr_salary_rule_category_ijm_salary"/>
+        <field name="name">IJM Salary</field>
+        <field name="code">IJMSALARY</field>
+        <field name="sequence">125</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+ijm_included_rules = payslip.struct_id.rule_ids.filtered('l10n_ch_ijm_included')
+ijm_included_codes = ijm_included_rules.mapped('code')
+
+payslips_values = previous_payslips._get_line_values(ijm_included_codes + ['IJMSALARY'], compute_sum=True)
+previous_ijm_base = sum([payslips_values[code]['sum']['total'] for code in ijm_included_codes])
+current_ijm_base = sum(result_rules[rule.code]['total'] for rule in payslip.struct_id.rule_ids if rule.l10n_ch_ijm_included)
+ijm_base = previous_ijm_base + current_ijm_base
+
+threshold = contract.l10n_ch_sickness_insurance_line_ids._get_threshold(payslip.date_from) / 12.0
+previous_ijm_threshold = sum([threshold if p.gross_wage else 0 for p in previous_payslips])
+current_ijm_threshold = threshold if categories['GROSS'] else 0
+ijm_threshold = previous_ijm_threshold + current_ijm_threshold
+
+previous_ijm_salary = payslips_values['IJMSALARY']['sum']['total']
+ijm_salary = max(min(ijm_base, ijm_threshold), 0) - previous_ijm_salary
+result = ijm_salary
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_ijm" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">IJM</field>
+        <field name="code">IJM</field>
+        <field name="l10n_ch_code">5045</field>
+        <field name="sequence">126</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+payslips_values = previous_payslips._get_line_values(
+    ['IJMSALARY', 'IJM'],
+    vals_list=['amount', 'total'],
+    compute_sum=True)
+previous_ijm_salary = payslips_values['IJMSALARY']['sum']['total']
+previous_ijm_deduction = payslips_values['IJM']['sum']['amount']
+ijm_salary = previous_ijm_salary + categories['IJMSALARY']
+taxable = ijm_salary - previous_ijm_deduction
+
+if len(contract.l10n_ch_sickness_insurance_line_ids) > 1:
+    total = 0
+    for line in contract.l10n_ch_sickness_insurance_line_ids:
+        solution_number = line.solution_number
+        if solution_number != "0":
+            wage_from, wage_to, rate, employer_part = line._get_rates(
+                payslip.date_from,
+                contract.employee_id.gender)
+            line_taxable = max(min(wage_to, taxable) - wage_from, 0)
+            total += - (rate * (100 - employer_part) / 100.0) * line_taxable
+    result = total
+else:
+    result_rate = 0
+    solution_number = contract.l10n_ch_sickness_insurance_line_ids.solution_number
+    if solution_number != "0":
+        wage_from, wage_to, rate, employer_part = contract.l10n_ch_sickness_insurance_line_ids._get_rates(
+            payslip.date_from,
+            contract.employee_id.gender)
+        result_rate = - rate * (100 - employer_part) / 100.0
+        taxable = max(min(wage_to, taxable) - wage_from, 0)
+    result = taxable
+        </field>
+        <field name="note">Daily Sickness Insurance</field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_ijm_comp" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll.hr_salary_rule_category_comp_part"/>
+        <field name="name">IJM (Comp. Part.)</field>
+        <field name="code">IJM.COMP</field>
+        <field name="sequence">127</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+payslips_values = previous_payslips._get_line_values(
+    ['IJMSALARY', 'IJM.COMP'],
+    vals_list=['amount', 'total'],
+    compute_sum=True)
+previous_ijm_salary = payslips_values['IJMSALARY']['sum']['total']
+previous_ijm_deduction = payslips_values['IJM.COMP']['sum']['amount']
+ijm_salary = previous_ijm_salary + categories['IJMSALARY']
+taxable = ijm_salary - previous_ijm_deduction
+
+if len(contract.l10n_ch_sickness_insurance_line_ids) > 1:
+    total = 0
+    for line in contract.l10n_ch_sickness_insurance_line_ids:
+        solution_number = line.solution_number
+        if solution_number != "0":
+            wage_from, wage_to, rate, employer_part = line._get_rates(
+                payslip.date_from,
+                contract.employee_id.gender)
+            line_taxable = max(min(wage_to, taxable) - wage_from, 0)
+            total += (rate * employer_part / 100.0) * line_taxable
+    result = total
+else:
+    result_rate = 0
+    solution_number = contract.l10n_ch_sickness_insurance_line_ids.solution_number
+    if solution_number != "0":
+        wage_from, wage_to, rate, employer_part = contract.l10n_ch_sickness_insurance_line_ids._get_rates(
+            payslip.date_from,
+            contract.employee_id.gender)
+        result_rate = rate * employer_part / 100.0
+        taxable = max(min(wage_to, taxable) - wage_from, 0)
+    result = taxable
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="note">Daily Sickness Insurance</field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_lpp" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">LPP</field>
+        <field name="code">LPP</field>
+        <field name="l10n_ch_code">5050</field>
+        <field name="sequence">130</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = - inputs['LPP'].amount if 'LPP' in inputs else 0
+        </field>
+        <field name="note">
+Pension
+Source:
+-https://hellosafe.ch/prevoyance/lpp/cotisation
+-https://finpension.ch/fr/glossaire/salaire-coordonne/
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_wage_statement">10.1</field>
+        <field name="l10n_ch_yearly_statement">M</field>
+        <field name="l10n_ch_october_statement">M</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_lpp_redemption" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">LPP: Redemption</field>
+        <field name="code">LPPRED</field>
+        <field name="l10n_ch_code">5051</field>
+        <field name="sequence">130</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'LPPRED' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['LPPRED'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_wage_statement">10.2</field>
+        <field name="l10n_ch_yearly_statement">Z</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_lpp_comp" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll.hr_salary_rule_category_comp_part"/>
+        <field name="name">LPP (Comp. Part.)</field>
+        <field name="code">LPP.COMP</field>
+        <field name="sequence">131</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['LPP.COMP'].amount if 'LPP.COMP' in inputs else 0
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="note">
+Pension
+Source:
+-https://hellosafe.ch/prevoyance/lpp/cotisation
+-https://finpension.ch/fr/glossaire/salaire-coordonne/
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_withholding_tax" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Withholding Tax</field>
+        <field name="code">IS</field>
+        <field name="l10n_ch_code">5060</field>
+        <field name="sequence">135</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+def find_rates(x, rates):
+    for low, high, min_amount, rate in rates:
+        if low &lt;= x &lt;= high:
+            return min_amount, rate
+    return 0, 0
+
+if contract.employee_id.l10n_ch_has_withholding_tax:
+    canton = contract.employee_id.l10n_ch_canton
+    church_tax = 'Y' if contract.employee_id.l10n_ch_church_tax else 'N'
+    tax_scale = contract.employee_id.l10n_ch_tax_scale
+    child_count = min(contract.employee_id.children, 9)
+
+    parameter_code = f"l10n_ch_withholding_tax_rates_{canton}_{church_tax}_{tax_scale}_{child_count}"
+    rates = payslip._rule_parameter(parameter_code)
+
+    gross = sum(result_rules[rule.code]['total'] for rule in payslip.struct_id.rule_ids if rule.l10n_ch_source_tax_included)
+    min_amount, rate = find_rates(gross, rates)
+    if gross * rate &lt; min_amount:
+        result = - min_amount
+    else:
+        result_rate = -rate
+        result = gross
+else:
+    result = 0
+        </field>
+        <field name="note">
+Kept tax in the source
+See: https://www.estv.admin.ch/estv/fr/accueil/impot-federal-direct/impot-a-la-source/baremes-cantonaux.html</field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_wage_statement">12</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_is_correction" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">IS: Correction</field>
+        <field name="code">ISCOR</field>
+        <field name="l10n_ch_code">5061</field>
+        <field name="sequence">135</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'ISCOR' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['ISCOR'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_fak" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_ch_hr_payroll.hr_salary_rule_category_caf"/>
+        <field name="name">CAF</field>
+        <field name="code">CAF</field>
+        <field name="l10n_ch_code">5070</field>
+        <field name="sequence">138</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+result = contract.l10n_ch_compensation_fund_id
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['GROSS']
+result_rate = - contract.l10n_ch_compensation_fund_id._get_caf_rates(payslip.date_from)
+</field>
+        <field name="note">CAF Contribution (Family Allowances)</field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_wage_statement">9</field>
+        <field name="l10n_ch_yearly_statement">L</field>
+        <field name="l10n_ch_october_statement">L</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_company_car_employee_2" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Company Car (Employee Part)</field>
+        <field name="code">COMPCAR2</field>
+        <field name="l10n_ch_code">5100</field>
+        <field name="sequence">140</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'COMPCAR' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -inputs['COMPCAR'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_travel_expense" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Travel Expense</field>
+        <field name="code">TRAVEXP</field>
+        <field name="l10n_ch_code">6000</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'TRAVEXP' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['TRAVEXP'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_wage_statement">13.1.1</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_family_allowance" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Family Allowance</field>
+        <field name="code">FAMILYALW</field>
+        <field name="l10n_ch_code">3030</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'FAMILYALW' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['FAMILYALW'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="True"/>
+        <field name="l10n_ch_wage_statement">3</field>
+        <field name="l10n_ch_yearly_statement">Q</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_car_expense" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Car Expense</field>
+        <field name="code">CAREXP</field>
+        <field name="l10n_ch_code">6001</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'CAREXP' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['CAREXP'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_wage_statement">13.1.1</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_lunch_expense" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Lunch Expense</field>
+        <field name="code">LUNCHEXP</field>
+        <field name="l10n_ch_code">6002</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'LUNCHEXP' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['LUNCHEXP'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_wage_statement">13.1.1</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_nightly_expense" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Nightly Expense</field>
+        <field name="code">NIGHTEXP</field>
+        <field name="l10n_ch_code">6010</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'NIGHTEXP' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['NIGHTEXP'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_wage_statement">13.1.1</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_other_expense" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Other Expense</field>
+        <field name="code">OTHEREXP</field>
+        <field name="l10n_ch_code">6030</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'OTHEREXP' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['OTHEREXP'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_wage_statement">13.1.2</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_representation_fees" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Representation Fees</field>
+        <field name="code">REPFEES</field>
+        <field name="l10n_ch_code">6040</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'REPFEES' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['REPFEES'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_wage_statement">13.2.1</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_car_fees" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Car Fees</field>
+        <field name="code">CARFEES</field>
+        <field name="l10n_ch_code">6050</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'CARFEES' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['CARFEES'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_wage_statement">13.2.2</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_other_fees" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Other Fees</field>
+        <field name="code">OTHERFEES</field>
+        <field name="l10n_ch_code">6070</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'OTHERFEES' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['OTHERFEES'].amount
+        </field>
+        <field name="l10n_ch_aanp_included" eval="False"/>
+        <field name="l10n_ch_ac_included" eval="False"/>
+        <field name="l10n_ch_comp_ac_included" eval="False"/>
+        <field name="l10n_ch_ijm_included" eval="False"/>
+        <field name="l10n_ch_source_tax_included" eval="False"/>
+        <field name="l10n_ch_wage_statement">13.2.3</field>
+        <field name="l10n_ch_13th_month_included" eval="False"/>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_indemnity_accident_2" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Accident Indemnity</field>
+        <field name="code">INDACC2</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'INDACC' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['INDACC'].amount
+        </field>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_indemnity_illness_2" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Illness Indemnity</field>
+        <field name="code">INDSICK2</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'INDSICK' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['INDSICK'].amount
+        </field>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <record id="l10n_ch_employees_indemnity_maternity_2" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Maternity Indemnity</field>
+        <field name="code">INDMAT2</field>
+        <field name="sequence">150</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'INDMAT' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['INDMAT'].amount
+        </field>
+        <field name="struct_id" ref="l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary"/>
+    </record>
+
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary')),
+            ('code', '=', 'NET')]"/>
+        <value eval="{'l10n_ch_code': '6500'}"/>
+    </function>
+</odoo>

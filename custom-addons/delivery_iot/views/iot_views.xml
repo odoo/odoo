@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="iot_device_view_form_inherit" model="ir.ui.view">
+        <field name="name">iot.device.view.form.inherit</field>
+        <field name="model">iot.device</field>
+        <field name="inherit_id" ref="iot.iot_device_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='reports']" position="before">
+                <page string="Linked Operation Types" name="picking_types" invisible="type != 'scale'">
+                    <field name="picking_type_ids"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

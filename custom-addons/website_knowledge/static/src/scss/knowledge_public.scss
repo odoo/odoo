@@ -1,0 +1,99 @@
+.o_knowledge_public_view {
+    --knowledge-article-sidebar-size: 300px;
+    // Header
+    // --------------------------------------------------------------------------
+    .o_knowledge_header {
+        cursor: default;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        transition: background-color 0.5s ease;
+        &.o_knowledge_header_highlight {
+            border-radius: 0.25rem;
+            background-color: rgba($knowledge-bg--active, 0.2);
+        }
+    }
+
+    .o_view_nocontent_empty_folder:before {
+        @extend %o-nocontent-empty-document;
+    }
+
+    // Body, cover and icon
+    // --------------------------------------------------------------------------
+    .o_knowledge_icon:not(.o_full_width),
+    .o_knowledge_article:not(.o_full_width) {
+        width: 750px;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .o_knowledge_cover + .o_knowledge_icon {
+        margin-top: -70px;
+    }
+    .o_knowledge_icon {
+        @include font-size(80px);
+    }
+
+    // = Resizer
+    // --------------------------------------------------------------------------
+    .o_knowledge_article_form_resizer {
+        // Use '$spacers' measures to match surrounding elements padding
+        $-resizer-spacing: map-get($spacers, 1);
+        $-resizer-line-width: map-get($spacers, 1);
+
+        @include o-position-absolute(0, auto, 0, $-resizer-spacing * -1);
+
+        span {
+            @include o-position-absolute(0, auto, 0, $-resizer-spacing + ($-resizer-line-width * -0.5));
+        }
+    }
+
+    // Sidebar
+    // --------------------------------------------------------------------------
+    .o_knowledge_sidebar {
+        width: clamp(200px, var(--knowledge-article-sidebar-size), 576px);
+        transition: width 0.15s linear;
+
+        .o_article_active > div {
+            background-color: rgba($knowledge-bg--active, 0.2);
+            &:hover {
+                background-color: rgba($knowledge-bg--active, 0.3);
+            }
+        }
+
+        .o_article_name a {
+            cursor: pointer;
+            color: inherit;
+            text-decoration: none;
+        }
+    }
+
+    .o_knowledge_embedded_view_placeholder {
+        .o_knowledge_embedded_view_placeholder_cover {
+            @include o-position-absolute(0, 0, 0, 0);
+            background: radial-gradient($white, transparent);
+        }
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .o_knowledge_public_view {
+        .o_knowledge_sidebar {
+            width: 100%;
+        }
+    }
+}
+
+@include media-breakpoint-up(sm) {
+    .o_knowledge_public_view {
+        .o_scroll_view {
+            @include o-position-absolute(0, 0, 0, 0);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+    }
+}
+
+.o_knowledge_public_virality {
+    table-layout: fixed;
+}

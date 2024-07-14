@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="planning.PlanningGanttRowProgressBar" t-inherit="web_gantt.GanttRowProgressBar">
+        <xpath expr="//span[hasclass('o_gantt_group_hours')]" position="after">
+            <t t-if="!props.progressBar.is_material_resource">
+                <span class="ms-1" t-esc="`(${props.progressBar.percentage})`"/>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

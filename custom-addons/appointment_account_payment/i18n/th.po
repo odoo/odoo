@@ -1,0 +1,496 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* appointment_account_payment
+# 
+# Translators:
+# Wil Odoo, 2023
+# Rasareeyar Lappiam, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: appointment_account_payment
+#. odoo-python
+#: code:addons/appointment_account_payment/models/calendar_booking.py:0
+#, python-format
+msgid ""
+"%(name)s\n"
+"%(date_start)s at %(time_start)s to\n"
+"%(date_end)s at %(time_end)s (%(timezone)s)"
+msgstr ""
+"%(name)s\n"
+"%(date_start)s เวลา %(time_start)s ถึง\n"
+"%(date_end)s เวลา %(time_end)s (%(timezone)s)"
+
+#. module: appointment_account_payment
+#. odoo-python
+#: code:addons/appointment_account_payment/models/calendar_booking.py:0
+#, python-format
+msgid ""
+"%(name)s with %(staff_user)s\n"
+"%(date_start)s at %(time_start)s to\n"
+"%(date_end)s at %(time_end)s (%(timezone)s)"
+msgstr ""
+"%(name)s กับ %(staff_user)s\n"
+"%(date_start)s เวลา %(time_start)s ถึง\n"
+"%(date_end)s เวลา %(time_end)s (%(timezone)s)"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "(timezone:"
+msgstr "(โซนเวลา:"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid ""
+"<br/><i class=\"fa fa-cog me-1\" role=\"img\" aria-label=\"Edit\" "
+"title=\"Configure Providers in backend\"/><em>Configure Payment "
+"Providers</em>"
+msgstr ""
+"<br/><i class=\"fa fa-cog me-1\" role=\"img\" aria-label=\"Edit\" "
+"title=\"Configure Providers in "
+"backend\"/><em>กำหนดค่าผู้ให้บริการชำระเงิน</em>"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "<i class=\"fa fa-pencil fa-fw me-1\"/>Edit my appointment"
+msgstr "<i class=\"fa fa-pencil fa-fw me-1\"/>แก้ไขการนัดหมายของฉัน"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_type_view_form
+msgid ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Configure Payment "
+"Providers"
+msgstr ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> "
+"กำหนดค่าผู้ให้บริการชำระเงิน"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid ""
+"<span class=\"text-nowrap\"><i class=\"oi oi-arrow-right mx-2\"/>Back to "
+"edit mode</span>"
+msgstr ""
+"<span class=\"text-nowrap\"><i class=\"oi oi-arrow-right "
+"mx-2\"/>กลับสู่โหมดแก้ไข</span>"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "<span>Online</span>"
+msgstr "<span>ออนไลน์</span>"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid ""
+"<strong>No suitable payment option could be found.</strong>\n"
+"                    If you believe that it is an error, please contact the website administrator."
+msgstr ""
+"<strong>ไม่พบตัวเลือกการชำระเงินที่เหมาะสม</strong>\n"
+"                    หากคุณเชื่อว่าเป็นข้อผิดพลาด โปรดติดต่อผู้ดูแลเว็บไซต์"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid ""
+"<strong>Warning</strong> Make sure you are logged in as the right partner "
+"before making this payment."
+msgstr ""
+"<strong>คำเตือน</strong> "
+"ตรวจสอบให้แน่ใจว่าคุณได้เข้าสู่ระบบในฐานะพาร์ทเนอร์ที่ถูกต้องก่อนที่จะชำระเงินนี้"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "<strong>Warning</strong> The currency is missing or incorrect."
+msgstr "<strong>คำเตือน</strong>สกุลเงินหายไปหรือไม่ถูกต้อง"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "<strong>Warning</strong> You must be logged in to pay."
+msgstr "<strong>คำเตือน</strong> คุณต้องเข้าสู่ระบบเพื่อชำระเงิน"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,help:appointment_account_payment.field_product_product__detailed_type
+#: model:ir.model.fields,help:appointment_account_payment.field_product_template__detailed_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"สินค้าที่จัดเก็บได้คือสินค้าที่ทคุณจัดการสต๊อก จำเป็นต้องติดตั้งแอปคลังสินค้า\n"
+"สินค้าบริโภคคือสินค้าที่ไม่มีการจัดการสต๊อก\n"
+"บริการคือสินค้าที่ไม่ใช่วัตถุที่คุณจัดหา"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__booking_token
+msgid "Access Token"
+msgstr "โทเค็นการเข้าถึง"
+
+#. module: appointment_account_payment
+#: model:ir.model.constraint,message:appointment_account_payment.constraint_appointment_type_check_product_and_payment_step
+msgid "Activating the payment step requires a product"
+msgstr "การเปิดใช้งานขั้นตอนการชำระเงินจำเป็นต้องมีสินค้า"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "Amount"
+msgstr "จำนวน"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view_form
+msgid "Answers"
+msgstr "คำตอบ"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Appointment"
+msgstr "การนัดหมาย"
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_appointment_answer_input
+msgid "Appointment Answer Inputs"
+msgstr "ข้อมูลคำตอบการนัดหมาย"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__appointment_answer_input_ids
+msgid "Appointment Answers"
+msgstr "คำตอบการนัดหมาย"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__appointment_invite_id
+msgid "Appointment Invite"
+msgstr "คำเชิญการนัดหมาย"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__account_move_id
+msgid "Appointment Invoice"
+msgstr "ใบแจ้งการนัดหมาย"
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_appointment_type
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__appointment_type_id
+msgid "Appointment Type"
+msgstr "ประเภทการนัดหมาย"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__asked_capacity
+msgid "Asked Capacity"
+msgstr "ความจุที่ขอ"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Attendees"
+msgstr "ผู้เข้าร่วม"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view_form
+msgid "Booking"
+msgstr "การจอง"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields.selection,name:appointment_account_payment.selection__product_template__detailed_type__booking_fees
+#: model:product.template,name:appointment_account_payment.default_booking_product_product_template
+msgid "Booking Fees"
+msgstr "ค่าธรรมเนียมการจอง"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__booking_line_ids
+msgid "Booking Lines"
+msgstr "รายการการจอง"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_appointment_answer_input__calendar_event_id
+msgid "Calendar Event"
+msgstr "ปฎิทินอีเวนต์"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__capacity_reserved
+msgid "Capacity Reserved"
+msgstr "ความจุที่สำรองไว้"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__capacity_used
+msgid "Capacity Used"
+msgstr "ความจุที่ใช้ไปแล้ว"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_form
+msgid "Confirm Appointment"
+msgstr "ยืนยันการนัดหมาย"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__partner_id
+msgid "Contact"
+msgstr "ติดต่อ"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__create_uid
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__create_date
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__name
+msgid "Customer Name"
+msgstr "ชื่อลูกค้า"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__description
+msgid "Description"
+msgstr "คำอธิบาย"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Details"
+msgstr "รายละเอียด"
+
+#. module: appointment_account_payment
+#: model_terms:appointment.type,message_intro:appointment_account_payment.appointment_type_online_cooking_lesson
+msgid ""
+"Discover the secrets kept in high-end kitchens with one of our starred "
+"chefs, from the comfort of your own home."
+msgstr ""
+"ค้นพบความลับที่ถูกเก็บไว้ในครัวระดับสูงกับหนึ่งในเชฟติดดาวของเราจากที่บ้านของคุณเองอย่างสะดวกสบาย"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__display_name
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__duration
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Duration"
+msgstr "ระยะเวลา"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "For"
+msgstr "สำหรับ"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__guest_ids
+msgid "Guests"
+msgstr "ลูกค้า"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__id
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__not_available
+msgid "Is Not Available"
+msgstr "ไม่สามารถใช้งานได้"
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_account_move
+msgid "Journal Entry"
+msgstr "รายการสมุดรายวัน"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__write_uid
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__write_date
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Location"
+msgstr "สถานที่"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__calendar_event_id
+msgid "Meeting"
+msgstr "การประชุม"
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_calendar_booking
+#: model:ir.model.fields,field_description:appointment_account_payment.field_account_bank_statement_line__calendar_booking_ids
+#: model:ir.model.fields,field_description:appointment_account_payment.field_account_move__calendar_booking_ids
+#: model:ir.model.fields,field_description:appointment_account_payment.field_account_payment__calendar_booking_ids
+#: model:ir.model.fields,field_description:appointment_account_payment.field_appointment_answer_input__calendar_booking_id
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__calendar_booking_id
+msgid "Meeting Booking"
+msgstr "การจองการประชุม"
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_calendar_booking_line
+msgid "Meeting Resource Booking"
+msgstr "การจองทรัพยากรการประชุม"
+
+#. module: appointment_account_payment
+#: model:appointment.type,name:appointment_account_payment.appointment_type_online_cooking_lesson
+#: model:product.template,name:appointment_account_payment.product_appointment_type_online_cooking_lesson_product_template
+msgid "Online Cooking Lesson"
+msgstr "ชั้นเรียนทำอาหารออนไลน์"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__staff_user_id
+msgid "Operator"
+msgstr "ผู้ปฏิบัติการ"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "Payment for \""
+msgstr "การชำระเงินสำหรับ \""
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_type_view_form
+msgid "Pick a Product"
+msgstr "เลือกสินค้า"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_form
+msgid "Proceed to Payment"
+msgstr "ดำเนินการชำระเงิน"
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_product_template
+#: model:ir.model.fields,field_description:appointment_account_payment.field_appointment_type__product_id
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__product_id
+msgid "Product"
+msgstr "สินค้า"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_product_product__detailed_type
+#: model:ir.model.fields,field_description:appointment_account_payment.field_product_template__detailed_type
+msgid "Product Type"
+msgstr "ประเภทสินค้า"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,help:appointment_account_payment.field_appointment_type__has_payment_step
+msgid "Require visitors to pay to confirm their booking"
+msgstr "กำหนดให้ผู้เยี่ยมชมชำระเงินเพื่อยืนยันการจอง"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__appointment_resource_id
+msgid "Resource"
+msgstr "แหล่งข้อมูล"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view_form
+msgid "Resources"
+msgstr "แหล่งข้อมูล"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Schedule another appointment"
+msgstr "กำหนดเวลาการนัดหมายอีกครั้ง"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "Service"
+msgstr "บริการ"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__start
+msgid "Start"
+msgstr "เริ่ม"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__stop
+msgid "Stop"
+msgstr "หยุด"
+
+#. module: appointment_account_payment
+#: model_terms:appointment.type,message_confirmation:appointment_account_payment.appointment_type_online_cooking_lesson
+msgid ""
+"Thank you for your reservation. We will soon contact you to discuss menu "
+"options."
+msgstr ""
+"ขอบคุณสำหรับการจองของคุณ เราจะติดต่อคุณโดยเร็ว "
+"เพื่อพูดคุยเกี่ยวกับตัวเลือกของเมนู"
+
+#. module: appointment_account_payment
+#: model:ir.model.constraint,message:appointment_account_payment.constraint_appointment_answer_input_check_event_or_booking
+msgid "The answer inputs must be linked to a meeting or to a booking"
+msgstr "ข้อมูลคำตอบจะต้องเชื่อมโยงกับการประชุมหรือการจอง"
+
+#. module: appointment_account_payment
+#. odoo-python
+#: code:addons/appointment_account_payment/models/calendar_booking.py:0
+#, python-format
+msgid ""
+"The following booking was not confirmed due to insufficient availability or "
+"configuration changes: %s"
+msgstr ""
+"การจองต่อไปนี้ไม่ได้รับการยืนยันเนื่องจากความพร้อมใช้งานไม่เพียงพอหรือมีการเปลี่ยนแปลงการกำหนดค่า:"
+" %s"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "There is nothing to pay."
+msgstr "ไม่มีอะไรต้องชำระ"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "This invoice is already paid for."
+msgstr "ใบแจ้งหนี้นี้ได้รับการชำระเงินแล้ว"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "This is a preview of the customer appointment payment form."
+msgstr "นี่คือตัวอย่างแบบฟอร์มการชำระเงินนัดหมายลูกค้า"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid ""
+"Unfortunately, it looks like this booking is not possible anymore. Please "
+"contact us to find an alternative."
+msgstr ""
+"ขออภัย ดูเหมือนว่าการจองนี้จะไม่สามารถทำได้อีกต่อไป "
+"โปรดติดต่อเราเพื่อค้นหาทางเลือกอื่น"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_appointment_type__has_payment_step
+msgid "Up-front Payment"
+msgstr "การชำระเงินล่วงหน้า"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "When"
+msgstr "เมื่อ"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid ""
+"Your appointment has not been booked yet. It will be confirmed upon payment "
+"confirmation."
+msgstr ""
+"การนัดหมายของคุณยังไม่ได้รับการจอง "
+"จะได้รับการยืนยันเมื่อมีการยืนยันการชำระเงิน"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "people"
+msgstr "ผู้คน"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "with"
+msgstr "กับ"

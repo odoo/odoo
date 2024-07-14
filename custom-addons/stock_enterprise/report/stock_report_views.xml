@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="stock_report_search_view" model="ir.ui.view">
+            <field name="name">stock.report.view.search</field>
+            <field name="model">stock.report</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="reference"/>
+                    <filter string="Done Transfers" name="done" domain="[('state', '=', 'done')]"/>
+                    <filter string="Done Deliveries" name="done_deliveries" domain="[('state', '=', 'done'), ('picking_type_code', '=', 'outgoing')]"/>
+                    <filter string="Done Receipts" name="done_receipts" domain="[('state', '=', 'done'), ('picking_type_code', '=', 'incoming')]"/>
+                    <separator/>
+                    <filter name="filter_date_done" date="date_done" default_period="this_month"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="stock_report_graph_view" model="ir.ui.view">
+            <field name="name">stock.report.view.graph</field>
+            <field name="model">stock.report</field>
+            <field name="arch" type="xml">
+                <graph type="line" sample="1">
+                    <field name="date_done" interval="week"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="stock_report_pivot_view" model="ir.ui.view">
+            <field name="name">stock.report.view.pivot</field>
+            <field name="model">stock.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Stock Overview" sample="1">
+                    <field name="operation_type_id" type="col"/>
+                    <field name="categ_id" type="row"/>
+                    <field name="cycle_time" type="measure" string="Average Cycle Time (Days)"/>
+                    <field name="delay" type="measure" string="Average Delay (Days)"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="stock_report_tree_view" model="ir.ui.view">
+            <field name="name">stock.report.view.tree</field>
+            <field name="model">stock.report</field>
+            <field name="arch" type="xml">
+                <tree create="false" edit="false" delete="false">
+                    <field name="reference"/>
+                    <field name="operation_type_id"/>
+                    <field name="product_id"/>
+                    <field name="creation_date"/>
+                    <field name="scheduled_date"/>
+                    <field name="date_done"/>
+                    <field name="cycle_time" optional="hide"/>
+                    <field name="delay" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="stock_report_form_view" model="ir.ui.view">
+            <field name="name">stock.report.view.form</field>
+            <field name="model">stock.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="picking_id" invisible="not picking_id"/>
+                                <field name="product_id"/>
+                                <field name="product_qty"/>
+                                <field name="operation_type_id"/>
+                                <field name="partner_id"/>
+                                <field name="state"/>
+                            </group>
+                            <group>
+                                <field name="creation_date"/>
+                                <field name="date_done"/>
+                                <field name="scheduled_date"/>
+                                <label for="cycle_time" string="Cycle Time"/>
+                                <div class="o_row">
+                                    <field name="cycle_time"/> Days
+                                </div>
+                                <label for="delay" string="Delay"/>
+                                <div class="o_row">
+                                    <field name="delay"/> Days
+                                </div>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="stock_report_cohort_view" model="ir.ui.view">
+            <field name="name">stock.report.cohort.view</field>
+            <field name="model">stock.report</field>
+            <field name="arch" type="xml">
+                <cohort string="Report" date_start="creation_date" date_stop="date_done" interval="day" mode="churn" sample="1"/>
+            </field>
+        </record>
+
+        <record id="stock_report_action_performance" model="ir.actions.act_window">
+            <field name="name">Warehouse Analysis</field>
+            <field name="res_model">stock.report</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="search_view_id" ref="stock_enterprise.stock_report_search_view"/>
+            <field name="domain" eval="[('picking_type_code', '!=', False)]"/>
+            <field name="context">{
+                'search_default_done_deliveries': 1,
+                'search_default_filter_date_done': 1}</field> <!-- Use context keys for cohort view -->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p>
+            </field>
+        </record>
+
+        <menuitem
+            id="stock_dashboard_menuitem"
+            name="Performance"
+            parent="stock.menu_warehouse_report"
+            action="stock_report_action_performance"
+            sequence="300"/>
+    </data>
+</odoo>

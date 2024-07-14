@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_pl_small_bs" model="account.report">
+        <field name="name">Balance Sheet - Small</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="country_id" ref="base.pl"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_pl_small_small_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_pl_small_bs_assets" model="account.report.line">
+                <field name="name">Assets</field>
+                <field name="code">pl_small_assets</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_pl_small_bs_assets_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">pl_small_assets_a.balance + pl_small_assets_b.balance + pl_small_assets_c.balance + pl_small_assets_d.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_pl_small_bs_assets_a" model="account.report.line">
+                        <field name="name">A. Non-current assets</field>
+                        <field name="code">pl_small_assets_a</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_small_bs_assets_a_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">pl_small_assets_a_1.balance + pl_small_assets_a_2.balance + pl_small_assets_a_3.balance + pl_small_assets_a_5.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_pl_small_bs_assets_a_1" model="account.report.line">
+                                <field name="name">I. Intangible assets</field>
+                                <field name="code">pl_small_assets_a_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">02 + 07.02</field>
+                            </record>
+                            <record id="l10n_pl_small_bs_assets_a_2" model="account.report.line">
+                                <field name="name">II. Property, plant and equipment</field>
+                                <field name="code">pl_small_assets_a_2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_pl_small_bs_assets_a_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">pl_small_assets_a_2_1.balance + pl_small_assets_a_2_2.balance</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_pl_small_bs_assets_a_2_1" model="account.report.line">
+                                        <field name="name">- fixed assets</field>
+                                        <field name="code">pl_small_assets_a_2_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">01 + 07.01</field>
+                                    </record>
+                                    <record id="l10n_pl_small_bs_assets_a_2_2" model="account.report.line">
+                                        <field name="name">- fixed assets under construction</field>
+                                        <field name="code">pl_small_assets_a_2_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">08</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_pl_small_bs_assets_a_3" model="account.report.line">
+                                <field name="name">III. Long-term investments</field>
+                                <field name="code">pl_small_assets_a_3</field>
+                                <field name="account_codes_formula" eval="False"/>
+                                <field name="groupby" eval="False"/>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_pl_small_bs_assets_a_3_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">pl_small_assets_a_3_1.balance + pl_small_assets_a_3_2.balance + pl_small_assets_a_3_3.balance</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_pl_small_bs_assets_a_3_1" model="account.report.line">
+                                        <field name="name">- real estate</field>
+                                        <field name="code">pl_small_assets_a_3_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">03.000.6 + 07.030.1</field>
+                                    </record>
+                                    <record id="l10n_pl_small_bs_assets_a_3_2" model="account.report.line">
+                                        <field name="name">- long-term financial assets</field>
+                                        <field name="code">pl_small_assets_a_3_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">03\(03.00) + 03.000.1 + 03.000.2 + 03.000.3 + 03.000.4</field>
+                                    </record>
+                                    <record id="l10n_pl_small_bs_assets_a_3_3" model="account.report.line">
+                                        <field name="name">- other</field>
+                                        <field name="code">pl_small_assets_a_3_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">03.000.5 + 03.000.7 + 07.030.2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_pl_small_bs_assets_a_5" model="account.report.line">
+                                <field name="name">IV. Long-term accruals</field>
+                                <field name="code">pl_small_assets_a_5</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">03.000.8 + 03.000.9</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pl_small_bs_assets_b" model="account.report.line">
+                        <field name="name">B. Current assets</field>
+                        <field name="code">pl_small_assets_b</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_small_bs_assets_b_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">pl_small_assets_b_1.balance + pl_small_assets_b_2.balance + pl_small_assets_b_3.balance + pl_small_assets_b_4.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_pl_small_bs_assets_b_1" model="account.report.line">
+                                <field name="name">I. Stocks</field>
+                                <field name="code">pl_small_assets_b_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">60 + 62 + 3\(30.000.3,30.000.4,30.000.7)</field>
+                            </record>
+                            <record id="l10n_pl_small_bs_assets_b_2" model="account.report.line">
+                                <field name="name">II. Short-term receivables</field>
+                                <field name="code">pl_small_assets_b_2</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_pl_small_bs_assets_b_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">pl_small_assets_b_2_a.balance + pl_small_assets_b_2_b.balance</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_pl_small_bs_assets_b_2_a" model="account.report.line">
+                                        <field name="name">a) on account of deliveries and services</field>
+                                        <field name="code">pl_small_assets_b_2_a</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">20.00\(20.000.3) + 30.000.3</field>
+                                    </record>
+                                    <record id="l10n_pl_small_bs_assets_b_2_b" model="account.report.line">
+                                        <field name="name">b) other</field>
+                                        <field name="code">pl_small_assets_b_2_b</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">22.01 + 24.090.1 + 29.00 + 29.02 + 30.000.4 + 30.000.7 + 64.000.1 + 65.000.1</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_pl_small_bs_assets_b_3" model="account.report.line">
+                                <field name="name">III. Short-term investments</field>
+                                <field name="code">pl_small_assets_b_3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_pl_small_bs_assets_b_3_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">pl_small_assets_b_3_a.balance</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_pl_small_bs_assets_b_3_a" model="account.report.line">
+                                        <field name="name">a) short-term financial assets</field>
+                                        <field name="code">pl_small_assets_b_3_a</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_pl_small_bs_assets_b_3_a_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">pl_small_assets_b_3_a_1.balance + pl_small_assets_b_3_a_2.balance</field>
+                                                <field name="date_scope">normal</field>
+                                            </record>
+                                        </field>
+                                        <field name="children_ids">
+                                            <record id="l10n_pl_small_bs_assets_b_3_a_1" model="account.report.line">
+                                                <field name="name">- cash on hand and in accounts</field>
+                                                <field name="code">pl_small_assets_b_3_a_1</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">1\(14.000.2)</field>
+                                            </record>
+                                            <record id="l10n_pl_small_bs_assets_b_3_a_2" model="account.report.line">
+                                                <field name="name">- other</field>
+                                                <field name="code">pl_small_assets_b_3_a_2</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="True"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">24.010.2 + 24.020.1 + 24.090.2 + 24.090.3 + 24.090.9</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_pl_small_bs_assets_b_4" model="account.report.line">
+                                <field name="name">IV. Short-term prepayments and accruals</field>
+                                <field name="code">pl_small_assets_b_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">14.000.2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pl_small_bs_assets_c" model="account.report.line">
+                        <field name="name">C. Payments due to capital</field>
+                        <field name="code">pl_small_assets_c</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">80.000.2</field>
+                    </record>
+                    <record id="l10n_pl_small_bs_assets_d" model="account.report.line">
+                        <field name="name">D. Owned shares</field>
+                        <field name="code">pl_small_assets_d</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">80.000.3</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pl_small_bs_passives" model="account.report.line">
+                <field name="name">Liabilities and Equity</field>
+                <field name="code">pl_small_passives</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_pl_small_bs_passives_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">pl_small_passives_a.balance + pl_small_passives_b.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_pl_small_bs_passives_a" model="account.report.line">
+                        <field name="name">A. Equity (fund)</field>
+                        <field name="code">pl_small_passives_a</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_small_bs_passives_a_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">pl_small_passives_a_1.balance + pl_small_passives_a_2.balance + pl_small_passives_a_3.balance + pl_small_passives_a_4.balance + pl_small_passives_a_5.balance + pl_small_passives_a_6.balance + pl_small_passives_a_7.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_pl_small_bs_passives_a_1" model="account.report.line">
+                                <field name="name">I. Primary capital (fund)</field>
+                                <field name="code">pl_small_passives_a_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-80.000.1</field>
+                            </record>
+                            <record id="l10n_pl_small_bs_passives_a_2" model="account.report.line">
+                                <field name="name">II. Supplementary capital (fund)</field>
+                                <field name="code">pl_small_passives_a_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-81.01 - 81.04</field>
+                            </record>
+                            <record id="l10n_pl_small_bs_passives_a_3" model="account.report.line">
+                                <field name="name">III. Capital (fund) from revaluation</field>
+                                <field name="code">pl_small_passives_a_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-81.03</field>
+                            </record>
+                            <record id="l10n_pl_small_bs_passives_a_4" model="account.report.line">
+                                <field name="name">IV. Other reserve capitals (funds)</field>
+                                <field name="code">pl_small_passives_a_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-81.02</field>
+                            </record>
+                            <record id="l10n_pl_small_bs_passives_a_5" model="account.report.line">
+                                <field name="name">V. Previous years earnings (loss)</field>
+                                <field name="code">pl_small_passives_a_5</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-82</field>
+                            </record>
+                            <record id="l10n_pl_small_bs_passives_a_6" model="account.report.line">
+                                <field name="name">VI. Net profit (loss)</field>
+                                <field name="code">pl_small_passives_a_6</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_pl_small_bs_passives_a_6_balance_account_codes" model="account.report.expression"> <!-- Current year earnings ? -->
+                                        <field name="label">balance_account_codes</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-86</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                    <record id="l10n_pl_small_bs_passives_a_6_balance_aggregate" model="account.report.expression"> <!-- Current year allocated earnings ? -->
+                                        <field name="label">balance_aggregate</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">pl_small_pl_j.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                    </record>
+                                    <record id="l10n_pl_small_bs_passives_a_6_balance_unallocated" model="account.report.expression"> <!-- Previous year unallocated earnings ? -->
+                                        <field name="label">balance_unallocated</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[
+                                            '|', ('account_id.account_type', '=', 'income'),
+                                            '|', ('account_id.account_type', '=', 'income_other'),
+                                            '|', ('account_id.account_type', '=', 'expense'),
+                                            '|', ('account_id.account_type', '=', 'expense_depreciation'),
+                                                 ('account_id.account_type', '=', 'expense_direct_cost')
+                                        ]"/>
+                                        <field name="subformula">-sum</field>
+                                        <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                    </record>
+                                    <record id="l10n_pl_small_bs_passives_a_6_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">pl_small_passives_a_6.balance_account_codes + pl_small_passives_a_6.balance_aggregate + pl_small_passives_a_6.balance_unallocated</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_pl_small_bs_passives_a_7" model="account.report.line">
+                                <field name="name">VII. Net profit write-offs during the financial year (negative amount)</field>
+                                <field name="code">pl_small_passives_a_7</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-80.000.4</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pl_small_bs_passives_b" model="account.report.line">
+                        <field name="name">B. Liabilities and provisions for liabilities</field>
+                        <field name="code">pl_small_passives_b</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_small_bs_passives_b_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">pl_small_passives_b_1.balance + pl_small_passives_b_2.balance + pl_small_passives_b_3.balance + pl_small_passives_b_4.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_pl_small_bs_passives_b_1" model="account.report.line">
+                                <field name="name">I. Provisions for liabilities</field>
+                                <field name="code">pl_small_passives_b_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-83</field>
+                            </record>
+                            <record id="l10n_pl_small_bs_passives_b_2" model="account.report.line">
+                                <field name="name">II. Long-term liabilities</field>
+                                <field name="code">pl_small_passives_b_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-24.010.1</field>
+                            </record>
+                            <record id="l10n_pl_small_bs_passives_b_3" model="account.report.line">
+                                <field name="name">III. Current liabilities, including</field>
+                                <field name="code">pl_small_passives_b_3</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_pl_small_bs_passives_b_3_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">pl_small_passives_b_3_a.balance + pl_small_passives_b_3_b.balance + pl_small_passives_b_3_c.balance + pl_small_passives_b_3_d.balance</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_pl_small_bs_passives_b_3_a" model="account.report.line">
+                                        <field name="name">a) loans and borrowings</field>
+                                        <field name="code">pl_small_passives_b_3_a</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">- 23.000.2 - 20.000.3 - 22\(22.01)</field>
+                                    </record>
+                                    <record id="l10n_pl_small_bs_passives_b_3_b" model="account.report.line">
+                                        <field name="name">b) on account of deliveries and services</field>
+                                        <field name="code">pl_small_passives_b_3_b</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-21</field>
+                                    </record>
+                                    <record id="l10n_pl_small_bs_passives_b_3_c" model="account.report.line">
+                                        <field name="name">c) special funds</field>
+                                        <field name="code">pl_small_passives_b_3_c</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-85</field>
+                                    </record>
+                                    <record id="l10n_pl_small_bs_passives_b_3_d" model="account.report.line">
+                                        <field name="name">d) other</field>
+                                        <field name="code">pl_small_passives_b_3_d</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="True"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-23\(23.000.2) - 24.03 - 24.05 - 24.020.2 - 28 - 29.01 - 64.01 - 65.01</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_pl_small_bs_passives_b_4" model="account.report.line">
+                                <field name="name">IV. Accruals and prepayments</field>
+                                <field name="code">pl_small_passives_b_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-84</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

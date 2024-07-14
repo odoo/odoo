@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_intrastat.IntrastatReportFilters" t-inherit="account_reports.AccountReportFiltersCustomizable">
+        <xpath expr="." position="inside">
+            <t t-if="'intrastat_type' in controller.options">
+                <t t-call="account_intrastat.IntrastatReportFilterType"/>
+            </t>
+
+            <t t-if="'intrastat_extended' in controller.options">
+                <t t-call="account_intrastat.IntrastatReportFilterOptions"/>
+            </t>
+
+            <t t-if="'intrastat_with_vat' in controller.options">
+                <t t-call="account_intrastat.IntrastatReportFilterPartner"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

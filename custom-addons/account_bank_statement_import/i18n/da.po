@@ -1,0 +1,203 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_bank_statement_import
+# 
+# Translators:
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Ejner Sønniksen <ejner@vkdata.dk>, 2023
+# Mads Søndergaard, 2023
+# Mads Søndergaard, 2023
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "%d transactions had already been imported and were ignored."
+msgstr "%dTransaktioner var allerede blevet importeret og blev ignoreret."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "1 transaction had already been imported and was ignored."
+msgstr "1 transaktion var allerede blevet importeret og blev ignoreret."
+
+#. module: account_bank_statement_import
+#: model:ir.model.constraint,message:account_bank_statement_import.constraint_account_bank_statement_line_unique_import_id
+msgid "A bank account transactions can be imported only once!"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Kontoudtogslinje"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_setup_bank_manual_config
+msgid "Bank setup manual config"
+msgstr "Manuel konfiguration af bankindstillinger"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot find in which journal import this statement. Please manually select a"
+" journal."
+msgstr ""
+"Kan ikke finde den tilhørende journal. Vælg venligst en journal manuelt."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid ""
+"Could not make sense of the given file.\n"
+"Did you install the module to support this type of file?"
+msgstr ""
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "Go to Apps"
+msgstr ""
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid ""
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
+"Hvis den indeholder overførsler fra mere end én konto, skal den importeres "
+"til hver af dem."
+
+#. module: account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
+msgid "Import File"
+msgstr "Importér filer"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__unique_import_id
+msgid "Import ID"
+msgstr "Import ID"
+
+#. module: account_bank_statement_import
+#. odoo-javascript
+#: code:addons/account_bank_statement_import/static/src/account_bank_statement_import_model.js:0
+#, python-format
+msgid "Import Template for Bank Statements"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_journal
+msgid "Journal"
+msgstr "Journal"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "Manual (or import %(import_formats)s)"
+msgstr "Manuel (eller import %(import_formats)s)"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "No attachment was provided"
+msgstr "Ingen vedhæftning blev leveret."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "No currency found matching '%s'."
+msgstr "Matchende valuta ikke fundet '%s'."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid ""
+"The account of this statement (%s) is not the same as the journal (%s)."
+msgstr ""
+"Kontoen for dette bank kontoudtog (%s) er ikke den samme som journalen (%s)."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid ""
+"The currency of the bank statement (%s) is not the same as the currency of "
+"the journal (%s)."
+msgstr ""
+"Valutaen på kontoudtoget (%s) er ikke det samme som valutaen på journalen "
+"(%s)."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "The following files could not be imported:\n"
+msgstr ""
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "This file doesn't contain any statement for account %s."
+msgstr "Denne fil indeholder ingen udtog for konto %s."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "This file doesn't contain any transaction for account %s."
+msgstr "Denne fil inderholder ikke nogen overførsler for konto %s."
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "View successfully imported statements"
+msgstr ""
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "You already have imported that file."
+msgstr "Du har allerede importeret denne fil. "
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "You have to set a Default Account for the journal: %s"
+msgstr "Du har angivet en Standard Konto for journalen: %s"
+
+#. module: account_bank_statement_import
+#. odoo-python
+#: code:addons/account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "You uploaded an invalid or empty file."
+msgstr ""

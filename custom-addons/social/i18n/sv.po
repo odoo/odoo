@@ -1,0 +1,1955 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* social
+# 
+# Translators:
+# Victor Ekström, 2023
+# Haojun Zou <apollo_zhj@msn.com>, 2023
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2023
+# Björn Hayer, 2023
+# Robin Calvin, 2023
+# Daniel Osser <danielosser@gmail.com>, 2023
+# Christelle Wehbe <libanon_cristelle@hotmail.com>, 2023
+# Daniel Löfgren, 2023
+# Kim Asplund <kim.asplund@gmail.com>, 2023
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
+# Simon S, 2023
+# Martin Trigaux, 2023
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2023
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
+# Kristoffer Grundström <lovaren@gmail.com>, 2023
+# Moa Nicklasson <Moa.nicklasson@hotmail.se>, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Lasse L, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Lasse L, 2024\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__accounts_count
+msgid "# Accounts"
+msgstr "Kontoprefix"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "%s (max %s chars)"
+msgstr "%s (max %s tecken)"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid ", you must first link a social media."
+msgstr ", måste du först länka en social media."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_http_error_view
+msgid "<b>An error occurred while trying to link your account</b>"
+msgstr "<b>Ett fel uppstod när du försökte länka ditt konto</b>"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "<i class=\"fa fa-globe ms-1\" title=\"See the post\"/>"
+msgstr "<I class=”fa fa-globe ms-1” title=”Se inlägget”/>"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_http_error_view
+msgid "<i class=\"oi oi-arrow-left\"/> Go back to Odoo"
+msgstr "<i class=\"oi oi-arrow-left\"/> Gå tillbaka till Odoo"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_kanban
+msgid "<small class=\"pe-1\">Clicks:</small>"
+msgstr "<small class=\"pe-1\">Klick:</small>"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_kanban
+msgid "<small class=\"pe-1\">Engagement:</small>"
+msgstr "<small class=”pe-1”>Engagemang:</small>"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid ""
+"<strong>Congrats! Come back in a few minutes to check your "
+"statistics.</strong>"
+msgstr ""
+"<strong>Grattis! Kom tillbaka om några minuter för att kontrollera din "
+"statistik.</strong>"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_needaction
+#: model:ir.model.fields,field_description:social.field_social_post__message_needaction
+msgid "Action Needed"
+msgstr "Åtgärd Krävs"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__active
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_ids
+msgid "Activities"
+msgstr "Aktiviteter"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Aktivitet undantaget dekoration"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_state
+msgid "Activity State"
+msgstr "Aktivitetstillstånd"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikon för aktivitetstyp"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Add"
+msgstr "Lägg till"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_form
+msgid "Add Post"
+msgstr "Lägg till inlägg"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/add_stream_modal.js:0
+#: code:addons/social/static/src/js/stream_post_kanban_controller.js:0
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Add a Stream"
+msgstr "Lägg till ett flöde"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream_post
+msgid "Add a stream"
+msgstr "Lägg till ett flöde"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Add an image"
+msgstr "Lägga till en bild"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "All Companies"
+msgstr "Alla företag"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_utm_campaign__social_post_ids
+msgid "All related social media posts"
+msgstr "Alla relaterade inlägg i sociala medier"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__account_allowed_ids
+msgid "Allowed Accounts"
+msgstr "Tillåtna konton"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_search
+msgid "Archived"
+msgstr "Arkiverad"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__has_active_accounts
+#: model:ir.model.fields,field_description:social.field_social_post_template__has_active_accounts
+msgid "Are Accounts Available?"
+msgstr "Finns det tillgängliga konton?"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__image_ids
+#: model:ir.model.fields,field_description:social.field_social_post_template__image_ids
+msgid "Attach Images"
+msgstr "Bifoga bilder"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_attachment_count
+#: model:ir.model.fields,field_description:social.field_social_post__message_attachment_count
+msgid "Attachment Count"
+msgstr "Antal Bilagor"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model:ir.model.fields,field_description:social.field_social_account__audience
+#, python-format
+msgid "Audience"
+msgstr "Publik"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__audience_trend
+msgid "Audience Trend"
+msgstr "Trender för publiken"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__author_link
+msgid "Author Link"
+msgstr "Författarlänk"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__author_name
+msgid "Author Name"
+msgstr "Författare"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream_post__author_link
+msgid ""
+"Author link to the external social.media (ex: link to the Twitter Account)."
+msgstr ""
+"Författarlänk till det externa sociala mediet (t.ex. länk till Twitter-"
+"kontot)."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Before posting, links will be converted to be trackable."
+msgstr "Före publicering kommer länkar att konverteras för att vara spårbara."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_search
+msgid "By Stream"
+msgstr "Genom ström"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__csrf_token
+msgid "CSRF Token"
+msgstr "CSRF-token"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__calendar_date
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+msgid "Calendar Date"
+msgstr "Kalenderdatum"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__utm_campaign_id
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_form_quick_create_social
+msgid "Campaign"
+msgstr "Kampanj"
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_view_utm_campaigns
+#: model:ir.ui.menu,name:social.menu_social_campaign
+msgid "Campaigns"
+msgstr "Kampanjer"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_view_utm_campaigns
+msgid ""
+"Campaigns are used to centralize your marketing efforts and track their "
+"results."
+msgstr ""
+"Kampanjer används för att centralisera dina marknadsföringsinsatser och "
+"spåra deras resultat."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__can_link_accounts
+msgid "Can link accounts?"
+msgstr "Kan du länka konton?"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+#, python-format
+msgid "Cancel"
+msgstr "Avbryt"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Choose which <b>account</b> you would like to link first."
+msgstr "Välj vilket <b>konto</b> du vill länka först."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Click to refresh."
+msgstr "Klicka för att uppdatera."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "Clicks"
+msgstr "Klickar"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Comment Image"
+msgstr "Kommentar Bild"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__company_id
+#: model:ir.model.fields,field_description:social.field_social_live_post__company_id
+#: model:ir.model.fields,field_description:social.field_social_post__company_id
+#: model:ir.model.fields,field_description:social.field_social_stream__company_id
+#: model:ir.model.fields,field_description:social.field_social_stream_post__company_id
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_stream_view_search
+msgid "Company"
+msgstr "Bolag"
+
+#. module: social
+#: model:ir.model,name:social.model_res_config_settings
+msgid "Config Settings"
+msgstr "Inställningar"
+
+#. module: social
+#: model:ir.ui.menu,name:social.menu_social_configuration
+msgid "Configuration"
+msgstr "Konfiguration"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Connecting Problem"
+msgstr "Problem med anslutning"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__social_account_handle
+msgid ""
+"Contains the social media handle of the person that created this account. "
+"E.g: '@odoo.official' for the 'Odoo' Twitter account"
+msgstr ""
+"Innehåller det sociala mediehandtaget för den person som skapade detta "
+"konto. T.ex.: \"@odoo.official\" för Twitter-kontot \"Odoo”"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_live_post__message
+msgid ""
+"Content of the social post message that is post-processed (links are "
+"shortened, UTMs, ...)"
+msgstr ""
+"Innehållet i det sociala inlägget som efterbehandlas (länkar förkortas, UTM,"
+" ...)"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__has_streams
+msgid "Controls if social streams are handled on this social media."
+msgstr "Kontrollerar om sociala flöden hanteras på detta sociala medium."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__can_link_accounts
+msgid "Controls if we can link accounts or not."
+msgstr "Kontrollerar om vi kan länka till konton eller inte."
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_view_utm_campaigns
+msgid "Create a Campaign"
+msgstr "Skapa en kampanj"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_post
+msgid "Create a Post"
+msgstr "Skapa ett inlägg"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_account.py:0
+#, python-format
+msgid ""
+"Create other accounts for %(media_names)s for this company or ask "
+"%(company_names)s to share their accounts"
+msgstr ""
+"Skapa andra konton för %(media_names)s för detta företag eller be "
+"%(company_names)s att dela sina konton"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__create_uid
+#: model:ir.model.fields,field_description:social.field_social_live_post__create_uid
+#: model:ir.model.fields,field_description:social.field_social_media__create_uid
+#: model:ir.model.fields,field_description:social.field_social_post__create_uid
+#: model:ir.model.fields,field_description:social.field_social_post_template__create_uid
+#: model:ir.model.fields,field_description:social.field_social_stream__create_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_post__create_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__create_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_type__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__create_date
+#: model:ir.model.fields,field_description:social.field_social_live_post__create_date
+#: model:ir.model.fields,field_description:social.field_social_media__create_date
+#: model:ir.model.fields,field_description:social.field_social_post__create_date
+#: model:ir.model.fields,field_description:social.field_social_post_template__create_date
+#: model:ir.model.fields,field_description:social.field_social_stream__create_date
+#: model:ir.model.fields,field_description:social.field_social_stream_post__create_date
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__create_date
+#: model:ir.model.fields,field_description:social.field_social_stream_type__create_date
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__has_account_stats
+msgid ""
+"Defines whether this account has Audience/Engagements/Stories stats.\n"
+"        Account with stats are displayed on the dashboard."
+msgstr ""
+"Definierar om detta konto har publik-/interaktion-/berättelser-statistik.\n"
+"        Konton med statistik visas på instrumentpanelen."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__has_trends
+msgid "Defines whether this account has statistics tends or not."
+msgstr "Definierar om detta konto har statistiktrender eller inte."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_comment.js:0
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Delete Comment"
+msgstr "Ta bort kommentar"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.res_config_settings_view_form
+msgid "Demo Mode"
+msgstr "Demoläge"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__media_description
+msgid "Description"
+msgstr "Beskrivning"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.res_config_settings_view_form
+msgid "Developer Accounts"
+msgstr "Konton för utvecklare"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__display_name
+#: model:ir.model.fields,field_description:social.field_social_live_post__display_name
+#: model:ir.model.fields,field_description:social.field_social_media__display_name
+#: model:ir.model.fields,field_description:social.field_social_post__display_name
+#: model:ir.model.fields,field_description:social.field_social_post_template__display_name
+#: model:ir.model.fields,field_description:social.field_social_stream__display_name
+#: model:ir.model.fields,field_description:social.field_social_stream_post__display_name
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__display_name
+#: model:ir.model.fields,field_description:social.field_social_stream_type__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_comment.js:0
+#, python-format
+msgid "Do you really want to delete %s"
+msgstr "Vill du verkligen ta bort %s"
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_post__state__draft
+msgid "Draft"
+msgstr "Utkast"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid ""
+"Due to length restrictions, the following posts cannot be posted:\n"
+" %s"
+msgstr ""
+"På grund av längdbegränsningar kan följande inlägg inte publiceras:\n"
+" %s"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Edit Comment"
+msgstr "Redigera kommentar"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_res_config_settings__module_social_demo
+msgid "Enable Demo Mode"
+msgstr "Aktivera demoläge"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.res_config_settings_view_form
+msgid ""
+"Enable this option and load demo data to test the social module. This must "
+"never be used on a production database!"
+msgstr ""
+"Aktivera det här alternativet och ladda demodata för att testa den sociala "
+"modulen. Detta får aldrig användas i en produktionsdatabas!"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model:ir.model.fields,field_description:social.field_social_account__engagement
+#: model:ir.model.fields,field_description:social.field_social_live_post__engagement
+#: model:ir.model.fields,field_description:social.field_social_post__engagement
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_form
+#, python-format
+msgid "Engagement"
+msgstr "Förlovning"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__engagement_trend
+msgid "Engagement Trend"
+msgstr "Engagemangstrend"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__utm_medium_id
+msgid ""
+"Every time an account is created, a utm.medium is also created and linked to"
+" the account"
+msgstr ""
+"Varje gång ett konto skapas, skapas också en utm.medium och länkas till "
+"kontot"
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_live_post__state__failed
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_kanban
+msgid "Failed"
+msgstr "Misslyckades"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_live_post__failure_reason
+msgid "Failure Reason"
+msgstr "Felorsak"
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_social_stream_post
+#: model:ir.ui.menu,name:social.menu_social_stream_post
+msgid "Feed"
+msgstr "Flöde"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+#, python-format
+msgid "Feed Posts"
+msgstr "Inlägg"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__stream_posts_count
+msgid "Feed Posts Count"
+msgstr "Antal inlägg i flödet"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_follower_ids
+#: model:ir.model.fields,field_description:social.field_social_post__message_follower_ids
+msgid "Followers"
+msgstr "Följare"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_partner_ids
+#: model:ir.model.fields,field_description:social.field_social_post__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Följare (kontakter)"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font Awesome-ikon t.ex. fa-tasks"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__formatted_published_date
+msgid "Formatted Published Date"
+msgstr "Formaterad Publicerad datum"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__audience
+msgid ""
+"General audience of the Social Account (Page Likes, Account Follows, ...)."
+msgstr ""
+"Allmän publik för det sociala kontot (Gillar på sidan, följer konto, …)."
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream
+msgid "Go to the"
+msgstr "Gå till"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_stream_view_search
+msgid "Group By"
+msgstr "Gruppera efter"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__social_account_handle
+msgid "Handle / Short Name"
+msgstr "Hantera / Kortnamn"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Happy with the result? Let's post it!"
+msgstr "Är du nöjd med resultatet? Låt oss publicera det!"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__has_account_stats
+msgid "Has Account Stats"
+msgstr "Har kontostatistik"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__has_message
+#: model:ir.model.fields,field_description:social.field_social_post__has_message
+msgid "Has Message"
+msgstr "Har meddelande"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__has_trends
+msgid "Has Trends?"
+msgstr "Finns det trender?"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__is_hatched
+msgid "Hatched"
+msgstr "Skuggad"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__id
+#: model:ir.model.fields,field_description:social.field_social_live_post__id
+#: model:ir.model.fields,field_description:social.field_social_media__id
+#: model:ir.model.fields,field_description:social.field_social_post__id
+#: model:ir.model.fields,field_description:social.field_social_post_template__id
+#: model:ir.model.fields,field_description:social.field_social_stream__id
+#: model:ir.model.fields,field_description:social.field_social_stream_post__id
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__id
+#: model:ir.model.fields,field_description:social.field_social_stream_type__id
+msgid "ID"
+msgstr "ID"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_exception_icon
+msgid "Icon"
+msgstr "Ikon"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikon för att indikera en undantagsaktivitet."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__message_needaction
+#: model:ir.model.fields,help:social.field_social_post__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Om markerad så finns det meddelanden som kräver din uppmärksamhet."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__message_has_error
+#: model:ir.model.fields,help:social.field_social_media__message_has_sms_error
+#: model:ir.model.fields,help:social.field_social_post__message_has_error
+#: model:ir.model.fields,help:social.field_social_post__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Om markerad, en del meddelanden har leveransfel."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__image
+#: model:ir.model.fields,field_description:social.field_social_media__image
+msgid "Image"
+msgstr "Bild"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__image_url
+msgid "Image URL"
+msgstr "Bild URL"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Image Url"
+msgstr "Bild url"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__image_urls
+#: model:ir.model.fields,field_description:social.field_social_post_template__image_urls
+msgid "Images URLs"
+msgstr "Bilder URL-adresser"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream_post__stream_post_image_ids
+msgid "Images that were shared with this post."
+msgstr "Bilder som delades med detta inlägg."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Insights"
+msgstr "Insikter"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__is_author
+msgid "Is Author"
+msgstr "Är författare"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_is_follower
+#: model:ir.model.fields,field_description:social.field_social_post__message_is_follower
+msgid "Is Follower"
+msgstr "Är Följare"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid ""
+"It appears there is an issue with the Social Media link, click here to link "
+"the account again"
+msgstr ""
+"Det verkar vara ett problem med länken till sociala medier, klicka här för "
+"att länka kontot igen"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_kanban_controller.js:0
+#, python-format
+msgid "It will appear in the Feed once it has posts to display."
+msgstr "Det kommer att dyka upp i flödet när det finns inlägg att visa."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__write_uid
+#: model:ir.model.fields,field_description:social.field_social_live_post__write_uid
+#: model:ir.model.fields,field_description:social.field_social_media__write_uid
+#: model:ir.model.fields,field_description:social.field_social_post__write_uid
+#: model:ir.model.fields,field_description:social.field_social_post_template__write_uid
+#: model:ir.model.fields,field_description:social.field_social_stream__write_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_post__write_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__write_uid
+#: model:ir.model.fields,field_description:social.field_social_stream_type__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__write_date
+#: model:ir.model.fields,field_description:social.field_social_live_post__write_date
+#: model:ir.model.fields,field_description:social.field_social_media__write_date
+#: model:ir.model.fields,field_description:social.field_social_post__write_date
+#: model:ir.model.fields,field_description:social.field_social_post_template__write_date
+#: model:ir.model.fields,field_description:social.field_social_stream__write_date
+#: model:ir.model.fields,field_description:social.field_social_stream_post__write_date
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__write_date
+#: model:ir.model.fields,field_description:social.field_social_stream_type__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Let's <b>connect</b> to Facebook, LinkedIn or Twitter."
+msgstr "Låt oss <b>ansluta</b> till Facebook, LinkedIn eller Twitter."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Let's create your own <b>social media</b> dashboard."
+msgstr "Låt oss skapa ditt eget <b>sociala media</b> instrumentpanel."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Let's start posting."
+msgstr "Låt oss börja skriva inlägg."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Like"
+msgstr "Gilla"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Likes"
+msgstr "Gillar"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__link_description
+msgid "Link Description"
+msgstr "Länk Beskrivning"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_kanban
+#, python-format
+msgid "Link Image"
+msgstr "Länkbild"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__link_image_url
+msgid "Link Image URL"
+msgstr "Länkbild URL"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__link_title
+msgid "Link Title"
+msgstr "Länkrubrik"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__link_url
+msgid "Link URL"
+msgstr "Länk url"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Link a new account"
+msgstr "Länka ett nytt konto"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_media_view_kanban
+msgid "Link account"
+msgstr "Länka till konto"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_account
+msgid "Link an Account"
+msgstr "Länka ett konto"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__company_id
+#: model:ir.model.fields,help:social.field_social_live_post__company_id
+#: model:ir.model.fields,help:social.field_social_stream__company_id
+#: model:ir.model.fields,help:social.field_social_stream_post__company_id
+msgid ""
+"Link an account to a company to restrict its usage or keep empty to let all "
+"companies use it."
+msgstr ""
+"Koppla ett konto till ett företag för att begränsa användningen eller håll "
+"det tomt för att låta alla företag använda det."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_live_post__live_post_link
+msgid "Link of the live post on the target media."
+msgstr "Länk till det liveinlägg på målmedia."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Link social accounts"
+msgstr "Länka sociala konton"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__stats_link
+msgid "Link to the external Social Account statistics"
+msgstr "Länk till det externa socialakontots statistik"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__is_media_disconnected
+msgid "Link with external Social Media is broken"
+msgstr "Länken till externa socialamedier är bruten"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__account_allowed_ids
+msgid "List of the accounts which can be selected for this post."
+msgstr "Lista över de konton som kan väljas för detta inlägg."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__live_posts_by_media
+msgid "Live Posts by Social Media"
+msgstr "Liveinlägg per sociala medier"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Load more comments..."
+msgstr "Ladda fler kommentarer..."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__max_post_length
+msgid "Max Post Length"
+msgstr "Maximal längd på inlägget"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__media_ids
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_kanban
+msgid "Media"
+msgstr "Media"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__media_type
+#: model:ir.model.fields,field_description:social.field_social_media__media_type
+msgid "Media Type"
+msgstr "Medietyp"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_live_post__message
+#: model:ir.model.fields,field_description:social.field_social_post__message
+#: model:ir.model.fields,field_description:social.field_social_post_template__message
+#: model:ir.model.fields,field_description:social.field_social_stream_post__message
+msgid "Message"
+msgstr "Meddelande"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_has_error
+#: model:ir.model.fields,field_description:social.field_social_post__message_has_error
+msgid "Message Delivery error"
+msgstr "Fel vid leverans meddelande"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__message_length
+#: model:ir.model.fields,field_description:social.field_social_post_template__message_length
+msgid "Message Length"
+msgstr "Meddelande längd"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "Message posted"
+msgstr "Meddelande publicerat"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid ""
+"Message posted partially. These are the ones that couldn't be posted:%s"
+msgstr "Meddelandet postades delvis. Det här är de som inte kunde postas:%s"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_ids
+#: model:ir.model.fields,field_description:social.field_social_post__message_ids
+msgid "Messages"
+msgstr "Meddelanden"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_live_post__state
+msgid ""
+"Most social.live.posts directly go from Ready to Posted/Failed since they result of a single call to the third party API.\n"
+"        A 'Posting' state is also available for those that are sent through batching (like push notifications)."
+msgstr ""
+"Flest sociala.live.inlägg går direkt från redo till postade/misslyckade eftersom de är resultatet av ett enda anrop till tredjeparts-API.\n"
+"        Ett ’Publicerar’-tillstånd finns också tillgängligt för de som skickas via satsning (som pushnotiser)."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Mina aktiviteters sluttid"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+msgid "My Posts"
+msgstr "Mina inlägg"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_search
+msgid "My Streams"
+msgstr "Mina flöden"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__name
+#: model:ir.model.fields,field_description:social.field_social_media__name
+#: model:ir.model.fields,field_description:social.field_social_post__name
+#: model:ir.model.fields,field_description:social.field_social_stream_type__name
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_form
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_search
+msgid "Name"
+msgstr "Namn"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_kanban_controller.js:0
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "New Post"
+msgstr "Nytt inlägg"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "New content available"
+msgstr "Nytt innehåll tillgängligt"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Next"
+msgstr "Nästa"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Nästa Kalenderhändelse för Aktivitet"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Nästa slutdatum för aktivitet"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_summary
+msgid "Next Activity Summary"
+msgstr "Nästa aktivitetssammanställning"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_type_id
+msgid "Next Activity Type"
+msgstr "Nästa aktivitetstyp"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_account
+msgid "No Social Account yet!"
+msgstr "Inget socialt konto ännu!"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream
+msgid "No Social Streams yet!"
+msgstr "Inga Social flöden ännu!"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream_post
+msgid "No Stream added yet!"
+msgstr "Ingen flöden har lagts till ännu!"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "No comments yet."
+msgstr "Inga kommentarer än."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_kanban_controller.js:0
+#, python-format
+msgid "No social accounts configured, please contact your administrator."
+msgstr ""
+"Inga sociala konton konfigurerade, vänligen kontakta din administratör."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_needaction_counter
+#: model:ir.model.fields,field_description:social.field_social_post__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Antal åtgärder"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Number of Followers of your channel"
+msgstr "Antal följare av din kanal"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__click_count
+msgid "Number of clicks"
+msgstr "Antal klick"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_has_error_counter
+#: model:ir.model.fields,field_description:social.field_social_post__message_has_error_counter
+msgid "Number of errors"
+msgstr "Antal fel"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_utm_campaign__social_engagement
+msgid ""
+"Number of interactions (likes, shares, comments ...) with the social posts"
+msgstr ""
+"Antal interaktioner (gilla-markeringar, delningar, kommentarer ...) med de "
+"sociala inläggen"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__message_needaction_counter
+#: model:ir.model.fields,help:social.field_social_post__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Antal meddelanden som kräver åtgärd"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__message_has_error_counter
+#: model:ir.model.fields,help:social.field_social_post__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Antal meddelanden med leveransfel"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_live_post__engagement
+#: model:ir.model.fields,help:social.field_social_post__engagement
+msgid "Number of people engagements with the post (Likes, comments...)"
+msgstr "Antal personer som engagerar sig i inlägget (Likes, kommentarer...)"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__engagement
+msgid "Number of people engagements with your posts (Likes, Comments, ...)."
+msgstr ""
+"Antal personer som engagerar sig i dina inlägg (Likes, Comments, ...)."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__stories
+msgid "Number of stories created from your posts (Shares, Re-tweets, ...)."
+msgstr ""
+"Antal berättelser som skapats från dina inlägg (delningar, re-tweets, ...)."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid ""
+"Number of times people have engaged with your posts (likes, comments, "
+"shares,...)"
+msgstr ""
+"Antal gånger människor har engagerat sig i dina inlägg (gillamarkeringar, "
+"kommentarer, delningar, ...)"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid ""
+"Number of times people who have engaged with your channel have created "
+"stories on their friends' or followers' feed (Shares, Retweets...)"
+msgstr ""
+"Antal gånger som personer som har engagerat sig i din kanal har skapat "
+"stories i sina vänners eller följares flöde (delningar, retweets...)"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Or add"
+msgstr "Eller lägg till"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__audience_trend
+msgid "Percentage of increase/decrease of the audience over a defined period."
+msgstr "Procentuell ökning/minskning av publiken under en definierad period."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__engagement_trend
+msgid ""
+"Percentage of increase/decrease of the engagement over a defined period."
+msgstr ""
+"Procentuell ökning/minskning av engagemanget under en definierad period."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__stories_trend
+msgid "Percentage of increase/decrease of the stories over a defined period."
+msgstr ""
+"Procentuell ökning/minskning av berättelser under en definierad period."
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "Please specify at least one account to post into (for post ID(s) %s)."
+msgstr "Ange minst ett konto att publicera till (för post-ID:n %s)."
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+#, python-format
+msgid "Post"
+msgstr "Bokför"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_kanban
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_kanban
+#, python-format
+msgid "Post Image"
+msgstr "Utvald bild"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/post_kanban_view.js:0
+#: code:addons/social/static/src/js/stream_post_comments.js:0
+#: code:addons/social/static/src/js/stream_post_kanban_renderer.js:0
+#, python-format
+msgid "Post Images"
+msgstr "Inläggsbilder"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_live_post__live_post_link
+#: model:ir.model.fields,field_description:social.field_social_stream_post__post_link
+msgid "Post Link"
+msgstr "Länk till inlägg"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+#: model_terms:ir.ui.view,arch_db:social.social_stream_post_view_search
+msgid "Post Message"
+msgstr "Inläggsmeddelande"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "Post Now"
+msgstr "Publicera Nu"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream_post__post_link
+msgid ""
+"Post link to the external social.media (ex: link to the actual Facebook "
+"Post)."
+msgstr ""
+"Inläggslänk till det externa sociala mediet (t.ex. länk till det faktiska "
+"Facebook-inlägget)."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Post on"
+msgstr "Publicera på"
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_live_post__state__posted
+#: model:ir.model.fields.selection,name:social.selection__social_post__state__posted
+msgid "Posted"
+msgstr "Bokförd"
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_live_post__state__posting
+#: model:ir.model.fields.selection,name:social.selection__social_post__state__posting
+msgid "Posting"
+msgstr "Publicera"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__stream_post_ids
+#: model:ir.ui.menu,name:social.menu_social_post
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_kanban
+msgid "Posts"
+msgstr "Inlägg"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__live_post_ids
+msgid "Posts By Account"
+msgstr "Inlägg efter konto"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "Posts By Accounts"
+msgstr "Inlägg efter konton"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Press Enter to post. Press Shift+Enter to insert a Line Break."
+msgstr ""
+"Tryck på Enter för att publicera. Tryck på Shift+Enter för att infoga en "
+"radbrytning."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Preview your post"
+msgstr "Förhandsgranska ditt inlägg"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Previous"
+msgstr "Föregående"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__post_method
+msgid "Publish your post immediately or schedule it at a later time."
+msgstr ""
+"Publicera ditt inlägg omedelbart eller schemalägg det till en senare "
+"tidpunkt."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_search
+msgid "Published By"
+msgstr "Publicerad av"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__published_date
+msgid "Published Date"
+msgstr "Publiceringsdatum"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__published_date
+msgid "Published date"
+msgstr "Publiceringsdatum"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__rating_ids
+#: model:ir.model.fields,field_description:social.field_social_post__rating_ids
+msgid "Ratings"
+msgstr "Betyg"
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_live_post__state__ready
+msgid "Ready"
+msgstr "Redo"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__media_type
+msgid "Related Social Media"
+msgstr "Relaterade sociala medier"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__media_id
+msgid "Related Social Media (Facebook, Twitter, ...)."
+msgstr "Relaterade sociala medier (Facebook, Twitter, ...)."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__account_id
+msgid "Related social Account"
+msgstr "Relaterat socialt konto"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Reply"
+msgstr "Besvara"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__activity_user_id
+msgid "Responsible User"
+msgstr "Ansvarig användare"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_live_post_view_form
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "Retry"
+msgstr "Försök igen"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__message_has_sms_error
+#: model:ir.model.fields,field_description:social.field_social_post__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS leveransfel"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_form
+msgid "Schedule"
+msgstr "Schemalägg"
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_post__post_method__scheduled
+msgid "Schedule later"
+msgstr "Schema senare"
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_post__state__scheduled
+msgid "Scheduled"
+msgstr "Planerad"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__scheduled_date
+msgid "Scheduled Date"
+msgstr "Schemalagt datum"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "Selected accounts (%s) do not match the selected company (%s)"
+msgstr "Valda konton (%s) matchar inte det valda företaget (%s)"
+
+#. module: social
+#: model:ir.model.fields.selection,name:social.selection__social_post__post_method__now
+msgid "Send now"
+msgstr "Skicka nu"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__sequence
+msgid "Sequence"
+msgstr "Sekvens"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream__sequence
+msgid "Sequence used to order streams (mainly for the 'Feed' kanban view)"
+msgstr "Sekvens används för att ordna flöden (främst för kanban-vyn \"Feed\")"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__max_post_length
+msgid ""
+"Set a maximum number of characters can be posted in post. 0 for no limit."
+msgstr ""
+"Ange ett maximalt antal tecken som kan visas i inlägget. 0 för ingen gräns."
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_social_global_settings
+#: model:ir.ui.menu,name:social.menu_social_global_settings
+msgid "Settings"
+msgstr "Inställningar"
+
+#. module: social
+#: model:ir.model,name:social.model_social_account
+#: model:ir.model.fields,field_description:social.field_social_live_post__account_id
+#: model:ir.model.fields,field_description:social.field_social_stream__account_id
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_form
+msgid "Social Account"
+msgstr "Socialt konto"
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_social_account
+#: model:ir.model.fields,field_description:social.field_social_media__account_ids
+#: model:ir.model.fields,field_description:social.field_social_post__account_ids
+#: model:ir.model.fields,field_description:social.field_social_post_template__account_ids
+#: model:ir.ui.menu,name:social.menu_social_account
+#: model_terms:ir.ui.view,arch_db:social.social_account_view_list
+msgid "Social Accounts"
+msgstr "Sociala konton"
+
+#. module: social
+#: model:ir.model,name:social.model_social_live_post
+msgid "Social Live Post"
+msgstr "Social Live Post"
+
+#. module: social
+#: model:res.groups,name:social.group_social_manager
+msgid "Social Manager"
+msgstr "Social chef"
+
+#. module: social
+#: model:ir.ui.menu,name:social.menu_social_global
+msgid "Social Marketing"
+msgstr "Social marknadsföring"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model:ir.actions.act_window,name:social.action_social_media
+#: model:ir.model,name:social.model_social_media
+#: model:ir.model.fields,field_description:social.field_social_account__media_id
+#: model:ir.model.fields,field_description:social.field_social_stream__media_id
+#: model:ir.model.fields,field_description:social.field_social_stream_type__media_id
+#: model:ir.ui.menu,name:social.menu_social_media
+#: model_terms:ir.ui.view,arch_db:social.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:social.social_media_view_kanban
+#: model_terms:ir.ui.view,arch_db:social.utm_campaign_view_form
+#, python-format
+msgid "Social Media"
+msgstr "Sociala medier"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_utm_campaign__social_posts_count
+msgid "Social Media Posts"
+msgstr "Inlägg i sociala medier"
+
+#. module: social
+#: model:ir.model,name:social.model_social_post
+#: model:ir.model.fields,field_description:social.field_social_live_post__post_id
+#: model_terms:ir.ui.view,arch_db:social.social_live_post_view_form
+msgid "Social Post"
+msgstr "Social postning"
+
+#. module: social
+#: model:ir.model,name:social.model_social_post_template
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Social Post Template"
+msgstr "Mall för sociala inlägg"
+
+#. module: social
+#: model:ir.actions.act_window,name:social.social_post_template_action
+msgid "Social Post Templates"
+msgstr "Mallar för sociala inlägg"
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_social_post
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_calendar
+#: model_terms:ir.ui.view,arch_db:social.social_post_view_pivot
+msgid "Social Posts"
+msgstr "Sociala inlägg"
+
+#. module: social
+#: model:ir.model,name:social.model_social_stream
+#: model:ir.model.fields,field_description:social.field_social_stream_post__stream_id
+#: model_terms:ir.ui.view,arch_db:social.social_stream_view_form
+msgid "Social Stream"
+msgstr "Sociala flöde"
+
+#. module: social
+#: model:ir.model,name:social.model_social_stream_post
+#: model:ir.model,name:social.model_social_stream_type
+msgid "Social Stream Post"
+msgstr "Inlägg om socialaflöden"
+
+#. module: social
+#: model:ir.model,name:social.model_social_stream_post_image
+msgid "Social Stream Post Image Attachment"
+msgstr "Bildtillägg för inlägg i Social flöden"
+
+#. module: social
+#: model:ir.actions.act_window,name:social.action_social_stream
+#: model:ir.ui.menu,name:social.menu_social_stream
+msgid "Social Streams"
+msgstr "Sociala flöden"
+
+#. module: social
+#: model:res.groups,name:social.group_social_user
+msgid "Social User"
+msgstr "Social användare"
+
+#. module: social
+#: model:ir.actions.server,name:social.ir_cron_post_scheduled_ir_actions_server
+msgid "Social: Publish Scheduled Posts"
+msgstr "Social: Publicera schemalagda inlägg"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_comments_reply.js:0
+#, python-format
+msgid ""
+"Something went wrong while posting the comment. \n"
+"%s"
+msgstr ""
+"Något gick fel när du publicerade kommentaren.\n"
+"%s"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_kanban_dashboard.js:0
+#, python-format
+msgid ""
+"Sorry, you're not allowed to re-link this account, please contact your "
+"administrator."
+msgstr ""
+"Du får tyvärr inte länka om det här kontot, vänligen kontakta din "
+"administratör."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__source_id
+msgid "Source"
+msgstr "Källa"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__live_posts_by_media
+msgid ""
+"Special technical field that holds a dict containing the live posts names by"
+" media ids (used for kanban view)."
+msgstr ""
+"Specialtekniskt fält som innehåller en dict med liveinläggens namn per "
+"media-ID (används för kanban-vy)."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__stats_link
+msgid "Stats Link"
+msgstr "Statistik länk"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_live_post__state
+#: model:ir.model.fields,field_description:social.field_social_post__state
+msgid "Status"
+msgstr "Status"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status baserad på aktiviteter\n"
+"Försenade: Leveranstidpunkten har passerat\n"
+"Idag: Aktivitetsdatum är idag\n"
+"Kommande: Framtida aktiviteter."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#: model:ir.model.fields,field_description:social.field_social_account__stories
+#, python-format
+msgid "Stories"
+msgstr "Storys"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_account__stories_trend
+msgid "Stories Trend"
+msgstr "Trend för berättelser"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_kanban_controller.js:0
+#, python-format
+msgid "Stream Added (%s)"
+msgstr "Flöde tillagd (%s)"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post_image__stream_post_id
+msgid "Stream Post"
+msgstr "Flödesinlägg"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__stream_post_image_ids
+msgid "Stream Post Images"
+msgstr "Bilder från ett flödesinlägg"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream_post__stream_post_image_urls
+msgid "Stream Post Images URLs"
+msgstr "Flödesinläggs bilders URL:er"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__stream_type_ids
+msgid "Stream Types"
+msgstr "Flödestyper"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__stream_type_type
+#: model:ir.model.fields,field_description:social.field_social_stream_type__stream_type
+msgid "Stream type name (technical)"
+msgstr "Namn på flödestyp (teknisk)"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__has_streams
+msgid "Streams Enabled"
+msgstr "Flöden aktiverade"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__live_post_ids
+msgid "Sub-posts that will be published on each selected social accounts."
+msgstr "Underinlägg som kommer att publiceras på varje valt socialt konto."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Synchronize"
+msgstr "Synkronisera"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post_template.py:0
+#, python-format
+msgid "The 'message' field is required for post ID %s"
+msgstr "Fältet \"meddelande\" är obligatoriskt för inläggs-ID %s"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__account_ids
+#: model:ir.model.fields,help:social.field_social_post_template__account_ids
+msgid "The accounts on which this post will be published."
+msgstr "De konton på vilka detta inlägg kommer att publiceras."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream_post__author_name
+msgid ""
+"The post author name based on third party information (ex: 'John Doe')."
+msgstr ""
+"Inläggets författarnamn baserat på information från tredje part (ex: \"John "
+"Doe\")."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__state
+msgid ""
+"The post is considered as 'Posted' when all its sub-posts (one per social "
+"account) are either 'Failed' or 'Posted'"
+msgstr ""
+"Inlägget anses vara ”Publicerat när alla dess underinlägg (ett per socialt "
+"konto) antingen är \"Misslyckat\" eller ”Publicerat”"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_stream_post__published_date
+msgid "The post published date based on third party information."
+msgstr "Inlägget publicerat datum baserat på information från tredje part."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_live_post__failure_reason
+msgid ""
+"The reason why a post is not successfully posted on the Social Media (eg: "
+"connection error, duplicated post, ...)."
+msgstr ""
+"Anledningen till att ett inlägg inte har publicerats på den sociala median "
+"(t.ex.: anslutningsfel, duplicerat inlägg, ...)."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__media_image
+msgid "The related Social Media's image"
+msgstr "Det relaterade sociala mediets bild"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__media_ids
+msgid "The social medias linked to the selected social accounts."
+msgstr "De sociala medierna länkade till de utvalda sociala kontona."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__has_post_errors
+msgid "There are post errors on sub-posts"
+msgstr "Det finns inläggsfel på underinlägg"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__csrf_token
+msgid ""
+"This token can be used to verify that an incoming request from a social "
+"provider has not been forged."
+msgstr ""
+"Denna token kan användas för att verifiera att en inkommande begäran från en"
+" social leverantör inte har förfalskats."
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__name
+msgid "Title"
+msgstr "Titel"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "To add a stream"
+msgstr "Lägga till ett flöde"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_stream__stream_type_id
+msgid "Type"
+msgstr "Typ"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Typ av undantagsaktivitet som har registrerats."
+
+#. module: social
+#: model:ir.model,name:social.model_utm_campaign
+msgid "UTM Campaign"
+msgstr "UTM kampanj"
+
+#. module: social
+#: model:ir.model,name:social.model_utm_medium
+#: model:ir.model.fields,field_description:social.field_social_account__utm_medium_id
+msgid "UTM Medium"
+msgstr "UTM Medium"
+
+#. module: social
+#: model:ir.model,name:social.model_utm_source
+msgid "UTM Source"
+msgstr "UTM Källa"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "Unknown error"
+msgstr "Okänt fel"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post_template.py:0
+#, python-format
+msgid "Uploaded file does not seem to be a valid image."
+msgstr "Den uppladdade filen verkar inte vara en giltig bild."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.res_config_settings_view_form
+msgid ""
+"Use your own Developer Accounts on our Social app. Those credentials are "
+"provided in the developer section of your professional social media account."
+msgstr ""
+"Använd dina egna utvecklarkonton på vår sociala app. Dessa referenser "
+"tillhandahålls i utvecklaravsnittet på ditt professionella sociala "
+"mediekonto."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_account__media_type
+#: model:ir.model.fields,help:social.field_social_media__media_type
+#: model:ir.model.fields,help:social.field_social_stream_post__media_type
+msgid ""
+"Used to make comparisons when we need to restrict some features to a "
+"specific media ('facebook', 'twitter', ...)."
+msgstr ""
+"Används för att göra jämförelser när vi behöver begränsa vissa funktioner "
+"till ett specifikt media (\"facebook\", \"twitter\", ...)."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "View"
+msgstr "Visa"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_media__website_message_ids
+#: model:ir.model.fields,field_description:social.field_social_post__website_message_ids
+msgid "Website Messages"
+msgstr "Webbplatsmeddelanden"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_media__website_message_ids
+#: model:ir.model.fields,help:social.field_social_post__website_message_ids
+msgid "Website communication history"
+msgstr "Webbplatsens kommunikationshistorik"
+
+#. module: social
+#: model:ir.model.fields,field_description:social.field_social_post__post_method
+msgid "When"
+msgstr "När"
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__published_date
+msgid ""
+"When the global post was published. The actual sub-posts published dates may"
+" be different depending on the media."
+msgstr ""
+"När det globala inlägget publicerades. De faktiska underposternas "
+"publiceringsdatum kan variera beroende på media."
+
+#. module: social
+#: model:ir.model.fields,help:social.field_social_post__image_ids
+#: model:ir.model.fields,help:social.field_social_post_template__image_ids
+msgid "Will attach images to your posts (if the social media supports it)."
+msgstr ""
+"Kan bifoga bilder till dina inlägg (om det sociala mediet stöder det)."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Write a comment..."
+msgstr "Skriv en kommentar."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/tours/social.js:0
+#, python-format
+msgid "Write a message to get a preview of your post."
+msgstr "Skriv ett meddelande för att få en förhandsgranskning av ditt inlägg."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "Write a reply..."
+msgstr "یک پاسخ بنویسید ..."
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_post
+msgid ""
+"Write an enticing post, add images and schedule it to be posted later on "
+"multiple platforms at once."
+msgstr ""
+"Skriv ett lockande inlägg, lägg till bilder och schemalägg det så att det "
+"publiceras senare på flera plattformar samtidigt."
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/utm_medium.py:0
+#, python-format
+msgid ""
+"You cannot delete these UTM Mediums as they are linked to the following social accounts in Social:\n"
+"%(social_accounts)s"
+msgstr ""
+"Du kan inte ta bort dessa UTM-medier eftersom de är kopplade till följande sociala konton i Social:\n"
+"%(social_accounts)s"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/utm_source.py:0
+#, python-format
+msgid ""
+"You cannot delete these UTM Sources as they are linked to social posts in Social:\n"
+"%(utm_sources)s"
+msgstr ""
+"Du kan inte radera dessa UTM-källor eftersom de är kopplade till sociala inlägg i Social:\n"
+"%(utm_sources)s"
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "You cannot reschedule a post that has already been posted."
+msgstr "Du kan inte flytta ett inlägg som redan har publicerats."
+
+#. module: social
+#. odoo-python
+#: code:addons/social/models/social_post.py:0
+#, python-format
+msgid "You cannot schedule a post in the past."
+msgstr "Du kan inte schemalägga ett inlägg i det förflutna."
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "Your Post"
+msgstr "Ditt inlägg"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "a Stream from an existing account"
+msgstr "ett flöde från ett befintligt konto"
+
+#. module: social
+#: model_terms:ir.ui.view,arch_db:social.social_post_template_view_form
+msgid "before posting."
+msgstr "före publicering."
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/js/stream_post_comment.js:0
+#, python-format
+msgid "comment/reply"
+msgstr "kommentar/svar"
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream
+msgid "dashboard"
+msgstr "kontrollpanel"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "for"
+msgstr "för"
+
+#. module: social
+#. odoo-javascript
+#: code:addons/social/static/src/xml/social_templates.xml:0
+#, python-format
+msgid "replies..."
+msgstr "svar..."
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream_post
+msgid "to keep an eye on your own posts and monitor all social activities."
+msgstr ""
+"för att hålla koll på dina egna inlägg och övervaka all social aktivitet."
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_stream
+msgid "to link your accounts and start posting."
+msgstr "för att länka dina konton och börja publicera."
+
+#. module: social
+#: model_terms:ir.actions.act_window,help:social.action_social_account
+msgid "to start posting from Odoo."
+msgstr "för att börja skriva inlägg från Odoo."

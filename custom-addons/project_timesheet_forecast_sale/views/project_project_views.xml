@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_timesheet_forecast_view_kanban_inherit_sale_timesheet" model="ir.ui.view">
+        <field name="name">project.project.kanban.inherit.sale.timesheet</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="hr_timesheet.view_project_kanban_inherited"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="inside">
+                <field name="display_planning_timesheet_analysis" invisible="1"/>
+            </xpath>
+            <xpath expr="//div[@name='project_burndown_menu']" position="after">
+                <div t-if="record.display_planning_timesheet_analysis.raw_value" role="menuitem">
+                    <a name="open_timesheets_planning_report" type="object">
+                        Timesheets and Planning Analysis
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="planning_slot_report_view_pivot_inherit_project_timesheet_forecast_sale" model="ir.ui.view">
+        <field name="name">planning.slot.pivot.inherit.timesheet</field>
+        <field name="inherit_id" ref="project_timesheet_forecast.planning_slot_report_view_pivot_inherit_project_timesheet_forecast"/>
+        <field name="model">planning.analysis.report</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='remaining_hours']" position="after">
+                <field name="billable_allocated_hours" widget="float_time"/>
+                <field name="non_billable_allocated_hours" widget="float_time"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

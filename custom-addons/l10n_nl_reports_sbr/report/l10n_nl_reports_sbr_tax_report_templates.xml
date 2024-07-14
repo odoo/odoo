@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="tax_report_sbr">
+            <!-- XBRL instance based on taxonomy report namespace https://www.nltaxonomie.nl/nt18/bd/20231213/entrypoints/bd-rpt-ob-aangifte-2024.xsd -->
+            <!-- Intellectual Property State of the Netherlands -->
+            <!-- Created on: 19-10-2021 16:00:00 -->
+            <xbrli:xbrl t-att="{'xml:lang': 'nl'}" xmlns:bd-i="http://www.nltaxonomie.nl/nt18/bd/20231213/dictionary/bd-data" xmlns:bd-t="http://www.nltaxonomie.nl/nt18/bd/20231213/dictionary/bd-tuples" xmlns:link="http://www.xbrl.org/2003/linkbase" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:iso4217="http://www.xbrl.org/2003/iso4217" xmlns:xbrli="http://www.xbrl.org/2003/instance">
+                <link:schemaRef xlink:type="simple" xlink:href="http://www.nltaxonomie.nl/nt18/bd/20231213/entrypoints/bd-rpt-ob-aangifte-2024.xsd"/>
+                <xbrli:context id="Msg">
+                    <xbrli:entity>
+                        <xbrli:identifier scheme="www.belastingdienst.nl/omzetbelastingnummer" t-esc="identifier"/>
+                    </xbrli:entity>
+                    <xbrli:period>
+                        <xbrli:startDate t-esc="startDate"/>
+                        <xbrli:endDate t-esc="endDate"/>
+                    </xbrli:period>
+                </xbrli:context>
+                <xbrli:unit id="EUR">
+                    <xbrli:measure>iso4217:EUR</xbrli:measure>
+                </xbrli:unit>
+                <bd-i:ContactInitials contextRef="Msg" t-if="ContactInitials" t-esc="ContactInitials"/>
+                <bd-i:ContactPrefix contextRef="Msg" t-if="ContactPrefix" t-esc="ContactPrefix"/>
+                <bd-i:ContactSurname contextRef="Msg" t-if="ContactSurname" t-esc="ContactSurname"/>
+                <bd-i:ContactTelephoneNumber contextRef="Msg" t-if="ContactTelephoneNumber" t-esc="ContactTelephoneNumber"/>
+                <bd-i:ContactType contextRef="Msg" t-esc="ContactType"/>
+                <bd-i:DateTimeCreation contextRef="Msg" t-esc="DateTimeCreation"/>
+                <bd-i:InstallationDistanceSalesWithinTheEC decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="InstallationDistanceSalesWithinTheEC"/>
+                <bd-i:MessageReferenceSupplierVAT contextRef="Msg" t-esc="MessageReferenceSupplierVAT"/>
+                <bd-t:ProfessionalAssociationForTaxServiceProvidersSpecification t-if="ProfessionalAssociationForTaxServiceProvidersName">
+                    <bd-i:ProfessionalAssociationForTaxServiceProvidersName contextRef="Msg" t-esc="ProfessionalAssociationForTaxServiceProvidersName"/>
+                </bd-t:ProfessionalAssociationForTaxServiceProvidersSpecification>
+                <bd-i:SoftwarePackageName contextRef="Msg" t-esc="SoftwarePackageName"/>
+                <bd-i:SoftwarePackageVersion contextRef="Msg" t-esc="SoftwarePackageVersion"/>
+                <bd-i:SoftwareVendorAccountNumber contextRef="Msg" t-esc="SoftwareVendorAccountNumber"/>
+                <bd-i:SuppliesServicesNotTaxed decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="SuppliesServicesNotTaxed"/>
+                <bd-i:SuppliesToCountriesOutsideTheEC decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="SuppliesToCountriesOutsideTheEC"/>
+                <bd-i:SuppliesToCountriesWithinTheEC decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="SuppliesToCountriesWithinTheEC"/>
+                <bd-i:TaxConsultantNumber contextRef="Msg" t-esc="TaxConsultantNumber"/>
+                <bd-i:TaxedTurnoverPrivateUse decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="TaxedTurnoverPrivateUse"/>
+                <bd-i:TaxedTurnoverSuppliesServicesGeneralTariff decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="TaxedTurnoverSuppliesServicesGeneralTariff"/>
+                <bd-i:TaxedTurnoverSuppliesServicesOtherRates decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="TaxedTurnoverSuppliesServicesOtherRates"/>
+                <bd-i:TaxedTurnoverSuppliesServicesReducedTariff decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="TaxedTurnoverSuppliesServicesReducedTariff"/>
+                <bd-i:TurnoverFromTaxedSuppliesFromCountriesOutsideTheEC decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="TurnoverFromTaxedSuppliesFromCountriesOutsideTheEC"/>
+                <bd-i:TurnoverFromTaxedSuppliesFromCountriesWithinTheEC decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="TurnoverFromTaxedSuppliesFromCountriesWithinTheEC"/>
+                <bd-i:TurnoverSuppliesServicesByWhichVATTaxationIsTransferred decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="TurnoverSuppliesServicesByWhichVATTaxationIsTransferred"/>
+                <bd-i:ValueAddedTaxOnInput decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="ValueAddedTaxOnInput"/>
+                <bd-i:ValueAddedTaxOnSuppliesFromCountriesOutsideTheEC decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="ValueAddedTaxOnSuppliesFromCountriesOutsideTheEC"/>
+                <bd-i:ValueAddedTaxOnSuppliesFromCountriesWithinTheEC decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="ValueAddedTaxOnSuppliesFromCountriesWithinTheEC"/>
+                <bd-i:ValueAddedTaxOwed decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="ValueAddedTaxOwed"/>
+                <bd-i:ValueAddedTaxOwedToBePaidBack decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="ValueAddedTaxOwedToBePaidBack"/>
+                <bd-i:ValueAddedTaxPrivateUse decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="ValueAddedTaxPrivateUse"/>
+                <bd-i:ValueAddedTaxSuppliesServicesByWhichVATTaxationIsTransferred decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="ValueAddedTaxSuppliesServicesByWhichVATTaxationIsTransferred"/>
+                <bd-i:ValueAddedTaxSuppliesServicesGeneralTariff decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="ValueAddedTaxSuppliesServicesGeneralTariff"/>
+                <bd-i:ValueAddedTaxSuppliesServicesOtherRates decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="ValueAddedTaxSuppliesServicesOtherRates"/>
+                <bd-i:ValueAddedTaxSuppliesServicesReducedTariff decimals="INF" contextRef="Msg" unitRef="EUR" t-esc="ValueAddedTaxSuppliesServicesReducedTariff"/>
+            </xbrli:xbrl>
+        </template>
+    </data>
+</odoo>

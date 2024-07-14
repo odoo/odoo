@@ -1,0 +1,533 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_usps
+# 
+# Translators:
+# Wil Odoo, 2023
+# Rasareeyar Lappiam, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_intl_non_delivery_option__abandon
+msgid "Abandon"
+msgstr "ละทิ้ง"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_account_validated
+msgid "Account Validated"
+msgstr "ตรวจสอบบัญชีแล้ว"
+
+#. module: delivery_usps
+#: model:ir.model.fields,help:delivery_usps.field_delivery_carrier__usps_account_validated
+msgid "Check this box if your account is validated by USPS"
+msgstr "เลือกกล่องนี้หากบัญชีของคุณผ่านการตรวจสอบโดย USPS"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid "Company phone number is invalid. Please insert a US phone number."
+msgstr ""
+"หมายเลขโทรศัพท์ของบริษัทไม่ถูกต้อง กรุณาใส่หมายเลขโทรศัพท์ในสหรัฐอเมริกา"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_content_type
+msgid "Content Type"
+msgstr "ประเภทเนื้อหา"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_delivery_nature
+msgid "Delivery Nature"
+msgstr "ลักษณะการจัดส่ง"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_content_type__documents
+msgid "Documents"
+msgstr "เอกสาร"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_delivery_nature__domestic
+msgid "Domestic"
+msgstr "ภายในประเทศ"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/delivery_usps.py:0
+#, python-format
+msgid ""
+"Error:\n"
+"%s"
+msgstr ""
+"ผิดพลาด:\n"
+"%s"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_service__express
+msgid "Express"
+msgstr "ด่วนพิเศษ"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_service__first_class
+msgid "First Class"
+msgstr "ชั้นหนึ่ง"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_first_class_mail_type__flat
+msgid "Flat"
+msgstr "คงที่"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_mail_type__flatrate
+msgid "Flat Rate"
+msgstr "อัตราคงที่"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_domestic_regular_container__flat_rate_box
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_international_regular_container__flatratebox
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_mail_type__flatratebox
+msgid "Flat Rate Box"
+msgstr "กล่องอัตราคงที่"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_domestic_regular_container__flat_rate_envelope
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_international_regular_container__flatrateenv
+msgid "Flat Rate Envelope"
+msgstr "ซองจดหมายอัตราคงที่"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_content_type__gift
+msgid "Gift"
+msgstr "ของขวัญ"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_delivery_nature__international
+msgid "International"
+msgstr "ระหว่างประเทศ"
+
+#. module: delivery_usps
+#: model_terms:ir.ui.view,arch_db:delivery_usps.view_delivery_carrier_form_with_provider_usps
+msgid "Label Format"
+msgstr "รูปแบบฉลาก"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_size_container__large
+msgid "Large"
+msgstr "ใหญ่"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_mail_type__largeenvelope
+msgid "Large Envelope"
+msgstr "ซองเอกสารใหญ่"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_domestic_regular_container__lg_flat_rate_box
+msgid "Large Flat Rate Box"
+msgstr "กล่องอัตราคงที่ขนาดใหญ่"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_domestic_regular_container__legal_flat_rate_envelope
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_international_regular_container__legalflatrateenv
+msgid "Legal Flat Rate Envelope"
+msgstr "ซองจดหมายอัตราคงที่ตามกฎหมาย"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_first_class_mail_type__letter
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_mail_type__letter
+msgid "Letter"
+msgstr "ซองจดหมาย"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_machinable
+msgid "Machinable"
+msgstr "แปรรูปได้"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_domestic_regular_container__md_flat_rate_box
+msgid "Medium Flat Rate Box"
+msgstr "กล่องอัตราคงที่ปานกลาง"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_content_type__merchandise
+msgid "Merchandise"
+msgstr "สินค้า"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_intl_non_delivery_option
+msgid "Non delivery option"
+msgstr "ตัวเลือกที่ไม่จัดส่ง"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_container__nonrectangular
+msgid "Non-rectangular"
+msgstr "ไม่เป็นสี่เหลี่ยม"
+
+#. module: delivery_usps
+#: model_terms:ir.ui.view,arch_db:delivery_usps.view_delivery_carrier_form_with_provider_usps
+msgid "Options"
+msgstr "ตัวเลือก"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_label_file_type__pdf
+msgid "PDF"
+msgstr "PDF"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_mail_type__package
+msgid "Package"
+msgstr "แพ็คเกจ"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_custom_container_girth
+msgid "Package Girth"
+msgstr "เส้นรอบวงของบรรจุภัณฑ์"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_custom_container_height
+msgid "Package Height"
+msgstr "ความสูงของบรรจุภัณฑ์"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_custom_container_length
+msgid "Package Length"
+msgstr "ความยาวของบรรจุภัณฑ์"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_first_class_mail_type__package_service
+msgid "Package Service"
+msgstr "บริการบรรจุภัณฑ์"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_custom_container_width
+msgid "Package Width"
+msgstr "ความกว้างของบรรจุภัณฑ์"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_domestic_regular_container__padded_flat_rate_envelope
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_international_regular_container__paddedflatrateenv
+msgid "Padded Flat Rate Envelope"
+msgstr "ซองจดหมายแบบรองอัตราคงที่"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_first_class_mail_type__parcel
+msgid "Parcel"
+msgstr "พัสดุ"
+
+#. module: delivery_usps
+#: model:ir.model.fields,help:delivery_usps.field_delivery_carrier__usps_machinable
+msgid ""
+"Please check on USPS website to ensure that your package is machinable."
+msgstr ""
+"โปรดตรวจสอบเว็บไซต์ USPS เพื่อให้แน่ใจว่าบรรจุภัณฑ์ของคุณสามารถแปรรูปได้"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid ""
+"Please choose another service (maximum weight of this service is 4 pounds)"
+msgstr "กรุณาเลือกบริการอื่น (น้ำหนักสูงสุดของบริการนี้คือ 4 ปอนด์)"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid "Please enter a valid ZIP code in recipient address"
+msgstr "โปรดป้อนรหัสไปรษณีย์ที่ถูกต้องในที่อยู่ผู้รับ"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid "Please enter a valid ZIP code in your Company address"
+msgstr "โปรดป้อนรหัสไปรษณีย์ที่ถูกต้องในที่อยู่บริษัทของคุณ"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid "Please provide at least one item to ship."
+msgstr "โปรดระบุอย่างน้อยหนึ่งรายการเพื่อจัดส่ง"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid ""
+"Please set country U.S.A in your company address, Service is only available "
+"for U.S.A"
+msgstr ""
+"โปรดตั้งค่าประเทศสหรัฐอเมริกาในที่อยู่บริษัทของคุณ "
+"บริการใช้ได้เฉพาะในสหรัฐอเมริกา"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_first_class_mail_type__postcard
+msgid "Postcard"
+msgstr "โปสการ์ด"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_service__priority
+msgid "Priority"
+msgstr "ระดับความสำคัญ"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "ผู้ให้บริการ"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid "Quantity for each move line should be less than 1000."
+msgstr "จำนวนสำหรับแต่ละรายการการย้ายควรน้อยกว่า 1,000"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid "Recipient address cannot be found. Please check the address exists."
+msgstr "ไม่พบที่อยู่ผู้รับ กรุณาตรวจสอบที่อยู่ที่มีอยู่"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_container__rectangular
+msgid "Rectangular"
+msgstr "สี่เหลี่ยมผืนผ้า"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_intl_non_delivery_option__redirect
+msgid "Redirect"
+msgstr "เปลี่ยนเส้นทาง"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_redirect_partner_id
+msgid "Redirect Partner"
+msgstr "เปลี่ยนเส้นทางพาร์ทเนอร์"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_size_container__regular
+msgid "Regular"
+msgstr "ปกติ"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_container__variable
+msgid "Regular < 12 inch"
+msgstr "ธรรมดา < 12 นิ้ว"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_content_type__return
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_intl_non_delivery_option__return
+msgid "Return"
+msgstr "ส่งคืน"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_content_type__sample
+msgid "Sample"
+msgstr "ตัวอย่าง"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/delivery_usps.py:0
+#, python-format
+msgid "Shipment #%s has been cancelled"
+msgstr "การจัดส่ง #%s ถูกยกเลิก"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/delivery_usps.py:0
+#, python-format
+msgid "Shipment created into USPS"
+msgstr "การจัดส่งที่สร้างขึ้นใน USPS"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/delivery_usps.py:0
+#, python-format
+msgid "Shipment created into USPS <br/> <b>Tracking Number: </b>%s"
+msgstr "การจัดส่งที่สร้างขึ้นใน USPS <br/> <b>หมายเลขติดตาม:</b>%s"
+
+#. module: delivery_usps
+#: model:ir.model,name:delivery_usps.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "วิธีการการจัดส่ง"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_domestic_regular_container__sm_flat_rate_box
+msgid "Small Flat Rate Box"
+msgstr "กล่องอัตราคงที่ขนาดเล็ก"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_domestic_regular_container__sm_flat_rate_envelope
+msgid "Small Flat Rate Envelope"
+msgstr "ซองจดหมายอัตราคงที่ขนาดเล็ก"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__usps_label_file_type__tif
+msgid "TIF"
+msgstr "TIF"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid ""
+"The address of your company is missing or wrong (Missing field(s) :  \n"
+" %s)"
+msgstr ""
+"ที่อยู่บริษัทของคุณหายไปหรือไม่ถูกต้อง (ไม่มีฟิลด์: \n"
+" %s)"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid ""
+"The estimated shipping price cannot be computed because the weight is missing for the following product(s): \n"
+" %s"
+msgstr ""
+"ไม่สามารถคำนวณราคาจัดส่งโดยประมาณได้เนื่องจากไม่มีน้ำหนักของสินค้าต่อไปนี้:\n"
+" %s"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid ""
+"The recipient address is missing or wrong (Missing field(s) :  \n"
+" %s)"
+msgstr ""
+"ที่อยู่ผู้รับหายไปหรือไม่ถูกต้อง (ไม่มีฟิลด์ :  \n"
+" %s)"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid "The selected USPS service (%s) cannot be used to deliver this package."
+msgstr "บริการ USPS ที่เลือก (%s) ไม่สามารถใช้ส่งพัสดุนี้ได้"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/delivery_usps.py:0
+#, python-format
+msgid "Tracking Number:"
+msgstr "หมายเลขติดตาม:"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_international_regular_container
+msgid "Type of USPS International regular container"
+msgstr "ประเภทของคอนเทนเนอร์ปกติของ USPS ระหว่างประเภท"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_domestic_regular_container
+msgid "Type of USPS domestic regular container"
+msgstr "ประเภทของคอนเทนเนอร์ปกติภายในประเทศของ USPS"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_container
+msgid "Type of container"
+msgstr "ประเภทของคอนเทนเนอร์"
+
+#. module: delivery_usps
+#: model:ir.model.fields.selection,name:delivery_usps.selection__delivery_carrier__delivery_type__usps
+msgid "USPS"
+msgstr "USPS"
+
+#. module: delivery_usps
+#: model_terms:ir.ui.view,arch_db:delivery_usps.view_delivery_carrier_form_with_provider_usps
+msgid "USPS Configuration"
+msgstr "การกำหนดค่า USPS"
+
+#. module: delivery_usps
+#: model:delivery.carrier,name:delivery_usps.delivery_carrier_usps_domestic
+#: model:product.template,name:delivery_usps.product_product_delivery_usps_domestic_product_template
+msgid "USPS Domestic Flat Rate Envelope"
+msgstr "ซองจดหมายอัตราคงที่ภายในประเทศ USPS"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid ""
+"USPS Domestic is used only to ship inside of the U.S.A. Please change the "
+"delivery method into USPS International."
+msgstr ""
+"USPS ภายในประเทศใช้สำหรับจัดส่งภายในสหรัฐอเมริกาเท่านั้น "
+"โปรดเปลี่ยนวิธีการจัดส่งเป็น USPS ระหว่างประเทศ"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_first_class_mail_type
+msgid "USPS First Class Mail Type"
+msgstr "USPS ประเภทเมลชั้นหนึ่ง"
+
+#. module: delivery_usps
+#: model:delivery.carrier,name:delivery_usps.delivery_carrier_usps_international
+#: model:product.template,name:delivery_usps.product_product_delivery_usps_international_product_template
+msgid "USPS International Flat Rate Box"
+msgstr "กล่องอัตราคงที่ระหว่างประเทศของ USPS"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid ""
+"USPS International is used only to ship outside of the U.S.A. Please change "
+"the delivery method into USPS Domestic."
+msgstr ""
+"USPS ระหว่างประเทศ ใช้สำหรับจัดส่งนอกสหรัฐอเมริกาเท่านั้น "
+"โปรดเปลี่ยนวิธีการจัดส่งเป็น USPS ภายในประเทศ"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_label_file_type
+msgid "USPS Label File Type"
+msgstr "ประเภทไฟล์ฉลาก USPS"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_mail_type
+msgid "USPS Mail Type"
+msgstr "ประเภทเมล USPS"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_service
+msgid "USPS Service"
+msgstr "บริการของ USPS"
+
+#. module: delivery_usps
+#: model_terms:ir.ui.view,arch_db:delivery_usps.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:delivery_usps.res_config_settings_view_form_stock
+msgid "USPS Shipping Methods"
+msgstr "วิธีการการจัดส่ง USPS "
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_username
+msgid "USPS User ID"
+msgstr "ไอดีผู้ใช้ USPS"
+
+#. module: delivery_usps
+#: model:ir.model.fields,field_description:delivery_usps.field_delivery_carrier__usps_size_container
+msgid "Usps Size Container"
+msgstr "Usps ขนาดคอนเทนเนอร์"
+
+#. module: delivery_usps
+#. odoo-python
+#: code:addons/delivery_usps/models/usps_request.py:0
+#, python-format
+msgid "Your company or recipient ZIP code is incorrect."
+msgstr "รหัสไปรษณีย์ของบริษัทหรือผู้รับของคุณไม่ถูกต้อง"
+
+#. module: delivery_usps
+#: model_terms:ir.ui.view,arch_db:delivery_usps.view_delivery_carrier_form_with_provider_usps
+msgid "inch"
+msgstr "นิ้ว"

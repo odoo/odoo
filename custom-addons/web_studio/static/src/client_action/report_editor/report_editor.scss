@@ -1,0 +1,56 @@
+.o-web-studio-report-editor {
+    .o-web-studio-report-container {
+        box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+
+        @include media-breakpoint-up(lg) {
+            margin: $o-sheet-vpadding auto $o-sheet-vpadding*2;
+        }
+    }
+
+    .o-web-studio-report-search-record, .o-web-studio-report-pager {
+        border: 2px solid $o-web-studio-bg-medium;
+    }
+
+    .o-web-studio-report-search-record input {
+        border:none;
+        background-color: transparent;
+    }
+
+    .o-web-studio-report-pager button {
+        max-height: 30px;
+    }
+
+    .o-web-studio-report-editor-undo-redo {
+        z-index: 1055;
+
+        div.border {
+            height: 1rem;
+        }
+
+        &.active {
+            border-color: map-get($theme-colors, 'dark') !important;
+            div.border {
+                border-color: map-get($theme-colors, 'dark') !important;
+            }
+        }
+        button:not(.active) {
+            pointer-events: none;
+        }
+        button.active {
+            color: map-get($theme-colors, 'dark') !important;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+.o_popover .o-web-studio-report-field-qweb-selector {
+    div {
+        color: $o-brand-primary;
+        &[selected] {
+            background: $o-brand-primary;
+            color: map-get($theme-colors, 'light');
+        }
+    }
+}

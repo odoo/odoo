@@ -1,0 +1,134 @@
+.o_knowledge_icon_search {
+    svg {
+        width: var(--oi-font-size, 1em);
+        aspect-ratio: 1;
+    }
+
+    &:not(:hover) {
+        --oi-color: currentColor;
+    }
+}
+
+.o_knowledge_form_view, .o_knowledge_article_view_form_view {
+    height: 100% !important;
+    padding: 0 !important;
+}
+
+$knowledge-bg--active: #1ba1e4;
+$knowledge-bg--hover: $gray-300;
+
+// .o_knowledge_public_view refers to the article view for public users, see
+// template "knowledge_article_public_view" in website_knowledge
+.o_knowledge_form_view, .o_knowledge_public_view {
+
+    background-color: var(--knowledge-view-bg, $o-white);
+    .o_knowledge_header {
+        .o_form_status_indicator {
+            align-self: normal !important;
+            display: flex;
+        }
+    }
+    .o_knowledge_sidebar {
+        .o_article:not(.o_article_has_children) {
+            .o_article_caret {
+                // Make caret invisible if article has no child
+                visibility: hidden;
+            }
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li > ul > li, li > ul > a.o_knowledge_article_load_more{
+            &:not(.o_dragged) {
+                margin-left: 1.28571429em * 0.5; // Workaround to get half .fa-fw icon's width.
+                padding-left: 0.8em;
+
+                &:before, &:after {
+                    content: '';
+                    background-color: $border-color;
+                }
+
+                &:after {
+                    @include o-position-absolute(0, auto, 0, 0);
+                    width: 1px;
+                    height: 100%;
+                }
+            }
+            &.o_article_has_children:before {
+                @include o-position-absolute($top: 1em, $left: 0);
+                width: .6em;
+                height: 1px;
+            }
+        }
+
+        li > ul > li,  li > ul > a:not(.o_knowledge_article_load_more_ellipsis) {
+            &:before {
+                @include o-position-absolute($top: 1em, $left: 0);
+                width: 1.8em;
+                height: 1px;
+                margin: auto;
+            }
+
+            &:last-child {
+                padding-bottom: 0;
+
+                &:after {
+                    height: 1em;
+                }
+            }
+        }
+
+        li > ul > a.o_knowledge_article_load_more:not(.ui-sortable-helper) {
+            padding-left: 2.5rem;
+        }
+    }
+    // = Resizer
+    // --------------------------------------------------------------------------
+    .o_knowledge_article_form_resizer {
+        cursor: col-resize;
+        touch-action: none;
+    }
+    .o_widget_knowledge_comments_handler {
+        z-index: 1;
+    }
+    // We are applying the style only when the anchors are displayed on the user's screen.
+    // This way when printing the style is not applied.
+    @media screen {
+        .o_widget_knowledge_comments_handler ~ .o_knowledge_body .o_field_knowledge_article_html_field {
+            .knowledge-thread-comment {
+                transition: background-color 0.3s ease-in-out;
+                &.knowledge-thread-highlighted-comment {
+                    background-color: rgba($knowledge-bg--active, 0.171);
+                    .knowledge-thread-comment:not(.focused-comment) {
+                        background-color: initial;
+                    }
+                    &.focused-comment {
+                        background-color: $knowledge-bg--active;
+                    }
+                }
+            }
+        }
+    }
+    // = Cover
+    // --------------------------------------------------------------------------
+    .o_knowledge_cover {
+        width: 100%;
+        img {
+            width: 100%;
+            height: 30vh;
+            min-height: 150px;
+            object-fit: cover;
+        }
+        &.o_cursor_grab {
+            cursor: grab;
+        }
+        &.o_cursor_grabbing {
+            cursor: grabbing;
+        }
+        .o_reposition_hint {
+            background-color: black;
+            color: white;
+        }
+    }
+}

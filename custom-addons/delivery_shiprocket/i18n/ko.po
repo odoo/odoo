@@ -1,0 +1,652 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_shiprocket
+# 
+# Translators:
+# Wil Odoo, 2023
+# Sarah Park, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Sarah Park, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "<b>Click on Add a New Channel</b>"
+msgstr "<b>새로운 채널 추가를 클릭하세요.</b>"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid ""
+"<b>Copy your API User's Email and Password and paste into Shipping method's "
+"configuration.</b>"
+msgstr "<b>API 사용자 이메일 및 비밀번호를 복사해서 배송 방법의 환경 설정에 붙여 넣으세요.</b>"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid ""
+"<b>Fill the details and Click on Save Channel &amp; Test Connection "
+"button.</b>"
+msgstr "<b>세부 정보 입력 후 채널 저장 및 테스트 연결 버튼을 클릭하세요.</b>"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid ""
+"<b>In Odoo configuration click on <i class=\"fa fa-refresh oe_inline\"/> "
+"icon near Shiprocket Channel to sync newly created channels.</b>"
+msgstr ""
+"<b>Odoo 환경 설정에서<i class=\"fa fa-refresh oe_inline\"/> Shiprocket 채널 옆에 있는 "
+"아이콘을 클릭하면 새로 생성된 채널이 동기화됩니다.</b>"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "<b>Now click on Add for MANUAL</b>"
+msgstr "<b>수기 추가 버튼을 클릭하세요.</b>"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid ""
+"<b>Once your account is created, go to Settings &gt; API &gt; Configure. </b>\n"
+"                                <b>You can add new API User from the right side of the page.</b>\n"
+"                                <br/>"
+msgstr ""
+"<b>계정을 생성한 후에는 설정 &gt; API &gt; 환경 설정으로 이동합니다. </b>\n"
+"                                <b>페이지 우측에서 새로운 API 사용자를 추가할 수 있습니다.</b>\n"
+"                                <br/>"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "<b>To Create a channel, Go to Shiprocket Channels</b>"
+msgstr "<b>채널을 생성하려면 Shiprocket 채널로 이동하세요.</b>"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/> In test environment, to avoid "
+"charges, your shippings are automatically <b>cancelled</b> after the label "
+"creation. The amount of cancelled shipment will be returned in next 3-4 "
+"days."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/> 테스트 환경에서 요금이 부과되지 않도록 라벨 생성 후 배송이 "
+"자동으로 <b>취소</b>됩니다. 취소된 배송 요금은 3-4 일 이후에 환불됩니다."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_manifests_generate
+msgid ""
+"A manifest is a document that is required by some carriers to streamline the"
+" pickup process.particularly when shipping out a high-volume of ecommerce "
+"orders."
+msgstr ""
+"적하 목록은 배송업체에서 요구하는 문서입니다. 픽업 프로세스를 간소화하기 위한 것으로, 온라인몰 대량 주문 배송 시 요청합니다."
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "API User"
+msgstr "API 사용자"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "AWB assignment was unsuccessful: %s"
+msgstr "AWB 배정에 실패했습니다: %s"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "AWB number(s) not found to cancel the shipment!"
+msgstr "배송을 취소할 AWB 번호를 찾을 수 없습니다!"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Access token is generated successfully!"
+msgstr "액세스 토큰이 생성되었습니다!"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Add Manual Channel"
+msgstr "수기 채널 추가"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Add New Channel"
+msgstr "새로운 채널 추가"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Authentication failed! Please check your credentials."
+msgstr "인증에 실패했습니다! 자격 증명을 확인하세요."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields.selection,name:delivery_shiprocket.selection__delivery_carrier__shiprocket_payment_method__cod
+msgid "COD"
+msgstr "배송시 지불"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_stock_package_type__package_carrier_type
+msgid "Carrier"
+msgstr "운송업체"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__channel_code
+msgid "Channel Code"
+msgstr "채널 코드"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__name
+msgid "Channel Name"
+msgstr "채널 이름"
+
+#. module: delivery_shiprocket
+#: model:ir.model,name:delivery_shiprocket.model_res_config_settings
+msgid "Config Settings"
+msgstr "환경설정"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Configure Shiprocket channel in shipping method"
+msgstr "배송 방법으로 Shiprocket 채널을 설정합니다."
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Country is required!"
+msgstr "국가는 필수 입력 항목입니다!"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Courier (%s): %s"
+msgstr "배송업체 (%s): %s"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__courier_code
+msgid "Courier Code"
+msgstr "배송업체 코드"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Courier is not available for delivery!"
+msgstr "택배 발송을 할 수 없습니다!"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Courier: %s"
+msgstr "배송업체: %s"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Create API User"
+msgstr "API 사용자 생성"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_pickup_request
+msgid ""
+"Create a pickup request for your order shipment using Validate button of the"
+" Delivery Order."
+msgstr "주문 배송과 관련된 수령요청서를 작성하려면 배송주문서의 확인 버튼을 클릭하세요."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__create_uid
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__create_date
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__display_name
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_stock_picking__eway_bill_number
+msgid "EWay Bill"
+msgstr "EWay 청구서"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Email is required!"
+msgstr "이메일은 필수 입력 항목입니다!"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_password
+msgid "Enter your Password from Shiprocket account (API)."
+msgstr "Shiprocket 계정 (API) 비밀번호를 입력하세요."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_email
+msgid "Enter your Username from Shiprocket account (API)."
+msgstr "Shiprocket 계정 (API) 사용자 이름을 입력하세요."
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid ""
+"Eway Bill number is required to ship an order if order amount is more than "
+"50,000 INR."
+msgstr "주문 금액이 50,000 INR 이상인 경우에는 Eway 청구서 번호를 입력해야 주문 배송을 할 수 있습니다."
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Failed to fetch Shiprocket Channel(s), Please try again later."
+msgstr "Shiprocket 채널을 가져오지 못했습니다. 나중에 다시 시도하세요."
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Failed to fetch Shiprocket Couriers(s), Please try again later."
+msgstr "Shiprocket 배송업체를 가져오지 못했습니다. 나중에 다시 시도하세요."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_manifests_generate
+msgid "Generate Manifest"
+msgstr "적하 목록을 생성합니다."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_access_token
+msgid "Generate access token using Shiprocket credentials"
+msgstr "Shiprocket 자격 증명을 사용하여 액세스 토큰을 생성합니다."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_courier_ids
+msgid ""
+"Get all the integrated Couriers from your Shiprocket account.Based on the "
+"courier selections the rate will be fetched from the Shiprocket."
+msgstr ""
+"Shiprocket 계정에서 전체 통합 배송업체 정보를 가져옵니다. 선택한 배송업체에 따라서 Shiprocket에서 배송 요금을 "
+"가져옵니다."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_channel_id
+msgid ""
+"Get all the integrated channels from your Shiprocket account.This channel id"
+" is used to select or specify a custom channel at the time of Shiprocket "
+"order creation."
+msgstr ""
+"Shiprocket 계정에서 전체 통합 채널 정보를 가져옵니다. 채널 아이디는 Shiprocket 주문을 생성할 경우 사용자 지정 채널을"
+" 선택하거나 지정하기 위해 사용됩니다."
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Go to"
+msgstr "이동하기"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Go to Shipping Method"
+msgstr "배송 방법으로 이동"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Go to Shipping Methods"
+msgstr "배송 방법으로 이동"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__id
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__id
+msgid "ID"
+msgstr "ID"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Label generated of %s with Tracking Number: %s"
+msgstr "%s 라벨이 다음의 조회 번호로 생성되었습니다: %s"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__write_uid
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__write_uid
+msgid "Last Updated by"
+msgstr "최근 업데이트한 사람"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__write_date
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__write_date
+msgid "Last Updated on"
+msgstr "최근 업데이트 일자"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/stock_package_type.py:0
+#, python-format
+msgid "Length, Width and Height is necessary for Shiprocket Package."
+msgstr "Shiprocket 패키지에는 길이, 너비, 높이 정보가 필수입니다."
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Manifest generated of %s"
+msgstr "%s Manifest 생성이 완료되었습니다."
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Order canceled successfully!"
+msgstr "주문이 취소되었습니다!"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_default_package_type_id
+msgid "Package Type"
+msgstr "패키지 유형"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_payment_method
+msgid "Payment Method"
+msgstr "결제 방법"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Phone or Mobile is required!"
+msgstr "전화번호 또는 핸드폰 번호가 필요합니다!"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_pickup_request
+msgid "Pickup Request"
+msgstr "수령 요청"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Pincode is required!"
+msgstr "핀코드가 필요합니다!"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Please configure Shiprocket credentials in the shipping method"
+msgstr "배송 방법에서 Shiprocket 자격 증명을 설정하세요."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields.selection,name:delivery_shiprocket.selection__delivery_carrier__shiprocket_payment_method__prepaid
+msgid "Prepaid"
+msgstr "선불"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "공급업체"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "SKU is missing!"
+msgstr "SKU 정보가 없습니다!"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Sale Order or Picking is required to get rate."
+msgstr "요금 정보를 확인하려면 판매주문서나 픽업이 필요합니다!"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid ""
+"Same order is available in Shiprocket so label provided is the copy of "
+"existing one."
+msgstr "Shiprocket에서 동일한 주문을 할 수 있습니다. 제공되는 라벨은 기존 주문서의 사본입니다."
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Save Manual Channel"
+msgstr "채널 수기 저장"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__name
+msgid "Service Name"
+msgstr "서비스 이름"
+
+#. module: delivery_shiprocket
+#: model:product.template,name:delivery_shiprocket.product_product_delivery_shiprocket_product_template
+msgid "ShipRocket"
+msgstr "ShipRocket"
+
+#. module: delivery_shiprocket
+#: model:delivery.carrier,name:delivery_shiprocket.delivery_carrier_shiprocket
+msgid "ShipRocket Domestic"
+msgstr "국내용 ShipRocket"
+
+#. module: delivery_shiprocket
+#: model:ir.model,name:delivery_shiprocket.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "배송 방법"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields.selection,name:delivery_shiprocket.selection__delivery_carrier__delivery_type__shiprocket
+#: model:ir.model.fields.selection,name:delivery_shiprocket.selection__stock_package_type__package_carrier_type__shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.stock_picking_form_inherit_shiprocket
+msgid "Shiprocket"
+msgstr "Shiprocket"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_access_token
+msgid "Shiprocket Access Token"
+msgstr "ShipRocket 액세스 토큰"
+
+#. module: delivery_shiprocket
+#: model:ir.model,name:delivery_shiprocket.model_shiprocket_channel
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_channel_id
+msgid "Shiprocket Channel"
+msgstr "ShipRocket 채널"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Shiprocket Configuration"
+msgstr "ShipRocket 환경 설정"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_res_config_settings__module_delivery_shiprocket
+msgid "Shiprocket Connector"
+msgstr "Shiprocket 배송"
+
+#. module: delivery_shiprocket
+#: model:ir.model,name:delivery_shiprocket.model_shiprocket_courier
+msgid "Shiprocket Courier"
+msgstr "ShipRocket 배송업체"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_courier_ids
+msgid "Shiprocket Couriers"
+msgstr "ShipRocket 배송업체"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_email
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_channel__shiprocket_email
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_shiprocket_courier__shiprocket_email
+msgid "Shiprocket Email"
+msgstr "ShipRocket 이메일"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Shiprocket Error: %s"
+msgstr "Shiprocket 오류: %s"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Shiprocket Notification"
+msgstr "Shiprocket 알림"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_stock_picking__shiprocket_orders
+msgid "Shiprocket Order(s)"
+msgstr "Shiprocket 주문서"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_password
+msgid "Shiprocket Password"
+msgstr "Shiprocket 비밀번호"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.res_config_settings_view_form_sale_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.res_config_settings_view_form_stock_shiprocket
+msgid "Shiprocket Shipping Methods"
+msgstr "Shiprocket 배송 방법"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Shiprocket Tutorial"
+msgstr "Shiprocket 튜토리얼"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Shiprocket Tutorial for add channel"
+msgstr "Shiprocket 채널 추가 튜토리얼"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Shiprocket Website"
+msgstr "Shiprocket 웹사이트"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/delivery_carrier.py:0
+#, python-format
+msgid "Shiprocket order(s) not found to cancel the shipment!"
+msgstr "배송을 취소할 Shiprocket 주문이 없습니다!"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_default_package_type_id
+msgid ""
+"Shiprocket requires package dimensions for getting accurate rate, you can "
+"define these in a package type that you set as default"
+msgstr "Shiprocket 패키지 치수 정보가 있어야 정확한 요금을 확인할 수 있습니다. 패키지 유형 기본값에서 지정하시면 됩니다."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_token_valid_upto
+msgid ""
+"Shiprocket token expires in 10 days. Token will be auto generate based on "
+"this token expiry date."
+msgstr "Shiprocket 토큰이 10일 후 만료됩니다. 해당 만료일을 기준으로 토큰이 자동 생성됩니다. "
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Sign up"
+msgstr "가입"
+
+#. module: delivery_shiprocket
+#: model:ir.model,name:delivery_shiprocket.model_stock_package_type
+msgid "Stock package type"
+msgstr "재고 포장 유형"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_stock_picking__shiprocket_orders
+msgid ""
+"Store shiprocket order(s) in a (+) separated string, used in cancelling the "
+"order."
+msgstr "Shiprocket 주문은 주문서를 취소할 때 사용하는 (+)로 구분된 문자열로 저장하세요."
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Street is required!"
+msgstr "도로명은 필수입니다!"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Sync Channel from Shiprocket"
+msgstr "Shiprocket에서 채널을 동기화합니다."
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Sync Couriers from Shiprocket"
+msgstr "Shiprocket에서 배송업체를 동기화합니다."
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "Test Connection"
+msgstr "테스트 연결"
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,help:delivery_shiprocket.field_delivery_carrier__shiprocket_payment_method
+msgid ""
+"The method of payment. Can be either COD (Cash on delivery) Or Prepaid while"
+" creating Shiprocket order."
+msgstr ""
+"결제 방법입니다. Shiprocket 주문을 생성할 때 COD (인수 시 대금 결제: Cash on delivery) 또는 선불로 결제할"
+" 수 있습니다."
+
+#. module: delivery_shiprocket
+#: model:ir.model.fields,field_description:delivery_shiprocket.field_delivery_carrier__shiprocket_token_valid_upto
+msgid "Token Expiry"
+msgstr "토큰 유효 기간"
+
+#. module: delivery_shiprocket
+#: model:ir.model,name:delivery_shiprocket.model_stock_picking
+msgid "Transfer"
+msgstr "전송"
+
+#. module: delivery_shiprocket
+#. odoo-python
+#: code:addons/delivery_shiprocket/models/shiprocket_request.py:0
+#, python-format
+msgid "Weight is missing!"
+msgstr "무게 정보가 누락되었습니다!"
+
+#. module: delivery_shiprocket
+#: model_terms:ir.ui.view,arch_db:delivery_shiprocket.view_delivery_carrier_form_inherit_delivery_shiprocket
+msgid "to create a new account:"
+msgstr "새 계정 만들려면 :"

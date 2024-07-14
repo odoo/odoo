@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="helpdesk_team_view_form" model="ir.ui.view">
+            <field name="name">helpdesk.team.form</field>
+            <field name="model">helpdesk.team</field>
+            <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='use_fsm']" position="after">
+                    <div invisible="not use_fsm" class="mt-2">
+                        <label for="fsm_project_id" string="Project" class="me-2"/>
+                        <field name="fsm_project_id" required="use_fsm" context="{'default_is_fsm': True}" />
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

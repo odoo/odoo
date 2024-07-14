@@ -1,0 +1,74 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_bank_statement_import_qif
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_bank_statement_import_qif
+#: model:ir.model.fields,help:account_bank_statement_import_qif.field_account_journal__qif_date_format
+msgid ""
+"Although the historic QIF date format is month-first (mm/dd/yy), many "
+"financial institutions use the local format.Therefore, it is frequent "
+"outside the US to have QIF date formatted day-first (dd/mm/yy)."
+msgstr ""
+"과거 QIF 날짜 형식 (mm/dd/yy)은 월을 처음에 기재하지만 대부분 금융 기관이 지역별 형식을 사용합니다. 그러므로 미국 이외의 "
+"지역에서는 대개 날짜가 앞에 오는 QIF 날짜 형식(dd/mm/yy)을 사용합니다."
+
+#. module: account_bank_statement_import_qif
+#. odoo-python
+#: code:addons/account_bank_statement_import_qif/models/account_journal.py:0
+#, python-format
+msgid "Could not decipher the QIF file."
+msgstr "QIF 파일을 해석할 수 없습니다."
+
+#. module: account_bank_statement_import_qif
+#: model:ir.model.fields,help:account_bank_statement_import_qif.field_account_journal__qif_decimal_point
+msgid "Field used to avoid conversion issues."
+msgstr "변환 문제를 방지하기 위해 사용되는 필드입니다."
+
+#. module: account_bank_statement_import_qif
+#: model:ir.model,name:account_bank_statement_import_qif.model_account_journal
+msgid "Journal"
+msgstr "전표"
+
+#. module: account_bank_statement_import_qif
+#: model:ir.model.fields,field_description:account_bank_statement_import_qif.field_account_journal__qif_date_format
+msgid "QIF Dates format"
+msgstr "QIF 날짜 형식"
+
+#. module: account_bank_statement_import_qif
+#: model:ir.model.fields,field_description:account_bank_statement_import_qif.field_account_journal__qif_decimal_point
+msgid "QIF Decimal Separator"
+msgstr "QIF 소수점 구분 기호"
+
+#. module: account_bank_statement_import_qif
+#. odoo-python
+#: code:addons/account_bank_statement_import_qif/models/account_journal.py:0
+#, python-format
+msgid "This file is either not a bank statement or is not correctly formed."
+msgstr "이 파일은 은행거래명세서 파일이 아니거나 올바른 형식의 파일이 아닙니다."
+
+#. module: account_bank_statement_import_qif
+#: model:ir.model.fields.selection,name:account_bank_statement_import_qif.selection__account_journal__qif_date_format__day_first
+msgid "dd/mm/yy"
+msgstr "일/월/년"
+
+#. module: account_bank_statement_import_qif
+#: model:ir.model.fields.selection,name:account_bank_statement_import_qif.selection__account_journal__qif_date_format__month_first
+msgid "mm/dd/yy"
+msgstr "월/일/년"

@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+        <record id="view_base_module_uninstall_studio" model="ir.ui.view">
+            <field name="name">base.module.uninstall.view.form.studio</field>
+            <field name="model">base.module.uninstall</field>
+            <field name="inherit_id" ref="base.view_base_module_uninstall"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='model_ids']" position="after">
+                    <field name="is_studio" invisible="1"/>
+                    <div class="alert alert-danger" role="alert" invisible="not is_studio or custom_models == 0 and custom_fields == 0 and custom_views == 0 and custom_reports == 0">
+                        <h3 class="text-danger">Customization made with Studio will be permanently lost</h3>
+                        <group>
+                            <field string="Custom models:" name="custom_models"/>
+                            <field string="Custom fields:" name="custom_fields"/>
+                            <field string="Custom views:" name="custom_views"/>
+                            <field string="Custom reports:" name="custom_reports"/>
+                        </group>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

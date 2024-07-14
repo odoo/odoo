@@ -1,0 +1,664 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:PLZ="http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/PolizasPeriodo" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:contelec_td="http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/CatalogosParaEsqContE" targetNamespace="http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/PolizasPeriodo" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://www.sat.gob.mx/esquemas/ContabilidadE/1_3/CatalogosParaEsqContE" schemaLocation="CatalogosParaEsqContE.xsd"/>
+	<xs:element name="Polizas">
+		<xs:annotation>
+			<xs:documentation>Estándar de pólizas del periodo que se entrega como parte de la contabilidad electrónica.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Poliza" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Nodo obligatorio para relacionar el detalle de cada transacción dentro de la póliza.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Transaccion" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Nodo obligatorio para relacionar el detalle de cada transacción dentro de la póliza</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="CompNal" minOccurs="0" maxOccurs="unbounded">
+											<xs:annotation>
+												<xs:documentation>Nodo opcional para relacionar el detalle de los comprobantes de origen nacional relacionados con la transacción. Se considera que se debe identificar, el soporte documental, tanto en la provisión, como en el pago y/o cobro de cada una de las cuentas y subcuentas que se vean afectadas.  Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:attribute name="UUID_CFDI" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido para expresar la clave UUID del CFDI soporte de la operación. (36 caracteres)</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:whiteSpace value="collapse"/>
+															<xs:length value="36"/>
+															<xs:pattern value="[a-f0-9A-F]{8}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{4}-[a-f0-9A-F]{12}"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="RFC" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido para expresar el RFC relacionado con el movimiento o transacción. El RFC al que se hace referencia, es el distinto del contribuyente que envía los datos, es decir, el RFC del tercero vinculado.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:minLength value="12"/>
+															<xs:maxLength value="13"/>
+															<xs:whiteSpace value="collapse"/>
+															<xs:pattern value="[A-ZÑ&amp;]{3,4}[0-9]{2}[0-1][0-9][0-3][0-9][A-Z0-9]?[A-Z0-9]?[0-9A-Z]?"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="MontoTotal" type="PLZ:t_Importe" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido para expresar el monto total del CFDI que soporte la transacción. (Incluye IVA en su caso)</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Moneda" type="contelec_td:c_Moneda" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional para expresar el tipo de moneda utilizado en la transacción, de acuerdo al catálogo publicado en la página de internet del SAT. Este dato sólo se utiliza en el caso de que el tipo de moneda, sea diferente a la moneda nacional (peso). Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="TipCamb" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional para expresar el tipo de cambio utilizado de acuerdo al tipo de moneda. Este dato sólo se utiliza en el caso de que el tipo de moneda, sea diferente a la moneda nacional (peso). Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:minInclusive value="0"/>
+															<xs:totalDigits value="19"/>
+															<xs:fractionDigits value="5"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="CompNalOtr" minOccurs="0" maxOccurs="unbounded">
+											<xs:annotation>
+												<xs:documentation>Nodo opcional para relacionar el detalle de los comprobantes de origen nacional relacionados con la transacción, diferente a CFDI, es decir, CFD y/o CBB. Se considera que se debe identificar, el soporte documental, tanto en la provisión, como en el pago y/o cobro de cada una de las cuentas y subcuentas que se vean afectadas. Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:attribute name="CFD_CBB_Serie" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional para expresar la serie del comprobante CFD_CBB que soporte la transacción.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:minLength value="1"/>
+															<xs:maxLength value="10"/>
+															<xs:pattern value="[A-Z]+"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="CFD_CBB_NumFol" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido para expresar el número de folio del comprobante CFD_CBB que soporte la transacción.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:integer">
+															<xs:minInclusive value="1"/>
+															<xs:totalDigits value="20"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="RFC" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido para expresar el RFC relacionado con el movimiento o transacción. El RFC al que se hace referencia, es el distinto del contribuyente que envía los datos, es decir, el RFC del tercero vinculado.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:minLength value="12"/>
+															<xs:maxLength value="13"/>
+															<xs:whiteSpace value="collapse"/>
+															<xs:pattern value="[A-ZÑ&amp;]{3,4}[0-9]{2}[0-1][0-9][0-3][0-9][A-Z0-9]?[A-Z0-9]?[0-9A-Z]?"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="MontoTotal" type="PLZ:t_Importe" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido para expresar el monto total del CFD y/o CBB que soporte la transacción. (Incluye IVA en su caso)</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Moneda" type="contelec_td:c_Moneda" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional para expresar el tipo de moneda utilizado en la transacción, de acuerdo al catálogo publicado en la página de internet del SAT. Este dato sólo se utiliza en el caso de que el tipo de moneda, sea diferente a la moneda nacional (peso). Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="TipCamb" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional para expresar el tipo de cambio utilizado de acuerdo al tipo de moneda. Este dato sólo se utiliza en el caso de que el tipo de moneda, sea diferente a la moneda nacional (peso). Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:minInclusive value="0"/>
+															<xs:totalDigits value="19"/>
+															<xs:fractionDigits value="5"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="CompExt" minOccurs="0" maxOccurs="unbounded">
+											<xs:annotation>
+												<xs:documentation>Nodo opcional para relacionar el detalle de los comprobantes de origen extranjero relacionados con la transacción.  Se considera que se debe identificar, el soporte documental, tanto en la provisión, como en el pago y/o cobro de cada una de las cuentas y subcuentas que se vean afectadas. Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:attribute name="NumFactExt" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido para expresar la clave numérico o alfanumérico del comprobante de origen extranjero que soporte la operación</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:whiteSpace value="collapse"/>
+															<xs:minLength value="1"/>
+															<xs:maxLength value="36"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="TaxID" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional que sirve para expresar el Identificador del contribuyente extranjero. Se convierte en requerido cuando se cuente con la información </xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:minLength value="1"/>
+															<xs:maxLength value="30"/>
+															<xs:whiteSpace value="collapse"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="MontoTotal" type="PLZ:t_Importe" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido para expresar el monto total del comprobante de origen extranjero que soporte la operación.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Moneda" type="contelec_td:c_Moneda" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional para expresar el tipo de moneda utilizado en la transacción, de acuerdo al catálogo publicado en la página de internet del SAT. Este dato sólo se utiliza en el caso de que el tipo de moneda, sea diferente a la moneda nacional (peso). Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="TipCamb" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional para expresar el tipo de cambio utilizado de acuerdo al tipo de moneda. Este dato sólo se utiliza en el caso de que el tipo de moneda, sea diferente a la moneda nacional (peso). Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:minInclusive value="0"/>
+															<xs:totalDigits value="19"/>
+															<xs:fractionDigits value="5"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Cheque" minOccurs="0" maxOccurs="unbounded">
+											<xs:annotation>
+												<xs:documentation>Nodo opcional para relacionar el detalle de los cheques que integran la póliza. Se convierte en requerido cuando exista una salida o entrada de recursos, que involucre este método de pago o cobro de la obligación contraída por parte del contribuyente que envía los datos.</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:attribute name="Num" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido para expresar el número del cheque emitido</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:maxLength value="20"/>
+															<xs:minLength value="1"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="BanEmisNal" type="contelec_td:c_Banco" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido, para expresar el Banco nacional emisor del cheque, de acuerdo al catálogo publicado en la página de internet del SAT. Se consideran banco nacional aquellos bancos de residencia nacional, indistintamente, si el tipo de moneda es nacional o extranjero.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="BanEmisExt" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional para expresar el nombre completo del Banco extranjero emisor del cheque. Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:maxLength value="150"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="CtaOri" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido para expresar el número de cuenta bancaria del origen de los recursos.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:maxLength value="50"/>
+															<xs:minLength value="1"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="Fecha" type="xs:date" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido, es la fecha del cheque</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Benef" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido, nombre del beneficiario del cheque</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:minLength value="1"/>
+															<xs:maxLength value="300"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="RFC" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido para expresar el RFC  relacionado con el movimiento. El RFC al que se hace referencia, es el distinto del contribuyente que envía los datos, es decir, el RFC del tercero vinculado.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:minLength value="12"/>
+															<xs:maxLength value="13"/>
+															<xs:whiteSpace value="collapse"/>
+															<xs:pattern value="[A-ZÑ&amp;]{3,4}[0-9]{2}[0-1][0-9][0-3][0-9][A-Z0-9]?[A-Z0-9]?[0-9A-Z]?"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="Monto" type="PLZ:t_Importe" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido, es el monto del cheque emitido</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Moneda" type="contelec_td:c_Moneda" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional para expresar el tipo de moneda utilizado en la transacción, de acuerdo al catálogo publicado en la página de internet del SAT. Este dato sólo se utiliza en el caso de que el tipo de moneda, sea diferente a la moneda nacional (peso). Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="TipCamb" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional para expresar el tipo de cambio utilizado de acuerdo al tipo de moneda. Este dato sólo se utiliza en el caso de que el tipo de moneda, sea diferente a la moneda nacional (peso). Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:minInclusive value="0"/>
+															<xs:totalDigits value="19"/>
+															<xs:fractionDigits value="5"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Transferencia" minOccurs="0" maxOccurs="unbounded">
+											<xs:annotation>
+												<xs:documentation>Nodo opcional para relacionar el detalle de las transferencias bancarias que integran la póliza. Se convierte en requerido cuando exista una salida o entrada de recursos que involucre este método de pago o cobro por parte del contribuyente que envía los datos. Además se convierte en requerido cuando se realicen transacciones, entre las cuentas propias del contribuyente.</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:attribute name="CtaOri" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional para expresar el número de cuenta de origen desde la cual se transfieren los recursos. Se convierte en requerido cuando se cuente con la información. </xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:minLength value="1"/>
+															<xs:maxLength value="50"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="BancoOriNal" type="contelec_td:c_Banco" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido, para expresar el Banco de la cuenta origen de la transferencia, de acuerdo al catálogo publicado en la página de internet del SAT. Se considera banco nacional aquellos bancos de residencia nacional, indistintamente, si el tipo de moneda es nacional o extranjero.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="BancoOriExt" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional para expresar el nombre completo del banco origen extranjero. Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:maxLength value="150"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="CtaDest" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido para expresar el número de cuenta destino, la cual se transfieren los recursos.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:minLength value="1"/>
+															<xs:maxLength value="50"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="BancoDestNal" type="contelec_td:c_Banco" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido, para expresar el Banco de la cuenta destino de la transferencia, de acuerdo al catálogo publicado en la página de internet del SAT. Se considera banco nacional aquellos bancos de residencia nacional, indistintamente, si el tipo de moneda es nacional o extranjero.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="BancoDestExt" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional para expresar el nombre completo del banco destino extranjero. Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:maxLength value="150"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="Fecha" type="xs:date" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido, es la fecha de la transferencia</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Benef" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido, nombre del beneficiario de la transferencia.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:minLength value="1"/>
+															<xs:maxLength value="300"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="RFC" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido para expresar el RFC  relacionado con el movimiento. El RFC al que se hace referencia, es el distinto del contribuyente que envía los datos, es decir, el RFC del tercero vinculado.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:minLength value="12"/>
+															<xs:maxLength value="13"/>
+															<xs:whiteSpace value="collapse"/>
+															<xs:pattern value="[A-ZÑ&amp;]{3,4}[0-9]{2}[0-1][0-9][0-3][0-9][A-Z0-9]?[A-Z0-9]?[0-9A-Z]?"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="Monto" type="PLZ:t_Importe" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido, es el monto transferido</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Moneda" type="contelec_td:c_Moneda" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional para expresar el tipo de moneda utilizado en la transacción, de acuerdo al catálogo publicado en la página de internet del SAT. Este dato sólo se utiliza en el caso de que el tipo de moneda, sea diferente a la moneda nacional (peso). Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="TipCamb" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional para expresar el tipo de cambio utilizado de acuerdo al tipo de moneda. Este dato sólo se utiliza en el caso de que el tipo de moneda, sea diferente a la moneda nacional (peso). Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:minInclusive value="0"/>
+															<xs:totalDigits value="19"/>
+															<xs:fractionDigits value="5"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="OtrMetodoPago" minOccurs="0" maxOccurs="unbounded">
+											<xs:annotation>
+												<xs:documentation>Nodo opcional para relacionar otros métodos de pago o cobro de la transacción. Se convierte en requerido cuando la transacción involucra un método de pago o cobro diverso a cheque y/o transferencia.</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:attribute name="MetPagoPol" type="contelec_td:c_MetPagos" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido para expresar el método de pago de la operación, de acuerdo al catálogo publicado en la página de internet del SAT.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Fecha" type="xs:date" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido, es la fecha de la transacción de otros métodos de pago.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Benef" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido, nombre de la persona o contribuyente a la cual se realiza éstos métodos de pago.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:minLength value="1"/>
+															<xs:maxLength value="300"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="RFC" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido para expresar el RFC  relacionado con la transacción. El RFC al que se hace referencia, es el distinto del contribuyente que envía los datos, es decir, el RFC del tercero vinculado.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:minLength value="12"/>
+															<xs:maxLength value="13"/>
+															<xs:whiteSpace value="collapse"/>
+															<xs:pattern value="[A-ZÑ&amp;]{3,4}[0-9]{2}[0-1][0-9][0-3][0-9][A-Z0-9]?[A-Z0-9]?[0-9A-Z]?"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+												<xs:attribute name="Monto" type="PLZ:t_Importe" use="required">
+													<xs:annotation>
+														<xs:documentation>Atributo requerido para expresar el monto del método de pago soporte de la transacción.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Moneda" type="contelec_td:c_Moneda" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional para expresar el tipo de moneda utilizado en la transacción, de acuerdo al catálogo publicado en la página de internet del SAT. Este dato sólo se utiliza en el caso de que el tipo de moneda, sea diferente a la moneda nacional (peso). Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="TipCamb" use="optional">
+													<xs:annotation>
+														<xs:documentation>Atributo opcional para expresar el tipo de cambio utilizado de acuerdo al tipo de moneda. Este dato sólo se utiliza en el caso de que el tipo de moneda, sea diferente a la moneda nacional (peso). Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:decimal">
+															<xs:minInclusive value="0"/>
+															<xs:totalDigits value="19"/>
+															<xs:fractionDigits value="5"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="NumCta" use="required">
+										<xs:annotation>
+											<xs:documentation>Atributo requerido para expresar la clave con que se distingue la cuenta o subcuenta que se afecta por la transacción.</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:minLength value="1"/>
+												<xs:maxLength value="100"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="DesCta" use="required">
+										<xs:annotation>
+											<xs:documentation>Atributo requerido para expresar el nombre de la cuenta o subcuenta que se afecta por la transacción.</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:minLength value="1"/>
+												<xs:maxLength value="100"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="Concepto" use="required">
+										<xs:annotation>
+											<xs:documentation>Atributo requerido para expresar el concepto de la transacción</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:minLength value="1"/>
+												<xs:maxLength value="200"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="Debe" type="PLZ:t_Importe" use="required">
+										<xs:annotation>
+											<xs:documentation>Atributo requerido para expresar el monto del cargo a la cuenta o subcuenta que se afecta en la transacción. En caso de no existir dato, colocar cero (0)</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="Haber" type="PLZ:t_Importe" use="required">
+										<xs:annotation>
+											<xs:documentation>Atributo requerido para expresar el monto del abono a la cuenta o subcuenta que se afecta en la transacción. En caso de no existir dato, colocar cero (0)</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="NumUnIdenPol" use="required">
+							<xs:annotation>
+								<xs:documentation>Atributo requerido para expresar el número único de identificación de la póliza. El campo deberá contener la clave o nombre utilizado por el contribuyente para diferenciar, el tipo de póliza y el número correspondiente. En un mes ordinario no debe repetirse un mismo número de póliza con la clave o nombre asignado por el contribuyente.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="50"/>
+									<xs:minLength value="1"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="Fecha" type="xs:date" use="required">
+							<xs:annotation>
+								<xs:documentation>Atributo requerido para expresar la fecha de registro de la póliza</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="Concepto" use="required">
+							<xs:annotation>
+								<xs:documentation>Atributo requerido para expresar el concepto de la operación</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:minLength value="1"/>
+									<xs:maxLength value="300"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="Version" type="xs:string" use="required" fixed="1.3">
+				<xs:annotation>
+					<xs:documentation>Atributo requerido para expresar la versión del formato.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="RFC" use="required">
+				<xs:annotation>
+					<xs:documentation>Atributo requerido para expresar el RFC del contribuyente que envía los datos</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="12"/>
+						<xs:maxLength value="13"/>
+						<xs:whiteSpace value="collapse"/>
+						<xs:pattern value="[A-ZÑ&amp;]{3,4}[0-9]{2}[0-1][0-9][0-3][0-9][A-Z0-9]?[A-Z0-9]?[0-9A-Z]?"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="Mes" use="required">
+				<xs:annotation>
+					<xs:documentation>Atributo requerido para expresar el mes al que corresponde la póliza</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="01"/>
+						<xs:enumeration value="02"/>
+						<xs:enumeration value="03"/>
+						<xs:enumeration value="04"/>
+						<xs:enumeration value="05"/>
+						<xs:enumeration value="06"/>
+						<xs:enumeration value="07"/>
+						<xs:enumeration value="08"/>
+						<xs:enumeration value="09"/>
+						<xs:enumeration value="10"/>
+						<xs:enumeration value="11"/>
+						<xs:enumeration value="12"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="Anio" use="required">
+				<xs:annotation>
+					<xs:documentation>Atributo requerido para expresar el año al que corresponde la póliza</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:int">
+						<xs:minInclusive value="2015"/>
+						<xs:maxInclusive value="2099"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="TipoSolicitud" use="required">
+				<xs:annotation>
+					<xs:documentation>Atributo requerido para expresar el tipo de solicitud de la póliza ( AF - Acto de Fiscalización; FC - Fiscalización Compulsa; DE - Devolución; CO - Compensación )</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="AF|FC|DE|CO"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="NumOrden" use="optional">
+				<xs:annotation>
+					<xs:documentation>Atributo opcional para expresar el número de orden asignado al acto de fiscalización al que hace referencia la solicitud de la póliza. Requerido para tipo de solicitud = AF y FC. Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:length value="13"/>
+						<xs:pattern value="[A-Z]{3}[0-9]{7}(/)[0-9]{2}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="NumTramite" use="optional">
+				<xs:annotation>
+					<xs:documentation>Atributo opcional para expresar el número de trámite asignado a la solicitud de devolución o compensación al que hace referencia la solicitud de la póliza. Requerido para tipo de solicitud  = DE  o CO. Se convierte en requerido cuando se cuente con la información.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:length value="14"/>
+						<xs:pattern value="[A-Z]{2}[0-9]{12}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="Sello" use="optional">
+				<xs:annotation>
+					<xs:documentation>Atributo opcional para contener el sello digital del archivo de contabilidad electrónica. El sello deberá ser expresado cómo una cadena de texto en formato Base 64</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="collapse"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="noCertificado" use="optional">
+				<xs:annotation>
+					<xs:documentation>Atributo opcional para expresar el número de serie del certificado de sello digital que ampara el archivo de contabilidad electrónica, de acuerdo al acuse correspondiente a 20 posiciones otorgado por el sistema del SAT.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:length value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="Certificado" use="optional">
+				<xs:annotation>
+					<xs:documentation>Atributo opcional que sirve para expresar el certificado de sello digital que ampara al archivo de contabilidad electrónica como texto, en formato base 64.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="collapse"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="t_Importe">
+		<xs:annotation>
+			<xs:documentation>Tipo definido para expresar importes numéricos con fracción hasta dos decimales</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:fractionDigits value="2"/>
+			<xs:whiteSpace value="collapse"/>
+			<xs:maxInclusive value="9999999999999999999999.99"/>
+			<xs:minExclusive value="-9999999999999999999999.99"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

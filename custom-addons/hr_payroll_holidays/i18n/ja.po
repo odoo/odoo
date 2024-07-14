@@ -1,0 +1,273 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_payroll_holidays
+# 
+# Translators:
+# Wil Odoo, 2023
+# Junko Augias, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.actions.act_window,help:hr_payroll_holidays.hr_leave_work_entry_action
+msgid ""
+"A great way to keep track on employee’s PTOs, sick days, and approval "
+"status."
+msgstr "従業員のPTO、病欠、および承認ステータスを追跡するための優れた方法。"
+
+#. module: hr_payroll_holidays
+#: model:ir.model,name:hr_payroll_holidays.model_mail_activity
+msgid "Activity"
+msgstr "活動"
+
+#. module: hr_payroll_holidays
+#: model:ir.model,name:hr_payroll_holidays.model_res_company
+msgid "Companies"
+msgstr "会社"
+
+#. module: hr_payroll_holidays
+#: model:ir.model.fields.selection,name:hr_payroll_holidays.selection__hr_leave__payslip_state__done
+msgid "Computed in current payslip"
+msgstr "現在の給与明細で計算済"
+
+#. module: hr_payroll_holidays
+#: model:ir.model,name:hr_payroll_holidays.model_res_config_settings
+msgid "Config Settings"
+msgstr "コンフィグ設定"
+
+#. module: hr_payroll_holidays
+#: model:ir.actions.server,name:hr_payroll_holidays.ir_actions_server_report_to_next_month
+msgid "Defer to Next Month"
+msgstr "来月に繰越"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.res_config_settings_view_form
+msgid "Deferred Time Off"
+msgstr "休暇の繰り延べ"
+
+#. module: hr_payroll_holidays
+#: model:ir.model.fields,field_description:hr_payroll_holidays.field_res_company__deferred_time_off_manager
+#: model:ir.model.fields,field_description:hr_payroll_holidays.field_res_config_settings__deferred_time_off_manager
+msgid "Deferred Time Off Manager"
+msgstr "繰越休暇マネジャー"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.hr_leave_view_search
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.view_hr_leave_allocation_inherit_filter
+msgid "Employee Code"
+msgstr "従業員コード"
+
+#. module: hr_payroll_holidays
+#: model:ir.model,name:hr_payroll_holidays.model_hr_contract
+msgid "Employee Contract"
+msgstr "従業員契約"
+
+#. module: hr_payroll_holidays
+#: model:mail.activity.type,name:hr_payroll_holidays.mail_activity_data_hr_leave_to_defer
+msgid "Leave to Defer"
+msgstr "繰越する休暇"
+
+#. module: hr_payroll_holidays
+#: model:ir.actions.server,name:hr_payroll_holidays.ir_actions_server_mark_as_reported
+msgid "Mark as deferred"
+msgstr "繰越済にする"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.actions.act_window,help:hr_payroll_holidays.hr_leave_work_entry_action
+msgid "Meet the time off dashboard."
+msgstr "ダッシュボードの休暇をご覧ください。"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"Not enough attendance work entries to report the time off %s. Please make "
+"the operation manually"
+msgstr "休暇%sを報告するには出勤ワークエントリが不十分です。オペレーションを手動で行って下さい。"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Only an employee time off to defer can be reported to next month"
+msgstr "繰越する従業員休暇のみ翌月に持越すことができます"
+
+#. module: hr_payroll_holidays
+#: model:ir.model,name:hr_payroll_holidays.model_hr_payslip
+msgid "Pay Slip"
+msgstr "給与明細"
+
+#. module: hr_payroll_holidays
+#: model:ir.model.fields,field_description:hr_payroll_holidays.field_hr_leave__payslip_state
+msgid "Payslip State"
+msgstr "給与明細ステータス"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Please create manually the work entry for %s"
+msgstr "以下用のワークエントリを手動で作成して下さい: %s"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.res_config_settings_view_form
+msgid "Postpone time off after payslip validation"
+msgstr "給与明細の確認後、休暇を繰り延べます"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.hr_leave_view_form_inherit
+msgid "Report to Next Month"
+msgstr "来月に繰越し"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.res_config_settings_view_form
+msgid "Responsible"
+msgstr "担当者"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"The next month work entries are not generated yet or are validated already "
+"for time off %s"
+msgstr "来月のワークエントリが作成されていないか、休暇%s用に既に検証済です。"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"The selected period is covered by a validated payslip. You can't create a "
+"time off for that period."
+msgstr "選択した期間は有効な給与明細でカバーされています。その期間に休暇を作成することはできません。"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"The time off %s can not be reported because it is defined over more than 2 "
+"months"
+msgstr "休暇 %sは繰越できません、2ヶ月以上に渡り定義されているためです。"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid "There is no work entries linked to this time off to report"
+msgstr "この休暇に連動したレポート対象のワークエントリはありません"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_payslip.py:0
+#, python-format
+msgid ""
+"There is some remaining time off to defer for these employees: \n"
+"\n"
+" %s"
+msgstr ""
+"これらの従業員には、繰り延べられる休暇が残っています： \n"
+"\n"
+" %s"
+
+#. module: hr_payroll_holidays
+#: model:ir.actions.act_window,name:hr_payroll_holidays.hr_leave_work_entry_action
+#: model:ir.model,name:hr_payroll_holidays.model_hr_leave
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.res_config_settings_view_form
+msgid "Time Off"
+msgstr "休暇"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_payslip.py:0
+#, python-format
+msgid "Time Off Not Related To An Allocation"
+msgstr "割当に関連しない休暇"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_payslip.py:0
+#, python-format
+msgid "Time Off To Defer"
+msgstr "繰越する休暇"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_payslip.py:0
+#, python-format
+msgid "Time Off Without Joined Document"
+msgstr "添付ドキュメントのない休暇"
+
+#. module: hr_payroll_holidays
+#: model:ir.actions.act_window,name:hr_payroll_holidays.hr_leave_action_open_to_defer
+msgid "Time Off to Defer"
+msgstr "繰越する休暇"
+
+#. module: hr_payroll_holidays
+#: model:ir.ui.menu,name:hr_payroll_holidays.menu_work_entry_leave_to_approve
+msgid "Time Off to Report"
+msgstr "レポート対象休暇"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.hr_leave_view_search
+msgid "To Defer"
+msgstr "繰越"
+
+#. module: hr_payroll_holidays
+#: model:ir.model.fields.selection,name:hr_payroll_holidays.selection__hr_leave__payslip_state__normal
+msgid "To compute in next payslip"
+msgstr "次回の給与明細で計算"
+
+#. module: hr_payroll_holidays
+#: model:ir.model.fields.selection,name:hr_payroll_holidays.selection__hr_leave__payslip_state__blocked
+msgid "To defer to next payslip"
+msgstr "次回の給与明細に繰越"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Validated Time Off to Defer"
+msgstr "繰越する承認済休暇"
+
+#. module: hr_payroll_holidays
+#. odoo-javascript
+#: code:addons/hr_payroll_holidays/static/src/xml/templates.xml:0
+#, python-format
+msgid "You have some"
+msgstr "いくつかの"
+
+#. module: hr_payroll_holidays
+#. odoo-javascript
+#: code:addons/hr_payroll_holidays/static/src/views/hooks.js:0
+#, python-format
+msgid "You have some <button>time off</button> to defer to the next month."
+msgstr "翌月に繰り延べできる<button>休暇</button>があります。"
+
+#. module: hr_payroll_holidays
+#. odoo-javascript
+#: code:addons/hr_payroll_holidays/static/src/xml/templates.xml:0
+#, python-format
+msgid "time off"
+msgstr "休暇"
+
+#. module: hr_payroll_holidays
+#. odoo-javascript
+#: code:addons/hr_payroll_holidays/static/src/xml/templates.xml:0
+#, python-format
+msgid "to defer to the next month."
+msgstr "。"

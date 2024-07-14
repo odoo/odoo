@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_order_tracking_display.Orders">
+        <div t-attf-class="container-fluid {{ props.class }}">
+            <div class="mb-2 fs-6 fw-bolder" t-esc="props.categoryName" />
+            <div class="row row-cols-2 row-cols-lg-4 row-cols-xxl-5 g-3 g-xxl-4">
+                <div class="col" t-foreach="props.orders" t-as="order" t-key="order">
+                    <div t-attf-class="o_tracking_display_number p-3 rounded {{ props.ready ? 'text-bg-success' : 'text-bg-600' }} fs-4 fw-bolder lh-sm text-break text-center" t-esc="order" />
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

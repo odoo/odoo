@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ====  Direct sharing - Main layout ==== -->
+
+    <template id="documents.not_available">
+        <t t-call="documents.public_page_layout">
+            <h1 class="o_documents_portal_central_message text-center mt160 mb-3">Sorry, this link is no longer valid.</h1>
+            <h4 class="o_documents_portal_central_message text-center">Please contact the person that shared this link for more information.</h4>
+        </t>
+    </template>
+
+    <template id="documents.public_page_layout" name="Documents public pages main layout">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <script type="text/javascript">
+                    odoo.__session_info__ = <t t-out="json.dumps({
+                        'is_admin': request.env.user._is_admin(),
+                        'is_system': request.env.user._is_system(),
+                        'user_id': request.env.user.id,
+                    })"/>;
+                </script>
+
+                <t t-call-assets="web.assets_frontend"/>
+                <t t-call="web.conditional_assets_tests"/>
+                <t t-call-assets="documents.public_page_assets"/>
+
+                <style>
+                    html, body {
+                        overflow: auto;
+                    }
+                </style>
+
+                <t t-out="head"/>
+            </t>
+
+            <t t-set="body_classname" t-value="'o_docs_share_page o_home_menu_background'"/>
+            <t t-set="shareType" t-value="shareType or ''"/>
+            <t t-set="share_redirect_URL" t-attf-value="#{base_url}/document/share/#{share_id}/#{token}"/>
+            <div id="wrap" t-attf-class="h-100 flex-column flex-nowrap d-flex position-relative container #{shareType}">
+                <header class="d-flex justify-content-between align-items-center mt-3">
+                    <span class="o_company_logo" t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+                    <ul t-if="not is_files_shared" class="list-inline mb-0">
+                        <li class="dropdown hidden-sm hidden-xs" t-ignore="true" t-if="not user_id._is_public()">
+                            <a href="#" class="dropdown-toggle o_docs_btn btn btn-secondary d-flex align-items-center gap-1" data-bs-toggle="dropdown">
+                                <img class="o_object_fit_cover rounded" width="13" height="13" t-attf-src="/web/image?model=res.users&amp;field=avatar_128&amp;id=#{request.env.user.id}" t-att-title="user_id.name"/>
+                                <span t-esc="user_id.name"/><span class="caret"/>
+                            </a>
+                            <ul class="dropdown-menu js_usermenu" role="menu">
+                                <li id="o_logout"><a class="dropdown-item" t-attf-href="/web/session/logout?redirect=#{share_redirect_URL}" role="menuitem">Logout</a></li>
+                            </ul>
+                        </li>
+                        <li t-ignore="true" t-if="user_id._is_public()">
+                            <a t-attf-href="/web/login?redirect=#{share_redirect_URL}" class="o_docs_btn btn btn-secondary">Login</a>
+                        </li>
+                    </ul>
+                </header>
+                <main class="d-flex flex-column flex-nowrap">
+                    <t t-out="0"/>
+                </main>
+                <footer class="flex-grow-0 flex-shrink-0 mb16 mt32 ">
+                    <div class="text-center col-sm-12">
+                        <p t-if="expiration_date">shared by <t t-esc="author"/>, expired on <t t-esc="expiration_date"/></p>
+                        <br/>Powered by <a target="_blank" title="Odoo Website" href="http://www.odoo.com/app/documents" class="text-reset"><span class="bg-primary p-1 rounded"><img class="o_object_fit_cover align-text-top" height="15" src="/web/static/img/logo_inverse_white_206px.png" alt="Odoo Logo"/></span><span>&amp;nbsp;Documents.</span></a>
+                    </div>
+                </footer>
+            </div>
+        </t>
+    </template>
+
+    <!-- ====  Workspace sharing ==== -->
+    <template id="documents.share_workspace_page" name="Workspace Share">
+        <t t-call="documents.public_page_layout">
+            <t t-set="shareType" t-value="'o_share_workspace'"/>
+            <t t-set="zip_URL" t-value="base_url + '/document/download/all/' + share_id + '/' + token"/>
+
+            <section class="o_docs_share_multible_bar d-flex mt-5 mb-4">
+                <div class="flex-grow-1 mb16">
+                    <h2><t t-esc="len(document_ids)"/> documents</h2>
+                    <span class="align-middle">
+                        shared by
+                        <img class="o_author rounded align-middle o_object_fit_cover" t-attf-src="/document/avatar/#{share_id}/#{token}" t-att-alt="author" t-att-title="author"/>
+                        <b t-esc="author"/>
+                    </span>
+                </div>
+                <div class="flex-grow-1 text-end">
+                    <div class="row g-0 justify-content-end">
+                        <div class="col me-3">
+                            <form class="o_docs_upload_wrapper position-relative d-inline-block" t-if="upload" enctype="multipart/form-data" t-attf-action="/document/upload/#{share_id}/#{token}" method="POST">
+                                <button title="Upload" class="btn btn-primary"><i class="fa fa-upload"/>  Upload</button>
+                                <input name="files" multiple="multiple" type="file" onchange="form.submit()"/>
+                            </form>
+                        </div>
+                        <div>
+                            <a t-if="all_button" t-att-href="zip_URL" title="Download all files" t-attf-class="btn  #{upload and 'o_docs_btn' or 'btn-primary'}"><i class="fa fa-download fa-fw"/>  Download All</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="o_docs_cards_container row mb32">
+                <t t-foreach="document_ids" t-as="document">
+                    <t t-set="download_URL" t-value="base_url + '/document/download/' + share_id + '/' + token + '/' + str(document.id)"/>
+                    <t t-set="document_request" t-value="document.type == 'empty'"/>
+                    <div t-if="document.type != 'url'" class="col-sm-6 col-lg-3">
+                        <article t-attf-class="o_card d-flex mb16 border #{document_request and 'o_request_card' or ''}">
+                            <figure class="o_card_left d-flex position-relative flex-column flex-nowrap justify-content-between m-0">
+                                <form t-if="request_upload and document_request" class="o_hidden" enctype="multipart/form-data" t-attf-action="/document/upload/#{share_id}/#{token}/#{document.id}" method="POST">
+                                    <input name="requestFile" class="o_request_upload" type="file" onchange="form.submit()"/>
+                                </form>
+                                <div t-if="document_request" onclick="document.querySelector('.o_request_upload').click()" t-attf-class="d-flex align-items-center justify-content-center o_request_icon #{request_upload and 'o_request_allowed' or ''}">
+                                    <i class="fa fa-upload fa-2x"/>
+                                </div>
+                                <div t-else="" class="o_image" t-att-data-mimetype="document.mimetype" t-attf-style="#{document.mimetype and 'image/' in document.mimetype and 'background-image:None;' ''}"/>
+                                <div t-if="document.mimetype and'image/' in document.mimetype" class="o_image_preview" t-attf-style="background-image:url(/document/thumbnail/#{share_id}/#{token}/#{document.id})"/>
+                            </figure>
+                            <div class="o_card_content d-flex flex-column flex-nowrap flex-grow-1 flex-shrink-1 justify-content-between">
+                                <header>
+                                    <h6 class="o_card_title mt0 mb4">
+                                        <span t-if="document_request" t-esc="document.name"/>
+                                        <a t-else="" t-att-href="download_URL + '?preview=True'" target="_blank" t-attf-title="Download #{document.name}" t-esc="document.name"/>
+                                    </h6>
+                                </header>
+                                <div class="o_card_footer">
+                                    <time><b t-field="document.write_date" t-options="{'format':'MMM d, yyyy'}"/></time> •
+                                    <small class="mb0">
+                                        <b>
+                                            <t t-if="document.type == 'binary'" t-call="documents.format_file_size"/>
+                                            <t t-else=""><span title="Requested Document">Requested Document</span></t>
+                                        </b>
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="o_card_right d-flex flex-column flex-nowrap justify-content-between text-end">
+                                <img t-attf-title="Owner: #{document.owner_id.name}" t-att-alt="document.owner_id.name" class="o_object_fit_cover rounded" width="15" height="15" t-attf-src="/document/avatar/#{share_id}/#{token}/#{document.id}"/>
+                                <a t-if="not document_request" t-att-href="download_URL" target="new" t-attf-title="Download #{document.name}"><i t-attf-class="fa fa-download"/></a>
+                            </div>
+                        </article>
+                    </div>
+                </t>
+            </div>
+            <div class="text-center col-sm-12 d-sm-none">
+                <div class="row g-0 justify-content-center">
+                    <div class="me-3">
+                        <form class="o_docs_upload_wrapper position-relative d-inline-block" t-if="upload" enctype="multipart/form-data" t-attf-action="/document/upload/#{share_id}/#{token}" method="POST">
+                            <button title="Upload" class="btn btn-primary"><i class="fa fa-upload"/>  Upload</button>
+                            <input name="files" multiple="multiple" type="file" onchange="form.submit()"/>
+                        </form>
+                    </div>
+                    <div>
+                        <a t-if="all_button" t-att-href="zip_URL" title="Download all files" t-attf-class="btn  #{upload and 'o_docs_btn' or 'btn-primary'}"><i class="fa fa-download fa-fw"/>  Download All</a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- ====  Single/Multiple files - direct sharing ==== -->
+    <template id="documents.share_files_page" name="Single/Multiple Documents Share">
+        <t t-call="documents.public_page_layout">
+            <t t-set="shareType" t-valuef="o_share_files"/>
+            <t t-if="len(document_ids) == 1" t-set="downloadUrl" t-valuef="#{base_url}/document/download/#{share_id}/#{token}/#{str(document_ids.id)}"/>
+
+            <div class="shadow-lg text-center bg-white p-3 rounded-3">
+                <span class="fa-stack text-black-25 fa-3x">
+                  <i class="fa fa-circle-thin fa-stack-2x"/>
+                  <i class="fa fa-arrow-down fa-stack-1x"/>
+                </span>
+                <div class="my-3 h3 text-truncate">
+                    <t t-esc="author"/><br/>
+                    is sharing content with you
+                </div>
+                <div t-if="name or len(document_ids) == 1" class="fs-4 text-truncate">
+                    <b t-esc="name or document_ids.name"/>
+                </div>
+                <div t-if="date_deadline">
+                    Validity date: <t t-esc="date_deadline"/>
+                </div>
+                <div>
+                    Size: <t t-call="documents.format_file_size"/>
+                </div>
+                <div class="mt16 mb8">
+                    <a t-att-href="downloadUrl or base_url + '/document/download/all/' + share_id + '/' + token" title="Download all files" class="btn btn-primary rounded-pill">
+                        <i class="fa fa-download fa-fw"/>
+                        <t t-if="len(document_ids) > 1">
+                            Download <t t-esc="len(document_ids)"/> files
+                        </t>
+                        <t t-else="">
+                            Download file
+                        </t>
+                    </a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- ==== Requested document sharing ==== -->
+    <template id="documents.document_request_page" name="Requested Documents Share">
+        <t t-call="documents.public_page_layout">
+            <t t-set="shareType" t-value="'o_share_files'"/>
+            <h3 class="text-center mb16">
+                This document has been requested.
+                <b onclick="document.querySelector('.o_request_upload').click()" style="cursor:pointer;">Upload it</b>.
+            </h3>
+            <div class="o_docs_single_container">
+                <article class="o_card d-flex mb4 o_request_card " title="">
+                    <figure class="o_card_left d-flex position-relative flex-column flex-nowrap justify-content-between m-0">
+                        <form class="o_hidden" enctype="multipart/form-data" t-attf-action="/document/upload/#{share_id}/#{token}/#{document_ids.id}" method="POST">
+                            <input name="requestFile" class="o_request_upload" type="file" onchange="form.submit()"/>
+                        </form>
+                        <div onclick="document.querySelector('.o_request_upload').click()"
+                            class="d-flex align-items-center justify-content-center o_request_icon o_request_allowed">
+                            <i class="fa fa-upload fa-2x"/>
+                        </div>
+                    </figure>
+                    <div class="o_card_content flex-column flex-nowrap d-flex">
+                        <header>
+                            <h3 class="mt4 mb8">
+                                <span t-esc="document_ids.name"/>
+                            </h3>
+                        </header>
+                        <div class="o_card_footer">
+                            <b>
+                                Requested
+                                ∙ <time t-field="document_ids.write_date" t-options="{'format':'MMM d, yyyy'}"/>
+                            </b>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </t>
+    </template>
+
+    <!-- Utils -->
+    <template id="documents.format_file_size" name="Format file size">
+        <t t-set="file_size" t-value="is_files_shared and file_size or document.file_size"/>
+        <t t-set="G" t-value="file_size//1000000000"/>
+        <t t-set="M" t-value="file_size//1000000"/>
+        <t t-set="K" t-value="file_size//1000"/>
+        <t t-set="B" t-value="file_size"/>
+
+        <t t-if="G"><t t-esc="G"/> Gb</t>
+        <t t-elif="M"><t t-esc="M"/> Mb</t>
+        <t t-elif="K"><t t-esc="K"/> Kb</t>
+        <t t-else=""><t t-esc="B"/> Bytes</t>
+    </template>
+</odoo>

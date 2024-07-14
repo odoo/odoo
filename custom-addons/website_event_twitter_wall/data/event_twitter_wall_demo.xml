@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record id="openwood_twitter_wall" model="website.twitter.wall">
+    <field name="name">OpenWood Wall</field>
+    <field name="search_pattern">#wood</field>
+    <field name="description">#wood</field>
+</record>
+
+<record id="event.event_7" model="event.event">
+    <field name="twitter_wall_id" ref="openwood_twitter_wall" />
+</record>
+
+</odoo>

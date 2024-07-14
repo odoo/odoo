@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.form</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='wage']" position="attributes">
+                <attribute name="invisible">holidays != 0.0</attribute>
+            </xpath>
+            <xpath expr="//div[@name='wage']" position="attributes">
+                <attribute name="invisible">holidays != 0.0</attribute>
+            </xpath>
+            <xpath expr="//div[@name='wage']" position="after">
+                <label name="label_wage_with_holidays" for="wage_with_holidays" invisible="holidays == 0.0"/>
+                <div class="o_row o_hr_narrow_field" name="div_wage_with_holidays" invisible="holidays == 0.0">
+                    <field name="wage_with_holidays" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+            </xpath>
+            <xpath expr="//button[@name='open_sign_requests']" position="before">
+                <button name="action_view_origin_contract" type="object" class="oe_stat_button" icon="fa-book" invisible="not origin_contract_id or is_origin_contract_template" help="Previous Contract">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text ml4">Previous Contract</span>
+                    </div>
+                    <field name="origin_contract_id" invisible="1"/>
+                    <field name="is_origin_contract_template" invisible="1"/>
+                </button>
+            </xpath>
+            <div name="button_box" position="inside">
+                <button name="action_show_contract_reviews" class="oe_stat_button" icon="fa-book" type="object" help="Contracts Reviews" invisible="not employee_id or contract_reviews_count == 0">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="contract_reviews_count"/></span>
+                        <span class="o_stat_text">Reviews</span>
+                    </div>
+                </button>
+                <button name="action_show_offers" invisible="salary_offers_count == 0" class="oe_stat_button" icon="fa-handshake-o" type="object" help="Sent Offers">
+                    <div class="o_field_widget o_stat_info ms-1">
+                        <span class="o_stat_value"><field name="salary_offers_count"/></span>
+                        <span class="o_stat_text">Offers</span>
+                    </div>
+                </button>
+            </div>
+            <xpath expr="//field[@name='state']" position="before">
+                <button name="%(hr_contract_salary.generate_simulation_link_action)d" type="action" string="Generate Offer" invisible="not employee_id" groups="hr_contract.group_hr_contract_manager"/>
+            </xpath>
+            <field name="contract_type_id" position="after">
+                <label for="wage_on_signature"/>
+                <div class="o_row" name="wage">
+                    <field class="o_hr_narrow_field" name="wage_on_signature" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+            </field>
+            <group name="contract_details_0" position="inside">
+                <field name="default_contract_id" context="{'form_view_ref': 'hr_contract_salary.hr_contract_view_form_contract_templates'}"/>
+            </group>
+            <group name="contract_details" position="inside">
+                <group>
+                    <separator string="Sign"/>
+                    <field name="hr_responsible_id" widget="many2one_avatar_user" required="1"/>
+                    <field name="sign_template_id" options="{'no_create': True}" context="{'kanban_view_ref': 'sign.sign_template_view_kanban_mobile'}"/>
+                    <field name="contract_update_template_id" options="{'no_create': True}"/>
+                    <field name="signatures_count" invisible="1"/>
+                </group>
+            </group>
+            <page name="other" position="after">
+                <page string="Personal Documents" name="personal_documents" groups="hr.group_hr_manager" invisible="not employee_id">
+                    <group>
+                        <field name="image_1920"/>
+                    </group>
+                </page>
+            </page>
+            <xpath expr="//group[@name='salary']" position="after">
+                <group groups="hr.group_hr_manager" name="employee_costs">
+                    <label for="final_yearly_costs"/>
+                    <div class="o_row">
+                        <field name="final_yearly_costs" class="o_hr_narrow_field" nolabel="1"/>
+                        <span class="ms-3">/ year</span>
+                    </div>
+                    <label for="monthly_yearly_costs"/>
+                    <div class="o_row">
+                        <field name="monthly_yearly_costs" class="o_hr_narrow_field" nolabel="1"/>
+                        <span class="ms-3">/ month</span>
+                    </div>
+                </group>
+            </xpath>
+            <xpath expr="//group[@name='yearly_benefits']" position="inside">
+                <label for="holidays" invisible="country_code != 'BE'"/>
+                <div class="o_row" invisible="country_code != 'BE'">
+                    <field name="holidays" class="o_hr_narrow_field" nolabel="1"/>
+                    <span>days / year</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_contract_view_form_contract_templates" model="ir.ui.view">
+        <field name="name">hr.contract.form</field>
+        <field name="model">hr.contract</field>
+        <field name="mode">primary</field>
+        <field name="priority">60</field>
+        <field name="inherit_id" ref="hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <page name="other" position="replace"/>
+            <field name="hr_responsible_id" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </field>
+            <field name="hr_responsible_id" position="after">
+                <field name="sign_template_id" context="{'kanban_view_ref': 'sign.sign_template_view_kanban_mobile'}"/>
+                <field name="contract_update_template_id"/>
+            </field>
+            <field name="date_start" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="date_end" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="employee_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="state" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_contract_view_tree_contract" model="ir.ui.view">
+        <field name="name">hr.contract.tree</field>
+        <field name="model">hr.contract</field>
+        <field name="mode">extension</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="wage" position="after">
+                <field name="monthly_yearly_costs" widget="monetary" optional="hidden"/>
+                <field name="final_yearly_costs" widget="monetary" optional="show"/>
+            </field>
+
+            <field name="contract_type_id" position="after">
+                <field name="wage_on_signature" widget="monetary" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_contract_view_tree_contract_templates" model="ir.ui.view">
+        <field name="name">hr.contract.tree</field>
+        <field name="model">hr.contract</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="employee_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="wage_on_signature" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_contract_view_kanban" model="ir.ui.view">
+        <field name="name">hr.contract.kanban</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_kanban"/>
+        <field name="arch" type="xml">
+            <field name="employee_id" position="before">
+                <field name="sign_request_ids" groups="sign.group_sign_user"/>
+            </field>
+            <xpath expr="//div[hasclass('oe_kanban_content')]" position="inside">
+                <t groups="sign.group_sign_user">
+                    <t t-if="record.sign_request_ids.raw_value.length">
+                        <div class="oe_kanban_bottom_left">
+                            <i class="fa fa-pencil"> <field name="signatures_count"/></i>
+                        </div>
+                    </t>
+                </t>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_hr_contract_templates" model="ir.actions.act_window">
+        <field name="name">Contract Templates</field>
+        <field name="res_model">hr.contract</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('employee_id', '=', False)]</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'sequence': 1, 'view_id': ref('hr_contract_view_tree_contract_templates')}),
+            (0, 0, {'view_mode': 'form', 'sequence': 2, 'view_id': ref('hr_contract_view_form_contract_templates')})]"/>
+        <field name="search_view_id" ref="hr_contract.hr_contract_view_search"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+              No Template found</p><p>
+                Let's create one
+          </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="hr_menu_contract_templates"
+        name="Templates"
+        action="action_hr_contract_templates"
+        parent="hr_contract.menu_human_resources_configuration_contract"
+        sequence="10"
+        groups="hr.group_hr_manager"/>
+</odoo>

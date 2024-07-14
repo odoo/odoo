@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="appointment_google_calendar.appointment_validated" inherit_id="appointment.appointment_validated">
+        <xpath expr="//t[@t-if='event.get_base_url() in event.videocall_location']" position="after">
+            <t t-elif="'meet.google.com' in event.videocall_location"> Join with Google Meet</t>
+        </xpath>
+        <xpath expr="//a[hasclass('o_google_calendar')]" position="attributes">
+            <attribute name="t-if">not event.videocall_location or 'meet.google.com' not in event.videocall_location</attribute>
+        </xpath>
+    </template>
+</odoo>

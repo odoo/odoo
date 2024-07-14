@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.ViewEditor">
+  <div class="o_web_studio_editor_manager d-flex flex-row w-100 h-100" t-ref="root">
+      <InteractiveEditor
+        t-if="viewEditorModel.mode === 'interactive'"
+        rendererRef="rendererRef"
+        editor="viewEditorModel.editorInfo.editor"
+        editorContainerRef="rootRef"
+        t-key="interactiveEditorKey"
+        t-slot-scope="scope"
+      >
+        <t t-call="web_studio.ViewEditor.View" />
+      </InteractiveEditor>
+
+      <t t-else="">
+        <ViewXmlEditor studioViewArch="viewEditorModel.studioViewArch" mainResourceId="viewEditorModel.view.id" defaultResourceId="viewEditorModel.studioViewId || viewEditorModel.view.id" onClose.bind="onXmlEditorClose" onSave.bind="onSaveXml"/>
+        <t t-call="web_studio.ViewEditor.View" />
+      </t>
+  </div>
+</t>
+
+<t t-name="web_studio.ViewEditor.View">
+  <div class="o_web_studio_view_renderer overflow-auto h-100" t-ref="viewRenderer">
+    <StudioView
+      t-props="viewEditorModel.studioViewProps"
+      t-key="viewEditorModel.studioViewKey"
+      autoClick="scope and scope.autoClick"
+    />
+  </div>
+</t>
+
+</templates>

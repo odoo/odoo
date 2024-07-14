@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="appointment.AppointmentBookingGanttRenderer.Header" t-inherit="web_gantt.GanttRenderer.Header" t-inherit-mode="primary">
+        <xpath expr="//button[hasclass('o_gantt_button_today')]" position="before">
+            <button
+                class="o_appointment_booking_gantt_button_add_leaves btn btn-primary"
+                t-att-class="{'btn-sm btn-link p-1': env.isSmall}"
+                t-on-click="onClickAddLeave"
+                t-if="showAddLeaveButton"
+            >
+            Add Closing Day(s)
+            </button>
+        </xpath>
+    </t>
+</templates>

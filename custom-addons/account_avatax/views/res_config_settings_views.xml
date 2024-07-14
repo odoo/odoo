@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_logging_avalara_tree" model="ir.ui.view">
+        <field name="name">ir.logging.avalara</field>
+        <field name="model">ir.logging</field>
+        <field name="arch" type="xml">
+            <tree create="0">
+                <field name="message"/>
+                <field name="path"/>
+                <field name="func"/>
+                <field name="line"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ir_logging_avalara_action" model="ir.actions.act_window">
+        <field name="name">Avalara Logging</field>
+        <field name="res_model">ir.logging</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('name', '=', 'Avatax')]</field>
+    </record>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account.avatax</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <field name="module_account_avatax" position="replace"/>
+            <setting id="avatax_settings" position="attributes">
+                <attribute name="invisible">country_code not in ('US', 'CA')</attribute>
+            </setting>
+            <setting id="avatax_settings" position="inside">
+                    <field name="setting_account_avatax"/>
+                    <div class="content-group" invisible="not setting_account_avatax">
+                        <div class="row mt16">
+                            <label string="Environment" for="avalara_environment" class="col-lg-3 o_light_label"/>
+                            <field name="avalara_environment"/>
+                        </div>
+                        <div class="row">
+                            <label string="API ID" for="avalara_api_id" class="col-lg-3 o_light_label"/>
+                            <field name="avalara_api_id"/>
+                        </div>
+                        <div class="row">
+                            <label string="API KEY" for="avalara_api_key" class="col-lg-3 o_light_label" />
+                            <field name="avalara_api_key"/>
+                        </div>
+                        <div class="row">
+                            <label string="Company Code" for="avalara_partner_code" class="col-lg-3 o_light_label" />
+                            <field name="avalara_partner_code"/>
+                        </div>
+                        <div class="row">
+                            <label string="Use UPC" for="avalara_use_upc" class="col-lg-3 o_light_label" />
+                            <field name="avalara_use_upc" class="w-50"/>
+                        </div>
+                        <div class="row">
+                            <label string="Commit Transactions" for="avalara_commit" class="col-lg-3 o_light_label" />
+                            <field name="avalara_commit" class="w-50"/>
+                        </div>
+                        <div class="row">
+                            <label string="Address Validation" for="avalara_address_validation" class="col-lg-3 o_light_label" />
+                            <field name="avalara_address_validation" class="w-50"/>
+                        </div>
+                        <div class="mt16" invisible="avalara_api_id and avalara_api_key">
+                            <a href="https://www.avalara.com/us/en/get-started.html" target="_new">
+                                <i class="oi oi-fw oi-arrow-right"/>
+                                How to Get Credentials
+                            </a>
+                        </div>
+                        <div class="mt16" invisible="not (avalara_api_id and avalara_api_key)">
+                            <a href="https://admin.avalara.com/" target="_new">
+                                <i title="Go to Avatax portal" role="img" aria-label="Go to Avatax portal" class="fa fa-external-link-square fa-fw"/>
+                                Avatax portal
+                            </a>
+                            <button name="avatax_ping" type="object" class="btn-link">
+                                <i title="Test connection" role="img" aria-label="Test connection" class="fa fa-plug fa-fw"/>
+                                Test connection
+                            </button>
+                        </div>
+                        <div class="mt16">
+                            <button name="avatax_sync_company_params" type="object" class="btn-link">
+                                <i title="Sync Parameters" role="img" aria-label="Sync Parameters" class="fa fa-refresh"/>
+                                Sync Parameters
+                            </button>
+                            <div class="text-muted">
+                                Synchronize the exemption codes from Avatax
+                            </div>
+                        </div>
+                        <div class="mt16">
+                            <button name="avatax_log" type="object" class="btn-link">
+                                <i title="Start logging for 30 minutes" role="img" aria-label="Start logging for 30 minutes" class="fa fa-file-text-o"/>
+                                Start logging for 30 minutes
+                            </button>
+                            <button name="account_avatax.ir_logging_avalara_action" type="action" class="btn-link">
+                                <i title="Show logs" role="img" aria-label="Show logs" class="fa fa-file-text-o"/>
+                                Show logs
+                            </button>
+                        </div>
+                    </div>
+            </setting>
+        </field>
+    </record>
+</odoo>

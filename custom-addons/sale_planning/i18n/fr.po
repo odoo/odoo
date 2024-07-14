@@ -1,0 +1,368 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_planning
+# 
+# Translators:
+# Jolien De Paepe, 2023
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:12+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.view_order_form_inherit_sale_planning
+msgid "<span class=\"o_stat_text\">Planned</span>"
+msgstr "<span class=\"o_stat_text\">Planifié</span>"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_form_inherit_sale_planning
+msgid "<span class=\"o_stat_text\">Sales Order</span>"
+msgstr "<span class=\"o_stat_text\">Bon de commande</span>"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.view_order_form_inherit_sale_planning
+msgid "<span class=\"o_stat_text\">To Plan</span>"
+msgstr "<span class=\"o_stat_text\">À planifier</span>"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.product_template_form_view_invoice_policy_inherit_sale_planning
+msgid ""
+"<span invisible=\"not planning_enabled\" class=\"oe_inline me-2\">\n"
+"                        as\n"
+"                    </span>"
+msgstr ""
+"<span invisible=\"not planning_enabled\" class=\"oe_inline me-2\">\n"
+"                        comme\n"
+"                    </span>"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_gantt_inherit_sale_planning
+msgid "<strong>Sales Order Item  — </strong>"
+msgstr "<strong>Article du bon de commande  — </strong>"
+
+#. module: sale_planning
+#. odoo-javascript
+#: code:addons/sale_planning/static/src/views/planning_hooks.js:0
+#, python-format
+msgid ""
+"All open shifts and sales orders have already been assigned, or there are no"
+" resources available to take them at this time."
+msgstr ""
+"Tous les postes et bons de commande ouverts ont déjà été assignés ou aucune "
+"ressource n'est disponible pour les prendre en ce moment."
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__allocated_hours
+msgid "Allocated Time"
+msgstr "Temps alloué"
+
+#. module: sale_planning
+#: model:ir.ui.menu,name:sale_planning.sale_planning_menu_schedule_by_sale_order
+msgid "By Sales Order"
+msgstr "Par bon de commande"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__partner_id
+msgid "Customer"
+msgstr "Client"
+
+#. module: sale_planning
+#: model:product.template,name:sale_planning.developer_product_product_template
+msgid "Developer (Plan services)"
+msgstr "Développer (planifier services)"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__end_datetime
+msgid "End Date"
+msgstr "Date de fin"
+
+#. module: sale_planning
+#: model:planning.role,name:sale_planning.planning_role_tester
+msgid "Functional Tester"
+msgstr "Testeur fonctionnel"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.view_order_form_inherit_sale_planning
+msgid "Hours"
+msgstr "Heures"
+
+#. module: sale_planning
+#: model:product.template,name:sale_planning.technical_maintainance_product_product_template
+msgid "IT Technical Maintenance (Plan services)"
+msgstr "Maintenance technique IT (planifier services)"
+
+#. module: sale_planning
+#: model:planning.role,name:sale_planning.planning_role_technician
+msgid "IT Technician"
+msgstr "Technicien IT"
+
+#. module: sale_planning
+#: model:ir.model.fields,help:sale_planning.field_planning_slot__sale_line_plannable
+#: model:ir.model.fields,help:sale_planning.field_product_product__planning_enabled
+#: model:ir.model.fields,help:sale_planning.field_product_template__planning_enabled
+msgid ""
+"If enabled, a shift will automatically be generated for the selected role "
+"when confirming the Sales Order. Only employees with this role will "
+"automatically be assigned shifts for Sales Orders containing this service."
+msgstr ""
+"Si cette option est activée, un poste sera automatiquement généré pour le "
+"rôle sélectionné lors de la confirmation du bon de commande. Seuls les "
+"employés ayant ce rôle se verront automatiquement attribuer des postes pour "
+"les bons de commande contenant ce service."
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_search_inherit_sale_planning
+msgid "My Sales Orders"
+msgstr "Mes bons de commande"
+
+#. module: sale_planning
+#: model_terms:ir.actions.act_window,help:sale_planning.sale_planning_action_schedule_by_sale_order
+msgid "No shifts found. Let's create one!"
+msgstr "Aucun poste trouvé. Créons-en un !"
+
+#. module: sale_planning
+#: model:ir.model.constraint,message:sale_planning.constraint_planning_slot_check_datetimes_set_or_plannable_slot
+msgid ""
+"Only slots linked to a sale order with a plannable service can be "
+"unscheduled."
+msgstr ""
+"Seuls les créneaux liés à un bon de commande avec un service planifiable "
+"peuvent être déprogrammés."
+
+#. module: sale_planning
+#: model_terms:product.template,description:sale_planning.developer_product_product_template
+msgid "Our developer will help you to add new features to your Software."
+msgstr ""
+"Notre développeur vous aidera à ajouter de nouvelles fonctionnalités à votre"
+" logiciel."
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__sale_line_plannable
+#: model:ir.model.fields,field_description:sale_planning.field_product_product__planning_enabled
+#: model:ir.model.fields,field_description:sale_planning.field_product_template__planning_enabled
+msgid "Plan Services"
+msgstr "Planifier des services"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.product_template_form_view_invoice_policy_inherit_sale_planning
+msgid "Plan shifts for your orders for employees who have this role."
+msgstr ""
+"Planifier des postes pour vos commandes pour les employés qui ont ce rôle."
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/models/product.py:0
+#, python-format
+msgid ""
+"Plannable services should be a service product, product\n"
+"%s."
+msgstr ""
+"Les services planifiables doivent être un produit de service, un produit %s."
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/models/product.py:0
+#, python-format
+msgid "Plannable services should use an UoM within the %s category."
+msgstr ""
+"Les services panifiables devrait utiliser une unité de mesure qui se trouve "
+"dans la catégorie %s."
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_planning_analysis_report
+msgid "Planning Analysis Report"
+msgstr "Rapport d'analyse de la planification "
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order__planning_first_sale_line_id
+msgid "Planning First Sale Line"
+msgstr "Planification de la première ligne de vente"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order__planning_hours_planned
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order_line__planning_hours_planned
+msgid "Planning Hours Planned"
+msgstr "Heures planifiées dans le planning "
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order__planning_hours_to_plan
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order_line__planning_hours_to_plan
+msgid "Planning Hours To Plan"
+msgstr "Heures à planifier dans le planning "
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order__planning_initial_date
+msgid "Planning Initial Date"
+msgstr "Date initiale du planning"
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_planning_role
+#: model:ir.model.fields,field_description:sale_planning.field_product_product__planning_role_id
+#: model:ir.model.fields,field_description:sale_planning.field_product_template__planning_role_id
+msgid "Planning Role"
+msgstr "Rôle de planning"
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_planning_slot
+msgid "Planning Shift"
+msgstr "Poste du planning"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_sale_order_line__planning_slot_ids
+msgid "Planning Slot"
+msgstr "Créneau du planning"
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_product_template
+msgid "Product"
+msgstr "Produit"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_analysis_report__role_product_ids
+msgid "Role Product"
+msgstr "Rôle produit"
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_sale_order
+#: model:ir.model.fields,field_description:sale_planning.field_planning_analysis_report__sale_order_id
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__sale_order_id
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_search_inherit_sale_planning
+msgid "Sales Order"
+msgstr "Bon de commande"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_analysis_report__sale_line_id
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__sale_line_id
+#: model_terms:ir.ui.view,arch_db:sale_planning.open_slots_list_template
+#: model_terms:ir.ui.view,arch_db:sale_planning.period_report_template
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_slot_view_search_inherit_sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.resource_sale_planning
+msgid "Sales Order Item"
+msgstr "Article du bon de commande"
+
+#. module: sale_planning
+#: model:ir.model,name:sale_planning.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Ligne de commande"
+
+#. module: sale_planning
+#: model:ir.model.fields,help:sale_planning.field_planning_slot__sale_line_id
+msgid ""
+"Sales order item for which this shift will be performed. When sales orders "
+"are automatically planned, the remaining hours of the sales order item, as "
+"well as the role defined on the service, are taken into account."
+msgstr ""
+"Article de la commande pour lequel ce poste sera effectué. Lorsque les bons "
+"de commande sont automatiquement planifiés, les heures restantes de "
+"l'article de la commande, ainsi que le rôle défini sur le service sont "
+"prises en compte."
+
+#. module: sale_planning
+#: model:ir.actions.act_window,name:sale_planning.sale_planning_action_schedule_by_sale_order
+msgid "Schedule by Sales Order"
+msgstr "Planifier par bon de commande"
+
+#. module: sale_planning
+#: model_terms:ir.actions.act_window,help:sale_planning.sale_planning_action_schedule_by_sale_order
+msgid ""
+"Schedule your human and material resources across roles, projects and sales "
+"orders."
+msgstr ""
+"Planifiez vos ressources humaines et matérielles à travers des rôles, "
+"projets et commandes."
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_role__product_ids
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__role_product_ids
+msgid "Services"
+msgstr "Interventions"
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/controllers/main.py:0
+#, python-format
+msgid "Shift"
+msgstr "Poste"
+
+#. module: sale_planning
+#: model:ir.model.fields,field_description:sale_planning.field_planning_slot__start_datetime
+msgid "Start Date"
+msgstr "Date de début"
+
+#. module: sale_planning
+#: model_terms:product.template,description:sale_planning.technical_maintainance_product_product_template
+msgid "Take a rest. We'll do our best."
+msgstr "Reposez-vous. Nous ferons de notre mieux."
+
+#. module: sale_planning
+#. odoo-javascript
+#: code:addons/sale_planning/static/src/views/planning_hooks.js:0
+#, python-format
+msgid "The open shifts and sales orders have been successfully assigned."
+msgstr "Les postes et bons de commande ouverts ont été assignés avec succès."
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/models/planning_slot.py:0
+#, python-format
+msgid ""
+"This Sale Order Item doesn't have a target value of planned hours. Planned "
+"hours :"
+msgstr ""
+"Cet article de bon de commande n'a pas de valeur objective d'heures "
+"planifiées. Heures planifiées :"
+
+#. module: sale_planning
+#. odoo-javascript
+#: code:addons/sale_planning/static/src/views/sale_planning_gantt/sale_planning_gantt_renderer.js:0
+#, python-format
+msgid ""
+"This resource is not available for this shift during the selected period."
+msgstr ""
+"Cette ressource n'est pas disponible pour ce poste pendant la période "
+"sélectionnée."
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_view_form_in_gantt_inherit_sale_planning
+msgid "Unschedule"
+msgstr "Déprogrammer"
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/models/sale_order.py:0
+#, python-format
+msgid "View Planning"
+msgstr "Voir le planning"
+
+#. module: sale_planning
+#: model:planning.role,name:sale_planning.planning_role_planner
+msgid "Work Planner"
+msgstr "Planificateur de travaux"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.planning_role_view_tree_inherit_sale_planning
+msgid "e.g. Cleaning Services"
+msgstr "par ex. Services de nettoyage"
+
+#. module: sale_planning
+#: model_terms:ir.ui.view,arch_db:sale_planning.product_template_form_view_invoice_policy_inherit_sale_planning
+msgid "e.g. Consultant"
+msgstr "par ex. Consultant"
+
+#. module: sale_planning
+#. odoo-python
+#: code:addons/sale_planning/models/sale_order_line.py:0
+#, python-format
+msgid "remaining"
+msgstr "restant"

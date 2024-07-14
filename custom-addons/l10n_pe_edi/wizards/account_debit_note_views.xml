@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_debit_note" model="ir.ui.view">
+        <field name="name">account.debit.note.form</field>
+        <field name="model">account.debit.note</field>
+        <field name="inherit_id" ref="account_debit_note.view_account_debit_note"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='journal_id']" position="after">
+                <field name="country_code" invisible="1"/>
+                <field name="l10n_pe_edi_charge_reason" widget="selection" invisible="country_code != 'PE'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

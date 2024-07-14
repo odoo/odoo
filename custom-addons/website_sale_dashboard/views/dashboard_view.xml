@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_online_sales_graph" model="ir.ui.view">
+             <field name="name">sale.report.graph</field>
+             <field name="model">sale.report</field>
+             <field name="arch" type="xml">
+                 <graph string="Sales Analysis" type="line" sample="1" banner_route="/onboarding/website_sale_dashboard">
+                     <field name="date" interval="day"/>
+                     <field name="price_subtotal" type="measure"/>
+                 </graph>
+             </field>
+        </record>
+
+        <record id="view_online_sales_pivot" model="ir.ui.view">
+            <field name="name">sale.report.pivot</field>
+            <field name="model">sale.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Sales Analysis" display_quantity="1" sample="1">
+                    <field name="categ_id" type="row"/>
+                    <field name="order_reference" type="measure"/>
+                    <field name="price_subtotal" type="measure"/>
+                    <field name="price_total" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="sale_report_view_search_website_inherit" model="ir.ui.view">
+            <field name="name">sale.report.view.search.inherit</field>
+            <field name="model">sale.report</field>
+            <field name="inherit_id" ref="website_sale.sale_report_view_search_website"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="before">
+                    <field name="order_reference"/>
+                </xpath>
+
+                <xpath expr="//filter[@name='confirmed']" position="after">
+                    <filter string="Unpaid Orders" name="unpaid" domain="[('state', '=', 'sent')]"/>
+                    <filter string="Abandoned Carts" name="abandoned" domain="[('is_abandoned_cart', '=', True)]" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="sale_dashboard" model="ir.actions.act_window">
+            <field name="name">eCommerce Dashboard</field>
+            <field name="res_model">sale.report</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="domain">[('team_id.website_ids', '!=', False)]</field>
+            <field name="search_view_id" ref="website_sale.sale_report_view_search_website"/>
+            <field name="context">{
+                'search_default_confirmed': 1,
+                'search_default_filter_date': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p>
+            </field>
+        </record>
+
+            <record id="sale_dashboard_view_graph" model="ir.actions.act_window.view">
+                <field name="sequence" eval="10"/>
+                <field name="view_mode">graph</field>
+                <field name="view_id" ref="view_online_sales_graph"/>
+                <field name="act_window_id" ref="sale_dashboard"/>
+            </record>
+
+            <record id="sale_dashboard_view_pivot" model="ir.actions.act_window.view">
+                <field name="sequence" eval="20"/>
+                <field name="view_mode">pivot</field>
+                <field name="view_id" ref="view_online_sales_pivot"/>
+                <field name="act_window_id" ref="sale_dashboard"/>
+            </record>
+
+        <record id="website.menu_website_dashboard" model="ir.ui.menu">
+            <field name="active" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_salary_resume_view_search" model="ir.ui.view">
+        <field name="name">hr.contract.salary.resume.view.search</field>
+        <field name="model">hr.contract.salary.resume</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="value_type" string="Value Type"/>
+                <field name="structure_type_id" string="Structure Type"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_contract_salary_resume_action" model="ir.actions.act_window">
+        <field name="name">Resume</field>
+        <field name="res_model">hr.contract.salary.resume</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="hr_contract_salary_resume_view_search"/>
+    </record>
+
+    <record id="hr_contract_salary_resume_view_tree" model="ir.ui.view">
+        <field name="name">hr.contract.salary.resume.view.tree</field>
+        <field name="model">hr.contract.salary.resume</field>
+        <field name="arch" type="xml">
+            <tree string="Salary Package Personal Info" expand='1'>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="value_type"/>
+                <field name="structure_type_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_contract_salary_resume_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.salary.resume.view.form</field>
+        <field name="model">hr.contract.salary.resume</field>
+        <field name="arch" type="xml">
+            <form string="Salary Package Personal Info">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Information"/>
+                        <h1><field name="name" placeholder="e.g. Birthdate"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category_id"/>
+                            <field name="impacts_monthly_total"/>
+                            <field name="uom" required="1"/>
+                        </group>
+                        <group>
+                            <field name="structure_type_id"/>
+                        	<field name="value_type"/>
+                            <field name="benefit_ids" invisible="value_type != 'sum'" widget="many2many_tags"/>
+                            <field name="code" invisible="value_type not in ['payslip', 'contract']" required="value_type in ['payslip', 'contract']"/>
+                            <field name="fixed_value" invisible="value_type != 'fixed'"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <menuitem
+        id="salary_package_resume"
+        action="hr_contract_salary_resume_action"
+        parent="hr_contract_salary.salary_package_menu"
+        sequence="3"/>
+
+</odoo>

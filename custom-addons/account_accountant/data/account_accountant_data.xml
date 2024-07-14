@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Switch root menu "Invoicing" to "Accounting" -->
+        <!-- Top menu item -->
+        <menuitem name="Accounting"
+            id="menu_accounting"
+            groups="account.group_account_readonly,account.group_account_invoice"
+            web_icon="account_accountant,static/description/icon.png"
+            sequence="60"/>
+        <!-- move existing submenus to point to the new parent -->
+        <record id="account.menu_finance_receivables" model="ir.ui.menu">
+            <field name="parent_id" ref="menu_accounting"/>
+        </record>
+        <record id="account.menu_finance_payables" model="ir.ui.menu">
+            <field name="parent_id" ref="menu_accounting"/>
+        </record>
+        <record id="account.menu_finance_entries" model="ir.ui.menu">
+            <field name="parent_id" ref="menu_accounting"/>
+        </record>
+        <record id="account.menu_finance_reports" model="ir.ui.menu">
+            <field name="parent_id" ref="menu_accounting"/>
+        </record>
+        <record id="account.menu_finance_configuration" model="ir.ui.menu">
+            <field name="parent_id" ref="menu_accounting"/>
+        </record>
+        <record id="account.menu_board_journal_1" model="ir.ui.menu">
+            <field name="parent_id" ref="menu_accounting"/>
+        </record>
+
+        <menuitem id="account.menu_account_config" name="Settings" parent="account.menu_finance_configuration" sequence="0" groups="base.group_system"/>
+
+</odoo>

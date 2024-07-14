@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_country_form_new_codes" model="ir.ui.view">
+        <field name="name">view.country.form.new.codes</field>
+        <field name="model">res.country</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="base.view_country_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="l10n_ec_code_ats"/>
+                <field name="l10n_ec_code_tax_haven"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

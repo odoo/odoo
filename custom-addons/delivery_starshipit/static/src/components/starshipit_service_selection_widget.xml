@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="delivery_starshipit.StarshipitServiceWidget">
+        <div class="d-flex flex-column gap-1">
+            <div class="row">
+                <Dropdown t-if="available_services" class="'btn-group col-12'" togglerClass="'btn btn-primary'" showCaret="true">
+                    <t t-set-slot="toggler">
+                        <t t-out="activeService.carrier_name"/> - <t t-out="activeService.service_name"/>
+                    </t>
+                    <t t-foreach="available_services" t-as="service" t-key='service.service_code'>
+                        <DropdownItem onSelected="() => this._onSelected(service.service_code)"><t t-out="service.carrier_name"/> - <t t-out="service.service_name"/></DropdownItem>
+                    </t>
+                </Dropdown>
+            </div>
+        </div>
+    </t>
+</templates>

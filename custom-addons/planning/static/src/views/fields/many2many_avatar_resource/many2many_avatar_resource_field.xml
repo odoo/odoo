@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="planning.AvatarResourceMany2XAutocomplete" t-inherit="web.AvatarMany2XAutocomplete">
+        <xpath expr="//span[hasclass('o_avatar_many2x_autocomplete')]/img" position="attributes">
+            <attribute name="t-if"></attribute>
+            <attribute name="t-elif">option.value</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('o_avatar_many2x_autocomplete')]/img" position="before">
+            <i t-if="option.resourceType === 'material'" class="o_material_resource fa fa-wrench rounded text-center me-1"/>
+        </xpath>
+    </t>
+</templates>

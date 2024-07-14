@@ -1,0 +1,341 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* social_linkedin
+# 
+# Translators:
+# Wil Odoo, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: social_linkedin
+#: model_terms:ir.ui.view,arch_db:social_linkedin.linkedin_preview
+msgid "<b>LinkedIn Post</b>"
+msgstr "<b>Публікація LinkedIn</b>"
+
+#. module: social_linkedin
+#: model_terms:ir.ui.view,arch_db:social_linkedin.social_stream_post_view_kanban
+msgid "<i class=\"fa fa-comments me-1\" title=\"Comments\"/>"
+msgstr "<i class=\"fa fa-comments me-1\" title=\"Comments\"/>"
+
+#. module: social_linkedin
+#: model_terms:ir.ui.view,arch_db:social_linkedin.social_stream_post_view_kanban
+msgid "<i class=\"fa fa-thumbs-up me-1\" title=\"Likes\"/>"
+msgstr "<i class=\"fa fa-thumbs-up me-1\" title=\"Likes\"/>"
+
+#. module: social_linkedin
+#: model:ir.model.fields,field_description:social_linkedin.field_social_live_post__linkedin_post_id
+msgid "Actual LinkedIn ID of the post"
+msgstr "Фактичний ID LinkedIn публікації"
+
+#. module: social_linkedin
+#: code:addons/social_linkedin/models/social_account.py:0
+#, python-format
+msgid "An error occurred when fetching your pages data: %r."
+msgstr "Виникла помилка під час отримання даних ваших сторінок: %r."
+
+#. module: social_linkedin
+#: code:addons/social_linkedin/models/social_account.py:0
+#, python-format
+msgid "An error occurred when fetching your pages: %r."
+msgstr "Виникла помилка під час отримання даних ваших сторінок: %r."
+
+#. module: social_linkedin
+#: model:ir.model.fields,field_description:social_linkedin.field_res_config_settings__linkedin_app_id
+msgid "App ID"
+msgstr "ID додатка"
+
+#. module: social_linkedin
+#: model:ir.model.fields,field_description:social_linkedin.field_res_config_settings__linkedin_client_secret
+msgid "App Secret"
+msgstr "Секрет додатка"
+
+#. module: social_linkedin
+#. odoo-javascript
+#: code:addons/social_linkedin/static/src/xml/social_linkedin_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social_linkedin.social_stream_post_view_kanban
+#, python-format
+msgid "Author Image"
+msgstr "Зображення автора"
+
+#. module: social_linkedin
+#: model:ir.model.fields,help:social_linkedin.field_res_config_settings__linkedin_use_own_account
+msgid ""
+"Check this if you want to use your personal LinkedIn Developer Account "
+"instead of the provided one."
+msgstr ""
+"Позначте, якщо ви хочете використовувати свій особистий обліковий запис "
+"розробника LinkedIn замість наданого."
+
+#. module: social_linkedin
+#: model:ir.model,name:social_linkedin.model_res_config_settings
+msgid "Config Settings"
+msgstr "Налаштування"
+
+#. module: social_linkedin
+#: model:ir.model.fields,field_description:social_linkedin.field_social_post__display_linkedin_preview
+#: model:ir.model.fields,field_description:social_linkedin.field_social_post_template__display_linkedin_preview
+msgid "Display LinkedIn Preview"
+msgstr "Відображати попередній перегляд LinkedIn"
+
+#. module: social_linkedin
+#. odoo-javascript
+#: code:addons/social_linkedin/static/src/xml/social_linkedin_templates.xml:0
+#, python-format
+msgid "Likes"
+msgstr "Сподобалось"
+
+#. module: social_linkedin
+#: model:ir.model.fields.selection,name:social_linkedin.selection__social_media__media_type__linkedin
+#: model:social.media,name:social_linkedin.social_media_linkedin
+msgid "LinkedIn"
+msgstr "LinkedIn"
+
+#. module: social_linkedin
+#: model:ir.model.fields,field_description:social_linkedin.field_social_account__linkedin_account_id
+msgid "LinkedIn Account ID"
+msgstr "ID облікового запису LinkedIn"
+
+#. module: social_linkedin
+#: model:ir.model.fields,field_description:social_linkedin.field_social_account__linkedin_account_urn
+#: model:ir.model.fields,help:social_linkedin.field_social_account__linkedin_account_urn
+msgid "LinkedIn Account URN"
+msgstr "URN облікового запису LinkedIn"
+
+#. module: social_linkedin
+#. odoo-javascript
+#: code:addons/social_linkedin/static/src/js/stream_post_kanban_record.js:0
+#: model:ir.model.fields,field_description:social_linkedin.field_social_stream_post__linkedin_comments_count
+#, python-format
+msgid "LinkedIn Comments"
+msgstr "Коментарі LinkedIn"
+
+#. module: social_linkedin
+#: model:ir.model.fields,field_description:social_linkedin.field_social_stream_post__linkedin_likes_count
+msgid "LinkedIn Likes"
+msgstr "Лайки LinkedIn"
+
+#. module: social_linkedin
+#: model:ir.model.fields,field_description:social_linkedin.field_social_post__linkedin_preview
+#: model:ir.model.fields,field_description:social_linkedin.field_social_post_template__linkedin_preview
+msgid "LinkedIn Preview"
+msgstr "Попередній перегляд LinkedIn"
+
+#. module: social_linkedin
+#: model:ir.model.fields,field_description:social_linkedin.field_social_stream_post__linkedin_author_vanity_name
+msgid "LinkedIn Vanity Name"
+msgstr "Назва Vanity LinkedIn"
+
+#. module: social_linkedin
+#: model:ir.model.fields,field_description:social_linkedin.field_social_account__linkedin_access_token
+msgid "LinkedIn access token"
+msgstr "Токен доступу LinkedIn"
+
+#. module: social_linkedin
+#: model:ir.model.fields,field_description:social_linkedin.field_social_stream_post__linkedin_author_id
+msgid "LinkedIn author ID"
+msgstr "ID автора LinkedIn"
+
+#. module: social_linkedin
+#: model:ir.model.fields,field_description:social_linkedin.field_social_stream_post__linkedin_author_urn
+msgid "LinkedIn author URN"
+msgstr "URN автора LinkedIn"
+
+#. module: social_linkedin
+#: model:ir.model.fields,field_description:social_linkedin.field_social_stream_post__linkedin_author_image_url
+msgid "LinkedIn author image URL"
+msgstr "URL зображення автора LinkedIn"
+
+#. module: social_linkedin
+#. odoo-python
+#: code:addons/social_linkedin/controllers/main.py:0
+#, python-format
+msgid "LinkedIn did not provide a valid access token."
+msgstr "LinkedIn не надав дійсний токен доступу."
+
+#. module: social_linkedin
+#: model:ir.model.fields,field_description:social_linkedin.field_social_stream_post__linkedin_post_urn
+msgid "LinkedIn post URN"
+msgstr "URN публікації LinkedIn"
+
+#. module: social_linkedin
+#: model_terms:ir.ui.view,arch_db:social_linkedin.res_config_settings_view_form
+msgid "Linkedin Developer Account"
+msgstr "Обліковий запис розробника Linkedin"
+
+#. module: social_linkedin
+#: model:ir.model.fields,field_description:social_linkedin.field_social_media__media_type
+msgid "Media Type"
+msgstr "Тип медіа"
+
+#. module: social_linkedin
+#: model_terms:ir.ui.view,arch_db:social_linkedin.linkedin_preview
+msgid "Post Image"
+msgstr "Зображення публікації"
+
+#. module: social_linkedin
+#: model:social.stream.type,name:social_linkedin.stream_type_linkedin_company_post
+msgid "Posts"
+msgstr "Публікації"
+
+#. module: social_linkedin
+#. odoo-python
+#: code:addons/social_linkedin/models/social_account.py:0
+#, python-format
+msgid "Read More about Business Accounts"
+msgstr "Читати більше про Бізнес-акаунти"
+
+#. module: social_linkedin
+#: model:ir.model,name:social_linkedin.model_social_account
+msgid "Social Account"
+msgstr "Обліковий запис соцмереж"
+
+#. module: social_linkedin
+#: model:ir.model,name:social_linkedin.model_social_live_post
+msgid "Social Live Post"
+msgstr "Онлайн-публікація соцмереж"
+
+#. module: social_linkedin
+#: model:ir.model,name:social_linkedin.model_social_media
+msgid "Social Media"
+msgstr "Соціальні мережі"
+
+#. module: social_linkedin
+#: model:ir.model,name:social_linkedin.model_social_post
+msgid "Social Post"
+msgstr "Публікація в соцмережах"
+
+#. module: social_linkedin
+#: model:ir.model,name:social_linkedin.model_social_post_template
+msgid "Social Post Template"
+msgstr "Шаблон публікації соцмереж"
+
+#. module: social_linkedin
+#: model:ir.model,name:social_linkedin.model_social_stream
+msgid "Social Stream"
+msgstr "Пряма трансляція у соціальних мережах"
+
+#. module: social_linkedin
+#: model:ir.model,name:social_linkedin.model_social_stream_post
+msgid "Social Stream Post"
+msgstr "Публікація трансляції соцмереж"
+
+#. module: social_linkedin
+#: model:ir.model.fields,help:social_linkedin.field_social_account__linkedin_access_token
+msgid "The access token is used to perform request to the REST API"
+msgstr "Токен доступу використовується для виконання запиту на REST API"
+
+#. module: social_linkedin
+#. odoo-python
+#: code:addons/social_linkedin/models/social_media.py:0
+#, python-format
+msgid ""
+"The url that this service requested returned an error. Please contact the "
+"author of the app."
+msgstr ""
+"Url-адреса, яку запитує ця послуга, повертає помилку. Зв'яжіться з автором "
+"модуля."
+
+#. module: social_linkedin
+#. odoo-python
+#: code:addons/social_linkedin/controllers/main.py:0
+#, python-format
+msgid "There was a authentication issue during your request."
+msgstr "Під час вашого запиту виникла проблема з автентифікацією."
+
+#. module: social_linkedin
+#. odoo-python
+#: code:addons/social_linkedin/controllers/main.py:0
+#, python-format
+msgid "Unauthorized. Please contact your administrator."
+msgstr "Неавторизовано. Зв'яжіться з вашим адміністратором."
+
+#. module: social_linkedin
+#: code:addons/social_linkedin/models/social_stream_post.py:0
+#, python-format
+msgid "Unknown"
+msgstr "Невідомо"
+
+#. module: social_linkedin
+#: model:ir.model.fields,field_description:social_linkedin.field_res_config_settings__linkedin_use_own_account
+msgid "Use your own LinkedIn Account"
+msgstr "Використовуйте ваш власний обліковий запис LinkedIn"
+
+#. module: social_linkedin
+#: model:ir.model.fields,help:social_linkedin.field_social_media__media_type
+msgid ""
+"Used to make comparisons when we need to restrict some features to a "
+"specific media ('facebook', 'twitter', ...)."
+msgstr ""
+"Використовується для порівняння, коли нам потрібно обмежити деякі функції "
+"певним медіа ('facebook', 'twitter', ...)."
+
+#. module: social_linkedin
+#: model:ir.model.fields,help:social_linkedin.field_social_stream_post__linkedin_author_vanity_name
+msgid "Vanity name, used to generate a link to the author"
+msgstr "Назва Vanity використовується для створення посилань на автора"
+
+#. module: social_linkedin
+#. odoo-python
+#: code:addons/social_linkedin/models/social_live_post.py:0
+#, python-format
+msgid ""
+"We could not upload your image, try reducing its size and posting it again "
+"(error: Failed during upload registering)."
+msgstr ""
+"Нам не вдалося завантажити ваше зображення, спробуйте зменшити його розмір "
+"та опублікувати знову (помилка: помилка під час реєстрації завантаження)."
+
+#. module: social_linkedin
+#. odoo-python
+#: code:addons/social_linkedin/models/social_live_post.py:0
+#, python-format
+msgid ""
+"We could not upload your image, try reducing its size and posting it again."
+msgstr ""
+"Нам не вдалося завантажити ваше зображення, спробуйте зменшити його розмір і"
+" опублікувати знову."
+
+#. module: social_linkedin
+#. odoo-python
+#: code:addons/social_linkedin/models/social_stream.py:0
+#, python-format
+msgid "Wrong stream type for \"%s\""
+msgstr "Невірний тип трансляції для \"%s\""
+
+#. module: social_linkedin
+#. odoo-python
+#: code:addons/social_linkedin/models/social_media.py:0
+#, python-format
+msgid "You don't have an active subscription. Please buy one here: %s"
+msgstr "У вас немає активної підписки. Купіть її тут: %s"
+
+#. module: social_linkedin
+#. odoo-python
+#: code:addons/social_linkedin/models/social_account.py:0
+#, python-format
+msgid ""
+"You need a Business Account to post on LinkedIn with Odoo Social.\n"
+" Please create one and make sure it is linked to your account"
+msgstr ""
+"Вам потрібен бізнес-акаунт для публікацій в LinkedIn через модуль Соцмереж Odoo.\n"
+"Створіть його та переконайтеся, що він пов’язаний із вашим обліковим записом"
+
+#. module: social_linkedin
+#. odoo-python
+#: code:addons/social_linkedin/models/social_live_post.py:0
+#, python-format
+msgid "unknown"
+msgstr "невідомо"

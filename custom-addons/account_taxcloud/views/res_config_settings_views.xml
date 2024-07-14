@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account.taxcloud</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="taxcloud_settings" position="inside">
+                <div class="content-group" invisible="not module_account_taxcloud">
+                    <div class="row mt16">
+                        <label string="API ID" for="taxcloud_api_id" class="col-lg-3 o_light_label"/>
+                        <field name="taxcloud_api_id" class="oe_inline"/>
+                    </div>
+                    <div class="row">
+                        <label string="API KEY" for="taxcloud_api_key" class="col-lg-3 o_light_label" />
+                        <field name="taxcloud_api_key" class="oe_inline"/>
+                    </div>
+                    <div class="mt8 row">
+                        <label string="Default Category" for="tic_category_id" class="col-lg-3 o_light_label"/>
+                        <field name="tic_category_id" class="oe_inline"/>
+                        <button name="sync_taxcloud_category" type="object" class="col-lg-auto btn-link">
+                            <i title="Import/update TICs from TaxCloud" role="img" aria-label="Import/update TICs from TaxCloud" class="fa fa-refresh fa-fw"/>
+                        </button>
+                    </div>
+                    <div class="mt16" invisible="taxcloud_api_id != '' and taxcloud_api_key != ''">
+                        <a href="https://www.odoo.com/documentation/17.0/applications/finance/accounting/taxation/taxes/taxcloud.html" target="_new">
+                            <i class="oi oi-fw oi-arrow-right"/>How to Get Credentials</a>
+                    </div>
+                </div>
+            </setting>
+        </field>
+    </record>
+
+</odoo>

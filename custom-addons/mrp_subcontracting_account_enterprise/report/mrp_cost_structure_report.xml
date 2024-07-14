@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="mrp_cost_structure_subcontracting" inherit_id="mrp_account_enterprise.mrp_cost_structure">
+        <xpath expr="//t[@name='operations']" position="after">
+            <t t-if="line.get('subcontracting')">
+                <h3 class="o_mrp_header o_mrp_table_header">Cost of Subcontracting</h3>
+                <table class="table table-sm o_mrp_report_table">
+                    <thead>
+                        <tr class="o_mrp_report_header">
+                            <th class="o_mrp_report_line_header"><span>Subcontractor</span></th>
+                            <th class="text-end o_mrp_report_line_header"><span>Quantity</span></th>
+                            <th class="text-end o_mrp_report_line_header"><span>Unit Cost</span></th>
+                            <th class="text-end o_mrp_report_line_header"><span>Total Cost</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="line['subcontracting']" t-as="row" class="text-muted">
+                            <td>
+                                <span t-esc="row['partner_name']"/>
+                            </td>
+                            <td class="text-end">
+                                <span t-esc="row['qty']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                                <span t-esc="row['uom'].name"/>
+                            </td>
+                            <td class="text-end">
+                                <span t-esc="row['unit_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            </td>
+                            <td class="text-end">
+                                <span t-esc="row['cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-end">
+                                <strong>Total Cost of Subcontracting</strong>
+                            </td>
+                            <td class="text-end">
+                                <strong t-esc="line['subcontracting_total_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            </td>
+                        </tr>
+                        <tr t-if="not line['qty_by_byproduct_w_costshare'] and line['mo_qty'] &gt; 1">
+                            <td colspan="3" class="text-end">
+                                <strong>Cost of Subcontracting per unit (in <t t-esc="line['product'].uom_id.name"/>)</strong>
+                            </td>
+                            <td class="text-end">
+                                <span t-esc="line['subcontracting_total_cost'] / line['subcontracting_total_qty']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+        </xpath>
+    </template>
+</odoo>

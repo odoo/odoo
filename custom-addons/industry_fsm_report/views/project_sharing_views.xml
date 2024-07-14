@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_sharing_project_task_view_search" model="ir.ui.view">
+        <field name="name">project.task.search.form</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_search"/>
+        <field name="arch" type="xml">
+            <field name="worksheet_template_id" position="replace"/>
+            <filter name="groupby_worksheet_template" position="replace"/>
+        </field>
+    </record>
+
+</odoo>

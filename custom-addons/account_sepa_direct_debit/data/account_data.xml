@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data noupdate="1">
+        <record id="sdd_mt_invoice_paid_with_mandate" model="mail.message.subtype">
+            <field name="name">Paid via direct debit</field>
+            <field name="res_model">account.move</field>
+            <field name="default" eval="False"/>
+            <field name="description">Invoice paid via direct debit.</field>
+        </record>
+    </data>
+</odoo>

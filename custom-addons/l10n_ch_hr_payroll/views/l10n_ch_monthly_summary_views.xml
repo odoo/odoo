@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ch_monthly_summary_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.monthly.summary.view.form</field>
+        <field name="model">l10n.ch.monthly.summary</field>
+        <field name="arch" type="xml">
+            <form string="Monthly Summary">
+                <header>
+                    <button name="action_generate_pdf" string="Create PDF" type="object" class="btn-primary"
+                        invisible="monthly_summary_pdf_filename"/>
+                    <button name="action_generate_xls" string="Create XLSX" type="object" class="btn-primary"
+                        invisible="monthly_summary_xls_filename"/>
+                    <button name="action_generate_pdf" string="Create PDF" type="object"
+                        invisible="not monthly_summary_pdf_filename"/>
+                    <button name="action_generate_xls" string="Create XLSX" type="object"
+                        invisible="not monthly_summary_xls_filename"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="year" class="o_hr_narrow_field" options="{'type': 'number'}"/>
+                            <field name="month" class="o_hr_narrow_field"/>
+                            <field name="aggregation_type"/>
+                            <label for="date_start" string="Reference Period" invisible="1"/>
+                            <div invisible="1">
+                                From<field name="date_start" class="oe_inline col-sm-5"/>
+                                to<field name="date_end" class="oe_inline col-sm-5"/>
+                            </div>
+                            <field name="company_ids" groups="base.group_multi_company" widget="many2many_tags"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="monthly_summary_pdf_filename" invisible="1"/>
+                            <field name="monthly_summary_xls_filename" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Generation Complete" invisible="not monthly_summary_pdf_file and not monthly_summary_xls_file">
+                        <p colspan="4" invisible="not monthly_summary_pdf_file">
+                            Download the Monthly Summary PDF file: <field name="monthly_summary_pdf_file" readonly="1" filename="monthly_summary_pdf_filename"/>
+                        </p>
+                        <p colspan="4" invisible="not monthly_summary_xls_file" class="oe_inline" name="monthly_summary_xls_file">
+                            Download the Monthly Summary XLSX file: <field name="monthly_summary_xls_file" readonly="1" filename="monthly_summary_xls_filename"/>
+                        </p>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_ch_monthly_summary_view_tree" model="ir.ui.view">
+        <field name="name">l10n.ch.monthly.summary.view.tree</field>
+        <field name="model">l10n.ch.monthly.summary</field>
+        <field name="arch" type="xml">
+            <tree string="Monthly Summary">
+                <field name="month"/>
+                <field name="year"/>
+                <field name="date_start" invisible="1"/>
+                <field name="date_end" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_ch_monthly_summary_action" model="ir.actions.act_window">
+        <field name="name">Monthly Summary</field>
+        <field name="res_model">l10n.ch.monthly.summary</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

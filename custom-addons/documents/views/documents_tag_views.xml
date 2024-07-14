@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="tag_view_form" model="ir.ui.view">
+        <field name="name">tag form view</field>
+        <field name="model">documents.tag</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Tag Name"/>
+                        <h1><field name="name" placeholder="e.g. To Validate"/></h1>
+                    </div>
+                    <group>
+                        <field name="facet_id" string="Category"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button class="btn btn-primary" special="save" data-hotkey="q">Save</button>
+                    <button class="btn btn-secondary" special="cancel" data-hotkey="x">Discard</button>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="tag_view_search" model="ir.ui.view">
+        <field name="name">tag search</field>
+        <field name="model">documents.tag</field>
+        <field name="arch" type="xml">
+        <search>
+            <field name="name" string="Tag"/>
+            <field name="facet_id"/>
+         </search>
+        </field>
+    </record>
+</odoo>

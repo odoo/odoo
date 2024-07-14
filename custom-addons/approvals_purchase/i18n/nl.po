@@ -1,0 +1,144 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* approvals_purchase
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,help:approvals_purchase.field_approval_category__approval_type
+msgid ""
+"Allows you to define which documents you would like to create once the "
+"request has been approved"
+msgstr ""
+"Hiermee kun je bepalen welke documenten je wilt maken nadat de aanvraag is "
+"goedgekeurd"
+
+#. module: approvals_purchase
+#: model:ir.model,name:approvals_purchase.model_approval_category
+msgid "Approval Category"
+msgstr "Goedkeuringscategorie"
+
+#. module: approvals_purchase
+#: model:ir.model,name:approvals_purchase.model_approval_request
+msgid "Approval Request"
+msgstr "Goedkeuringsaanvraag"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_category__approval_type
+msgid "Approval Type"
+msgstr "Goedkeuringssoort"
+
+#. module: approvals_purchase
+#: model:approval.category,name:approvals_purchase.approval_category_data_rfq
+#: model:ir.model.fields.selection,name:approvals_purchase.selection__approval_category__approval_type__purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.approval_purchase_request_view_form_inherit
+msgid "Create RFQ's"
+msgstr "Maak offertaanvragen"
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid "Exception occurred: the Approval Request"
+msgstr "Uitzondering opgetreden: de goedkeuringsaanvraag"
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid "Exception(s):"
+msgstr "Foutmelding(en):"
+
+#. module: approvals_purchase
+#. odoo-python
+#: code:addons/approvals_purchase/models/approval_product_line.py:0
+#, python-format
+msgid "Please set a vendor on product(s) %s."
+msgstr "Je dient een leverancier in te stellen op de product(en) %s."
+
+#. module: approvals_purchase
+#: model:ir.model,name:approvals_purchase.model_approval_product_line
+msgid "Product Line"
+msgstr "Productregel"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_product_line__product_id
+msgid "Products"
+msgstr "Producten"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_request__purchase_order_count
+msgid "Purchase Order Count"
+msgstr "Inkooporder aantal"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_product_line__purchase_order_line_id
+msgid "Purchase Order Line"
+msgstr "Inkooporderregel"
+
+#. module: approvals_purchase
+#. odoo-python
+#: code:addons/approvals_purchase/models/approval_request.py:0
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.approval_purchase_request_view_form_inherit
+#, python-format
+msgid "Purchase Orders"
+msgstr "Inkooporders"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_product_line__po_uom_qty
+msgid "Purchase UoM Quantity"
+msgstr "Inkoopmaateenheid hoeveelheid"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,help:approvals_purchase.field_approval_product_line__po_uom_qty
+msgid ""
+"The quantity converted into the UoM used by the product in Purchase Order."
+msgstr ""
+"De hoeveelheid die is geconverteerd naar de maateenheid die door het product"
+" in de inkooporder wordt gebruikt."
+
+#. module: approvals_purchase
+#. odoo-python
+#: code:addons/approvals_purchase/models/approval_request.py:0
+#, python-format
+msgid "You cannot create an empty purchase request."
+msgstr "Je kunt geen lege inkoopaanvraag aanmaken."
+
+#. module: approvals_purchase
+#. odoo-python
+#: code:addons/approvals_purchase/models/approval_request.py:0
+#, python-format
+msgid "You must select a product for each line of requested products."
+msgstr ""
+"Je moet een product selecteren voor elke regel voor de aangevraagde "
+"producten."
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid "cancelled"
+msgstr "geannuleerd"
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid ""
+"has been canceled.\n"
+"            Manual actions may be needed."
+msgstr ""
+"is geannuleerd.\n"
+"Handmatige acties zijn mogelijk nodig."
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid "of"
+msgstr "of"

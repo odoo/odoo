@@ -1,0 +1,15 @@
+<templates>
+
+<t t-name="web_studio.ViewEditor.InteractiveEditorProperties.Label">
+    <Property
+        name="'string'"
+        type="'string'"
+        value="this.props.node.attrs.string"
+        onChange.bind="onChangeAttribute"
+    >
+        <t t-esc="'Label'" />
+    </Property>
+    <SidebarPropertiesToolbox />
+</t>
+
+</templates>

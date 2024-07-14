@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_consolidation.ConsolidationReportLine" t-inherit="account_reports.AccountReportLineCustomizable">
+        <xpath expr="//tr" position="replace">
+            <tr>
+                <!-- Name column -->
+                <t t-component="env.component('AccountReportLineName')" t-props="{ lineIndex: props.lineIndex, line: props.line }"/>
+
+                <!-- Value columns -->
+                <t t-foreach="props.line.columns" t-as="cell" t-key="cell_index">
+                    <td>
+                         <t t-component="env.component('AccountReportLineCell')" t-props="{ line: props.line, cell: cell }"/>
+                    </td>
+                </t>
+            </tr>
+        </xpath>
+    </t>
+</templates>

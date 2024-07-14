@@ -1,0 +1,474 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_sale_renting
+# 
+# Translators:
+# Ali Reza Feizi Derakhshi, 2023
+# Hamed Mohammadi <hamed@dehongi.com>, 2023
+# F Hariri <fhari1234@gmail.com>, 2023
+# Hamid Darabi, 2023
+# Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2023
+# Martin Trigaux, 2024
+# Hanna Kheradroosta, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:12+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Hanna Kheradroosta, 2024\n"
+"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+#, python-format
+msgid ""
+"\n"
+"                The new period is not valid for some products of your cart.\n"
+"                Your changes on the rental period are not taken into account.\n"
+"            "
+msgstr ""
+"\n"
+"                دوره جدید برای برخی از محصولات سبد خرید شما معتبر نیست.\n"
+"                تغییرات شما در مدت اجاره در نظر گرفته نمی شود.\n"
+"           "
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+#, python-format
+msgid ""
+"\n"
+"                Your rental duration was too short. Unfortunately, we do not process\n"
+"                rentals that last less than %(duration)s %(unit)s.\n"
+"            "
+msgstr ""
+"\n"
+"                مدت اجاره شما خیلی کوتاه بود. متأسفانه، اجاره‌هایی که کمتر از\n"
+"                 %(duration)s %(unit)s هستند را پردازش نمی‌کنیم.\n"
+"          "
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+#, python-format
+msgid ""
+"\n"
+"                Your rental product had invalid date of pickup (%(start_date)s).\n"
+"                Unfortunately, we do not process pickups on that weekday.\n"
+"            "
+msgstr ""
+"\n"
+"                محصول اجاره‌ای شما تاریخ تحویل نامعتبر داشت (%(start_date)s).\n"
+"                 متأسفانه، ما در آن روز هفته تحویل ها را پردازش نمی کنیم.\n"
+"            "
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+#, python-format
+msgid ""
+"\n"
+"                Your rental product had invalid date of return (%(end_date)s).\n"
+"                Unfortunately, we do not process returns on that weekday.\n"
+"            "
+msgstr ""
+"\n"
+"                محصول اجاره‌ای شما تاریخ برگشت نامعتبر داشت (%(end_date)s).\n"
+"                 متأسفانه، ما در آن روز هفته، بازگشت را پردازش نمی کنیم.\n"
+"            "
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+#, python-format
+msgid ""
+"\n"
+"                Your rental product had invalid dates of pickup (%(start_date)s) and\n"
+"                return (%(end_date)s). Unfortunately, we do not process pickups nor\n"
+"                returns on those weekdays.\n"
+"            "
+msgstr ""
+"\n"
+"                محصول اجاره‌ای شما تاریخ‌های تحویل (%(start_date)s) و \n"
+"                بازگشت (%(end_date)s) نامعتبر داشت. متأسفانه، ما در آن روزهای کاری\n"
+"                تحویل و بازگشت را پردازش نمی کنیم.\n"
+"       "
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+#, python-format
+msgid ""
+"\n"
+"            Some of your rental products (%(product)s) cannot be rented during the\n"
+"            selected period and your cart must be updated. We're sorry for the\n"
+"            inconvenience.\n"
+"        "
+msgstr ""
+"\n"
+"            برخی از محصولات اجاره ای شما (%(product)s) در طول دوره انتخابی\n"
+"            قابل اجاره نیستند و سبد خرید شما باید به روز شود. از شما عذرخواهی می کنیم.\n"
+"         "
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+#, python-format
+msgid "(%s days)."
+msgstr ""
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+#, python-format
+msgid "(%s hours)."
+msgstr ""
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+#, python-format
+msgid "(%s months)."
+msgstr ""
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+#, python-format
+msgid "(%s weeks)."
+msgstr ""
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search_options
+msgid ", .s_rental_search"
+msgstr ""
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.o_wsale_offcanvas
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.products
+msgid "<b>Rental Period</b>"
+msgstr "<b>دوره اجاره</b>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_search_result_price
+msgid "<small>from</small>"
+msgstr "<small>از</small>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_search_result_price
+msgid "<small>per</small>"
+msgstr "<small>به ازای</small>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.price_dynamic_filter_template_product_product
+msgid "<span>/</span>"
+msgstr ""
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.products_item
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_products_price
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.suggested_products_list
+msgid "<span>per</span>"
+msgstr "<span>به ازای</span>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_product
+msgid "<strong class=\"attribute_name\">Rental Period</strong>"
+msgstr "<strong class=\"attribute_name\">دوره اجاره</strong>"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_product
+msgid "<u class=\"h5\">Pricing</u>"
+msgstr "<u class=\"h5\">قیمت گذاری</u>"
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/snippets/s_rental_search/options.js:0
+#, python-format
+msgid "All"
+msgstr "همه"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.cart
+msgid "Applies to all rented items"
+msgstr "برای تمام اقلام اجاره ای اعمال می شود"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search_options
+msgid "Attribute Filter"
+msgstr "فیلتر ویژگی"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_res_company
+msgid "Companies"
+msgstr "شرکت‌ها"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_res_config_settings
+msgid "Config Settings"
+msgstr "تنظیمات پیکربندی"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.snippet_options
+msgid "Datepicker"
+msgstr "انتخاب تاریخ"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search_options
+msgid "Day"
+msgstr "روز"
+
+#. module: website_sale_renting
+#: model:ir.model.fields.selection,name:website_sale_renting.selection__res_company__renting_minimal_time_unit__day
+msgid "Days"
+msgstr "روز"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form
+msgid "Days during which pickup and return are not possible."
+msgstr "روزهایی که امکان تحویل و بازگشت وجود ندارد."
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_fri
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_fri
+msgid "Friday"
+msgstr "جمعه"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.price_dynamic_filter_template_product_product
+msgid "From"
+msgstr "از"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search_options
+msgid "Hour"
+msgstr "ساعت"
+
+#. module: website_sale_renting
+#: model:ir.model.fields.selection,name:website_sale_renting.selection__res_company__renting_minimal_time_unit__hour
+msgid "Hours"
+msgstr "ساعت"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_minimal_time_duration
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_minimal_time_duration
+msgid "Minimal Rental Duration"
+msgstr "حداقل مدت اجاره"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_minimal_time_unit
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_minimal_time_unit
+msgid "Minimal Rental Duration Unit"
+msgstr "واحد حداقل مدت اجاره"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form
+msgid "Minimal duration between pickup and return."
+msgstr "حداقل مدت زمان بین تحویل و بازگشت"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form
+msgid "Minimal time of rental"
+msgstr "حداقل زمان اجاره"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_mon
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_mon
+msgid "Monday"
+msgstr "دوشنبه"
+
+#. module: website_sale_renting
+#: model:ir.model.fields.selection,name:website_sale_renting.selection__res_company__renting_minimal_time_unit__month
+msgid "Months"
+msgstr "ماه"
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/product_template.py:0
+#, python-format
+msgid "Please choose a return date that is after the pickup date."
+msgstr "لطفاً تاریخ بازگشتی را انتخاب کنید که بعد از تاریخ تحویل باشد."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+#, python-format
+msgid "Please select a rental period."
+msgstr "لطفا یک دوره اجاره را انتخاب کنید."
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_product_pricelist
+msgid "Pricelist"
+msgstr "لیست قیمت"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_product_template
+msgid "Product"
+msgstr "محصول"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_product_product
+msgid "Product Variant"
+msgstr "گونه محصول"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form
+msgid "Rent Online"
+msgstr "اجاره آنلاین"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.cart_summary
+msgid "Rental Period"
+msgstr "دوره اجاره"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.snippets
+msgid "Rental Search"
+msgstr "جستجوی اجاره"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.cart
+msgid "Rental period"
+msgstr "دوره اجاره"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_sale_order
+msgid "Sales Order"
+msgstr "سفارش فروش"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "سطر سفارش‌فروش"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_sat
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_sat
+msgid "Saturday"
+msgstr "شنبه"
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+#, python-format
+msgid ""
+"Some of your rental products cannot be rented during the selected period and"
+" your cart must be updated. We're sorry for the inconvenience."
+msgstr ""
+"برخی از محصولات اجاره ای شما در مدت انتخاب شده قابل اجاره نیستند و سبد خرید "
+"شما باید به روز شود. از شما عذرخواهی می کنیم."
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_sun
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_sun
+msgid "Sunday"
+msgstr "1‌شنبه"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.datepicker
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_product
+msgid ""
+"The period must be the same for all products of your cart.\n"
+"You must change the period on your cart or create different orders if you want different periods."
+msgstr ""
+"دوره باید برای همه محصولات سبد خرید شما یکسان باشد.\n"
+"اگر دوره های متفاوتی می خواهید، باید دوره را در سبد خرید خود تغییر دهید یا سفارش های متفاوتی ایجاد کنید."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+#, python-format
+msgid "The pickup date cannot be in the past."
+msgstr "تاریخ تحویل نمی تواند در گذشته باشد."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+#, python-format
+msgid "The rental lasts less than the minimal rental duration %s"
+msgstr "مدت اجاره کمتر از حداقل مدت اجاره %s است"
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+#, python-format
+msgid "The return date should be after the pickup date."
+msgstr "تاریخ بازگشت باید بعد از تاریخ تحویل باشد."
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_thu
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_thu
+msgid "Thursday"
+msgstr "5شنبه"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.s_rental_search_options
+msgid "Timing"
+msgstr "زمان سنجی"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.rental_product
+msgid "Total"
+msgstr "مجموع"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_tue
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_tue
+msgid "Tuesday"
+msgstr "3‌شنبه"
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.res_config_settings_view_form
+msgid "Unavailability days"
+msgstr "روزهای در دسترس نبودن"
+
+#. module: website_sale_renting
+#: model:ir.model,name:website_sale_renting.model_website
+msgid "Website"
+msgstr "تارنما"
+
+#. module: website_sale_renting
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_company__renting_forbidden_wed
+#: model:ir.model.fields,field_description:website_sale_renting.field_res_config_settings__renting_forbidden_wed
+msgid "Wednesday"
+msgstr "4شنبه"
+
+#. module: website_sale_renting
+#: model:ir.model.fields.selection,name:website_sale_renting.selection__res_company__renting_minimal_time_unit__week
+msgid "Weeks"
+msgstr "هفته"
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+#, python-format
+msgid "You cannot pick up your rental on that day of the week."
+msgstr "شما نمی توانید محصول اجاره ای خود را در آن روز هفته تحویل بگیرید."
+
+#. module: website_sale_renting
+#. odoo-javascript
+#: code:addons/website_sale_renting/static/src/js/renting_mixin.js:0
+#, python-format
+msgid "You cannot return your rental on that day of the week."
+msgstr "شما نمی توانید محصول اجاره ای خود را در آن روز هفته بازگردانید."
+
+#. module: website_sale_renting
+#. odoo-python
+#: code:addons/website_sale_renting/models/sale_order.py:0
+#, python-format
+msgid "Your rental product cannot be pickedup in the past."
+msgstr "محصول اجاره ای شما را نمی توان در گذشته تحویل گرفت."
+
+#. module: website_sale_renting
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.products_item
+#: model_terms:ir.ui.view,arch_db:website_sale_renting.suggested_products_list
+msgid "from"
+msgstr "از"

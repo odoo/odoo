@@ -1,0 +1,27 @@
+.o_web_studio_xml_editor:not(.btn) {
+    background: $o-web-studio-bg-dark;
+    width: min-content;
+
+    .o_web_studio_code_editor {
+        height: 100%;
+    }
+
+    .o_web_studio_xml_resource_selector {
+        background-color: $o-web-studio-bg-medium;
+        display: grid;
+        grid-template-columns: auto min-content min-content;
+        column-gap: 10px;
+    }
+
+    .o_web_studio_code_editor,
+    .o_web_studio_code_editor_info {
+        background: $o-web-studio-bg-dark;
+    }
+
+    .o_web_studio_code_editor .ace_gutter {
+        background: $o-web-studio-bg-darker;
+    }
+    .o_web_studio_code_editor {
+        height: 100%;
+    }
+}

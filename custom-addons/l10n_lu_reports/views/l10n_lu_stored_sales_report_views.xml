@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="l10n_lu_stored_intra_report_view_tree" model="ir.ui.view">
+        <field name="name">l10n_lu.stored.intra.report.view.tree</field>
+        <field name="model">l10n_lu.stored.intra.report</field>
+        <field name="arch" type="xml">
+            <tree string="Reports" create="false">
+                <field name="attachment_id" string="Attachment" widget="Many2onebutton"/>
+                <field name="year"/>
+                <field name="period"/>
+                <field name="codes"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_l10n_lu_stored_intra_report" model="ir.actions.act_window">
+        <field name="name">EC Sales - Stored Reports</field>
+        <field name="res_model">l10n_lu.stored.intra.report</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="l10n_lu_stored_intra_report_view_tree"/>
+    </record>
+    <menuitem id="menu_action_l10n_lu_stored_intra_report" name="EC Sales - Stored Reports" action="action_l10n_lu_stored_intra_report" parent="l10n_lu.account_reports_lu_statements_menu" groups="base.group_no_one"/>
+</odoo>

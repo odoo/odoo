@@ -1,0 +1,81 @@
+<odoo>
+    <!-- Quality Control From Manufacturing -->
+    
+    <!-- For [FURN_9666] Table-->
+    <record id="quality_point_register_serial_production" model="quality.point">
+        <field name="product_ids" eval="[(4, ref('mrp.product_product_computer_desk'))]"/>
+        <field name="picking_type_ids" model="stock.warehouse" eval="[(4, obj().env.ref('stock.warehouse0').manu_type_id.id)]"/>
+        <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
+        <field name="test_type_id" ref="mrp_workorder.test_type_register_production"/>
+        <field name="note">Generate a new Serial Number for the assembled product.</field>
+        <field name="title">Generate Serial Number</field>
+        <field name="worksheet_page">0</field>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="quality_point_component_registration" model="quality.point">
+        <field name="product_ids" eval="[(4, ref('mrp.product_product_computer_desk'))]"/>
+        <field name="picking_type_ids" model="stock.warehouse" eval="[(4, obj().env.ref('stock.warehouse0').manu_type_id.id)]"/>
+        <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
+        <field name="test_type_id" ref="mrp_workorder.test_type_register_consumed_materials"/>
+        <field name="note">Please enter the table head serial number.</field>
+        <field name="title">Component Registration: Table Head</field>
+        <field name="component_id" ref="mrp.product_product_computer_desk_head"/>
+        <field name="worksheet_page">1</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="quality_point_instructions" model="quality.point">
+        <field name="product_ids" eval="[(4, ref('mrp.product_product_computer_desk'))]"/>
+        <field name="picking_type_ids" model="stock.warehouse" eval="[(4, obj().env.ref('stock.warehouse0').manu_type_id.id)]"/>
+        <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
+        <field name="test_type_id" ref="quality.test_type_instructions"/>
+        <field name="note">Please ensure you are using the new SRX679 screwdriver.</field>
+        <field name="title">Choice of screwdriver</field>
+        <field name="worksheet_page">1</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="quality_point_component_registration_2" model="quality.point">
+        <field name="product_ids" eval="[(4, ref('mrp.product_product_computer_desk'))]"/>
+        <field name="picking_type_ids" model="stock.warehouse" eval="[(4, obj().env.ref('stock.warehouse0').manu_type_id.id)]"/>
+        <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
+        <field name="test_type_id" ref="mrp_workorder.test_type_register_consumed_materials"/>
+        <field name="note">Please encode the table legs lot number(s).</field>
+        <field name="title">Component Registration: Table Legs</field>
+        <field name="component_id" ref="mrp.product_product_computer_desk_leg"/>
+        <field name="worksheet_page">4</field>
+        <field name="sequence">70</field>
+    </record>
+
+    <record id="quality_point_register_production" model="quality.point">
+        <field name="product_ids" eval="[(4, ref('mrp.product_product_computer_desk'))]"/>
+        <field name="picking_type_ids" model="stock.warehouse" eval="[(4, obj().env.ref('stock.warehouse0').manu_type_id.id)]"/>
+        <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
+        <field name="test_type_id" ref="quality.test_type_instructions"/>
+        <field name="note">Please attach the legs to the table as shown below.</field>
+        <field name="title">Table Legs</field>
+        <field name="worksheet_page">4</field>
+        <field name="sequence">60</field>
+    </record>
+
+    <record id="quality_point_print_labels" model="quality.point">
+        <field name="product_ids" eval="[(4, ref('mrp.product_product_computer_desk'))]"/>
+        <field name="picking_type_ids" model="stock.warehouse" eval="[(4, obj().env.ref('stock.warehouse0').manu_type_id.id)]"/>
+        <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
+        <field name="test_type_id" ref="mrp_workorder.test_type_print_label"/>
+        <field name="title">Print Labels</field>
+        <field name="worksheet_page">0</field>
+        <field name="sequence">90</field>
+    </record>
+
+    <!-- Split the pdf added in mrp demo data-->
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('mrp_workorder.group_mrp_wo_tablet_timer')),  (4, ref('mrp_workorder.group_mrp_wo_shop_floor'))]"/>
+    </record>
+
+    <function model="mrp.workorder" name="_create_checks">
+        <function eval="[[('state', 'not in', ('cancel', 'done'))]]" model="mrp.workorder" name="search"/>
+    </function>
+
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ch_location_unit_view_tree" model="ir.ui.view">
+        <field name="name">l10n.ch.location.unit.view.tree</field>
+        <field name="model">l10n.ch.location.unit</field>
+        <field name="arch" type="xml">
+            <tree string="Work addresses">
+                <field name="partner_id"/>
+                <field name="bur_ree_number"/>
+                <field name="canton"/>
+                <field name="dpi_number"/>
+                <field name="municipality"/>
+                <field name="company_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_ch_location_unit_view_form" model="ir.ui.view">
+        <field name="name">l10n.ch.location.unit.view.form</field>
+        <field name="model">l10n.ch.location.unit</field>
+        <field name="arch" type="xml">
+            <form string="Work address">
+                <sheet>
+                    <group>
+                        <field name="partner_id"/>
+                        <field name="bur_ree_number"/>
+                        <field name="canton"/>
+                        <field name="dpi_number"/>
+                        <field name="municipality"/>
+                        <field name="company_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_ch_location_unit" model="ir.actions.act_window">
+        <field name="name">Work addresses</field>
+        <field name="res_model">l10n.ch.location.unit</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

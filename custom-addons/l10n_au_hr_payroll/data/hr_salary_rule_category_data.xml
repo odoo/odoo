@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_category_conditions_qualifications_duties" model="hr.salary.rule.category">
+        <field name="name">Working conditions, qualifications or special duties</field>
+        <field name="code">ALW.CQD</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+
+    <record id="rule_category_non_deductible_expense" model="hr.salary.rule.category">
+        <field name="name">Non-deductible expenses</field>
+        <field name="code">ALW.NOTDED</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+
+    <record id="rule_category_deductible_expense" model="hr.salary.rule.category">
+        <field name="name">Deductible expenses</field>
+        <field name="code">ALW.DED</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+
+    <record id="rule_category_ordinary_on_call" model="hr.salary.rule.category">
+        <field name="name">On-call allowance (ordinary hours)</field>
+        <field name="code">ALW.ORD.CALL</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+
+    <record id="rule_category_non_ordinary_on_call" model="hr.salary.rule.category">
+        <field name="name">On-call allowance (outside ordinary hours)</field>
+        <field name="code">ALW.NOTORD.CALL</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+
+    <record id="rule_category_withholding" model="hr.salary.rule.category">
+        <field name="name">Withholding</field>
+        <field name="code">WITHHOLD</field>
+    </record>
+
+    <record id="rule_category_withholding_offsets" model="hr.salary.rule.category">
+        <field name="name">Withholding offset</field>
+        <field name="code">WITHHOLD.OFFSET</field>
+    </record>
+
+    <record id="rule_category_net_withholding" model="hr.salary.rule.category">
+        <field name="name">Total Withholding</field>
+        <field name="code">WITHHOLD.TOTAL</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="rule_category_super_contribution" model="hr.salary.rule.category">
+        <field name="name">Super Contribution</field>
+        <field name="code">SUPER</field>
+    </record>
+
+    <!-- Termination -->
+    <!-- ETP -->
+    <record id="rule_category_etp_gross" model="hr.salary.rule.category">
+        <field name="name">Gross ETP</field>
+        <field name="code">ETP.GROSS</field>
+    </record>
+
+    <record id="rule_category_tax_free_component" model="hr.salary.rule.category">
+        <field name="name">Tax Free component of ETP</field>
+        <field name="code">ETP.FREE</field>
+    </record>
+
+    <record id="rule_category_etp_base" model="hr.salary.rule.category">
+        <field name="name">ETP Base</field>
+        <field name="code">ETP.BASE</field>
+    </record>
+
+    <record id="rule_category_etp_withhold" model="hr.salary.rule.category">
+        <field name="name">ETP Withholding</field>
+        <field name="code">ETP.WITHHOLD</field>
+    </record>
+
+    <!-- Leaves -->
+    <record id="rule_category_leave_base" model="hr.salary.rule.category">
+        <field name="name">Leave Base</field>
+        <field name="code">LEAVE.BASE</field>
+    </record>
+
+    <record id="rule_category_leave_withhold" model="hr.salary.rule.category">
+        <field name="name">Leave Withholding</field>
+        <field name="code">LEAVE.WITHHOLD</field>
+    </record>
+
+    <!-- Child Support -->
+    <record id="rule_category_child_support" model="hr.salary.rule.category">
+        <field name="name">Child Support</field>
+        <field name="code">CHILD.SUPPORT</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <!-- Salary Sacrifice -->
+    <record id="rule_category_salary_sacrifice" model="hr.salary.rule.category">
+        <field name="name">Salary Sacrifice</field>
+        <field name="code">SALARY.SACRIFICE</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+</odoo>

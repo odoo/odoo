@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_form_l10n_ma_payroll" model="ir.ui.view">
+        <field name="name">hr.employee.form.l10n_ma_payroll</field>
+        <field name="model">hr.employee</field>
+        <field name="priority">30</field>
+        <field name="inherit_id" ref="hr_payroll.payroll_hr_employee_view_form"/>
+        <field name="arch" type="xml">
+            <group name="payroll_group" position="inside">
+                <field name="l10n_ma_cin_number"
+                    invisible="company_country_code != 'MA'"/>
+                <field name="l10n_ma_cnss_number"
+                    invisible="company_country_code != 'MA'"/>
+                <field name="l10n_ma_cimr_number"
+                    invisible="company_country_code != 'MA'"/>
+                <field name="l10n_ma_mut_number"
+                    invisible="company_country_code != 'MA'"/>
+            </group>
+        </field>
+    </record>
+</odoo>

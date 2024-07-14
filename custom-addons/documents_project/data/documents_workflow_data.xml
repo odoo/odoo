@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="documents_project_rule" model="documents.workflow.rule" forcecreate="0">
+            <field name="sequence">3</field>
+            <field name="name">Create a Task</field>
+            <field name="activity_option">True</field>
+            <field name="excluded_tag_ids" model="documents.tag" eval="obj().env.ref('documents.documents_internal_status_deprecated', raise_if_not_found=False) and [(4, obj().env.ref('documents.documents_internal_status_deprecated', raise_if_not_found=False).id)]"/>
+            <field name="activity_type_id" ref="documents.mail_documents_activity_data_tv"/>
+            <field name="create_model">project.task</field>
+            <field name="condition_type">domain</field>
+            <field name="domain" eval="[('res_model', '!=', 'project.task')]"/>
+            <field name="domain_folder_id" ref="documents.documents_internal_folder"/>
+        </record>
+
+        <record id="documents_workflow_action_project" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_project_rule"/>
+            <field name="action">replace</field>
+            <field name="facet_id" model="documents.facet" eval="obj().env.ref('documents.documents_internal_status', raise_if_not_found=False)"/>
+            <field name="tag_id" model="documents.tag" eval="obj().env.ref('documents.documents_internal_status_tc', raise_if_not_found=False)"/>
+        </record>
+
+
+        <record id="documents_project_rule_mark_as_draft" model="documents.workflow.rule" forcecreate="0">
+            <field name="name">Mark As Draft</field>
+            <field name="sequence">10</field>
+            <field name="condition_type">domain</field>
+            <field name="domain" eval="['|', ('tag_ids', '=', False), ('tag_ids', 'in', [
+                ref('documents_project_status_to_validate'),
+                ref('documents_project_status_deprecated')])]"/>
+            <field name="remove_activities">True</field>
+            <field name="domain_folder_id" ref="documents_project_folder"/>
+        </record>
+
+        <record id="documents_project_action_mark_as_draft" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_project_rule_mark_as_draft"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="documents_project_status"/>
+            <field name="tag_id" ref="documents_project_status_draft"/>
+        </record>
+
+        <record id="documents_project_rule_ask_for_validation" model="documents.workflow.rule" forcecreate="0">
+            <field name="sequence">15</field>
+            <field name="name">Ask for Validation</field>
+            <field name="condition_type">domain</field>
+            <field name="domain" eval="[('tag_ids', 'in', [
+                ref('documents_project_status_draft'),
+                ref('documents_project_status_validated')])]"/>
+            <field name="activity_option">True</field>
+            <field name="activity_type_id" ref="documents.mail_documents_activity_data_tv"/>
+            <field name="domain_folder_id" ref="documents_project_folder"/>
+        </record>
+
+        <record id="documents_project_action_ask_for_validation" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_project_rule_ask_for_validation"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="documents_project_status"/>
+            <field name="tag_id" ref="documents_project_status_to_validate"/>
+        </record>
+
+        <record id="documents_project_rule_validate" model="documents.workflow.rule" forcecreate="0">
+            <field name="sequence">20</field>
+            <field name="name">Validate</field>
+            <field name="condition_type">domain</field>
+            <field name="domain" eval="[('tag_ids', 'in', [
+                ref('documents_project_status_draft'),
+                ref('documents_project_status_to_validate')])]"/>
+            <field name="remove_activities">True</field>
+            <field name="domain_folder_id" ref="documents_project_folder"/>
+        </record>
+
+        <record id="documents_project_action_validate" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_project_rule_validate"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="documents_project_status"/>
+            <field name="tag_id" ref="documents_project_status_validated"/>
+        </record>
+
+        <record id="documents_project_rule_deprecate" model="documents.workflow.rule" forcecreate="0">
+            <field name="name">Deprecate</field>
+            <field name="sequence">25</field>
+            <field name="remove_activities">True</field>
+            <field name="domain" eval="['|', ('tag_ids', '=', False), ('tag_ids', 'in', [
+                ref('documents_project_status_to_validate'),
+                ref('documents_project_status_validated')])]"/>
+            <field name="domain_folder_id" ref="documents_project_folder"/>
+        </record>
+
+        <record id="documents_project_action_deprecate" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_project_rule_deprecate"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="documents_project_status"/>
+            <field name="tag_id" ref="documents_project_status_deprecated"/>
+        </record>
+
+        <record id="documents_project_rule_task" model="documents.workflow.rule" forcecreate="0">
+            <field name="sequence">3</field>
+            <field name="name">Create a Task</field>
+            <field name="activity_option">True</field>
+            <field name="excluded_tag_ids" eval="[Command.link(ref('documents_project_status_deprecated'))]"/>
+            <field name="activity_type_id" ref="documents.mail_documents_activity_data_tv"/>
+            <field name="create_model">project.task</field>
+            <field name="condition_type">domain</field>
+            <field name="domain" eval="[('res_model', '!=', 'project.task')]"/>
+            <field name="domain_folder_id" ref="documents_project_folder"/>
+        </record>
+
+        <record id="documents_workflow_action_task" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_project_rule"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="documents_project_status"/>
+            <field name="tag_id" ref="documents_project_status_to_validate"/>
+        </record>
+    </data>
+</odoo>

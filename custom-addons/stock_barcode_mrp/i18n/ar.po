@@ -1,0 +1,428 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_barcode_mrp
+# 
+# Translators:
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-23 16:33+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+msgid ""
+"<i class=\"fa fa-fw fa-lg fa-barcode me-3\" title=\"Serial/Lot Number\" "
+"invisible=\"product_tracking not in ['serial', 'lot']\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-lg fa-barcode me-3\" title=\"الرقم التسلسلي/رقم "
+"المجموعة \" invisible=\"product_tracking not in ['serial', 'lot']\"/> "
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid ""
+"<i class=\"fa fa-fw fa-lg fa-barcode me-3\" title=\"Serial/Lot Number\" "
+"invisible=\"tracking not in ['serial', 'lot']\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-lg fa-barcode me-3\" title=\"الرقم التسلسلي/رقم "
+"المجموعة \" invisible=\"tracking not in ['serial', 'lot']\"/>"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "<i class=\"fa fa-fw fa-lg fa-cube me-3\" title=\"Quantity\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-cube me-3\" title=\"الكمية \"/>"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid ""
+"<i class=\"fa fa-fw fa-lg fa-long-arrow-right me-3\" title=\"Destination "
+"Location\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-long-arrow-right me-3\" title=\"موقع الوجهة \"/>"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid ""
+"<i class=\"fa fa-fw fa-lg fa-map-marker text-center me-3\" title=\"Source "
+"Location\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-lg fa-map-marker text-center me-3\" title=\"موقع "
+"المصدر \"/>"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "<i class=\"fa fa-fw fa-lg fa-tags me-3\" title=\"Product\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-tags me-3\" title=\"المنتج \"/>"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.res_config_settings_view_form
+msgid "<i class=\"fa fa-print\"/> Print barcode commands and operation types"
+msgstr "<i class=\"fa fa-print\"/> طباعة أوامر الباركود وأنواع العمليات "
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.res_config_settings_view_form
+msgid "<i class=\"fa fa-print\"/> Print barcode demo sheet"
+msgstr "<i class=\"fa fa-print\"/> طباعة ورقة الباركود التجريبية "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/components/main.js:0
+#, python-format
+msgid "Add Component"
+msgstr "إضافة مكون "
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.view_picking_type_form
+msgid "Allow full order validation"
+msgstr "السماح بتصديق الطلب كاملاً "
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,help:stock_barcode_mrp.field_stock_move_line__pick_type_create_components_lots
+msgid "Allow to create new lot/serial numbers for the components"
+msgstr "السماح بإنشاء أرقام دفعات/أرقام تسلسلية جديدة للمكونات "
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.view_picking_type_form
+msgid "Allow user to produce all even if no components were scanned"
+msgstr "السماح للمستخدم بإنتاج الكل على الرغم من أنه لم يتم مسح أي مكونات "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/components/main.js:0
+#, python-format
+msgid "Are you sure you want to cancel this manufacturing order?"
+msgstr "هل أنت متأكد من أنك ترغب في إلغاء أمر التصنيع هذا؟ "
+
+#. module: stock_barcode_mrp
+#: model:ir.actions.client,name:stock_barcode_mrp.stock_barcode_mo_client_action
+msgid "Barcode MO Client Action"
+msgstr "إجراء عميل باركود أمر التصنيع "
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.res_config_settings_view_form
+msgid "Barcode Nomenclature"
+msgstr "تسمية الباركود"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Cancel Manufacturing Order"
+msgstr "إلغاء أمر التصنيع "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/components/main.js:0
+#, python-format
+msgid "Cancel manufacturing order?"
+msgstr "إلغاء أمر التصنيع؟ "
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.res_config_settings_view_form
+msgid "Configure Product Barcodes"
+msgstr "تهيئة باركود المنتج"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_barcode_form
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Confirm"
+msgstr "تأكيد"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_stock_picking_type__count_mo_confirmed
+msgid "Count Mo Confirmed"
+msgstr "عدد أوامر التصنيع المؤكدة "
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_stock_move_line__pick_type_create_components_lots
+msgid "Create New Lots/Serial Numbers for Components"
+msgstr "إنشاء أرقام دفعات/أرقام تسلسلية جديدة للمكونات "
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.actions.act_window,help:stock_barcode_mrp.mrp_action_kanban
+msgid "Create a new Manufacturing Order"
+msgstr "إنشاء أمر تصنيع جديد "
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Destination Location"
+msgstr "الموقع الوجهة "
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_barcode_form
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Discard"
+msgstr "إهمال "
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_mrp_production__is_completed
+msgid "Is Completed"
+msgstr "مكتملة "
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_stock_move_line__manual_consumption
+msgid "Manual Consumption"
+msgstr "الاستهلاك اليدوي "
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_mrp_production__move_byproduct_line_ids
+msgid "Move Byproduct Line"
+msgstr "نقل بند المنتج الثانوي "
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_mrp_production__move_raw_line_ids
+msgid "Move Raw Line"
+msgstr "Move Raw Line"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_mrp_production__backorder_ids
+msgid "Mrp Production"
+msgstr "إنتاج تخطيط متطلبات المواد "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "New"
+msgstr "جديد"
+
+#. module: stock_barcode_mrp
+#. odoo-python
+#: code:addons/stock_barcode_mrp/models/mrp_production.py:0
+#, python-format
+msgid "No Manufacturing Order ready for this %(barcode_type)s"
+msgstr "لا يوجد أمر تصنيع جاهز لـ %(barcode_type)s "
+
+#. module: stock_barcode_mrp
+#. odoo-python
+#: code:addons/stock_barcode_mrp/models/mrp_production.py:0
+#, python-format
+msgid "No product or order found for barcode %s"
+msgstr "لم يتم العثور على منتج أو طلب للباركود %s "
+
+#. module: stock_barcode_mrp
+#: model:ir.actions.act_window,name:stock_barcode_mrp.mrp_action_kanban
+msgid "Operations"
+msgstr "العمليات"
+
+#. module: stock_barcode_mrp
+#: model:ir.model,name:stock_barcode_mrp.model_stock_picking_type
+msgid "Picking Type"
+msgstr "نوع الانتقاء "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Print Finished Product Label (PDF)"
+msgstr "طباعة بطاقة عنوان المنتج النهائي (PDF) "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Print Finished Product Label (ZPL)"
+msgstr "طباعة بطاقة عنوان المنتج النهائي (ZPL) "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Print Production Order"
+msgstr "طباعة أمر الإنتاج "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/components/main.js:0
+#, python-format
+msgid "Produce"
+msgstr "ينتج"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/components/main.js:0
+#, python-format
+msgid "Produce All"
+msgstr "إنتاج الكل "
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Product"
+msgstr "المنتج"
+
+#. module: stock_barcode_mrp
+#: model:ir.model,name:stock_barcode_mrp.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "تحركات المنتج (بنود حركة المخزون)"
+
+#. module: stock_barcode_mrp
+#: model:ir.model,name:stock_barcode_mrp.model_product_product
+msgid "Product Variant"
+msgstr "متغير المنتج "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Product not Allowed"
+msgstr "المنتج غير مسموح به "
+
+#. module: stock_barcode_mrp
+#: model:ir.model,name:stock_barcode_mrp.model_mrp_production
+msgid "Production Order"
+msgstr "أمر الإنتاج"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Quantity"
+msgstr "الكمية"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Scan a component"
+msgstr "مسح مكوّن "
+
+#. module: stock_barcode_mrp
+#. odoo-python
+#: code:addons/stock_barcode_mrp/models/mrp_production.py:0
+#, python-format
+msgid "Scan a product to filter the orders."
+msgstr "قم بمسح منتج لتصفية الطلبات. "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/kanban/stock_barcode_kanban.xml:0
+#, python-format
+msgid "Scan a transfer, a product or a package to filter your records"
+msgstr "قم بمسح شحنة أو طرد ضوئياً لتصفية سجلاتك "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/kanban/stock_barcode_kanban.xml:0
+#, python-format
+msgid "Scan an order or a product to filter your records"
+msgstr "قم بمسح طلب أو منتج ضوئياً لتصفية سجلاتك "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Scan your final product or more components"
+msgstr "قم بمسح منتجك النهائي أو المزيد من المكونات "
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.stock_move_line_product_selector
+msgid "Serial/Lot Number"
+msgstr "الرقم التسلسلي/رقم الدفعة "
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Source Location"
+msgstr "الموقع المصدري "
+
+#. module: stock_barcode_mrp
+#: model:ir.model,name:stock_barcode_mrp.model_stock_move
+msgid "Stock Move"
+msgstr "حركة المخزون"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "The Manufacturing Order has been cancelled"
+msgstr "تم إلغاء أمر التصنيع "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid ""
+"The lines with a kit have been replaced with their components. Please check "
+"the picking before the final validation."
+msgstr ""
+"تم استبدال البنود التي تحتوي على الحزم بالمكونات. يرجى التحقق من عملية "
+"الانتقاء قبل التقييم النهائي. "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "The manufacturing order has been validated"
+msgstr "تم تصديق أمر التصنيع "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "This order is already done"
+msgstr "هذا الطلب منتهٍ بالفعل "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "This order is cancelled"
+msgstr "تم إلغاء الطلب "
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.stock_mrp_picking_type_kanban
+msgid "To Process"
+msgstr "للمعالجة "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "To produce more products create a new MO."
+msgstr "لإنتاج المزيد من المنتجات، قم بإنشاء أمر تصنيع جديد. "
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.actions.act_window,help:stock_barcode_mrp.mrp_action_kanban
+msgid "Transfers allow you to move products from one location to another."
+msgstr "تتيح لك الشحنات نقل البضائع من موقع إلى آخر. "
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Unit of Measure"
+msgstr "وحدة القياس"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,help:stock_barcode_mrp.field_stock_move_line__manual_consumption
+msgid ""
+"When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
+"If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also."
+msgstr ""
+"عندما تكون مفعلة، ثم يتم تسجيل استهلاك ذلك المكون يدوياً فقط. \n"
+"إذا لم تكن مفعلة، ويتم تحرير استهلاك المكونات يدوياً في أمر التصنيع، يفترض أودو الاستهلاك اليدوي أيضاً. "
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "You can't add the final product of a MO as a byproduct."
+msgstr "لا يمكنك إضافة المنتج النهائي لأمر التصنيع كمنتج ثانوي. "

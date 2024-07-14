@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="industry_fsm.warning_tooltip">
+        <span class="fa fa-exclamation-triangle text-danger o_calendar_warning ms-3"
+              t-att-data-tooltip-info="tooltipInfo"
+              data-tooltip-template="industry_fsm.task_confirm_schedule_warning"
+        >
+        </span>
+    </t>
+
+    <t t-name="industry_fsm.DateTimeWithWarning" t-inherit="web.DateTimeField" t-inherit-mode="primary">
+        <xpath expr="//*[@t-if='props.readonly']" position="inside">
+            <WarningTooltip t-if="warning" value="warning"/>
+        </xpath>
+    </t>
+
+</templates>

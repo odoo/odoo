@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="website_helpdesk_share_coupon_generate_view_form" model="ir.ui.view">
+            <field name="name">website.helpdesk.share.coupon.generate.form</field>
+            <field name="model">helpdesk.sale.coupon.generate</field>
+            <field name="inherit_id" ref="helpdesk_sale_loyalty.helpdesk_sale_coupon_generate_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/footer/button[@name='action_coupon_generate_send']" position="after">
+                    <button name="action_coupon_generate_share" type="object" string="Get Share Link" class="oe_highlight"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

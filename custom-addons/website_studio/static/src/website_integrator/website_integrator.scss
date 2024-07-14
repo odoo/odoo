@@ -1,0 +1,36 @@
+.o_website_studio_website_integrator {
+    @include o-web-studio-thumbnails-container;
+
+    > h6 {
+        margin: $o-horizontal-padding;
+    }
+
+    .o-web-studio-card-container {
+         @include o-web-studio-thumbnails;
+
+         .o-website-studio-item-card {
+            @include o-web-studio-thumbnail;
+            min-height: 140px;
+            height: unset;
+
+            &.disabled {
+                opacity: 0.7
+            }
+         }
+    }
+
+    .o_web_studio_more {
+        border: 1px solid white;
+        border-width: 1px 1px 0 1px;
+        padding: 5px 9px;
+        border-radius: 50%;
+        font-size: 10px;
+        cursor: pointer;
+        color: $o-web-studio-bg-dark;
+        background-color: white;
+
+        &:hover, &:focus {
+            background-color: $o-web-studio-bg-light;
+        }
+    }
+}

@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+<data noupdate="1">
+    <record id="social_stream_instagram_account" model="social.stream">
+        <field name="name">Instagram Posts: My Company</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="stream_type_id" ref="social_instagram.stream_type_instagram_posts" />
+        <field name="media_id" ref="social_instagram.social_media_instagram" />
+        <field name="account_id" ref="social_account_instagram" />
+    </record>
+
+    <record id="social_stream_post_instagram_1" model="social.stream.post">
+        <field name="stream_id" ref="social_stream_instagram_account" />
+        <field name="instagram_comments_count">47</field>
+        <field name="instagram_likes_count">879</field>
+        <field name="author_name">My Company Page</field>
+        <field name="instagram_post_link">http://instagram.com/1/1</field>
+        <field name="message">Get 20% out of your purchases on https://mycompany.com/shop
+    Better run to our website while it lasts 🏃</field>
+        <field name="published_date" eval="time.strftime('%Y-01-07 09:00:00')"/>
+    </record>
+
+    <record id="social_stream_post_instagram_image_1" model="social.stream.post.image">
+        <field name="image_url" eval="'/web/image/product.product/%s/image_512' % ref('social_demo.product_product_4')"></field>
+        <field name="stream_post_id" ref="social_stream_post_instagram_1" />
+    </record>
+</data>
+</odoo>

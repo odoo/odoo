@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <div t-name="spreadsheet_edition.SpreadsheetComponent" class="o_spreadsheet_container o_field_highlight">
+        <Spreadsheet model="model"/>
+    </div>
+
+    <div t-name="spreadsheet_edition.AutofillTooltip">
+        <t t-foreach="props.content" t-as="line" t-key="line.value+line_index">
+            <div><t t-esc="line.value"/></div>
+        </t>
+    </div>
+
+</templates>

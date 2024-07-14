@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_model_view_tree_marketing" model="ir.ui.view">
+        <field name="name">ir.model.view.tree.marketing</field>
+        <field name="model">ir.model</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <tree string="Model Description">
+                <field name="name"/>
+                <field name="model" groups="base.group_no_one"/>
+                <field name="state" groups="base.group_no_one"/>
+                <field name="transient" groups="base.group_no_one"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

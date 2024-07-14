@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportButtonsBar">
+        <!-- There is only one button -->
+        <t t-if="controller.buttons.length == 1">
+            <t t-set="button" t-value="controller.buttons[0]"/>
+            <button
+                t-att-class="'btn btn-primary' + (button.disabled ? ' disabled' : '')"
+                t-on-click="(ev) => controller.reportAction(ev, button.action, button.action_param, true)"
+            >
+                <t t-out="button.name"/>
+            </button>
+        </t>
+
+        <!-- There is more than one button -->
+        <t t-if="controller.buttons.length > 1">
+            <!-- Grouped buttons -->
+            <!-- There is only one grouped button -->
+            <t t-if="groupedButtons.length == 1">
+                <button
+                    t-att-class="'btn btn-primary text-nowrap' + (groupedButtons[0].disabled ? ' disabled' : '')"
+                    t-on-click="(ev) => controller.reportAction(ev, groupedButtons[0].action, groupedButtons[0].action_param, true)"
+                >
+                    <t t-out="groupedButtons[0].name"/>
+                </button>
+            </t>
+
+            <!-- There is more than one grouped button -->
+            <t t-if="groupedButtons.length > 1">
+                <div class="btn-group">
+                    <button
+                        t-att-class="'btn btn-primary text-nowrap' + (groupedButtons[0].disabled ? ' disabled' : '')"
+                        t-on-click="(ev) => controller.reportAction(ev, groupedButtons[0].action, groupedButtons[0].action_param, true)"
+                    >
+                        <t t-out="groupedButtons[0].name"/>
+                    </button>
+
+                    <Dropdown togglerClass="'btn btn-primary'" showCaret="true" class="'btn-group'">
+                        <t t-foreach="groupedButtons" t-as="groupedButton" t-key="groupedButton_index">
+                            <t t-if="groupedButton_index != 0">
+                                <DropdownItem>
+                                    <button
+                                        t-att-class="'btn btn-link text-nowrap' + (groupedButton.disabled ? ' disabled' : '')"
+                                        t-on-click="(ev) => controller.reportAction(ev, groupedButton.action, groupedButton.action_param, true)"
+                                    >
+                                        <t t-out="groupedButton.name"/>
+                                    </button>
+                                </DropdownItem>
+                            </t>
+                        </t>
+                    </Dropdown>
+                </div>
+            </t>
+
+            <!-- Single buttons -->
+            <t t-foreach="singleButtons" t-as="singleButton" t-key="singleButton_index">
+                <button
+                    t-att-class="'btn btn-secondary text-nowrap' + (singleButton.disabled ? ' disabled' : '')"
+                    t-on-click="(ev) => controller.reportAction(ev, singleButton.action, singleButton.action_param, true)"
+                >
+                    <t t-out="singleButton.name"/>
+                </button>
+            </t>
+        </t>
+    </t>
+</templates>

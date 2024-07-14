@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_hrsalarybymonth">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <div class="text-center">
+                            <h2>Yearly Salary Details</h2>
+                            <p>
+                                From <u><span t-field="o.start_date"/></u> To <u><span t-field="o.end_date"/></u> of <u><span t-esc="data['form']['category_id'][1]"/></u> Category
+                            </p>
+                        </div>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr style="border-top: 1px solid black">
+                                    <th>Name</th>
+                                    <t t-foreach="get_periods" t-as="month">
+                                        <th class="text-end">
+                                            <span t-esc="month"/>
+                                        </th>
+                                    </t>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="get_employee" t-as="e">
+                                    <tr>
+                                        <td><span t-esc="e[0]"/></td>
+                                        <t t-foreach="e[1:month_len]" t-as="month_sal">
+                                            <td class="text-end">
+                                                <span t-esc="month_sal"/>
+                                            </td>
+                                        </t>
+                                        <td class="text-end">
+                                            <span t-esc="e[month_len]" t-options="{'widget': 'monetary', 'display_currency': o.env.user.company_id.currency_id}"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot>
+                                <tr class="border-black">
+                                    <t t-foreach="get_months_tol" t-as="t">
+                                        <td><strong>Total</strong></td>
+                                        <t t-foreach="t" t-as="tdata">
+                                            <td class="text-end">
+                                                <strong><span t-esc="tdata" t-options="{'widget': 'monetary', 'display_currency': o.env.user.company_id.currency_id}"/></strong>
+                                            </td>
+                                        </t>
+                                        <td class="text-end"><strong><span t-esc="get_total" t-options="{'widget': 'monetary', 'display_currency': o.env.user.company_id.currency_id}"/></strong></td>
+                                    </t>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

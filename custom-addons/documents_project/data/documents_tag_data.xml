@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="documents_project_status_draft" model="documents.tag" forcecreate="0">
+            <field name="name">Draft</field>
+            <field name="sequence">5</field>
+            <field name="facet_id" ref="documents_project_status"/>
+        </record>
+        <record id="documents_project_status_to_validate" model="documents.tag" forcecreate="0">
+            <field name="name">To Validate</field>
+            <field name="sequence">10</field>
+            <field name="facet_id" ref="documents_project_status"/>
+        </record>
+        <record id="documents_project_status_validated" model="documents.tag" forcecreate="0">
+            <field name="name">Validated</field>
+            <field name="sequence">15</field>
+            <field name="facet_id" ref="documents_project_status"/>
+        </record>
+        <record id="documents_project_status_deprecated" model="documents.tag" forcecreate="0">
+            <field name="name">Deprecated</field>
+            <field name="sequence">20</field>
+            <field name="facet_id" ref="documents_project_status"/>
+        </record>
+    </data>
+</odoo>

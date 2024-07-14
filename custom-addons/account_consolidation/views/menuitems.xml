@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Top menu item -->
+        <menuitem name="Consolidation"
+                  id="menu_consolidation"
+                  web_icon="account_consolidation,static/description/icon.png"
+                  sequence="175"/>
+
+        <menuitem id="menu_consolidation_home" name="Dashboard" parent="menu_consolidation" sequence="2"
+                  action="consolidation_period_action"/>
+        <menuitem id="menu_consolidation_operations" name="Operations" parent="menu_consolidation" sequence="3"/>
+        <menuitem id="menu_consolidation_configuration" name="Configuration" parent="menu_consolidation" sequence="4"/>
+
+        <!-- Operations sub-menus -->
+        <menuitem id="menu_consolidation_operations_consolidation_entries" name="Consolidation Entry"
+                  parent="menu_consolidation_operations" sequence="1" action="consolidation_journal_action"/>
+        <!-- Configuration sub-menus -->
+        <menuitem id="menu_consolidation_configuration_charts" name="Consolidation" parent="menu_consolidation_configuration"
+                  sequence="30" action="consolidation_chart_action"/>
+        <menuitem id="menu_consolidation_configuration_analysis_periods" name="Periods"
+                  parent="menu_consolidation_configuration"
+                  sequence="10" action="analysis_period_config_action"/>
+        <menuitem id="menu_consolidation_configuration_company_periods" name="Company Periods"
+                  parent="menu_consolidation_configuration" groups="base.group_no_one"
+                  sequence="11" action="consolidation_company_period_action"/>
+        <menuitem id="menu_consolidation_configuration_accounts" name="Consolidation Accounts" groups="base.group_no_one"
+                  parent="menu_consolidation_configuration" sequence="20" action="account_consolidation.consolidation_account_action"/>
+        <menuitem id="menu_consolidation_configuration_account_sections" name="Account Groups"
+                  parent="menu_consolidation_configuration" sequence="21" action="account_consolidation.consolidation_group_action"/>
+    </data>
+</odoo>
+

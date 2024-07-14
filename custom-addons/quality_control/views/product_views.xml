@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="quality_control_menu_product"
+        name="Products"
+        parent="quality_control.menu_quality_root"
+        sequence="18"/>
+
+    <menuitem
+        id="quality_product_menu_product_template"
+        name="Products"
+        action="stock.product_template_action_product"
+        parent="quality_control_menu_product"
+        sequence="5"/>
+
+    <menuitem
+        id="quality_control_menu_product_variant"
+        name="Product Variants"
+        action="product.product_normal_action"
+        parent="quality_control_menu_product"
+        groups="product.group_product_variant"
+        sequence="10"/>
+
+    <menuitem 
+        id="quality_control_menu_traceability"
+        name="Lots/Serial Numbers"
+        action="stock.action_production_lot_form"
+        parent="quality_control_menu_product"
+        groups="stock.group_production_lot"
+        sequence="15"/>
+
+    <record id="action_qualtity_alert" model="ir.actions.server">
+        <field name="name">Quality Alert</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+        if record:
+            action = record.button_quality_alert()
+        </field>
+    </record>
+</odoo>

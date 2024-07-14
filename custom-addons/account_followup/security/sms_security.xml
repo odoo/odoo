@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="ir_rule_sms_template_account_manager" model="ir.rule">
+        <field name="name">SMS Template: account manager CUD on partner templates</field>
+        <field name="model_id" ref="sms.model_sms_template"/>
+        <field name="groups" eval="[(4, ref('account.group_account_manager'))]"/>
+        <field name="domain_force">[('model_id.model', '=', 'res.partner')]</field>
+        <field name="perm_read" eval="False"/>
+    </record>
+</odoo>

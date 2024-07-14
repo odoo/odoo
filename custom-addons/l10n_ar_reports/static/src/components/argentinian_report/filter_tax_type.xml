@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="l10n_ar_reports.L10nArReportsFilterTaxType">
+        <Dropdown togglerClass="'btn btn-secondary'">
+            <t t-set-slot="toggler">
+                <t t-set="taxSelected" t-value="controller.options.ar_vat_book_tax_type_selected"/>
+
+                <span class="fa fa-filter me-1"/>Tax Type: <t t-esc="controller.options.ar_vat_book_tax_types_available[taxSelected]"/>
+            </t>
+
+            <t t-foreach="Object.entries(controller.options.ar_vat_book_tax_types_available)" t-as="taxType" t-key="taxType[0]">
+                <DropdownItem
+                    class="{ 'selected': (controller.options.ar_vat_book_tax_type_selected == taxType[0]) }"
+                    onSelected="() => this.updateFilter('ar_vat_book_tax_type_selected', taxType[0])"
+                >
+                    <t t-esc="taxType[1]"/>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

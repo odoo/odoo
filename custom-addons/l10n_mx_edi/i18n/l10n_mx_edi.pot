@@ -1,0 +1,2228 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_mx_edi
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-28 09:03+0000\n"
+"PO-Revision-Date: 2024-02-28 09:03+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "01 - Efectivo"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_invoice_cancellation_reason__01
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__cancellation_reason__01
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_invoice_cancel__cancellation_reason__01
+msgid "01 - Invoice issued with errors (with related document)"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_invoice_cancellation_reason
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_move__l10n_mx_edi_invoice_cancellation_reason
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_payment__l10n_mx_edi_invoice_cancellation_reason
+#: model:ir.model.fields,help:l10n_mx_edi.field_l10n_mx_edi_document__cancellation_reason
+#: model:ir.model.fields,help:l10n_mx_edi.field_l10n_mx_edi_invoice_cancel__cancellation_reason
+msgid ""
+"01 - Invoice issued with errors (with related document).\n"
+"This option applies when there is an error in the document data, so it must be reissued. In this case, the replacement document is referenced in the cancellation request.\n"
+"02 - Invoice issued with errors (no replacement).\n"
+"This option applies when there is an error in the invoice data and no replacement document will be generated.\n"
+"03 - The operation was not carried out.\n"
+"This option applies when a transaction was invoiced that does not materialize.\n"
+"04 - Nominative operation related to the global invoice.\n"
+"This option applies when a sale was included in the global invoice of operations with the general public, but should actually be excluded since the partner has requested a CFDI to be issued in their name.\n"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "01010101"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_invoice_cancellation_reason__02
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__cancellation_reason__02
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_invoice_cancel__cancellation_reason__02
+msgid "02 - Invoice issued with errors (no replacement)"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_invoice_cancellation_reason__03
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__cancellation_reason__03
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_invoice_cancel__cancellation_reason__03
+msgid "03 - The operation was not carried out"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_invoice_cancellation_reason__04
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__cancellation_reason__04
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_invoice_cancel__cancellation_reason__04
+msgid "04 - Nominative operation related to the global invoice"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "2023-09-12"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "20928"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "30001000000500003416"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "30001000000500003442"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.l10n_mx_fiscal_regime_receptor
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "601"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "<span> - </span>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "<span> Emitter Acc. Ben.</span>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "<span> Emitter Acc. Ord.</span>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "<span> | Certification Date:</span>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "<span> | Emission Date:</span>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "<span> | Expedition place:</span>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "<span> | Fiscal Folio:</span>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "<span> | Fiscal Regime:</span>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "<span> | SAT Certificate:</span>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "<span>Digital stamp SAT</span>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "<span>Digital stamp of the emitter</span>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "<span>Emitter certificate:</span>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "<span>Extra Info</span>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "<span>Original chain complement of digital certification SAT</span>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "<span>Product code</span>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "<span>Unit code</span>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "<span>XML VAT: </span>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "<strong>Bank Account:</strong>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "<strong>Payment Method:</strong>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "<strong>Payment Way:</strong>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "<strong>This document is a printed representation of a CFDI</strong>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "<strong>Usage:</strong>"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#, python-format
+msgid "A delay of 2 hours has to be respected before to cancel"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_partner__l10n_mx_edi_addenda
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_users__l10n_mx_edi_addenda
+msgid "A view representing the addenda"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "Account Ben."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model,name:l10n_mx_edi.model_account_move_send
+msgid "Account Move Send"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "Account Ord."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__g01
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__g01
+msgid "Acquisition of merchandise"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_payment_method__active
+msgid "Active"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__622
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__622
+msgid "Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.res_config_settings_view_form
+msgid "Add your certificates to sign your CFDI documents."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_partner__l10n_mx_edi_addenda
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_users__l10n_mx_edi_addenda
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.l10n_mx_edi_inh_res_partner_form
+msgid "Addenda"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_partner__l10n_mx_edi_addenda_doc
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_users__l10n_mx_edi_addenda_doc
+msgid "Addenda Documentation"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:res.company,invoice_terms_html:l10n_mx_edi.demo_company_2_mx
+msgid ""
+"All our contractual relations will be governed exclusively by Mexico law."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "Amount Paid"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__606
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__606
+msgid "Arrendamiento"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model,name:l10n_mx_edi.model_ir_attachment
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__attachment_id
+msgid "Attachment"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.res_config_settings_view_form
+msgid "Authorized Certification Provider (PAC)"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.actions.server,name:l10n_mx_edi.ir_cron_update_pac_status_invoice_ir_actions_server
+msgid "Automatic update of state on the SAT (for invoices)"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_invoice_cancel__available_cancellation_reasons
+msgid "Available Cancellation Reasons"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_certificate__date_start
+msgid "Available date"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "Balance"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model,name:l10n_mx_edi.model_res_bank
+msgid "Bank"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "Bank Name Acc. Ord."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "Barcode"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:res.company,invoice_terms_html:l10n_mx_edi.demo_company_2_mx
+msgid ""
+"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
+"responsibility."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_global_invoice_create__periodicity__05
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_invoice_cancel__periodicity__05
+msgid "Bimonthly"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.l10n_mx_edi_addenda_bosh_A_C
+msgid "CC"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.l10n_mx_edi_addenda_bosh_A_C
+msgid "CENTRO DE COSTOS"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cfdi_attachment_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_cfdi_attachment_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move_send__l10n_mx_edi_checkbox_cfdi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_cfdi_attachment_id
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.account_move_form_inherit_l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.account_payment_form_inherit_l10n_mx_edi
+msgid "CFDI"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cfdi_origin
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_cfdi_origin
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_cfdi_origin
+msgid "CFDI Origin"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.res_config_settings_view_form
+msgid "CFDI configuration."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cfdi_state
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_cfdi_state
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_cfdi_state
+msgid "CFDI status"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cfdi_to_public
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_cfdi_to_public
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_cfdi_to_public
+msgid "CFDI to public"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.l10n_mx_edi_addenda_bosh_A_C
+msgid "CP"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__state__invoice_cancel
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.account_move_form_inherit_l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.account_payment_form_inherit_l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.l10n_mx_edi_global_invoice_create_form
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.l10n_mx_edi_invoice_cancel_form
+msgid "Cancel"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__cancel_button_needed
+msgid "Cancel Button Needed"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__state__ginvoice_cancel
+msgid "Cancel Global"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__state__ginvoice_cancel_failed
+msgid "Cancel Global In Error"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__state__invoice_cancel_failed
+msgid "Cancel In Error"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_invoice_cancellation_reason
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_invoice_cancellation_reason
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_invoice_cancellation_reason
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__cancellation_reason
+msgid "Cancellation Reason"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_cfdi_sat_state__cancelled
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_cfdi_state__cancel
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__sat_state__cancelled
+msgid "Cancelled"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_cfdi_state__global_cancel
+msgid "Cancelled Global"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#, python-format
+msgid "Cancelling got an error"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:res.company,invoice_terms_html:l10n_mx_edi.demo_company_2_mx
+msgid ""
+"Certain countries apply withholding at source on the amount of invoices, in "
+"accordance with their internal legislation. Any withholding at source will "
+"be paid by the client to the tax authorities. Under no circumstances can "
+"ZAPATERIA URTADO ÑERI become involved in costs related to a country's "
+"legislation. The amount of the invoice will therefore be due to ZAPATERIA "
+"URTADO ÑERI in its entirety and does not include any costs relating to the "
+"legislation of the country in which the client is located."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_certificate__content
+msgid "Certificate"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_certificate__key
+msgid "Certificate Key"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_l10n_mx_edi_certificate__key
+msgid "Certificate Key in .key format"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_certificate__password
+msgid "Certificate Password"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cer_source
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_cer_source
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_cer_source
+msgid "Certificate Source"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_l10n_mx_edi_certificate__content
+msgid "Certificate in .cer format"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.res_config_settings_view_form
+msgid "Certificates"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_company__l10n_mx_edi_certificate_ids
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_config_settings__l10n_mx_edi_certificate_ids
+msgid "Certificates (MX)"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_payment_method__code
+msgid "Code"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#, python-format
+msgid "Code : %s"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_country__l10n_mx_edi_code
+msgid "Code MX"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_l10n_mx_edi_payment_method__code
+msgid ""
+"Code defined by the SAT by this payment way. This value will be set in the "
+"XML node \"metodoDePago\"."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.l10n_mx_edi_addenda_bosh_A_C
+msgid "Codigo Planta"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model,name:l10n_mx_edi.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_certificate__company_id
+msgid "Company"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__i04
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__i04
+msgid "Computer equipment and accessories"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model,name:l10n_mx_edi.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.res_config_settings_view_form
+msgid "Configure your credentials to sign your CFDI documents."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.l10n_mx_edi_invoice_cancel_form
+msgid "Confirm"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__609
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__609
+msgid "Consolidación"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__i01
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__i01
+msgid "Constructions"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model,name:l10n_mx_edi.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__624
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__624
+msgid "Coordinados"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid "Could not retrieve the %s tax with rate %s%%."
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid "Could not retrieve the %s withholding tax with rate %s%%."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model,name:l10n_mx_edi.model_res_country
+msgid "Country"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_partner__country_code
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_users__country_code
+msgid "Country Code"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_country__l10n_mx_edi_code
+msgid ""
+"Country code defined by the SAT in the catalog to CFDI version 4.0 and new "
+"complements. Will be used in the CFDI to indicate the country reference."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.l10n_mx_edi_global_invoice_create_form
+msgid "Create"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#: model:ir.actions.server,name:l10n_mx_edi.action_account_move_create_global_invoice
+#, python-format
+msgid "Create Global Invoice"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.l10n_mx_edi_invoice_cancel_form
+msgid "Create Replacement Invoice"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model,name:l10n_mx_edi.model_l10n_mx_edi_global_invoice_create
+msgid "Create a global invoice"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.actions.act_window,help:l10n_mx_edi.certificate_list_action
+msgid "Create the first certificate"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_certificate__create_uid
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__create_uid
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_global_invoice_create__create_uid
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_invoice_cancel__create_uid
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_payment_method__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_certificate__create_date
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__create_date
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_global_invoice_create__create_date
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_invoice_cancel__create_date
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_payment_method__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model,name:l10n_mx_edi.model_res_currency
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "Currency"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cfdi_customer_rfc
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_cfdi_customer_rfc
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_cfdi_customer_rfc
+msgid "Customer RFC"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_global_invoice_create__periodicity__01
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_invoice_cancel__periodicity__01
+msgid "Daily"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__datetime
+msgid "Datetime"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__629
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__629
+msgid ""
+"De los Regímenes Fiscales Preferentes y de las Empresas Multinacionales"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__608
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__608
+msgid "Demás ingresos"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__d09
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__d09
+msgid "Deposits in savings accounts, premiums based on pension plans."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__i05
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__i05
+msgid "Dices, dies, molds, matrices and tooling"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_certificate__display_name
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__display_name
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_global_invoice_create__display_name
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_invoice_cancel__display_name
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_payment_method__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_invoice_cancel__document_id
+msgid "Document"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__d04
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__d04
+msgid "Donations"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.account_move_form_inherit_l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.account_payment_form_inherit_l10n_mx_edi
+msgid "Download"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "EKU9003173C9"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_company__l10n_mx_edi_pac_test_env
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_config_settings__l10n_mx_edi_pac_test_env
+msgid "Enable the usage of test credentials"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__630
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__630
+msgid "Enajenación de acciones en bolsa de valores"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_cfdi_sat_state__error
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__sat_state__error
+msgid "Error"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/wizard/account_move_send.py:0
+#, python-format
+msgid "Error when sending the CFDI to the PAC:"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_certificate__date_end
+msgid "Expiration date"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid "Failed to distribute some negative lines"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#, python-format
+msgid "Failure during update of the SAT status: %s"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cfdi_uuid
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_cfdi_uuid
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_cfdi_uuid
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__attachment_uuid
+msgid "Fiscal Folio"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_company__l10n_mx_edi_fiscal_regime
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_config_settings__l10n_mx_edi_fiscal_regime
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_partner__l10n_mx_edi_fiscal_regime
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_users__l10n_mx_edi_fiscal_regime
+msgid "Fiscal Regime"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_partner__l10n_mx_edi_fiscal_regime
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_users__l10n_mx_edi_fiscal_regime
+msgid "Fiscal Regime is required for all partners (used in CFDI)"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.l10n_mx_fiscal_regime_receptor
+msgid "Fiscal Regime:"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "Fiscal Regime: ("
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cfdi_uuid
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_move__l10n_mx_edi_cfdi_uuid
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_payment__l10n_mx_edi_cfdi_uuid
+msgid "Folio in electronic invoice, is returned by SAT when send to stamp."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.account_move_form_inherit_l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.account_payment_form_inherit_l10n_mx_edi
+msgid "Force CFDI"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_global_invoice_create__periodicity__03
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_invoice_cancel__periodicity__03
+msgid "Fortnightly"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__d03
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__d03
+msgid "Funeral expenses"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__601
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__601
+msgid "General de Ley Personas Morales"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__g03
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__g03
+msgid "General expenses"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#, python-format
+msgid "Global Invoice"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__628
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__628
+msgid "Hidrocarburos"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_partner__l10n_mx_edi_addenda_doc
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_users__l10n_mx_edi_addenda_doc
+msgid ""
+"How should be done the addenda for this customer (try to put human readable "
+"information here to help the invoice people to fill properly the fields in "
+"the invoice)"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_certificate__id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_global_invoice_create__id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_invoice_cancel__id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_payment_method__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_ir_ui_view__l10n_mx_edi_addenda_flag
+msgid "If True, the view is an addenda for the Mexican EDI invoicing."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:res.company,invoice_terms_html:l10n_mx_edi.demo_company_2_mx
+msgid ""
+"If a payment is still outstanding more than sixty (60) days after the due "
+"payment date, ZAPATERIA URTADO ÑERI reserves the right to call on the "
+"services of a debt recovery company. All legal expenses will be payable by "
+"the client."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_l10n_mx_edi_payment_method__active
+msgid "If this payment way is not used by the company could be deactivated."
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid "Importing a CFDI Payment is not supported."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:res.company,invoice_terms_html:l10n_mx_edi.demo_company_2_mx
+msgid ""
+"In order for it to be admissible, ZAPATERIA URTADO ÑERI must be notified of "
+"any claim by means of a letter sent by recorded delivery to its registered "
+"office within 8 days of the delivery of the goods or the provision of the "
+"services."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cfdi_origin
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_move__l10n_mx_edi_cfdi_origin
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_payment__l10n_mx_edi_cfdi_origin
+msgid ""
+"In some cases like payments, credit notes, debit notes, invoices re-signed or invoices that are redone due to payment in advance will need this field filled, the format is:\n"
+"Origin Type|UUID1, UUID2, ...., UUIDn.\n"
+"Where the origin type could be:\n"
+"- 01: Nota de crédito\n"
+"- 02: Nota de débito de los documentos relacionados\n"
+"- 03: Devolución de mercancía sobre facturas o traslados previos\n"
+"- 04: Sustitución de los CFDI previos\n"
+"- 05: Traslados de mercancias facturados previamente\n"
+"- 06: Factura generada por los traslados previos\n"
+"- 07: CFDI por aplicación de anticipo"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__621
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__621
+msgid "Incorporación Fiscal"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_bank__l10n_mx_edi_vat
+msgid ""
+"Indicate the VAT of this institution, the value could be used in the payment"
+" complement in Mexico documents"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_payment_method_id
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_move__l10n_mx_edi_payment_method_id
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_payment__l10n_mx_edi_payment_method_id
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_partner__l10n_mx_edi_payment_method_id
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_users__l10n_mx_edi_payment_method_id
+msgid ""
+"Indicates the way the invoice was/will be paid, where the options could be: "
+"Cash, Nominal Check, Credit Card, etc. Leave empty if unkown and the XML "
+"will show 'Unidentified'."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_journal__l10n_mx_edi_payment_method_id
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_payment_register__l10n_mx_edi_payment_method_id
+msgid ""
+"Indicates the way the payment was/will be received, where the options could "
+"be: Cash, Nominal Check, Credit Card, etc."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__message
+msgid "Info"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__611
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__611
+msgid "Ingresos por Dividendos (socios y accionistas)"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__614
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__614
+msgid "Ingresos por intereses"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__invoice_ids
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "Invoice"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "Invoice Date"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "Invoice Number"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"Invoice lines having a negative amount are not allowed to generate the CFDI."
+" Please create a credit note instead."
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid "Invoices %s are already sent or not eligible for CFDI."
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid "Invoices %s are not posted."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_ir_ui_view__l10n_mx_edi_addenda_flag
+msgid "Is an addenda?"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_company__l10n_mx_edi_fiscal_regime
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_config_settings__l10n_mx_edi_fiscal_regime
+msgid ""
+"It is used to fill Mexican XML CFDI required field "
+"Comprobante.Emisor.RegimenFiscal."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model,name:l10n_mx_edi.model_account_journal
+msgid "Journal"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model,name:l10n_mx_edi.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_post_time
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_move__l10n_mx_edi_post_time
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_payment__l10n_mx_edi_post_time
+msgid "Keep empty to use the current México central time"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_partner__l10n_mx_edi_addenda_is_readonly
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_users__l10n_mx_edi_addenda_is_readonly
+msgid "L10N Mx Edi Addenda Is Readonly"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_document_ids
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_document_ids
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_document_ids
+msgid "L10N Mx Edi Document"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move_send__l10n_mx_edi_enable_cfdi
+msgid "L10N Mx Edi Enable Cfdi"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_force_pue_payment_needed
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_force_pue_payment_needed
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_force_pue_payment_needed
+msgid "L10N Mx Edi Force Pue Payment Needed"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_invoice_document_ids
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_invoice_document_ids
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_invoice_document_ids
+msgid "L10N Mx Edi Invoice Document"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_is_cfdi_needed
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_is_cfdi_needed
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_is_cfdi_needed
+msgid "L10N Mx Edi Is Cfdi Needed"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_payment_document_ids
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_payment_document_ids
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_payment_document_ids
+msgid "L10N Mx Edi Payment Document"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_update_payments_needed
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_update_payments_needed
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_update_payments_needed
+msgid "L10N Mx Edi Update Payments Needed"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_update_sat_needed
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_update_sat_needed
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_update_sat_needed
+msgid "L10N Mx Edi Update Sat Needed"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_certificate__write_uid
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__write_uid
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_global_invoice_create__write_uid
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_invoice_cancel__write_uid
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_payment_method__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_certificate__write_date
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__write_date
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_global_invoice_create__write_date
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_invoice_cancel__write_date
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_payment_method__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.res_config_settings_view_form
+msgid "MX Electronic invoicing"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.view_l10n_mx_edi_ir_ui_view_form_inherit
+msgid "MX parameters"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__d08
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__d08
+msgid "Mandatory School Transportation Expenses"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__d02
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__d02
+msgid "Medical expenses for disability"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__d07
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__d07
+msgid "Medical insurance premiums"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__d01
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__d01
+msgid "Medical, dental and hospital expenses."
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#, python-format
+msgid "Message : %s"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model,name:l10n_mx_edi.model_l10n_mx_edi_document
+msgid "Mexican documents that needs to transit outside of Odoo"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_partner__l10n_mx_edi_no_tax_breakdown
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_users__l10n_mx_edi_no_tax_breakdown
+msgid ""
+"Mexico: Includes taxes in the price and does not add tax information to the "
+"CFDI."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_invoice_cancel__mode
+msgid "Mode"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_global_invoice_create__periodicity__04
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_invoice_cancel__periodicity__04
+msgid "Monthly"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__move_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_global_invoice_create__move_ids
+msgid "Move"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.l10n_mx_edi_addenda_bosh_A_C
+msgid "NC"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.l10n_mx_edi_addenda_bosh_A_C
+msgid "NOMBRE DEL REQUISITOR"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_payment_method__name
+msgid "Name"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_invoice_cancel__need_replacement_invoice_button
+msgid "Need Replacement Invoice Button"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#, python-format
+msgid "No PAC credentials specified."
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#, python-format
+msgid "No PAC specified."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_partner__l10n_mx_edi_no_tax_breakdown
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_users__l10n_mx_edi_no_tax_breakdown
+msgid "No Tax Breakdown"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "No identificado"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#, python-format
+msgid "No valid certificate found"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_cfdi_sat_state__not_defined
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__sat_state__not_defined
+msgid "Not Defined"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_cfdi_sat_state__not_found
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__sat_state__not_found
+msgid "Not Found"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_currency__l10n_mx_edi_decimal_places
+msgid "Number of decimals"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_currency__l10n_mx_edi_decimal_places
+msgid ""
+"Number of decimals to be supported for this currency, according to the SAT. "
+"It will be used in the CFDI to format amounts."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.l10n_mx_edi_addenda_bosh_A_C
+msgid "OC"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__i02
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__i02
+msgid "Office furniture and equipment investment"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid "On %s: %s"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__623
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__623
+msgid "Opcional para Grupos de Sociedades"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.l10n_mx_edi_addenda_bosh_A_C
+msgid "Orden de Compra"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__attachment_origin
+msgid "Origin"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "Original Amount"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__i08
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__i08
+msgid "Other machinery and equipment"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:res.company,invoice_terms_html:l10n_mx_edi.demo_company_2_mx
+msgid ""
+"Our invoices are payable within 21 working days, unless another payment "
+"timeframe is indicated on either the invoice or the order. In the event of "
+"non-payment by the due date, ZAPATERIA URTADO ÑERI reserves the right to "
+"request a fixed interest payment amounting to 10% of the sum remaining due. "
+"ZAPATERIA URTADO ÑERI will be authorized to suspend any provision of "
+"services without prior warning in the event of late payment."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_company__l10n_mx_edi_pac
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_config_settings__l10n_mx_edi_pac
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.res_config_settings_view_form
+msgid "PAC"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_company__l10n_mx_edi_pac_password
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_config_settings__l10n_mx_edi_pac_password
+msgid "PAC password"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_company__l10n_mx_edi_pac_test_env
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_config_settings__l10n_mx_edi_pac_test_env
+msgid "PAC test environment"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_company__l10n_mx_edi_pac_username
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_config_settings__l10n_mx_edi_pac_username
+msgid "PAC username"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_payment_policy__ppd
+msgid "PPD"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_payment_policy__pue
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "PUE"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__state__payment_sent_pue
+msgid "PUE Payment"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "Partiality"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.res_config_settings_view_form
+msgid "Password"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_l10n_mx_edi_certificate__password
+msgid "Password for the Certificate Key"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__state__payment_cancel
+msgid "Payment Cancel"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__state__payment_cancel_failed
+msgid "Payment Cancel In Error"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model,name:l10n_mx_edi.model_l10n_mx_edi_payment_method
+msgid "Payment Method for Mexico from SAT Data"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_payment_policy
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_payment_policy
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_payment_policy
+msgid "Payment Policy"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__state__payment_sent_failed
+msgid "Payment Send In Error"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__state__payment_sent
+msgid "Payment Sent"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.actions.act_window,name:l10n_mx_edi.action_l10n_mx_payment_method
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_payment_method_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_journal__l10n_mx_edi_payment_method_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_payment_method_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_payment_method_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment_register__l10n_mx_edi_payment_method_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_partner__l10n_mx_edi_payment_method_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_users__l10n_mx_edi_payment_method_id
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.view_l10n_mx_payment_method_form
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.view_l10n_mx_payment_method_tree
+msgid "Payment Way"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.ui.menu,name:l10n_mx_edi.cfd_22_metodos_pago
+msgid "Payment Way Codes (MX)"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_l10n_mx_edi_payment_method__name
+msgid "Payment way, is found in the SAT catalog."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model,name:l10n_mx_edi.model_account_payment
+msgid "Payments"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__d10
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__d10
+msgid "Payments for educational services (Colegiatura)"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_global_invoice_create__periodicity
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_invoice_cancel__periodicity
+msgid "Periodicity"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__612
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__612
+msgid "Personas Físicas con Actividades Empresariales y Profesionales"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__603
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__603
+msgid "Personas Morales con Fines no Lucrativos"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_post_time
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_post_time
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_post_time
+msgid "Posted Time"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "Previous balance"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_pac__finkok
+msgid "Quadrum (formerly finkok)"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__d05
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__d05
+msgid "Real interest effectively paid for mortgage loans (room house)"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_invoice_cancel__cancellation_reason
+msgid "Reason"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_cfdi_state__received
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__state__invoice_received
+msgid "Received"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model,name:l10n_mx_edi.model_account_payment_register
+msgid "Register Payment"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/wizard/l10n_mx_edi_invoice_cancel.py:0
+#, python-format
+msgid "Replacement Invoice"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#: model:ir.model,name:l10n_mx_edi.model_l10n_mx_edi_invoice_cancel
+#, python-format
+msgid "Request CFDI Cancellation"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__610
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__610
+msgid "Residentes en el Extranjero sin Establecimiento Permanente en México"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.account_move_form_inherit_l10n_mx_edi
+msgid "Retry"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__retry_button_needed
+msgid "Retry Button Needed"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__g02
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__g02
+msgid "Returns, discounts or bonuses"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__626
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__626
+msgid "Régimen Simplificado de Confianza - RESICO"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__607
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__607
+msgid "Régimen de Enajenación o Adquisición de Bienes"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__625
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__625
+msgid ""
+"Régimen de las Actividades Empresariales con ingresos a través de "
+"Plataformas Tecnológicas"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__615
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__615
+msgid "Régimen de los ingresos por obtención de premios"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "S01"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_invoice_document
+msgid "S01 - Without fiscal effects"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model,name:l10n_mx_edi.model_l10n_mx_edi_certificate
+msgid "SAT Digital Sail"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cfdi_sat_state
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_cfdi_sat_state
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_cfdi_sat_state
+msgid "SAT status"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:res.company,invoice_terms_html:l10n_mx_edi.demo_company_2_mx
+msgid "STANDARD TERMS AND CONDITIONS OF SALE"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_pac__sw
+msgid "SW sapien-SmarterWEB"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__sat_state
+msgid "Sat State"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__i07
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__i07
+msgid "Satellite communications"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__state__ginvoice_sent_failed
+msgid "Send Global In Error"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__state__invoice_sent_failed
+msgid "Send In Error"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cfdi_to_public
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_move__l10n_mx_edi_cfdi_to_public
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_payment__l10n_mx_edi_cfdi_to_public
+msgid "Send the CFDI with recipient 'publico en general'"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__state__invoice_sent
+msgid "Sent"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__state__ginvoice_sent
+msgid "Sent Global"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_certificate__serial_number
+msgid "Serial number"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.res_config_settings_view_form
+msgid "Service Tax Administration (SAT)"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.account_move_form_inherit_l10n_mx_edi
+msgid "Show"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__show_button_needed
+msgid "Show Button Needed"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_cfdi_state__sent
+msgid "Signed"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_cfdi_state__global_sent
+msgid "Signed Global"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__616
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__616
+msgid "Sin obligaciones fiscales"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__sat_state__skip
+msgid "Skip"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__620
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__620
+msgid ""
+"Sociedades Cooperativas de Producción que optan por diferir sus ingresos"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_pac__solfact
+msgid "Solucion Factible"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#, python-format
+msgid "Some documents are being sent by another process already."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_certificate_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_certificate_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_certificate_id
+msgid "Source Certificate"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_l10n_mx_edi_document__state
+msgid "State"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cfdi_cancel_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_cfdi_cancel_id
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_cfdi_cancel_id
+msgid "Substituted By"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_company__l10n_mx_edi_fiscal_regime__605
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_fiscal_regime__605
+msgid "Sueldos y Salarios e Ingresos Asimilados a Salarios"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cfdi_supplier_rfc
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_cfdi_supplier_rfc
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_cfdi_supplier_rfc
+msgid "Supplier RFC"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid "Tax ID %s can not be imported"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__i06
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__i06
+msgid "Telephone communications"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.res_config_settings_view_form
+msgid "Testing"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-javascript
+#: code:addons/l10n_mx_edi/static/src/components/document_state/document_state_field.js:0
+#, python-format
+msgid "Text copied"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid "The CFDI document has been successfully cancelled."
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"The CFDI document was successfully created and signed by the government."
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#, python-format
+msgid "The Finkok service failed to cancel with the following error: %s"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#, python-format
+msgid "The Finkok service failed to sign with the following error: %s"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid "The Global CFDI document has been successfully cancelled."
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"The Global CFDI document was successfully created and signed by the "
+"government."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_partner__country_code
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_users__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_company__l10n_mx_edi_pac
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_config_settings__l10n_mx_edi_pac
+msgid "The PAC that will sign/cancel the invoices"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"The SAT does not provide information for the currency %s.\n"
+"You must get manually a key from the PAC to confirm the currency rate is accurate enough."
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#, python-format
+msgid ""
+"The Solucion Factible service failed to cancel with the following error: %s"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#, python-format
+msgid ""
+"The Solucion Factible service failed to sign with the following error: %s"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_certificate.py:0
+#, python-format
+msgid "The certificate content is invalid %s."
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_certificate.py:0
+#, python-format
+msgid "The certificate is expired since %s"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_certificate.py:0
+#, python-format
+msgid "The certificate key and/or password is/are invalid."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:res.company,invoice_terms_html:l10n_mx_edi.demo_company_2_mx
+msgid ""
+"The client explicitly waives its own standard terms and conditions, even if "
+"these were drawn up after these standard terms and conditions of sale. In "
+"order to be valid, any derogation must be expressly agreed to in advance in "
+"writing."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_partner__l10n_mx_edi_usage
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_users__l10n_mx_edi_usage
+msgid ""
+"The code that corresponds to the use that will be made of the receipt by the"
+" recipient."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cfdi_customer_rfc
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_move__l10n_mx_edi_cfdi_customer_rfc
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_payment__l10n_mx_edi_cfdi_customer_rfc
+msgid "The customer tax identification number."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_l10n_mx_edi_certificate__date_end
+msgid "The date on which the certificate expires"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_l10n_mx_edi_certificate__date_start
+msgid "The date on which the certificate starts to be valid"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"The following CFDI origin %s is invalid and must match the <code>|<uuid1>,<uuid2>,...,<uuidn> template.\n"
+"Here are the specification of this value:\n"
+"- 01: Nota de crédito\n"
+"- 02: Nota de débito de los documentos relacionados\n"
+"- 03: Devolución de mercancía sobre facturas o traslados previos\n"
+"- 04: Sustitución de los CFDI previos\n"
+"- 05: Traslados de mercancias facturados previamente\n"
+"- 06: Factura generada por los traslados previos\n"
+"- 07: CFDI por aplicación de anticipo\n"
+"For example: 01|89966ACC-0F5C-447D-AEF3-3EED22E711EE,89966ACC-0F5C-447D-AEF3-3EED22E711EE"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/wizard/account_move_send.py:0
+#, python-format
+msgid "The following partner(s) have an RFC but no country configured."
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/wizard/l10n_mx_edi_invoice_cancel.py:0
+#, python-format
+msgid "The input document is invalid"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"The invoice must contain at least one positive line to generate the CFDI."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_company__l10n_mx_edi_pac_password
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_config_settings__l10n_mx_edi_pac_password
+msgid "The password used to request the seal from the PAC"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_l10n_mx_edi_global_invoice_create__periodicity
+#: model:ir.model.fields,help:l10n_mx_edi.field_l10n_mx_edi_invoice_cancel__periodicity
+msgid "The periodicity at which you want to send the CFDI global invoices."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_l10n_mx_edi_certificate__serial_number
+msgid "The serial number to add to electronic documents"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cfdi_supplier_rfc
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_move__l10n_mx_edi_cfdi_supplier_rfc
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_payment__l10n_mx_edi_cfdi_supplier_rfc
+msgid "The supplier tax identification number."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cfdi_amount
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_move__l10n_mx_edi_cfdi_amount
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_payment__l10n_mx_edi_cfdi_amount
+msgid "The total amount reported on the cfdi."
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#, python-format
+msgid "The username and/or password are missing."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_company__l10n_mx_edi_pac_username
+#: model:ir.model.fields,help:l10n_mx_edi.field_res_config_settings__l10n_mx_edi_pac_username
+msgid "The username used to request the seal from the PAC"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cfdi_amount
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_cfdi_amount
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_cfdi_amount
+msgid "Total Amount"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__i03
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__i03
+msgid "Transportation equipment"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.report_payment_document
+msgid "UUID"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.account_move_form_inherit_l10n_mx_edi
+msgid "Update Payments"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.account_move_form_inherit_l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.account_payment_form_inherit_l10n_mx_edi
+msgid "Update SAT"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_usage
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_move__l10n_mx_edi_usage
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_account_payment__l10n_mx_edi_usage
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_partner__l10n_mx_edi_usage
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_users__l10n_mx_edi_usage
+msgid "Usage"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_cer_source
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_move__l10n_mx_edi_cer_source
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_payment__l10n_mx_edi_cer_source
+msgid ""
+"Used in CFDI like attribute derived from the exception of certificates of "
+"Origin of the Free Trade Agreements that Mexico has celebrated with several "
+"countries. If it has a value, it will indicate that it serves as certificate"
+" of origin and this value will be set in the CFDI node "
+"'NumCertificadoOrigen'."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_bank_statement_line__l10n_mx_edi_usage
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_move__l10n_mx_edi_usage
+#: model:ir.model.fields,help:l10n_mx_edi.field_account_payment__l10n_mx_edi_usage
+msgid ""
+"Used in CFDI to express the key to the usage that will gives the receiver to this invoice. This value is defined by the customer.\n"
+"Note: It is not cause for cancellation if the key set is not the usage that will give the receiver of the document."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.res_config_settings_view_form
+msgid "Username"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_bank__l10n_mx_edi_vat
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.view_res_bank_inherit_l10n_mx_edi_bank
+msgid "VAT"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_cfdi_sat_state__valid
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_document__sat_state__valid
+msgid "Validated"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.certificate_form_view
+msgid "Validity"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model,name:l10n_mx_edi.model_ir_ui_view
+msgid "View"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_partner__l10n_mx_edi_addenda_name
+#: model:ir.model.fields,field_description:l10n_mx_edi.field_res_users__l10n_mx_edi_addenda_name
+msgid "View Name"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__d06
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__d06
+msgid "Voluntary contributions to SAR"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_global_invoice_create__periodicity__02
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_invoice_cancel__periodicity__02
+msgid "Weekly"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__account_move__l10n_mx_edi_usage__s01
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__res_partner__l10n_mx_edi_usage__s01
+msgid "Without fiscal effects"
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#, python-format
+msgid ""
+"You can only make a global invoice for documents marked as 'to public'."
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid "You can only process invoices sharing the same company and journal."
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/l10n_mx_edi_document.py:0
+#, python-format
+msgid ""
+"You can't make a global invoice for invoices having different currencies."
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid "You can't register a payment for invoices having different RFCs."
+msgstr ""
+
+#. module: l10n_mx_edi
+#. odoo-python
+#: code:addons/l10n_mx_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"You need to define an 'UNSPSC Product Category' on the following products: "
+"%s"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:res.company,invoice_terms_html:l10n_mx_edi.demo_company_2_mx
+msgid "You should update this document to reflect your T&amp;C."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:res.company,invoice_terms_html:l10n_mx_edi.demo_company_2_mx
+msgid ""
+"ZAPATERIA URTADO ÑERI undertakes to do its best to supply performant "
+"services in due time in accordance with the agreed timeframes. However, none"
+" of its obligations can be considered as being an obligation to achieve "
+"results. ZAPATERIA URTADO ÑERI cannot under any circumstances, be required "
+"by the client to appear as a third party in the context of any claim for "
+"damages filed against the client by an end consumer."
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.certificate_form_view
+msgid "certificate Form"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi.certificate_tree_view
+msgid "certificate Tree"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.actions.act_window,name:l10n_mx_edi.certificate_list_action
+msgid "certificates"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_invoice_cancel__mode__ginvoice
+msgid "ginvoice"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_invoice_cancel__mode__ginvoice_with_replacement
+msgid "ginvoice_with_replacement"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_invoice_cancel__mode__invoice
+msgid "invoice"
+msgstr ""
+
+#. module: l10n_mx_edi
+#: model:ir.model.fields.selection,name:l10n_mx_edi.selection__l10n_mx_edi_invoice_cancel__mode__invoice_with_replacement
+msgid "invoice_with_replacement"
+msgstr ""

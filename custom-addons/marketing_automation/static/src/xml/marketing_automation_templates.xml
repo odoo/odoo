@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="marketing.CampaignKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
+        <t t-call="web.ActionHelper" position="replace">
+            <t t-if="showNoContentHelper">
+                <CampaignActionHelper/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="marketing.CampaignListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <t t-call="web.ActionHelper" position="replace">
+            <t t-if="showNoContentHelper">
+                <CampaignActionHelper/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="marketing.CampaignActionHelper">
+        <div class="o_view_nocontent o_ma_campaign_container">
+            <div class="container">
+                <div class="row justify-content-center o_ma_templates_container cursor-pointer mt-5">
+                    <t t-set="template_names" t-value="Object.keys(campaignTemplateData)"/>
+                    <t t-foreach="template_names" t-as="template_name" t-key="template_name">
+                        <t t-set="template_info" t-value="campaignTemplateData[template_name]"/>
+                        <div class="col-12 col-md-4 col-lg-3 py-2">
+                            <div class="card rounded p-1 d-flex align-items-stretch h-100 marketing-template" t-on-click.stop.prevent="() => this.onTemplateClick(template_name)">
+                                <div class="row m-0 w-100 h-100">
+                                    <div class="col-2 col-lg-2 p-0 d-flex align-items-center justify-content-center myShape">
+                                        <div class="d-flex w-50  h-50 align-items-center justify-content-center display-3 text-muted">
+                                            <img t-attf-src="{{template_info.icon}}" t-attf-alt="{{template_info.title}}" class="img-fluid mx-auto"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-10 col-lg-10 p-0">
+                                        <div class="card-body d-flex flex-column align-items-start justify-content-center h-100 p-0">
+                                            <h3 class="card-title" t-out="template_info.title"></h3>
+                                            <p class="card-text" t-out="template_info.description"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+
+                <div class="o_activity_not_found o_nocontent_help container text-center">
+                    <h1 style="font-weight: normal;">Create a Campaign</h1>
+                    <div class="lead" style="font-weight: normal;"> 
+                        <p class='mb-0'>Create one or load a template prepared by our experts. </p>
+                        <p class='mb-0'> Then sit down and let Odoo handle the rest!</p>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</odoo>

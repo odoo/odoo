@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="account_accountant_fleet.BankRecRecordFormLineIds" t-inherit="account_accountant.BankRecRecordFormLineIds" t-inherit-mode="extension">
+        <xpath expr="//t[@name='col_taxes']" position="after">
+            <!-- Vehicle -->
+            <t t-if="column[0] === 'vehicle'" name="col_vehicle">
+                <td class="o_data_cell o_field_cell o_field_widget o_list_many2one"
+                    t-att-class="{'o_invalid_cell': invalidFields.includes('vehicle')}"
+                    field="vehicle_id"
+                    t-att-title="line.data.vehicle_id[1]"
+                    t-out="line.data.vehicle_id[1]"/>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="account_accountant_fleet.BankRecRecordNotebookManualOperations" t-inherit="account_accountant.BankRecRecordNotebookManualOperations" t-inherit-mode="extension">
+        <xpath expr="//div[@name='suggestion']" position="before">
+            <div name="vehicle"
+                 t-if="line.data.flag !== 'liquidity'"
+                 class="o_wrap_field d-flex d-sm-contents flex-column mb-3 mb-sm-0">
+                <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
+                    <label class="o_form_label"
+                           t-att-class="{'o_field_invalid': invalidFields.includes('vehicle')}">Vehicle</label>
+                </div>
+                <div class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0 w-100 mb-1">
+                    <div class="o_field_widget o_field_many2one"
+                         t-att-class="{'o_field_invalid': invalidFields.includes('vehicle')}">
+                        <Many2OneField
+                            name="'vehicle_id'"
+                            record="line"
+                            canOpen="false"
+                            canQuickCreate="false"
+                        />
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

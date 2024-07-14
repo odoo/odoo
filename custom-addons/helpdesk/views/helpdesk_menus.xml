@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <menuitem
+        id="menu_helpdesk_root"
+        name="Helpdesk"
+        sequence="90"
+        web_icon="helpdesk,static/description/icon.png"
+        groups="helpdesk.group_helpdesk_user">
+
+        <menuitem
+            id="helpdesk_menu_team_dashboard"
+            name="Overview"
+            action="helpdesk.helpdesk_team_dashboard_action_main"
+            sequence="5"
+            groups="helpdesk.group_helpdesk_user"/>
+
+        <menuitem
+            id="helpdesk_ticket_menu_main"
+            name="Tickets"
+            sequence="10">
+
+            <menuitem
+                id="helpdesk_ticket_menu_my"
+                name="My Tickets"
+                action="helpdesk_ticket_action_main_my"
+                sequence="10"/>
+
+            <menuitem
+                id="helpdesk_ticket_menu_all"
+                name="All Tickets"
+                action="helpdesk_ticket_action_main_tree"
+                sequence="20"/>
+
+        </menuitem>
+
+        <menuitem
+            id="helpdesk_ticket_report_menu_main"
+            name="Reporting"
+            sequence="20">
+
+            <menuitem
+                id="helpdesk_ticket_report_menu"
+                name="Tickets Analysis"
+                action="helpdesk.helpdesk_ticket_analysis_action"
+                sequence="10"/>
+
+            <menuitem
+                id="helpdesk_ticket_report_menu_sla_analysis"
+                name="SLA Status Analysis"
+                action="helpdesk_sla_report_analysis_action"
+                sequence="20"/>
+
+            <menuitem
+                id="helpdesk_ticket_report_menu_ratings"
+                name="Customer Ratings"
+                action="helpdesk_ratings_server_action"
+                sequence="30"
+                groups="helpdesk.group_use_rating"/>
+
+        </menuitem>
+
+        <menuitem
+            id="helpdesk_menu_config"
+            name="Configuration"
+            sequence="100"
+            groups="helpdesk.group_helpdesk_manager">
+
+            <menuitem
+                id="helpdesk_team_menu"
+                name="Helpdesk Teams"
+                action="helpdesk_team_action"
+                sequence="0"
+                groups="helpdesk.group_helpdesk_manager"/>
+
+            <menuitem
+                id="helpdesk_stage_menu"
+                action="helpdesk_stage_action"
+                sequence="3"
+                groups="base.group_no_one"/>
+
+            <menuitem
+                id="helpdesk_sla_menu_main"
+                action="helpdesk_sla_action_main"
+                sequence="7"
+                groups="helpdesk.group_use_sla"/>
+
+            <menuitem
+                id="helpdesk_ticket_type_menu"
+                action="helpdesk_ticket_type_action"
+                sequence="10"/>
+
+            <menuitem
+                id="helpdesk_tag_menu"
+                action="helpdesk_tag_action"
+                sequence="15"
+                groups="base.group_no_one"/>
+
+            <menuitem
+                id="helpdesk_menu_config_activity_type"
+                action="mail_activity_type_action_config_helpdesk"
+                sequence="20"
+                groups="base.group_no_one"/>
+
+        </menuitem>
+
+    </menuitem>
+
+</odoo>

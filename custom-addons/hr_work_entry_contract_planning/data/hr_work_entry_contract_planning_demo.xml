@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_ngh" model="hr.contract">
+        <field name="name">Jeffrey Kelly Contract</field>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(months=-1, day=1))"/>
+        <field name="date_end" eval="(DateTime.today() + relativedelta(months=2))"/>
+        <field name="employee_id" ref="hr.employee_ngh"/>
+        <field name="job_id" model="hr.job"
+            eval="obj().env.ref('hr.employee_ngh').job_id.id"/>
+        <field name="department_id" model="hr.department"
+            eval="obj().env.ref('hr.employee_ngh').department_id.id"/>
+        <field name="wage" eval="6000"/>
+        <field name="state">open</field>
+        <field name="work_entry_source">planning</field>
+        <field name="structure_type_id" ref="hr_contract.structure_type_worker"/>
+    </record>
+
+    <!-- Monday evening shifts -->
+    <record id="planning_slot_211" model="planning.slot">
+        <field name="start_datetime" eval="(datetime.today() - relativedelta(months=1, day=1, weekday=0)).strftime('%Y-%m-%d 12:00:00')"/>
+        <field name="end_datetime" eval="(datetime.today() - relativedelta(months=1, day=1, weekday=0)).strftime('%Y-%m-%d  18:00:00')"/>
+        <field name="employee_id" ref="hr.employee_ngh"/>
+        <field name="role_id" ref="planning.planning_role_cm"/>
+        <field name="publication_warning" eval="False"/>
+        <field name="state">published</field>
+        <field name="repeat" eval="True"/>
+        <field name="repeat_interval" eval="1"/>
+        <field name="repeat_type">forever</field>
+    </record>
+
+    <!-- Tuesday morning shifts -->
+    <record id="planning_slot_212" model="planning.slot">
+        <field name="start_datetime" eval="(datetime.today() - relativedelta(months=1, day=1, weekday=1)).strftime('%Y-%m-%d 04:00:00')"/>
+        <field name="end_datetime" eval="(datetime.today() - relativedelta(months=1, day=1, weekday=1)).strftime('%Y-%m-%d  12:00:00')"/>
+        <field name="employee_id" ref="hr.employee_ngh"/>
+        <field name="role_id" ref="planning.planning_role_cm"/>
+        <field name="publication_warning" eval="False"/>
+        <field name="state">published</field>
+        <field name="repeat" eval="True"/>
+        <field name="repeat_interval" eval="1"/>
+        <field name="repeat_type">forever</field>
+    </record>
+
+    <!-- Wednesday evening shifts -->
+    <record id="planning_slot_213" model="planning.slot">
+        <field name="start_datetime" eval="(datetime.today() - relativedelta(months=1, day=1, weekday=2)).strftime('%Y-%m-%d 12:00:00')"/>
+        <field name="end_datetime" eval="(datetime.today() - relativedelta(months=1, day=1, weekday=2)).strftime('%Y-%m-%d  18:00:00')"/>
+        <field name="employee_id" ref="hr.employee_ngh"/>
+        <field name="role_id" ref="planning.planning_role_cm"/>
+        <field name="publication_warning" eval="False"/>
+        <field name="state">published</field>
+        <field name="repeat" eval="True"/>
+        <field name="repeat_interval" eval="1"/>
+        <field name="repeat_type">forever</field>
+    </record>
+
+    <!-- Thursday morning shifts -->
+    <record id="planning_slot_214" model="planning.slot">
+        <field name="start_datetime" eval="(datetime.today() - relativedelta(months=1, day=1, weekday=3)).strftime('%Y-%m-%d 04:00:00')"/>
+        <field name="end_datetime" eval="(datetime.today() - relativedelta(months=1, day=1, weekday=3)).strftime('%Y-%m-%d  12:00:00')"/>
+        <field name="employee_id" ref="hr.employee_ngh"/>
+        <field name="role_id" ref="planning.planning_role_cm"/>
+        <field name="publication_warning" eval="False"/>
+        <field name="state">published</field>
+        <field name="repeat" eval="True"/>
+        <field name="repeat_interval" eval="1"/>
+        <field name="repeat_type">forever</field>
+    </record>
+
+    <!-- Friday evening shifts -->
+    <record id="planning_slot_215" model="planning.slot">
+        <field name="start_datetime" eval="(datetime.today() - relativedelta(months=1, day=1, weekday=4)).strftime('%Y-%m-%d 12:00:00')"/>
+        <field name="end_datetime" eval="(datetime.today() - relativedelta(months=1, day=1, weekday=4)).strftime('%Y-%m-%d  18:00:00')"/>
+        <field name="employee_id" ref="hr.employee_ngh"/>
+        <field name="role_id" ref="planning.planning_role_cm"/>
+        <field name="publication_warning" eval="False"/>
+        <field name="state">published</field>
+        <field name="repeat" eval="True"/>
+        <field name="repeat_interval" eval="1"/>
+        <field name="repeat_type">forever</field>
+    </record>
+</odoo>

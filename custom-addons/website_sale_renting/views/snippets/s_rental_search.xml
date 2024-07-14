@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template name="Rental Search" id="s_rental_search">
+        <div class="s_rental_search row align-items-start g-3 my-2">
+            <div class="product_attribute_search_rental d-none col-auto o_not_editable">
+                <div class="product_attribute_search_rental_name"/>
+                <select class="s_rental_search_select form-select"/>
+            </div>
+            <div class="o_website_sale_daterange_picker variant_attribute col-auto">
+                <input class="s_rental_search_rental_duration_unit" type="hidden" name="rental_duration_unit"
+                       value=""/>
+                <div class="s_website_form_datetime input-group date ps-0 o_not_editable o_daterange_picker"
+                     id="rentingDates">
+                    <input type="text" name="renting_start_date" class="form-control"/>
+                    <input type="text" name="renting_end_date" class="form-control"/>
+                    <div class="input-group-text">
+                        <i class="fa fa-calendar"/>
+                    </div>
+                    <button class="s_rental_search_btn btn btn-secondary input-group-text">
+                        <i class="fa fa-search"/>
+                    </button>
+                </div>
+                <div class="o_renting_warning d-none">
+                    <span class="text-warning">
+                        <i class="fa fa-warning"/>
+                        <span name="renting_warning_message"/>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="s_rental_search_options" inherit_id="website.snippet_options">
+        <xpath expr="//t[@t-set='so_content_addition_selector']" position="inside">, .s_rental_search</xpath>
+        <xpath expr="." position="inside">
+            <div data-js="RentalSearchOptions" data-selector=".s_rental_search">
+                <we-select data-name="timing_picker_opt" string="Timing" data-no-preview="true">
+                    <we-button data-set-timing="day">Day</we-button>
+                    <we-button data-set-timing="hour">Hour</we-button>
+                </we-select>
+                <we-row>
+                    <we-many2one string="Attribute Filter"
+                                 data-model="product.attribute"
+                                 data-no-preview="true"
+                                 data-name="product_attribute_picker_opt"
+                                 data-set-product-attribute=""
+                    />
+                    <we-button data-name="product_attribute_reset_opt"
+                               class="reset-product-attribute-picker align-self-end fa fa-fw fa-times">
+                    </we-button>
+                </we-row>
+            </div>
+        </xpath>
+    </template>
+    <record id="website_sale_renting.s_rental_search_000_js" model="ir.asset">
+        <field name="name">Rental Search 000 JS</field>
+        <field name="bundle">web.assets_frontend</field>
+        <field name="path">website_sale_renting/static/src/snippets/s_rental_search/000.js</field>
+    </record>
+</odoo>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp_workorder.MrpDisplay">
+        <div class="o_action o_mrp_display h-100 overflow-auto">
+            <Layout display="display" className="'d-flex' + state.showEmployeesPanel ? 'o_component_with_search_panel' : ''">
+                <t t-if="group_mrp_routings" t-set-slot="control-panel-top-middle">
+                    <t t-call="{{ constructor.buttonTemplate }}"/>
+                </t>
+                <t t-set-slot="control-panel-additional-actions">
+                    <button class="btn btn-light oi oi-panel-right fa-flip-horizontal" name="employeePanelButton" t-if="group_mrp_routings" t-att-class="state.showEmployeesPanel ? 'active' : ''" t-on-click="toggleEmployeesPanel"/>
+                </t>
+                <t t-set-slot="layout-actions">
+                    <t t-if="group_mrp_routings">
+                        <ControlPanelButtons
+                            productionCount="productions.length"
+                            workorders="filteredWorkorders"
+                            workcenters="state.workcenters"
+                            toggleWorkcenter="toggleWorkcenterDialog.bind(this)"
+                            selectWorkcenter="selectWorkcenter.bind(this)"
+                            activeWorkcenter="state.activeWorkcenter"
+                            relevantCount="relevantRecords.length"
+                            adminWorkorders="adminWorkorderIds"
+                            hideNewWorkcenterButton="shouldHideNewWorkcenterButton"
+                        />
+                    </t>
+                </t>
+                <t t-set-slot="control-panel-navigation-additional">
+                    <MrpDisplaySearchBar>
+                        <t t-set-slot="search-bar-additional-menu" t-if="groups.workorders">
+                            <div class="o_dropdown_container border-start px-3">
+                                <div class="px-3 fs-5 mb-2">
+                                    <i class="me-2 text-info fa fa-filter"></i>
+                                    <h5 class="o_dropdown_title d-inline">WO Filters</h5>
+                                </div>
+                                <t t-foreach="env.searchModel.state.workorderFilters" t-as="item" t-key="item.name">
+                                    <CheckboxItem
+                                            class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
+                                            checked="item.isActive"
+                                            parentClosingMode="'none'"
+                                            onSelected="() => {item.isActive = !item.isActive; this.env.searchModel.invalidateRecordCache();}"
+                                            t-out="item.string"/>
+                                </t>
+                            </div>
+                        </t>
+                    </MrpDisplaySearchBar>
+                    <button class="btn btn-light fa fa-refresh" t-on-click="onClickRefresh"/>
+                    <button class="o_home_menu btn btn-light text-nowrap" t-on-click="close">
+                        <i class="fa fa-lg fa-sign-out me-md-1"/><span class="d-none d-md-inline">Close</span>
+                    </button>
+                </t>
+                <MrpDisplayEmployeesPanel t-if="this.group_mrp_routings &amp;&amp; state.showEmployeesPanel" employees="useEmployee.employees"
+                    setSessionOwner.bind="changeAdmin"
+                    popupAddEmployee.bind="login"
+                    logout.bind="logout"/>
+                <div class="o_mrp_display_records flex-grow-1 m-2">
+                    <t t-foreach="relevantRecords" t-as="record" t-key="record.id">
+                        <MrpDisplayRecord
+                            addToValidationStack.bind="addToValidationStack"
+                            groups="groups"
+                            record="record"
+                            production="getproduction(record)"
+                            workcenters="state.workcenters"
+                            selectWorkcenter.bind="selectWorkcenter"
+                            updateEmployees.bind="useEmployee.getConnectedEmployees"
+                            sessionOwner="useEmployee.employees.admin"
+                            removeFromValidationStack.bind="removeFromValidationStack"
+                            barcodeTarget="barcodeTargetRecord === record.resId"
+                            />
+                    </t>
+                    <t t-if="!relevantRecords.length">
+                        <t t-foreach="demoMORecords" t-as="record" t-key="record.id">
+                            <MrpDisplayRecord
+                            addToValidationStack.bind="addToValidationStack"
+                            groups="groups"
+                            record="record"
+                            production="getproduction(record)"
+                            workcenters="state.workcenters"
+                            selectWorkcenter.bind="selectWorkcenter"
+                            updateEmployees.bind="useEmployee.getConnectedEmployees"
+                            sessionOwner="useEmployee.employees.admin"
+                            removeFromValidationStack.bind="removeFromValidationStack"
+                            demoRecord="true"
+                            />
+                        </t>
+                        <div class="o_view_nocontent">
+                        <div class="o_nocontent_help">
+                            <p>
+                                Shop Floor Control Panel
+                            </p><p>
+                                Track work orders, show instructions and record manufacturing operations from here:
+                                quality control, consumed quantities, lot/serial numbers, etc.
+                            </p>
+                            <button role="button" class="btn btn-lg btn-primary" t-on-click="loadSamples" t-if="state.canLoadSamples" t-att-disabled="state.canLoadSamples === 'disabled'">Load Samples</button>
+                        </div>
+                    </div>
+                    </t>
+                </div>
+            </Layout>
+        </div>
+    </t>
+</templates>

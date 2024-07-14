@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="email_template_website_scrapped" model="mail.template">
+            <field name="name">Website Scraped</field>
+            <field name="model_id" ref="website.model_website"/>
+            <field name="email_from">{{ ctx.get('email_to') }}</field>
+            <field name="email_to">{{ ctx.get('email_to') }}</field>
+            <field name="subject">Your Odoo Website is Ready!</field>
+            <field name="body_html" type="html">
+            <div>
+            <p><b>Great news!</b> Your website conversion is complete and your new integrated Odoo website is now live.</p>
+            <p>Check out your new website here: <a t-att-href="ctx.get('website_url')"><t t-out="ctx.get('website_url')"/></a></p>
+            <p>Thank you for choosing Odoo for your web integration!</p>
+            <p>Best regards,</p>
+            <br></br>
+            <p>Odoo - The best open source website builder.</p>
+            </div>
+            </field>
+        </record>
+    </data>
+</odoo>

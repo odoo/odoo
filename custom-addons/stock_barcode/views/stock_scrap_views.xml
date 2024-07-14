@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock_scrap_wizard_inherit_mrp_barcode" model="ir.ui.view">
+        <field name="name">stock.scrap.form.inherit.barcode</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_form_view2"/>
+        <field name="arch" type="xml">
+            <form position="inside">
+                <field name="_barcode_scanned" widget="barcode_handler"/>
+            </form>
+            <xpath expr="//button[@name='action_validate']" position="attributes">
+                <attribute name="barcode_trigger">validate</attribute>
+            </xpath>
+            <xpath expr="//button[@special='cancel']" position="attributes">
+                <!-- TODO : Clarify next 2 lines-->
+                <attribute name="barcode_trigger">discard</attribute> <!--O-BTN.discard : Legit but unavailable in PDF-->
+                <attribute name="class" add="o_form_button_cancel" separator=" "/> <!--O-CMD.discard : Hacky but available in PDF-->
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_scrap_inherit_mrp_barcode" model="ir.ui.view">
+        <field name="name">stock.scrap.form.inherit.barcode</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_form_view"/>
+        <field name="arch" type="xml">
+            <form position="inside">
+                <field name="_barcode_scanned" widget="barcode_handler"/>
+            </form>
+        </field>
+    </record>
+
+</odoo>

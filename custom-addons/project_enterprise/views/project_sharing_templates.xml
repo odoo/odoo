@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="project_sharing_embed" inherit_id="project.project_sharing_embed">
+        <xpath expr="//t[@t-set='head']" position="after">
+            <t t-set="head_project_sharing_enterprise">
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+                <meta name="theme-color" content="#875A7B"/>
+            </t>
+            <t t-set="head" t-value="head_project_sharing_enterprise + (head or '')" />
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web_enterprise.EnterpriseNavBar" t-inherit="web.NavBar" t-inherit-mode="primary">
+    <xpath expr="//nav" position="attributes">
+        <attribute name="t-ref">nav</attribute>
+    </xpath>
+    <xpath expr="//t[@t-call='web.NavBar.AppsMenu']" position="replace">
+        <a href="#" class="o_menu_toggle" t-att-class="{'hasImage': currentApp &amp;&amp; currentApp.webIconData}" accesskey="h" t-ref="menuApps" t-on-click.prevent="() => this.hm.toggle()">
+            <svg class="o_menu_toggle_icon pe-none" width="14px" height="14px" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
+                <g t-foreach="[0, 5, 10]" t-as="Y" t-att-id="'o_menu_toggle_row_' + Y_index" fill="currentColor" t-key="'o_menu_toggle_row_' + Y_index">
+                    <rect t-foreach="[0, 5, 10]" t-as="X" width="3" height="3" t-att-x="X" t-att-y="Y" t-key="'o_menu_toggle_cell_' + X_index"/>
+                </g>
+            </svg>
+
+            <img
+                t-if="currentApp &amp;&amp; currentApp.webIconData"
+                t-att-src="currentApp.webIconData"
+                class="o_menu_brand_icon d-none d-lg-inline position-absolute start-0 h-100 ps-1 ms-2"
+                t-att-alt="currentApp.name"
+                t-ref="appIcon"/>
+
+            <span
+                t-if="currentApp"
+                t-esc="currentApp.name"
+                class="o_menu_brand d-none d-md-flex ms-3 pe-0"/>
+        </a>
+    </xpath>
+
+    <xpath expr="//DropdownItem[@t-esc='currentApp.name']" position="replace"/>
+</t>
+
+<t t-name="web_enterprise.EnterpriseNavBar.SectionsMenu" t-inherit="web.NavBar.SectionsMenu" t-inherit-mode="extension">
+    <xpath expr="//MenuDropdown" position="attributes">
+        <attribute name="togglerClass" add="'fw-normal'"/>
+    </xpath>
+
+</t>
+
+</templates>

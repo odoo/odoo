@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_consolidation.ConsolidationReportHeader" t-inherit="account_reports.AccountReportHeaderCustomizable" owl="1">
+        <xpath expr="//tr" position="replace">
+            <tr>
+                <th/>
+                <t t-foreach="columnHeader" t-as="header" t-key="header_index">
+                    <th t-att-colspan="header.colspan" t-att-title="header.title">
+                        <t t-out="header.name"/>
+                        <t t-if="header.consolidation_rate">
+                            <br/>
+                            <span class="subtitle">
+                                Conso Rate: <t t-out="header.consolidation_rate"/>%<br/>
+                                <t t-if="header.from_currency">
+                                    Avg Rate: 1<t t-out="header.from_currency"/> = <t t-out="header.currency_rate_avg"/><t t-out="header.to_currency"/>
+                                    / End Rate: 1<t t-out="header.from_currency"/> = <t t-out="header.currency_rate_end"/><t t-out="header.to_currency"/>
+                                </t>
+                            </span>
+                        </t>
+                    </th>
+               </t>
+            </tr>
+        </xpath>
+    </t>
+</templates>

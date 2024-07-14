@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="survey_survey_view_form" model="ir.ui.view">
+        <field name="name">survey.survey.view.form</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='survey_type']" position="attributes">
+                <attribute name="class">o_survey_type_hide_appraisal</attribute>
+                <attribute name="invisible">survey_type == 'appraisal'</attribute>
+            </xpath>
+            <button name="action_send_survey" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
+            <button name="action_start_session" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
+            <button name="action_archive" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
+        </field>
+    </record>
+
+    <record id="survey_survey_view_kanban" model="ir.ui.view">
+        <field name="name">survey.survey.view.kanban</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_kanban"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <button name="action_send_survey" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
+            <button name="action_start_session" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
+        </field>
+    </record>
+
+    <record id="survey_survey_action_appraisal" model="ir.actions.act_window">
+        <field name="name">360 Feedback</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">survey.survey</field>
+        <field name="domain">[('survey_type', '=', 'appraisal')]</field>
+        <field name="view_mode">kanban,tree,activity,form</field>
+        <field name="context">{'default_survey_type': 'appraisal'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new survey
+            </p><p>
+                You can create surveys used for appraisals. Design easily your appraisal,
+                send invitations and analyze answers.
+            </p>
+        </field>
+    </record>
+
+    <record id="survey_survey_action_appraisal_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="20"/> <!-- Lower priority than kanban view -->
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_appraisal_survey.survey_survey_view_form"/>
+        <field name="act_window_id" ref="survey_survey_action_appraisal"/>
+    </record>
+
+    <!-- Default to kanban view when opening 360 Feedback -->
+    <record id="survey_survey_action_appraisal_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/> <!-- Higher priority than form view -->
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="hr_appraisal_survey.survey_survey_view_kanban"/>
+        <field name="act_window_id" ref="survey_survey_action_appraisal"/>
+    </record>
+
+    <!--Hide appraisal surveys from survey app-->
+    <record id="survey.action_survey_form" model="ir.actions.act_window">
+        <field name="domain">[('survey_type', '!=', 'appraisal')]</field>
+    </record>
+
+    <record id="survey.action_survey_question_form" model="ir.actions.act_window">
+        <field name="domain">[('is_page', '=', False), ('survey_id.survey_type', '!=', 'appraisal')]</field>
+    </record>
+
+    <record id="survey.survey_question_answer_action" model="ir.actions.act_window">
+        <field name="domain">[('survey_id.survey_type', '!=', 'appraisal')]</field>
+    </record>
+
+    <record id="survey.action_survey_user_input" model="ir.actions.act_window">
+        <field name="domain">[('survey_id.survey_type', '!=', 'appraisal')]</field>
+    </record>
+
+    <record id="survey.survey_user_input_line_action" model="ir.actions.act_window">
+        <field name="domain">[('survey_id.survey_type', '!=', 'appraisal')]</field>
+    </record>
+
+    <menuitem
+        id="menu_hr_appraisal_surveys"
+        name="360 Feedback"
+        action="survey_survey_action_appraisal"
+        parent="hr_appraisal.menu_hr_appraisal_configuration"
+        sequence="6"
+        groups="hr_appraisal.group_hr_appraisal_manager"/>
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Variable Commissions -->
+    <record id="input_pit_last_year" model="hr.payslip.input.type">
+        <field name="name">PIT exceeding amount (Last Year)</field>
+        <field name="code">PITLAST</field>
+        <field name="country_id" ref="base.lt"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_lt_hr_payroll.hr_payroll_structure_lt_employee_salary'))]"/>
+    </record>
+</odoo>

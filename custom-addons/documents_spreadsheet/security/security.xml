@@ -1,0 +1,37 @@
+<odoo>
+    <data noupdate="1">
+
+        <record id="spreadsheet_manager_templates" model="ir.rule">
+            <field name="name">Spreadsheet_template: manager</field>
+            <field name="model_id" ref="model_spreadsheet_template"/>
+            <field name="groups" eval="[(4, ref('documents.group_documents_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <record id="spreadsheet_own_templates" model="ir.rule">
+            <field name="name">Spreadsheet_template: manage own</field>
+            <field name="model_id" ref="model_spreadsheet_template"/>
+            <field name="groups" eval="[(4, ref('documents.group_documents_user'))]"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="spreadsheet_share_create_uid_rule" model="ir.rule">
+            <field name="name">documents.shared.spreadsheet: create uid</field>
+            <field name="model_id" ref="model_documents_shared_spreadsheet"/>
+            <field name="groups" eval="[(4, ref('documents.group_documents_user'))]"/>
+            <field name="domain_force">[('share_id.create_uid', '=', user.id)]</field>
+        </record>
+
+        <record id="spreadsheet_share_manager_rule" model="ir.rule">
+            <field name="name">documents.shared.spreadsheet: manager rule</field>
+            <field name="model_id" ref="model_documents_shared_spreadsheet"/>
+            <field name="groups" eval="[(4, ref('documents.group_documents_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+    </data>
+</odoo>

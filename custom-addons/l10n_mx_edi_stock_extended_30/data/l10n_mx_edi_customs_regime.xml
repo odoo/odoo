@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_mx_edi_customs_regime_imd" model="l10n_mx_edi.customs.regime">
+        <field name="code">IMD</field>
+        <field name="name">Definitivo de importación</field>
+        <field name="goods_direction">import</field>
+    </record>
+    <record id="l10n_mx_edi_customs_regime_exd" model="l10n_mx_edi.customs.regime">
+        <field name="code">EXD</field>
+        <field name="name">Definitivo de exportación</field>
+        <field name="goods_direction">export</field>
+    </record>
+    <record id="l10n_mx_edi_customs_regime_itr" model="l10n_mx_edi.customs.regime">
+        <field name="code">ITR</field>
+        <field name="name">Temporales de importación para retomar al extranjero en el mismo estado</field>
+        <field name="goods_direction">import</field>
+    </record>
+    <record id="l10n_mx_edi_customs_regime_ite" model="l10n_mx_edi.customs.regime">
+        <field name="code">ITE</field>
+        <field name="name">Temporales de importación para elaboración, transformación o reparación para empresas con programa IMMEX</field>
+        <field name="goods_direction">import</field>
+    </record>
+    <record id="l10n_mx_edi_customs_regime_etr" model="l10n_mx_edi.customs.regime">
+        <field name="code">ETR</field>
+        <field name="name">Temporales de exportación para retornar al país en el mismo estado</field>
+        <field name="goods_direction">export</field>
+    </record>
+    <record id="l10n_mx_edi_customs_regime_ete" model="l10n_mx_edi.customs.regime">
+        <field name="code">ETE</field>
+        <field name="name">Temporales de exportación para elaboración, transformación o reparación</field>
+        <field name="goods_direction">export</field>
+    </record>
+    <record id="l10n_mx_edi_customs_regime_dfi" model="l10n_mx_edi.customs.regime">
+        <field name="code">DFI</field>
+        <field name="name">Depósito Fiscal</field>
+        <field name="goods_direction">both</field>
+    </record>
+    <record id="l10n_mx_edi_customs_regime_rfe" model="l10n_mx_edi.customs.regime">
+        <field name="code">RFE</field>
+        <field name="name">Elaboración, transformación o reparación en recinto fiscalizado</field>
+        <field name="goods_direction">both</field>
+    </record>
+    <record id="l10n_mx_edi_customs_regime_rfs" model="l10n_mx_edi.customs.regime">
+        <field name="code">RFS</field>
+        <field name="name">Recinto fiscalizado estratégico</field>
+        <field name="goods_direction">both</field>
+    </record>
+    <record id="l10n_mx_edi_customs_regime_tra" model="l10n_mx_edi.customs.regime">
+        <field name="code">TRA</field>
+        <field name="name">Tránsitos</field>
+        <field name="goods_direction">both</field>
+    </record>
+</odoo>

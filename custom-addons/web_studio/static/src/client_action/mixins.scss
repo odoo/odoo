@@ -1,0 +1,177 @@
+@mixin o-web-studio-checkbox(
+  $label-color: $o-web-studio-text-inactive,
+  $label-color-active: $o-web-studio-text-light,
+  $label-color-hover: $o-web-studio-text-light,
+  $unchecked-color: $o-web-studio-bg-dark,
+  $unchecked-border: $o-web-studio-bg-dark
+) {
+  label {
+    cursor: pointer;
+    font-size: 12px;
+    color: $label-color;
+
+    &:active {
+      color: $label-color-active;
+    }
+    &:hover {
+      color: $label-color-hover;
+    }
+  }
+  .form-check {
+    > input {
+      padding: 6px 6px;
+      margin-top: 6px;
+      &:not(:checked) {
+        border: 1px solid $unchecked-border;
+        background-color: $o-white;
+      }
+      &:checked {
+        background-image: url("/web_studio/static/src/img/ui/checkbox_active.svg");
+      }
+    }
+    &.o_web_studio_checkbox_indeterminate > input {
+      background-image: url("/web_studio/static/src/img/ui/checkbox_indeterminate.svg");
+    }
+  }
+}
+
+@mixin o-web-studio-select($top: 29px, $bottom: 37px) {
+  position: relative;
+
+  select,
+  select:active,
+  select:focus {
+    color: $o-web-studio-text-inactive;
+    background-image: none;
+    box-shadow: none;
+    border-color: $o-web-studio-bg-dark;
+  }
+
+  &:after,
+  &:before {
+    color: $o-web-studio-text-inactive;
+    font-family: "FontAwesome";
+    font-size: 8px;
+    content: "\f077";
+    @include o-position-absolute($top, 8px);
+  }
+  &:after {
+    content: "\f078";
+    @include o-position-absolute($bottom, 8px);
+  }
+  &:hover {
+    &:after,
+    &:before {
+      color: $o-web-studio-text-light;
+    }
+  }
+}
+
+@mixin o-web-studio-btn-variation($normal-color, $active-color) {
+  border-color: $normal-color;
+  background-color: $normal-color;
+  color: $o-web-studio-bg-light;
+
+  &:hover,
+  &:active,
+  &:focus,
+  &.active {
+    background-color: $active-color;
+    border-color: $active-color;
+    color: white;
+  }
+}
+
+@mixin o-web-studio-btn {
+  font-size: 0.8em;
+  color: $o-web-studio-bg-light;
+  text-transform: uppercase;
+
+  &.btn-secondary {
+    @include o-web-studio-btn-variation($o-web-studio-bg-dark, $o-web-studio-bg-darker);
+  }
+  &.btn-primary {
+    @include o-web-studio-btn-variation($o-brand-primary, darken($o-brand-primary, 5%));
+  }
+  &.btn-danger {
+    @include o-web-studio-btn-variation(
+      $o-web-studio-color-danger,
+      darken($o-web-studio-color-danger, 5%)
+    );
+  }
+  &.btn-warning {
+    @include o-web-studio-btn-variation(
+      $o-web-studio-color-warning,
+      darken($o-web-studio-color-warning, 5%)
+    );
+  }
+  &.btn-dark {
+    @include o-web-studio-btn-variation(
+      $o-web-studio-bg-medium,
+      darken($o-web-studio-bg-medium, 5%)
+    );
+  }
+}
+
+@mixin o-web-studio-sidebar-btn-link($color: $o-enterprise-action-color) {
+  color: $color;
+  &:hover {
+    color: darken($color, 5%);
+  }
+}
+
+@mixin o-web-studio-thumbnails-container {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: $o-web-studio-bg-light;
+}
+@mixin o-web-studio-thumbnails {
+  overflow: auto;
+  display: flex;
+  align-content: flex-start;
+  align-items: flex-start;
+  flex-flow: row wrap;
+}
+@mixin o-web-studio-thumbnail {
+  display: inline-flex;
+  justify-content: center;
+  align-items: baseline;
+  float: left;
+  position: relative;
+  height: 140px;
+  width: $o-web-studio-view-type-width;
+  background-color: white;
+  border: 1px solid white;
+  border-radius: 2px;
+  box-shadow: $o-web-studio-shadow-base;
+
+  &:hover {
+    box-shadow: $o-web-studio-shadow-active;
+  }
+
+  .o_web_studio_thumbnail {
+    height: 115px;
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+
+    img {
+      width: 60px;
+      margin: auto;
+      align-self: center;
+    }
+  }
+  .o_web_studio_name {
+    font-weight: 500;
+    font-size: 12px;
+    color: $o-web-studio-text-dark;
+    text-transform: capitalize;
+    height: 3em !important;
+  }
+}
+
+@mixin o-web-studio-app-creator-background {
+  background-image: radial-gradient(circle, rgba(darken($o-web-studio-bg-dark, 10%), 0) 0%, darken($o-web-studio-bg-dark, 10%) 100%),
+                    repeating-linear-gradient(45deg, darken($o-web-studio-bg-medium, 10%), darken($o-web-studio-bg-medium, 10%) 30px, darken($o-web-studio-bg-dark, 10%) 30px, darken($o-web-studio-bg-dark, 10%) 60px);
+}

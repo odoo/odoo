@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="form_view_account_debit_note_inherit" model="ir.ui.view">
+            <field name="name">form.view.account.debit.note.inherit</field>
+            <field name="model">account.debit.note</field>
+            <field name="inherit_id" ref="account_debit_note.view_account_debit_note"/>
+            <field name="arch" type="xml">
+                <field name="journal_id" position="after">
+                  <field name="country_code" invisible="1"/>
+                  <field name="l10n_co_edi_description_code_debit"
+                         required="country_code == 'CO'"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

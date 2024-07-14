@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="stock_barcode.MainComponent" t-inherit-mode="extension" t-translation="off">
+        <!-- Will display the lines to select a picking type or to select pickings to batch -->
+        <xpath expr="//div[hasclass('o_barcode_lines')]" position="inside">
+            <t t-if="env.model.needPickingType">
+                <t t-foreach="env.model.pickingTypes" t-as="line" t-key="line.id">
+                    <OptionLine line="line" additionalClass="'o_barcode_picking_type'"/>
+                </t>
+            </t>
+            <t t-if="env.model.needPickings">
+                <t t-foreach="env.model.allowedPickings" t-as="line" t-key="line.id">
+                    <OptionLine line="line" responsible="line.user_id.name || '-'"/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('o_barcode_control')]" position="after">
+            <div t-if="isConfiguring" class="o_barcode_control d-flex">
+                <button class="o_confirm btn btn-secondary text-uppercase"
+                    t-att-disabled="!env.model.canConfirmSelection"
+                    t-on-click="confirm" t-esc="'Confirm'"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

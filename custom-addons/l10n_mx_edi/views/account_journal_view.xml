@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record id="account_journal_form_inherit_l10n_mx_edi" model="ir.ui.view">
+            <field name="name">account.journal.form.inherit.l10n_mx_edi</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='loss_account_id']" position="after">
+                        <field name="l10n_mx_edi_payment_method_id"
+                               invisible="type not in ['bank', 'sale'] or country_code != 'MX'"
+                               options="{'no_open': True}"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</odoo>

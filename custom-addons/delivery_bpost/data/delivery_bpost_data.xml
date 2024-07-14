@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+  <data noupdate="1">
+    <record id="bpost_parcel" model="stock.package.type">
+      <field name="name">bpost Custom Parcel</field>
+      <field name="max_weight">30.0</field>
+      <field name="package_carrier_type">bpost</field>
+    </record>
+    <record id="product_product_delivery_bpost_world" model="product.product">
+      <field name="name">Bpost World Express Pro</field>
+      <field name="default_code">Delivery_002</field>
+      <field name="type">service</field>
+      <field name="categ_id" ref="delivery.product_category_deliveries"/>
+      <field name="sale_ok" eval="False"/>
+      <field name="purchase_ok" eval="False"/>
+      <field name="list_price">0.0</field>
+      <field name="invoice_policy">order</field>
+    </record>
+    <record id="delivery_carrier_bpost_inter" model="delivery.carrier">
+      <field name="name">Bpost World Express Pro</field>
+      <field name="product_id" ref="delivery_bpost.product_product_delivery_bpost_world"/>
+      <field name="delivery_type">bpost</field>
+      <field name="bpost_account_number">107088</field>
+      <field name="bpost_developer_password">DEMO_shm</field>
+      <field name="bpost_shipment_type">OTHER</field>
+      <field name="bpost_delivery_nature">International</field>
+      <field name="bpost_parcel_return_instructions">RTA</field>
+      <field name="bpost_international_deliver_type">bpack World Express Pro</field>
+      <field name="bpost_label_stock_type">A6</field>
+      <field name="bpost_label_format">PDF</field>
+      <field name="bpost_default_package_type_id" ref="delivery_bpost.bpost_parcel"/>
+    </record>
+    <record id="product_product_delivery_bpost_domestic" model="product.product">
+      <field name="name">Bpost Domestic bpack 24h Pro</field>
+      <field name="default_code">Delivery_001</field>
+      <field name="type">service</field>
+      <field name="categ_id" ref="delivery.product_category_deliveries"/>
+      <field name="sale_ok" eval="False"/>
+      <field name="purchase_ok" eval="False"/>
+      <field name="list_price">0.0</field>
+      <field name="invoice_policy">order</field>
+    </record>
+    <record id="delivery_carrier_bpost_domestic" model="delivery.carrier">
+      <field name="name">Bpost Domestic bpack 24h Pro</field>
+      <field name="product_id" ref="delivery_bpost.product_product_delivery_bpost_domestic"/>
+      <field name="delivery_type">bpost</field>
+      <field name="country_ids" eval="[(6, 0, [ref('base.be')])]"/>
+      <field name="bpost_account_number">107088</field>
+      <field name="bpost_developer_password">DEMO_shm</field>
+      <field name="bpost_delivery_nature">Domestic</field>
+      <field name="bpost_domestic_deliver_type">bpack 24h Pro</field>
+      <field name="bpost_label_stock_type">A6</field>
+      <field name="bpost_label_format">PDF</field>
+      <field name="bpost_default_package_type_id" ref="delivery_bpost.bpost_parcel"/>
+    </record>
+  </data>
+</odoo>

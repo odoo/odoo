@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="knowledge_article_action_trashed" model="ir.actions.act_window">
+        <field name="name">Trash</field>
+        <field name="res_model">knowledge.article</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="domain">[('is_template', '=', False)]</field>
+        <field name="context">{'search_default_filter_trashed':1}</field>
+    </record>
+
+    <record id="knowledge_article_view_form" model="ir.ui.view">
+        <field name="name">knowledge.article.view.form</field>
+        <field name="model">knowledge.article</field>
+        <field name="arch" type="xml">
+            <form js_class="knowledge_article_view_form" disable_autofocus="1">
+                <field name="active" invisible="1"/>
+                <field name="article_properties" invisible="1"/>
+                <field name="category" invisible="1"/>
+                <field name="is_article_item" invisible="1"/>
+                <field name="is_locked" invisible="1" readonly="1"/>
+                <field name="is_user_favorite" invisible="1"/>
+                <field name="user_can_write" invisible="1"/>
+                <field name="internal_permission" invisible="1"/>
+                <field name="name" invisible="1"/>
+                <field name="parent_id" invisible="1"/>
+                <field name="user_permission" invisible="1"/>
+                <field name="to_delete" invisible="1"/>
+                <field name="cover_image_id" invisible="1"/>
+                <field name="has_article_children" invisible="1"/>
+                <field name="has_item_parent" invisible="1"/>
+                <field name="full_width" invisible="1"/>
+                <field name="last_edition_uid" invisible="1"/>
+                <field name="last_edition_date" invisible="1"/>
+                <field name="create_date" invisible="1"/>
+                <field name="create_uid" invisible="1"/>
+                <field name="is_article_visible_by_everyone" invisible="1"/>
+                <field name="is_article_visible" invisible="1"/>
+                    <!-- Article header -->
+                    <widget name="knowledge_topbar"/>
+                    <!-- Invisible Article Warning Banner-->
+                    <div class="alert alert-info text-center mb-0" role="alert" groups="base.group_user"
+                         invisible="not id or internal_permission == 'none' or is_article_visible_by_everyone or is_article_visible">
+                        <field name="user_has_access_parent_path" invisible="1"/>
+                        This article is only displayed to its members.
+                        <a invisible="not user_has_access_parent_path" role="button" type="object" name="action_join" class="text-decoration-underline oe_link alert-link">
+                            Join
+                        </a>
+                    </div>
+                    <!-- Archived Article Warning Banner-->
+                    <div class="alert alert-warning text-center mb-0" role="alert"
+                         invisible="active or to_delete">
+                        This article is archived.
+                        <a role="button" class="text-decoration-underline oe_link alert-link" type="object" name="action_unarchive"
+                        invisible="not user_can_write" >Unarchive</a>
+                    </div>
+                    <!-- Trashed Article Warning Banner-->
+                    <div class="alert alert-warning text-center mb-0" role="alert" invisible="not to_delete">
+                        This Article is in Trash and will be deleted on the <field class="mb-0" name="deletion_date"/>.
+                        <a role="button" type="object" name="action_unarchive_article"
+                                class="text-decoration-underline oe_link alert-link"
+                                invisible="not user_can_write" >
+                            Restore
+                        </a>
+                    </div>
+                    <div class="flex-grow-1 position-relative">
+                        <div class="o_scroll_view o_knowledge_main_view">
+                            <div class="row p-0 m-0" style="min-height: 100%">
+                                <div class="d-flex col-12 col-lg position-relative p-0">
+                                    <div class="o_scroll_view_lg">
+                                        <widget name="knowledge_comments_handler" invisible="not user_permission"/>
+                                        <!-- Article body -->
+                                        <div class="o_knowledge_body d-flex flex-column"
+                                             invisible="not id">
+                                             <!-- Full Width handling -->
+                                             <span class="o_knowledge_article_view_form_dynamic_width d-none"
+                                                   invisible="full_width"/>
+                                            <!-- Article Cover -->
+                                            <field name="cover_image_url" invisible="1" />
+                                            <field name="cover_image_position" invisible="1" />
+                                            <widget name="knowledge_cover" invisible="not cover_image_id"/>
+                                            <!-- Article Icon -->
+                                            <field name="icon" widget="knowledge_icon" invisible="not icon" readonly="is_locked or not user_can_write or not active" class="o_knowledge_icon o_large"/>
+                                            <!-- Article body -->
+                                            <div class="o_knowledge_editor mt-3">
+                                                <field name="body" widget="knowledge_article_html_field" class="o_field_html" no_label="1" groups="base.group_user"
+                                                    options="{'collaborative': true, 'collaborative_trigger': 'start', 'resizable': False, 'knowledge_commands': true}"
+                                                    readonly="is_locked or not user_can_write or not active"/>
+                                                <!-- Portal users get some commands disabled, notably /image and /file, as they don't have access to ir.attachment -->
+                                                <field name="body" widget="knowledge_article_html_field" class="o_field_html" no_label="1" groups="base.group_portal"
+                                                    options="{'collaborative': true, 'collaborative_trigger': 'start', 'resizable': False, 'knowledge_commands': true, 'allowCommandImage': false, 'allowCommandVideo': false, 'allowCommandFile': false}"
+                                                    readonly="is_locked or not user_can_write or not active"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- No Content Helper -->
+                                    <div class="o_view_nocontent" invisible="id">
+                                        <div class="o_nocontent_help">
+                                            <p class="o_view_nocontent_smiling_face">
+                                                 No article yet.
+                                            </p>
+                                            <p>
+                                                <a role="button" class="o_nocontent_create_btn">
+                                                    Create an article
+                                                </a>
+                                                to unleash the power of Knowledge !
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Properties -->
+                                <widget name="knowledge_properties_panel"/>
+                                <!-- Chatter -->
+                                <widget name="knowledge_chatter_panel" groups="base.group_user"/>
+                                <!-- Comments Panel -->
+                                <widget name="knowledge_comments_panel"/>
+                            </div>
+                        </div>
+                    </div>
+                <field name="icon" invisible="1" readonly="is_locked or not user_can_write"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_tree" model="ir.ui.view">
+        <field name="name">knowledge.article.view.tree</field>
+        <field name="model">knowledge.article</field>
+        <field name="arch" type="xml">
+            <tree default_order="is_user_favorite desc, favorite_count desc"
+                  js_class="knowledge_article_view_tree">
+                <header>
+                    <button string="Send to Trash" icon="fa-trash" type="object" context="{'in_tree_view': True}" name="action_send_to_trash" class="btn"/>
+                </header>
+                <field name="display_name" string="Name"/>
+                <field name="is_user_favorite" column_invisible="True"/>
+                <button name="action_toggle_favorite" string=" " type="object"
+                        icon="fa-star pe-2" class="o_knowledge_toggle_favorite"
+                        invisible="not is_user_favorite"/>
+                <button name="action_toggle_favorite" string=" " type="object"
+                        icon="fa-star-o pe-2" class="o_knowledge_toggle_favorite"
+                        invisible="is_user_favorite"/>
+                <field name="parent_id"/>
+                <field name="create_uid" string="Created by" widget="many2one_avatar_user" optional="show"/>
+                <field name="create_date" string="Created on" optional="show"/>
+                <field name="category" optional="hide"/>
+                <field name="favorite_count" column_invisible="True"/>
+                <field name="root_article_id" optional="hide"/>
+                <field name="last_edition_uid" widget="many2one_avatar_user" optional="hide"/>
+                <field name="last_edition_date" string="Last Edit Date" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_tree_trash" model="ir.ui.view">
+        <field name="name">knowledge.article.view.tree.trash</field>
+        <field name="model">knowledge.article</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <tree create="0" default_order="write_date desc"
+                  js_class="knowledge_article_view_tree">
+                <header>
+                    <button string="Restore" icon="oi-unarchive" type="object" name="action_unarchive" class="btn"/>
+                </header>
+                <field name="display_name" string="Name"/>
+                <field name="is_user_favorite" column_invisible="True"/>
+                <button name="action_toggle_favorite" string=" " type="object"
+                        icon="fa-star pe-2" class="o_knowledge_toggle_favorite"
+                        invisible="not is_user_favorite"/>
+                <button name="action_toggle_favorite" string=" " type="object"
+                        icon="fa-star-o pe-2" class="o_knowledge_toggle_favorite"
+                        invisible="is_user_favorite"/>
+                <field name="category" optional="hide"/>
+                <field name="favorite_count" column_invisible="True"/>
+                <field name="root_article_id" optional="hide"/>
+                <field name="parent_id"/>
+                <field name="last_edition_uid" widget="many2one_avatar_user"/>
+                <field name="last_edition_date" string="Last Edit Date"/>
+                <field name="deletion_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_form_item_quick_create" model="ir.ui.view">
+        <field name="name">knowledge.article.view.form.item.quick_create</field>
+        <field name="model">knowledge.article</field>
+        <field name="priority">666</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="icon" widget="knowledge_icon" allow_random_icon_selection="1"/>
+                <field name="name" placeholder="My New Item" class="ms-2 mb-3"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_tree_items" model="ir.ui.view">
+        <field name="name">knowledge.article.view.tree.embedded</field>
+        <field name="model">knowledge.article</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <tree create="1" js_class="knowledge_article_view_tree_embedded" default_order="sequence asc, write_date desc, id desc">
+                <field name="sequence" widget="handle"/>
+                <field name="display_name" string="Name"/>
+                <field name="is_user_favorite" column_invisible="True"/>
+                <button name="action_toggle_favorite" string=" " type="object"
+                        icon="fa-star pe-2" class="o_knowledge_toggle_favorite"
+                        invisible="not is_user_favorite"/>
+                <button name="action_toggle_favorite" string=" " type="object"
+                        icon="fa-star-o pe-2" class="o_knowledge_toggle_favorite"
+                        invisible="is_user_favorite"/>
+                <field name="create_uid" string="Created by" widget="many2one_avatar_user" optional="show"/>
+                <field name="create_date" string="Created on" optional="show"/>
+                <field name="category" optional="hide"/>
+                <field name="favorite_count" column_invisible="True"/>
+                <field name="root_article_id" optional="hide"/>
+                <field name="last_edition_uid" widget="many2one_avatar_user" optional="hide"/>
+                <field name="last_edition_date" string="Last Edit Date" optional="hide"/>
+                <field name="parent_id" column_invisible="True"/>
+                <field name="article_properties"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_kanban" model="ir.ui.view">
+        <field name="name">knowledge.article.view.kanban</field>
+        <field name="model">knowledge.article</field>
+        <field name="arch" type="xml">
+            <kanban create="0" class="o_knowledge_article_kanban_view">
+                <field name="is_user_favorite"/>
+                <field name="parent_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_knowledge_kanban_card d-flex flex-column h-100">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-grow-1 lead text-truncate">
+                                        <field name="display_name"/>
+                                    </div>
+                                    <!-- When the user does not have 'write' access on an article, the user will not be
+                                         allowed to write on the `knowledge.article` model. Therefore, we can not use the
+                                         `boolean_favorite` widget as the model can block the write call issued by the widget.
+                                         To let the user add an article to their favorites, we will instead call an
+                                         intermediate action that will do a sudo call on the `knowledge.article` model. -->
+                                    <a type="object" name="action_toggle_favorite" class="o_knowledge_toggle_favorite mb-auto mt-1 me-1">
+                                        <i invisible="not is_user_favorite"
+                                           class="fa fa-star" title="Remove from favorites"/>
+                                        <i invisible="is_user_favorite"
+                                           class="fa fa-star-o" title="Add to favorites"/>
+                                    </a>
+                                </div>
+                                <div class="text-muted text-truncate">
+                                    <field name="parent_id"/>
+                                </div>
+                                <field name="activity_ids" widget="kanban_activity" class="ms-auto mt-auto"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_kanban_items" model="ir.ui.view">
+        <field name="name">knowledge.article.view.kanban.embedded</field>
+        <field name="model">knowledge.article</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <kanban quick_create_view="knowledge.knowledge_article_view_form_item_quick_create"
+                    js_class="knowledge_article_view_kanban_embedded"
+                    class="o_knowledge_article_kanban_view"
+                    default_order="sequence asc, write_date desc, id desc">
+                <field name="icon"/>
+                <field name="is_locked"/>
+                <field name="is_user_favorite"/>
+                <field name="is_template"/>
+                <field name="sequence" widget="handle"/>
+                <field name="user_has_write_access"/>
+                <field name="article_url"/>
+                <field name="article_properties"/>
+                <field name="cover_image_url"/>
+                <field name="activity_ids"/>
+                <field name="stage_id"/>
+                <field name="parent_id"/>
+                <field name="template_name"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <div class="o_kanban_record_title d-flex w-100">
+                                <div t-if="record.cover_image_url.raw_value.length > 0" class="o_kanban_image_fill_left mw-25"
+                                     t-attf-style="background-image: url(#{record.cover_image_url.raw_value});" role="img"/>
+                                <div class="d-flex flex-column justify-content-between pb-4 mb-2">
+                                    <div class="d-flex">
+                                        <field name="icon" widget="knowledge_icon" class="me-2" readonly="is_locked or not user_has_write_access" invisible="not icon"/>
+                                        <field name="name" invisible="is_template"/>
+                                        <field name="template_name" invisible="not is_template"/>
+                                        <div invisible="(is_template and template_name) or (not is_template and name)">Untitled</div>
+                                    </div>
+                                    <field name="article_properties" widget="properties"/>
+                                    <field name="parent_id" invisible="1"/>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom d-flex flex-column align-items-end justify-content-between">
+                                <a type="object" name="action_toggle_favorite" class="o_knowledge_toggle_favorite mb-auto pe-1">
+                                    <i invisible="not is_user_favorite"
+                                       class="fa fa-star" title="Remove from favorites"/>
+                                    <i invisible="is_user_favorite"
+                                       class="fa fa-star-o" title="Add to favorites"/>
+                                </a>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="activity_ids" widget="kanban_activity" class="pt-1"/>
+                                    <field name="create_uid" widget="many2one_avatar_user"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_kanban_items_stages" model="ir.ui.view">
+        <field name="name">knowledge.article.view.kanban.embedded.stages</field>
+        <field name="model">knowledge.article</field>
+        <field name="priority">48</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="knowledge.knowledge_article_view_kanban_items"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="default_group_by">stage_id</attribute>
+                <attribute name="on_create">quick_create</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- To be used only for embedded article items, do not use it in standard
+    actions (see knowledge_article_action_item_calendar) --> 
+    <record id="knowledge_article_view_calendar_items" model="ir.ui.view">
+        <field name="name">knowledge.article.view.calendar.embedded</field>
+        <field name="model">knowledge.article</field>
+        <field name="arch" type="xml">
+            <!-- date_start has a dummy value because the attribute is required
+            but it will not be used: the itemCalendarController will overwrite
+            it in onWillStartModel using the property selected by the user -->
+            <calendar js_class="knowledge_article_view_calendar_embedded" string="Items" date_start="article_properties">
+                <field name="parent_id" invisible="1"/>
+                <field name="article_properties"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_search" model="ir.ui.view">
+        <field name="name">knowledge.article.view.search</field>
+        <field name="model">knowledge.article</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="root_article_id"/>
+                <field name="body"/>
+                <field name="last_edition_uid"/>
+                <field name="article_properties"/>
+
+                <filter name="filter_not_is_article_item" string="Articles"
+                    domain="[('is_article_item', '=', False)]"/>
+                <filter name="filter_is_article_item" string="Article Items"
+                    domain="[('is_article_item', '=', True)]"/>
+                <separator/>
+                <filter name="filter_favorites" string="Favorite"
+                    domain="[('is_user_favorite', '=', True)]"/>
+                <separator/>
+                <filter name="filter_workspace_articles" string="Workspace"
+                    domain="[('category', '=', 'workspace')]"/>
+                <filter name="filter_shared_articles" string="Shared"
+                    domain="[('category', '=', 'shared')]"/>
+                <filter name="filter_own_privates" string="Private"
+                    domain="[('category', '=', 'private'), ('user_has_write_access', '=', True)]"/>
+                <separator/>
+                <filter name="filter_trashed" string="Trashed"
+                    domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_category" domain="[]" context="{'group_by': 'category'}"/>
+                    <filter name="group_by_menu_article" context="{'group_by': 'root_article_id'}"/>
+                    <separator/>
+                    <filter name="group_by_article_properties" domain="[]" context="{'group_by': 'article_properties'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_search_items" model="ir.ui.view">
+        <field name="name">knowledge.article.view.search.embedded</field>
+        <field name="model">knowledge.article</field>
+        <field name="priority">2</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="root_article_id"/>
+                <field name="body"/>
+                <field name="last_edition_uid"/>
+                <field name="article_properties"/>
+                <field name="stage_id"/>
+
+                <filter name="filter_my_items" string="My Items"
+                    domain="[('create_uid', '=', uid)]"/>
+                <filter name="filter_favorites" string="My Favorites"
+                    domain="[('is_user_favorite', '=', True)]"/>
+                <separator/>
+                <filter name="filter_active" string="Archived"
+                    domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_stage" string="Stage" domain="[]" context="{'group_by': 'stage_id'}"/>
+                    <separator/>
+                    <filter name="group_by_article_properties" domain="[]"
+                        context="{'group_by': 'article_properties'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="knowledge_article_action" model="ir.actions.act_window">
+        <field name="name">Articles</field>
+        <field name="res_model">knowledge.article</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="context">{'search_default_filter_not_is_article_item': 1}</field>
+        <field name="domain">[('is_template', '=', False)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an article
+            </p><p>
+                Be the first one to unleash the power of Knowledge!
+            </p>
+        </field>
+    </record>
+
+    <record id="knowledge_article_action_form" model="ir.actions.act_window">
+        <field name="name">Articles</field>
+        <field name="res_model">knowledge.article</field>
+        <field name="view_mode">form</field>
+        <field name="domain">[('is_template', '=', False)]</field>
+        <field name="view_id" ref="knowledge.knowledge_article_view_form"/>
+    </record>
+
+    <record id="knowledge_article_action_form_show_resolved" model="ir.actions.act_window">
+        <field name="name">Articles</field>
+        <field name="res_model">knowledge.article</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="knowledge.knowledge_article_view_form"/>
+        <field name="context">{'show_resolved_threads': True}</field>
+    </record>
+
+    <!-- Action window for article items -->
+    <record id="knowledge_article_item_action" model="ir.actions.act_window">
+        <field name="name">Article Items</field>
+        <field name="res_model">knowledge.article</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('parent_id', '=', active_id), ('is_article_item', '=', True)]</field>
+        <field name="search_view_id" ref="knowledge_article_view_search_items"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new article item
+            </p>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_items_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="knowledge_article_view_kanban_items"/>
+        <field name="act_window_id" ref="knowledge_article_item_action"/>
+    </record>
+
+    <record id="knowledge_article_view_items_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="knowledge_article_view_tree_items"/>
+        <field name="act_window_id" ref="knowledge_article_item_action"/>
+    </record>
+
+    <!-- Action window for article items calendar (different from other item
+    views as we do not want to be able to switch from other views to calendar,
+    and vice versa, as the calendar absolutely needs some props from the
+    behaviorProps to work) -->
+    <record id="knowledge_article_action_item_calendar" model="ir.actions.act_window">
+        <field name="name">Article Items</field>
+        <field name="res_model">knowledge.article</field>
+        <field name="view_mode">calendar</field>
+        <field name="domain">[('parent_id', '=', active_id), ('is_article_item', '=', True)]</field>
+        <field name="search_view_id" ref="knowledge_article_view_search_items"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new article item
+            </p>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_item_calendar" model="ir.actions.act_window.view">
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="knowledge_article_view_calendar_items"/>
+        <field name="act_window_id" ref="knowledge_article_action_item_calendar"/>
+    </record>
+
+    <record id="knowledge_article_item_action_stages" model="ir.actions.act_window">
+        <field name="name">Article Items</field>
+        <field name="res_model">knowledge.article</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('parent_id', '=', active_id), ('is_article_item', '=', True)]</field>
+        <field name="search_view_id" ref="knowledge_article_view_search_items"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new article item
+            </p>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_items_kanban_stages" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="knowledge_article_view_kanban_items_stages"/>
+        <field name="act_window_id" ref="knowledge_article_item_action_stages"/>
+    </record>
+
+    <record id="knowledge_article_view_items_tree_stages" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="knowledge_article_view_tree_items"/>
+        <field name="act_window_id" ref="knowledge_article_item_action_stages"/>
+    </record>
+
+    <record id="knowledge_article_action_trashed_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="knowledge_article_view_tree_trash"/>
+        <field name="act_window_id" ref="knowledge_article_action_trashed"/>
+    </record>
+
+    <!-- Templates: -->
+
+    <record id="knowledge_article_template_view_search" model="ir.ui.view">
+        <field name="name">knowledge.article.template.view.search</field>
+        <field name="model">knowledge.article</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="filter_not_is_article_item" string="Template"
+                    domain="[('is_article_item', '=', False)]"/>
+                <filter name="filter_is_article_item" string="Template Items"
+                    domain="[('is_article_item', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_template_category_id" domain="[]" context="{'group_by': 'template_category_id'}"/>
+                    <filter name="group_by_menu_article" context="{'group_by': 'root_article_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="knowledge_article_template_view_tree" model="ir.ui.view">
+        <field name="name">knowledge.article.template.view.tree</field>
+        <field name="model">knowledge.article</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="display_name" string="Name"/>
+                <field name="parent_id"/>
+                <field name="template_category_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="knowledge_article_template_view_form" model="ir.ui.view">
+        <field name="name">knowledge.article.template.view.form</field>
+        <field name="model">knowledge.article</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="template_name"/>
+                        <field name="icon" widget="char_emojis"/>
+                        <field name="template_body" widget="code" options="{'mode': 'xml'}"/>
+                        <field name="template_description"/>
+                        <field name="parent_id" string="Parent Template" domain="[('id', '!=', id), ('is_template', '=', True)]"/>
+                        <field name="is_article_item" invisible="not parent_id"/>
+                        <field name="article_properties" invisible="not parent_id"/>
+                        <field name="template_category_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="knowledge_article_template_action" model="ir.actions.act_window">
+        <field name="name">Article Templates</field>
+        <field name="res_model">knowledge.article</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{
+            'search_default_filter_not_is_article_item': 1,
+            'default_is_template': True
+        }</field>
+        <field name="search_view_id" ref="knowledge_article_template_view_search"/>
+        <field name="domain">[('is_template', '=', True)]</field>
+    </record>
+
+    <record id="knowledge_article_template_action_view_tree" model="ir.actions.act_window.view">
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="knowledge_article_template_view_tree"/>
+        <field name="act_window_id" ref="knowledge_article_template_action"/>
+    </record>
+
+    <record id="knowledge_article_template_action_view_form" model="ir.actions.act_window.view">
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="knowledge_article_template_view_form"/>
+        <field name="act_window_id" ref="knowledge_article_template_action"/>
+    </record>
+</odoo>

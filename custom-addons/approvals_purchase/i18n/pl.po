@@ -1,0 +1,141 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* approvals_purchase
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,help:approvals_purchase.field_approval_category__approval_type
+msgid ""
+"Allows you to define which documents you would like to create once the "
+"request has been approved"
+msgstr ""
+"Pozwala zdefiniować które dokumenty chcesz utworzyć gdy zapytanie zostanie "
+"zaakceptowane."
+
+#. module: approvals_purchase
+#: model:ir.model,name:approvals_purchase.model_approval_category
+msgid "Approval Category"
+msgstr "Kategoria zatwierdzenia"
+
+#. module: approvals_purchase
+#: model:ir.model,name:approvals_purchase.model_approval_request
+msgid "Approval Request"
+msgstr "Wniosek o zatwierdzenie"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_category__approval_type
+msgid "Approval Type"
+msgstr "Typ zatwierdzenia"
+
+#. module: approvals_purchase
+#: model:approval.category,name:approvals_purchase.approval_category_data_rfq
+#: model:ir.model.fields.selection,name:approvals_purchase.selection__approval_category__approval_type__purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.approval_purchase_request_view_form_inherit
+msgid "Create RFQ's"
+msgstr "Utwórz RFQ"
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid "Exception occurred: the Approval Request"
+msgstr "Wystąpił błąd: wniosek o zatwierdzenie"
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid "Exception(s):"
+msgstr "Wyjątek(i):"
+
+#. module: approvals_purchase
+#. odoo-python
+#: code:addons/approvals_purchase/models/approval_product_line.py:0
+#, python-format
+msgid "Please set a vendor on product(s) %s."
+msgstr "Prosimy o ustawienie sprzedawcy na produkcie (produktach) %s."
+
+#. module: approvals_purchase
+#: model:ir.model,name:approvals_purchase.model_approval_product_line
+msgid "Product Line"
+msgstr "Linia produktu"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_product_line__product_id
+msgid "Products"
+msgstr "Produkty"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_request__purchase_order_count
+msgid "Purchase Order Count"
+msgstr "Liczba zamówień zakupu"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_product_line__purchase_order_line_id
+msgid "Purchase Order Line"
+msgstr "Pozycja zamówienia zakupu"
+
+#. module: approvals_purchase
+#. odoo-python
+#: code:addons/approvals_purchase/models/approval_request.py:0
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.approval_purchase_request_view_form_inherit
+#, python-format
+msgid "Purchase Orders"
+msgstr "Zamówienia Zakupu"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,field_description:approvals_purchase.field_approval_product_line__po_uom_qty
+msgid "Purchase UoM Quantity"
+msgstr "Zakup JM Ilość"
+
+#. module: approvals_purchase
+#: model:ir.model.fields,help:approvals_purchase.field_approval_product_line__po_uom_qty
+msgid ""
+"The quantity converted into the UoM used by the product in Purchase Order."
+msgstr ""
+"Ilość przeliczona na JM wykorzystywana przez produkt w zamówieniu zakupu"
+
+#. module: approvals_purchase
+#. odoo-python
+#: code:addons/approvals_purchase/models/approval_request.py:0
+#, python-format
+msgid "You cannot create an empty purchase request."
+msgstr "Nie możesz utworzyć pustego zamówienia zakupu."
+
+#. module: approvals_purchase
+#. odoo-python
+#: code:addons/approvals_purchase/models/approval_request.py:0
+#, python-format
+msgid "You must select a product for each line of requested products."
+msgstr "Musisz wybrać produkt dla każdej pozycji żądanych produktów."
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid "cancelled"
+msgstr "anulowane"
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid ""
+"has been canceled.\n"
+"            Manual actions may be needed."
+msgstr ""
+"zostało anulowane.\n"
+"Może być konieczne wykonanie czynności manualnych."
+
+#. module: approvals_purchase
+#: model_terms:ir.ui.view,arch_db:approvals_purchase.exception_approval_request_canceled
+msgid "of"
+msgstr "z"

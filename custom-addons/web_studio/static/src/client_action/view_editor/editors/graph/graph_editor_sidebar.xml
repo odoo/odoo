@@ -1,0 +1,83 @@
+<templates>
+
+    <t t-name="web_studio.ViewEditor.GraphEditorSidebar">
+        <InteractiveEditorSidebar>
+            <t t-set-slot="view">
+                <Property
+                    name="'type'"
+                    type="'selection'"
+                    value="modelParams.mode"
+                    childProps="{ choices: this.typeChoices }"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Type
+                </Property>
+
+                <Property
+                    t-if="modelParams.mode !== 'pie'"
+                    name="'order'"
+                    type="'selection'"
+                    value="modelParams.order"
+                    childProps="{ choices: this.orderChoices, required: false }"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Sorting
+                </Property>
+
+                <!-- Disable linking is presented as a positive sentence for easier understanding (hence inverse) -->
+                <Property
+                    t-if="modelParams.mode !== 'line'"
+                    name="'disable_linking'"
+                    type="'boolean'"
+                    value="!modelParams.disableLinking"
+                    onChange.bind="(value, name) => this.onViewAttributeChanged(!value, name)"
+                >
+                    Access records from graph
+                </Property>
+
+                <Property
+                    t-if="modelParams.mode === 'bar'"
+                    name="'stacked'"
+                    type="'boolean'"
+                    value="modelParams.stacked"
+                    onChange.bind="this.onViewAttributeChanged"
+                >
+                    Stacked graph
+                </Property>
+
+                <Property
+                    name="'first_groupby'"
+                    type="'selection'"
+                    value="modelParams.groupBy[0]"
+                    childProps="{ choices: this.firstGroupbyChoices, required: false }"
+                    onChange="(value) => this.onGroupByChanged('col', value, this.oldFieldValues.firstDimension)"
+                >
+                    First dimension
+                </Property>
+
+                <Property
+                    name="'second_groupby'"
+                    type="'selection'"
+                    value="modelParams.groupBy[1]"
+                    childProps="{ choices: this.secondGroupbyChoices, required: false }"
+                    onChange="(value) => this.onGroupByChanged('col', value, this.oldFieldValues.secondDimension)"
+                >
+                    Second dimension
+                </Property>
+
+                <Property
+                    name="'measure'"
+                    type="'selection'"
+                    value="modelParams.measure"
+                    childProps="{ choices: this.mesureChoices, required: false }"
+                    onChange.bind="(value) => this.onGroupByChanged('measure', value, this.oldFieldValues.measure)"
+                >
+                    Measure
+                </Property>
+
+                <SidebarViewToolbox onMore="props.openViewInForm" canEditXml="!viewEditorModel.isEditingSubview" openDefaultValues="props.openDefaultValues" />
+            </t>
+        </InteractiveEditorSidebar>
+    </t>
+
+</templates>

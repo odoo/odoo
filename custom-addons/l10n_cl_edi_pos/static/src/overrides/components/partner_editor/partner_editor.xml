@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="PartnerDetailsEdit" t-inherit="point_of_sale.PartnerDetailsEdit" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('partner-details-box')]" position="inside">
+            <t t-if="pos.isChileanCompany()">
+                <div class="partner-detail col">
+                    <span class="label">Identification Type</span>
+                    <select class="detail form-select" t-att="{'disabled': isFieldCommercialAndPartnerIsChild('l10n_latam_identification_type_id')}" name="l10n_latam_identification_type_id"
+                        t-model="changes.l10n_latam_identification_type_id"
+                        t-att-class="{'border-danger': missingFields.includes('l10n_latam_identification_type_id')}">
+                       <t t-foreach="pos.l10n_latam_identification_types" t-as="l10n_latam_identification_type" t-key="l10n_latam_identification_type.id">
+                           <option t-att-value="l10n_latam_identification_type.id">
+                               <t t-esc="l10n_latam_identification_type.name" />
+                           </option>
+                       </t>
+                   </select>
+                </div>
+                <div class="partner-detail col">
+                    <span class="label">Tax Payer Type</span>
+                    <select class="detail form-select" t-att="{'disabled': isFieldCommercialAndPartnerIsChild('l10n_cl_sii_taxpayer_type')}" name="l10n_cl_sii_taxpayer_type"
+                        t-model="changes.l10n_cl_sii_taxpayer_type"
+                        t-att-class="{'border-danger': missingFields.includes('l10n_cl_sii_taxpayer_type')}">
+                       <t t-foreach="pos.sii_taxpayer_types" t-as="sii_taxpayer_type" t-key="sii_taxpayer_type[0]">
+                           <option t-att-value="sii_taxpayer_type[0]"
+                                    t-att-selected="changes.l10n_cl_sii_taxpayer_type ? ((sii_taxpayer_type[0] === changes.l10n_cl_sii_taxpayer_type) ? true : undefined) : undefined">
+                               <t t-esc="sii_taxpayer_type[1]" />
+                           </option>
+                       </t>
+                   </select>
+                </div>
+                <div class="partner-detail col">
+                    <span class="label">Giro</span>
+                    <input class="detail form-control" t-att="{'disabled': isFieldCommercialAndPartnerIsChild('l10n_cl_activity_description')}" name="l10n_cl_activity_description"
+                           t-model="changes.l10n_cl_activity_description"
+                           placeholder="Describe your activity here..."
+                           t-att-class="{'border-danger': missingFields.includes('l10n_cl_activity_description')}" />
+                </div>
+                <div class="partner-detail col">
+                    <span class="label">DTE Email</span>
+                    <input class="detail form-control" t-att="{'disabled': isFieldCommercialAndPartnerIsChild('l10n_cl_dte_email')}" name="l10n_cl_dte_email" type="email"
+                           t-model="changes.l10n_cl_dte_email"
+                           t-att-class="{'border-danger': missingFields.includes('l10n_cl_dte_email')}"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

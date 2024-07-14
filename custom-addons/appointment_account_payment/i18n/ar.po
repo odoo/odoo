@@ -1,0 +1,489 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* appointment_account_payment
+# 
+# Translators:
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: appointment_account_payment
+#. odoo-python
+#: code:addons/appointment_account_payment/models/calendar_booking.py:0
+#, python-format
+msgid ""
+"%(name)s\n"
+"%(date_start)s at %(time_start)s to\n"
+"%(date_end)s at %(time_end)s (%(timezone)s)"
+msgstr ""
+"%(name)s\n"
+"%(date_start)s في %(time_start)s إلى\n"
+"%(date_end)s في %(time_end)s (%(timezone)s) "
+
+#. module: appointment_account_payment
+#. odoo-python
+#: code:addons/appointment_account_payment/models/calendar_booking.py:0
+#, python-format
+msgid ""
+"%(name)s with %(staff_user)s\n"
+"%(date_start)s at %(time_start)s to\n"
+"%(date_end)s at %(time_end)s (%(timezone)s)"
+msgstr ""
+"%(name)s مع %(staff_user)s\n"
+"%(date_start)s في %(time_start)s إلى\n"
+"%(date_end)s في %(time_end)s (%(timezone)s) "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "(timezone:"
+msgstr "(المنطقة الزمنية:"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid ""
+"<br/><i class=\"fa fa-cog me-1\" role=\"img\" aria-label=\"Edit\" "
+"title=\"Configure Providers in backend\"/><em>Configure Payment "
+"Providers</em>"
+msgstr ""
+"<br/><i class=\"fa fa-cog me-1\" role=\"img\" aria-label=\"Edit\" title=\"قم"
+" بتهيئة مزودي الدفع في الواجهة الخلفية \"/><em>تهيئة مزودي الدفع</em> "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "<i class=\"fa fa-pencil fa-fw me-1\"/>Edit my appointment"
+msgstr "<i class=\"fa fa-pencil fa-fw me-1\"/>تحرير موعدي "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_type_view_form
+msgid ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Configure Payment "
+"Providers"
+msgstr "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> تهيئة مزودي الدفع "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid ""
+"<span class=\"text-nowrap\"><i class=\"oi oi-arrow-right mx-2\"/>Back to "
+"edit mode</span>"
+msgstr ""
+"<span class=\"text-nowrap\"><i class=\"oi oi-arrow-right mx-2\"/>العودة إلى "
+"وضع التحرير</span> "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "<span>Online</span>"
+msgstr "<span>عبر الإنترنت</span> "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid ""
+"<strong>No suitable payment option could be found.</strong>\n"
+"                    If you believe that it is an error, please contact the website administrator."
+msgstr ""
+"<strong>لم يتم العثور على خيار دفع مناسب.</strong>\n"
+"                    إذا كنت تظن أنه هناك خطأ ما، رجاءً تواصل مع مدير الموقع الإلكتروني. "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid ""
+"<strong>Warning</strong> Make sure you are logged in as the right partner "
+"before making this payment."
+msgstr ""
+"<strong>تحذير</strong> تأكد من أنك قد قمت بتسجيل دخولك في حساب الشريك الصحيح"
+" قبل الاستمرار بهذا الدفع. "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "<strong>Warning</strong> The currency is missing or incorrect."
+msgstr "<strong>تحذير</strong> العملة غير موجودة أو غير صحيحة. "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "<strong>Warning</strong> You must be logged in to pay."
+msgstr "<strong>تحذير</strong> عليك تسجيل دخولك لإكمال الدفع. "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,help:appointment_account_payment.field_product_product__detailed_type
+#: model:ir.model.fields,help:appointment_account_payment.field_product_template__detailed_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"المنتج القابل للتخزين هو المنتج الذي يمكن إدارة مخزونه. يجب أن يكون تطبيق المخزون مثبتاً.\n"
+"المنتج القابل للاستهلاء هو المنتج الذي لا يمكن إدارة مخزونه.\n"
+"الخدمة هي منتج غير مادي تقوم بتقديمه. "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__booking_token
+msgid "Access Token"
+msgstr "رمز الوصول "
+
+#. module: appointment_account_payment
+#: model:ir.model.constraint,message:appointment_account_payment.constraint_appointment_type_check_product_and_payment_step
+msgid "Activating the payment step requires a product"
+msgstr "تفعيل خطوة الدفع يتطلب وجود منتج "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "Amount"
+msgstr "مبلغ"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view_form
+msgid "Answers"
+msgstr "الإجابات"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Appointment"
+msgstr "الموعد"
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_appointment_answer_input
+msgid "Appointment Answer Inputs"
+msgstr "مدخلات إجابات الموعد "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__appointment_answer_input_ids
+msgid "Appointment Answers"
+msgstr "إجابات الموعد "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__appointment_invite_id
+msgid "Appointment Invite"
+msgstr "دعوة الموعد "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__account_move_id
+msgid "Appointment Invoice"
+msgstr "فاتورة الموعد "
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_appointment_type
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__appointment_type_id
+msgid "Appointment Type"
+msgstr "نوع الموعد"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__asked_capacity
+msgid "Asked Capacity"
+msgstr "السعة المطلوبة "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Attendees"
+msgstr "الحاضرين "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view_form
+msgid "Booking"
+msgstr "الحجز "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields.selection,name:appointment_account_payment.selection__product_template__detailed_type__booking_fees
+#: model:product.template,name:appointment_account_payment.default_booking_product_product_template
+msgid "Booking Fees"
+msgstr "رسوم الحجز "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__booking_line_ids
+msgid "Booking Lines"
+msgstr "بنود الحجز "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_appointment_answer_input__calendar_event_id
+msgid "Calendar Event"
+msgstr "فعالية التقويم "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__capacity_reserved
+msgid "Capacity Reserved"
+msgstr "السعة المحجوزة "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__capacity_used
+msgid "Capacity Used"
+msgstr "السعة المستخدمة "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_form
+msgid "Confirm Appointment"
+msgstr "تأكيد الموعد "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__partner_id
+msgid "Contact"
+msgstr "جهة الاتصال"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__create_uid
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__create_date
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__create_date
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__name
+msgid "Customer Name"
+msgstr "اسم العميل"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__description
+msgid "Description"
+msgstr "الوصف"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Details"
+msgstr "التفاصيل"
+
+#. module: appointment_account_payment
+#: model_terms:appointment.type,message_intro:appointment_account_payment.appointment_type_online_cooking_lesson
+msgid ""
+"Discover the secrets kept in high-end kitchens with one of our starred "
+"chefs, from the comfort of your own home."
+msgstr ""
+"اكتشف الأسرار المحفوظة في المطابخ الراقية مع أحد طهاتنا المتميزين، وأنت "
+"مرتاح في منزلك. "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__display_name
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__display_name
+msgid "Display Name"
+msgstr "اسم العرض "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__duration
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Duration"
+msgstr "المدة"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "For"
+msgstr "لـ "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__guest_ids
+msgid "Guests"
+msgstr "ضيوف"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__id
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__not_available
+msgid "Is Not Available"
+msgstr "غير متاح "
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_account_move
+msgid "Journal Entry"
+msgstr "قيد اليومية"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__write_uid
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__write_date
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Location"
+msgstr "الموقع "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__calendar_event_id
+msgid "Meeting"
+msgstr "الاجتماع"
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_calendar_booking
+#: model:ir.model.fields,field_description:appointment_account_payment.field_account_bank_statement_line__calendar_booking_ids
+#: model:ir.model.fields,field_description:appointment_account_payment.field_account_move__calendar_booking_ids
+#: model:ir.model.fields,field_description:appointment_account_payment.field_account_payment__calendar_booking_ids
+#: model:ir.model.fields,field_description:appointment_account_payment.field_appointment_answer_input__calendar_booking_id
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__calendar_booking_id
+msgid "Meeting Booking"
+msgstr "حجز الاجتماع "
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_calendar_booking_line
+msgid "Meeting Resource Booking"
+msgstr "حجز موارد الاجتماع "
+
+#. module: appointment_account_payment
+#: model:appointment.type,name:appointment_account_payment.appointment_type_online_cooking_lesson
+#: model:product.template,name:appointment_account_payment.product_appointment_type_online_cooking_lesson_product_template
+msgid "Online Cooking Lesson"
+msgstr "درس الطبخ عبر الإنترنت "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__staff_user_id
+msgid "Operator"
+msgstr "موظف الدعم"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "Payment for \""
+msgstr "الدفع لـ \""
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_type_view_form
+msgid "Pick a Product"
+msgstr "اختر منتجاً "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_form
+msgid "Proceed to Payment"
+msgstr "الاستمرار للدفع "
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_product_template
+#: model:ir.model.fields,field_description:appointment_account_payment.field_appointment_type__product_id
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__product_id
+msgid "Product"
+msgstr "المنتج"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_product_product__detailed_type
+#: model:ir.model.fields,field_description:appointment_account_payment.field_product_template__detailed_type
+msgid "Product Type"
+msgstr "نوع المنتج"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,help:appointment_account_payment.field_appointment_type__has_payment_step
+msgid "Require visitors to pay to confirm their booking"
+msgstr "مطالبة الزوار بالدفع لتأكيد حجزهم "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__appointment_resource_id
+msgid "Resource"
+msgstr "المورد"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view_form
+msgid "Resources"
+msgstr "الموارد"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Schedule another appointment"
+msgstr "جدولة موعد آخر "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "Service"
+msgstr "الخدمة"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__start
+msgid "Start"
+msgstr "بدء"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__stop
+msgid "Stop"
+msgstr "إيقاف"
+
+#. module: appointment_account_payment
+#: model_terms:appointment.type,message_confirmation:appointment_account_payment.appointment_type_online_cooking_lesson
+msgid ""
+"Thank you for your reservation. We will soon contact you to discuss menu "
+"options."
+msgstr "شكرا لك على الحجز. سوف نتصل بك قريبًا لمناقشة خيارات القائمة. "
+
+#. module: appointment_account_payment
+#: model:ir.model.constraint,message:appointment_account_payment.constraint_appointment_answer_input_check_event_or_booking
+msgid "The answer inputs must be linked to a meeting or to a booking"
+msgstr "يجب ربط مدخلات الإجابة باجتماع أو حجز "
+
+#. module: appointment_account_payment
+#. odoo-python
+#: code:addons/appointment_account_payment/models/calendar_booking.py:0
+#, python-format
+msgid ""
+"The following booking was not confirmed due to insufficient availability or "
+"configuration changes: %s"
+msgstr ""
+"لم يتم تأكيد الحجز التالي بسبب عدم كفاية التوفر أو تغييرات التكوين: %s "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "There is nothing to pay."
+msgstr "لا يوجد شيء لدفعه. "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "This invoice is already paid for."
+msgstr "تم دفع قيمة الفاتورة بالفعل. "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "This is a preview of the customer appointment payment form."
+msgstr "هذه معاينة لنموذج دفع موعد العميل. "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid ""
+"Unfortunately, it looks like this booking is not possible anymore. Please "
+"contact us to find an alternative."
+msgstr ""
+"لسوء الحظ، يبدو أن هذا الحجز لم يعد ممكنًا بعد الآن. يرجى الاتصال بنا للعثور"
+" على بديل. "
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_appointment_type__has_payment_step
+msgid "Up-front Payment"
+msgstr "الدفع المقدم "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "When"
+msgstr "الزمان"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid ""
+"Your appointment has not been booked yet. It will be confirmed upon payment "
+"confirmation."
+msgstr "لم يتم حجز موعدك بعد. وسيتم تأكيد ذلك عند تأكيد الدفع. "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "people"
+msgstr "أفراد "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "with"
+msgstr "مع"

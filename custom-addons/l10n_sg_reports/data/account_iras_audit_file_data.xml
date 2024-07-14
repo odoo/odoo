@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_sg_iras_action_view" model="ir.ui.view">
+        <field name="name">l10n.sg.reports.iaf.wizard.form</field>
+        <field name="model">l10n.sg.reports.iaf.wizard</field>
+        <field name="arch" type="xml">
+            <form string="IRAS File Generation">
+                <notebook>
+                    <page string="Options" name="options">
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="export_type"/>
+                        </group>
+                    </page>
+                </notebook>
+                <footer>
+                    <button string="Generate" name="generate_iras" type="object"
+                        class="oe_highlight"/>
+                    <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_sg_iras_action" model="ir.actions.act_window">
+        <field name="name">IRAS Audit File</field>
+        <field name="res_model">l10n.sg.reports.iaf.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="account_sg_iras" parent="l10n_sg.account_reports_sg_statements_menu"
+            action="account_sg_iras_action" sequence="100" />
+
+</odoo>

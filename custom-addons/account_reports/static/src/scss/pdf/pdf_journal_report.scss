@@ -1,0 +1,30 @@
+.journal_report {
+    .o_table {
+        > tbody {
+            .o_journal_report_td {
+                padding-top: 3rem;
+                padding-left: 8px;
+            }
+
+            tr.o_subtable {
+                .table {
+                    table-layout: fixed;
+                    width: 100%;
+                    max-width: 480px;
+                    margin-top: 24px;
+                    padding: 0;
+                    border: 1px solid $o-gray-300;
+                    border-radius: 0.25rem;
+
+                    thead {
+                        font-size: 15px;
+                        tr > th {
+                            background-color: #e9ecef;
+                            text-align: left;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

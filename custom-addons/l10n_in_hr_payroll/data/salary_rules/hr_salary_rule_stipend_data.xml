@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <function model="hr.salary.rule" name="unlink">
+        <value model="hr.salary.rule" search="[('struct_id', '=', ref('l10n_in_hr_payroll.hr_payroll_structure_in_stipend')),
+        ('code', '=', 'BASIC')]"/>
+    </function>
+
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[('struct_id', '=', ref('l10n_in_hr_payroll.hr_payroll_structure_in_stipend')),
+            ('code', '=', 'GROSS')]"/>
+        <value eval="{'amount_python_compute':&quot;result=( contract.wage - worked_days['LEAVE90'].amount) if 'LEAVE90' in worked_days else contract.wage &quot;}"/>
+    </function>
+
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[('struct_id', '=', ref('l10n_in_hr_payroll.hr_payroll_structure_in_stipend')),
+            ('code', '=', 'NET')]"/>
+        <value eval="{ 'name': 'Net', 'amount_python_compute':&quot;result=(categories['GROSS'] + categories['ALW'] + categories['DED'])\nresult_name = _('NET')&quot;}"/>
+    </function>
+
+</odoo>

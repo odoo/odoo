@@ -1,0 +1,72 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_project_forecast
+# 
+# Translators:
+# Janne Rättyä <janne.rattya@web-veistamo.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:12+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,help:sale_project_forecast.field_product_product__planning_enabled
+#: model:ir.model.fields,help:sale_project_forecast.field_product_template__planning_enabled
+msgid ""
+"If enabled, a shift will automatically be generated for the selected role "
+"when confirming the Sales Order. Only employees with this role will "
+"automatically be assigned shifts for Sales Orders containing this service."
+msgstr ""
+"Jos tämä on käytössä, valitulle roolille luodaan automaattisesti työvuoro, "
+"kun myyntitilaus vahvistetaan. Vain tämän roolin omaaville työntekijöille "
+"määritetään automaattisesti työvuorot tätä palvelua sisältäville "
+"myyntitilauksille."
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,field_description:sale_project_forecast.field_product_product__planning_enabled
+#: model:ir.model.fields,field_description:sale_project_forecast.field_product_template__planning_enabled
+msgid "Plan Services"
+msgstr "Suunnittele palvelut"
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_planning_slot
+msgid "Planning Shift"
+msgstr "Suunnitteluvuoro"
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_product_template
+msgid "Product"
+msgstr "Tuote"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,field_description:sale_project_forecast.field_planning_slot__sale_line_id
+msgid "Sales Order Item"
+msgstr "Myyntitilausrivi"
+
+#. module: sale_project_forecast
+#: model:ir.model,name:sale_project_forecast.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Myyntitilausrivi"
+
+#. module: sale_project_forecast
+#: model:ir.model.fields,help:sale_project_forecast.field_planning_slot__sale_line_id
+msgid ""
+"Sales order item for which this shift will be performed. When sales orders "
+"are automatically planned, the remaining hours of the sales order item, as "
+"well as the role defined on the service, are taken into account."
+msgstr ""
+"Myyntitilauskohde, jolle tämä siirto tehdään. Kun myyntitilauksia "
+"suunnitellaan automaattisesti, otetaan huomioon myyntitilauskohteen jäljellä"
+" olevat tunnit sekä palvelulle määritelty rooli."

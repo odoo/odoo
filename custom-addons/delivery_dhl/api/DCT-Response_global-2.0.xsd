@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<xsd:schema targetNamespace="http://www.dhl.com" xmlns:dhl="http://www.dhl.com/datatypes" xmlns:dct="http://www.dhl.com/DCTResponsedatatypes" xmlns="http://www.dhl.com" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="unqualified">
+	<xsd:import namespace="http://www.dhl.com/datatypes_global" schemaLocation="datatypes_global_v62.xsd" />
+	<xsd:import namespace="http://www.dhl.com/DCTResponsedatatypes" schemaLocation="DCTResponsedatatypes_global.xsd" />
+	<xsd:element name="DCTResponse">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:choice minOccurs="1" maxOccurs="1">
+					<xsd:element name="GetQuoteResponse">
+						<xsd:annotation>
+							<xsd:documentation>Root element of Quote request
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="Response">
+									<xsd:complexType>
+										<xsd:annotation>
+											<xsd:documentation>Generic response header</xsd:documentation>
+										</xsd:annotation>
+										<xsd:sequence>
+											<xsd:element name="ServiceHeader" type="ServiceHeader" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="BkgDetails" minOccurs="0" type="dct:BkgDetailsType" maxOccurs="1" />
+								<xsd:element name="Srvs" minOccurs="0" maxOccurs="1">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="Srv" type="dct:SrvType" minOccurs="0" maxOccurs="unbounded">
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="Note" minOccurs="0" type="dct:NoteType" maxOccurs="1" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="GetCapabilityResponse">
+						<xsd:annotation>
+							<xsd:documentation>Root element of Capability request
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="Response">
+									<xsd:complexType>
+										<xsd:annotation>
+											<xsd:documentation>Generic response header</xsd:documentation>
+										</xsd:annotation>
+										<xsd:sequence>
+											<xsd:element name="ServiceHeader" type="ServiceHeader" />
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="BkgDetails" minOccurs="0" type="dct:BkgDetailsType" maxOccurs="1" />
+								<xsd:element name="Srvs" minOccurs="0" maxOccurs="1">
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="Srv" type="dct:SrvType" minOccurs="0" maxOccurs="unbounded">
+											</xsd:element>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+								<xsd:element name="Note" minOccurs="0" type="dct:NoteType" maxOccurs="1" />
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="ServiceHeader">
+		<xsd:annotation>
+			<xsd:documentation>Standard routing header</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="MessageTime" type="xsd:dateTime" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Time this message is sent</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="MessageReference" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A string, peferably number, to uniquely identify individual messages. Minimum length must be 28 and maximum length is 32</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="SiteID" type="xsd:string" />
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

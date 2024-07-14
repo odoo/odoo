@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="manual_reminder_view_form_inherit_snailmail" model="ir.ui.view">
+            <field name="name">account.followup.manual_reminder.view.form.inherit</field>
+            <field name="model">account_followup.manual_reminder</field>
+            <field name="inherit_id" ref="account_followup.manual_reminder_view_form"/>
+            <field name="arch" type="xml">
+                <group name="options" position="inside">
+                    <group name="snailmail" colspan="1">
+                        <field name="snailmail" string="By post" nolabel="1"/><label for="snailmail"/>
+                    </group>
+                </group>
+                <group name="main" position="after">
+                    <div name="snailmail_cost" invisible="not snailmail" class="text-start d-inline-block" style="margin-bottom: 15px;">
+                        <span> Sending this document by post will cost
+                            <b>
+                                <field name="snailmail_cost" options="{'digits':[0,0]}" class="mr4"/>
+                                <label for="snailmail_cost" class="mr4"/>
+                            </b>
+                        </span>
+                        <i class="fa fa-info-circle" role="img" aria-label="Warning"
+                           title="The letter will be sent using the IAP service from Odoo.&#10;Make sure you have enough credits on your account or proceed to a recharge."/>
+                        <br/>
+                    </div>
+                </group>
+                <group name="email_content" position="attributes">
+                    <attribute name="invisible">not print and not email and not snailmail</attribute>
+                </group>
+                <group name="attachments" position="attributes">
+                    <attribute name="invisible">not print and not email and not snailmail</attribute>
+                </group>
+                <xpath expr="//footer/button[1]" position="attributes">
+                    <attribute name="invisible">not print or not email and not sms and not snailmail</attribute>
+                </xpath>
+                <xpath expr="//footer/button[2]" position="attributes">
+                    <attribute name="invisible">print or not email and not sms and not snailmail</attribute>
+                </xpath>
+                <xpath expr="//footer/button[3]" position="attributes">
+                    <attribute name="invisible">not print or email or sms or snailmail</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

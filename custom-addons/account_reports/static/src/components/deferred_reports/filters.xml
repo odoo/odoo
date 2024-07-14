@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.DeferredFilterComparison" t-inherit="account_reports.AccountReportFilterComparison">
+        <xpath expr="//div[@name='filter_comparison_same_period_last_year']" position="replace"/>
+        <xpath expr="//div[@name='filter_comparison_custom']" position="replace"/>
+        <xpath expr="//div[@class='dropdown-divider'][last()]" position="replace"/>
+        <xpath expr="//div[@class='dropdown-divider'][last()]" position="replace"/>
+    </t>
+
+    <t t-name="account_reports.DeferredFilters" t-inherit="account_reports.AccountReportFiltersCustomizable">
+        <xpath expr="//div[@id='filter_comparison']/t" position="replace">
+            <t t-call="account_reports.DeferredFilterComparison"/>
+        </xpath>
+    </t>
+</templates>

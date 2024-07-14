@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <record id="SALC" model="hr.salary.rule.category">
+            <field name="name">Salary Costs</field>
+            <field name="code">SALC</field>
+            <field name="parent_id" ref="hr_payroll.DED"/>
+        </record>
+        <record id="DEDIRPP" model="hr.salary.rule.category">
+            <field name="name">Tax deduction</field>
+            <field name="code">DEDIRPP</field>
+        </record>
+        <record id="UNTAXABLE_DED" model="hr.salary.rule.category">
+            <field name="name">Untaxed Deductions</field>
+            <field name="code">UNTAXABLE_DED</field>
+        </record>
+        <record id="COMP" model="hr.salary.rule.category">
+            <field name="name">Employer's contributions</field>
+            <field name="code">COMP</field>
+        </record>
+        <record id="INCOME_TAX" model="hr.salary.rule.category">
+            <field name="name">Income Tax</field>
+            <field name="code">INCOME_TAX</field>
+        </record>
+        <record id="O_TOTAL" model="hr.salary.rule.category">
+            <field name="name">Others</field>
+            <field name="code">O_TOTALS</field>
+        </record>
+    </data>
+</odoo>

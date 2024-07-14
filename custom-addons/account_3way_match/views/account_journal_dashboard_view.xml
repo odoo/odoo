@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_journal_dashboard_kanban_view_3_way_match" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//a[span[@id='account_dashboard_purchase_draft']]" position="attributes">
+                <attribute name="context">
+                    {'search_default_bills_to_validate':1}
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Signature Request Views For Employee -->
+    <record id="sign_request_employee_view_kanban" model="ir.ui.view">
+        <field name="name">sign.request.kanban</field>
+        <field name="model">sign.request</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" quick_create="false">
+                <field name="create_uid"/>
+                <field name="last_action_date"/>
+                <field name="state"/>
+                <templates>
+                    <div t-name="kanban-box" t-attf-class="oe_kanban_global_click">
+                        <div class="o_kanban_title clearfix">
+                            <span><field name="reference"/></span>
+                        </div>
+                        <div class="o_kanban_record_bottom">
+                            <div class="oe_kanban_bottom_left">
+                                <em><field name="create_date"/></em>
+                            </div>
+                            <div class="oe_kanban_bottom_right">
+                                <field name="create_uid" widget="many2one_avatar_user"/>
+                            </div>
+                        </div>
+                    </div>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

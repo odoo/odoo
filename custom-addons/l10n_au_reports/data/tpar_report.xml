@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tpar_report" model="account.report">
+        <field name="name">Taxable Payments Annual Reports (TPAR)</field>
+        <field name="filter_cash_basis" eval="True"/>
+        <field name="custom_handler_model_id" ref="model_l10n_au_report_handler"/>
+        <field name="load_more_limit" eval="80"/>
+        <field name="column_ids">
+            <record id="l10n_au_tpar_abn" model="account.report.column">
+                <field name="name">ABN</field>
+                <field name="expression_label">abn</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="l10n_au_tpar_total_gst" model="account.report.column">
+                <field name="name">Total GST</field>
+                <field name="expression_label">total_gst</field>
+            </record>
+            <record id="l10n_au_tpar_gross_paid" model="account.report.column">
+                <field name="name">Gross Paid</field>
+                <field name="expression_label">gross_paid</field>
+            </record>
+            <record id="l10n_au_tpar_tax_withheld" model="account.report.column">
+                <field name="name">Tax Withheld</field>
+                <field name="expression_label">tax_withheld</field>
+            </record>
+        </field>
+    </record>
+
+</odoo>

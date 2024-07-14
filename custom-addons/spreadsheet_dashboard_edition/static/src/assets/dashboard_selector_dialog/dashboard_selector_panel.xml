@@ -1,0 +1,11 @@
+<odoo>
+    <t t-name="spreadsheet_dashboard_edition.DashboardSelectorPanel" t-inherit="spreadsheet_edition.SpreadsheetSelectorDialog" t-inherit-mode="extension">
+        <xpath expr="//Notebook" position="inside">
+            <t t-set-slot="2" title="getPageTitle('DASHBOARD')" isVisible="true">
+                <DashboardSelectorPanel onSpreadsheetSelected.bind="onSpreadsheetSelected"
+                    onSpreadsheetDblClicked.bind="_confirm"
+                    displayBlank="false"/>
+            </t>
+        </xpath>
+    </t>
+</odoo>

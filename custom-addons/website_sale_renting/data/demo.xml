@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+        <record id="sale_renting.rental_product_1" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+        <record id="sale_renting.rental_product_2" model="product.product">
+            <field name="is_published" eval="True"/>
+        </record>
+
+        <record id="base.main_company" model="res.company">
+            <field name="renting_forbidden_sat" eval="True"/>
+            <field name="renting_forbidden_sun" eval="True"/>
+        </record>
+
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_config_settings_inherit_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.rental</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale_renting.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting name="rental_delay_costs" position="after">
+                <setting string="Default Padding Time" help="Minimum amount of time between two rentals">
+                    <div class="content-group">
+                        <div class="row mt16 o_light_label">
+                            <label for="padding_time" class="col-lg-3"/>
+                            <field name="padding_time" class="col-lg-2" widget="float_time"/>
+                            <label for="padding_time" string="hours" class="col-lg-2"/>
+                        </div>
+                    </div>
+                </setting>
+                <setting string="Rental Transfers" help="Activate to use stock deliveries and receipts for rental orders">
+                    <field name="group_rental_stock_picking"/>
+                </setting>
+            </setting>
+        </field>
+    </record>
+</odoo>

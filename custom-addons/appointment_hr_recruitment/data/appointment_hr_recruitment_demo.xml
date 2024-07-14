@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="appointment_type_interviews" model="appointment.type">
+        <field name="name">Interviews availabilities</field>
+        <field name="appointment_duration">0.5</field>
+        <field name="min_schedule_hours">1</field>
+        <field name="max_schedule_days">60</field>
+        <field name="min_cancellation_hours">1</field>
+        <field name="staff_user_ids" eval="[(6, 0, [ref('base.user_admin'), ref('base.user_demo')])]"/>
+        <field name="assign_method">resource_time</field>
+        <field name="avatars_display">show</field>
+        <field name="slot_ids" eval="[]"/>
+    </record>
+    <record id="appointment_slot_1" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_interviews"/>
+        <field name="slot_type">recurring</field>
+        <field name="weekday">1</field>
+        <field name="start_hour">14</field>
+        <field name="end_hour">17</field>
+    </record>
+    <record id="appointment_slot_2" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_interviews"/>
+        <field name="slot_type">recurring</field>
+        <field name="weekday">2</field>
+        <field name="start_hour">14</field>
+        <field name="end_hour">16</field>
+    </record>
+    <record id="appointment_slot_3" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_interviews"/>
+        <field name="slot_type">recurring</field>
+        <field name="weekday">4</field>
+        <field name="start_hour">10</field>
+        <field name="end_hour">11.5</field>
+    </record>
+    <record id="appointment_slot_4" model="appointment.slot">
+        <field name="appointment_type_id" ref="appointment_type_interviews"/>
+        <field name="slot_type">recurring</field>
+        <field name="weekday">5</field>
+        <field name="start_hour">9</field>
+        <field name="end_hour">11</field>
+    </record>
+    <record id="appointment_invite_for_type_3" model="appointment.invite">
+        <field name="short_code">interview</field>
+        <field name="appointment_type_ids" eval="[(6, 0, [ref('appointment_type_interviews')])]"/>
+    </record>
+</odoo>

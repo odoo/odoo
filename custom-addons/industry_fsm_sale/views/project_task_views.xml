@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_task_view_list_fsm_sale_inherit" model="ir.ui.view">
+        <field name="name">project.task.tree.fsm.sale.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="industry_fsm.project_task_view_list_fsm"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <header>
+                    <button name="action_create_invoice" string="Create Invoice" type="object"
+                            groups="sales_team.group_sale_salesman,account.group_account_invoice"
+                            invisible="not context.get('display_to_invoice', 0)"/>
+                </header>
+            </xpath>
+            <field name="partner_id" position="attributes">
+                <attribute name="invisible">not allow_billable and not is_fsm</attribute>
+                <attribute name="required">is_fsm</attribute>
+            </field>
+        </field>
+    </record>
+
+    <!-- All Tasks: to invoice action -->
+    <record id="project_task_action_to_invoice_fsm" model="ir.actions.act_window">
+        <field name="name">To Invoice</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">tree,kanban,map,calendar,gantt,pivot,graph,form,activity</field>
+        <field name="search_view_id" ref="industry_fsm.project_task_view_search_fsm"/>
+        <field name="domain">[('is_fsm', '=', True), ('project_id', '!=', False), ('display_in_project', '=', True)]</field>
+        <field name="context">{
+            'fsm_mode': True,
+            'search_default_to_invoice': True,
+            'display_to_invoice': True,
+            'default_user_ids': False,
+            'default_scale': 'week',
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No tasks found. Let's create one!
+            </p><p>Invoice your time and material to your customers once your tasks are done.</p>
+        </field>
+    </record>
+
+    <record id="project_task_view_search_fsm_inherit_sale" model="ir.ui.view">
+        <field name="name">project.task.view.search</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="industry_fsm.project_task_view_search_fsm"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="sale_order_id" filter_domain="['|', ('sale_order_id', 'ilike', self), ('sale_line_id', 'ilike', self)]"/>
+            </field>
+            <filter name="schedule" position="after">
+                <filter string="To Invoice" domain="[('invoice_status', '=', 'to invoice')]" name="to_invoice" invisible="1"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="project_task_action_to_invoice_fsm_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="industry_fsm.project_task_view_list_fsm"/>
+        <field name="act_window_id" ref="project_task_action_to_invoice_fsm"/>
+    </record>
+
+    <record id="project_task_action_to_invoice_fsm_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="industry_fsm.project_task_view_kanban_fsm"/>
+        <field name="act_window_id" ref="project_task_action_to_invoice_fsm"/>
+    </record>
+
+    <record id="project_task_action_to_invoice_fsm_view_map" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">map</field>
+        <field name="view_id" ref="project_enterprise.project_task_map_view"/>
+        <field name="act_window_id" ref="project_task_action_to_invoice_fsm"/>
+    </record>
+
+    <record id="project_task_action_to_invoice_fsm_view_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="industry_fsm.project_task_view_calendar_fsm"/>
+        <field name="act_window_id" ref="project_task_action_to_invoice_fsm"/>
+    </record>
+
+    <record id="project_task_action_to_invoice_fsm_view_gantt" model="ir.actions.act_window.view">
+        <field name="sequence" eval="25"/>
+        <field name="view_mode">gantt</field>
+        <field name="view_id" ref="project_enterprise.project_task_view_gantt"/>
+        <field name="act_window_id" ref="project_task_action_to_invoice_fsm"/>
+    </record>
+
+    <record id="project_task_action_to_invoice_fsm_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">pivot</field>
+        <field name="act_window_id" ref="project_task_action_to_invoice_fsm"/>
+    </record>
+
+    <record id="project_task_action_to_invoice_fsm_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="45"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project.view_task_form2"/>
+        <field name="act_window_id" ref="project_task_action_to_invoice_fsm"/>
+    </record>
+
+    <record id="industry_fsm.project_project_action_only_fsm" model="ir.actions.act_window">
+        <field name="context">{
+            'fsm_mode': True,
+            'default_is_fsm': True,
+            'default_allow_timesheets': True,
+            'default_allow_material': True,
+            'default_allow_billable': True,
+        }</field>
+    </record>
+
+    <record id="product_action_fsm" model="ir.actions.act_window" >
+        <field name="name">Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,activity,form</field>
+        <field name="domain">[('sale_ok', '=', True)]</field>
+        <field name="context">{
+            'fsm_mode': True,
+            'search_default_filter_to_sell': True,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No products found. Let's create one!
+            </p><p>
+                Track and bill the material used to complete your tasks.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="fsm_menu_settings_product"
+        name="Products"
+        sequence="30"
+        action="product_action_fsm"
+        parent="industry_fsm.fsm_menu_settings"
+        groups="sales_team.group_sale_salesman"/>
+
+        <menuitem id="fsm_menu_all_tasks_invoice"
+            name="To Invoice"
+            action="project_task_action_to_invoice_fsm"
+            sequence="30"
+            parent="industry_fsm.fsm_menu_all_tasks_root"
+            groups="sales_team.group_sale_salesman"/>
+
+    <record id="view_task_form2_inherit" model="ir.ui.view">
+        <field name="name">view.task.form2.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="industry_fsm.view_task_form2_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <div groups="sales_team.group_sale_salesman,industry_fsm.group_fsm_quotation_from_task" class="text-center alert alert-primary" role="alert" invisible="not warning_message or warning_message == ''">
+                    <field name="warning_message"/>
+                </div>
+            </xpath>
+            <xpath expr="//span[@id='end_button_box']" position="before">
+                <t groups="sales_team.group_sale_salesman,industry_fsm.group_fsm_quotation_from_task">
+                    <button name="action_fsm_view_quotations"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-dollar"
+                        groups="industry_fsm.group_fsm_manager"
+                        invisible="not allow_quotations or quotation_count == 0">
+                        <field string="Quotations" name="quotation_count" widget="statinfo"/>
+                    </button>
+                </t>
+            </xpath>
+            <xpath expr="//button[@name='action_view_so']" position="after">
+                <t groups="sales_team.group_sale_salesman,industry_fsm.group_fsm_quotation_from_task">
+                    <button name="action_view_invoices" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="not allow_billable or invoice_count == 0">
+                        <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                    </button>
+                </t>
+            </xpath>
+            <field name="is_fsm" position="after">
+                <field name="allow_material" invisible="1"/>
+                <field name="allow_quotations" invisible="1"/>
+                <field name="display_create_invoice_primary" invisible="1"/>
+                <field name="display_create_invoice_secondary" invisible="1"/>
+            </field>
+            <xpath expr="//button[@name='action_fsm_validate'][hasclass('btn-primary')]" position="before">
+                <button class="btn-primary" name="action_create_invoice" type="object" string="Create Invoice" data-hotkey="l"
+                    invisible="not display_create_invoice_primary" groups="sales_team.group_sale_salesman,account.group_account_invoice"/>
+            </xpath>
+            <xpath expr="//button[@name='action_fsm_validate'][hasclass('btn-secondary')]" position="before">
+                <button class="btn-secondary" name="action_create_invoice" type="object" string="Create Invoice" data-hotkey="l"
+                        invisible="not display_create_invoice_secondary" groups="sales_team.group_sale_salesman,account.group_account_invoice"/>
+            </xpath>
+            <xpath expr="//button[@name='action_timer_resume']" position='after'>
+                <button class="btn-secondary" name="action_fsm_create_quotation" type="object" string="New Quotation"
+                        invisible="not allow_quotations" groups="sales_team.group_sale_salesman,industry_fsm.group_fsm_quotation_from_task"
+                        data-hotkey="c"/>
+            </xpath>
+            <xpath expr="//span[@id='button_products']" position="replace">
+                <button class="oe_stat_button" name="action_fsm_view_material"
+                    type="object" icon="fa-cart-plus" invisible="not partner_id and not is_fsm or not allow_material">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text d-flex align-items-baseline gap-1">
+                            <field name="material_line_product_count" widget="statinfo" string="Products" nolabel="1" class="oe_inline"/>
+                            <span>Products</span>
+                        </span>
+                        <span class="o_stat_value">
+                            <field name="material_line_total_price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="currency_id" invisible="True"/>
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+            <field name="partner_id" position="attributes">
+                <attribute name="invisible">not allow_billable and not is_fsm</attribute>
+                <attribute name="required">is_fsm</attribute>
+            </field>
+            <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="attributes">
+                <attribute name="column_invisible">parent.is_fsm and not parent.partner_id or not parent.allow_billable and not parent.is_fsm</attribute>
+                <attribute name="invisible">not allow_billable and not is_fsm</attribute>
+                <attribute name="required">is_fsm and parent.partner_id</attribute>
+            </xpath>
+            <xpath expr="//field[@name='depend_on_ids']/tree/field[@name='partner_id']" position="attributes">
+                <attribute name="column_invisible">not parent.allow_billable and not parent.is_fsm</attribute>
+                <attribute name="invisible">not allow_billable and not is_fsm</attribute>
+                <attribute name="required">is_fsm</attribute>
+            </xpath>
+            <field name="project_id" position="attributes">
+                <attribute name="context">{
+                    'default_allow_billable': True,
+                    'default_is_fsm': context.get('fsm_mode'),
+                }</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>

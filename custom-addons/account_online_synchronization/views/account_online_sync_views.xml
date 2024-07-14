@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_online_link_view_form" model="ir.ui.view">
+            <field name="name">account.online.link.form</field>
+            <field name="model">account.online.link</field>
+            <field name="arch" type="xml">
+                <form create="false">
+                    <header>
+                        <button name="action_fetch_transactions" string="Fetch Transactions" class="oe_highlight"
+                                type="object" groups="account.group_account_user"
+                                invisible="state == 'disconnected' or not provider_data"/>
+                        <button groups="account.group_account_manager" name="action_update_credentials" string="Update Credentials" class="btn-secondary" type="object" invisible="state == 'disconnected' or not provider_data"/>
+                        <button groups="account.group_account_manager" name="action_reconnect_account" string="Reconnect" class="btn-primary" type="object" invisible="state != 'disconnected' or not provider_data"/>
+                        <button groups="account.group_account_manager" name="action_new_synchronization" string="Connect" class="btn-primary" type="object" invisible="state != 'disconnected' or provider_data"/>
+                        <field name="state" widget="statusbar" readonly="1"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="client_id" readonly="1" string="Client id"/>
+                                <field name="auto_sync" invisible="not provider_data"/>
+                                <field name="provider_data" readonly="1" invisible="1"/>
+                                <field name="provider_type" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="last_refresh" string="Last refresh" readonly="1" invisible="not provider_data"/>
+                                <field name="next_refresh" readonly="1" invisible="not provider_data or not auto_sync"/>
+                                <field name="expiring_synchronization_date" readonly="1" invisible="not provider_data"/>
+                                <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="account_online_account_ids" nolabel="1" widget="one2many" mode="tree" string="Online Accounts" invisible="not provider_data" colspan="2">
+                                <tree create="false" editable="bottom"> <!-- Clicks on records (for edit) are blocked -->
+                                    <field name="name" required="1"/>
+                                    <field name="account_number"/>
+                                    <field name="journal_ids"
+                                        widget="many2many_tags"
+                                        options="{'no_quick_create': True}"
+                                        domain="[('type', '=', 'bank'), ('account_online_account_id', '=', False)]"
+                                        context="{'default_type': 'bank', 'default_bank_statements_source': 'online_sync', 'default_account_online_account_id': id}"/>
+                                    <field name="last_sync"/>
+                                    <field name="balance" readonly="1"/>
+                                    <field name="inverse_balance_sign" groups="base.group_no_one" optional="hide"/>
+                                    <field name="inverse_transaction_sign" groups="base.group_no_one" optional="hide"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                    <!-- Chatter -->
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="message_ids"/>
+                        <field name="activity_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_online_account_view_form" model="ir.ui.view">
+            <field name="name">account.online.account.form</field>
+            <field name="model">account.online.account</field>
+            <field name="arch" type="xml">
+                <form create="false">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="account_number" readonly="1"/>
+                                <field name="journal_ids" widget="many2many_tags" domain="[('type', '=', 'bank'), ('account_online_account_id', '=', False)]"/>
+                            </group>
+                            <group>
+                                <field name="last_sync"/>
+                                <field name="balance" readonly="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_online_link_view_tree" model="ir.ui.view">
+            <field name="name">account.online.link.tree</field>
+            <field name="model">account.online.link</field>
+            <field name="arch" type="xml">
+                <tree decoration-danger="state != 'connected'" create="false">
+                    <field name="name" readonly="1"/>
+                    <field name="state"/>
+                    <field name="provider_type" readonly="1"/>
+                    <field name="last_refresh" readonly="1"/>
+                    <field name="next_refresh" readonly="1" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_account_online_link_form">
+            <field name="name">Online Synchronization</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="account_online_link_view_tree"/>
+            <field name="res_model">account.online.link</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Online Synchronization
+              </p>
+              <p>
+                To create a synchronization with your banking institution,<br/>
+                please click on <b>Add a Bank Account</b>.
+              </p>
+            </field>
+        </record>
+
+        <menuitem
+            name="Online Synchronization"
+            parent="account.account_banks_menu"
+            action="action_account_online_link_form"
+            id="menu_action_online_link_account"
+            groups="base.group_no_one"
+            sequence="4"/>
+    </data>
+</odoo>

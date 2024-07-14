@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="attachment_sign_termination" model="ir.attachment">
+        <field name="name">Employee Termination.pdf</field>
+        <field name="datas" type="base64" file="hr_contract_sign/static/demo/employee_termination.pdf"/>
+        <field name="mimetype">application/pdf;base64</field>
+    </record>
+
+    <record id="template_sign_termination" model="sign.template">
+        <field name="attachment_id" ref="attachment_sign_termination"/>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[(4, ref('sign.sign_template_tag_1'))]"/>
+    </record>
+
+    <record model="sign.item" id="sign_item_1">
+        <field name="template_id" ref="template_sign_termination"/>
+        <field name="type_id" ref="sign.sign_item_type_name"/>
+        <field name="responsible_id" ref="hr_contract_sign.sign_item_role_job_responsible"/>
+        <field name="page" type="int">1</field>
+        <field name="posX" type="float">0.164</field>
+        <field name="posY" type="float">0.163</field>
+        <field name="width" type="float">0.186</field>
+        <field name="height" type="float">0.014</field>
+    </record>
+
+    <record model="sign.item" id="sign_item_2">
+        <field name="template_id" ref="template_sign_termination"/>
+        <field name="type_id" ref="sign.sign_item_type_date"/>
+        <field name="responsible_id" ref="hr_contract_sign.sign_item_role_job_responsible"/>
+        <field name="page" type="int">1</field>
+        <field name="posX" type="float">0.141</field>
+        <field name="posY" type="float">0.215</field>
+        <field name="width" type="float">0.157</field>
+        <field name="height" type="float">0.016</field>
+    </record>
+
+    <record model="sign.item" id="sign_item_3">
+        <field name="template_id" ref="template_sign_termination"/>
+        <field name="type_id" ref="sign.sign_item_type_text"/>
+        <field name="responsible_id" ref="hr_contract_sign.sign_item_role_job_responsible"/>
+        <field name="page" type="int">1</field>
+        <field name="posX" type="float">0.496</field>
+        <field name="posY" type="float">0.423</field>
+        <field name="width" type="float">0.125</field>
+        <field name="height" type="float">0.016</field>
+    </record>
+
+    <record model="sign.item" id="sign_item_4">
+        <field name="template_id" ref="template_sign_termination"/>
+        <field name="type_id" ref="sign.sign_item_type_signature"/>
+        <field name="responsible_id" ref="hr_contract_sign.sign_item_role_job_responsible"/>
+        <field name="page" type="int">1</field>
+        <field name="posX" type="float">0.123</field>
+        <field name="posY" type="float">0.822</field>
+        <field name="width" type="float">0.200</field>
+        <field name="height" type="float">0.050</field>
+    </record>
+
+    <record model="sign.item" id="sign_item_5">
+        <field name="template_id" ref="template_sign_termination"/>
+        <field name="type_id" ref="sign.sign_item_type_date"/>
+        <field name="responsible_id" ref="hr_contract_sign.sign_item_role_job_responsible"/>
+        <field name="page" type="int">1</field>
+        <field name="posX" type="float">0.168</field>
+        <field name="posY" type="float">0.782</field>
+        <field name="width" type="float">0.205</field>
+        <field name="height" type="float">0.015</field>
+    </record>
+
+    <record model="sign.item" id="sign_item_6">
+        <field name="template_id" ref="template_sign_termination"/>
+        <field name="type_id" ref="sign.sign_item_type_signature"/>
+        <field name="responsible_id" ref="sign.sign_item_role_employee"/>
+        <field name="page" type="int">1</field>
+        <field name="posX" type="float">0.695</field>
+        <field name="posY" type="float">0.822</field>
+        <field name="width" type="float">0.200</field>
+        <field name="height" type="float">0.050</field>
+    </record>
+
+    <record model="sign.item" id="sign_item_7">
+        <field name="template_id" ref="template_sign_termination"/>
+        <field name="type_id" ref="sign.sign_item_type_date"/>
+        <field name="responsible_id" ref="sign.sign_item_role_employee"/>
+        <field name="page" type="int">1</field>
+        <field name="posX" type="float">0.740</field>
+        <field name="posY" type="float">0.782</field>
+        <field name="width" type="float">0.205</field>
+        <field name="height" type="float">0.015</field>
+    </record>
+
+    <record id="offboard_sign_termination_request" model="mail.activity.plan.template">
+        <field name="summary">Termination Request</field>
+        <field name="activity_type_id" ref="sign.mail_activity_data_signature_request"/>
+        <field name="sign_template_id" ref="template_sign_termination"/>
+        <field name="employee_role_id" ref="sign.sign_item_role_employee"/>
+        <field name="plan_id" ref="hr.offboarding_plan"/>
+        <field name="responsible_type">other</field>
+        <field name="responsible_id" ref="base.user_demo"/>
+    </record>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="planning_project_stage_0" model="project.task.type">
+            <field name="sequence">1</field>
+            <field name="name">New</field>
+        </record>
+
+        <record id="planning_project_stage_1" model="project.task.type">
+            <field name="sequence">5</field>
+            <field name="name">Planned</field>
+        </record>
+
+        <record id="planning_project_stage_2" model="project.task.type">
+            <field name="sequence">10</field>
+            <field name="name">In Progress</field>
+        </record>
+
+        <record id="planning_project_stage_3" model="project.task.type">
+            <field name="sequence">20</field>
+            <field name="name">Done</field>
+            <field name="fold" eval="True"/>
+        </record>
+
+        <record id="planning_project_stage_4" model="project.task.type">
+            <field name="sequence">25</field>
+            <field name="name">Cancelled</field>
+            <field name="fold" eval="True"/>
+        </record>
+
+        <record id="fsm_project" model="project.project">
+            <field name="name">Field Service</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="is_fsm" eval="True"/>
+            <field name="allow_task_dependencies" eval="False"/>
+            <field name="allow_timesheets" eval="True"/>
+            <field name="type_ids" eval="[(4, ref('planning_project_stage_0')), (4, ref('planning_project_stage_1')), (4, ref('planning_project_stage_2')), (4, ref('planning_project_stage_3')), (4, ref('planning_project_stage_4'))]"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+    </data>
+</odoo>

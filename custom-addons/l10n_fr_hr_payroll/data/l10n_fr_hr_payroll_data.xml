@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--   Rule Category -->
+    <record id="base.main_company" model="res.company">
+        <field name="plafond_secu">3218</field>
+    </record>
+
+    <record id="TOTAL" model="hr.salary.rule.category">
+        <field name="name">Cout total pour l'entreprise</field>
+        <field name="code">TOTAL</field>
+        <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="C_IMP" model="hr.salary.rule.category">
+        <field name="name">Cumul Imposable</field>
+        <field name="code">C_IMP</field>
+        <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="RETENUES" model="hr.salary.rule.category">
+        <field name="name">Total Retenues</field>
+        <field name="code">RETENUES</field>
+        <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="SALC" model="hr.salary.rule.category">
+        <field name="name">Total Charges Salariales</field>
+        <field name="code">SALC</field>
+        <field name="parent_id" ref="RETENUES"/>
+    </record>
+
+    <record id="PREV" model="hr.salary.rule.category">
+        <field name="name">Cotisations Prevoyance Patronales</field>
+        <field name="code">PREV</field>
+        <field name="parent_id" ref="hr_payroll.COMP"/>
+    </record>
+
+    <record id="SECU" model="hr.salary.rule.category">
+        <field name="name">Plafond de Securite Sociale</field>
+        <field name="code">SECU</field>
+        <field name="parent_id" eval="False"/>
+    </record>
+
+    <record id="other_totals" model="hr.salary.rule.category">
+        <field name="name">Autres totaux</field>
+        <field name="code">O_TOTALS</field>
+        <field name="parent_id" eval="False"/>
+    </record>
+
+    <!-- Contribution Register -->
+    <record id="hr_urssaf_register" model="res.partner">
+        <field name="name">URSSAF</field>
+    </record>
+
+    <record id="hr_retraite_register" model="res.partner">
+        <field name="name">Organisme de retraite complementaire</field>
+    </record>
+
+    <record id="hr_cci_register" model="res.partner">
+        <field name="name">Chambre du commerce et de l'industrie</field>
+    </record>
+
+    <record id="hr_prevoyance_register" model="res.partner">
+        <field name="name">Organisme de prevoyance</field>
+    </record>
+</odoo>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_expense_extract_view_form" model="ir.ui.view">
+        <field name="name">hr.expense.extract.view.form</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_manual_send_for_digitization" class="oe_highlight" string="Digitize document" type="object"
+                    invisible="not extract_can_show_send_button" data-hotkey="s"/>
+            </xpath>
+            <xpath expr="//header" position='after'>
+                <field name="extract_state" invisible="True"/>
+                <field name="extract_can_show_send_button" invisible="True"/>
+                <div role="status" class="alert alert-danger text-center"
+                     invisible="state != 'draft' or extract_state != 'not_enough_credit'">
+                    You don't have enough credit to extract data from your expense.
+                    <button type="object" name="buy_credits" class="btn btn-link">
+                        <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                        Buy credits
+                    </button>
+                    <button type="object" name="action_manual_send_for_digitization" class="btn btn-link">
+                        <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                        Retry
+                    </button>
+                </div>
+                <div role="status" class="alert alert-info text-center"
+                     invisible="state != 'draft' or extract_state != 'waiting_extraction'">
+                    All fields will be automated by Artificial Intelligence, it might take 5 seconds.
+                    <button type="object" name="check_ocr_status" class="btn btn-link">
+                        <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                        Refresh
+                    </button>
+                </div>
+                <field name="extract_status" invisible="1"/>
+                <div role="status" class="alert alert-info text-center"
+                     invisible="state != 'draft' or extract_state != 'extract_not_ready'">
+                    The data extraction is not finished yet. The extraction usually takes between 5 and 10 seconds.
+                    <button type="object" name="check_ocr_status" class="btn btn-link">
+                        <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                        Refresh
+                    </button>
+                </div>
+                <div role="status" class="alert alert-danger text-center"
+                     invisible="state != 'draft' or extract_state != 'error_status'">
+                    <field name="extract_error_message" class="oe_inline" style="width:auto !important;"/>
+                    <button type="object" name="action_manual_send_for_digitization" class="btn btn-link">
+                        <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                        Retry
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='account_id']" position='after'>
+                <field name="extract_document_uuid" groups="base.group_no_one" widget="CopyClipboardChar"
+                       invisible="not extract_document_uuid"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_expense_extract_view_graph" model="ir.ui.view">
+        <field name="name">hr.expense.extract.view.graph</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_graph"/>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="inside">
+                <field name="extract_document_uuid" invisible="1"/>
+                <field name="extract_status" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_expense_extract_view_list" model="ir.ui.view">
+        <field name="name">hr.expense.extract.view.list</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_expenses_analysis_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-muted">extract_state_processed</attribute>
+            </xpath>
+            <xpath expr="//tree" position="inside">
+                <field name="extract_state_processed" column_invisible="True"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_expense_parse_action_server" model="ir.actions.server">
+            <field name="name">Digitize document</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field name="binding_model_id" ref="model_hr_expense"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.action_send_batch_for_digitization()
+            </field>
+    </record>
+</odoo>

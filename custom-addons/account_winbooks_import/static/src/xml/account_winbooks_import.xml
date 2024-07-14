@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="winbooks_import_template_button" t-inherit="account_base_import.accountImportTemplate" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('winbooks-import')]" position="inside">
+            <button class="btn btn-primary mb-3" t-on-click="() => this._importAccountGuideAction('account_winbooks_import.winbooks_import_action')">Import WBK</button>
+        </xpath>
+    </t>
+</templates>

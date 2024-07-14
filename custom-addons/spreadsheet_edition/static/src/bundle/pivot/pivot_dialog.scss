@@ -1,0 +1,41 @@
+.o_missing_values_dialog {
+    > div.form-check {
+        margin-bottom: 8px;
+    }
+
+    .o_pivot_table_dialog {
+        width: 100%;
+        border-collapse: collapse;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        td,
+        th {
+            border: 1px solid #dee2e6;
+            background-color: #fff;
+            padding: 0.3rem;
+            white-space: nowrap;
+
+            &:hover {
+                filter: brightness(0.9);
+            }
+        }
+
+        td {
+            text-align: right;
+        }
+
+        th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+            color: black;
+        }
+
+        .o_missing_value {
+            color: #46646d;
+            background: #e7f2f6;
+        }
+    }
+}

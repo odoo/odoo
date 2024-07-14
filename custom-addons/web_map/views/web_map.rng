@@ -1,0 +1,67 @@
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+    xmlns:rng="http://relaxng.org/ns/structure/1.0">
+    <define name="map">
+        <element name="map">
+            <optional>
+                <attribute name="string"/>
+            </optional>
+            <choice>
+                <attribute name="res_partner"/>
+                <empty/>
+            </choice>
+            <optional>
+                <attribute name="default_order"/>
+            </optional>
+            <optional>
+                <attribute name="routing"/>
+            </optional>
+            <optional>
+                <attribute name="hide_name"/>
+            </optional>
+            <optional>
+                <attribute name="hide_address"/>
+            </optional>
+            <optional>
+                <attribute name="panel_title" />
+            </optional>
+            <optional>
+                <attribute name="hide_title"/>
+            </optional>
+            <optional>
+                <attribute name="limit"/>
+            </optional>
+            <optional>
+                <attribute name="js_class"/>
+            </optional>
+            <zeroOrMore>
+                <optional>
+                    <ref name="field"/>
+                </optional>
+            </zeroOrMore>
+
+        </element>
+    </define>
+
+    <define name="field">
+        <element name="field">
+            <attribute name="name"/>
+            <attribute name="string"/>
+            <optional>
+                <attribute name="on_change"/>
+            </optional>
+            <optional>
+                <attribute name="modifiers"/>
+            </optional>
+            <optional>
+                <attribute name="can_create"/>
+            </optional>
+            <optional>
+                <attribute name="can_write"/>
+            </optional>
+        </element>
+    </define>
+
+    <start>
+        <ref name="map"/>
+    </start>
+</grammar>

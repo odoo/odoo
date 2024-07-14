@@ -1,0 +1,58 @@
+<odoo>
+    <record id="mrp_workcenter_view_kanban_inherit_workorder" model="ir.ui.view">
+        <field name="name">mrp.workcenter.view.kanban.inherit.mrp.workorder</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_kanban"/>
+        <field name="arch" type="xml">
+            <!-- Desktop view -->
+            <xpath expr="//div[@name='o_wo']" position="inside">
+                <button class="btn btn-secondary fa fa-desktop" name="action_work_order" type="object" title="Work orders" aria-label="Work orders"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_workcenter_form_view_inherit" model="ir.ui.view">
+        <field name="name">mrp.workcenter.form.view.inherit</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='costing']" position='after'>
+                <group string="Operations" name="workorder_employee">
+                    <field name="employee_ids" widget="many2many_tags"
+                        string="Allowed Employees"
+                        domain="[('company_id', '=', company_id)]"
+                        />
+                </group>
+            </xpath>
+            <xpath expr="//div[@id='costs_hour']" position='after'>
+                <label for="employee_costs_hour" string=""/>
+                <div>
+                    <field name="employee_costs_hour" class="oe_inline"/> per employee
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- override to change the no content image -->
+    <record id="mrp.action_work_orders" model="ir.actions.act_window">
+        <field name="help" type="html">
+          <p class="o_view_nocontent_workorder">
+            No work orders to do!
+          </p><p>
+            Work orders are operations to do as part of a manufacturing order.
+            Operations are defined in the bill of materials or added in the manufacturing order directly.
+          </p><p>
+            Use the table work center control panel to register operations in the shop floor directly.
+            The tablet provides worksheets for your workers and allow them to scrap products, track time,
+            launch a maintenance request, perform quality tests, etc.
+          </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_mrp_dashboard"
+      name="Overview"
+      action="mrp.mrp_workcenter_kanban_action"
+      groups="mrp.group_mrp_routings"
+      parent="mrp.menu_mrp_root"
+      sequence="5"/>
+</odoo>

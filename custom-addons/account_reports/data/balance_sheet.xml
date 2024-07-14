@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="balance_sheet" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="default_opening_date_filter">today</field>
+        <field name="column_ids">
+            <record id="balance_sheet_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_total_assets0" model="account.report.line">
+                <field name="name">ASSETS</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">TA</field>
+                <field name="aggregation_formula">CA.balance + FA.balance + PNCA.balance</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_current_assets_view0" model="account.report.line">
+                        <field name="name">Current Assets</field>
+                        <field name="code">CA</field>
+                        <field name="aggregation_formula">BA.balance + REC.balance + CAS.balance + PRE.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_bank_view0" model="account.report.line">
+                                <field name="name">Bank and Cash Accounts</field>
+                                <field name="code">BA</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">sum([('account_id.account_type', '=', 'asset_cash')])</field>
+                            </record>
+                            <record id="account_financial_report_receivable0" model="account.report.line">
+                                <field name="name">Receivables</field>
+                                <field name="code">REC</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">sum([('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)])</field>
+                            </record>
+                            <record id="account_financial_report_current_assets0" model="account.report.line">
+                                <field name="name">Current Assets</field>
+                                <field name="code">CAS</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">sum(['|', ('account_id.account_type', '=', 'asset_current'), '&amp;', ('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', True)])</field>
+                            </record>
+                            <record id="account_financial_report_prepayements0" model="account.report.line">
+                                <field name="name">Prepayments</field>
+                                <field name="code">PRE</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="domain_formula">sum([('account_id.account_type', '=', 'asset_prepayments')])</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_fixed_assets_view0" model="account.report.line">
+                        <field name="name">Plus Fixed Assets</field>
+                        <field name="code">FA</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="domain_formula">sum([('account_id.account_type', '=', 'asset_fixed')])</field>
+                    </record>
+                    <record id="account_financial_report_non_current_assets_view0" model="account.report.line">
+                        <field name="name">Plus Non-current Assets</field>
+                        <field name="code">PNCA</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="domain_formula">sum([('account_id.account_type', '=', 'asset_non_current')])</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_liabilities_view0" model="account.report.line">
+                <field name="name">LIABILITIES</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">L</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_liabilities_view0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CL.balance + NL.balance</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_current_liabilities0" model="account.report.line">
+                        <field name="name">Current Liabilities</field>
+                        <field name="code">CL</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_current_liabilities0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CL1.balance + CL2.balance</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_current_liabilities1" model="account.report.line">
+                                <field name="name">Current Liabilities</field>
+                                <field name="code">CL1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_current_liabilities1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="['|', ('account_id.account_type', 'in', ('liability_current', 'liability_credit_card')), '&amp;', ('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', True)]"/>
+                                        <field name="subformula">-sum</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_current_liabilities_payable" model="account.report.line">
+                                <field name="name">Payables</field>
+                                <field name="code">CL2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_current_liabilities_payable_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', False)]"/>
+                                        <field name="subformula">-sum</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_non_current_liabilities0" model="account.report.line">
+                        <field name="name">Plus Non-current Liabilities</field>
+                        <field name="code">NL</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_non_current_liabilities0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.account_type', '=', 'liability_non_current')]"/>
+                                <field name="subformula">-sum</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_equity0" model="account.report.line">
+                <field name="name">EQUITY</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">EQ</field>
+                <field name="aggregation_formula">UNAFFECTED_EARNINGS.balance + RETAINED_EARNINGS.balance</field>
+                <field name="children_ids">
+                    <record id="account_financial_unaffected_earnings0" model="account.report.line">
+                        <field name="name">Unallocated Earnings</field>
+                        <field name="code">UNAFFECTED_EARNINGS</field>
+                        <field name="aggregation_formula">CURR_YEAR_EARNINGS.balance + PREV_YEAR_EARNINGS.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_current_year_earnings0" model="account.report.line">
+                                <field name="name">Current Year Unallocated Earnings</field>
+                                <field name="code">CURR_YEAR_EARNINGS</field>
+                                <field name="aggregation_formula">CURR_YEAR_EARNINGS_PNL.balance + CURR_YEAR_EARNINGS_ALLOC.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_current_year_earnings_line_1" model="account.report.line">
+                                        <field name="name">Current Year Earnings</field>
+                                        <field name="code">CURR_YEAR_EARNINGS_PNL</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_current_year_earnings_line_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">NEP.balance</field>
+                                                <field name="date_scope">from_fiscalyear</field>
+                                                <field name="subformula">cross_report</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_current_year_earnings_line_2" model="account.report.line">
+                                        <field name="name">Current Year Allocated Earnings</field>
+                                        <field name="code">CURR_YEAR_EARNINGS_ALLOC</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_current_year_earnings_line_2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[('account_id.account_type', '=', 'equity_unaffected')]"/>
+                                                <field name="date_scope">from_fiscalyear</field>
+                                                <field name="subformula">-sum</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_previous_year_earnings0" model="account.report.line">
+                                <field name="name">Previous Years Unallocated Earnings</field>
+                                <field name="code">PREV_YEAR_EARNINGS</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_previous_year_earnings0_allocated_earnings" model="account.report.expression">
+                                        <field name="label">allocated_earnings</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.account_type', '=', 'equity_unaffected')]"/>
+                                        <field name="subformula">-sum</field>
+                                        <field name="date_scope">from_beginning</field>
+                                    </record>
+                                    <record id="account_financial_previous_year_earnings0_balance_domain" model="account.report.expression">
+                                        <field name="label">balance_domain</field>
+                                        <field name="engine">domain</field>
+                                        <field name="formula" eval="[('account_id.account_type', 'in', ('income', 'income_other', 'expense_direct_cost', 'expense', 'expense_depreciation'))]"/>
+                                        <field name="subformula">-sum</field>
+                                        <field name="date_scope">from_beginning</field>
+                                    </record>
+                                    <record id="account_financial_previous_year_earnings0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">PREV_YEAR_EARNINGS.balance_domain + PREV_YEAR_EARNINGS.allocated_earnings - CURR_YEAR_EARNINGS.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_retained_earnings0" model="account.report.line">
+                        <field name="name">Retained Earnings</field>
+                        <field name="code">RETAINED_EARNINGS</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="domain_formula">-sum([('account_id.account_type', '=', 'equity')])</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_liabilities_and_equity_view0" model="account.report.line">
+                <field name="name">LIABILITIES + EQUITY</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">LE</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_liabilities_and_equity_view0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">L.balance + EQ.balance</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_off_sheet" model="account.report.line">
+                <field name="name">OFF BALANCE SHEET ACCOUNTS</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">OS</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="hide_if_zero" eval="1"/>
+                <field name="domain_formula">-sum([('account_id.account_type', '=', 'off_balance')])</field>
+            </record>
+        </field>
+    </record>
+</odoo>

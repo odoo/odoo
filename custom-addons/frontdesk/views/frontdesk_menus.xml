@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<odoo>
+    <menuitem
+        id="frontdesk_menu_root"
+        name="Frontdesk"
+        web_icon="frontdesk,static/description/icon.png"
+        sequence="20"/>
+
+    <menuitem
+        id="frontdesk_menu_stations"
+        name="Stations"
+        parent="frontdesk_menu_root"
+        action="action_frontdesk_frontdesk"
+        sequence="1"/>
+
+    <menuitem
+        id="frontdesk_menu_visitors"
+        name="Visitors"
+        parent="frontdesk_menu_root"
+        action="action_frontdesk_visitor"
+        sequence="2"/>
+
+    <menuitem
+        id="frontdesk_menu_report"
+        name="Reporting"
+        parent="frontdesk_menu_root"
+        groups="frontdesk.frontdesk_group_user"
+        sequence="3"/>
+
+    <menuitem
+        id="frontdesk_menu_report_visitors"
+        name="Visitors"
+        parent="frontdesk_menu_report"
+        action="action_frontdesk_visitors_report"
+        sequence="1"/>
+
+    <menuitem
+        id="frontdesk_menu_report_drinks"
+        name="Drinks"
+        parent="frontdesk_menu_report"
+        action="action_frontdesk_drinks_report"
+        sequence="2"/>
+
+    <menuitem
+        id="frontdesk_menu_config"
+        name="Configuration"
+        parent="frontdesk_menu_root"
+        groups="frontdesk.frontdesk_group_administrator"
+        sequence="4"/>
+
+    <menuitem
+        id="frontdesk_menu_stations_config"
+        name="Stations"
+        parent="frontdesk_menu_config"
+        action="action_frontdesk_frontdesk_tree"
+        sequence="1"/>
+
+    <menuitem
+        id="frontdesk_menu_drinks_config"
+        name="Drinks"
+        parent="frontdesk_menu_config"
+        action="action_frontdesk_drink"
+        sequence="2"/>
+</odoo>

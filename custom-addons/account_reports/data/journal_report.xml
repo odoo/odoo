@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="journal_report" model="account.report">
+        <field name="name">Journal Report</field>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_show_draft" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_unreconciled" eval="False"/>
+        <field name="filter_hide_0_lines">never</field>
+        <field name="default_opening_date_filter">this_year</field>
+        <field name="load_more_limit" eval="80"/>
+        <field name="custom_handler_model_id" ref="model_account_journal_report_handler"/>
+        <field name="column_ids">
+            <record id="journal_report_date" model="account.report.column">
+                <field name="name">Invoice Date</field>
+                <field name="expression_label">invoice_date</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="journal_report_communication" model="account.report.column">
+                <field name="name">Account</field>
+                <field name="expression_label">account</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="journal_report_partner_name" model="account.report.column">
+                <field name="name">Label</field>
+                <field name="expression_label">label</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="journal_report_amount_currency" model="account.report.column">
+                <field name="name">Debit</field>
+                <field name="expression_label">debit</field>
+            </record>
+            <record id="journal_report_debit" model="account.report.column">
+                <field name="name">Credit</field>
+                <field name="expression_label">credit</field>
+            </record>
+            <record id="journal_report_credit" model="account.report.column">
+                <field name="name"/>
+                <field name="expression_label">additional_col_1</field>
+            </record>
+            <record id="journal_report_balance" model="account.report.column">
+                <field name="name"/>
+                <field name="expression_label">additional_col_2</field>
+            </record>
+        </field>
+    </record>
+
+    <template id="journal_report_pdf_export_main_table_body" inherit_id="account_reports.pdf_export_main_table_body" primary="True">
+        <xpath expr="//td[hasclass('o_line_name_level')]" position="replace">
+            <!-- Make the line name -->
+            <t t-set="line_name">
+                <t t-out="line.get('name')"/>
+            </t>
+
+            <td t-att-colspan="line.get('colspan', '1')" class="o_line_name_level">
+                <t t-out="line_name"/>
+                <t t-if="line.get('footnote')">
+                    <sup>
+                        <span class="o_fw_bold" t-out="line['footnote']"/>
+                    </sup>
+                </t>
+            </td>
+        </xpath>
+
+        <!-- Make the normal line generation optional. We can then override it with a custom line used for displaying the tax sections -->
+        <xpath expr="//tr[@name='pdf_export_main_table_body_lines_tr']" position="attributes">
+            <attribute name="t-if">not line.get('is_tax_section_line')</attribute>
+            <attribute name="t-att-class">o_line_level + (' o_bold' if line.get('unfolded') or 'total' in line.get('id') else '') + (' o_d_none' if line.get('unfoldable') and not line.get('unfolded') else '')</attribute>
+        </xpath>
+
+        <!-- Add a new t-else after the line rendering, to render our custom line -->
+        <xpath expr="//tr[@name='pdf_export_main_table_body_lines_tr']" position="after">
+            <tr t-else="" t-att-class="'o_subtable ' + o_line_level + (' o_bold' if line.get('unfolded') else '')">
+                <!-- Taxes applied -->
+                <td colspan="3" t-att-class="o_journal_report_td">
+                    <t t-set="taxes" t-value="line.get('tax_report_lines')"/>
+                    <t t-set="extra_columns" t-value="line.get('extra_columns')"/>
+                    <table t-if="taxes" class="table">
+                        <thead>
+                            <tr>
+                                <th t-att-colspan="(4 if len(taxes) > 1 else 3) + extra_columns">Taxes Applied</th>
+                            </tr>
+                            <tr>
+                                <th t-if="len(taxes) > 1">Country</th>
+                                <th>Name</th>
+                                <th class="o_text_end">Base Amount</th>
+                                <th class="o_text_end">Tax Amount</th>
+                                <th t-if="line.get('tax_non_deductible_column')" class="o_text_end">Non-Deductible</th>
+                                <th t-if="line.get('tax_deductible_column')" class="o_text_end">Deductible</th>
+                                <th t-if="line.get('tax_due_column')" class="o_text_end">Due</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="taxes" t-as="country_name">
+                                <tr t-foreach="taxes[country_name]" t-as="tax">
+                                    <t t-if="country_name_size > 1">
+                                        <td>
+                                            <t t-if="tax_index == 0" t-out="country_name"/>
+                                        </td>
+                                    </t>
+                                    <td t-out="tax['name']"/>
+                                    <td class="o_text_end" t-out="tax['base_amount']"/>
+                                    <td class="o_text_end" t-out="tax['tax_amount']"/>
+                                    <td t-if="line.get('tax_non_deductible_column')" class="o_text_end" t-out="tax['tax_non_deductible']"/>
+                                    <td t-if="line.get('tax_deductible_column')" class="o_text_end" t-out="tax['tax_deductible']"/>
+                                    <td t-if="line.get('tax_due_column')" class="o_text_end" t-out="tax['tax_due']"/>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </td>
+
+                <!-- Tax grids -->
+                <t t-set="grids" t-value="line.get('tax_grid_summary_lines')"/>
+                <td t-att-colspan="5">
+                    <table t-if="grids" class="table">
+                        <thead>
+                            <tr>
+                                <th t-att-colspan="5 if len(grids) > 1 else 4">
+                                    Impacted Tax Grids
+                                </th>
+                            </tr>
+                            <tr>
+                                <th t-if="len(grids) > 1">Country</th>
+                                <th>Grid</th>
+                                <th class="o_text_end">+</th>
+                                <th class="o_text_end">-</th>
+                                <th class="o_text_end">Impact On Grid</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="grids" t-as="country_name">
+                                <tr t-foreach="grids[country_name]" t-as="grid_name">
+                                    <t t-if="country_name_size > 1">
+                                        <td>
+                                            <t t-if="grid_name_index == 0" t-out="country_name"/>
+                                        </td>
+                                    </t>
+                                    <td t-out="grid_name"/>
+                                    <td class="o_text_end" t-out="grids[country_name][grid_name].get('+', 0)"/>
+                                    <td class="o_text_end" t-out="grids[country_name][grid_name].get('-', 0)"/>
+                                    <td class="o_text_end" t-out="grids[country_name][grid_name]['impact']"/>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </xpath>
+    </template>
+
+    <!-- Remove the headers from above the table. It will be added back after each journal lines -->
+    <template id="journal_report_pdf_export_main_table_header" inherit_id="account_reports.pdf_export_main_table_header" primary="True">
+        <xpath expr="//thead[@id='table_header']" position="replace"/>
+    </template>
+
+    <template id="journal_report_pdf_export_filters" inherit_id="account_reports.pdf_export_filters" primary="True">
+        <xpath expr="//div[@name='filter_info_template_journals']" position="before">
+            <div class="row">
+                <t t-out="options['date']['string']"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[@name='pdf_options_header']" position="replace">
+            <div class="row">
+                <div class="col-2">Options:</div>
+                <div class="col-10 text-muted" >
+                    <t t-set="export_filters" t-value="[]"/>
+
+                    <!-- All entries -->
+                    <t t-if="options.get('all_entries')">
+                        <t t-set="export_filters" t-value="export_filters + ['Posted and Draft Entries']"/>
+                    </t>
+                    <t t-else="">
+                        <t t-set="export_filters" t-value="export_filters + ['Posted Entries only']"/>
+                    </t>
+
+                    <!-- Group by months -->
+                    <t t-if="options.get('group_by_months')">
+                        <t t-set="export_filters" t-value="export_filters + ['Grouped by month']"/>
+                    </t>
+
+                    <!-- Sort by date -->
+                    <t t-if="options.get('sort_by_date') is not None">
+                        <t t-if="options.get('sort_by_date')">
+                            <t t-set="export_filters" t-value="export_filters + ['Sorted by date']"/>
+                        </t>
+                        <t t-else="">
+                            <t t-set="export_filters" t-value="export_filters + ['Sorted by number']"/>
+                        </t>
+                    </t>
+
+                    <t t-out="', '.join(export_filters)"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

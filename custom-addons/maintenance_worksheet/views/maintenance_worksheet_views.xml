@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_maintenance_worksheets" model="ir.actions.act_window">
+        <field name="name">Worksheet Templates</field>
+        <field name="res_model">worksheet.template</field>
+        <field name="view_mode">tree,form,graph,pivot</field>
+        <field name="search_view_id"/>
+        <field name="domain">[('res_model', '=', 'maintenance.request')]</field>
+        <field name="context">{'default_res_model': 'maintenance.request'}</field>
+    </record>
+
+    <record id="maintenance_worksheet_action_settings" model="ir.actions.act_window" >
+        <field name="name">Worksheet Templates</field>
+        <field name="res_model">worksheet.template</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('res_model', '=', 'maintenance.request')]</field>
+        <field name="context">{'default_res_model': 'maintenance.request'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No worksheet templates found. Let's create one!
+            </p><p>
+                Customize worksheet templates for each type of request.<br/>
+            </p>
+        </field>
+    </record>
+
+    <!-- settings menu -->
+    <menuitem id="menu_maintenance_configuration_worksheet_templates"
+        name="Worksheet Templates"
+        sequence="30"
+        action="maintenance_worksheet_action_settings"
+        parent="maintenance.menu_maintenance_configuration"
+        groups="maintenance.group_equipment_manager"/>
+
+</odoo>

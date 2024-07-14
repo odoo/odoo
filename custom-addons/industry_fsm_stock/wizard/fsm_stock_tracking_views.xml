@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fsm_stock_tracking_line_view_form" model="ir.ui.view">
+        <field name="name">fsm.stock.tracking.view.form</field>
+        <field name="model">fsm.stock.tracking</field>
+        <field name="arch" type="xml">
+            <form string="Track Stock">
+                <div class="oe_title">
+                    <h1><field name="product_id" readonly="1" options="{'no_open': True}"/></h1>
+                </div>
+                <field name="company_id" invisible="1"/>
+                <field name="task_id" invisible="1"/>
+                <field name="tracking" invisible="1"/>
+                <field name="is_same_warehouse" invisible="1"/>
+                <field name="tracking_line_ids" context="{'default_product_id': product_id, 'default_company_id': company_id}">
+                    <tree editable="bottom" decoration-muted="not is_same_warehouse">
+                        <field name="lot_id" groups="stock.group_production_lot" context="{'default_product_id': product_id, 'default_company_id': company_id}" readonly="not is_same_warehouse"/>
+                        <field name="warehouse_id" column_invisible="parent.is_same_warehouse"/>
+                        <field name="quantity" column_invisible="parent.tracking == 'serial'" readonly="not is_same_warehouse"/>
+                        <field name="product_id" column_invisible="True"/>
+                        <field name="company_id" column_invisible="True"/>
+                        <field name="sale_order_line_id" column_invisible="True"/>
+                        <field name="is_same_warehouse" column_invisible="True"/>
+                    </tree>
+                </field>
+
+                <separator string="Already Delivered" invisible="not tracking_validated_line_ids"/>
+                <field name="tracking_validated_line_ids" readonly="1" invisible="not tracking_validated_line_ids">
+                    <tree>
+                        <field name="lot_id" groups="stock.group_production_lot"/>
+                        <field name="quantity" column_invisible="parent.tracking == 'serial'"/>
+                        <field name="product_id" column_invisible="True"/>
+                        <field name="sale_order_line_id" column_invisible="True"/>
+                        <field name="company_id" column_invisible="True"/>
+                    </tree>
+                </field>
+
+                <footer>
+                    <button name="generate_lot" string="Validate" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="fsm_stock_tracking_line_line_view_form" model="ir.ui.view">
+        <field name="name">fsm.stock.tracking.line.view.form</field>
+        <field name="model">fsm.stock.tracking.line</field>
+        <field name="arch" type="xml">
+            <form string="Track Stock">
+                <group>
+                    <group>
+                        <field name="lot_id" groups="stock.group_production_lot" readonly="1"/>
+                        <field name="quantity" readonly="1"/>
+                        <field name="product_id" invisible="1"/>
+                        <field name="sale_order_line_id" invisible="1"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,144 @@
+
+.o_knowledge_behavior_type_file {
+    margin-bottom: 5px;
+    border-radius: 5px;
+    background-color: $o-gray-100;
+    outline: 1px solid $o-gray-300;
+    outline-offset: -1px;
+    display: flex;
+    padding: 5px;
+}
+
+.odoo-editor-editable .o_knowledge_behavior_type_file {
+    .o_knowledge_file_name_container {
+        &:hover i {
+            visibility: visible !important;
+        }
+    }
+}
+
+.o_knowledge_behavior_type_template {
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    background-color: $o-gray-100;
+    outline: 1px solid $o-gray-300;
+    outline-offset: -1px;
+    .o_knowledge_content {
+        padding: 5px;
+        border-bottom: 5px solid $o-gray-100;
+        margin: 0 5px;
+        background-color: $o-view-background-color;
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+    .o_knowledge_template_label {
+        font-family: $font-family-base !important;
+        font-weight: $font-weight-bold;
+        padding: $btn-padding-y-sm $btn-padding-x-sm;
+        color: $o-gray-600;
+    }
+}
+
+.o_knowledge_behavior_type_toc {
+    box-shadow: 0 2px 4px 4px $o-gray-200;
+    padding: 10px;
+    margin: 15px 0 15px 0;
+    & > .o_knowledge_toc_content {
+        @for $depth from 0 through 5 {
+            a.o_knowledge_toc_link_depth_#{$depth} {
+                padding-left: calc(5px + Min(30px, 10%) * #{$depth});
+                font-family: $font-family-base !important;
+                font-weight: $font-weight-bolder !important;
+                border-radius: 5px;
+                min-height: $line-height-base * $font-size-base;
+                border: transparent;
+
+                &:hover {
+                    background-color: rgba($knowledge-bg--active, 0.2);
+                    text-decoration: none;
+                }
+            }
+
+            a.o_knowledge_toc_link_depth_0 {
+                // initial 5px padding to give some space to first level
+                padding-left: 5px;
+            }
+        }
+    }
+}
+
+.o_knowledge_behavior_type_articles_structure {
+    box-shadow: 0 2px 4px 4px $o-gray-200;
+    padding: 10px;
+    margin: 15px 0;
+    .o_knowledge_articles_structure_content {
+        min-height: 30px;
+
+        ol {
+            list-style-type: none;
+            padding-left: Min(30px, 10%);
+            li {
+                a {
+                    font-family: $font-family-base !important;
+                    font-weight: $font-weight-bolder !important;
+                    border-radius: 5px;
+                    min-height: $line-height-base * $font-size-base;
+                }
+                a:hover {
+                    background-color: rgba($knowledge-bg--active, 0.2);
+                    text-decoration: none;
+                }
+            }
+        }
+
+        > ol {
+            padding-left: 5px;
+        }
+    }
+}
+
+.o_knowledge_behavior_type_article {
+    border-color: $o-gray-200;
+}
+
+.o_knowledge_behavior_type_video {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 750px;
+    iframe {
+        @include o-position-absolute(0, 0, 0, 0);
+        width: 100%;
+        height: 100%;
+        min-height: auto;
+    }
+}
+
+.o_knowledge_behavior_type_embedded_view {
+    .o_knowledge_embedded_view_placeholder {
+        min-height: 300px;
+        .o_knowledge_embedded_view_placeholder_cover {
+            @include o-position-absolute(0, 0, 0, 0);
+            background: radial-gradient($white, transparent);
+        }
+    }
+    .o_kanban_renderer.o_kanban_grouped .o_kanban_group {
+        background: #{$o-kanban-background};
+    }
+}
+
+// Knowledge Toolbars
+
+.o_knowledge_toolbar {
+    button {
+        font-family: $font-family-base !important;
+        font-weight: $font-weight-bold;
+        @media screen and (max-width: 1024px) {
+            .o_knowledge_toolbar_button_text {
+                display: none;
+            }
+        }
+    }
+}

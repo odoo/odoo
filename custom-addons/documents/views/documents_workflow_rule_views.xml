@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="action_view_search" model="ir.ui.view">
+        <field name="name">Action search view</field>
+        <field name="model">documents.workflow.rule</field>
+        <field name="arch" type="xml">
+            <search string="Documents">
+                <field name="name"/>
+                <field name="domain_folder_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="workflow_rule_view_tree" model="ir.ui.view">
+        <field name="name">action tree</field>
+        <field name="model">documents.workflow.rule</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="domain_folder_id"/>
+                <field name="name"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="workflow_rule_form_view" model="ir.ui.view">
+        <field name="name">Rules form</field>
+        <field name="model">documents.workflow.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="condition_type" invisible="1"/>
+                <sheet>
+                    <div class="oe_title">
+                      <label for="name" string="Action Name"/>
+                      <h1><field name="name" placeholder="e.g. Validate document"/></h1>
+                      <field name="note" placeholder="Write a tooltip for the action here"/>
+                    </div>
+                    <group>
+                        <group>
+                            <group string="Conditions" colspan="2">
+                                <field name="domain_folder_id" required="1"/>
+                                <field name="condition_type" widget="radio" groups="base.group_no_one"/>
+                            </group>
+                            <field name="domain" string="Domain" nolabel="1" widget="domain"
+                                   colspan="2" options="{'model':'documents.document'}"
+                                   invisible="condition_type == 'criteria'"/>
+                            <group string="Tags" invisible="condition_type == 'domain'">
+                                <field name="required_tag_ids"
+                                       string="Contains"
+                                       widget="many2many_tags"
+                                       domain="[('id','not in', excluded_tag_ids), ('folder_id', '=', domain_folder_id)]"
+                                       options='{"no_open": True, "no_create": True}'
+                                />
+                                <field name="excluded_tag_ids"
+                                       string="Does not contain"
+                                       widget="many2many_tags"
+                                       domain="[('id','not in', required_tag_ids), ('folder_id', '=', domain_folder_id)]"
+                                       options='{"no_open": True, "no_create": True}'
+                                />
+                            </group>
+                            <group string="Miscellaneous" invisible="condition_type == 'domain'">
+                                <field name="criteria_partner_id"/>
+                                <field name="criteria_owner_id"/>
+                            </group>
+                        </group>
+                        <group string="Actions">
+                            <field name="folder_id"/>
+                            <field name="create_model"/>
+                            <field name="partner_id"/>
+                            <field name="user_id"/>
+                            <field name="link_model" invisible="create_model != 'link.to.record'"/>
+                            <field name="tag_action_ids">
+                                <tree editable="bottom">
+                                    <field name="action"/>
+                                    <field name="facet_id"
+                                           domain="['|',
+                                               ('folder_id','parent_of', parent.folder_id),
+                                               ('folder_id', 'parent_of', parent.domain_folder_id)
+                                           ]"
+                                           required="1"/>
+                                    <field name="tag_id"
+                                           context="{'simple_name': True}"
+                                           domain="[('facet_id','=',facet_id)]"
+                                           options='{"no_open": True}'/>
+                                </tree>
+                            </field>
+                        </group>
+                    </group>
+                    <group string="Activities">
+                        <field name="remove_activities"/>
+                        <field name="activity_option"/>
+                    </group>
+                    <group name="next_activity" invisible="not activity_option">
+                        <group>
+                            <field name="activity_type_id"
+                                   options="{'no_create': True, 'no_open': True}"
+                                   required="activity_option"/>
+                            <field name="activity_summary" placeholder="e.g. Discuss proposal"/>
+                        </group>
+                        <group>
+                            <label for="activity_date_deadline_range"/>
+                            <div class="o_row">
+                                <field name="activity_date_deadline_range"/>
+                                <field name="activity_date_deadline_range_type"/>
+                            </div>
+                            <field name="has_owner_activity"/>
+                            <field name="activity_user_id"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="activity_note" placeholder="Log a note..."/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="workflow_rule_action" model="ir.actions.act_window">
+        <field name="name">Workflow Actions</field>
+        <field name="res_model">documents.workflow.rule</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

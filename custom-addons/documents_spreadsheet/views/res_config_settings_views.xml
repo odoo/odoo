@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_documents_spreadsheet" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.documents.spreadsheet</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="10"/>
+        <field name="inherit_id" ref="documents.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='documents']" position="attributes">
+                <attribute name="notApp">0</attribute>
+            </xpath>
+            <xpath expr="//app[@name='documents']" position="inside">
+                <block>
+                    <setting string="Spreadsheets" company_dependent="1" help="Centralize your spreadsheets">
+                        <div name="documents_spreadsheet_folder" class="content-group">
+                            <div class="row mt16">
+                                <label class="o_form_label col-lg-3" for="documents_spreadsheet_folder_id" string="Workspace"/>
+                                <field name="documents_spreadsheet_folder_id" required="1"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

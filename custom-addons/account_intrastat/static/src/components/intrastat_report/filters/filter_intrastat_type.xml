@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_intrastat.IntrastatReportFilterType">
+        <Dropdown togglerClass="'btn btn-secondary'">
+            <t t-set-slot="toggler">
+                <span class="fa fa-filter me-1"/>Types: <t t-esc="intrastatTypeName"/>
+            </t>
+
+            <t t-foreach="controller.options.intrastat_type" t-as="intrastatType" t-key="intrastatType_index">
+                <DropdownItem
+                    class="{ 'selected': intrastatType.selected }"
+                    onSelected="() => this.toggleFilter('intrastat_type.' + intrastatType_index + '.selected')"
+                >
+                    <t t-esc="intrastatType.name"/>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

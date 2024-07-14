@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+        <record id="documents_internal_status" model="documents.facet" forcecreate="0">
+            <field name="name">Status</field>
+            <field name="sequence">1</field>
+            <field name="folder_id" ref="documents_internal_folder"/>
+        </record>
+
+        <record id="documents_internal_knowledge" model="documents.facet" forcecreate="0">
+            <field name="name">Knowledge</field>
+            <field name="sequence">2</field>
+            <field name="folder_id" ref="documents_internal_folder"/>
+        </record>
+
+        <record id="documents_internal_template" model="documents.facet" forcecreate="0">
+            <field name="name">Templates</field>
+            <field name="sequence">3</field>
+            <field name="folder_id" ref="documents_internal_folder"/>
+        </record>
+
+        <!-- Facets finance -->
+
+        <record id="documents_finance_status" model="documents.facet" forcecreate="0">
+            <field name="name">Status</field>
+            <field name="sequence">4</field>
+            <field name="folder_id" ref="documents_finance_folder"/>
+        </record>
+
+        <record id="documents_finance_documents" model="documents.facet" forcecreate="0">
+            <field name="name">Documents</field>
+            <field name="sequence">5</field>
+            <field name="folder_id" ref="documents_finance_folder"/>
+        </record>
+
+        <record id="documents_finance_fiscal_year" model="documents.facet" forcecreate="0">
+            <field name="name">Fiscal years</field>
+            <field name="sequence">6</field>
+            <field name="folder_id" ref="documents_finance_folder"/>
+        </record>
+
+
+        <!-- Facets marketing -->
+
+        <record id="documents_marketing_assets" model="documents.facet" forcecreate="0">
+            <field name="name">Assets</field>
+            <field name="sequence">7</field>
+            <field name="folder_id" ref="documents_marketing_folder"/>
+        </record>
+</data></odoo>

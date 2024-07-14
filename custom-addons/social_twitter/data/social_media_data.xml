@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="social_media_twitter" model="social.media">
+            <field name="name">Twitter</field>
+            <field name="media_type">twitter</field>
+            <field name="media_description">Manage your Twitter accounts and schedule tweets</field>
+            <field name="max_post_length">280</field>
+            <field name="image" type="base64" file="social_twitter/static/src/img/twitter.svg"/>
+        </record>
+
+        <record id="stream_type_twitter_user_mentions" model="social.stream.type">
+            <field name="name">Mentions</field>
+            <field name="stream_type">twitter_user_mentions</field>
+            <field name="media_id" ref="social_media_twitter"></field>
+        </record>
+
+        <record id="stream_type_twitter_follow" model="social.stream.type">
+            <field name="name">Tweets of</field>
+            <field name="stream_type">twitter_follow</field>
+            <field name="media_id" ref="social_media_twitter"></field>
+        </record>
+
+        <record id="stream_type_twitter_likes" model="social.stream.type">
+            <field name="name">Favorites of</field>
+            <field name="stream_type">twitter_likes</field>
+            <field name="media_id" ref="social_media_twitter"></field>
+        </record>
+
+        <record id="stream_type_twitter_keyword" model="social.stream.type">
+            <field name="name">Keyword</field>
+            <field name="stream_type">twitter_keyword</field>
+            <field name="media_id" ref="social_media_twitter"></field>
+        </record>
+    </data>
+</odoo>

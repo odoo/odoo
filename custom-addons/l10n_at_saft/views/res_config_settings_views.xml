@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_form_inherit_l10n_at_saft" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n.at.saft</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='invoicing_settings']" position="after">
+                <block title="Austrian localization" id="l10n_at_saft_settings" invisible="country_code != 'AT'">
+                    <setting id="l10n_at_saft_settings" company_dependent="1"
+                        string="SAF-T Export"
+                        documentation="/applications/finance/fiscal_localizations/austria.html">
+                        <div class="content-group">
+                            <div class="row">
+                                <label for="l10n_at_oenace_code" class="col o_light_label"/>
+                                <field name="l10n_at_oenace_code"/>
+                            </div>
+                            <div class="row">
+                                <label for="l10n_at_profit_assessment_method" class="col o_light_label"/>
+                                <field name="l10n_at_profit_assessment_method"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

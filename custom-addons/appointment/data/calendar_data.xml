@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="calendar_event_type_data_online_appointment" model="calendar.event.type">
+            <field name="name">Appointment Portal</field>
+        </record>
+        <record id="calendar.alarm_notif_1" model="calendar.alarm">
+            <field name="default_for_new_appointment_type">True</field>
+        </record>
+        <record id="calendar.alarm_mail_1" model="calendar.alarm">
+            <field name="default_for_new_appointment_type">True</field>
+        </record>
+    </data>
+</odoo>

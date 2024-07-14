@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="snippets" inherit_id="website.snippets" name="rental snippets">
+        <xpath expr="//t[@id='snippet_rental_search_hook']" position="replace">
+            <t t-snippet="website_sale_renting.s_rental_search"
+               string="Rental Search"
+               t-thumbnail="/website/static/src/img/snippets_thumbs/s_searchbar.svg"/>
+        </xpath>
+    </template>
+
+    <template id="snippet_options" inherit_id="website_sale.snippet_options" name="rental e-commerce snippet options">
+        <xpath expr="//we-checkbox[@id='collapse_category_recursive']" position="after">
+            <we-checkbox string="Datepicker"
+                         data-customize-website-views="website_sale_renting.shop_rental_datepicker_opt"
+                         data-no-preview="true"
+                         data-reload="/"/>
+        </xpath>
+    </template>
+</odoo>

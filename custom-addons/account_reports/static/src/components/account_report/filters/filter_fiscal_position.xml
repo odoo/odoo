@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportFilterFiscalPosition">
+        <Dropdown togglerClass="'btn btn-secondary'">
+            <t t-set-slot="toggler">
+                <i class="fa fa-book me-1"/>Fiscal Position: <t t-esc="selectedFiscalPositionName"/>
+            </t>
+
+            <t t-if="controller.groups.account_readonly and controller.options.allow_domestic">
+                <DropdownItem
+                    class="{ 'selected': controller.options.fiscal_position === 'domestic' }"
+                    onSelected="() => this.updateFilter('fiscal_position', 'domestic')"
+                >
+                    Domestic
+                </DropdownItem>
+            </t>
+
+            <t t-if="controller.groups.account_readonly">
+                <DropdownItem
+                    class="{ 'selected': controller.options.fiscal_position === 'all' }"
+                    onSelected="() => this.updateFilter('fiscal_position', 'all')"
+                >
+                    All
+                </DropdownItem>
+            </t>
+
+            <t t-foreach="controller.options.available_vat_fiscal_positions" t-as="fiscalPosition" t-key="fiscalPosition_index">
+                <t t-if="fiscalPosition_first">
+                    <div class="dropdown-divider"/>
+                </t>
+
+                <DropdownItem
+                    class="{ 'selected': controller.options.fiscal_position === fiscalPosition.id }"
+                    onSelected="() => this.updateFilter('fiscal_position', fiscalPosition.id)"
+                >
+                    <t t-esc="fiscalPosition.name"/>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

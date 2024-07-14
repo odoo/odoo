@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.AppCreator">
+    <div class="o_web_studio_app_creator h-100 overflow-auto">
+        <div t-if="state.step !== 'model_configuration'" class="o_web_studio_app_creator_box">
+            <div t-attf-class="o_web_studio_app_creator_left">
+                <div class="o_web_studio_app_creator_left_content">
+                    <t t-if="state.step === 'welcome'">
+                        <h2 class="mb0 o_web_studio_welcome">Welcome to</h2>
+                        <h1 class="mt8">Odoo Studio</h1>
+                        <h5 class="text-muted">The fastest way to create a web application.</h5>
+                    </t>
+                    <t t-elif="state.step === 'app'">
+                        <h3 class="mb32">Create your App</h3>
+                        <div class="o_web_studio_app_creator_name" t-att-class="{ o_web_studio_field_warning: !state.isFieldValid('appName') }">
+                            <label for="appName">Choose an app name</label>
+                            <input type="text" class="o_input"
+                                name="appName"
+                                placeholder="e.g. Real Estate"
+                                t-model="state.data.appName"
+                                t-ref="autofocus"
+                            />
+                        </div>
+                    </t>
+                    <t t-elif="state.step === 'model'">
+                        <h3 class="w-100 mb-5">Create your first menu</h3>
+                        <MenuCreator showValidation="state.showValidation" menuCreatorModel="state.menuCreatorModel" />
+                    </t>
+                </div>
+                <div class="o_web_studio_app_creator_buttons">
+                    <button t-if="state.hasPrevious" type="button"
+                        class="btn oi oi-chevron-left o_web_studio_app_creator_previous"
+                        aria-label="Previous"
+                        title="Previous"
+                        t-on-click="() => this.state.previous()"
+                    />
+                    <t t-set="nextStep" t-value="state.nextStep" />
+                    <button type="button"
+                        class="btn o_web_studio_app_creator_next"
+                        aria-label="Next"
+                        title="Next"
+                        t-att-class="{ is_ready: nextStep !== false }"
+                        t-on-click="() => this.state.next()"
+                        >
+                        <span t-if="nextStep !== false">
+                            <t t-if="nextStep">Next</t>
+                            <t t-else="">Create your app</t>
+                        </span>
+                        <i class="oi oi-chevron-right"/>
+                    </button>
+                </div>
+            </div>
+            <div class="o_web_studio_app_creator_right" t-if="state.step !== 'model_configuration'">
+                <div class="o_web_studio_app_creator_right_content">
+                    <t t-if="state.step === 'welcome'">
+                        <img class="o_web_studio_welcome_image" src="/web_studio/static/src/img/studio_app_icon.png"/>
+                    </t>
+                    <IconCreator t-else=""
+                        t-props="state.data.iconData" 
+                        editable="state.step === 'app'"
+                        onIconChange.bind="(iconData) => this.state.data.iconData = iconData"
+                    />
+                </div>
+            </div>
+        </div>
+        <t t-set="label">Create your app</t>
+        <ModelConfigurator
+            t-if="state.step === 'model_configuration'"
+            label="label"
+            onConfirmOptions.bind="onConfirmOptions"
+            onPrevious="() => this.state.previous()"
+        />
+    </div>
+</t>
+
+</templates>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="input_gratification_lu" model="hr.payslip.input.type">
+        <field name="name">Gratification</field>
+        <field name="code">GRATIFICATION</field>
+        <field name="struct_ids" eval="[(4,ref('l10n_lu_hr_payroll.hr_payroll_structure_lux_employee_salary'))]"/>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+</odoo>

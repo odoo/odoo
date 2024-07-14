@@ -1,0 +1,67 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* appointment_google_calendar
+# 
+# Translators:
+# Jonas Zinkevicius <jozi@odoo.com>, 2023
+# Gailius Kazlauskas <gailius@vialaurea.lt>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Gailius Kazlauskas <gailius@vialaurea.lt>, 2023\n"
+"Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: lt\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: appointment_google_calendar
+#. odoo-python
+#: code:addons/appointment_google_calendar/models/appointment_type.py:0
+#, python-format
+msgid ""
+"%(user_names)s did not synchronize their Google Calendar account yet, Google"
+" Meeting links won't be added to their meetings."
+msgstr ""
+
+#. module: appointment_google_calendar
+#: model:ir.model,name:appointment_google_calendar.model_appointment_type
+msgid "Appointment Type"
+msgstr "Susitikimo tipas"
+
+#. module: appointment_google_calendar
+#: model:ir.model,name:appointment_google_calendar.model_calendar_event
+msgid "Calendar Event"
+msgstr "Įvykis kalendoriuje"
+
+#. module: appointment_google_calendar
+#: model:ir.model.fields,help:appointment_google_calendar.field_appointment_type__event_videocall_source
+msgid ""
+"Defines the type of video call link that will be used for the generated "
+"events. Keep it empty to prevent generating meeting url."
+msgstr ""
+
+#. module: appointment_google_calendar
+#: model:ir.model.fields.selection,name:appointment_google_calendar.selection__appointment_type__event_videocall_source__google_meet
+msgid "Google Meet"
+msgstr ""
+
+#. module: appointment_google_calendar
+#: model_terms:ir.ui.view,arch_db:appointment_google_calendar.appointment_validated
+msgid "Join with Google Meet"
+msgstr ""
+
+#. module: appointment_google_calendar
+#: model:ir.model.fields,field_description:appointment_google_calendar.field_appointment_type__users_wo_google_calendar_msg
+msgid "Users Without Google Calendar Synchronization"
+msgstr ""
+
+#. module: appointment_google_calendar
+#: model:ir.model.fields,field_description:appointment_google_calendar.field_appointment_type__event_videocall_source
+msgid "Videoconference Link"
+msgstr ""

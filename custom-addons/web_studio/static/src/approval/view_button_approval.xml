@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+	<t t-inherit="web.views.ViewButton" t-inherit-mode="extension">
+		<xpath expr="./t[@t-tag='props.tag']" position="attributes">
+			<attribute name="t-attf-studio_approval">{{ approval ? true : undefined }}</attribute>
+		</xpath>
+		<xpath expr="//t[@t-slot='contents']" position="after" >
+			<StudioApproval t-if="approval" approval="approval"/>
+		</xpath>
+	</t>
+</templates>

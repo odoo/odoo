@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="appraisal_ask_feedback_view_form" model="ir.ui.view">
+            <field name="name">appraisal.ask.feedback.view.form</field>
+            <field name="model">appraisal.ask.feedback</field>
+            <field name="arch" type="xml">
+                <form string="Ask Feedback">
+                    <sheet>
+                        <field name="appraisal_id" invisible="1" />
+                        <field name="author_id" invisible="1"/>
+                        <field name="employee_id" invisible="1"/>
+                        <field name="lang" invisible="1"/>
+                        <field name="render_model" invisible="1"/>
+                        <group col="2">
+                            <group>
+                                <field name="survey_template_id" options="{'no_create':1,'no_quick_create':1}"/>
+                                <field name="employee_ids"
+                                    options="{'no_create': 1, 'no_quick_create': 1}"
+                                    widget="many2many_avatar_employee"
+                                    placeholder="Add employees..."
+                                    context="{'show_email': True}"/>
+                                <field name="subject" placeholder="Subject..."/>
+                            </group>
+                            <group>
+                                <field name="deadline"/>
+                            </group>
+                        </group>
+                        <div>
+                            <field name="body" class="oe-bordered-editor" placeholder="Optional message" options="{'style-inline': true}"/>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="attachment_ids" widget="many2many_binary"/>
+                                <field name="template_id" string="Load template"/>
+                            </group>
+                        </group>
+                    </sheet>
+
+                    <footer>
+                        <button string="Send" name="action_send" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <button icon="fa-lg fa-save" type="object"
+                                name="action_save_as_template" string="Save as new template"
+                                class="float-end btn-secondary" help="Save as a new template" data-hotkey="w"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

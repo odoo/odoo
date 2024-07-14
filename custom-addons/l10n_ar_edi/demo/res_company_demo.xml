@@ -1,0 +1,77 @@
+<odoo>
+
+    <record id="l10n_ar.company_ri" model="res.company">
+        <field name='l10n_ar_afip_ws_environment'>testing</field>
+        <field name="l10n_ar_afip_ws_key" type="base64" file="l10n_ar_edi/demo/private_key.pem"/>
+    </record>
+
+    <record id="l10n_ar.company_mono" model="res.company">
+        <field name='l10n_ar_afip_ws_environment'>testing</field>
+        <field name="l10n_ar_afip_ws_key" type="base64" file="l10n_ar_edi/demo/private_key.pem"/>
+    </record>
+
+    <record id="l10n_ar.company_exento" model="res.company">
+        <field name='l10n_ar_afip_ws_environment'>testing</field>
+        <field name="l10n_ar_afip_ws_key" type="base64" file="l10n_ar_edi/demo/private_key.pem"/>
+    </record>
+
+    <data noupdate="1">
+
+        <record id="bank_account_mono" model="res.partner.bank">
+            <field name="acc_number">2097538411100037551563</field>
+            <field name="partner_id" ref="l10n_ar.partner_mono"/>
+            <field name="company_id" ref="l10n_ar.company_mono"/>
+        </record>
+
+        <function name="set_demo_random_cert" model="res.company">
+            <value eval="[ref('l10n_ar.company_ri'), ref('l10n_ar.company_mono'), ref('l10n_ar.company_exento')]"/>
+        </function>
+
+        <record id="ws_fe_journal_ri" model="account.journal">
+            <field name='name'>Electronic Invoice (FE)</field>
+            <field name='company_id' ref="l10n_ar.company_ri"/>
+            <field name='type'>sale</field>
+            <field name='l10n_latam_use_documents' eval="True"/>
+            <field name='code'>1</field>
+            <field name='l10n_ar_afip_pos_number'>1</field>
+            <field name='l10n_ar_afip_pos_partner_id' ref="l10n_ar.partner_ri"/>
+            <field name='l10n_ar_afip_pos_system'>RAW_MAW</field>
+        </record>
+
+        <record id="ws_fex_journal_ri" model="account.journal">
+            <field name='name'>Electronic Exportation Invoice (FEX)</field>
+            <field name='company_id' ref="l10n_ar.company_ri"/>
+            <field name='type'>sale</field>
+            <field name='l10n_latam_use_documents' eval="True"/>
+            <field name='code'>2</field>
+            <field name='l10n_ar_afip_pos_number'>2</field>
+            <field name='l10n_ar_afip_pos_partner_id' ref="l10n_ar.partner_ri"/>
+            <field name='l10n_ar_afip_pos_system'>FEEWS</field>
+        </record>
+
+        <record id="ws_bfe_journal_ri" model="account.journal">
+            <field name='name'>Electronic Fiscal Bond (BFE)</field>
+            <field name='company_id' ref="l10n_ar.company_ri"/>
+            <field name='type'>sale</field>
+            <field name='l10n_latam_use_documents' eval="True"/>
+            <field name='code'>3</field>
+            <field name='l10n_ar_afip_pos_number'>3</field>
+            <field name='l10n_ar_afip_pos_partner_id' ref="l10n_ar.partner_ri"/>
+            <field name='l10n_ar_afip_pos_system'>BFEWS</field>
+        </record>
+
+        <function name="_onchange_type" model="account.journal">
+            <value eval="[ref('l10n_ar_edi.ws_fe_journal_ri')]"/>
+        </function>
+
+        <function name="_onchange_type" model="account.journal">
+            <value eval="[ref('l10n_ar_edi.ws_fex_journal_ri')]"/>
+        </function>
+
+        <function name="_onchange_type" model="account.journal">
+            <value eval="[ref('l10n_ar_edi.ws_bfe_journal_ri')]"/>
+        </function>
+        
+    </data>
+
+</odoo>

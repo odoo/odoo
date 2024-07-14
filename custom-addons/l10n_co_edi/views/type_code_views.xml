@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="type_code_view_tree" model="ir.ui.view">
+            <field name="name">l10n_co_edi.type.code.tree</field>
+            <field name="model">l10n_co_edi.type_code</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_type_code" model="ir.actions.act_window">
+            <field name="name">Colombian EDI codes</field>
+            <field name="res_model">l10n_co_edi.type_code</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            action="action_type_code"
+            name="Colombian EDI codes"
+            id="type_code_menu"
+            parent="account.account_account_menu"
+            sequence="100"/>
+    </data>
+</odoo>

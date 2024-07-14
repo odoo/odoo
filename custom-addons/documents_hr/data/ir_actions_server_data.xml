@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_actions_server_send_access_link" model="ir.actions.server">
+        <field name="name">Send HR Documents Access Link</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="groups_id" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="code">records.action_send_documents_share_link()</field>
+    </record>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_stock_landed_cost_form_l10n_mx_stock">
+        <field name="name">view.stock.landed.cost.form.l10n_mx_stock</field>
+        <field name="model">stock.landed.cost</field>
+        <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="l10n_mx_edi_customs_number" placeholder="15  48  3009  0001234" readonly="state != 'draft'"/>
+            </xpath>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_stock_landed_cost_l10n_mx_stock_search">
+        <field name="name">stock_landed_cost_l10n_mx_stock.search</field>
+        <field name="model">stock.landed.cost</field>
+        <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="l10n_mx_edi_customs_number"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<odoo noupdate="1">
+    <record id="whatsapp_template_payment_link" model="whatsapp.template">
+        <field name="name">Payment Link</field>
+        <field name="template_name">payment_link</field>
+        <field name="lang_code">en</field>
+        <field name="template_type">utility</field>
+        <field name="phone_field">partner_id.mobile</field>
+        <field name="footer_text">Write 'stop' to stop receiving messages</field>
+        <field name="model_id" ref="payment.model_payment_link_wizard"/>
+        <field name="body">Hello {{1}},
+
+Use the following link to pay *{{2}}{{3}}* to *{{4}}*.
+{{5}}
+
+Don't share screenshots of payment here.
+
+Thank you
+        </field>
+        <field name="variable_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {
+                'name': '{{1}}',
+                'demo_value': 'Azure Interior',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'partner_id'
+            }),
+            (0, 0, {
+                'name': '{{2}}',
+                'demo_value': '$',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'currency_id.symbol'
+            }),
+            (0, 0, {
+                'name': '{{3}}',
+                'demo_value': '1000',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'amount'
+            }),
+            (0, 0, {
+                'name': '{{4}}',
+                'demo_value': 'My Company',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'company_id'
+            }),
+            (0, 0, {
+                'name': '{{5}}',
+                'demo_value': 'https://..',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'link'
+            })
+        ]" />
+    </record>
+</odoo>

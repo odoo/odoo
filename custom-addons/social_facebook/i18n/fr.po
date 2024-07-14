@@ -1,0 +1,366 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* social_facebook
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: social_facebook
+#: model_terms:ir.ui.view,arch_db:social_facebook.facebook_preview
+msgid "<b class=\"d-block mb-2\">Facebook Page</b>"
+msgstr "<b class=\"d-block mb-2\">Page Facebook</b>"
+
+#. module: social_facebook
+#: model_terms:ir.ui.view,arch_db:social_facebook.social_stream_post_view_kanban
+msgid "<i class=\"fa fa-comments me-1\" title=\"Comments\"/>"
+msgstr "<i class=\"fa fa-comments me-1\" title=\"Commentaires\"/>"
+
+#. module: social_facebook
+#: model_terms:ir.ui.view,arch_db:social_facebook.social_stream_post_view_kanban
+msgid "<i class=\"fa fa-thumbs-up me-1\" title=\"Likes\"/>"
+msgstr "<i class=\"fa fa-thumbs-up me-1\" title=\"J'aime\"/>"
+
+#. module: social_facebook
+#: model:ir.model.fields,field_description:social_facebook.field_social_live_post__facebook_post_id
+msgid "Actual Facebook ID of the post"
+msgstr "Facebook ID du post"
+
+#. module: social_facebook
+#. odoo-python
+#: code:addons/social_facebook/models/social_stream_post.py:0
+#, python-format
+msgid "An error occurred."
+msgstr "Une erreur s'est produite."
+
+#. module: social_facebook
+#: model_terms:ir.ui.view,arch_db:social_facebook.res_config_settings_view_form
+msgid "App ID"
+msgstr "App ID"
+
+#. module: social_facebook
+#: model_terms:ir.ui.view,arch_db:social_facebook.res_config_settings_view_form
+msgid "App Secret"
+msgstr "App Secret"
+
+#. module: social_facebook
+#. odoo-javascript
+#: code:addons/social_facebook/static/src/xml/social_facebook_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social_facebook.social_stream_post_view_kanban
+#, python-format
+msgid "Author Image"
+msgstr "Auteur de l'image"
+
+#. module: social_facebook
+#: model:ir.model.fields,help:social_facebook.field_res_config_settings__facebook_use_own_account
+msgid ""
+"Check this if you want to use your personal Facebook Developer Account "
+"instead of the provided one."
+msgstr ""
+"Cochez cette case si vous souhaitez utiliser votre compte développeur "
+"Facebook personnel au lieu de celui fourni."
+
+#. module: social_facebook
+#: model:ir.model.fields,field_description:social_facebook.field_social_stream_post__facebook_comments_count
+msgid "Comments"
+msgstr "Commentaires"
+
+#. module: social_facebook
+#: model:ir.model,name:social_facebook.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paramètres de configuration"
+
+#. module: social_facebook
+#: model:ir.model.fields,field_description:social_facebook.field_social_post__display_facebook_preview
+#: model:ir.model.fields,field_description:social_facebook.field_social_post_template__display_facebook_preview
+msgid "Display Facebook Preview"
+msgstr "Afficher l'aperçu Facebook"
+
+#. module: social_facebook
+#: model:ir.model.fields.selection,name:social_facebook.selection__social_media__media_type__facebook
+#: model:social.media,name:social_facebook.social_media_facebook
+msgid "Facebook"
+msgstr "Facebook"
+
+#. module: social_facebook
+#: model:ir.model.fields,field_description:social_facebook.field_social_account__facebook_access_token
+msgid "Facebook Access Token"
+msgstr "Jeton d'accès Facebook"
+
+#. module: social_facebook
+#: model:ir.model.fields,field_description:social_facebook.field_social_account__facebook_account_id
+msgid "Facebook Account ID"
+msgstr "ID de compte Facebook"
+
+#. module: social_facebook
+#: model:ir.model.fields,field_description:social_facebook.field_res_config_settings__facebook_app_id
+msgid "Facebook App ID"
+msgstr "ID de l'app Facebook"
+
+#. module: social_facebook
+#: model:ir.model.fields,field_description:social_facebook.field_res_config_settings__facebook_client_secret
+msgid "Facebook App Secret"
+msgstr "Facebook Secret App"
+
+#. module: social_facebook
+#: model:ir.model.fields,field_description:social_facebook.field_social_stream_post__facebook_author_id
+msgid "Facebook Author ID"
+msgstr "ID de l'auteur Facebook"
+
+#. module: social_facebook
+#. odoo-javascript
+#: code:addons/social_facebook/static/src/js/stream_post_kanban_record.js:0
+#, python-format
+msgid "Facebook Comments"
+msgstr "Commentaires Facebook"
+
+#. module: social_facebook
+#: model_terms:ir.ui.view,arch_db:social_facebook.res_config_settings_view_form
+msgid "Facebook Developer Account"
+msgstr "Compte développeur Facebook"
+
+#. module: social_facebook
+#: model:ir.model.fields,help:social_facebook.field_social_account__facebook_access_token
+msgid ""
+"Facebook Page Access Token provided by the Facebook API, this should never be set manually.\n"
+"            It's used to authenticate requests when posting to or reading information from this account."
+msgstr ""
+"Les jetons d'accès à la Page Facebook provenant de l'API Facebook ne doivent pas être entrés manuellement.\n"
+"            Ils sont utilisés pour identifier les demandes lors de la publication ou pour lire les informations du compte."
+
+#. module: social_facebook
+#: model:ir.model.fields,help:social_facebook.field_social_account__facebook_account_id
+msgid ""
+"Facebook Page ID provided by the Facebook API, this should never be set "
+"manually."
+msgstr ""
+"L'ID de page Facebook provient de l'API Facebook, il ne doit être encodé "
+"manuellement."
+
+#. module: social_facebook
+#: model:ir.model.fields,field_description:social_facebook.field_social_stream_post__facebook_post_id
+msgid "Facebook Post ID"
+msgstr "ID du post Facebook"
+
+#. module: social_facebook
+#: model:ir.model.fields,field_description:social_facebook.field_social_post__facebook_preview
+#: model:ir.model.fields,field_description:social_facebook.field_social_post_template__facebook_preview
+msgid "Facebook Preview"
+msgstr "Aperçu Facebook"
+
+#. module: social_facebook
+#. odoo-python
+#: code:addons/social_facebook/controllers/main.py:0
+#, python-format
+msgid "Facebook did not provide a valid access token or it may have expired."
+msgstr ""
+"Facebook n'a pas fourni un jeton d'accès valide ou il se peut que celui-ci "
+"ait expiré."
+
+#. module: social_facebook
+#. odoo-python
+#: code:addons/social_facebook/controllers/main.py:0
+#, python-format
+msgid "Facebook did not provide a valid access token."
+msgstr "Facebook n'a pas fourni un jeton d'accès valide."
+
+#. module: social_facebook
+#: model:ir.model.fields,field_description:social_facebook.field_social_stream_post__facebook_is_event_post
+msgid "Is event post"
+msgstr "Est un post d'événement"
+
+#. module: social_facebook
+#. odoo-javascript
+#: code:addons/social_facebook/static/src/xml/social_facebook_templates.xml:0
+#: model:ir.model.fields,field_description:social_facebook.field_social_stream_post__facebook_likes_count
+#, python-format
+msgid "Likes"
+msgstr "J'aime"
+
+#. module: social_facebook
+#: model:ir.model.fields,field_description:social_facebook.field_social_media__media_type
+msgid "Media Type"
+msgstr "Type de réseau"
+
+#. module: social_facebook
+#: model:social.stream.type,name:social_facebook.stream_type_page_mentions
+msgid "Page Mentions"
+msgstr "Mentions de page "
+
+#. module: social_facebook
+#: model:social.stream.type,name:social_facebook.stream_type_page_posts
+msgid "Page Posts"
+msgstr "Posts de page"
+
+#. module: social_facebook
+#: model_terms:ir.ui.view,arch_db:social_facebook.facebook_preview
+msgid "Post Image"
+msgstr "Image du post"
+
+#. module: social_facebook
+#. odoo-python
+#: code:addons/social_facebook/models/social_stream_post.py:0
+#, python-format
+msgid ""
+"Post not found. It could be because the post has been deleted on the Social "
+"Platform."
+msgstr ""
+"Post introuvable. Cela peut être dû au fait que ce dernier a été supprimé de"
+" la plateforme sociale."
+
+#. module: social_facebook
+#: model_terms:ir.ui.view,arch_db:social_facebook.facebook_preview
+msgid "Published by Facebook Page •"
+msgstr "Publié par la Page Facebook •"
+
+#. module: social_facebook
+#: model:ir.model.fields,field_description:social_facebook.field_social_stream_post__facebook_reach
+msgid "Reach"
+msgstr "Couverture"
+
+#. module: social_facebook
+#. odoo-python
+#: code:addons/social_facebook/controllers/main.py:0
+#, python-format
+msgid "Read More about Facebook Pages"
+msgstr "En savoir plus sur les pages Facebook"
+
+#. module: social_facebook
+#. odoo-javascript
+#: code:addons/social_facebook/static/src/xml/social_facebook_templates.xml:0
+#: model:ir.model.fields,field_description:social_facebook.field_social_stream_post__facebook_shares_count
+#: model_terms:ir.ui.view,arch_db:social_facebook.social_stream_post_view_kanban
+#, python-format
+msgid "Shares"
+msgstr "Partages"
+
+#. module: social_facebook
+#: model:ir.model,name:social_facebook.model_social_account
+msgid "Social Account"
+msgstr "Compte social"
+
+#. module: social_facebook
+#: model:ir.model,name:social_facebook.model_social_live_post
+msgid "Social Live Post"
+msgstr "Post en direct"
+
+#. module: social_facebook
+#: model:ir.model,name:social_facebook.model_social_media
+msgid "Social Media"
+msgstr "Réseaux sociaux"
+
+#. module: social_facebook
+#: model:ir.model,name:social_facebook.model_social_post
+msgid "Social Post"
+msgstr "Post social"
+
+#. module: social_facebook
+#: model:ir.model,name:social_facebook.model_social_post_template
+msgid "Social Post Template"
+msgstr "Modèle de post social"
+
+#. module: social_facebook
+#: model:ir.model,name:social_facebook.model_social_stream
+msgid "Social Stream"
+msgstr "Flux social"
+
+#. module: social_facebook
+#: model:ir.model,name:social_facebook.model_social_stream_post
+msgid "Social Stream Post"
+msgstr "Post du flux social"
+
+#. module: social_facebook
+#. odoo-python
+#: code:addons/social_facebook/controllers/main.py:0
+#, python-format
+msgid "Unauthorized. Please contact your administrator. "
+msgstr "Non autorisé. Veuillez contacter votre administrateur."
+
+#. module: social_facebook
+#. odoo-python
+#: code:addons/social_facebook/models/social_stream_post.py:0
+#: code:addons/social_facebook/models/social_stream_post.py:0
+#, python-format
+msgid "Unknown"
+msgstr "Inconnu"
+
+#. module: social_facebook
+#: model:ir.model.fields,field_description:social_facebook.field_res_config_settings__facebook_use_own_account
+msgid "Use your own Facebook Account"
+msgstr "Utiliser votre propre compte Facebook"
+
+#. module: social_facebook
+#: model:ir.model.fields,help:social_facebook.field_social_media__media_type
+msgid ""
+"Used to make comparisons when we need to restrict some features to a "
+"specific media ('facebook', 'twitter', ...)."
+msgstr ""
+"Utilisé pour faire des comparaisons lorsque nous devons restreindre "
+"certaines fonctionnalités à un réseau spécifique ('facebook', 'twitter', "
+"...)."
+
+#. module: social_facebook
+#: model:ir.model.fields,field_description:social_facebook.field_social_stream_post__facebook_user_likes
+msgid "User Likes"
+msgstr "Mentions J'aime"
+
+#. module: social_facebook
+#. odoo-javascript
+#: code:addons/social_facebook/static/src/xml/social_facebook_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social_facebook.social_stream_post_view_kanban
+#, python-format
+msgid "Views"
+msgstr "Vues"
+
+#. module: social_facebook
+#. odoo-python
+#: code:addons/social_facebook/models/social_live_post.py:0
+#: code:addons/social_facebook/models/social_post.py:0
+#, python-format
+msgid ""
+"We could not upload your image, try reducing its size and posting it again "
+"(error: %s)."
+msgstr ""
+"Nous n'avons pas pu télécharger votre image, essayez de réduire sa taille et"
+" de la publier à nouveau (erreur : %s)."
+
+#. module: social_facebook
+#. odoo-python
+#: code:addons/social_facebook/models/social_media.py:0
+#, python-format
+msgid "You don't have an active subscription. Please buy one here: %s"
+msgstr "Vous n'avez pas d'abonnement actif. Veuillez en acheter un ici : %s"
+
+#. module: social_facebook
+#. odoo-python
+#: code:addons/social_facebook/controllers/main.py:0
+#, python-format
+msgid ""
+"You need to be the manager of a Facebook Page to post with Odoo Social.\n"
+" Please create one and make sure it is linked to your account."
+msgstr ""
+"Vous devez être le responsable d'une page Facebook pour publier des posts avec Odoo Social Marketing.\n"
+"Veuillez en créer un et l'associer à votre compte."
+
+#. module: social_facebook
+#: model_terms:ir.ui.view,arch_db:social_facebook.social_stream_post_view_kanban
+msgid "added an event"
+msgstr "a ajouté un événement"
+
+#. module: social_facebook
+#: model_terms:ir.ui.view,arch_db:social_facebook.facebook_preview
+msgid "• <i class=\"fa fa-globe\"/>"
+msgstr "• <i class=\"fa fa-globe\"/>"

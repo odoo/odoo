@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Add a disclaimer when managing a subscription from the /my/payment_method page. -->
+    <template id="payment_form_inherit" inherit_id="payment.form">
+        <xpath expr="//form" position="before">
+            <h3 t-if="subscription" class="mt-2 mb-0">
+                Set payment method for subscription <t t-out="subscription.name"/>
+            </h3>
+        </xpath>
+    </template>
+
+    <!-- Mention that the token will be saved when paying for a subscription. -->
+    <template id="payment_method_form" inherit_id="payment.method_form">
+        <xpath expr="//div[@name='o_payment_inline_form']" position="inside">
+            <label t-if="is_subscription" class="fst-italic">
+                Your payment details will be saved for automatic renewals.
+            </label>
+        </xpath>
+    </template>
+
+</odoo>

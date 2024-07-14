@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    <t t-name="website_twitter_wall_tweets">
+        <center class="o-tw-tweet" t-att-data-tweet-id="tweet_id">
+            <script src="//platform.twitter.com/widgets.js" charset="utf-8" />
+            <div>
+                <button class="btn o-tw-tweet-delete hidden-xs" groups="base.group_user" title="Delete this tweet"><i class="fa fa-trash text-primary" /></button>
+                <span t-out="tweet" />
+            </div>
+        </center>
+    </t>
+</template>

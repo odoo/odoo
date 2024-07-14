@@ -1,0 +1,68 @@
+<templates>
+
+    <t t-name="web_studio.ViewEditor.MapEditorSidebar">
+        <InteractiveEditorSidebar>
+            <t t-set-slot="view">
+                <Property
+                    name="'res_partner'"
+                    type="'selection'"
+                    value="modelParams.resPartnerField"
+                    childProps="{ choices: this.contactFieldChoices, required: false }"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Contact Field
+                </Property>
+
+                <Property
+                    name="'hide_name'"
+                    type="'boolean'"
+                    value="modelParams.hideName"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Hide Name
+                </Property>
+
+                <Property
+                    name="'hide_address'"
+                    type="'boolean'"
+                    value="modelParams.hideAddress"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Hide Address
+                </Property>
+
+                <div class="o_map_popup_fields">
+                    <label for="additional_fields" class="mb-1">Additional Fields</label>
+                    <div class="o_field_widget o_field_many2many_tags" name="additional_fields">
+                        <MultiRecordSelector t-props="multiRecordSelectorProps" />
+                    </div>
+                </div>
+
+                <Property
+                    name="'routing'"
+                    type="'boolean'"
+                    value="modelParams.routing"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Enable Routing
+                </Property>
+
+                <Property
+                    t-if="modelParams.routing === true"
+                    name="'default_order'"
+                    type="'selection'"
+                    value="modelParams.defaultOrder?.name"
+                    childProps="{ choices: this.defaultOrderChoices, required: false }"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Sort by
+                </Property>
+
+                <SidebarViewToolbox onMore="props.openViewInForm"
+                    canEditXml="!viewEditorModel.isEditingSubview"
+                    openDefaultValues="props.openDefaultValues" />
+            </t>
+        </InteractiveEditorSidebar>
+    </t>
+
+</templates>

@@ -1,0 +1,184 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_iot
+# 
+# Translators:
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
+# Marko Happonen <marko.happonen@sprintit.fi>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: delivery_iot
+#: model:ir.actions.report,print_report_name:delivery_iot.action_report_shipping_docs
+#: model:ir.actions.report,print_report_name:delivery_iot.action_report_shipping_labels
+msgid "'Empty Report - Used for assigning IoT printer'"
+msgstr "'Tyhjä raportti - Käytetään IoT-tulostimen määrittämiseen'"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_stock_picking_type__auto_print_carrier_labels
+msgid "Auto Print Carrier Labels"
+msgstr "Automaattinen toimitusdokumenttien tulostus"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_stock_picking_type__auto_print_export_documents
+msgid "Auto Print Export Documents"
+msgstr "Automaattinen vientiasiakirjojen tulostus"
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "Carrier Labels"
+msgstr "Kuljetuksen etiketit"
+
+#. module: delivery_iot
+#: model:ir.model.fields,help:delivery_iot.field_choose_delivery_package__available_scale_ids
+#: model:ir.model.fields,help:delivery_iot.field_stock_picking_type__iot_scale_ids
+msgid ""
+"Choose the scales you want to use for this operation type. Those scales can "
+"be used to weigh the packages created."
+msgstr ""
+"Valitse vaa'at, joita haluat käyttää tässä toimintatyypissä. Näitä vaakoja "
+"voidaan käyttää luotujen pakkausten punnitsemiseen."
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "Connect Scale"
+msgstr "Yhdistä vaaka"
+
+#. module: delivery_iot
+#: model:ir.model,name:delivery_iot.model_choose_delivery_package
+msgid "Delivery Package Selection Wizard"
+msgstr "Toimituspaketin valinta -toiminto"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__iot_ip
+msgid "Domain Address"
+msgstr "Verkkotunnuksen osoite"
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "Export Documents"
+msgstr "Vientidokumentit"
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "How to connect scales?"
+msgstr "Miten yhdistää vaa'at?"
+
+#. module: delivery_iot
+#: model:ir.model,name:delivery_iot.model_iot_device
+msgid "IOT Device"
+msgstr "IoT-laite"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__iot_device_identifier
+msgid "Identifier"
+msgstr "Tunniste"
+
+#. module: delivery_iot
+#: model:ir.model.fields,help:delivery_iot.field_stock_picking_type__auto_print_carrier_labels
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the carrier labels"
+" of the picking when they are created. Note this requires a printer to be "
+"assigned to this report."
+msgstr ""
+"Jos valittu, Odoo tulostaa automaattisesti poiminnan kuljetuksen etiketit, "
+"kun ne luodaan. Huomaa, että tämä edellyttää, että raportille on määritetty "
+"tulostin."
+
+#. module: delivery_iot
+#: model:ir.model.fields,help:delivery_iot.field_stock_picking_type__auto_print_export_documents
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the export "
+"documents of the picking when they are created. Availability of export "
+"documents depends on the carrier and the destination. Note this requires a "
+"printer to be assigned to this report. "
+msgstr ""
+"Jos valittu, Odoo tulostaa automaattisesti poiminnan vientiasiakirjat, kun "
+"ne luodaan. Vientiasiakirjojen saatavuus riippuu rahdinkuljettajasta ja "
+"määränpäästä. Huomaa, että tämä edellyttää, että tälle raportille on "
+"määritetty tulostin."
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid ""
+"If you connect your scales through the IoT App, the\n"
+"                            weight of the package will be set automatically when\n"
+"                            you do a \"Put in Pack\" operation."
+msgstr ""
+"Jos yhdistät vaa'an IoT-sovelluksen kautta, vaa'an\n"
+"                            paketin paino asetetaan automaattisesti, kun\n"
+"                            kun teet \"Laita pakettiin\" -toiminnon."
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.iot_device_view_form_inherit
+msgid "Linked Operation Types"
+msgstr "Linkitetyt toimintatyypit"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__manual_measurement
+msgid "Manual Measurement"
+msgstr "Manuaalinen mittaus"
+
+#. module: delivery_iot
+#: model:ir.model.fields,help:delivery_iot.field_choose_delivery_package__manual_measurement
+msgid "Manually read the measurement from the device"
+msgstr "Mittauksen lukeminen laitteesta manuaalisesti"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_iot_device__picking_type_ids
+msgid "Operation Types"
+msgstr "Toimintotyypit"
+
+#. module: delivery_iot
+#: model:ir.model,name:delivery_iot.model_stock_picking_type
+msgid "Picking Type"
+msgstr "Keräilyn tyyppi"
+
+#. module: delivery_iot
+#. odoo-javascript
+#: code:addons/delivery_iot/static/src/field_many2one_iot_scale.xml:0
+#, python-format
+msgid "Read weight"
+msgstr "Lue paino"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__iot_device_id
+msgid "Scale"
+msgstr "Skaala"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__available_scale_ids
+#: model:ir.model.fields,field_description:delivery_iot.field_stock_picking_type__iot_scale_ids
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "Scales"
+msgstr "Vaa'at"
+
+#. module: delivery_iot
+#: model:ir.actions.report,name:delivery_iot.action_report_shipping_docs
+msgid "Shipping Documents"
+msgstr "Toimitusasiakirjat"
+
+#. module: delivery_iot
+#: model:ir.actions.report,name:delivery_iot.action_report_shipping_labels
+msgid "Shipping Labels"
+msgstr "Lähetystarrat"
+
+#. module: delivery_iot
+#: model:ir.model,name:delivery_iot.model_stock_picking
+msgid "Transfer"
+msgstr "Siirto"

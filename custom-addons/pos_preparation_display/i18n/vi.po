@@ -1,0 +1,515 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_preparation_display
+# 
+# Translators:
+# Martin Trigaux, 2023
+# Wil Odoo, 2023
+# Thi Huong Nguyen, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "<span>Average time</span>"
+msgstr "<span>Thời gian trung bình</span>"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "<span>In progress</span>"
+msgstr "<span>Đang xử lý</span>"
+
+#. module: pos_preparation_display
+#. odoo-python
+#: code:addons/pos_preparation_display/models/preparation_display.py:0
+#, python-format
+msgid "A preparation display must have a minimum of one step."
+msgstr "Màn hình khâu chuẩn bị phải chứa tối thiểu một bước."
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__access_token
+msgid "Access Token"
+msgstr "Token truy cập"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__alert_timer
+msgid "Alert timer (min)"
+msgstr "Thời gian nhắc nhở (phút)"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/stages/stages.xml:0
+#, python-format
+msgid "All"
+msgstr "Tất cả"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+msgid "All PoS"
+msgstr "Tất cả POS"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+msgid "All categories"
+msgstr "Tất cả danh mục"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_order__order_stage_ids
+msgid "All the stage ids in which the order is placed"
+msgstr "Tất cả id giai đoạn mà đơn đặt hàng đã được đặt"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_reset_wizard
+msgid ""
+"Archive all preparation display's orders for a fresh start. This will not "
+"affect the PoS order history."
+msgstr ""
+"Lưu trữ tất cả đơn đặt hàng của màn hình khâu chuẩn bị để bắt đầu lại từ "
+"đầu. Điều này sẽ không ảnh hưởng đến lịch sử đơn hàng PoS."
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_display__average_time
+msgid "Average time of all order that not in a done stage."
+msgstr ""
+"Thời gian trung bình của tất cả đơn hàng ngoại từ đơn ở giai đoạn hoàn tất."
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_reset_wizard
+msgid "Check products"
+msgstr "Kiểm tra sản phẩm"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Clear All Filters"
+msgstr "Bỏ tất cả bộ lọc"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Close"
+msgstr "Đóng"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__color
+msgid "Color"
+msgstr "Màu sắc"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__company_id
+msgid "Company"
+msgstr "Công ty"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "Configure"
+msgstr "Cấu hình"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__create_uid
+msgid "Created by"
+msgstr "Được tạo bởi"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__create_date
+msgid "Created on"
+msgstr "Được tạo vào"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/order/order.xml:0
+#, python-format
+msgid "Delete"
+msgstr "Xoá"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Delete All"
+msgstr "Xoá tất cả"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_order__displayed
+msgid ""
+"Determines whether the order should be displayed on the preparation screen"
+msgstr ""
+"Xác định xem đơn hàng có được hiển thị trên màn hình khâu chuẩn bị hay không"
+
+#. module: pos_preparation_display
+#: model_terms:ir.actions.act_window,help:pos_preparation_display.action_preparation_display
+msgid ""
+"Different products and categories are sent to different tablets and screens."
+msgstr ""
+"Các sản phẩm và danh mục khác nhau được gửi đến các máy tính bảng và màn "
+"hình khác nhau."
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_reset_wizard
+msgid "Discard"
+msgstr "Huỷ bỏ"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Explore demo data"
+msgstr "Khám phá dữ liệu demo"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/override/point_of_sale/pos_store.js:0
+#, python-format
+msgid "Failed in sending the changes to preparation display"
+msgstr "Không thể gửi các thay đổi đến màn hình khâu chuẩn bị"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Filters"
+msgstr "Bộ lọc"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_order__pos_order_id
+msgid "ID of the original PoS order"
+msgstr "ID của đơn hàng POS gốc"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__internal_note
+msgid "Internal Note"
+msgstr "Ghi chú nội bộ"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_orderline__internal_note
+msgid "Internal notes written at the time of the order"
+msgstr "Ghi chú nội bộ được ghi vào thời điểm đặt hàng"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__contains_bar_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_search
+msgid "Is a Bar/Restaurant"
+msgstr "Là một Nhà hàng/quầy bar"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__done
+msgid "Is the order done"
+msgstr "Là đơn hàng đã hoàn tất"
+
+#. module: pos_preparation_display
+#: model:ir.actions.server,name:pos_preparation_display.action_pos_preparation_display_kitchen_display
+#: model:ir.ui.menu,name:pos_preparation_display.menu_point_kitchen_display_root
+msgid "Kitchen Display"
+msgstr "Màn hình nhà bếp"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__write_uid
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__write_date
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối vào"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Loading..."
+msgstr "Đang tải..."
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__name
+msgid "Name"
+msgstr "Tên"
+
+#. module: pos_preparation_display
+#: model_terms:ir.actions.act_window,help:pos_preparation_display.action_preparation_display
+msgid "Need a touchscreen interface to manage order ?"
+msgstr "Bạn cần một giao diện màn hình cảm ứng để quản lý đơn hàng?"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "No data available."
+msgstr "Không có dữ liệu."
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+msgid "Offer"
+msgstr "Offer"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "Open Preparation Display"
+msgstr "Mở màn hình khâu chuẩn bị"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__order_id
+msgid "Order"
+msgstr "Đơn hàng"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__preparation_display_order_line_ids
+msgid "Order Lines"
+msgstr "Chi tiết đơn hàng"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__order_stage_ids
+msgid "Order Stage"
+msgstr "Giai đoạn đơn hàng"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__average_time
+msgid "Order average time"
+msgstr "Thời gian trung bình của đơn hàng"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__order_count
+msgid "Order count"
+msgstr "Số đơn hàng"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__displayed
+msgid "Order is displayed"
+msgstr "Đơn hàng được hiển thị"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__pos_config_ids
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__pos_config_id
+msgid "Point of Sale"
+msgstr "Điểm bán hàng"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Đơn hàng điểm bán hàng"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Phiên POS"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_orderline
+msgid "Point of Sale preparation order line"
+msgstr "Point of Sale preparation order line"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_stage
+msgid "Point of Sale preparation stage"
+msgstr "Giai đoạn khâu chuẩn bị POS"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__pos_order_id
+msgid "Pos Order"
+msgstr "Đơn hàng POS"
+
+#. module: pos_preparation_display
+#: model:ir.actions.act_url,name:pos_preparation_display.action_pos_preparation_display_bar_restaurant_filter_link
+#: model:ir.actions.act_window,name:pos_preparation_display.action_preparation_display
+#: model:ir.actions.act_window,name:pos_preparation_display.action_preparation_display_bar_restaurant_filter
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__preparation_display_id
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_search
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_tree
+msgid "Preparation Display"
+msgstr "Màn hình khâu chuẩn bị"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__preparation_display_order_id
+msgid "Preparation Display Order"
+msgstr "Preparation Display Order"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__preparation_display_id
+msgid "Preparation display"
+msgstr "Màn hình khâu chuẩn bị"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_order
+msgid "Preparation orders"
+msgstr "Preparation orders"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__product_id
+msgid "Product ID"
+msgstr "ID sản phẩm"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__category_ids
+msgid "Product categories"
+msgstr "Danh mục sản phẩm"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_display__category_ids
+msgid "Product categories that will be displayed on this screen."
+msgstr "Danh mục sản phẩm sẽ được hiển thị trên màn hình này. "
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__product_cancelled
+msgid "Quantity of cancelled product"
+msgstr "Số lượng sản phẩm đã huỷ"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__product_quantity
+msgid "Quantity of ordered product"
+msgstr "Số lượng sản phẩm đã đặt"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Recall"
+msgstr "Thu hồi"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/order/order.xml:0
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_reset_wizard
+#, python-format
+msgid "Reset"
+msgstr "Đặt lại"
+
+#. module: pos_preparation_display
+#. odoo-python
+#: code:addons/pos_preparation_display/models/preparation_display.py:0
+#, python-format
+msgid "Reset Preparation Display"
+msgstr "Cài đặt lại màn hình khâu chuẩn bị"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_reset_wizard
+msgid "Reset all current order in a preparation display"
+msgstr "Cài đặt lại tất cả đơn hàng hiện có trên màn hình khâu chuẩn bị"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "Reset all orders"
+msgstr "Cài đặt lại tất cả đơn hàng"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__attribute_value_ids
+msgid "Selected Attributes"
+msgstr "Thuộc tính đã chọn"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/override/point_of_sale/pos_store.js:0
+#, python-format
+msgid "Send failed"
+msgstr "Gửi không thành công"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__sequence
+msgid "Sequence"
+msgstr "Trình tự"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__stage_id
+msgid "Stage"
+msgstr "Giai đoạn"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_order_stage
+msgid "Stage of orders by preparation display"
+msgstr "Giai đoạn của đơn hàng dựa theo màn hình khâu chuẩn bị"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__stage_ids
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+msgid "Stages"
+msgstr "Giai đoạn"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__todo
+msgid "Status of the orderline"
+msgstr "Trạng thái dòng đơn hàng"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_orderline__todo
+msgid "The status of a command line, todo or not"
+msgstr "Trạng thái của một dòng, việc cần làm hoặc không phải"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_stage__alert_timer
+msgid "Timer after which the order will be highlighted"
+msgstr "Khoảng thời gian mà sau đó đơn hàng sẽ được đánh dấu"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "or simply wait for orders to be sent for preparation."
+msgstr "hoặc chỉ cần chờ gửi đơn hàng đi để chuẩn bị."
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/order/order.xml:0
+#, python-format
+msgid "products"
+msgstr "sản phẩm"

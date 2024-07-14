@@ -1,0 +1,47 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* industry_fsm_sms
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: industry_fsm_sms
+#: model:sms.template,name:industry_fsm_sms.sms_template_data_fsm_intervention
+msgid "Field Service: Intervention Planned"
+msgstr "Serwis terenowy: planowana interwencja"
+
+#. module: industry_fsm_sms
+#: model:sms.template,name:industry_fsm_sms.sms_template_data_fsm_onway
+msgid "Field Service: Our team is on its way to your location."
+msgstr "Serwis terenowy: nasz zespół jest w drodze do Twojej lokacji."
+
+#. module: industry_fsm_sms
+#: model:sms.template,body:industry_fsm_sms.sms_template_data_fsm_onway
+msgid "{{ object.company_id.name }}: We are on our way to your intervention."
+msgstr ""
+"{{ object.company_id.name }}: Jesteśmy w drodze do Twojej interwencji."
+
+#. module: industry_fsm_sms
+#: model:sms.template,body:industry_fsm_sms.sms_template_data_fsm_intervention
+msgid ""
+"{{ object.company_id.name }}: Your intervention is scheduled {{ 'from the ' "
+"+ format_datetime(object.planned_date_begin, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) + ' to the ' + "
+"format_datetime(object.date_deadline, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) if object.planned_date_begin and "
+"object.date_deadline else '' }}"
+msgstr ""

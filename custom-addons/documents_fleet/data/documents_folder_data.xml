@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="documents_fleet_folder" model="documents.folder" forcecreate="0">
+            <field name="name">Fleet</field>
+            <field name="group_ids" eval="[(4, ref('fleet.fleet_group_manager'))]"/>
+            <field name="read_group_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="user_specific">True</field>
+            <field name="sequence">14</field>
+        </record>
+    </data>
+</odoo>

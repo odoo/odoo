@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_cz_reports_pl" model="account.report">
+        <field name="name">Profit and Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.cz"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_cz_reports_pl_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_cz_reports_pl_line_1" model="account.report.line">
+                <field name="name">I. Revenues from products, goods and services</field>
+                <field name="code">l10n_cz_reports_pl_line_1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_1_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-601 - 602 - 604</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_2" model="account.report.line">
+                <field name="name">A. Costs of sale (values adjustments including) </field>
+                <field name="code">l10n_cz_reports_pl_line_2</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_2_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">501 + 502 + 503 + 504 + 511 + 512 + 513 + 518 + 551 + 557</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_3" model="account.report.line">
+                <field name="name">Gross profit or loss</field>
+                <field name="code">l10n_cz_reports_pl_line_3</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_3_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_cz_reports_pl_line_1.balance - l10n_cz_reports_pl_line_2.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_4" model="account.report.line">
+                <field name="name">B. Distribution costs (values adjustments including)</field>
+                <field name="code">l10n_cz_reports_pl_line_4</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_4_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">581 + 582 + 583 + 584 + 558</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_5" model="account.report.line">
+                <field name="name">C. Administrative costs (values adjustments including)</field>
+                <field name="code">l10n_cz_reports_pl_line_5</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_5_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">585 + 586 + 587 + 588 + 559</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_6" model="account.report.line">
+                <field name="name">II. Other operating revenues </field>
+                <field name="code">l10n_cz_reports_pl_line_6</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_6_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-641 - 642 - 643 - 644 - 645 - 646 - 647 - 648 - 649 - 697</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_7" model="account.report.line">
+                <field name="name">D. Other operating costs</field>
+                <field name="code">l10n_cz_reports_pl_line_7</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_7_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">521 + 522 +523 + 524 + 525 + 526 + 527 + 528 + 531 + 532 + 538 + 541 + 542 + 543 + 544 + 545 + 546 + 547 + 548 + 549 + 552 + 554 + 555 + 597</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_8" model="account.report.line">
+                <field name="name">Operating profit / loss (+/-) </field>
+                <field name="code">l10n_cz_reports_pl_line_8</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_8_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_cz_reports_pl_line_3.balance - l10n_cz_reports_pl_line_4.balance - l10n_cz_reports_pl_line_5.balance + l10n_cz_reports_pl_line_6.balance - l10n_cz_reports_pl_line_7.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_9" model="account.report.line">
+                <field name="name">III. Revenues from long-term financial assets - shares</field>
+                <field name="code">l10n_cz_reports_pl_line_9</field>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_9_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_cz_reports_pl_line_10.balance + l10n_cz_reports_pl_line_11.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_cz_reports_pl_line_10" model="account.report.line">
+                        <field name="name">III.1. Revenues from shares - controlled or controlling entity</field>
+                        <field name="code">l10n_cz_reports_pl_line_10</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_cz_reports_pl_line_10_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-661</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_cz_reports_pl_line_11" model="account.report.line">
+                        <field name="name">III.2. Other revenues from shares</field>
+                        <field name="code">l10n_cz_reports_pl_line_11</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_cz_reports_pl_line_11_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-660</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_12" model="account.report.line">
+                <field name="name">E. Costs of sold shares</field>
+                <field name="code">l10n_cz_reports_pl_line_12</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_12_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">560 + 561</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_13" model="account.report.line">
+                <field name="name">IV. Revenues from other long-term financial assets</field>
+                <field name="code">l10n_cz_reports_pl_line_13</field>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_13_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_cz_reports_pl_line_14.balance + l10n_cz_reports_pl_line_15.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_cz_reports_pl_line_14" model="account.report.line">
+                        <field name="name">IV.1. Revenues from other long-term financial assets - controlled or controlling entity</field>
+                        <field name="code">l10n_cz_reports_pl_line_14</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_cz_reports_pl_line_14_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-665\(6651)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_cz_reports_pl_line_15" model="account.report.line">
+                        <field name="name">IV.2. Other revenues from other long-term financial assets</field>
+                        <field name="code">l10n_cz_reports_pl_line_15</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_cz_reports_pl_line_15_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-6651</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_16" model="account.report.line">
+                <field name="name">F. Costs associated with other long-term financial assets</field>
+                <field name="code">l10n_cz_reports_pl_line_16</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_16_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">566</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_17" model="account.report.line">
+                <field name="name">V. Interest revenues and similar revenues</field>
+                <field name="code">l10n_cz_reports_pl_line_17</field>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_17_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_cz_reports_pl_line_18.balance + l10n_cz_reports_pl_line_19.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_cz_reports_pl_line_18" model="account.report.line">
+                        <field name="name">V.1. Interest revenues and similar revenues - controlled or controlling entity</field>
+                        <field name="code">l10n_cz_reports_pl_line_18</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_cz_reports_pl_line_18_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-662\(6621)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_cz_reports_pl_line_19" model="account.report.line">
+                        <field name="name">V.2. Other interest revenues and similar revenues</field>
+                        <field name="code">l10n_cz_reports_pl_line_19</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_cz_reports_pl_line_19_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-6621</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_20" model="account.report.line">
+                <field name="name">G. Values adjustments and reserves in financial activity</field>
+                <field name="code">l10n_cz_reports_pl_line_20</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_20_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">574 + 579</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_21" model="account.report.line">
+                <field name="name">H. Interest expenses and similar costs</field>
+                <field name="code">l10n_cz_reports_pl_line_21</field>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_21_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_cz_reports_pl_line_22.balance + l10n_cz_reports_pl_line_23.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_cz_reports_pl_line_22" model="account.report.line">
+                        <field name="name">H.1. Interest expenses and similar costs controlled or controlling entity</field>
+                        <field name="code">l10n_cz_reports_pl_line_22</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_cz_reports_pl_line_22_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">562\(5621)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_cz_reports_pl_line_23" model="account.report.line">
+                        <field name="name">H.2. Other interest expenses and similar costs</field>
+                        <field name="code">l10n_cz_reports_pl_line_23</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_cz_reports_pl_line_23_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">5621</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_24" model="account.report.line">
+                <field name="name">VI. Other financial revenues</field>
+                <field name="code">l10n_cz_reports_pl_line_24</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_24_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-663 - 664 - 666 - 667 - 668 - 669 - 698 - 699</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_25" model="account.report.line">
+                <field name="name">I. Other financial costs</field>
+                <field name="code">l10n_cz_reports_pl_line_25</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_25_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">563 + 564 + 565 + 567 + 568 + 569 + 598</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_26" model="account.report.line">
+                <field name="name">Profit / loss from financial operations (+/-) </field>
+                <field name="code">l10n_cz_reports_pl_line_26</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_26_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_cz_reports_pl_line_9.balance - l10n_cz_reports_pl_line_12.balance + l10n_cz_reports_pl_line_13.balance - l10n_cz_reports_pl_line_16.balance + l10n_cz_reports_pl_line_17.balance - l10n_cz_reports_pl_line_20.balance - l10n_cz_reports_pl_line_21.balance + l10n_cz_reports_pl_line_24.balance - l10n_cz_reports_pl_line_25.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_27" model="account.report.line">
+                <field name="name">Profit/ loss before tax (+/-)</field>
+                <field name="code">l10n_cz_reports_pl_line_27</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_27_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_cz_reports_pl_line_8.balance + l10n_cz_reports_pl_line_26.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_28" model="account.report.line">
+                <field name="name">J. Income tax</field>
+                <field name="code">l10n_cz_reports_pl_line_28</field>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_28_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_cz_reports_pl_line_29.balance + l10n_cz_reports_pl_line_30.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_cz_reports_pl_line_29" model="account.report.line">
+                        <field name="name">J.1. Income tax-due</field>
+                        <field name="code">l10n_cz_reports_pl_line_29</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_cz_reports_pl_line_29_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">591 + 593 + 595 + 599</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_cz_reports_pl_line_30" model="account.report.line">
+                        <field name="name">J.2. Income tax deferred</field>
+                        <field name="code">l10n_cz_reports_pl_line_30</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_cz_reports_pl_line_30_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">592</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_31" model="account.report.line">
+                <field name="name">Profit/ loss after tax (+/-)</field>
+                <field name="code">l10n_cz_reports_pl_line_31</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_31_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_cz_reports_pl_line_27.balance - l10n_cz_reports_pl_line_28.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_32" model="account.report.line">
+                <field name="name">K. Transfer of share from profit / loss to partners (+/-)</field>
+                <field name="code">l10n_cz_reports_pl_line_32</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_32_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">596</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_33" model="account.report.line">
+                <field name="name">Profit / loss of current accounting period (+/-)</field>
+                <field name="code">l10n_cz_reports_pl_line_33</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_33_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_cz_reports_pl_line_31.balance - l10n_cz_reports_pl_line_32.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_cz_reports_pl_line_34" model="account.report.line">
+                <field name="name">Net turnover of current accounting period (+/-)</field>
+                <field name="code">l10n_cz_reports_pl_line_34</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_cz_reports_pl_line_34_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_cz_reports_pl_line_1.balance + l10n_cz_reports_pl_line_6.balance + l10n_cz_reports_pl_line_9.balance + l10n_cz_reports_pl_line_13.balance + l10n_cz_reports_pl_line_17.balance + l10n_cz_reports_pl_line_24.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

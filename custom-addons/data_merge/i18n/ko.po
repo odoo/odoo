@@ -1,0 +1,752 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* data_merge
+# 
+# Translators:
+# Wil Odoo, 2023
+# Daye Jeong, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Daye Jeong, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (사본)"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_group.py:0
+#, python-format
+msgid "%s - Similarity: %s%%"
+msgstr "%s - 유사도: %s%%"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid "%s records have been merged"
+msgstr "%s 데이터가 병합되었습니다"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid ""
+"' deduplication rule.<br/>\n"
+"You can merge them"
+msgstr ""
+"' 중복 제거 규칙.<br/>\n"
+"병합할 수 있습니다"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "<span class=\"me-1\">Every</span>"
+msgstr "<span class=\"me-1\">매</span>"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "<span class=\"oe_inline\">%</span>"
+msgstr "<span class=\"oe_inline\">%</span>"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "<span invisible=\"not custom_merge_method\">Model specific</span>"
+msgstr "<span invisible=\"not custom_merge_method\">특정 모델</span>"
+
+#. module: data_merge
+#: model:ir.model.constraint,message:data_merge.constraint_data_merge_rule_uniq_model_id_field_id
+msgid "A field can only appear once!"
+msgstr "하나의 필드는 한번만 표시됩니다!"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__active
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__active
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__active
+msgid "Active"
+msgstr "활성화"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__removal_mode__archive
+msgid "Archive"
+msgstr "보관"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_model_view_search
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Archived"
+msgstr "보관됨"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid ""
+"Are you sure that you want to merge the selected records in their respective"
+" group?"
+msgstr "선택한 레코드를 해당 그룹에서 병합하시겠습니까?"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid "Are you sure that you want to merge these records?"
+msgstr "정말 이 데이터를 병합하시겠습니까?"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__merge_mode__automatic
+msgid "Automatic"
+msgstr "자동"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_ir_model__is_merge_enabled
+#: model_terms:ir.ui.view,arch_db:data_merge.ir_model_view_search
+msgid "Can Be Merged"
+msgstr "병합 가능"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_rule.py:0
+#, python-format
+msgid "Case/Accent Insensitive Match"
+msgstr "대소문자/악센트 매치 구분 없음"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__company_id
+msgid "Company"
+msgstr "회사"
+
+#. module: data_merge
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record_notification
+msgid "Configure rules to identify duplicate records"
+msgstr "중복 레코드를 식별하는 규칙 구성하기"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_res_partner
+msgid "Contact"
+msgstr "연락처"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_ir_model__ref_merge_ir_act_server_id
+msgid ""
+"Contextual menu action that redirects to the deduplicate view of data_merge."
+msgstr "data_merge의 중복 항목 제거 보기로 이동하는 컨텍스트 메뉴 동작입니다."
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_create_uid
+msgid "Created By"
+msgstr "작성자"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_create_date
+msgid "Created On"
+msgstr "작성일자"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__create_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__create_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__create_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__create_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__create_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__create_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__mix_by_company
+msgid "Cross-Company"
+msgstr "회사간"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__custom_merge_method
+msgid "Custom Merge Method"
+msgstr "사용자 지정 병합 방식"
+
+#. module: data_merge
+#: model:ir.actions.server,name:data_merge.ir_cron_cleanup_ir_actions_server
+msgid "Data Merge: Cleanup Records"
+msgstr "데이터 병합: 데이터 청소"
+
+#. module: data_merge
+#: model:ir.actions.server,name:data_merge.ir_cron_find_duplicates_ir_actions_server
+msgid "Data Merge: Find Duplicate Records"
+msgstr "데이터 병합: 중복데이터 검색"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__notify_frequency_period__days
+msgid "Days"
+msgstr "일"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+#, python-format
+msgid "Deduplicate"
+msgstr "중복제거"
+
+#. module: data_merge
+#: model:ir.ui.menu,name:data_merge.menu_data_merge_config_rules_deduplication
+#: model:ir.ui.menu,name:data_merge.menu_data_merge_group
+msgid "Deduplication"
+msgstr "중복 제거"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_group
+msgid "Deduplication Group"
+msgstr "그룹 중복 제거"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_model
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__model_id
+msgid "Deduplication Model"
+msgstr "모델 중복 제거"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_record
+msgid "Deduplication Record"
+msgstr "데이터 중복 제거"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_data_merge_rule
+msgid "Deduplication Rule"
+msgstr "규칙 중복 제거"
+
+#. module: data_merge
+#: model:ir.actions.act_window,name:data_merge.action_data_merge_config
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__rule_ids
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "Deduplication Rules"
+msgstr "규칙 중복 제거"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "Deduplication is forbidden on the model: %s"
+msgstr "이 모델에서는 중복 항목이 금지됩니다: %s"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__removal_mode__delete
+msgid "Delete"
+msgstr "삭제"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__differences
+msgid "Differences"
+msgstr "차이"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_record__differences
+msgid "Differences with the master record"
+msgstr "마스터 레코드와의 차이"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.ir_model_view_form
+msgid "Disable Merge"
+msgstr "병합 비활성화"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_list
+msgid "Discard"
+msgstr "취소"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Discarded"
+msgstr "취소됨"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__display_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__display_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__display_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__divergent_fields
+msgid "Divergent Fields"
+msgstr "발산 필드"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__domain
+msgid "Domain"
+msgstr "도메인"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__removal_mode
+msgid "Duplicate Removal"
+msgstr "중복 삭제"
+
+#. module: data_merge
+#: model:ir.actions.act_window,name:data_merge.action_data_merge_record
+#: model:ir.actions.act_window,name:data_merge.action_data_merge_record_notification
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "Duplicates"
+msgstr "복사"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "Duplicates to Merge"
+msgstr "병합할 중복 항목"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__create_threshold
+msgid ""
+"Duplicates with a similarity below this threshold will not be suggested"
+msgstr "이 임계값 미만의 유사도를 가진 중복 항목은 제안되지 않습니다"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.ir_model_view_form
+msgid "Enable Merge"
+msgstr "병합 활성화"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_rule.py:0
+#, python-format
+msgid "Exact Match"
+msgstr "정확히 일치"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__field_values
+msgid "Field Values"
+msgstr "필드값"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_ir_model__hide_merge_action
+msgid "Hide merge action button"
+msgstr "병합 작업 숨기기 버튼"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid "I've identified"
+msgstr "확인했습니다"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__id
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_list
+msgid "ID"
+msgstr "ID"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_ir_model__is_merge_enabled
+msgid ""
+"If True, the generic data merge tool is available in the contextual menu of "
+"this model."
+msgstr "True면, 해당 모델의 컨텍스트 메뉴에서 일반 데이터 병합 도구를 사용할 수 있습니다."
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__is_contextual_merge_action
+msgid ""
+"If True, this record is used for contextual menu action \"Merge\" on the "
+"target model."
+msgstr "True면, 해당 레코드는 타켓 모델의 컨텍스트 메뉴 작업 \"병합\"에 사용됩니다."
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_ir_model__hide_merge_action
+msgid ""
+"If the model already has a custom merge method, the class attribute `_merge_disabled` is set to true on\n"
+"             that model and the generic data merge action should not be available on that model."
+msgstr ""
+"모델에 이미 사용자 지정 병합 메서드가 있는 경우 해당 모델에서 클래스 속성 `_merge_disabled`은\n"
+"             True로 설정되어야 하며, 해당 모델에서는 일반 데이터 병합 작업을 할 수 없습니다."
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__is_deleted
+msgid "Is Deleted"
+msgstr "삭제됨"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__is_discarded
+msgid "Is Discarded"
+msgstr "취소됨"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__is_master
+msgid "Is Master"
+msgstr "마스터정보"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__last_notification
+msgid "Last Notification"
+msgstr "최근 알림"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__write_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__write_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__write_uid
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__write_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__write_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__write_date
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_record__used_in
+msgid "List of other models referencing this record"
+msgstr "이 레코드를 참조하는 다른 모델 목록"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__notify_user_ids
+msgid "List of users to notify when there are new records to merge"
+msgstr "병합할 새 레코드가 있을 때 알림을 받을 사용자 목록"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__merge_mode__manual
+msgid "Manual"
+msgstr "수동"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "Manual Selection - %s"
+msgstr "수동 선택 - %s"
+
+#. module: data_merge
+#. odoo-javascript
+#. odoo-python
+#: code:addons/data_merge/models/ir_model.py:0
+#: code:addons/data_merge/static/src/views/data_merge_list_view.xml:0
+#: model:ir.actions.server,name:data_merge.merge_action_crm_lost_reason
+#: model:ir.actions.server,name:data_merge.merge_action_crm_tag
+#: model:ir.actions.server,name:data_merge.merge_action_helpdesk_tag
+#: model:ir.actions.server,name:data_merge.merge_action_helpdesk_ticket
+#: model:ir.actions.server,name:data_merge.merge_action_project_tags
+#: model:ir.actions.server,name:data_merge.merge_action_project_task
+#: model:ir.actions.server,name:data_merge.merge_action_res_country
+#: model:ir.actions.server,name:data_merge.merge_action_res_country_state
+#: model:ir.actions.server,name:data_merge.merge_action_res_partner_category
+#: model:ir.actions.server,name:data_merge.merge_action_res_partner_industry
+#: model:ir.actions.server,name:data_merge.merge_action_res_partner_title
+#: model:ir.actions.server,name:data_merge.merge_action_utm_campaign
+#: model:ir.actions.server,name:data_merge.merge_action_utm_medium
+#: model:ir.actions.server,name:data_merge.merge_action_utm_source
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_list
+#, python-format
+msgid "Merge"
+msgstr "병합"
+
+#. module: data_merge
+#: model:ir.ui.menu,name:data_merge.ir_model_menu_merge_action_manager
+msgid "Merge Action Manager"
+msgstr "병합 작업 관리자"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__match_mode
+msgid "Merge If"
+msgstr "병합"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__merge_mode
+msgid "Merge Mode"
+msgstr "병합 모드"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_ir_model__ref_merge_ir_act_server_id
+msgid "Merge Server Action"
+msgstr "서버 작업 병합"
+
+#. module: data_merge
+#: model:ir.actions.act_window,name:data_merge.ir_model_action_merge
+msgid "Merge action Manager"
+msgstr "병합 작업 관리자"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__is_contextual_merge_action
+msgid "Merge action attached"
+msgstr "병합 작업 첨부"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_model.py:0
+#, python-format
+msgid "Missing required PostgreSQL extension: unaccent"
+msgstr "필수 PostgreSQL 확장자 누락: unaccent"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__res_model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__res_model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__res_model_id
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__res_model_id
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Model"
+msgstr "모델"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__res_model_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__res_model_name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__res_model_name
+msgid "Model Name"
+msgstr "모델명"
+
+#. module: data_merge
+#: model:ir.model,name:data_merge.model_ir_model
+msgid "Models"
+msgstr "모델"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__notify_frequency_period__months
+msgid "Months"
+msgstr "월"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__name
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__name
+msgid "Name"
+msgstr "이름"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record
+#: model_terms:ir.actions.act_window,help:data_merge.action_data_merge_record_notification
+#, python-format
+msgid "No duplicates found"
+msgstr "중복된 정보가 없습니다"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__notify_frequency
+msgid "Notify"
+msgstr "알림"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__notify_frequency_period
+msgid "Notify Frequency Period"
+msgstr "알림 주기"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__notify_user_ids
+msgid "Notify Users"
+msgstr "사용자 알림"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "Query Failed."
+msgstr "쿼리 실패."
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__record_ids
+msgid "Record"
+msgstr "기록"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__group_id
+msgid "Record Group"
+msgstr "그룹 기록"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__res_id
+msgid "Record ID"
+msgstr "레코드 ID"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_record_view_search_merge_action
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Records"
+msgstr "기록"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__records_to_merge_count
+msgid "Records To Merge Count"
+msgstr "병합할 데이터 수"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__domain
+msgid "Records eligible for the deduplication process"
+msgstr "중복 제거 프로세스에 적합한 레코드"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "Records must be of the same model"
+msgstr "레코드는 동일한 모델이어야 합니다"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__merge_threshold
+msgid ""
+"Records with a similarity percentage above this threshold will be "
+"automatically merged"
+msgstr "이 임계값을 초과하는 유사도 비율을 가진 레코드는 자동으로 병합됩니다"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_record_search
+msgid "Rule"
+msgstr "규칙"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.view_data_merge_model_form
+msgid "Select a model to configure deduplication rules"
+msgstr "중복 제거 규칙을 구성할 모델 선택"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__sequence
+msgid "Sequence"
+msgstr "순서"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_group__similarity
+msgid "Similarity %"
+msgstr "유사도 %"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__merge_threshold
+msgid "Similarity Threshold"
+msgstr "유사도 임계값"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_group__similarity
+msgid ""
+"Similarity coefficient based on the amount of text fields exactly in common."
+msgstr "정확히 일치하는 텍스트 필드 수를 기반으로 한 유사도 계수입니다."
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__rule_ids
+msgid "Suggest to merge records matching at least one of these rules"
+msgstr "다음 규칙 중 하나 이상 일치하는 레코드를 병합하도록 제안합니다"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_model__create_threshold
+msgid "Suggestion Threshold"
+msgstr "제안 임계값"
+
+#. module: data_merge
+#: model:ir.model.constraint,message:data_merge.constraint_data_merge_model_check_notif_freq
+msgid "The notification frequency should be greater than 0"
+msgstr "알림주기는 0보다 커야합니다."
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "The referenced record does not exist"
+msgstr "참조된 레코드가 존재하지 않음"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.js:0
+#, python-format
+msgid "The selected records have been merged"
+msgstr "선택한 레코드가 병합되었습니다"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "The target model does not exists."
+msgstr "타겟 모델이 존재하지 않음"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "There is not referenced record"
+msgstr "참조된 레코드가 없습니다"
+
+#. module: data_merge
+#: model:ir.model.constraint,message:data_merge.constraint_data_merge_model_uniq_name
+msgid "This name is already taken"
+msgstr "이미 사용 중인 이름입니다"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_rule__field_id
+msgid "Unique ID Field"
+msgstr "고유 ID 필드"
+
+#. module: data_merge
+#. odoo-javascript
+#: code:addons/data_merge/static/src/views/data_merge_list_view.xml:0
+#, python-format
+msgid "Unselect"
+msgstr "선택 취소"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_write_uid
+msgid "Updated By"
+msgstr "업데이트한 사람"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__record_write_date
+msgid "Updated On"
+msgstr "업데이트일자"
+
+#. module: data_merge
+#: model:ir.model.fields,field_description:data_merge.field_data_merge_record__used_in
+msgid "Used In"
+msgstr "다음에서 사용"
+
+#. module: data_merge
+#: model:ir.model.fields.selection,name:data_merge.selection__data_merge_model__notify_frequency_period__weeks
+msgid "Weeks"
+msgstr "주"
+
+#. module: data_merge
+#: model:ir.model.fields,help:data_merge.field_data_merge_model__mix_by_company
+msgid "When enabled, duplicates across different companies will be suggested"
+msgstr "활성화하면 여러 회사의 중복 항목이 제안됩니다"
+
+#. module: data_merge
+#. odoo-python
+#: code:addons/data_merge/models/data_merge_record.py:0
+#, python-format
+msgid "You must select at least two %s in order to merge them."
+msgstr "병합하려면 최소 두 개 이상의 %s를 선택해야 합니다."
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid "duplicate records with the '"
+msgstr "레코드 복사 '"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_duplicate
+msgid "here"
+msgstr "여기"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_merged
+msgid "merged into"
+msgstr "병합"
+
+#. module: data_merge
+#: model_terms:ir.ui.view,arch_db:data_merge.data_merge_main
+msgid "merged into this one"
+msgstr "이 항목으로 병합"

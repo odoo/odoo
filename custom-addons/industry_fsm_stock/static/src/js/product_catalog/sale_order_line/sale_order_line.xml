@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="product.ProductCatalogOrderLine" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_product_catalog_buttons')]" position="before">
+            <button t-if="this.props.tracking and this.props.quantity != 0 and this.env.fsm_task_id"
+                    class="btn align-self-end o_product_catalog_cancel_global_click"
+                    type="object" t-on-click="this.env.resetQuantity">
+                <i class="fa fa-list text-success" title="Lot/Serial number"></i>
+            </button>
+        </xpath>
+    </t>
+
+</templates>

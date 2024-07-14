@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportFilterHorizontalGroups">
+        <Dropdown togglerClass="'btn btn-secondary'">
+            <t t-set-slot="toggler">
+                <i class="fa fa-filter me-1"/>Horizontal Group: <t t-esc="selectedHorizontalGroupName"/>
+            </t>
+
+            <DropdownItem
+                class="{ 'selected': controller.options.selected_horizontal_group_id === 'none' }"
+                onSelected="() => this.updateFilter('selected_horizontal_group_id', 'none')"
+            >
+                None
+            </DropdownItem>
+
+            <t t-foreach="controller.options.available_horizontal_groups" t-as="horizontalGroup" t-key="horizontalGroup_index">
+                <t t-if="horizontalGroup_first">
+                    <div class="dropdown-divider"/>
+                </t>
+
+                <DropdownItem
+                    class="{ 'selected': controller.options.selected_horizontal_group_id === horizontalGroup.id }"
+                    onSelected="() => this.updateFilter('selected_horizontal_group_id', horizontalGroup.id)"
+                >
+                    <t t-esc="horizontalGroup.name"/>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

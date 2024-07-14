@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="expense_sample_receipt_view_form" model="ir.ui.view">
+        <field name="name">expense.sample.receipt.view.form</field>
+        <field name="model">expense.sample.receipt</field>
+        <field name="arch" type="xml">
+            <form string="Try Sample Receipt">
+                <h4 class="mb-5">Let's try a sample receipt to test the automated processing of expenses with Artificial Intelligence.</h4>
+                <h5>Choose a receipt:</h5>
+                <div class="container-fluid">
+                    <div class="row">
+                            <div class="d-flex justify-content-between align-content-center o_expense_flex">
+                            <div class="p-2 flex-grow-1">
+                                <button type="object" name="action_choose_sample_1"
+                                        class="o_extract_sample o_extract_sample_1"/>
+                            </div>
+                            <div class="p-2 flex-grow-1">
+                                <button type="object" name="action_choose_sample_2"
+                                        class="o_extract_sample o_extract_sample_2"/>
+                            </div>
+                            <div class="p-2 flex-grow-1">
+                                <button type="object" name="action_choose_sample_3"
+                                        class="o_extract_sample o_extract_sample_3"/>
+                            </div>
+                            <div class="p-2 flex-grow-1">
+                                <button type="object" name="action_choose_sample_4"
+                                        class="o_extract_sample o_extract_sample_4"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer></footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_expense_sample_receipt" model="ir.actions.act_window">
+        <field name="name">Try Sample Receipt</field>
+        <field name="res_model">expense.sample.receipt</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_au_super_stream_view_form" model="ir.ui.view">
+        <field name="name">l10n_au.super.stream.view.form</field>
+        <field name="model">l10n_au.super.stream</field>
+        <field name="arch" type="xml">
+            <form string="SuperStream">
+                <header>
+                    <button name="action_get_super_stream_file" string="Create SuperStream File" type="object" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" />
+                        </h1>
+                    </div>
+                    <group class="row">
+                        <group>
+                            <field name="company_id" />
+                            <field name="source_entity_id" />
+                            <field name="source_entity_id_type" />
+                            <field name="journal_id" domain="[('type', '=', 'bank')]"/>
+                        </group>
+                        <group>
+                            <field name="file_version"/>
+                            <field name="super_stream_file" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="lines" string="SuperStream Lines">
+                            <field name="l10n_au_super_stream_lines"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_au_super_stream_view_tree" model="ir.ui.view">
+        <field name="name">l10n_au.super.stream.view.tree</field>
+        <field name="model">l10n_au.super.stream</field>
+        <field name="arch" type="xml">
+            <tree string="SuperStream">
+                <field name="display_name" />
+                <field name="company_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_au_super_stream_line_view_form" model="ir.ui.view">
+        <field name="name">l10n_au.super.stream.line.view.form</field>
+        <field name="model">l10n_au.super.stream.line</field>
+        <field name="arch" type="xml">
+            <form string="SuperStream Line">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employer_id" />
+                            <field name="sender_id" />
+                        </group>
+                        <group>
+                            <field name="employee_id" />
+                            <field name="super_account_id"/>
+                            <field name="payee_id" />
+                        </group>
+                    </group>
+                    <h2>Super Fund Member</h2>
+                    <group>
+                        <field name="payslip_id" domain="[('employee_id', '=', employee_id)]"/>
+                    </group>
+                        <group name="contribution" string="Contribution">
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date" />
+                            <field name="currency_id"/>
+                        </group>
+                        <group>
+                            <field name="superannuation_guarantee_amount" />
+                            <field name="award_or_productivity_amount" />
+                            <field name="personal_contributions_amount" />
+                            <field name="salary_sacrificed_amount" />
+                            <field name="voluntary_amount" />
+                            <field name="spouse_contributions_amount" />
+                            <field name="child_contributions_amount" />
+                            <field name="other_third_party_contributions_amount" />
+                        </group>
+                    </group>
+                    <group class="row" name="registration" string="Registration">
+                        <group>
+                            <field name="employment_start_date" />
+                            <field name="at_work_indicator" />
+                            <field name="annual_salary_for_benefits_amount" />
+                            <field name="annual_salary_for_contributions_amount" />
+                            <field name="annual_salary_for_contributions_effective_start_date" />
+                            <field name="annual_salary_for_contributions_effective_end_date" />
+                            <field name="annual_salary_for_insurance_amount" />
+                        </group>
+                        <group>
+                            <field name="weekly_hours_worked_number" />
+                            <field name="occupation_description" />
+                            <field name="insurance_opt_out_indicator" />
+                            <field name="fund_registration_date" />
+                            <field name="benefit_category_text" />
+                            <field name="employment_status_code" />
+                            <field name="super_contribution_commence_date" />
+                            <field name="super_contribution_cease_date" />
+                            <field name="member_registration_amendment_reason_text" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_au_super_stream_line_view_tree" model="ir.ui.view">
+        <field name="name">l10n_au.super.stream.line.view.tree</field>
+        <field name="model">l10n_au.super.stream.line</field>
+        <field name="arch" type="xml">
+            <tree string="SuperStream Lines">
+                <!-- <field name="sender_id"/> -->
+                <field name="name"/>
+                <field name="employer_id"/>
+                <field name="payee_id"/>
+                <field name="employee_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_au_super_stream_action" model="ir.actions.act_window">
+        <field name="name">SuperStream</field>
+        <field name="res_model">l10n_au.super.stream</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        name="SuperStream"
+        id="l10n_au_super_stream"
+        sequence="30"
+        action="l10n_au_super_stream_action"
+        parent="l10n_au_hr_payroll.menu_reporting_l10n_au"
+    />
+</odoo>

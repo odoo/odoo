@@ -1,0 +1,404 @@
+.o_web_studio_sidebar {
+    background-color: $o-web-studio-bg-medium;
+    border-right: 3px solid $o-web-studio-bg-dark;
+    color-scheme: dark;
+
+    .o_notebook_headers {
+        position: sticky;
+        top: 0;
+        flex-shrink: 0;
+        z-index: 200;
+        margin-bottom: $o-web-studio-sidebar-margin;
+        overflow-y: hidden;
+
+        ul {
+            border-bottom: none;
+        }
+
+        li {
+            flex: 1 0 auto;
+            text-align: center;
+            background-color: $o-web-studio-bg-dark;
+            margin: 0;
+
+            .active, &:first-child:last-child {
+                background-color: $o-web-studio-bg-medium;
+            }
+            :not(.inactive):not(.active):hover {
+                background-color: rgba($o-web-studio-bg-medium, 0.5);
+            }
+            .nav-link, .nav-link:active {
+                padding: 14px 0;
+                border: none;
+                color: $o-web-studio-bg-light;
+            }
+        }
+    }
+
+    .o_notebook_content, .o_web_studio_sidebar_content {
+        padding: 0 $o-web-studio-sidebar-margin $o-web-studio-sidebar-margin;
+
+        h3 {
+            color: white;
+            margin: 10px 0 15px 0;
+            cursor: default;
+            &.o_web_studio_existing_fields_header {
+                cursor: pointer;
+            }
+        }
+
+        hr {
+            border-color: $o-web-studio-bg-dark;
+            border-width: 1px;
+        }
+
+        .o_studio_sidebar_approval_rule {
+            position: relative;
+            &::before {
+                border-left: 1px solid #6b6a6a;
+                content: "";
+                position: absolute;
+                top: 0;
+                left: -8px;
+                width: 1px;
+                background-color: #6b6a6a;
+                height: 100%;
+            }
+            .inactive {
+                color: grey !important; // fucking bootstrap
+            }
+        }
+
+        div,
+        .o_studio_sidebar_approval_rule > div,
+        div > .card > .card-collapse > .card-body > div
+         {
+            // Generic style for all field types
+            label {
+                font-size: 12px;
+                font-weight: normal;
+                margin: 4px 0 3px 2px;
+                color: $o-web-studio-text-inactive;
+            }
+
+            input, select, textarea, div.input-group-addon {
+                color: $o-web-studio-text-inactive;
+                border: 1px solid transparent;
+                background-color: $o-web-studio-bg-dark;
+                padding: 4px 9px;
+                transition: all 0.3s ease 0s;
+                transition-property: background, border;
+                &:focus {
+                    border-color: $o-web-studio-color-info;
+                    box-shadow: 0 0 1px 0 $o-web-studio-color-info;
+                    color: white;
+                }
+                > option {
+                    background-color: white;
+                    color: $o-web-studio-text-dark;
+                }
+            }
+
+            .o_select_menu {
+                input {
+                    background-color: $dropdown-bg;
+                    color: $o-web-studio-text-dark;
+                }
+
+                button {
+                    background-color: $o-web-studio-bg-dark !important;
+                }
+            }
+
+            .o_tag {
+                color: white;
+                background: transparent;
+            }
+
+            .o_web_studio_sidebar_toolbox .o_tag {
+                box-shadow: unset;
+                margin-bottom: 5px;
+            }
+
+            .input-group > input {
+                min-width: 75px;
+            }
+
+            .o_web_studio_attrs {
+                font-size: 11px;
+                float: right;
+                @include o-web-studio-sidebar-btn-link;
+            }
+
+            button {
+                @include o-web-studio-btn;
+            }
+
+            // Specific style for each field type
+            &.o_web_studio_sidebar_iscode, .o_web_studio_field_code {
+                input, textarea {
+                    font-family: $o-web-studio-font-family-monospace;
+                    font-size: 11px;
+                }
+                textarea {
+                    white-space: pre;
+                    overflow-x: scroll;
+                    resize: vertical;
+                }
+            }
+
+            &.o_web_studio_sidebar_checkbox {
+                @include o-web-studio-checkbox;
+                & + .o_web_studio_sidebar_checkbox {
+                    margin-top: 2px;
+                }
+            }
+
+            &.o_web_studio_sidebar_optional_select {
+                @include o-web-studio-select;
+                margin-top: 0px;
+            }
+
+            /* field in the sidebar: M2M_tags for group visibility
+            and M2O for approval rules; these styles cover only these
+            specific use case */
+            .o_field_widget {
+                display: flex;
+                flex-flow: row wrap;
+                flex-grow: 1;
+            }
+            .o_field_many2one {
+                .o_input_dropdown {
+                    width: auto;
+                    > .o_dropdown_button {
+                        right: 18px;
+                        top: -2px;
+                        font-size: 10px;
+                        font-family: 'FontAwesome';
+                        color: $o-web-studio-text-inactive;
+                        &:after {
+                            border: none;
+                            content: "\f078"
+                        }
+                    }
+                    &:hover .o_dropdown_button {
+                        color: $o-web-studio-text-light;
+                    }
+                }
+                .o_external_button {
+                    border: 0;
+                    padding-right: 0;
+                    background-color: transparent;
+                    &:hover, &:focus, &:active {
+                        color: $o-web-studio-text-light;
+                    }
+                }
+            }
+
+            .o_approval_group {
+                display: flex;
+                & > button {
+                    @include o-web-studio-btn;
+                }
+            }
+
+            &.o_web_studio_sidebar_tags {
+                .badge {
+                    display: flex;
+                    align-items: baseline;
+                    max-width: $o-web-studio-sidebar-width - 2*$o-web-studio-sidebar-margin;
+                    margin: 1px 5px 0px 0px;
+                    cursor: default;
+                    .o_badge_text {
+                        margin-right: 5px;
+                        @include o-text-overflow;
+                        font-weight: normal;
+                    }
+                    .o_delete:hover {
+                        cursor: pointer;
+                        color: $o-web-studio-color-danger;
+                    }
+                    &.o_tag_color_10 {
+                        background-color: $o-web-studio-color-info;
+                    }
+                }
+                .o_field_tags {
+                    width: 100%;
+                    border: none;
+                }
+            }
+        }
+        .o_web_studio_field_type_container {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-between;
+        }
+        .o_web_studio_component {
+            @include o-text-overflow;
+            width: 49%;
+            position: relative;
+            margin-bottom: 5px;
+            padding: 3px 5px 0 0;
+            max-width: 130px;
+            border-radius: 2px;
+            background-color: $o-web-studio-bg-light;
+            box-shadow: 0 1px 1px black;
+            color: $o-web-studio-bg-dark;
+            font: bold 11px/2.4 $font-family-base;
+            cursor: pointer;
+            &:hover {
+                background-color: white;
+                &:before {
+                    background: $o-web-studio-bg-light;
+                }
+            }
+            &.o_web_studio_debug:not(.ui-draggable-helper) {
+                height: 40px;
+                line-height: 1.9;
+            }
+            .o_web_studio_component_description {
+                @include o-text-overflow(block);
+                padding: 2px;
+                background: white;
+                font: bold 10px/1 $o-web-studio-font-family-monospace;
+            }
+            &:before {
+                width: 33px;
+                height: 150%;
+                display: block;
+                float: left;
+                margin: -3px 5px 0 0;
+                border-right: 1px solid lighten($o-web-studio-bg-dark, 50%);
+                background-color: darken($o-web-studio-bg-light, 5%);
+                content: "";
+            }
+            &:after {
+                @include o-position-absolute(6px, auto, auto , 7px);
+                background-image: url('/web_studio/static/src/img/ui/studio_icons.png');
+                background-repeat: no-repeat;
+                content: "";
+                width: 20px;
+                height: 20px;
+
+                // Optimized version to avoid blurred icons on HiDPI screens
+                @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 196dpi) {
+                    background-image: url('/web_studio/static/src/img/ui/studio_icons@2x.png');
+                    background-size: 20px auto;
+                }
+            }
+            &.o_web_studio_field_binary:after {
+                background-position: 0 0;
+            }
+            &.o_web_studio_field_boolean:after {
+                background-position: 0 -20px;
+            }
+            &.o_web_studio_field_char:after {
+                background-position: 0 -40px;
+            }
+            &.o_web_studio_field_columns:after {
+                background-position: 0 -60px;
+            }
+            &.o_web_studio_field_date:after {
+                background-position: 0 -80px;
+            }
+            &.o_web_studio_field_datetime:after {
+                background-position: 0 -100px;
+            }
+            &.o_web_studio_field_float:after {
+                background-position: 0 -120px;
+            }
+            &.o_web_studio_field_html:after {
+                background-position: 0 -140px;
+            }
+            &.o_web_studio_field_picture:after {
+                background-position: 0 -160px;
+            }
+            &.o_web_studio_field_integer:after {
+                background-position: 0 -180px;
+            }
+            &.o_web_studio_field_many2many:after {
+                background-position: 0 -200px;
+            }
+            &.o_web_studio_field_many2one:after {
+                background-position: 0 -220px;
+            }
+            &.o_web_studio_field_monetary:after {
+                background-position: 0 -240px;
+            }
+            &.o_web_studio_field_one2many:after {
+                background-position: 0 -260px;
+            }
+            &.o_web_studio_field_selection:after {
+                background-position: 0 -280px;
+            }
+            &.o_web_studio_field_tabs:after {
+                background-position: 0 -300px;
+            }
+            &.o_web_studio_field_tags:after {
+                background-position: 0 -320px;
+            }
+            &.o_web_studio_field_text:after {
+                background-position: 0 -340px;
+            }
+            &.o_web_studio_filter_separator:after {
+                background-position: 0 -360px;
+            }
+            &.o_web_studio_field_priority:after {
+                background-position: 0 -380px;
+            }
+            &.o_web_studio_field_related:after {
+                background-position: 0 -400px;
+            }
+            &.o_web_studio_filter:after {
+                background-position: 0 -420px;
+            }
+            &.o_web_studio_field_signature:after {
+                background-position: 0 -440px;
+            }
+            &.o_web_studio_field_lines:after {
+                background-position: 0 -460px;
+            }
+        }
+        .o_web_studio_existing_fields_section > h6 {
+            cursor: default;
+        }
+        .o_web_studio_existing_fields {
+            margin-top: inherit;
+            .o_web_studio_component {
+                width: 100%;
+                max-width: $o-web-studio-sidebar-width;
+            }
+        }
+        .o_web_studio_sidebar_toolbox {
+            button.btn {
+                @include o-web-studio-btn;
+                flex: 1 1 auto;
+            }
+
+            > div {
+                display: flex;
+                align-content: space-between;
+            }
+
+            .o_web_studio_restore {
+                margin-top: inherit;
+                width: 100%;
+            }
+
+            .o_web_studio_remove_warning_groups {
+                color: orange;
+                display: block;
+            }
+        }
+        .o_field_selector_chain_part {
+            background: none;
+        }
+        .o_web_studio_edit_selection_values {
+            @include o-web-studio-sidebar-btn-link;
+        }
+
+        .o_web_studio_sidebar_btn_link {
+            @include o-web-studio-sidebar-btn-link;
+        }
+    }
+}

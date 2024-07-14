@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ONBOARDING STEPS -->
+        <record id="onboarding_onboarding_step_setup_consolidation" model="onboarding.onboarding.step">
+            <field name="title">The Scope of Consolidation</field>
+            <field name="description">Define the companies that should be consolidated &amp; the target currency.</field>
+            <field name="button_text">Define</field>
+            <field name="done_text">Scope of Consolidation defined!</field>
+            <field name="panel_step_open_action_name">action_open_step_setup_consolidation</field>
+            <field name="step_image" type="base64" file="base/static/img/onboarding_company-data.png"></field>
+            <field name="step_image_filename">onboarding_company-data.png</field>
+            <field name="step_image_alt">Onboarding The Scope of Consolidation</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="onboarding_onboarding_step_setup_ccoa" model="onboarding.onboarding.step">
+            <field name="title">Chart of Accounts</field>
+            <field name="description">Setup your consolidated accounts and their currency conversion method.
+                Then map them with the companies accounts.</field>
+            <field name="button_text">Setup</field>
+            <field name="done_text">Chart of accounts set!</field>
+            <field name="panel_step_open_action_name">action_open_step_setup_ccoa</field>
+            <field name="step_image" type="base64" file="base/static/img/onboarding_puzzle.png"></field>
+            <field name="step_image_filename">onboarding_puzzle.png</field>
+            <field name="step_image_alt">Onboarding Chart of Accounts</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="onboarding_onboarding_step_create_consolidation_period" model="onboarding.onboarding.step">
+            <field name="title">Analysis period</field>
+            <field name="description">Create your first analysis period &amp; set the currency rates.</field>
+            <field name="button_text">Create</field>
+            <field name="done_text">Analysis period created!</field>
+            <field name="panel_step_open_action_name">action_open_step_create_consolidation_period</field>
+            <field name="step_image" type="base64" file="base/static/img/onboarding_chart-of-accounts.png"></field>
+            <field name="step_image_filename">onboarding_chart-of-accounts.png</field>
+            <field name="step_image_alt">Onboarding Analysis period</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <!-- ONBOARDING PANELS -->
+        <record id="onboarding_onboarding_account_consolidation_dashboard" model="onboarding.onboarding">
+            <field name="name">Account Consolidation Dashboard Onboarding</field>
+            <field name="step_ids" eval="[
+                Command.link(ref('onboarding_onboarding_step_setup_consolidation')),
+                Command.link(ref('onboarding_onboarding_step_setup_ccoa')),
+                Command.link(ref('onboarding_onboarding_step_create_consolidation_period')),
+            ]"/>
+            <field name="route_name">account_consolidation_dashboard</field>
+            <field name="panel_close_action_name">action_close_panel_account_consolidation_dashboard</field>
+        </record>
+
+    </data>
+</odoo>

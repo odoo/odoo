@@ -1,0 +1,577 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mrp_maintenance
+# 
+# Translators:
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2023
+# Björn Hayer, 2023
+# Robin Calvin, 2023
+# Daniel Löfgren, 2023
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
+# Lasse L, 2023
+# Simon S, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2023
+# Leif Persson <leifpz54@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_production_view_form_inherit_maintenance
+msgid "<span class=\"o_stat_text\">Maintenance</span>"
+msgstr "<span class=\"o_stat_text\">Underhåll</span>"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_equipment_view_form_inherit_mrp
+msgid "<span class=\"o_stat_text\">Work Center</span>"
+msgstr ""
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_needaction
+msgid "Action Needed"
+msgstr "Åtgärd Krävs"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_ids
+msgid "Activities"
+msgstr "Aktiviteter"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Aktivitet undantaget dekoration"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_state
+msgid "Activity State"
+msgstr "Aktivitetstillstånd"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikon för aktivitetstyp"
+
+#. module: mrp_maintenance
+#: model_terms:ir.actions.act_window,help:mrp_maintenance.mrp_workcenter_request_action_from_workcenter
+msgid "Add a new maintenance request"
+msgstr "Lägg till en ny underhållsbegäran"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__recurring_leaves_count
+msgid "Additional Leaves to Plan Ahead"
+msgstr ""
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_attachment_count
+msgid "Attachment Count"
+msgstr "Antal Bilagor"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__block_workcenter
+msgid "Block Workcenter"
+msgstr "Blockera Produktionsgrupp"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_maintenance_request__recurring_leaves_count
+msgid ""
+"Block the workcenter for this many time slots in the future in advance."
+msgstr ""
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__company_id
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__company_id
+msgid "Company"
+msgstr "Bolag"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__estimated_next_failure
+msgid "Computed as Latest Failure Date + MTBF"
+msgstr "Beräknat som senaste feldatum + Medeltid mellan fel"
+
+#. module: mrp_maintenance
+#: model_terms:ir.actions.act_window,help:mrp_maintenance.maintenance_workcenter_action
+msgid "Create a new work center"
+msgstr "Skapa en ny produktionsgrupp"
+
+#. module: mrp_maintenance
+#: model:maintenance.equipment,name:mrp_maintenance.equipment_furniture1
+msgid "Crosscut Saw: 8 ppi."
+msgstr "Tvärsåg: 8 ppi."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__maintenance_open_count
+msgid "Current Maintenance"
+msgstr "Aktuellt underhåll"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_request_view_form_inherit_mrp
+msgid "Discard"
+msgstr "Förkasta"
+
+#. module: mrp_maintenance
+#: model:maintenance.equipment,name:mrp_maintenance.equipment_furniture3
+msgid "Drill Machine"
+msgstr "Borrmaskin"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__effective_date
+msgid "Effective Date"
+msgstr "Förfallodag"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__equipment_id
+#: model:ir.model.fields.selection,name:mrp_maintenance.selection__maintenance_request__maintenance_for__equipment
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Equipment"
+msgstr "Utrustning"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Est. Next Failure"
+msgstr "Ber. nästa fel"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Estimated Next Failure"
+msgstr "Förväntad nästa fel"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__estimated_next_failure
+msgid "Estimated time before next failure (in days)"
+msgstr "Förväntad tid innan nästa fel (i dagar)"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__expected_mtbf
+msgid "Expected MTBF"
+msgstr "Förväntad medeltid mellan fel"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__expected_mtbf
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Expected Mean Time Between Failure"
+msgstr "Förväntad medeltid mellan fel"
+
+#. module: mrp_maintenance
+#: model_terms:ir.actions.act_window,help:mrp_maintenance.mrp_workcenter_request_action_from_workcenter
+msgid ""
+"Follow the process of the request and communicate with the collaborator."
+msgstr "Följ processen av ärendet och kommunicera med medarbetaren."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_follower_ids
+msgid "Followers"
+msgstr "Följare"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Följare (kontakter)"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font Awesome-ikon t.ex. fa-tasks"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__maintenance_for
+msgid "For"
+msgstr "För"
+
+#. module: mrp_maintenance
+#: model:maintenance.equipment.category,name:mrp_maintenance.equipment_furniture_tools
+msgid "Furniture Tools"
+msgstr "Möbelverktyg"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__has_message
+msgid "Has Message"
+msgstr "Har meddelande"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_exception_icon
+msgid "Icon"
+msgstr "Ikon"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikon för att indikera en undantagsaktivitet."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Om markerad så finns det meddelanden som kräver din uppmärksamhet."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__message_has_error
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Om markerad, en del meddelanden har leveransfel."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_is_follower
+msgid "Is Follower"
+msgstr "Är Följare"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_maintenance_request__block_workcenter
+msgid ""
+"It won't be possible to plan work orders or other maintenances on this "
+"workcenter during this time."
+msgstr ""
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Latest Failure"
+msgstr "Senaste fel"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__latest_failure_date
+msgid "Latest Failure Date"
+msgstr "Senaste feldatum"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__leave_ids
+msgid "Leaves"
+msgstr ""
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__mtbf
+msgid "MTBF"
+msgstr "Medeltid mellan fel"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__mttr
+msgid "MTTR"
+msgstr "Medeltid innan reparation"
+
+#. module: mrp_maintenance
+#: model:ir.ui.menu,name:mrp_maintenance.menu_equipment_dashboard
+msgid "Machines & Tools"
+msgstr "Maskiner & Verktyg "
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__maintenance_ids
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_kanban_inherit_maintenance
+msgid "Maintenance"
+msgstr "Underhåll"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__maintenance_count
+msgid "Maintenance Count"
+msgstr "Antal underhåll"
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_maintenance_equipment
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__equipment_ids
+msgid "Maintenance Equipment"
+msgstr "Utrustning att underhålla"
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_maintenance_request
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_production_view_form_inherit_maintenance
+msgid "Maintenance Request"
+msgstr "Underhållsbegäran"
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#: model:ir.actions.act_window,name:mrp_maintenance.mrp_workcenter_request_action_from_workcenter
+#, python-format
+msgid "Maintenance Requests"
+msgstr "Underhållsbegäran"
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_maintenance_stage
+msgid "Maintenance Stage"
+msgstr "Underhållsetapp"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__maintenance_team_id
+msgid "Maintenance Team"
+msgstr "Underhållsteam"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__production_id
+msgid "Manufacturing Order"
+msgstr "Tillverkningsorder"
+
+#. module: mrp_maintenance
+#: model_terms:ir.actions.act_window,help:mrp_maintenance.maintenance_workcenter_action
+msgid ""
+"Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
+"            workers and/or machines, they are used for costing, scheduling, capacity planning, etc."
+msgstr ""
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Mean Time Between Failure"
+msgstr "Medeltid mellan fel"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__mtbf
+msgid ""
+"Mean Time Between Failure, computed based on done corrective maintenances."
+msgstr ""
+"Medeltid mellan fel, beräknas baserat på utförda korrigerande underhåll."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__mttr
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Mean Time To Repair"
+msgstr "Medeltid innan reparation"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_has_error
+msgid "Message Delivery error"
+msgstr "Fel vid leverans meddelande"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_ids
+msgid "Messages"
+msgstr "Meddelanden"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Mina aktiviteters sluttid"
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#, python-format
+msgid "New Maintenance Request"
+msgstr "Ny underhållsbegäran"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Nästa Kalenderhändelse för Aktivitet"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Nästa slutdatum för aktivitet"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_summary
+msgid "Next Activity Summary"
+msgstr "Nästa aktivitetssammanställning"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_type_id
+msgid "Next Activity Type"
+msgstr "Nästa aktivitetstyp"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Antal åtgärder"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_has_error_counter
+msgid "Number of errors"
+msgstr "Antal fel"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_production__maintenance_count
+msgid "Number of maintenance requests"
+msgstr "Antal underhållsbegäran"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Antal meddelanden som kräver åtgärd"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Antal meddelanden med leveransfel"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_request_view_search_inherit_mrp
+msgid "Operation"
+msgstr "Åtgärd"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__production_company_id
+msgid "Production Company"
+msgstr "Produktionsbolag"
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_mrp_production
+msgid "Production Order"
+msgstr "Tillverkningsorder"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__rating_ids
+msgid "Ratings"
+msgstr "Betyg"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_production__request_ids
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_workcenter_view_kanban_inherit_mrp
+msgid "Request"
+msgstr "Begäran"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_stage__create_leaves
+msgid "Request Confirmed"
+msgstr ""
+
+#. module: mrp_maintenance
+#. odoo-javascript
+#: code:addons/mrp_maintenance/static/src/components/menuPopup.xml:0
+#, python-format
+msgid "Request Maintenance"
+msgstr ""
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#, python-format
+msgid "Request planned for %s"
+msgstr "Begäran planerad för %s"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_user_id
+msgid "Responsible User"
+msgstr "Ansvarig användare"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS leveransfel"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_request_view_form_inherit_mrp
+msgid "Save"
+msgstr "Spara"
+
+#. module: mrp_maintenance
+#: model:maintenance.equipment,name:mrp_maintenance.equipment_furniture2
+msgid "Scrub Plane"
+msgstr "Hyvel"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status baserad på aktiviteter\n"
+"Försenade: Leveranstidpunkten har passerat\n"
+"Idag: Aktivitetsdatum är idag\n"
+"Kommande: Framtida aktiviteter."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__technician_user_id
+msgid "Technician"
+msgstr "Tekniker"
+
+#. module: mrp_maintenance
+#. odoo-javascript
+#: code:addons/mrp_maintenance/static/src/components/maintenance_request_form_view.js:0
+#, python-format
+msgid "The maintenance request has successfully been created."
+msgstr ""
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#, python-format
+msgid ""
+"The schedule has changed from %(desired_date)s to %(effective_date)s due to "
+"planned manufacturing orders."
+msgstr ""
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#, python-format
+msgid "The workcenter is missing for %s."
+msgstr ""
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__effective_date
+msgid "This date will be used to compute the Mean Time Between Failure."
+msgstr ""
+"Detta datum kommer att användas för att beräkna den genomsnittliga tiden "
+"mellan fel."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Typ av undantagsaktivitet som har registrerats."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__website_message_ids
+msgid "Website Messages"
+msgstr "Webbplatsmeddelanden"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__website_message_ids
+msgid "Website communication history"
+msgstr "Webbplatsens kommunikationshistorik"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_maintenance_stage__create_leaves
+msgid ""
+"When this box is unticked, and the maintenance is of the type 'Work Center', no leave is created on the respective work center when a maintenance request is created.\n"
+"If the box is ticked, the work center is automatically blocked for the listed duration, either at the specified date, or as soon as possible, if the work center is unavailable then."
+msgstr ""
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_mrp_workcenter
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_equipment__workcenter_id
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__workcenter_id
+#: model:ir.model.fields.selection,name:mrp_maintenance.selection__maintenance_request__maintenance_for__workcenter
+msgid "Work Center"
+msgstr "Produktionsgrupp"
+
+#. module: mrp_maintenance
+#: model:ir.actions.act_window,name:mrp_maintenance.maintenance_workcenter_action
+#: model:ir.ui.menu,name:mrp_maintenance.menu_workcenter_tree
+msgid "Work Centers"
+msgstr "Produktionsgrupper"
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_mrp_workorder
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__workorder_id
+msgid "Work Order"
+msgstr "Arbetsorder"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_request_view_search_inherit_mrp
+msgid "Workcenter"
+msgstr "Produktionsgrupp"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "days"
+msgstr "dagar"
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#, python-format
+msgid "work centers"
+msgstr "produktionsgrupper"

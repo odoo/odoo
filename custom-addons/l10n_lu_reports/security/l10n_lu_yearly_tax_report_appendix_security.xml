@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="l10n_lu_appendix_multi_company_rule" model="ir.rule">
+        <field name="name">Appendix multi-company</field>
+        <field name="model_id" ref="model_l10n_lu_reports_report_appendix_expenditures"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+</odoo>

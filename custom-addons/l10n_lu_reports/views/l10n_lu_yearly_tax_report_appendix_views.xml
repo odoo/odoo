@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_lu_yearly_tax_report_appendix_view_tree" model="ir.ui.view">
+            <field name="name">l10n_lu_reports.report.appendix.expenditures.view.tree</field>
+            <field name="model">l10n_lu_reports.report.appendix.expenditures</field>
+            <field name="arch" type="xml">
+                <tree string="Appendix line" editable="top" default_order="create_date">
+                    <field name="report_section_411"/>
+                    <field name="report_section_412"/>
+                    <field name="report_section_413"/>
+                    <field name="year"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="rental_schedule_view_search" model="ir.ui.view">
+        <field name="name">sale.rental.schedule.search</field>
+        <field name="model">sale.rental.schedule</field>
+        <field name="arch" type="xml">
+            <search string="Rental Analysis">
+                <field name="order_date"/>
+                    <filter string="Date" name="year" invisible="1" date="order_date" default_period="this_year"/>
+                    <filter string="My Orders" domain="[('user_id','=',uid)]" name="my_sale_orders_filter"/>
+                <separator/>
+                    <filter name="Quotations" string="Quotations" domain="[('rental_status','=', 'draft')]"/>
+                    <filter name="Rentals" string="Confirmed Orders" domain="[('rental_status','not in',('draft', 'cancel', 'sent'))]"/>
+                <separator/>
+                <filter name="filter_today" string="To Do Today"
+                    domain="['|',
+                            '&amp;', ('pickup_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0))),
+                            ('pickup_date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59))),
+                            '&amp;', ('return_date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0))),
+                            ('return_date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59)))]"/>
+                <filter name="Late" domain="[('late', '=', True), ('report_line_status', '!=', 'returned')]"/>
+                <separator/>
+                <field name="product_id"/>
+                <field name="user_id"/>
+                <field name="partner_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <group expand="1" string="Group By" name="report_group_by">
+                    <filter string="Salesperson" name="User" context="{'group_by':'user_id'}"/>
+                    <filter string="Sales Team" name="sales_channel" context="{'group_by':'team_id'}"/>
+                    <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>
+                    <filter string="Customer Country" name="country_id" context="{'group_by':'country_id'}"/>
+                    <filter string="Product" name="Product" context="{'group_by':'product_id'}"/>
+                    <filter string="Product Category" name="Category" context="{'group_by':'categ_id'}"/>
+                    <filter name="status" string="Status" context="{'group_by':'report_line_status'}"/>
+                    <filter string="Company" name="company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <separator/>
+                    <filter string="Order Date" name="date" context="{'group_by':'order_date'}"/>
+                    <filter string="Pickup Date" name="pickup_date" context="{'group_by':'pickup_date'}"/>
+                    <filter string="Return Date" name="return_date" context="{'group_by':'return_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="rental_schedule_view_gantt" model="ir.ui.view">
+        <field name="name">sale.rental.schedule.gantt</field>
+        <field name="model">sale.rental.schedule</field>
+        <field name="arch" type="xml">
+            <gantt string="Rental"
+                date_start="pickup_date"
+                date_stop="return_date"
+                default_group_by="product_id"
+                groups_limit="20"
+                create="true"
+                on_create="sale_renting.action_create_rental_order"
+                cell_create="false"
+                edit="false"
+                decoration-info="state in ['draft', 'sent']"
+                decoration-danger="late"
+                consolidation="product_uom_qty"
+                consolidation_max="{'product_id': 100000000000, 'lot_id': 100000000000, 'report_line_status': 100000000000, 'categ_id': 100000000000, 'company_id': 100000000000, 'partner_id': 100000000000, 'team_id': 100000000000, 'user_id': 100000000000}"
+                color="color"
+                thumbnails="{'partner_id': 'avatar_128', 'user_id': 'avatar_128'}"
+                sample="1">
+                <templates>
+                    <div t-name="gantt-popover">
+                        <div>
+                            <strong>Order # — </strong> <t t-esc="name"/>
+                        </div>
+                        <div>
+                            <strong>Pickup  — </strong> <t t-esc="pickup_date.toFormat('f')"/>
+                        </div>
+                        <div>
+                            <strong>Return — </strong> <t t-esc="return_date.toFormat('f')"/>
+                        </div>
+                        <div>
+                            <strong>Status — </strong>
+                            <t t-if="late">
+                                Late
+                                <t t-if="report_line_status == 'reserved'">
+                                    Pickup
+                                </t>
+                                <t t-elif="report_line_status == 'pickedup'">
+                                    Return
+                                </t>
+                            </t>
+                            <t t-elif="report_line_status == 'pickedup'">
+                                    Picked-Up
+                            </t>
+                            <t t-elif="report_line_status == 'returned'">
+                                Returned
+                            </t>
+                            <t t-else="">
+                                Reserved
+                            </t>
+                        </div>
+                    </div>
+                </templates>
+                <field name="name"/>
+                <field name="report_line_status"/>
+                <field name="state"/>
+                <field name="late"/>
+                <field name="product_uom_qty"/>
+            </gantt>
+        </field>
+    </record>
+
+    <record id="action_rental_order_schedule" model="ir.actions.act_window">
+        <field name="name">Scheduled Rentals</field>
+        <field name="res_model">sale.rental.schedule</field>
+        <field name="view_mode">gantt</field>
+        <field name="context">{'search_default_Rentals':1, 'group_by_no_leaf':1}</field>
+    </record>
+
+    <record id="action_create_rental_order" model="ir.actions.act_window">
+        <field name="name">Create Rental Orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale_renting.rental_order_primary_form_view"/>
+        <field name="context">{'in_rental_app': 1, 'group_by_no_leaf': 0}</field>
+    </record>
+
+    <record id="product_template_form_view_rental_gantt" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.rental</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="sale.product_template_form_view_sale_order_button"/>
+        <field name="arch" type="xml">
+            <button name="action_view_sales" position="after">
+                <field name="rent_ok" invisible="1"/>
+                <button class="oe_stat_button" name="action_view_rentals"
+                    type="object" icon="fa-calendar" groups="sales_team.group_sale_salesman" invisible="not rent_ok">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value d-flex gap-1">
+                            <field name="qty_in_rent" widget="statinfo" nolabel="1" class="oe_inline"/>
+                            <field name="uom_name"  class="oe_inline"/>
+                        </span>
+                        <span class="o_stat_text">in Rental</span>
+                    </div>
+                </button>
+            </button>
+        </field>
+    </record>
+
+    <record id="product_product_form_view_rental_gantt" model="ir.ui.view">
+        <field name="name">product.product.form.inherit.rental</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="sale.product_form_view_sale_order_button"/>
+        <field name="arch" type="xml">
+            <button name="action_view_sales" position="after">
+                <field name="rent_ok" invisible="1"/>
+                <button class="oe_stat_button" name="action_view_rentals"
+                    type="object" icon="fa-calendar" groups="sales_team.group_sale_salesman" invisible="not rent_ok">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value d-flex gap-1">
+                            <field name="qty_in_rent" widget="statinfo" nolabel="1" class="oe_inline"/>
+                            <field name="uom_name"  class="oe_inline"/>
+                        </span>
+                        <span class="o_stat_text">in Rental</span>
+                    </div>
+                </button>
+            </button>
+        </field>
+    </record>
+
+    <record id="rental_schedule_view_form" model="ir.ui.view">
+        <field name="name">rental.schedule.form</field>
+        <field name="model">sale.rental.schedule</field>
+        <field name="arch" type="xml">
+            <form string="Rental Order">
+                <sheet>
+                    <div class="badge rounded-pill text-bg-success float-end fs-6 border-0"
+                        invisible="state != 'sale' or report_line_status != 'reserved' or late">Booked</div>
+                    <div class="badge rounded-pill text-bg-danger float-end fs-6 border-0"
+                        invisible="state != 'sale' or report_line_status != 'reserved' or not late">Late Pickup</div>
+                    <div class="badge rounded-pill text-bg-warning float-end fs-6 border-0"
+                        invisible="state != 'sale' or report_line_status != 'pickedup' or late">Picked-up</div>
+                    <div class="badge rounded-pill text-bg-danger float-end fs-6 border-0"
+                        invisible="state != 'sale' or report_line_status != 'pickedup' or not late">Late Return</div>
+                    <div class="badge rounded-pill text-bg-default float-end fs-6 border-0"
+                        invisible="state != 'sale' or report_line_status != 'returned'">Returned</div>
+                    <h1>
+                        <field name="order_line_id" options="{'no_open':1}"/>
+                    </h1>
+                    <field name="report_line_status" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="late" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="order_id" context="{'form_view_ref': 'sale_renting.rental_order_primary_form_view'}"/>
+                            <field name="product_id"/>
+                            <field name="description"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="product_uom_qty"/>
+                            <field name="qty_delivered" invisible="state != 'sale'"/>
+                            <field name="qty_returned" invisible="state != 'sale'"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button type="button" string="Ok" special="cancel" data-hotkey="x" class="btn-primary" close="1"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

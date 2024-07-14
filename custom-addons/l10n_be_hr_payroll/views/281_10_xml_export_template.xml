@@ -1,0 +1,1108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="281_10_xml_report">
+            <!-- Source:
+            Avis aux débiteurs : https://finances.belgium.be/fr/entreprises/personnel_et_remuneration/avis_aux_debiteurs#q2
+            Doc Technique: https://finances.belgium.be/fr/E-services/Belcotaxonweb/documentation-technique
+            -->
+            <Verzendingen>
+                <!-- 
+                    Un envoi (<Verzending></Verzending>) peut reprendre plusieurs « déclarations
+                    Belcotax » (collectes de données). Par déclaration Belcotax, on ne peut trouver que les
+                    données d'un seul débiteur de revenus.
+                -->
+                <Verzending>
+                    <!--
+                        4.1 Enregistrement « début » d’un envoi (balises v0 …)
+                        4.1.1 Description enregistrement "début" d’un envoi
+                        Cet enregistrement reprend les données communes de l’envoi. Les données
+                        d’identification de l’expéditeur sont essentielles et doivent toujours être complétées,
+                        même lorsque l’expéditeur est le débiteur lui-même.
+                    -->
+
+                    <!-- Note:
+                        X = Obligatoire
+                        4 = Longueur
+                        N = Type (N numérique, AN Alphanumérique)
+                        Description
+                    -->
+
+                    <!-- X 4 N année des revenus (= 2020) -->
+                    <v0002_inkomstenjaar t-esc="data['v0002_inkomstenjaar']"/>
+
+                    <!-- X 8 AN mention "BELCOTAX" ou "BELCOTST" selon qu'il s'agit d'un
+                        envoi "réalité" ou d'un envoi "test"
+                    -->
+                    <v0010_bestandtype t-esc="data['v0010_bestandtype']"/>
+
+                    <!-- X 10 N date de création du fichier "JJ-MMAAAA" (>01-01-2021) -->
+                    <v0011_aanmaakdatum t-esc="data['v0011_aanmaakdatum']"/>
+        
+                    <!--
+                        <v0012_sequentieelnr /> 4 N numérotation séquentielle des
+                        fichiers physiques qui sont envoyés
+                        au SPF Finances (1 pour le premier
+                        fichier)
+                    -->
+
+                    <!--
+                        <v0013_hoofdkantoor /> 3 N numéro d'identification du bureau
+                        central du Secrétariat Social agréé par l'ONSS
+                    -->
+
+                    <!-- X 41 AN nom de l’expéditeur -->
+                    <v0014_naam t-esc="data['v0014_naam']"/>
+
+                    <!-- X 32 AN rue et numéro de l’expéditeur -->
+                    <v0015_adres t-esc="data['v0015_adres']"/>
+    
+                    <!-- X 4 N N° postal de l’expéditeur -->
+                    <v0016_postcode t-esc="data['v0016_postcode']"/>
+
+                    <!-- X 27 AN commune de l’expéditeur -->
+                    <v0017_gemeente t-esc="data['v0017_gemeente']"/>
+    
+                    <!-- X 12 AN N° de téléphone de l’expéditeur -->
+                    <v0018_telefoonnummer t-esc="data['v0018_telefoonnummer']"/>
+
+                    <!-- 
+                        <v0019_faxnummer /> 12 AN N° de fax de l’expéditeur (Obsolète)
+                    -->
+
+                    <!-- 
+                        <v0020_identificatie /> 8 AN identification de l’envoi (valeur libre)
+                    -->
+
+                    <!-- X 34 AN nom de la personne de contact auprès de l’expéditeur-->
+                    <v0021_contactpersoon t-esc="data['v0021_contactpersoon']"/>
+
+                    <!--
+                        X <v0022_taalcode /> 1 N code langue de l’expéditeur
+                        1=expression de langue néerlandaise
+                        2=expression de langue française
+                        3=expression de langue allemande
+                    -->
+                    <v0022_taalcode t-esc="data['v0022_taalcode']"/>
+
+                    <!--
+                        X 44 AN adresse E-MAIL de la personne de
+                        contact auprès de l’expéditeur
+                    -->
+                    <v0023_emailadres t-esc="data['v0023_emailadres']"/>
+
+                    <!--
+                        X 10 N numéro d’entreprise (BCE) de l’expéditeur
+                    -->
+                    <v0024_nationaalnr t-esc="data['v0024_nationaalnr']"/>
+
+                    <!-- 
+                        X 1 N 
+                        0=envoi original
+                        1=envoi de corrections groupées
+                    -->
+                    <v0025_typeenvoi t-esc="data['v0025_typeenvoi']"/>
+
+                    <!-- 
+                        <v0026_referte /> 6 N numéro d’identification de l’envoi à
+                        corriger = ‘numéro à rappeler’ repris
+                        dans ’accusé de réception de l’envoi
+                        original
+                    -->
+
+                    <!-- <v0027_postcodebuitenl /> 12 AN code postal étranger de l’expéditeur -->
+                    
+                    <!-- <v0028_landwoonplaats /> 5 N code pays de l’expéditeur -->
+
+                    <!--
+                        <v0030_nationaalnummer /> 11 N Nr° National d’un expéditeur
+                        Personne physique sans N° BCE ou
+                        NN de la personne physique
+                        autorisée à consulter/modifier
+                        l’envoi au sein de la personne
+                        morale 
+                    -->
+                    <Aangiften>
+                        <!-- 
+                            Chaque « déclaration Belcotax » (<Aangifte></Aangifte>) est constituée de trois types
+                            d'enregistrements :
+                            a) l’enregistrement "début" (balise type ‘a1’) qui comme premier enregistrement
+                            du fichier de données n'existe qu'une fois et qui contient les données communes à tous
+                            les enregistrements "données" (record ‘2’) de la « déclaration Belcotax »,
+                            b) l’enregistrement "données" (balise ‘f2’) qui contient les données d'une fiche
+                            281 et se présente autant de fois qu'il y a de fiches,
+                            c) l’enregistrement "fin" (balise ‘r8’) qui n'existe qu'une fois comme dernier
+                            enregistrement de la déclaration Belcotax et contient des zones de contrôle des
+                            données.
+                            Les enregistrements "données" (balise ‘f2’) sont triés en ordre croissant sur :
+                            - le code d'identification du record,
+                            - l'année des revenus,
+                            - l'identification du débiteur des revenus,
+                            - le numéro d'identification de la fiche (ex. 28110),
+                            - le numéro de fiche du bénéficiaire des revenus.
+                            Il s'agit des neuf premières balises de type ‘f2
+                        -->
+                        <Aangifte>
+                            <!-- X 4 N année des revenus (= 2020) -->
+                            <a1002_inkomstenjaar t-esc="data['a1002_inkomstenjaar']"/>
+
+                            <!-- <a1003_gewestdirectie /> 2 N numéro de la direction régionale du
+                            débiteur des revenus (obsolète) -->
+
+                            <!-- <a1004_ontvangkantoor /> 2 N numéro du bureau de recette du
+                            débiteur de revenus (obsolète) -->
+
+                            <!-- X 10 N numéro d’entreprise (BCE) -->
+                            <a1005_registratienummer t-esc="data['a1005_registratienummer']"/>
+
+                            <!-- <a1007_division /> 4 N numéro de division -->
+
+                            <!-- <a1010_schrappingcode /> 1 N plus d’application (obsolète) -->
+
+                            <!-- X 28 AN le nom du débiteur des revenus NL -->
+                            <a1011_naamnl1 t-esc="data['a1011_naamnl1']"/>
+
+                            <!-- <a1012_naamnl2 /> 31 AN le nom du débiteur des revenus NL
+                            (suite) -->
+
+                            <!-- X 32 AN rue et numéro du débiteur des revenus NL -->
+                            <a1013_adresnl t-esc="data['a1013_adresnl']"/>
+
+                            <!--  4 N numéro postal belge du débiteur des
+                            revenus (uniquement si 1.016 = 0
+                            (= Belgique), sinon utiliser 1.026) -->
+                            <a1014_postcodebelgisch t-esc="data['a1014_postcodebelgisch']"/>
+
+                            <!-- X 27 AN commune du débiteur des revenus NL -->
+                            <a1015_gemeente t-esc="data['a1015_gemeente']"/>
+
+                            <!-- 5 N code pays du domicile du débiteur des
+                            revenus ; zéro si Belgique -->
+                            <a1016_landwoonplaats t-esc="data['a1016_landwoonplaats']"/>
+
+                            <!-- <a1017_telefoonnummer /> 12 AN numéro de téléphone du débiteur des
+                            revenus -->
+
+                            <!-- <a1018_faxnummer /> 12 AN numéro de fax du débiteur des
+                            revenus (obsolète) -->
+
+                            <!-- <a1019_contactpersoon /> 34 AN nom de la personne à contacter
+                            auprès du débiteur des revenus -->
+
+                            <!-- X 1 N code langue des zones 1.011 à 1.013
+                            et 1.015(*) = 1
+                            1 = expression de langue néerlandaise -->
+                            <a1020_taalcode>1</a1020_taalcode>
+
+                            <!-- <a1021_ontvangkantoor /> 34 AN nom du bureau de recette du débiteur
+                            des revenus -->
+                            
+                            <!-- <a1022_naamtaxatiedienst /> 34 AN nom du bureau de contrôle du
+                            débiteur des revenus -->
+                            
+                            <!-- <a1023_taxatiedienst /> 4 N numéro du bureau de contrôle du
+                            débiteur des revenus -->
+
+                            <!-- <a1024_bijkantoor /> 3 N numéro d'identification de la
+                            succursale du Secrétariat Social
+                            agréé par l'ONSS -->
+
+                            <!-- <a1025_aansluitingsnr /> 20 AN numéro d'enregistrement du débiteur
+                            des revenus auprès de son expéditeur -->
+
+                            <!-- <a1026_postcodebuitenl /> 12 AN numéro postal à l'étranger du
+                            débiteur des revenus (uniquement si
+                            1.016 pas = zéro ou 150; sinon
+                            utiliser 1.014) -->
+
+                            <!-- <a1027_naamfr1 /> 28 AN le nom du débiteur des revenus dans
+                            la deuxième langue FR -->
+
+                            <!-- <a1028_naamfr2 /> 31 AN le nom du débiteur des revenus dans
+                            la deuxième langue FR (suite) -->
+
+                            <!-- <a1029_adresfr /> 32 AN rue et numéro du débiteur des
+                            revenus dans la deuxième langue FRr -->
+
+                            <!-- <a1030_gemeentefr /> 27 AN commune du débiteur des revenus
+                            dans la deuxième langue FR -->
+ 
+                            <!-- <a1031_taalfr /> 1 N code langue des zones 1.027 à1.030
+                            = 2
+                            2 = expression de langue française -->
+
+                            <!-- <a1032_naamde1 /> 28 AN le nom du débiteur langue D -->
+                            
+                            <!-- <a1033_naamde2 /> 31 AN le nom du débiteur des revenus
+                            (suite)dans la troisième langue D -->
+ 
+                            <!-- <a1034_adresde /> 32 AN rue et numéro du débiteur des
+                            revenus dans la troisième langue D -->
+
+                            <!-- <a1035_gemeentede /> 27 AN commune du débiteur des revenus
+                            dans la troisième langue D -->
+
+                            <!-- <a1036_taalde /> 1 N code langue des zones 1.032 à
+                            1.035= 3
+                            3 = expression de langue allemande -->
+
+                            <!-- <a1037_nationaalnr /> 11 N numéro national du débiteur des
+                            revenus uniquement s’il s’agit d’une
+                            personne physique; le champ
+                            a1005_registratienummer est alors
+                            non complété. -->
+
+                            <!-- <a1038_emailadres /> 44 AN adresse E-MAIL de la personne de
+                            contact auprès du débiteur des
+                            revenus -->
+                            <Opgaven>
+                                <Opgave32510>
+                                    <t t-foreach="employees_data" t-as="employee_data">
+                                        <Fiche28110>
+                                        <!-- 
+                                        4.2.3.1 Description générale d’un enregistrement “ données ”
+                                        (balises f2)…
+                                        Ce type d'enregistrement peut être décomposé en :
+                                        • Un premier segment qui définit chaque enregistrement - zones 2001 à 2009 y
+                                        compris.
+                                        • Un deuxième segment contenant une série de zones dont le contenu est défini,
+                                        zones 2010 à 2029 y compris, et qui concerne une suite de données
+                                        apparaissant sur tous les types de fiches 281.xx.
+                                        • Un troisième segment constitué d'une série de zones non spécifiques. C'est-àdire une suite de zones dont le contenu dépendra du numéro d'identification de
+                                        la fiche introduit dans la zone 2008.  -->
+
+                                            <!-- X 4 N année des revenus (=2020) -->
+                                            <f2002_inkomstenjaar t-esc="employee_data['f2002_inkomstenjaar']"/>
+
+                                            <!-- <f2003_gewestdirectie /> 2 N numéro de la direction régionale du
+                                            débiteur des revenus (obsolète) -->
+
+                                            <!-- <f2004_ontvangkantoor /> 2 N numéro de bureau de recette du
+                                            débiteur des revenus obsolète) -->
+
+                                            <!-- X 10 N numéro d’entreprise (BCE)
+                                            = numéro d'enregistrement sous
+                                            lequel le débiteur des revenus est
+                                            connu auprès du SPF Finances;
+                                            si le champ 1005 n’est pas rempli,
+                                            le champ 2005 reste également vide -->
+                                            <f2005_registratienummer t-esc="employee_data['f2005_registratienummer']"/>
+
+                                            <!-- <f2007_division /> 4 N numéro de division -->
+
+                                            <!-- X <f2008_typefiche /> 5 N numéro d'identification de la fiche
+                                            (ex. : 28110) -->
+                                            <f2008_typefiche t-esc="employee_data['f2008_typefiche']"/>
+
+                                            <!-- X 12 N N° de suite de la fiche du bénéficiaire -->
+                                            <f2009_volgnummer t-esc="employee_data['f2009_volgnummer']"/>
+
+                                            <!-- <f2010_referentie /> 20 AN numéro d’identification de la fiche ou
+                                            référence du bénéficiaire des revenus
+                                            auprès du débiteur des revenus ou
+                                            auprès de l’expéditeur -->
+
+                                            <!-- <f2011_nationaalnr /> 11 N numéro national du bénéficiaire ou
+                                            «numéro Bis» (doit être complété dans
+                                            un moins 95% des cas à l’exception
+                                            des fiches 281.00, 281.15, 281.30,
+                                            281.45, 281.50, 281.71, 281.80,
+                                            281.91, 281.92, 281.93, 281.99 et des
+                                            non-résidents) -->
+                                            <f2011_nationaalnr t-esc="employee_data['f2011_nationaalnr']"/>
+
+                                            <!-- <f2012_geboortedatum /> 10 N date de naissance sous forme
+                                            JJ-MM-AAAA -->
+
+                                            <!-- X <f2013_naam /> 41 AN Nom du bénéficiaire à l'exclusion
+                                            du titre (Monsieur, Madame, etc.)
+                                            voir remarques ci-dessous.
+                                            Le prénom est repris en 2114 -->
+                                            <f2013_naam t-esc="employee_data['f2013_naam']"/>
+
+                                            <!-- X <f2015_adres /> 32 AN rue et numéro du bénéficiaire -->
+                                            <f2015_adres t-esc="employee_data['f2015_adres']"/>
+
+                                            <!-- X <f2016_postcodebelgisch /> 4 N code postal belge du
+                                            bénéficiaire(uniquement si 2018 = 0
+                                            =>Belgique; sinon utiliser 2112) -->
+                                            <t t-if="'f2016_postcodebelgisch' in employee_data">
+                                                <f2016_postcodebelgisch t-esc="employee_data['f2016_postcodebelgisch']"/>
+                                            </t>
+
+                                            <!-- <f2017_gemeente /> 27 AN commune du bénéficiaire -->
+
+                                            <!-- <f2018_landwoonplaats /> 5 N Code pays du domicile du bénéficiaire
+                                            des revenus, zéro si Belgique -->
+                                            <f2018_landwoonplaats t-esc="employee_data['f2018_landwoonplaats']"/>
+
+                                            <!-- <f2027_taalcode /> 1 N code langue du bénéficiaire des
+                                            revenus
+                                            1= expression de langue
+                                            néerlandaise
+                                            2 = expression de langue française
+                                            3 = expression de langue allemande -->
+                                            <f2027_taalcode t-esc="employee_data['f2027_taalcode']"/>
+
+                                            <!-- X <f2028_typetraitement /> 1 N Nature de la fiche
+                                            0 = ordinaire
+                                            1 = modification
+                                            2 = ajout
+                                            3 = annulation -->
+                                            <f2028_typetraitement t-esc="employee_data['f2028_typetraitement']"/>
+
+                                            <!-- X <f2029_enkelopgave325 /> 1 N code "uniquement relevé 325"
+                                            0 : fiche 281
+                                            1 :: données reprises uniquement
+                                            dans le relevé 325 : Salaires
+                                            de récolte
+                                            2 : fiche 281 sans contenu significatif -->
+                                            <f2029_enkelopgave325 t-esc="employee_data['f2029_enkelopgave325']"/>
+
+                                            <!-- <f2105_birthplace /> 27 AN Lieu de naissance -->
+
+                                            <!-- <f2112_buitenlandspostnummer/>
+                                            12 AN numéro postal à l'étranger du
+                                            bénéficiaire (uniquement si 2018 est
+                                            différent de zéro ou 150; sinon utiliser
+                                            2016) -->
+                                            <t t-if="'f2112_buitenlandspostnummer' in employee_data">
+                                                <f2112_buitenlandspostnummer t-esc="employee_data['f2112_buitenlandspostnummer']"/>
+                                            </t>
+
+                                            <!-- <f2114_voornamen /> 15 AN Prénom du bénéficiaire des revenus -->
+                                            <f2114_voornamen t-esc="employee_data['f2114_voornamen']"/>
+
+                                            <!-- <fxx_2059_totaalcontrole /> 13 NS total de contrôle
+                                            (total des zones 2.060 à 2.088 y
+                                            compris) -->
+
+                                            <f10_2031_associationactivity t-esc="employee_data['f10_2031_associationactivity']"/>
+
+                                            <!-- - Documents justificatifs pour l’exonération par convention du précompte  professionnel tenus à la disposition de l’Administration 
+                                            0 : pas d’application
+                                            1 : d’application -->
+                                            <f10_2035_verantwoordingsstukken t-esc="employee_data['f10_2035_verantwoordingsstukken']"/>
+
+                                            <!-- - code pour la mention des  habitants de France
+                                             qui sont employés en Belgique et qui répondent aux critères de ‘frontalier’ 2036
+                                             0 (zéro) : n'est pas d'application
+                                             1 : FRONTALIER FRANCAIS
+                                             2 : FRONTALIER SAISONNIER FRANCAIS -->
+                                            <f10_2036_inwonersdeenfr t-esc="employee_data['f10_2036_inwonersdeenfr']"/>
+
+                                            <!-- * Indemnités octroyées aux inspecteurs d'assurances en
+                                             remboursement de frais
+                                            Circ. administrative 19.03.1982 Ci. RH. 241/315.785............... 2.037
+                                             1 = Catégorie A
+                                             2 = Catégorie B -->
+                                            <f10_2037_vergoedingkosten t-esc="employee_data['f10_2037_vergoedingkosten']"/>
+
+                                            <f10_2038_seasonalworker t-esc="employee_data['f10_2038_seasonalworker']"/>
+
+                                            <!-- * Options attribuées par une société étrangère ne possédant pas
+                                             d’établissement en Belgique..................................................... 2.039
+                                            0 : pas d'application
+                                            1 : société étrangère -->
+                                            <f10_2039_optiebuitvennoots t-esc="employee_data['f10_2039_optiebuitvennoots']"/>
+
+                                            <!-- Transport collectif organisé
+                                             Montant :  2.087
+                                            Convention individuelle tenue à disposition 2.040
+                                            1 = oui, 0 = pas d’application -->
+                                            <f10_2040_individualconvention t-esc="employee_data['f10_2040_individualconvention']"/>
+
+                                            <!-- Personnel du secteur public sans contrat de travail ..................290 2.041
+                                            0 (zéro) : si pas d'application
+                                            1 : si d'application – Mention « OUI »  -->
+                                            <f10_2041_overheidspersoneel t-esc="employee_data['f10_2041_overheidspersoneel']"/>
+
+                                            <!-- - rémunérations recueillies en raison de l'activité exercée à bord
+                                             d'un navire marchand par ……………………………………………… 2.042
+                                            0 (zéro) : la mention n’est pas d’application
+                                            1 : marin inscrit sur la liste pool
+                                            2 : marin non inscrit sur la liste pool et résident de l’Espace Economique
+                                             Européen
+                                            3 : marin non inscrit sur la liste pool et non résident de l’Espace
+                                             Economique Européen
+                                            (voir art. 248, § 1er, al. 2, 1°, b, CIR 92) -->          
+                                            <f10_2042_sailorcode t-esc="employee_data['f10_2042_sailorcode']"/>
+
+                                            <!-- Mentionnez ici la date d'entrée en service lorsque le travailleur est entré en service au
+                                            cours de l'année des revenus. -->
+                                            <f10_2055_datumvanindienstt t-esc="employee_data['f10_2055_datumvanindienstt']"/>
+
+                                            <!-- Mentionnez ici la date de sortie de service lorsque le travailleur n'est plus en service à
+                                            la date du 31 décembre de l'année des revenus. -->
+                                            <f10_2056_datumvanvertrek t-esc="employee_data['f10_2056_datumvanvertrek']"/>
+
+                                            <!-- a) Déplacements par cycle ou par speed-pedelec  -->
+                                            <f10_2058_km t-esc="employee_data['f10_2058_km']"/>
+
+                                            <!-- = somme mathématique des
+                                            zones 2.060 à 2.088 -->
+                                            <f10_2059_totaalcontrole t-esc="employee_data['f10_2059_totaalcontrole']"/>
+                                            
+                                            <!-- Rémunérations -->
+                                            <f10_2060_gewonebezoldiginge t-esc="employee_data['f10_2060_gewonebezoldiginge']"/>
+
+                                            <!-- 20. Rémunérations pour heures supplémentaires dans l’horeca qui entrent en
+                                            ligne de compte pour l’exonération :
+                                            a) auprès d’employeurs qui n’utilisent pas le système de caisse enregistreuse
+                                             1° Rémunérations ordinaires………………..……… 335 2061 -->
+                                            <f10_2061_bedragoveruren300horeca t-esc="employee_data['f10_2061_bedragoveruren300horeca']"/>
+
+                                            <!-- Total (2.060 + 2.076 + 2069 + 2.082 + 2.083 ) -->
+                                            <f10_2062_totaal t-esc="employee_data['f10_2062_totaal']"/>
+
+                                            <!-- a) Pécule de vacances anticipé (autres que visés sous 14 b et 15 b -->
+                                            <f10_2063_vervroegdvakantieg t-esc="employee_data['f10_2063_vervroegdvakantieg']"/>
+
+                                            <!-- b) Arriérés.(autres que visés sous 12 b, 14 c et 15 c )..... 252 2.064 -->
+                                            <f10_2064_afzbelachterstall t-esc="employee_data['f10_2064_afzbelachterstall']"/>
+
+                                            <!-- c) Indemnités de dédit (autres que visées sous 14 d et 15d) et indemnités de reclassement 
+                                            Note: Indermnité de dédit = Il s'agit des indemnités payées ou attribuées par l’employeur légalement,
+                                            contractuellement ou bénévolement, sous quelque forme ou sous quelque
+                                            dénomination que ce soit, ensuite d’une cessation de travail ou d’une rupture de
+                                            contrat de travail.
+                                            Tel est le cas notamment des indemnités de licenciement payées, par l’employeur, en
+                                            exécution de la législation relative à l’indemnisation des travailleurs licenciés en cas de
+                                            fermeture d’entreprises.
+                                            -->
+                                            <f10_2065_opzeggingsreclasseringsverg t-esc="employee_data['f10_2065_opzeggingsreclasseringsverg']"/>
+
+                                            <!-- Mentionnez ici le montant total de la prime unique payée ou attribuée par le Fonds
+                                            d’impulsion21 à un médecin généraliste agréé en pratique individuelle ou collective
+                                            dans une zone dite prioritaire, c.-à-d. une zone nécessitant la présence de médecins
+                                            généralistes supplémentaires -->
+                                            <f10_2066_impulsfund t-esc="employee_data['f10_2066_impulsfund']"/>
+
+                                            <!-- 21. Heures supplémentaires qui donnent droit à un sursalaire :
+                                            a) Nombre total d’heures supplémentaires effectivement prestées
+                                             1° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 180 heures..…….…………………… 2118
+                                             2° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 180 heures
+                                             (Construction avec système d’enregistrement ……………… 2142
+                                            Total (2118+2142) 305 2129
+                                             3° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 360 heures (*) 317 2110
+                                             b) Base de calcul du sursalaire relatif aux heures donnant
+                                             droit à une réduction de :
+                                            - 66,81% ……………………………………… 233 2.067
+                                             Nombre d’heures (*)………………………. 2.095
+                                            - 57,75% ……………………………………… 234 2.068
+                                             Nombre d’heures (*) 2.097
+                                            (*) (Attention : heures supplémentaires en centièmes d’heures – voir 4.2.3.2 :
+                                             Remarques)  -->
+                                            <f10_2067_rechtvermindering66_81 t-esc="employee_data['f10_2067_rechtvermindering66_81']"/>
+
+                                            <!-- 21. Heures supplémentaires qui donnent droit à un sursalaire :
+                                            a) Nombre total d’heures supplémentaires effectivement prestées
+                                             1° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 180 heures..…….…………………… 2118
+                                             2° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 180 heures
+                                             (Construction avec système d’enregistrement ……………… 2142
+                                            Total (2118+2142) 305 2129
+                                             3° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 360 heures (*) 317 2110
+                                             b) Base de calcul du sursalaire relatif aux heures donnant
+                                             droit à une réduction de :
+                                            - 66,81% ……………………………………… 233 2.067
+                                             Nombre d’heures (*)………………………. 2.095
+                                            - 57,75% ……………………………………… 234 2.068
+                                             Nombre d’heures (*) 2.097
+                                            (*) (Attention : heures supplémentaires en centièmes d’heures – voir 4.2.3.2 :
+                                             Remarques)  -->
+                                            <f10_2068_rechtvermindering57_75 t-esc="employee_data['f10_2068_rechtvermindering57_75']"/>
+
+                                            <!-- Timbres fidélité
+                                            Mentionnez dans la colonne de droite le montant des timbres fidélité qui ont été payés
+                                            ou attribués au travailleur en 2020, en application des dispositions de la convention
+                                            collective applicable au secteur concerné.
+                                            Dans le secteur de la construction, ce montant correspond à 9 % du montant total des
+                                            rémunérations brutes imposables mentionnées en regard du cadre 9, a),
+                                            'Rémunérations'. -->
+                                            <f10_2069_fidelitystamps t-esc="employee_data['f10_2069_fidelitystamps']"/>
+
+                                            <!-- Il s'agit des rémunérations du mois de décembre telles que visées à l’article 31,
+                                            alinéa 2, 1°, CIR 92 qu'une autorité publique a, pour la première fois, payées ou
+                                            attribuées au cours du mois de décembre de l'année en cours au lieu du mois de
+                                            janvier de l'année suivante, suite à une décision de cette autorité publique de payer ou
+                                            attribuer les rémunérations du mois de décembre dorénavant au cours de ce mois de
+                                            décembre au lieu du mois de janvier de l'année suivante.
+                                            Ces rémunérations sont payées ou attribuées par les employeurs du secteur public1
+                                            ,
+                                            dont les entreprises publiques autonomes, ainsi qu'un certain nombre d’autorités qui
+                                            ne sont pas reprises dans l’AR cité en note de bas de page (entre autres les autorités
+                                            communales). -->
+                                            <f10_2070_decemberremuneration t-esc="employee_data['f10_2070_decemberremuneration']"/>
+
+                                            <!-- ) Déplacements par cycle ou par speed-pedelec
+                                            * Indemnité totale 2.071-->
+                                            <f10_2071_totalevergoeding t-esc="employee_data['f10_2071_totalevergoeding']"/>
+
+                                            <!-- 19. Retenues pour pensions complémentaires
+                                             a) Cotisations et primes normales 285 2.081
+                                             b) Cotisations et primes pour la continuation individuelle 283 2.072
+                                             Caisse ou société 2.102
+                                             c) Cotisations et primes de pension libre complémentaire pour les travailleurs salariés 387 2.128
+                                             Caisse: 2.103 -->
+                                            <f10_2072_pensioentoezetting t-esc="employee_data['f10_2072_pensioentoezetting']"/>
+
+                                            <f10_2073_tipamount t-esc="employee_data['f10_2073_tipamount']"/>
+
+                                            <!-- Précompte professionnel ? -->
+                                            <f10_2074_bedrijfsvoorheffing t-esc="employee_data['f10_2074_bedrijfsvoorheffing']"/>
+
+                                            <!-- 24. Cotisations spéciales pour la sécurité sociale.............................287 2.075 -->
+                                            <f10_2075_bijzonderbijdrage t-esc="employee_data['f10_2075_bijzonderbijdrage']"/>
+
+                                            <!-- Avantages de toute nature :
+                                            * montant......................................................................................... 2.076
+                                            * nature............................................................................................ 2.099
+                                            A = prêt B = logement C = chauffage
+                                            D = électricité (pas chauffage) E = nourriture F = véhicule
+                                            G = PC privé H = PC fins personnelles I = internet
+                                            J = tablette ou tél. mobile K = abon. téléphone Z = autres avantages
+                                            - le code doit être aligné à gauche dans la zone
+                                            - si plusieurs codes doivent être introduits pour un bénéficiaire,
+                                             ils seront placés l'un à côté de l'autre (ex. : ABC) -->
+                                            <f10_2076_voordelenaardbedrag t-esc="employee_data['f10_2076_voordelenaardbedrag']"/>
+
+                                            <!-- Total ... (2.086 + 2.087 + 2.088 +2.176) -->
+                                            <f10_2077_totaal t-esc="employee_data['f10_2077_totaal']"/>
+
+                                            <!-- Dépenses propres à l'employeur: Frais de représentation -->
+                                            <f10_2078_compensationamountwithoutstandards t-esc="employee_data['f10_2078_compensationamountwithoutstandards']"/>
+
+                                            <f10_2079_covidovertimeremuneration2023 t-esc="employee_data['f10_2079_covidovertimeremuneration2023']"/>
+
+                                            <!-- 28. Rémunérations et autres avantages reçus d’une société étrangère liée  -->
+                                            <f10_2080_detacheringsvergoed t-esc="employee_data['f10_2080_detacheringsvergoed']"/>
+
+                                            <!-- 19. Retenues pour pensions complémentaires
+                                             a) Cotisations et primes normales 285 2.081
+                                             b) Cotisations et primes pour la continuation individuelle 283 2.072
+                                             Caisse ou société 2.102
+                                             c) Cotisations et primes de pension libre complémentaire pour les travailleurs salariés 387 2.128
+                                             Caisse: 2.103 -->
+                                            <f10_2081_gewonebijdragenenpremies t-esc="employee_data['f10_2081_gewonebijdragenenpremies']"/>
+
+                                            <!--  Options sur actions
+                                            * Attribuées en 2023....................................................................... 2.082
+                                            * Attribuées avant 2023................................................................................. 2.083
+                                            * pourcentage(s) ............................................................. 2.101
+                                            Mentionner ici sous forme de commentaire le ou les pourcentage(s),
+                                            éventuel(s), qui a (ont) servi à déterminer le montant de l’avantage
+                                            de toute nature imposable découlant de l’attribution d’options sur
+                                            actions.
+                                            * Options attribuées par une société étrangère ne possédant pas
+                                             d’établissement en Belgique..................................................... 2.039
+                                            0 : pas d'application
+                                            1 : société étrangère -->
+                                            <f10_2082_bedrag t-esc="employee_data['f10_2082_bedrag']"/>
+
+                                            <!--  Options sur actions
+                                            * Attribuées en 2020....................................................................... 2.082
+                                            * Attribuées avant 2020................................................................................. 2.083
+                                            * pourcentage(s) ............................................................. 2.101
+                                            Mentionner ici sous forme de commentaire le ou les pourcentage(s),
+                                            éventuel(s), qui a (ont) servi à déterminer le montant de l’avantage
+                                            de toute nature imposable découlant de l’attribution d’options sur
+                                            actions.
+                                            * Options attribuées par une société étrangère ne possédant pas
+                                             d’établissement en Belgique..................................................... 2.039
+                                            0 : pas d'application
+                                            1 : société étrangère -->
+                                            <f10_2083_bedrag t-esc="employee_data['f10_2083_bedrag']"/>
+
+                                            <!-- 28. Rémunérations et autres avantages reçus d’une société étrangère liée  -->
+                                            <f10_2084_mobiliteitsvergoedi t-esc="employee_data['f10_2084_mobiliteitsvergoedi']"/>
+
+                                            <!-- 28. Rémunérations et autres avantages reçus d’une société étrangère liée  -->
+                                            <f10_2085_forfbezoldiging t-esc="employee_data['f10_2085_forfbezoldiging']"/>
+
+                                            <!-- 17. Intervention dans les frais de déplacement :
+                                             a) Transport public en commun…….............................................…... 2.086
+                                             b) Transport collectif organisé
+                                             Montant : …………………..…….............................................….… 2.087
+                                            Convention individuelle tenue à disposition 2.040
+                                            1 = oui, 0 = pas d’application
+                                             c) Autre moyen de transport. ….…………..................................…..... 2.088
+                                             d) Allocation de mobilité « Cash for Car » … 2.176 -->
+                                            <f10_2086_openbaargemeenschap t-esc="employee_data['f10_2086_openbaargemeenschap']"/>
+
+                                            <!-- 17. Intervention dans les frais de déplacement :
+                                             a) Transport public en commun…….............................................…... 2.086
+                                             b) Transport collectif organisé
+                                             Montant : …………………..…….............................................….… 2.087
+                                            Convention individuelle tenue à disposition 2.040
+                                            1 = oui, 0 = pas d’application
+                                             c) Autre moyen de transport. ….…………..................................…..... 2.088
+                                             d) Allocation de mobilité « Cash for Car » … 2.176 -->
+                                            <f10_2087_bedrag t-esc="employee_data['f10_2087_bedrag']"/>
+
+                                            <!-- 17. Intervention dans les frais de déplacement :
+                                             a) Transport public en commun…….............................................…... 2.086
+                                             b) Transport collectif organisé
+                                             Montant : …………………..…….............................................….… 2.087
+                                            Convention individuelle tenue à disposition 2.040
+                                            1 = oui, 0 = pas d’application
+                                             c) Autre moyen de transport. ….…………..................................…..... 2.088
+                                             d) Allocation de mobilité « Cash for Car » … 2.176 
+                                            NOTE: Could be a company car, ONLY used to move from home to work.
+                                            -->
+                                            <f10_2088_andervervoermiddel t-esc="employee_data['f10_2088_andervervoermiddel']"/>
+
+                                            <!-- d) Travailleurs frontaliers :
+                                             nombre de jours de sortie de zone frontalière……………………… 2.090 -->
+                                            <f10_2090_outborderdays t-esc="employee_data['f10_2090_outborderdays']"/>
+
+                                            <!-- 28. Rémunérations et autres avantages reçus d’une société étrangère liée  -->
+                                            <t t-if="employee_data['f10_2092_othercode1']">
+                                                <f10_2092_othercode1 t-esc="employee_data['f10_2092_othercode1']"/>
+                                            </t>
+
+                                            <!-- <f10_2093_datevooropzeg t-esc="employee_data['f10_2093_datevooropzeg']"/> -->
+
+                                            <!-- 28. Rémunérations et autres avantages reçus d’une société étrangère liée  -->
+                                            <t t-if="employee_data['f10_2094_othercode2']">
+                                                <f10_2094_othercode2 t-esc="employee_data['f10_2094_othercode2']"/>
+                                            </t>
+
+                                            <!-- 21. Heures supplémentaires qui donnent droit à un sursalaire :
+                                            a) Nombre total d’heures supplémentaires effectivement prestées
+                                             1° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 180 heures..…….…………………… 2118
+                                             2° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 180 heures
+                                             (Construction avec système d’enregistrement ……………… 2142
+                                            Total (2118+2142) 305 2129
+                                             3° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 360 heures (*) 317 2110
+                                             b) Base de calcul du sursalaire relatif aux heures donnant
+                                             droit à une réduction de :
+                                            - 66,81% ……………………………………… 233 2.067
+                                             Nombre d’heures (*)………………………. 2.095
+                                            - 57,75% ……………………………………… 234 2.068
+                                             Nombre d’heures (*) 2.097
+                                            (*) (Attention : heures supplémentaires en centièmes d’heures – voir 4.2.3.2 :
+                                             Remarques)  -->
+                                            <f10_2095_aantaluren t-esc="employee_data['f10_2095_aantaluren']"/>
+
+                                            <!-- 28. Rémunérations et autres avantages reçus d’une société étrangère liée  -->
+                                            <t t-if="employee_data['f10_2096_othercode3']">
+                                                <f10_2096_othercode3 t-esc="employee_data['f10_2096_othercode3']"/>
+                                            </t>
+
+                                            <!-- 21. Heures supplémentaires qui donnent droit à un sursalaire :
+                                            a) Nombre total d’heures supplémentaires effectivement prestées
+                                             1° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 180 heures..…….…………………… 2118
+                                             2° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 180 heures
+                                             (Construction avec système d’enregistrement ……………… 2142
+                                            Total (2118+2142) 305 2129
+                                             3° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 360 heures (*) 317 2110
+                                             b) Base de calcul du sursalaire relatif aux heures donnant
+                                             droit à une réduction de :
+                                            - 66,81% ……………………………………… 233 2.067
+                                             Nombre d’heures (*)………………………. 2.095
+                                            - 57,75% ……………………………………… 234 2.068
+                                             Nombre d’heures (*) 2.097
+                                            (*) (Attention : heures supplémentaires en centièmes d’heures – voir 4.2.3.2 :
+                                             Remarques)  -->
+                                            <f10_2097_aantaluren t-esc="employee_data['f10_2097_aantaluren']"/>
+
+                                            <!-- 28. Rémunérations et autres avantages reçus d’une société étrangère liée  -->
+
+                                            <t t-if="employee_data['f10_2098_othercode4']">
+                                                <f10_2098_othercode4 t-esc="employee_data['f10_2098_othercode4']"/>
+                                            </t>
+
+                                            <!-- Avantages de toute nature :
+                                            * montant......................................................................................... 2.076
+                                            * nature............................................................................................ 2.099
+                                            A = prêt B = logement C = chauffage
+                                            D = électricité (pas chauffage) E = nourriture F = véhicule
+                                            G = PC privé H = PC fins personnelles I = internet
+                                            J = tablette ou tél. mobile K = abon. téléphone Z = autres avantages
+                                            - le code doit être aligné à gauche dans la zone
+                                            - si plusieurs codes doivent être introduits pour un bénéficiaire,
+                                             ils seront placés l'un à côté de l'autre (ex. : ABC) -->
+                                            <f10_2099_aard t-esc="employee_data['f10_2099_aard']"/>
+
+                                            <!-- 19. Retenues pour pensions complémentaires
+                                             a) Cotisations et primes normales 285 2.081
+                                             b) Cotisations et primes pour la continuation individuelle 283 2.072
+                                             Caisse ou société 2.102
+                                             c) Cotisations et primes de pension libre complémentaire pour les travailleurs salariés 387 2.128
+                                             Caisse: 2.103 -->
+                                            <f10_2102_kas t-esc="employee_data['f10_2102_kas']"/>
+
+                                            <!-- 19. Retenues pour pensions complémentaires
+                                             a) Cotisations et primes normales 285 2.081
+                                             b) Cotisations et primes pour la continuation individuelle 283 2.072
+                                             Caisse ou société 2.102
+                                             c) Cotisations et primes de pension libre complémentaire pour les travailleurs salariés 387 2.128
+                                             Caisse: 2.103 -->
+                                            <f10_2103_kasvrijaanvullendpensioen t-esc="employee_data['f10_2103_kasvrijaanvullendpensioen']"/>
+
+                                            <f10_2106_percentages t-esc="employee_data['f10_2106_percentages']"/>
+
+                                            <f10_2109_fiscaalidentificat t-esc="employee_data['f10_2109_fiscaalidentificat']"/>
+
+                                            <!-- 21. Heures supplémentaires qui donnent droit à un sursalaire :
+                                            a) Nombre total d’heures supplémentaires effectivement prestées
+                                             1° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 180 heures..…….…………………… 2118
+                                             2° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 180 heures
+                                             (Construction avec système d’enregistrement ……………… 2142
+                                            Total (2118+2142) 305 2129
+                                             3° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 360 heures (*) 317 2110
+                                             b) Base de calcul du sursalaire relatif aux heures donnant
+                                             droit à une réduction de :
+                                            - 66,81% ……………………………………… 233 2.067
+                                             Nombre d’heures (*)………………………. 2.095
+                                            - 57,75% ……………………………………… 234 2.068
+                                             Nombre d’heures (*) 2.097
+                                            (*) (Attention : heures supplémentaires en centièmes d’heures – voir 4.2.3.2 :
+                                             Remarques)  -->
+                                            <f10_2110_aantaloveruren360 t-esc="employee_data['f10_2110_aantaloveruren360']"/>
+
+                                            <!-- 20. Rémunérations pour heures supplémentaires dans l’horeca qui entrent en
+                                            ligne de compte pour l’exonération :
+                                            a) auprès d’employeurs qui n’utilisent pas le système de caisse enregistreuse
+                                             2° Arriérés ………………………………………. 337 2111-->
+                                            <f10_2111_achterstalloveruren300horeca t-esc="employee_data['f10_2111_achterstalloveruren300horeca']"/>
+
+                                            <!-- c). Pourboires :
+                                            *code.................................................................... 2.045
+                                            00 : si pas d’application
+                                            01 : rémunéré totalement au pourboire
+                                            02 : rémunéré principalement au pourboire
+                                            03 : rémunéré accessoirement au pourboire
+                                            * forfait Séc. soc........................................................................ 2.113 -->
+                                            <f10_2113_forfaitrsz t-esc="employee_data['f10_2113_forfaitrsz']"/>
+
+                                            <!-- 26. Bonus à l’emploi 284 2.115 -->
+                                            <f10_2115_bonus t-esc="employee_data['f10_2115_bonus']"/>
+
+                                            <!-- 11. Timbres intempéries ………………………………… 271 2.116 -->
+                                            <f10_2116_badweatherstamps t-esc="employee_data['f10_2116_badweatherstamps']"/>
+
+                                            <!-- 12. Avantages non récurrents liés aux résultats
+                                             a) Avantages ………….……….. 242 2.117
+                                             b) Arriérés ………….…….. 243 2.127 -->
+                                            <f10_2117_nonrecurrentadvantages t-esc="employee_data['f10_2117_nonrecurrentadvantages']"/>
+
+                                            <!-- 21. Heures supplémentaires qui donnent droit à un sursalaire :
+                                            a) Nombre total d’heures supplémentaires effectivement prestées
+                                             1° qui entrent en considération
+                                             pour la limite jusqu’ à 180 heures..…….…………………… 2118
+                                             2° qui entrent en considération
+                                             pour la limite jusqu’ à 180 heures
+                                             (Construction avec système d’enregistrement ……………… 2142
+                                            Total (2118+2142) 305 2129
+                                             3° qui entrent en considération
+                                             pour la limite jusqu’ à 360 heures (*) 317 2110
+                                             b) Base de calcul du sursalaire relatif aux heures donnant
+                                             droit à une réduction de :
+                                            - 66,81% ……………………………………… 233 2.067
+                                             Nombre d’heures (*)………………………. 2.095
+                                            - 57,75% ……………………………………… 234 2.068
+                                             Nombre d’heures (*) 2.097
+                                            (*) (Attention : heures supplémentaires en centièmes d’heures – voir 4.2.3.2 :
+                                             Remarques)  -->
+                                            <f10_2118_overtimehours180 t-esc="employee_data['f10_2118_overtimehours180']"/>
+
+                                            <!-- 14. Rémunérations obtenues par des sportifs dans le cadre de leur activité sportive : -->
+                                            <f10_2119_sportremuneration t-esc="employee_data['f10_2119_sportremuneration']"/>
+
+                                            <!-- 14. Rémunérations obtenues par des sportifs dans le cadre de leur activité sportive : -->
+                                            <f10_2120_sportvacancysavings t-esc="employee_data['f10_2120_sportvacancysavings']"/>
+
+                                            <!-- 14. Rémunérations obtenues par des sportifs dans le cadre de leur activité sportive : -->
+                                            <f10_2121_sportoutdated t-esc="employee_data['f10_2121_sportoutdated']"/>
+
+                                            <!-- 14. Rémunérations obtenues par des sportifs dans le cadre de leur activité sportive : -->
+                                            <f10_2122_sportindemnificationofretraction t-esc="employee_data['f10_2122_sportindemnificationofretraction']"/>
+
+                                            <!-- Rémunérations obtenues par des arbitres de compétitions
+                                             sportives pour leurs prestations arbitrales, ou par des
+                                             formateurs, des entraîneurs et des accompagnateurs pour
+                                             leur activité au profit de sportifs : -->
+                                            <f10_2123_managerremuneration t-esc="employee_data['f10_2123_managerremuneration']"/>
+
+                                            <!-- Rémunérations obtenues par des arbitres de compétitions
+                                             sportives pour leurs prestations arbitrales, ou par des
+                                             formateurs, des entraîneurs et des accompagnateurs pour
+                                             leur activité au profit de sportifs : -->
+                                            <f10_2124_managervacancysavings t-esc="employee_data['f10_2124_managervacancysavings']"/>
+
+                                            <!-- Rémunérations obtenues par des arbitres de compétitions
+                                             sportives pour leurs prestations arbitrales, ou par des
+                                             formateurs, des entraîneurs et des accompagnateurs pour
+                                             leur activité au profit de sportifs : -->
+                                            <f10_2125_manageroutdated t-esc="employee_data['f10_2125_manageroutdated']"/>
+
+                                            <!-- Rémunérations obtenues par des arbitres de compétitions
+                                             sportives pour leurs prestations arbitrales, ou par des
+                                             formateurs, des entraîneurs et des accompagnateurs pour
+                                             leur activité au profit de sportifs : -->
+                                            <f10_2126_managerindemnificationofretraction t-esc="employee_data['f10_2126_managerindemnificationofretraction']"/>
+
+                                            <!-- 12. Avantages non récurrents liés aux résultats
+                                            a) Avantages ………….……….. 242 2.117
+                                             b) Arriérés ………….…….. 243 2.127 -->
+                                            <f10_2127_nonrecurrentadvantagesoutdated t-esc="employee_data['f10_2127_nonrecurrentadvantagesoutdated']"/>
+
+                                            <!-- 19. Retenues pour pensions complémentaires
+                                             a) Cotisations et primes normales 285 2.081
+                                             b) Cotisations et primes pour la continuation individuelle 283 2.072
+                                             Caisse ou société 2.102
+                                             c) Cotisations et primes de pension libre complémentaire pour les travailleurs salariés 387 2.128
+                                             Caisse: 2.103 -->
+                                            <f10_2128_vrijaanvullendpensioenwerknemers t-esc="employee_data['f10_2128_vrijaanvullendpensioenwerknemers']"/>
+
+                                            <!-- PC Privé : Montant de l’intervention de l’employeur -->
+                                            <f10_2130_privatepc t-esc="employee_data['f10_2130_privatepc']"/>
+
+                                            <!-- Précompte -->
+                                            <f10_2131_bedrijfsvoorheffingvanwerkgever t-esc="employee_data['f10_2131_bedrijfsvoorheffingvanwerkgever']"/>
+
+                                            <f10_2132_horeca t-esc="employee_data['f10_2132_horeca']"/>
+
+                                            <!-- Precompte à l'étranger -->
+                                            <f10_2133_bedrijfsvoorheffingbuitenlvenverbondenwerkgever t-esc="employee_data['f10_2133_bedrijfsvoorheffingbuitenlvenverbondenwerkgever']"/>
+
+                                            <!--  h) Budget de mobilité: montant total 2.134 -->
+                                            <f10_2134_totaalbedragmobiliteitsbudget t-esc="employee_data['f10_2134_totaalbedragmobiliteitsbudget']"/>
+
+                                            <!-- 22. Rémunérations qui entrent en ligne de compte pour l’exonération pour les
+                                            heures supplémentaires volontaires prestées en raison de la pandémie du
+                                            COVID-19 du 01.04 au 30.06.2020 inclus auprès d’employeurs appartenant aux
+                                            secteurs critiques et/ou du 01.10 au 31.12.2020 auprès d’employeurs appartenant
+                                            aux secteurs cruciaux :
+                                            a) Rémunérations 306 2.135 -->
+                                            <f10_2135_amountpaidforvolontarysuplementaryhourscovid t-esc="employee_data['f10_2135_amountpaidforvolontarysuplementaryhourscovid']"/>
+
+                                            <!-- k) Job d’étudiant4
+                                            :
+                                            • montant total de toutes les rémunérations payées dans le cadre d'un
+                                            contrat d'occupation d'étudiant 2.136
+                                            • rémunérations spécifiques pour les prestations pendant les deuxième et
+                                            quatrième trimestres 2020 2.137 -->
+                                            <f10_2136_amountcontractofstudent t-esc="employee_data['f10_2136_amountcontractofstudent']"/>
+
+                                            <!-- k) Job d’étudiant4
+                                            :
+                                            • montant total de toutes les rémunérations payées dans le cadre d'un
+                                            contrat d'occupation d'étudiant 2.136
+                                            • rémunérations spécifiques pour les prestations pendant les deuxième et
+                                            quatrième trimestres 2020 2.137 -->
+                                            <f10_2137_amountstudentspecificperiod t-esc="employee_data['f10_2137_amountstudentspecificperiod']"/>
+
+                                            <!-- 13. Imposable au taux de 33% :
+                                             Travailleur occasionnel dans le secteur Horeca …………………. 263 2.141 -->
+                                            <f10_2141_total t-esc="employee_data['f10_2141_total']"/>
+
+                                            <!-- 21. Heures supplémentaires qui donnent droit à un sursalaire :
+                                            a) Nombre total d’heures supplémentaires effectivement prestées
+                                             1° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 180 heures..…….…………………… 2118
+                                             2° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 180 heures
+                                             (Construction avec système d’enregistrement ……………… 2142
+                                            Total (2118+2142) 305 2129
+                                             3° qui entrent en ligne de compte
+                                             pour la limite jusqu’ à 360 heures (*) 317 2110
+                                             b) Base de calcul du sursalaire relatif aux heures donnant
+                                             droit à une réduction de :
+                                            - 66,81% ……………………………………… 233 2.067
+                                             Nombre d’heures (*)………………………. 2.095
+                                            - 57,75% ……………………………………… 234 2.068
+                                             Nombre d’heures (*) 2.097
+                                            (*) (Attention : heures supplémentaires en centièmes d’heures – voir 4.2.3.2 :
+                                             Remarques)  -->
+                                            <f10_2142_totalovertimehours180 t-esc="employee_data['f10_2142_totalovertimehours180']"/>
+
+                                            <!-- 20. Rémunérations pour heures supplémentaires dans l’horeca qui entrent en
+                                            ligne de compte pour l’exonération :
+                                            b) auprès d’employeurs qui utilisent le système de caisse enregistreuse
+
+                                             1° Rémunérations ordinaires………………..……… 395 2143 -->
+                                            <f10_2143_bedragoveruren360horeca t-esc="employee_data['f10_2143_bedragoveruren360horeca']"/>
+
+                                            <!-- 20. Rémunérations pour heures supplémentaires dans l’horeca qui entrent en
+                                            ligne de compte pour l’exonération :
+                                            b) auprès d’employeurs qui utilisent le système de caisse enregistreuse
+                                             2° Arriérés ………………………………………. 397 2165-->
+                                            <f10_2165_achterstalloveruren360horeca t-esc="employee_data['f10_2165_achterstalloveruren360horeca']"/>
+
+                                            <!-- e) Revenus exonérés perçus en exécution
+                                             d’un contrat de travail flexi-job ……………………………………………. 2.166 -->
+                                            <f10_2166_flexi_job t-esc="employee_data['f10_2166_flexi_job']"/>
+
+                                            <!-- 20. Rémunérations pour heures supplémentaires dans l’horeca qui entrent en
+                                            ligne de compte pour l’exonération :
+                                            a) auprès d’employeurs qui n’utilisent pas le système de caisse enregistreuse
+                                             Nombre d’heures supplémentaires…………………… 336 2167-->
+                                            <f10_2167_aantaloveruren300horeca t-esc="employee_data['f10_2167_aantaloveruren300horeca']"/>
+
+                                            <!-- 20. Rémunérations pour heures supplémentaires dans l’horeca qui entrent en
+                                            ligne de compte pour l’exonération :
+                                            a) auprès d’employeurs qui n’utilisent pas le système de caisse enregistreuse
+                                            Nombre d’heures supplémentaires ……… 338 2168-->
+                                            <f10_2168_achterstallaantaloveruren300horeca t-esc="employee_data['f10_2168_achterstallaantaloveruren300horeca']"/>
+
+                                            <!-- 20. Rémunérations pour heures supplémentaires dans l’horeca qui entrent en
+                                            ligne de compte pour l’exonération :
+                                            b) auprès d’employeurs qui utilisent le système de caisse enregistreuse
+                                             Nombre d’heures supplémentaires 396 2169 -->
+                                            <f10_2169_aantaloveruren360horeca t-esc="employee_data['f10_2169_aantaloveruren360horeca']"/>
+
+                                            <!-- 20. Rémunérations pour heures supplémentaires dans l’horeca qui entrent en
+                                            ligne de compte pour l’exonération :
+                                            b) auprès d’employeurs qui utilisent le système de caisse enregistreuse
+                                            Nombre d’heures supplémentaires 398 2170 -->
+                                            <f10_2170_achterstallaantaloveruren360horeca t-esc="employee_data['f10_2170_achterstallaantaloveruren360horeca']"/>
+
+                                            <f10_2176_overtimehours180 t-esc="employee_data['f10_2176_overtimehours180']"/>
+
+                                            <!--  f) Prime bénéficiaire : ……….………………………………………….. 2.177 -->
+                                            <f10_2177_winstpremies t-esc="employee_data['f10_2177_winstpremies']"/>
+
+                                            <f10_2178_pensioner t-esc="employee_data['f10_2178_pensioner']"/>
+
+                                            <!--  i) Convention de premier emploi : supplément compensatoire 2.179 -->
+                                            <f10_2179_startersjob t-esc="employee_data['f10_2179_startersjob']"/>
+
+                                            <!-- j) Pompier volontaire et agent volontaire de la Protection civile
+                                             allocations payées …………………… 2.180-->
+                                            <f10_2180_onkostenbrandweerenambulanciers t-esc="employee_data['f10_2180_onkostenbrandweerenambulanciers']"/>
+
+                                            <!-- 28. Rémunérations et autres avantages reçus d’une société étrangère liée  -->
+                                            <f10_2181_remunerationetrang t-esc="employee_data['f10_2181_remunerationetrang']"/>
+
+                                            <!-- 28. Rémunérations et autres avantages reçus d’une société étrangère liée  -->
+                                            <f10_2182_aandelenetrang t-esc="employee_data['f10_2182_aandelenetrang']"/>
+
+                                            <!-- 28. Rémunérations et autres avantages reçus d’une société étrangère liée  -->
+                                            <f10_2183_bonuspremieoaandelenoptiesetrang t-esc="employee_data['f10_2183_bonuspremieoaandelenoptiesetrang']"/>
+
+                                            <!-- 28. Rémunérations et autres avantages reçus d’une société étrangère liée  -->
+                                            <f10_2184_anderevaaetrang t-esc="employee_data['f10_2184_anderevaaetrang']"/>
+
+                                            <!-- 28. Rémunérations et autres avantages reçus d’une société étrangère liée  -->
+                                            <f10_2185_amountother1 t-esc="employee_data['f10_2185_amountother1']"/>
+
+                                            <!-- 28. Rémunérations et autres avantages reçus d’une société étrangère liée  -->
+                                            <f10_2186_amountother2 t-esc="employee_data['f10_2186_amountother2']"/>
+
+                                            <!-- 28. Rémunérations et autres avantages reçus d’une société étrangère liée  -->
+                                            <f10_2187_amountother3 t-esc="employee_data['f10_2187_amountother3']"/>
+
+                                            <!-- 28. Rémunérations et autres avantages reçus d’une société étrangère liée  -->
+                                            <f10_2190_covidovertimeremunerationfirstsemester t-esc="employee_data['f10_2190_covidovertimeremunerationfirstsemester']"/>
+
+                                            <f10_2191_covidovertimeremunerationsecondsemester t-esc="employee_data['f10_2191_covidovertimeremunerationsecondsemester']"/>
+
+                                            <f10_2192_covidovertimehoursfirstsemester t-esc="employee_data['f10_2192_covidovertimehoursfirstsemester']"/>
+
+                                            <f10_2193_covidovertimehourssecondsemester t-esc="employee_data['f10_2193_covidovertimehourssecondsemester']"/>
+
+                                            <f10_2194_covidovertimehourstotal t-esc="employee_data['f10_2194_covidovertimehourstotal']"/>
+
+                                            <f10_2197_covidovertimeremuneration2022 t-esc="employee_data['f10_2197_covidovertimeremuneration2022']"/>
+
+                                            <f10_2199_covidovertimehours2022 t-esc="employee_data['f10_2199_covidovertimehours2022']"/>
+
+                                            <f10_2200_compensationwithstandards t-esc="employee_data['f10_2200_compensationwithstandards']"/>
+
+                                            <f10_2201_compensationwithdocuments t-esc="employee_data['f10_2201_compensationwithdocuments']"/>
+
+                                            <f10_2202_amount t-esc="employee_data['f10_2202_amount']"/>
+
+                                            <f10_2203_amount t-esc="employee_data['f10_2203_amount']"/>
+
+                                            <f10_2204_repaidsums t-esc="employee_data['f10_2204_repaidsums']"/>
+
+                                            <f10_2206_grossamountremuneration t-esc="employee_data['f10_2206_grossamountremuneration']"/>
+
+                                        </Fiche28110>
+                                    </t>
+                                </Opgave32510>
+                            </Opgaven>
+
+                            <!-- X <r8002_inkomstenjaar /> 4 N année des revenus (=2020) -->
+                            <r8002_inkomstenjaar t-esc="total_data['r8002_inkomstenjaar']"/>
+
+                            <!-- <r8003_gewestelijkedirectie /> 2 N numéro de la direction régionale du
+                            débiteur des revenus (obsolète) -->
+
+                            <!-- <r8004_ontvangkantoor /> 2 N numéro du bureau de recette du
+                            débiteur des revenus (obsolète) -->
+
+                            <!--10 N numéro d’entreprise (BCE) = numéro
+                            d'enregistrement sous lequel le
+                            débiteur des revenus est connu par le
+                            SPF Finances. -->
+                            <r8005_registratienummer t-esc="total_data['r8005_registratienummer']"/>
+
+                            <!-- <r8007_division /> 4 N numéro de division -->
+
+                            <!-- X <r8010_aantalrecords /> 8 N nombre total d'enregistrements dans
+                            le fichier "données" (premier et dernier
+                            enregistrement compris) -->
+                            <r8010_aantalrecords t-esc="total_data['r8010_aantalrecords']"/>
+
+                            <!-- X <r8011_controletotaal /> 18 N total de contrôle (somme des zones
+                            2.009) -->
+                            <r8011_controletotaal t-esc="total_data['r8011_controletotaal']"/>
+ 
+                            <!-- X <r8012_controletotaal /> 18 N S total de contrôle (somme des zones
+                            2.059) -->
+                            <r8012_controletotaal t-esc="total_data['r8012_controletotaal']"/>
+
+                            <!-- <r8013_totaalvoorheffingen /> 18 N S total des précomptes professionnels et
+                            mobiliers (281.40 et 281.45) à imputer
+                            pour les enregistrements "données" -->
+                            <r8013_totaalvoorheffingen t-esc="total_data['r8013_totaalvoorheffingen']"/>
+                        </Aangifte>
+                    </Aangiften>
+
+                    <!-- X <r9002_inkomstenjaar /> 4 N année des revenus (=2020) -->
+                    <r9002_inkomstenjaar t-esc="total_data['r9002_inkomstenjaar']"/>
+
+                    <!-- X <r9010_aantallogbestanden /> 8 N nombre de fichiers logiques constituant
+                    le fichier physique (fichier début et
+                    fichier fin compris) -->
+                    <r9010_aantallogbestanden t-esc="total_data['r9010_aantallogbestanden']"/>
+
+                    <!-- X <r9011_totaalaantalrecords /> 8 N nombre d'enregistrements de l’envoi
+                    (fichier début et fichier fin compris) -->
+                    <r9011_totaalaantalrecords t-esc="total_data['r9011_totaalaantalrecords']"/>
+
+                    <!-- X <r9012_controletotaal /> 18 N total de contrôle (somme des
+                    zones 8.011) -->
+                    <r9012_controletotaal t-esc="total_data['r9012_controletotaal']"/>
+
+                    <!-- X <r9013_controletotaal /> 18 N S total de contrôle (somme des
+                    zones 8.012) -->
+                    <r9013_controletotaal t-esc="total_data['r9013_controletotaal']"/>
+
+                    <!-- <r9014_controletotaal /> 18 N S total de contrôle (somme des zones
+                    8.013) -->
+                    <r9014_controletotaal t-esc="total_data['r9014_controletotaal']"/>
+                </Verzending>
+            </Verzendingen>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="helpdesk_ticket_to_lead_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.to.lead.view.form</field>
+        <field name="model">helpdesk.ticket.to.lead</field>
+        <field name="arch" type="xml">
+            <form string="Convert Ticket to Lead">
+                <group>
+                   <group name="action" string="Customer" col="2">
+                        <field name="action" nolabel="1" widget="radio" required="1" colspan="2"/>
+                        <field name="partner_id" widget="res_partner_many2one"
+                            context="{'res_partner_search_mode': 'customer', 'show_vat': True}"
+                            invisible="action != 'exist'"
+                            required="action == 'exist'"/>
+                    </group>
+                    <group string="Sales Team">
+                        <field name="ticket_id" invisible="1"/>
+                        <field name="team_id"/>
+                        <field name="user_id"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_convert_to_lead" string="Convert" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_to_lead_action" model="ir.actions.act_window">
+        <field name="name">Convert to Lead</field>
+        <field name="res_model">helpdesk.ticket.to.lead</field>
+        <field name="binding_model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="binding_view_types">form</field>
+        <field name="groups_id" eval="[(4, ref('crm.group_use_lead'))]"/>
+        <field name="context">{'dialog_size': 'medium'}</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="helpdesk_ticket_to_lead_view_form"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,102 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_contract_salary_holidays
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_contract_salary_holidays
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary_holidays.hr_contract_view_form
+msgid "<span>Allocations</span>"
+msgstr "<span>分配</span>"
+
+#. module: hr_contract_salary_holidays
+#: model:ir.model.constraint,message:hr_contract_salary_holidays.constraint_res_company_auto_allocation
+msgid ""
+"A Time Off Type is required once the Extra Time Off automatic allocation is "
+"set."
+msgstr "一旦设置了额外的休息时间自动分配，就需要一个休息时间类型。"
+
+#. module: hr_contract_salary_holidays
+#: model:ir.model.fields,field_description:hr_contract_salary_holidays.field_hr_contract__leave_allocation_id
+msgid "Allocation"
+msgstr "分配"
+
+#. module: hr_contract_salary_holidays
+#. odoo-python
+#: code:addons/hr_contract_salary_holidays/controllers/main.py:0
+#, python-format
+msgid "Allocation automatically created from Contract Signature."
+msgstr "从合同签字中自动创建的分配。"
+
+#. module: hr_contract_salary_holidays
+#: model:ir.model,name:hr_contract_salary_holidays.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: hr_contract_salary_holidays
+#: model:ir.model,name:hr_contract_salary_holidays.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设置"
+
+#. module: hr_contract_salary_holidays
+#. odoo-python
+#: code:addons/hr_contract_salary_holidays/models/hr_contract.py:0
+#, python-format
+msgid "Contract has been cancelled."
+msgstr "合同已被取消。"
+
+#. module: hr_contract_salary_holidays
+#: model:ir.model,name:hr_contract_salary_holidays.model_hr_contract
+msgid "Employee Contract"
+msgstr "员工合同"
+
+#. module: hr_contract_salary_holidays
+#: model:hr.leave.type,name:hr_contract_salary_holidays.holiday_status_eto
+msgid "Extra Time Off"
+msgstr "额外的休息时间"
+
+#. module: hr_contract_salary_holidays
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary_holidays.res_config_settings_view_form
+msgid "Extra Time Off Allocation"
+msgstr "额外的休息时间分配"
+
+#. module: hr_contract_salary_holidays
+#: model:ir.model.fields,field_description:hr_contract_salary_holidays.field_res_company__hr_contract_timeoff_auto_allocation
+#: model:ir.model.fields,field_description:hr_contract_salary_holidays.field_res_config_settings__hr_contract_timeoff_auto_allocation
+msgid "Extra Time Off Allocation on contract signature"
+msgstr "合同签字时的额外时间分配"
+
+#. module: hr_contract_salary_holidays
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary_holidays.res_config_settings_view_form
+msgid ""
+"If the employee requested extra time off in his salary configurator, create "
+"automatically the allocation request"
+msgstr "如果员工在他的工资配置器中要求额外的休息时间，自动创建分配请求"
+
+#. module: hr_contract_salary_holidays
+#: model_terms:ir.ui.view,arch_db:hr_contract_salary_holidays.res_config_settings_view_form
+msgid ""
+"If the employee requested extra time off in his salary configurator, create "
+"automatically the allocation request."
+msgstr "如果员工在他的工资配置器中要求额外的休息时间，则自动创建分配请求。"
+
+#. module: hr_contract_salary_holidays
+#: model:ir.model.fields,field_description:hr_contract_salary_holidays.field_res_company__hr_contract_timeoff_auto_allocation_type_id
+#: model:ir.model.fields,field_description:hr_contract_salary_holidays.field_res_config_settings__hr_contract_timeoff_auto_allocation_type_id
+msgid "Time Off Type"
+msgstr "休假类型"

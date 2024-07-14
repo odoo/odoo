@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="print_batch_payment">
+    <t t-call="web.basic_layout">
+        <t t-foreach="docs" t-as="o">
+            <div class="page page_batch_payment">
+                <div class="oe_structure"></div>
+                <div class="row batch_details">
+                    <div class="col-6"><span t-out="o.journal_id.company_id.name">Odoo Payments LLC</span></div>
+                    <div class="col-6 text-end"><span t-out="o.journal_id.name">Bank Transfer</span> : <span t-out="o.name">Monthly Payment</span></div>
+                </div>
+                <div class="oe_structure"></div>
+                <div class="row batch_details">
+                    <div class="col-6"><span t-out="o.date">2023-08-14</span></div>
+                </div>
+                <div class="oe_structure"></div>
+                <div class="row batch_details">
+                    <div t-if="o.journal_id.bank_acc_number" class="col-6" style="font-size:18px;">Issuing bank account : <span t-out="o.journal_id.bank_acc_number">3956012345678</span></div>
+                </div>
+                <div class="oe_structure"></div>
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th class="text-start">Customer</th>
+                            <th class="text-start">Date</th>
+                            <th class="text-start">Memo</th>
+                            <th class="text-start">Recipient Bank Account</th>
+                            <th class="text-end">Amount</th>
+                        </tr>
+                    </thead>
+                    <tr t-foreach="o.payment_ids" t-as="payment">
+                        <td class="text-start"><span t-out="payment.partner_id.name">ABC Suppliers</span></td>
+                        <td class="text-start"><span t-out="payment.date" t-options='{"widget": "date"}'>2023-08-15</span></td>
+                        <td class="text-start"><span t-out="payment.ref">Demo Ref</span></td>
+                        <td class="text-start"><span t-out="payment.partner_bank_id.acc_number">3956012345678</span></td>
+                        <td class="text-end"><span t-out="payment.amount" t-options="{'widget': 'monetary', 'display_currency': payment.currency_id}">$1000.0</span></td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold;">TOTAL</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-end" style="font-weight: bold;"><span t-out="o.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}">$1000.0</span></td>
+                    </tr>
+                </table>
+                <div class="oe_structure"></div>
+            </div>
+        </t>
+    </t>
+</template>
+</odoo>

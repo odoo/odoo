@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_termination_holidays_n">
+    <t t-call="web.html_container">
+        <div class="oe_structure"></div>
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="oe_structure"></div>
+                    <h3>Certificate of Holidays</h3>
+
+                    <h4 class="text-center">
+                        <span>Holiday exercise </span><span t-out="o.date_to.year">2022</span>
+                        <span>/Holiday year </span><span t-out="o.date_to.year + 1">2023</span>
+                    </h4>
+
+                    <div class="oe_structure"></div>
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td><strong>Company Information</strong></td>
+                            <td>
+                                <span t-field="o.company_id.name">Odoo</span><br/>
+                                <span t-field="o.company_id.street">Rue du Paradis</span><br/>
+                                <span t-if="o.company_id.street2" t-field="o.company_id.street2">Boulevard de Waterloo</span><br/>
+                                <span t-field="o.company_id.city">Eghezee</span>
+                                <span t-field="o.company_id.state_id">Limburg</span>
+                                <span t-field="o.company_id.zip">6870</span><br/>
+                                <span t-field="o.company_id.country_id">Belgium</span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="oe_structure"></div>
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td><strong>Name</strong></td>
+                            <td><span t-field="o.employee_id">Marc Demo</span></td>
+                            <td><strong>Job Position</strong></td>
+                            <td><span t-field="o.employee_id.job_id">SDE</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Address</strong></td>
+                            <td colspan="3">
+                                <span class="w-100 d-block">
+                                    <span t-out="o.employee_id.private_street">Rue du Paradis</span><br/>
+                                    <span t-if="o.employee_id.private_street2" t-out="o.employee_id.private_street2">Boulevard de Waterloo</span><br/>
+                                    <span t-out="o.employee_id.private_zip">34567</span> <span t-out="o.employee_id.private_city">Eghezee</span><br/>
+                                    <span t-out="o.employee_id.private_country_id.name">Belgium</span><br/>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Identification No</strong></td>
+                            <td><span t-field="o.employee_id.identification_id">567877</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reference</strong></td>
+                            <td><span t-field="o.number">0987</span></td>
+                        </tr>
+                    </table>
+
+                    <div class="oe_structure"></div>
+                    <t t-set="total_annual" t-value="0" />
+                    <t t-set="total" t-value="0" />
+                    <div class="oe_structure"></div>
+                    <h6>
+                        <t t-set="period_from" t-value="o.employee_id.first_contract_in_company if not o.employee_id.end_notice_period else max(o.employee_id.first_contract_in_company, o.employee_id.end_notice_period.replace(month=1, day=1))"/>
+                        <t t-set="period_to" t-value="o.employee_id.end_notice_period"/>
+                        <span>Remuneration for the period from </span><span t-out="period_from">20-03-2000</span>
+                        <span>to </span><span t-out="period_to">21-04-2001</span> <span>included:</span>
+                    </h6>
+
+                    <div class="oe_structure"></div>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>Gross reference remuneration</td>
+                                <td><span t-esc="o.input_line_ids.filtered(lambda line: line.code == 'GROSS_REF').amount"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>100000</span></td>
+                            </tr>
+                            <tr>
+                                <td>Time off already taken</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>Working Schedule</td>
+                                <td><span t-out="round(o.contract_id.resource_calendar_id.hours_per_week, 2)">20</span> / <span t-out="round(o.contract_id.resource_calendar_id.full_time_required_hours, 2)">5 Hours/Week</span></td>
+                            </tr>
+                            <tr>
+                                <td>Additional time off (european, ...)</td>
+                                <td><span t-out="o.input_line_ids.filtered(lambda line: line.code == 'EUROPEAN_DAYS').amount">15</span>></td>
+                            </tr>
+                            <tr>
+                                <td>Additional amount to deduct</td>
+                                <td><span t-out="o.input_line_ids.filtered(lambda line: line.code == 'EUROPEAN').amount">2334</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="oe_structure"></div>
+                    <h6>Holiday pay details:</h6>
+
+                    <div class="oe_structure"></div>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td colspan="2"><strong>Pay simple</strong></td>
+                            </tr>
+                            <tr>
+                                <td>7,67% of gross reference remuneration</td>
+                                <td><span t-out="o.line_ids.filtered(lambda line: line.code == 'PAY_SIMPLE').total"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>34565</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><strong>Pay holiday double</strong></td>
+                            </tr>
+                            <tr>
+                                <td>6,8% of gross reference remuneration</td>
+                                <td><span t-out="o.line_ids.filtered(lambda line: line.code == 'PAY DOUBLE').total"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>9876</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><strong>Pay holiday double complementary</strong></td>
+                            </tr>
+                            <tr>
+                                <td>0,87% of gross reference remuneration</td>
+                                <td><span t-out="o.line_ids.filtered(lambda line: line.code == 'PAY DOUBLE COMPLEMENTARY').total"
+                                    t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>987</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>TOTAL</strong></td>
+                                <td><span t-out="o.line_ids.filtered(lambda line: line.code == 'BASIC').total"
+                                    t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>87656</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="oe_structure"></div>
+                    <p class="text-end"><strong>Established on <span t-field="o.compute_date">20-03-2000</span></strong></p>
+                    <p class="text-end"><strong>Authorized signature</strong></p>
+                </div>
+                <div class="page">
+                <div class="oe_structure"></div>
+                <p style="page-break-after:always;"/>
+
+                    <span>
+                        To the attention of the worker
+                        <ul>
+                            <li><span>You must return this certificate to your next employer, or failing that, to your allowance payment agency.
+                            Social security contributions on holiday pay have already been retained.</span></li>
+                            <li><span>The amount covered by this certificate pre-emptively compensates the vacation days you will take with
+                                your next employer in </span><span t-out="o.date_to.year + 1">1999</span>.
+                            <span>Your future holidays won't be paid. So you are advised to keep this amount
+                            until you take these days off.</span></li>
+                        </ul>
+                    </span>
+                    <span>
+                        To the attention of the next employer
+                        <ul>
+                            <li><span>Social contributions on the various vacation pay have already been paid.</span></li>
+                        </ul>
+                    </span>
+                    <div class="oe_structure"></div>
+                </div>
+
+            </t>
+        </t>
+    </t>
+</template>
+
+<template id="report_termination_holidays_n1">
+    <t t-call="web.html_container">
+        <div class="oe_structure"></div>
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="oe_structure"></div>
+                    <h3>Certificate of Holidays</h3>
+
+                    <h4 class="text-center">
+                        <span>Holiday exercise </span><span t-out="o.date_to.year - 1">2022</span>
+                        <span>/Holiday year </span><span t-out="o.date_to.year">2023</span>
+                    </h4>
+
+                    <div class="oe_structure"></div>
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td><strong>Company Information</strong></td>
+                            <td>
+                                <span t-field="o.company_id.name">Odoo</span><br/>
+                                <span t-field="o.company_id.street">Rue du Paradis</span><br/>
+                                <span t-if="o.company_id.street2" t-field="o.company_id.street2">Boulevard de Waterloo</span><br/>
+                                <span t-field="o.company_id.city">Eghezee</span>
+                                <span t-field="o.company_id.state_id">Limburg</span>
+                                <span t-field="o.company_id.zip">6870</span><br/>
+                                <span t-field="o.company_id.country_id">Belgium</span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="oe_structure"></div>
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td><strong>Name</strong></td>
+                            <td><span t-field="o.employee_id">Marc Demo</span></td>
+                            <td><strong>Job Position</strong></td>
+                            <td><span t-field="o.employee_id.job_id">SDE</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Address</strong></td>
+                            <td colspan="3">
+                                <span class="w-100 d-block">
+                                    <span t-out="o.employee_id.private_street">Boulevard de Waterloo</span><br/>
+                                    <span t-if="o.employee_id.private_street2" t-out="o.employee_id.private_street2">Rue du Paradis</span><br/>
+                                    <span t-out="o.employee_id.private_zip">6870</span> <span t-out="o.employee_id.private_city">Eghezee</span><br/>
+                                    <span t-out="o.employee_id.private_country_id.name">Belgium</span><br/>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Identification No</strong></td>
+                            <td><span t-field="o.employee_id.identification_id">567877</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reference</strong></td>
+                            <td><span t-field="o.number">0987</span></td>
+                        </tr>
+                    </table>
+
+                    <div class="oe_structure"></div>
+                    <t t-set="total_annual" t-value="0" />
+                    <t t-set="total" t-value="0" />
+                    <div class="oe_structure"></div>
+                    <h6>
+                        <t t-set="period_from" t-value="o.employee_id.first_contract_in_company if not o.employee_id.end_notice_period else max(o.employee_id.first_contract_in_company, (o.employee_id.end_notice_period + relativedelta(years=-1)).replace(month=1, day=1))"/>
+                        <t t-set="period_to" t-value="o.employee_id.first_contract_in_company if not o.employee_id.end_notice_period else max(o.employee_id.first_contract_in_company, (o.employee_id.end_notice_period + relativedelta(years=-1)).replace(month=12, day=31))"/>
+                        <span>Remuneration for the period from </span><span t-out="period_from">20-03-2000</span>
+                        <span>to </span><span t-out="period_to">21-04-2001</span><span> included:</span>
+                    </h6>
+
+                    <div class="oe_structure"></div>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>Gross reference remuneration</td>
+                                <td><span t-out="o.input_line_ids.filtered(lambda line: line.code == 'GROSS_REF').amount"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>100000</span></td>
+                            </tr>
+                            <tr>
+                                <td>Time off already taken</td>
+                                <td><span t-out="o.input_line_ids.filtered(lambda line: line.code == 'TIME_OFF_TAKEN').amount">0</span></td>
+                            </tr>
+                            <tr>
+                                <td>Right to time off</td>
+                                <td><span t-out="o.input_line_ids.filtered(lambda line: line.code == 'ALLOCATION').amount">789</span></td>
+                            </tr>
+                            <tr>
+                                <td>Working Schedule</td>
+                                <td><span t-out="round(o.contract_id.resource_calendar_id.hours_per_week, 2)">20</span> / <span t-out="round(o.contract_id.resource_calendar_id.full_time_required_hours, 2)">5 Hours/Week</span></td>
+                            </tr>
+                            <tr>
+                                <td>Additional time off (european, ...)</td>
+                                <td><span t-out="o.input_line_ids.filtered(lambda line: line.code == 'EUROPEAN_DAYS').amount">15</span></td>
+                            </tr>
+                            <tr>
+                                <td>Additional amount to deduct</td>
+                                <td><span t-out="o.input_line_ids.filtered(lambda line: line.code == 'EUROPEAN').amount">2334</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="oe_structure"></div>
+                    <h6>Holiday pay details:</h6>
+
+                    <div class="oe_structure"></div>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td colspan="2"><strong>Pay simple</strong></td>
+                            </tr>
+                            <tr>
+                                <td>7,67% of gross reference remuneration * (time off not taken) / (right to time off)</td>
+                                <td><span t-out="o.line_ids.filtered(lambda line: line.code == 'PAY_SIMPLE').total"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>34565</span></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><strong>Pay holiday double</strong> only if the majority of vacation days
+                                have not yet been taken</td>
+                            </tr>
+                            <tr>
+                                <td>6,8% of gross reference remuneration - additional time off amount</td>
+                                <td><span t-out="o.line_ids.filtered(lambda line: line.code == 'PAY DOUBLE').total"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>9876</span></td>
+                            </tr>
+                            <tr>
+                                <td>0,87% of gross reference remuneration</td>
+                                <td><span t-out="o.line_ids.filtered(lambda line: line.code == 'PAY DOUBLE COMPLEMENTARY').total"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>3456</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>TOTAL</strong></td>
+                                <td><span t-out="o.line_ids.filtered(lambda line: line.code == 'BASIC').total"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>34893</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="oe_structure"></div>
+                    <p class="text-end"><strong>Established on <span t-field="o.compute_date">20-03-2000</span></strong></p>
+                    <p class="text-end"><strong>Authorized signature</strong></p>
+                </div>
+                <div class="page">
+                <div class="oe_structure"></div>
+                <p style="page-break-after:always;"/>
+                    <span>
+                        To the attention of the worker
+                        <ul>
+                            <li><span>You must return this certificate to your next employer, or failing that, to your allowance payment agency.
+                            Social security contributions on holiday pay have already been retained.</span></li>
+                            <li><span>The amount covered by this certificate pre-emptively compensates the vacation days you will take with your next
+                            employer in </span><span t-out="o.date_to.year + 1">1999</span>.
+                            <span>Your future holidays won't be paid. So you are advised to keep this amount
+                            until you take these days off.</span></li>
+                        </ul>
+                    </span>
+                    <span>
+                        To the attention of the next employer
+                        <ul>
+                            <li><span>Social contributions on the various vacation pay have already been paid.</span></li>
+                        </ul>
+                    </span>
+                    <div class="oe_structure"></div>
+                </div>
+
+            </t>
+        </t>
+    </t>
+</template>
+</odoo>

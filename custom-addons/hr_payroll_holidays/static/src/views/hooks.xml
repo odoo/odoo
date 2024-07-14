@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<templates>
+    <t t-name="hr_payroll_holidays.TimeOffToDeferWarning" owl="1">
+        <div class="alert alert-warning text-center mb-0" role="alert">
+            <p class="mb-0">
+                <t t-esc="timeOffButtonText.before"/>
+                <button class="btn btn-link p-0 o_open_defer_time_off" role="button" t-on-click="onTimeOffToDefer" t-esc="timeOffButtonText.inside"/>
+                <t t-esc="timeOffButtonText.after"/>
+            </p>
+        </div>
+    </t>
+</templates>

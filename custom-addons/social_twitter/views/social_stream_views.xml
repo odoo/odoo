@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="social_stream_view_form" model="ir.ui.view">
+        <field name="name">social.stream.view.form.inherit.twitter</field>
+        <field name="model">social.stream</field>
+        <field name="inherit_id" ref="social.social_stream_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stream_type_id']" position="after">
+                <field name="twitter_followed_account_search"
+                    invisible="stream_type_type not in ('twitter_follow', 'twitter_likes') or not account_id or id"
+                    required="not id and stream_type_type in ('twitter_follow', 'twitter_likes') and not twitter_followed_account_id"
+                    widget="twitter_users_autocomplete" />
+                <field name="twitter_followed_account_id" invisible="1" />
+                <field name="twitter_searched_keyword" placeholder="e.g. #odoo"
+                    invisible="stream_type_type != 'twitter_keyword' or not account_id"
+                    readonly="id"
+                    required="stream_type_type == 'twitter_keyword'" />
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>

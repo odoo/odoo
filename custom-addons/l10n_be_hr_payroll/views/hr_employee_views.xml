@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_form__l10n_be_view_for" model="ir.ui.view">
+        <field name="name">hr.employee.inherit.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='marital']" position="after">
+                <field name="spouse_fiscal_status" invisible="marital not in ['married', 'cohabitant'] or company_country_code != 'BE'" required="marital in ['married', 'cohabitant']" help="if spouse has professionnel income or not"/>
+                <p colspan="2" class="p-0 m-0 " invisible="marital not in ['married', 'cohabitant'] or company_country_code != 'BE'">
+                    <a class="btn btn-link p-0 mb-1" data-bs-toggle="collapse" href="#spouse_status_explanation" role="button" aria-expanded="false" aria-controls="#spouse_status_explanation">Toggle Explanation</a>
+                </p>
+                <div class="collapse" id="spouse_status_explanation" colspan="2" invisible="marital not in ['married', 'cohabitant'] or company_country_code != 'BE'">
+                  <div class="card card-body">
+                    <field name="spouse_fiscal_status_explanation" nolabel="1" class="text-muted" widget="text"/>
+                  </div>
+                </div>
+                <field name="disabled_spouse_bool" invisible="marital not in ['married', 'cohabitant'] or company_country_code != 'BE'"/>
+            </xpath>
+            <xpath expr="//field[@name='birthday']" position="after">
+                <field name="disabled" invisible="company_country_code != 'BE'"/>
+            </xpath>
+            <xpath expr="//field[@name='children']" position="after">
+                <field name="l10n_be_dependent_children_attachment" invisible="company_country_code != 'BE' or children &lt;= 0"/>
+                <field name="disabled_children_bool"  invisible="company_country_code != 'BE' or children &lt;= 0"/>
+                <field name="disabled_children_number" invisible="not disabled_children_bool or children &lt;= 0" help="Number of dependent children declared as disabled"/>
+                <field name="children" invisible="1"/>
+            </xpath>
+            <field name="children" position="after">
+                <field name="other_dependent_people" groups="hr.group_hr_user" invisible="company_country_code != 'BE'"/>
+                <field name="other_senior_dependent" invisible="not other_dependent_people"/>
+                <field name="other_disabled_senior_dependent" invisible="not other_dependent_people or other_senior_dependent &lt;= 0"/>
+                <field name="other_juniors_dependent" invisible="not other_dependent_people"/>
+                <field name="other_disabled_juniors_dependent" invisible="not other_dependent_people or other_juniors_dependent &lt;= 0"/>
+            </field>
+            <xpath expr="//group[@name='departure']" position="attributes">
+                <attribute name="invisible">active and not departure_reason_id</attribute>
+            </xpath>
+            <xpath expr="//field[@name='departure_reason_id']" position="after">
+                <field name="start_notice_period" groups="base.group_no_one" invisible="company_country_code != 'BE'"/>
+                <field name="end_notice_period" groups="base.group_no_one" invisible="company_country_code != 'BE'"/>
+            </xpath>
+            <xpath expr="//div[@name='div_km_home_work']" position="after">
+                <field name="private_car_plate" position="move" />
+            </xpath>
+            <field name="identification_id" position="after">
+                <field name="niss" invisible="company_country_code != 'BE'"/>
+            </field>
+            <field name="study_school" position="after">
+                <field name="l10n_be_scale_seniority" invisible="company_country_code != 'BE'"/>
+            </field>
+            <group name="application_group" position="before">
+                <notebook groups="hr_payroll.group_hr_payroll_user" invisible="company_country_code != 'BE'">
+                    <page name="Attestation (N-1)">
+                        <strong class="o_horizontal_separator o_row" colspan="2" id="previous_employer_title" invisible="company_country_code != 'BE'">
+                            Holiday Attest <span style="width: 30px !important;"><field name="first_contract_year_n1"/></span> - Simple Holiday Pay from previous employer to recover in <span style="width: 30px !important;"><field name="first_contract_year_n"/></span>
+                        </strong>
+                        <group invisible="company_country_code != 'BE'" groups="hr_payroll.group_hr_payroll_user">
+                            <label for="l10n_be_holiday_pay_to_recover_n1" string="Amount to recover"/>
+                            <div class="o_row" style="width: 20% !important;">
+                                <field name="l10n_be_holiday_pay_to_recover_n1" nolabel="1"/>
+                                <span>€</span>
+                            </div>
+                            <label for="l10n_be_holiday_pay_number_of_days_n1" string="Number of days"/>
+                            <div class="o_row" style="width: 20% !important;">
+                                <field name="l10n_be_holiday_pay_number_of_days_n1" nolabel="1"/>
+                                <span>days</span>
+                            </div>
+                            <label for="l10n_be_holiday_pay_recovered_n1" string="Recovered Amount"/>
+                            <div class="o_row" style="width: 20% !important;">
+                                <field name="l10n_be_holiday_pay_recovered_n1" nolabel="1"/>
+                                <span>€</span>
+                            </div>
+                        </group>
+                        <field name="first_contract_year" invisible="1"/>
+                        <field name="double_pay_line_ids" invisible="1"/>
+                        <group id="recovery_pay_lines_n1" class="mt-3" colspan="2" invisible="company_country_code != 'BE'">
+                            <strong class="o_horizontal_separator o_row" colspan="2">
+                                    Holiday Attest <span style="width: 30px !important;"><field name="first_contract_year_n1"/></span> - Previous occupation for Double Holiday Pay Recovery in <span style="width: 30px !important;"><field name="first_contract_year_n"/></span>
+                            </strong>
+                            <field name="double_pay_line_n1_ids"
+                                   widget="double_pay"
+                                   context="{'default_year':first_contract_year_n1, 'default_employee_id': id}"
+                                   domain="[('year', '=', first_contract_year_n1)]"
+                                   colspan="2" nolabel="1" force_save="1">
+                                <tree editable="bottom">
+                                    <field name="months_count"/>
+                                    <field name="amount"/>
+                                    <field name="occupation_rate"/>
+                                    <field name="employee_id" column_invisible="True"/>
+                                    <field name="year" column_invisible="True"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+
+                    <page name="Attestation (N)">
+                        <strong class="o_horizontal_separator o_row" colspan="2" id="previous_employer_title" invisible="company_country_code != 'BE'">
+                            Holiday Attest <span style="width: 30px !important;"><field name="first_contract_year_n"/></span> - Simple Holiday Pay from previous employer to recover in <span style="width: 30px !important;"><field name="first_contract_year_n_plus_1"/></span>
+                        </strong>
+                        <group invisible="company_country_code != 'BE'">
+                            <label for="l10n_be_holiday_pay_to_recover_n" string="Amount to recover"/>
+                            <div class="o_row" style="width: 20% !important;" colspan="1">
+                                <field name="l10n_be_holiday_pay_to_recover_n" colspan="1" nolabel="1"/>
+                                <span>€</span>
+                            </div>
+                            <label for="l10n_be_holiday_pay_number_of_days_n" string="Number of days"/>
+                            <div class="o_row" style="width: 20% !important;">
+                                <field name="l10n_be_holiday_pay_number_of_days_n" nolabel="1"/>
+                                <span>days</span>
+                            </div>
+                            <label for="l10n_be_holiday_pay_recovered_n" string="Recovered Amount"/>
+                            <div class="o_row" style="width: 20% !important;">
+                                <field name="l10n_be_holiday_pay_recovered_n" nolabel="1"/>
+                                <span>€</span>
+                            </div>
+                        </group>
+                        <group id="recovery_pay_lines_n" class="mt-3" colspan="2" invisible="company_country_code != 'BE'">
+                            <strong class="o_horizontal_separator o_row" colspan="2">
+                                Holiday Attest <span style="width: 30px !important;"><field name="first_contract_year_n"/></span> - Previous occupation for Double Holiday Pay Recovery in <span style="width: 30px !important;"><field name="first_contract_year_n_plus_1"/></span>
+                            </strong>
+                            <field name="double_pay_line_n_ids"
+                                   widget="double_pay"
+                                   force_save="1"
+                                   context="{'default_year':first_contract_year, 'default_employee_id': id}"
+                                   domain="[('year', '=', first_contract_year)]"
+                                   colspan="2" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="months_count"/>
+                                    <field name="amount"/>
+                                    <field name="occupation_rate"/>
+                                    <field name="employee_id" column_invisible="True"/>
+                                    <field name="year" column_invisible="True"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                </notebook>
+            </group>
+        </field>
+    </record>
+</odoo>

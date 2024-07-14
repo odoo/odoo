@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.inherit.onsip</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="voip.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='pbx_ip']" position="replace">
+                <label for="pbx_ip" class="col-lg-4 o_light_label" string="OnSIP Domain"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

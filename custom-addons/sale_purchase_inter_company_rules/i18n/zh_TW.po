@@ -1,0 +1,258 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_purchase_inter_company_rules
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model.fields,field_description:sale_purchase_inter_company_rules.field_purchase_order__auto_generated
+msgid "Auto Generated Purchase Order"
+msgstr "自動產生的採購訂單"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model.fields,field_description:sale_purchase_inter_company_rules.field_sale_order__auto_generated
+msgid "Auto Generated Sales Order"
+msgstr "自動產生的銷售訂單"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model.fields,field_description:sale_purchase_inter_company_rules.field_res_company__auto_validation
+#: model:ir.model.fields,field_description:sale_purchase_inter_company_rules.field_res_config_settings__auto_validation
+msgid "Automatic Validation"
+msgstr "自動驗證"
+
+#. module: sale_purchase_inter_company_rules
+#. odoo-python
+#: code:addons/sale_purchase_inter_company_rules/models/purchase_order.py:0
+#: code:addons/sale_purchase_inter_company_rules/models/sale_order.py:0
+#, python-format
+msgid "Automatically generated from %(origin)s of company %(company)s."
+msgstr "據 %(company)s 公司的「%(origin)s」自動產生"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model,name:sale_purchase_inter_company_rules.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model,name:sale_purchase_inter_company_rules.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
+
+#. module: sale_purchase_inter_company_rules
+#. odoo-python
+#: code:addons/sale_purchase_inter_company_rules/models/purchase_order.py:0
+#: code:addons/sale_purchase_inter_company_rules/models/sale_order.py:0
+#, python-format
+msgid ""
+"Configure correct warehouse for company(%s) from Menu: "
+"Settings/Users/Companies"
+msgstr "請使用選單：設定 &gt; 使用者 &gt; 公司，為公司（%s）設定正確的倉庫。"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model.fields,field_description:sale_purchase_inter_company_rules.field_res_company__copy_lots_delivery
+#: model:ir.model.fields,field_description:sale_purchase_inter_company_rules.field_res_config_settings__copy_lots_delivery
+msgid "Copy Lots on Delivery Validation"
+msgstr "驗證交貨時複製批次"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model.fields,help:sale_purchase_inter_company_rules.field_res_company__warehouse_id
+#: model:ir.model.fields,help:sale_purchase_inter_company_rules.field_res_config_settings__warehouse_id
+msgid ""
+"Default value to set on Purchase(Sales) Orders that will be created based on"
+" Sale(Purchase) Orders made to this company"
+msgstr "若採購 / 銷售訂單是根據向該公司發出的銷售 / 採購訂單而建立，在所建立訂單中設定的預設值"
+
+#. module: sale_purchase_inter_company_rules
+#. odoo-python
+#: code:addons/sale_purchase_inter_company_rules/models/res_company.py:0
+#, python-format
+msgid ""
+"Generate a %(validation)s %(generated_object)s using warehouse %(warehouse)s"
+" when a company confirms a %(event_type)s for %(company)s."
+msgstr ""
+"當公司為%(company)s 確認 %(event_type)s 時,使用倉庫 %(warehouse)s 生成 %(validation)s "
+"%(generated_object)s。"
+
+#. module: sale_purchase_inter_company_rules
+#. odoo-python
+#: code:addons/sale_purchase_inter_company_rules/models/res_company.py:0
+#, python-format
+msgid ""
+"Generate a %(validation)s %(generated_object)s when a company confirms a "
+"%(event_type)s for %(company)s."
+msgstr ""
+"當公司確認 %(event_type)s為%(company)s 時,生成 %(validation)s %(generated_object)s。"
+
+#. module: sale_purchase_inter_company_rules
+#. odoo-python
+#: code:addons/sale_purchase_inter_company_rules/models/purchase_order.py:0
+#, python-format
+msgid ""
+"Inter company user of company %(name)s doesn't have enough access rights"
+msgstr "公司 %(name)s 的跨公司用戶，沒有足夠存取權限"
+
+#. module: sale_purchase_inter_company_rules
+#. odoo-python
+#: code:addons/sale_purchase_inter_company_rules/models/sale_order.py:0
+#, python-format
+msgid "Inter company user of company %s doesn't have enough access rights"
+msgstr "公司 %s 的跨公司用戶，沒有足夠存取權限"
+
+#. module: sale_purchase_inter_company_rules
+#. odoo-python
+#: code:addons/sale_purchase_inter_company_rules/models/purchase_order.py:0
+#, python-format
+msgid "Provide at least one user for inter company relation for %(name)s"
+msgstr "請為 %(name)s 的跨公司關係，提供至少一名用戶"
+
+#. module: sale_purchase_inter_company_rules
+#. odoo-python
+#: code:addons/sale_purchase_inter_company_rules/models/sale_order.py:0
+#, python-format
+msgid "Provide one user for intercompany relation for %(name)s "
+msgstr "請為 %(name)s 的跨公司關係，提供一名用戶"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model,name:sale_purchase_inter_company_rules.model_purchase_order
+msgid "Purchase Order"
+msgstr "採購訂單"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model.fields,field_description:sale_purchase_inter_company_rules.field_res_company__rule_type
+msgid "Rule"
+msgstr "規則"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model,name:sale_purchase_inter_company_rules.model_sale_order
+msgid "Sales Order"
+msgstr "銷售訂單"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model,name:sale_purchase_inter_company_rules.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "銷售訂單明細"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model.fields,help:sale_purchase_inter_company_rules.field_res_company__rule_type
+msgid "Select the type to setup inter company rules in selected company."
+msgstr "選擇在所選公司中設置公司間規則的類型 。"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model.fields,field_description:sale_purchase_inter_company_rules.field_sale_order__auto_purchase_order_id
+msgid "Source Purchase Order"
+msgstr "來源採購訂單"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model.fields,field_description:sale_purchase_inter_company_rules.field_purchase_order__auto_sale_order_id
+msgid "Source Sales Order"
+msgstr "來源銷售訂單"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model.fields.selection,name:sale_purchase_inter_company_rules.selection__res_company__rule_type__purchase
+msgid "Synchronize Purchase Order"
+msgstr "同步採購訂單"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model.fields.selection,name:sale_purchase_inter_company_rules.selection__res_company__rule_type__sale
+msgid "Synchronize Sales Order"
+msgstr "同步銷售訂單"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model.fields.selection,name:sale_purchase_inter_company_rules.selection__res_company__rule_type__sale_purchase
+msgid "Synchronize Sales and Purchase Order"
+msgstr "同步銷售訂單及採購訂單"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model,name:sale_purchase_inter_company_rules.model_stock_picking
+msgid "Transfer"
+msgstr "轉移"
+
+#. module: sale_purchase_inter_company_rules
+#: model_terms:ir.ui.view,arch_db:sale_purchase_inter_company_rules.res_config_settings_view_form
+msgid "Use Warehouse"
+msgstr "使用倉庫"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model.fields,field_description:sale_purchase_inter_company_rules.field_res_company__warehouse_id
+msgid "Warehouse"
+msgstr "倉庫"
+
+#. module: sale_purchase_inter_company_rules
+#: model:ir.model.fields,field_description:sale_purchase_inter_company_rules.field_res_config_settings__warehouse_id
+msgid "Warehouse For Purchase Orders"
+msgstr "採購訂單使用倉庫"
+
+#. module: sale_purchase_inter_company_rules
+#. odoo-python
+#: code:addons/sale_purchase_inter_company_rules/models/purchase_order.py:0
+#, python-format
+msgid ""
+"You cannot create SO from PO because sale price list currency is different than purchase price list currency.\n"
+"The currency of the SO is obtained from the pricelist of the company partner.\n"
+"\n"
+"(SO currency: %(so_currency)s, Pricelist: %(pricelist)s, Partner: %(partner)s (ID: %(id)s))"
+msgstr ""
+"無法從採購訂單建立銷售訂單，因為銷售價目表的貨幣，與採購價目表的貨幣不同。\n"
+"銷售訂單貨幣是按照公司合作夥伴的價目表而設定的。\n"
+"\n"
+"（銷售訂單貨幣：%(so_currency)s，價目表：%(pricelist)s，合作夥伴：%(partner)s [識別碼: %(id)s] ）"
+
+#. module: sale_purchase_inter_company_rules
+#. odoo-python
+#: code:addons/sale_purchase_inter_company_rules/models/res_company.py:0
+#, python-format
+msgid "draft"
+msgstr "草稿"
+
+#. module: sale_purchase_inter_company_rules
+#. odoo-python
+#: code:addons/sale_purchase_inter_company_rules/models/res_company.py:0
+#: code:addons/sale_purchase_inter_company_rules/models/res_company.py:0
+#, python-format
+msgid "purchase order"
+msgstr "採購訂單"
+
+#. module: sale_purchase_inter_company_rules
+#. odoo-python
+#: code:addons/sale_purchase_inter_company_rules/models/res_company.py:0
+#, python-format
+msgid "purchase/sales order"
+msgstr "採購 / 銷售訂單"
+
+#. module: sale_purchase_inter_company_rules
+#. odoo-python
+#: code:addons/sale_purchase_inter_company_rules/models/res_company.py:0
+#: code:addons/sale_purchase_inter_company_rules/models/res_company.py:0
+#, python-format
+msgid "sales order"
+msgstr "銷售訂單"
+
+#. module: sale_purchase_inter_company_rules
+#. odoo-python
+#: code:addons/sale_purchase_inter_company_rules/models/res_company.py:0
+#, python-format
+msgid "sales/purchase order"
+msgstr "銷售 / 採購訂單"
+
+#. module: sale_purchase_inter_company_rules
+#. odoo-python
+#: code:addons/sale_purchase_inter_company_rules/models/res_company.py:0
+#, python-format
+msgid "validated"
+msgstr "已驗證"

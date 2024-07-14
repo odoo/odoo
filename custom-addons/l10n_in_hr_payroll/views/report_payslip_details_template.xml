@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_payslipdetails">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <div class="page">
+                        <div class="container my-3">
+                            <div class="row">
+                                <div class="col-1">
+                                    <img t-if="o.company_id.logo" class="mt-1" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 40px;max-width: 60px;" alt="Logo"/>
+                                </div>
+                                <div class="col-11">
+                                    <strong><span t-field="o.company_id"/></strong>
+                                    <div>
+                                        <span class="ms-8" t-field="o.company_id.street"/>
+                                        <span t-field="o.company_id.street2"/>
+                                        <span t-field="o.company_id.city"/>
+                                        <span t-field="o.company_id.country_id"/>
+                                        <span t-field="o.company_id.zip"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="mt-0"/>
+                        </div>
+                        <div class="container">
+                            <h4 id="payslip_name" t-field="o.name"/>
+                            <div class="my-2">
+                                <strong> Pay Period: </strong> <t t-if="o.date_from &lt; o.contract_id.date_start">
+                                    <span t-field="o.contract_id.date_start"/>
+                                </t>
+                                <t t-else="">
+                                    <span t-field="o.date_from"/>
+                                </t>
+                                 -
+                                <t t-if="o.contract_id.date_end and o.date_to &gt; o.contract_id.date_end">
+                                    <span t-field="o.contract_id.date_end"/>
+                                </t>
+                                <t t-else="">
+                                    <span t-field="o.date_to"/>
+                                </t>
+                                <strong> Computed on: </strong><span t-field="o.compute_date"/>
+                            </div>
+                            <t t-set="is_invalid" t-value="o._is_invalid()"/>
+                            <t t-if="is_invalid">
+                                <strong id="invalid_warning"><t t-esc="is_invalid"/></strong>
+                            </t>
+                            <table name="employee-infos" id="employee_info_table_1" class="table table-sm table-bordered">
+                                <tr id="employee_info_line_1">
+                                    <td class="w-25"><strong>Employee Code</strong></td>
+                                    <td class="w-25"><strong>Employee</strong></td>
+                                    <td class="w-25"><strong>Designation</strong></td>
+                                    <td class="w-25"><strong>Joining Date</strong></td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25"><span t-field="o.employee_id.registration_number"/></td>
+                                    <td class="w-25"><span t-field="o.employee_id"/></td>
+                                    <td class="w-25"><span t-field="o.employee_id.job_title"/></td>
+                                    <td class="w-25"><span t-field="o.contract_id.date_start"/></td>
+                                </tr>
+                                <tr id="employee_info_line_2">
+                                    <td><strong>Email</strong></td>
+                                    <td><strong>Contract Type</strong></td>
+                                    <td><strong>Working Schedule</strong></td>
+                                    <td/>
+                                </tr>
+                                <tr>
+                                    <td><span t-field="o.employee_id.work_email"/></td>
+                                    <td><span t-field="o.contract_id.contract_type_id"/></td>
+                                    <td>
+                                        <t t-if="o.wage_type == 'monthly'">
+                                            <span t-out="o._get_l10n_in_company_working_time()"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-out="o._get_l10n_in_company_working_time(return_hours=True)"/>:hh
+                                        </t>
+                                    </td>
+                                    <td/>
+                                </tr>
+                                <tr id="employee_bank_info">
+                                    <td><strong>Bank Account</strong></td>
+                                    <td><strong>PAN</strong></td>
+                                    <td><strong>UAN</strong></td>
+                                    <td><strong>ESIC</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><span t-field="o.employee_id.bank_account_id.acc_number"/></td>
+                                    <td><span t-field="o.employee_id.l10n_in_pan"/></td>
+                                    <td><span t-field="o.employee_id.l10n_in_uan"/></td>
+                                    <td><span t-field="o.employee_id.l10n_in_esic_number"/></td>
+                                </tr>
+                            </table>
+                            <div class="row">
+                                <div class="col-3 border px-0" t-foreach="o._get_employee_timeoff_data()" t-as="timeoff_data">
+                                    <div class="mx-2 mt-2">
+                                        <strong><t t-out="timeoff_data[0]"/></strong>
+                                    </div>
+                                    <div class="border-top"/>
+                                    <div class="mx-2">
+                                        <strong>Total: </strong> <t t-out="timeoff_data[1].get('max_leaves')"/>
+                                        <t t-if="timeoff_data[1].get('request_unit') == 'hour'">Hours</t>
+                                        <t t-else="">Days</t>
+                                    </div>
+                                    <div class="mx-2">
+                                        <strong>Remaining:</strong> <t t-out="timeoff_data[1].get('remaining_leaves')"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table table-sm">
+                                <thead class="o_black_border">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>
+                                            <t t-if="o.wage_type == 'hourly'">
+                                                Number of Hours
+                                            </t>
+                                            <t t-else="">
+                                                Number of Days
+                                            </t>
+                                        </th>
+                                        <th class="text-end">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.worked_days_line_ids" t-as="worked_days">
+                                        <t t-set="line_style" t-value="'color:none;'"/>
+                                        <t t-if="worked_days == o.worked_days_line_ids[-1]">
+                                            <t t-set="line_style" t-value="'color:none; border-bottom: 1px solid black;'"/>
+                                        </t>
+                                        <t t-if="worked_days.code != 'OUT'">
+                                            <tr t-att-style="line_style">
+                                                <td>
+                                                    <span t-field="worked_days.name"/>
+                                                </td>
+                                                <td>
+                                                    <span t-if="o.wage_type == 'hourly'" t-field="worked_days.number_of_hours"/>
+                                                    <span t-else="" t-field="worked_days.number_of_days"/>
+                                                </td>
+                                                <td/>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <t t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip and line.total !=0 )" t-as="line">
+                                        <t t-set="line_style"/>
+                                        <t t-set="line_class"/>
+                                        <t t-if="line.code == 'NET'">
+                                            <t t-set="line_style" t-value="'color:#00A09D; border-bottom: 1px solid black;'"/>
+                                            <t t-set="line_class" t-value="'o_total fw-bold'"/>
+                                        </t>
+                                        <t t-if="(line.code == 'BASIC') or (line.code == 'GROSS')">
+                                            <t t-set="line_style" t-value="'color:#00A09D;'"/>
+                                            <t t-set="line_class" t-value="'o_subtotal o_border_bottom'"/>
+                                        </t>
+                                        <tr t-att-class="line_class" t-att-style="line_style" id="line_display">
+                                            <td><span t-field="line.name"/></td>
+                                            <td><span t-if="line.quantity > 1" t-esc="line.quantity"/></td>
+                                            <td class="text-end"><span t-esc="line.total"
+                                                t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'
+                                                t-att-style="'color:#875A7B;' if line.total &lt; 0 else ''"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <t t-if="o.net_wage &gt;= 0">
+                                <p t-if="o.net_wage &gt;= 0">To pay on <b><span t-field="o.employee_id.bank_account_id"/></b> of <i><span t-field="o.employee_id"/></i>: <span t-field="o.net_wage"/>
+                               Amount In Words Rs:<span t-out="o.currency_id.with_context(lang='en_US').amount_to_text(o.net_wage)"/></p>
+                            </t>
+                            <hr/>
+                            <p t-if="o.net_wage &lt; 0">The net amount will be recovered from the first positive remuneration established after this.</p>
+                            <div class="mt-2">This is a system generated payslip, hence the signature is not required.</div>
+                            <p class="text-center mt-2">Made by Odoo with ❤️</p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

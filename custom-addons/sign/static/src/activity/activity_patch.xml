@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="mail.Activity" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('o-mail-Activity-markDone')]" position="attributes">
+            <attribute name="t-if">activity.activity_category != "sign_request"</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('o-mail-Activity-markDone')]" position="after">
+            <span
+                t-if="activity.activity_category == 'sign_request'"
+                class="btn btn-link p-0 me-3"
+                t-att-data-chaining-type-activity="activity.chaining_type"
+                t-att-data-previous-activity-type-id="activity.activity_type_id[0]"
+                t-att-data-activity-id="activity.id"
+                t-on-click="onClickRequestSign"
+            >
+                <i class="fa fa-pencil-square-o"/> Request Signature
+            </span>
+        </xpath>
+    </t>
+
+</templates>

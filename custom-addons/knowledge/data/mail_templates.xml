@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+    <template id="knowledge_article_mail_invite">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: white; padding: 0; border-collapse:separate;">
+    <tr><td valign="top">
+        <div style="margin: 0px; padding: 0px; font-size: 13px;">
+            <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                <t t-if="record.name">
+                    <t t-out="user.name or ''"/> invited you to <t t-if="permission == 'write'">EDIT</t><t t-if="permission == 'read'">READ</t> the article <t t-out="record.name"/>.<br/>
+                </t>
+                <t t-else="">
+                    <t t-out="user.name or ''"/> invited you to access an article.<br/>
+                </t>
+                <div class="text-muted">
+                    <t t-if="message" t-out="message"/>
+                    <t t-else=""><br/></t>
+                </div>
+            </p>
+        </div>
+    </td></tr>
+</table>
+    </template>
+
+        <template id="knowledge_article_trash_notification">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: white; padding: 0; border-collapse:separate;">
+    <tr><td valign="top">
+        <div style="margin: 0px; padding: 0px; font-size: 13px;">
+            <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                <p>Dear <t t-out="recipient.name"/>,</p>
+                <t t-foreach="articles" t-as="article">
+                     <a t-att-href="article.article_url"><t t-out="article.name"/></a><t t-if="article_last">,</t>
+                </t>
+                <t t-if="child_articles">and the following child article(s) have</t><t t-elif="len(articles) > 1">have</t><t t-else="">has</t>
+                been sent to Trash.<br/><br/>
+                <ul t-if="child_articles">
+                    <li t-foreach="child_articles" t-as="article">
+                        <a t-att-href="article.article_url"><t t-out="article.name"/></a>
+                    </li>
+                </ul>
+            </p>
+        </div>
+    </td></tr>
+</table>
+    </template>
+
+</data>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_report_view_search" model="ir.ui.view">
+        <field name="name">hr.payroll.report.view.search</field>
+        <field name="model">hr.payroll.report</field>
+        <field name="inherit_id" ref="hr_payroll.payroll_report_view_search"/>
+        <field name="arch" type="xml">
+            <field name="employee_id" position="after">
+                <field name="struct_id" filter_domain="[('struct_id', 'ilike', self)]"/>
+            </field>
+        </field>
+    </record>
+</odoo>

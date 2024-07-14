@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="documents_project_sign_rule_sign_directly" model="documents.workflow.rule" forcecreate="0">
+            <field name="name">Sign</field>
+            <field name="sequence">5</field>
+            <field name="create_model">sign.template.direct</field>
+            <field name="condition_type">domain</field>
+            <field name="activity_option">True</field>
+            <field name="activity_type_id" ref="documents.mail_documents_activity_data_tv"/>
+            <field name="domain">[["mimetype","ilike","pdf"]]</field>
+            <field name="domain_folder_id" ref="documents_project.documents_project_folder"/>
+        </record>
+    </data>
+</odoo>

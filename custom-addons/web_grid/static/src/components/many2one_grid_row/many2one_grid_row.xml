@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web_grid.Many2OneGridRow">
+        <div t-att-name="props.name" t-att-class="props.classNames" t-att-style="props.style">
+            <t t-if="!props.canOpen and resId">
+                <span>
+                    <span t-esc="displayName" />
+                    <t t-foreach="extraLines" t-as="extraLine" t-key="extraLine_index">
+                        <br />
+                        <span t-esc="extraLine" />
+                    </t>
+                </span>
+            </t>
+            <t t-elif="resId">
+                <a
+                    t-attf-class="o_form_uri"
+                    t-att-href="`#id=${resId}&amp;model=${relation}`"
+                    t-on-click.prevent="onClick"
+                >
+                    <span t-esc="displayName" />
+                    <t t-foreach="extraLines" t-as="extraLine" t-key="extraLine_index">
+                        <br />
+                        <span t-esc="extraLine" />
+                    </t>
+                </a>
+            </t>
+            <span t-else="" class="o_grid_no_data text-300">None</span>
+        </div>
+    </t>
+
+</templates>

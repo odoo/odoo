@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="bacs_paperformat" model="report.paperformat">
+            <field name="name">A4 for BACS DDI</field>
+            <field name="default" eval="False" />
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">25</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">20</field>
+            <field name="dpi">90</field>
+            <field name="print_page_width">210</field>
+            <field name="print_page_height">297</field>
+        </record>
+
+        <record id="ddi_form_report_main" model="ir.actions.report">
+            <field name="name">Direct Debit Instruction form</field>
+            <field name="model">bacs.ddi</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account_bacs.ddi_form_report</field>
+            <field name="report_file">account_bacs.ddi_form_report</field>
+            <field name="attachment_use">True</field>
+            <field name="binding_model_id" ref="model_bacs_ddi"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="account_bacs.bacs_paperformat"/>
+        </record>
+
+        <template id="account_bacs.ddi_form_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="account_bacs.ddi_form" t-lang="o.partner_id.lang"/>
+                </t>
+            </t>
+        </template>
+
+        <template id="account_bacs.ddi_form">
+            <div class="header">
+                <img src="/account_bacs/static/src/img/dd_logo.png" class="bacs-logo float-end" />
+            </div>
+            <t t-call="web.basic_layout">
+                <div class="row font-regular">
+                    <div class="w-50">
+                        <div class="company-logo-container">
+                            <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" class="company-logo"/>
+                        </div>
+                        <div class=" mt-5">Please fill in the whole form using a ball point pen and send it to:</div>
+                        <div class="border border-dark address-box text-standard mb-2 ps-2">
+                            <p><t t-out="o.company_id.name"/></p>
+                            <div t-field="o.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
+                        </div>
+                        <div>Name(s) of Account Holder(s)</div>
+                        <div class="border border-dark mb-1 field-min-height"></div>
+                        <div class="border border-dark mb-1 field-min-height"></div>
+                        <div>Bank/Building Society account number</div>
+                        <div class="border border-dark mb-2 py-2 ps-2">
+                            <t t-out="o.partner_bank_id.sanitized_acc_number[14:]"/>
+                        </div>
+                        <div>Branch Sort Code</div>
+                        <div class="border border-dark mb-2 py-2 ps-2">
+                            <t t-out="o.partner_bank_id.sanitized_acc_number[8:14]"/>
+                        </div>
+                        <div>Name and full postal address of your Bank or Building Society</div>
+                        <div class="border border-dark mb-1 px-1 pt-1 field-min-height">
+                            <span class="float-start font-small">To:</span>
+                            <span class="float-end font-small">Bank/building society</span>
+                        </div>
+                        <div class="border border-dark mb-1 px-1 pt-1 field-min-height">
+                            <span class="font-small">Address</span>
+                        </div>
+                        <div class="border border-dark mb-1 field-min-height"></div>
+                        <div class="border border-dark mb-1 pt-2 field-min-height">
+                            <span class="float-end font-small postcode">Postcode</span>
+                        </div>
+                    </div>
+                    <div class="w-50 ms-2">
+                        <h2 class="document-title">Instruction to your Bank or Building Society to pay by Direct Debit</h2>
+                        <div>Service user number</div>
+                        <div class="border border-dark mb-2 py-2 ps-2">
+                            <t t-out="o.company_id.bacs_sun"/>
+                        </div>
+                        <div>Reference</div>
+                        <div class="border border-dark mb-2 py-2 ps-2">
+                            <t t-out="o.name"/>
+                        </div>
+                            <t t-set="company_name" t-value="' ' + o.company_id.name"/>
+                            <h5 class="my-2">Instruction to your Bank or Building Society</h5>
+                            <div class=" bacs-instructions">Please pay <span class="font-company-name"><t t-out="company_name"/></span> Direct Debits from the account
+                            detailed in this Instruction subject to the safeguards assured by
+                            the Direct Debit Guarantee. I understand that this Instruction
+                            may remain with <span class="font-company-name"><t t-out="company_name"/></span> and, if so, details will be passed
+                            electronically to my Bank/Building Society.</div>
+                        <div class="border border-dark mb-1 px-1 pt-1 field-min-height">
+                            <span class="font-small">signature(s)</span>
+                        </div>
+                        <div class="border border-dark mb-1 pt-2 field-min-height"></div>
+                        <div class="border border-dark px-1 pt-1 field-min-height">
+                            <span class="font-small">Date</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="my-3 font-regular">
+                    <div class="float-start ">Banks and Building Societies may not accept Direct Debit Instructions for some types of account</div>
+                    <div class="float-end ">DDI 2 5/15</div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="dashed-line font-regular my-3 py-2">This guarantee should be detached and retained by the payer.</div>
+                <div class="border border-dark mx-5 pe-3 py-2 font-regular">
+                    <div class="row">
+                        <span class="bacs-garantee-text">The Direct Debit Guarantee</span>
+                        <img src="/account_bacs/static/src/img/dd_logo.png" class="bacs-logo-footer" />
+                    </div>
+                    <div class="row">
+                        <ul class="w-50 ">
+                            <li><span>This Guarantee is offered by all banks and building societies that accept instructions to pay Direct Debits</span></li>
+                            <li>
+                                <span>If there are any changes to the amount, date or frequency of your Direct Debit</span>
+                                <span class="font-company-name"><t t-out="company_name"/></span>
+                                <span>will notify you (insert number of) working days in advance of your account being debited or as otherwise agreed. If you request</span>
+                                <span class="font-company-name"><t t-out="company_name"/></span>
+                                <span>to collect a payment, confirmation of the amount and date will be given to you at the time of the request</span>
+                            </li>
+                        </ul>
+                        <ul class="w-50 ">
+                            <li>
+                                <span>If an error is made in the payment of your Direct Debit, by</span>
+                                <span class="font-company-name"><t t-out="company_name"/></span>
+                                <span>bank or building society, you are entitled to a full and immediate refund of the amount paid from your bank or building society</span>
+                            </li>
+                            <li>
+                                <span>If you receive a refund you are not entitled to, you must pay it back when</span>
+                                <span class="font-company-name"><t t-out="company_name"/></span>
+                                <span>asks you to</span>
+                            </li>
+                            <li>
+                                <span>You can cancel a Direct Debit at any time by simply contacting your bank or building society. Written confirmation may be required. Please also notify us.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </t>            
+        </template>
+    </data>
+</odoo>

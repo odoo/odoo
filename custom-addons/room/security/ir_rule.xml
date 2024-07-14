@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_room_manager" model="res.groups">
+        <field name="name">Manage Rooms</field>
+        <field name="category_id" ref="module_category_room"/>
+        <field name="implied_ids" eval="[Command.link(ref('base.group_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <record id="room_room_comp_rule" model="ir.rule">
+        <field name="name">Room Room MC Rule</field>
+        <field name="model_id" ref="model_room_room"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="room_office_comp_rule" model="ir.rule">
+        <field name="name">Room Office MC Rule</field>
+        <field name="model_id" ref="model_room_office"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

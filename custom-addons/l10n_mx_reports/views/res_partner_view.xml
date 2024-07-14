@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record  model="ir.ui.view" id="res_partner_account_diot_form_oml">
+            <field name="name">res.partner.account.diot.form.oml</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='accounting_entries']" position="after">
+                    <group string="DIOT Information" invisible="'MX' not in fiscal_country_codes">
+                        <field name="l10n_mx_nationality" invisible="l10n_mx_type_of_third == '04'"/>
+                        <field name="l10n_mx_type_of_third" invisible="1"/>
+                        <field name="l10n_mx_type_of_operation"  colspan="2" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

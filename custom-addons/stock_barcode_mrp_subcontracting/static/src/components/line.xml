@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="stock_barcode.LineComponent" t-inherit-mode="extension">
+        <xpath expr="//button[@name='incrementButton']" position="after">
+            <button t-if="env.model.showSubcontractingDetails(line)"
+                t-on-click="showSubcontractingDetails" title="Show subcontract Details"
+                class="o_line_button btn btn-secondary ms-2 ms-sm-4">
+                <i class="fa fa-2x fa-sitemap"/>
+            </button>
+        </xpath>
+    </t>
+
+</templates>

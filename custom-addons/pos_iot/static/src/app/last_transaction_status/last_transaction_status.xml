@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_iot.LastTransactionStatusButton">
+        <li class="menu-item navbar-button" t-on-click="sendLastTransactionStatus">
+            <span>
+                <i t-if="state.pending" class="fa fa-spinner fa-spin"/>
+                <t t-else="">Last Transaction Status</t>
+            </span>
+        </li>
+    </t>
+    
+
+    <t t-name="pos_iot.LastTransactionPopup">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-alert">
+                <p class="title">Worldline - Last Transaction Status</p>
+                <p class="body">
+                    <t t-if="props.error" t-esc="props.error"/>
+                    <t t-else="">
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="text-align: right; padding: 0.3em;">Action identifier:</td>
+                                <td style="text-align: left" t-esc="props.action_identifier" />
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; padding: 0.3em;">Time:</td>
+                                <td style="text-align: left" t-esc="props.time" />
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; padding: 0.3em;">Amount:</td>
+                                <td style="text-align: left" t-esc="props.amount" />
+                            </tr>
+                        </table>
+                    </t>
+                </p>
+                <div class="footer">
+                    <div class="button cancel" t-on-click="confirm">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

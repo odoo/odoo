@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_br_service_code_tree" model="ir.ui.view">
+            <field name="name">l10n_br.service.code.tree</field>
+            <field name="model">l10n_br.service.code</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="city_id"/>
+                    <field name="code"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

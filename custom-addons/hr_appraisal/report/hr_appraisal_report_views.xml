@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_appraisal_report_pivot" model="ir.ui.view">
+            <field name="name">hr.appraisal.report.pivot</field>
+            <field name="model">hr.appraisal.report</field>
+            <field name="arch" type="xml">
+            <pivot string="Appraisal Analysis" sample="1">
+                 <field name="employee_id" type="row"/>
+                 <field name="create_date" interval="month" type="col"/>
+             </pivot>
+         </field>
+    </record>
+
+    <record id="view_appraisal_report_graph" model="ir.ui.view">
+            <field name="name">hr.appraisal.report.graph</field>
+            <field name="model">hr.appraisal.report</field>
+            <field name="arch" type="xml">
+            <graph string="Appraisal Analysis" sample="1">
+                 <field name="employee_id"/>
+                 <field name="create_date" interval="month"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="hr_appraisal_report_view_tree" model="ir.ui.view">
+        <field name="name">hr.appraisal.report.view.tree</field>
+        <field name="model">hr.appraisal.report</field>
+        <field name="arch" type="xml">
+            <tree string="Appraisal Analysis">
+                <field name="employee_id" widget="many2one_avatar_employee"/>
+                <field name="department_id" optional="show"/>
+                <field name="deadline" optional="show"/>
+                <field name="final_interview" optional="hide"/>
+                <field name="state" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_appraisal_report_view_form" model="ir.ui.view">
+        <field name="name">hr.appraisal.report.view.form</field>
+        <field name="model">hr.appraisal.report</field>
+        <field name="arch" type="xml">
+            <form string="Appraisal Analysis" create="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="department_id"/>
+                            <field name="final_interview"/>
+                        </group>
+                        <group>
+                            <field name="deadline"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_appraisal_report_view_gantt" model="ir.ui.view">
+        <field name="name">hr.appraisal.report.gantt</field>
+        <field name="model">hr.appraisal.report</field>
+        <field name="arch" type="xml">
+            <gantt
+                edit="0"
+                create="0"
+                color="color"
+                date_start="deadline"
+                date_stop="deadline"
+                default_group_by='department_id'
+                sample="1"
+                default_scale="year">
+                <templates>
+                    <div t-name="gantt-popover">
+                        <strong>Date — </strong><t t-esc="deadline.toFormat('f')"/>
+                    </div>
+                </templates>
+            </gantt>
+        </field>
+    </record>
+
+    <record id="hr_appraisal_report_view_calendar" model="ir.ui.view">
+        <field name="name">hr.appraisal.report.calendar</field>
+        <field name="model">hr.appraisal.report</field>
+        <field name="arch" type="xml">
+            <calendar date_start="deadline" date_stop="deadline" mode="month" color="state">
+                <field name="display_name"/>
+                <field name="state" filters="1" invisible="1"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_appraisal_report_search" model="ir.ui.view">
+        <field name="name">hr.appraisal.report.search</field>
+        <field name="model">hr.appraisal.report</field>
+        <field name="arch" type="xml">
+            <search string="Appraisal Analysis">
+                <filter string="To Start" name="to_start" icon="fa-check" domain="[('state', '=' ,'new')]" help = "In progress Evaluations"/>
+                <filter string="Appraisal Sent" name="appraisal_sent" icon="fa-check" domain="[('state','=','pending')]" help = "Final Interview Date"/>
+                <filter string="Done" name="done" domain="[('state','=','done')]"/>
+                <separator/>
+                <filter string="Creation Date" name="filter_create_date" date="create_date"/>
+                <field name="employee_id"/>
+                <group expand="0" string="Extended Filters...">
+                    <field name="deadline"/>
+                    <field name="state"/>
+                    <field name="create_date"/>
+                    <field name="final_interview"/>
+                </group>
+                <group expand="1" string="Group By">
+                    <filter string="Employee" name="employee" context="{'group_by':'employee_id'}"/>
+                    <filter string="Department" name="department" context="{'group_by':'department_id'}"/>
+                    <filter string="Status" name="status" context="{'group_by':'state'}"/>
+                    <separator/>
+                    <filter string="Date" name="month" context="{'group_by':'create_date:month'}" help="Creation Date"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_appraisal_report_all" model="ir.actions.act_window">
+        <field name="name">Appraisal Analysis</field>
+        <field name="res_model">hr.appraisal.report</field>
+        <field name="view_mode">gantt,calendar,graph,pivot</field>
+        <field name="context">{'search_default_department':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="search_view_id" ref="view_appraisal_report_search"/>
+    </record>
+
+    <menuitem id="menu_hr_appraisal_report" parent="menu_hr_appraisal_root" sequence="20"
+        name="Reporting" groups="hr_appraisal.group_hr_appraisal_manager"/>
+
+    <menuitem id="menu_appraisal_analysis_report"
+        name="Appraisal Analysis"
+        action="action_appraisal_report_all"
+        parent="menu_hr_appraisal_report"
+        sequence="1"/>
+
+</odoo>

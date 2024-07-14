@@ -1,0 +1,580 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* documents_spreadsheet
+# 
+# Translators:
+# Jolien De Paepe, 2023
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/wizard/save_spreadsheet_template.py:0
+#, python-format
+msgid "\"%s\" saved as template"
+msgstr "\"%s\" enregistré comme modèle"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.share_page
+msgid "#{'Download '}#{document.name}"
+msgstr "#{'Download '}#{document.name}"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/spreadsheet_template.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (copie)"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/bundle/actions/spreadsheet_action.js:0
+#, python-format
+msgid "%s - Template"
+msgstr "%s - Modèle"
+
+#. module: documents_spreadsheet
+#: model:ir.model.constraint,message:documents_spreadsheet.constraint_spreadsheet_contributor_spreadsheet_user_unique
+msgid "A combination of the spreadsheet and the user already exist"
+msgstr ""
+"Une combinaison de la feuille de calcul et de l'utilisateur existe déjà"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.save_spreadsheet_template_view_form
+msgid ""
+"Any user will be able to create a new spreadsheet based on this template."
+msgstr ""
+"Tout utilisateur pourra créer une nouvelle feuille de calcul sur la base de "
+"ce modèle."
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid ""
+"Ask an admin to configure the workspace to be accessible to the users you "
+"want."
+msgstr ""
+"Demandez à un administrateur de configurer l'espace de travail pour qu'il "
+"soit accessible aux utilisateurs que vous souhaitez."
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#, python-format
+msgid "Blank spreadsheet"
+msgstr "Feuille de calcul vierge"
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid ""
+"By default, the spreadsheets in this workspace will only be seen and updated"
+" by their <strong>creator</strong>."
+msgstr ""
+"Par défaut, les feuilles de calcul de cet espace de travail ne seront vues "
+"et mises à jour que par leur <strong>créateur</strong>."
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.save_spreadsheet_template_view_form
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.res_config_settings_view_form_inherit_documents_spreadsheet
+msgid "Centralize your spreadsheets"
+msgstr "Centraliser vos feuilles de calcul"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paramètres de configuration"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.save_spreadsheet_template_view_form
+msgid "Confirm"
+msgstr "Confirmer"
+
+#. module: documents_spreadsheet
+#: model:ir.actions.act_window,name:documents_spreadsheet.spreadsheet_contributor_action
+#: model:ir.ui.menu,name:documents_spreadsheet.menu_technical_spreadsheet_contributor
+msgid "Contributors"
+msgstr "Contributeurs"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_documents_shared_spreadsheet
+msgid "Copy of a shared spreadsheet"
+msgstr "Copie d'une feuille de calcul partagée"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#, python-format
+msgid "Create"
+msgstr "Créer"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/spreadsheet_template_dialog.js:0
+#, python-format
+msgid "Create a Spreadsheet or select a Template"
+msgstr "Créez une feuille de calcul ou sélectionnez un modèle"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__create_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__create_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__create_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__create_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__create_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__create_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#, python-format
+msgid "Discard"
+msgstr "Ignorer"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__display_name
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__display_name
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__display_name
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_documents_document
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__document_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__document_id
+msgid "Document"
+msgstr "Document"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_documents_share
+msgid "Documents Share"
+msgstr "Partage de documents"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_res_company__documents_spreadsheet_folder_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_res_config_settings__documents_spreadsheet_folder_id
+msgid "Documents Spreadsheet Folder"
+msgstr "Fichier de feuilles de calcul"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_template_view_tree
+msgid "Edit"
+msgstr "Modifier"
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid "Enjoy collaborative work on your spreadsheets."
+msgstr "Profitez du travail collaboratif sur vos feuilles de calcul."
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__excel_export
+msgid "Excel Export"
+msgstr "Export Excel"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Format issue"
+msgstr "Problème de format"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_share__freezed_spreadsheet_ids
+msgid "Freezed Spreadsheet"
+msgstr "Feuille de calcul figée"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__handler
+msgid "Handler"
+msgstr "Handler"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__id
+msgid "ID"
+msgstr "ID"
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid "If you want to work together on those spreadsheets :"
+msgstr "Si vous souhaitez travailler ensemble sur ces feuilles de calcul :"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__write_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__write_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__write_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__write_uid
+msgid "Last Updated by"
+msgstr "Mis à jour par"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__write_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__write_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__write_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__write_date
+msgid "Last Updated on"
+msgstr "Mis à jour le"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__last_update_date
+msgid "Last update date"
+msgstr "Dernière date de mise à jour"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_template_view_tree
+msgid "Make a copy"
+msgstr "Faire une copie"
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid ""
+"Manage and work with all the <strong>spreadsheets</strong> created in other "
+"applications."
+msgstr ""
+"Gérez et travaillez avec toutes <strong>les feuilles de calcul</strong> "
+"créées dans d'autres applications."
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid "Move them to another workspace"
+msgstr "Déplacez-les vers un autre espace de travail"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_template_view_search
+msgid "My Templates"
+msgstr "Mes modèles"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__name
+msgid "Name"
+msgstr "Nom"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.xml:0
+#, python-format
+msgid "New Spreadsheet"
+msgstr "Nouvelle feuille de calcul"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/spreadsheet_template_dialog.js:0
+#, python-format
+msgid "New sheet saved in Documents"
+msgstr "Nouvelle feuille enregistrée dans Documents"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_template_view_tree
+msgid "New spreadsheet"
+msgstr "Nouvelle feuille de calcul"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#: code:addons/documents_spreadsheet/static/src/bundle/actions/spreadsheet_action.js:0
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_selector_dialog/document_selector_panel.js:0
+#, python-format
+msgid "New spreadsheet created in Documents"
+msgstr "Nouvelle feuille de calcul créée dans Documents"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/models/spreadsheet_template.py:0
+#: code:addons/documents_spreadsheet/static/src/bundle/actions/spreadsheet_template/spreadsheet_template_action.js:0
+#, python-format
+msgid "New spreadsheet template created"
+msgstr "Nouveau modèle de feuille de calcul créé"
+
+#. module: documents_spreadsheet
+#: model:ir.model.constraint,message:documents_spreadsheet.constraint_documents_shared_spreadsheet__unique
+msgid "Only one freezed spreadsheet per document share"
+msgstr "Une seule feuille de calcul figée par partage de documents"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Open with Odoo Spreadsheet"
+msgstr "Ouvrir avec Odoo Feuille de calcul"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Restore"
+msgstr "Restaurer"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Restore file?"
+msgstr "Restaurer le fichier ?"
+
+#. module: documents_spreadsheet
+#: model:ir.actions.act_window,name:documents_spreadsheet.save_spreadsheet_template_action
+msgid "Save as template"
+msgstr "Enregistrer en tant que modèle"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_clone_xlsx_dialog/spreadsheet_clone_xlsx_dialog.xml:0
+#, python-format
+msgid "Send source file to trash"
+msgstr "Envoyer le fichier de source à la corbeille"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__sequence
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__server_revision_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__server_revision_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__server_revision_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__server_revision_id
+msgid "Server Revision"
+msgstr "Révision du serveur"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__share_id
+msgid "Share"
+msgstr "Partager"
+
+#. module: documents_spreadsheet
+#: model:documents.folder,name:documents_spreadsheet.documents_spreadsheet_folder
+#: model:ir.model.fields.selection,name:documents_spreadsheet.selection__documents_document__handler__spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.document_view_search_spreadsheet
+msgid "Spreadsheet"
+msgstr "Feuilles de calcul"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_spreadsheet_contributor
+msgid "Spreadsheet Contributor"
+msgstr "Contributeur de feuille de calcul"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__spreadsheet_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__spreadsheet_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__spreadsheet_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__spreadsheet_data
+msgid "Spreadsheet Data"
+msgstr "Données de la feuille de calcul"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_document_view_kanban
+msgid "Spreadsheet Preview"
+msgstr "Aperçu de feuille de calcul"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__spreadsheet_revision_ids
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__spreadsheet_revision_ids
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__spreadsheet_revision_ids
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__spreadsheet_revision_ids
+msgid "Spreadsheet Revision"
+msgstr "Révision feuille de calcul"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__spreadsheet_snapshot
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__spreadsheet_snapshot
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__spreadsheet_snapshot
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__spreadsheet_snapshot
+msgid "Spreadsheet Snapshot"
+msgstr "Aperçu de la feuille de calcul"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_spreadsheet_template
+msgid "Spreadsheet Template"
+msgstr "Modèle de feuille de calcul"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_save_spreadsheet_template
+msgid "Spreadsheet Template Save Wizard"
+msgstr "Assistant d'enregistrement de modèle de feuille de calcul"
+
+#. module: documents_spreadsheet
+#: model:ir.actions.act_window,name:documents_spreadsheet.spreadsheet_template_action
+#: model:ir.ui.menu,name:documents_spreadsheet.menu_technical_spreadsheet_template
+msgid "Spreadsheet Templates"
+msgstr "Modèles de feuille de calcul"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__spreadsheet_binary_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__spreadsheet_binary_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__spreadsheet_binary_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__spreadsheet_binary_data
+msgid "Spreadsheet file"
+msgstr "Fichier de feuille de calcul"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid ""
+"Spreadsheet files cannot be handled from the Trash. Would you like to "
+"restore this document?"
+msgstr ""
+"Les fichiers de feuilles de calcul ne peuvent pas être traités depuis la "
+"corbeille. Voulez-vous restaurer ce document ?"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_clone_xlsx_dialog/spreadsheet_clone_xlsx_dialog.xml:0
+#, python-format
+msgid ""
+"Spreadsheet files cannot be previewed or edited in Odoo. Opening your file "
+"with Odoo Spreadsheet will allow you to do so."
+msgstr ""
+"Les fichiers de feuilles de calcul ne peuvent pas être prévisualisés ou "
+"modifiés dans Odoo. Ouvrez plutôt votre fichier avec Odoo Feuille de calcul."
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.res_config_settings_view_form_inherit_documents_spreadsheet
+msgid "Spreadsheets"
+msgstr "Feuilles de calcul"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/inspector/documents_inspector.js:0
+#, python-format
+msgid ""
+"Spreadsheets mass download not yet supported.\n"
+" Download spreadsheets individually instead."
+msgstr ""
+"Le téléchargement en masse de feuilles de calcul n'est pas encore pris en charge.\n"
+"Téléchargez plutôt les feuilles de calcul individuellement."
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__template_name
+msgid "Template Name"
+msgstr "Nom du modèle"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "The file is not a xlsx file"
+msgstr "Le fichier n'est pas un fichier xlsx"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "The spreadsheet you are trying to access does not exist."
+msgstr "La feuille de calcul à laquelle vous essayez d'accéder n'existe pas."
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "The xlsx file is corrupted"
+msgstr "Le fichier xlsx est corrompu"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "The xlsx file is too big"
+msgstr "Le fichier xlsx est trop gros"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__thumbnail
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__thumbnail
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__thumbnail
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__thumbnail
+msgid "Thumbnail"
+msgstr "Vignette"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/bundle/components/control_panel/spreadsheet_breadcrumbs.xml:0
+#: code:addons/documents_spreadsheet/static/src/bundle/components/control_panel/spreadsheet_breadcrumbs.xml:0
+#, python-format
+msgid "Toggle favorite"
+msgstr "Marquer comme favori"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "Untitled spreadsheet"
+msgstr "Feuille de calcul sans titre"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/bundle/actions/spreadsheet_template/spreadsheet_template_action.js:0
+#, python-format
+msgid "Untitled spreadsheet template"
+msgstr "Modèle de feuille de calcul sans titre"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__user_id
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.res_config_settings_view_form_inherit_documents_spreadsheet
+#, python-format
+msgid "Workspace"
+msgstr "Espace de travail "
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/controllers/documents.py:0
+#, python-format
+msgid "You cannot upload spreadsheets in a shared folder"
+msgstr ""
+"Vous ne pouvez pas charger des feuilles de calcul dans un fichier partagé"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/controllers/share.py:0
+#: code:addons/documents_spreadsheet/controllers/share.py:0
+#: code:addons/documents_spreadsheet/controllers/share.py:0
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "You don't have access to this document"
+msgstr "Nous n'avez pas accès à ce document"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_selector_dialog/document_selector_panel.xml:0
+#, python-format
+msgid "getPageTitle('SPREADSHEET')"
+msgstr "getPageTitle('SPREADSHEET')"

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <template id="l10n_mx_edi_addenda_autozone" name="Addenda Autozone">
+            <t t-set="sale_model" t-value="'sale_line_ids' in record.invoice_line_ids._fields"/>
+            <t t-set="sale_id" t-value="record.mapped('invoice_line_ids.sale_line_ids.order_id') if sale_model else False"/>
+            <ADDENDA10
+                xmlns:cfdi="http://www.sat.gob.mx/cfd/3"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:noNamespaceSchemaLocation="https://azfes.autozone.com/xsd/Addenda_Merch_32.xsd"
+                t-att-DEPTID="record.user_id.partner_id.function"
+                VERSION="1.0"
+                t-att-BUYER="record.partner_id.name"
+                t-att-VENDOR_ID="record.user_id.partner_id.ref"
+                t-att-POID="record.name"
+                t-att-PODATE="time.strftime('%Y-%m-%d', time.strptime(sale_id.date_order, '%Y-%m-%d %H:%M:%S')) if sale_id else False"
+                t-att-EMAIL="record.company_id.partner_id.email"/>
+        </template>
+        <record id="l10n_mx_edi_addenda_autozone" model="ir.ui.view">
+            <field name="l10n_mx_edi_addenda_flag">True</field>
+        </record>
+
+        <template id="l10n_mx_edi_addenda_bosh_A_C" name="Addenda Bosh Type A and C (Only One Purchase Order)">
+            <Addenda>
+                <customized xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                            xmlns="http://repository.edicomnet.com/schemas/mx/cfd/addenda"
+                            t-if="record.name and len(record.name.split('|')) >= 2"
+                            xsi:schemaLocation="http://repository.edicomnet.com/schemas/mx/cfd/addenda http://repository.edicomnet.com/schemas/mx/cfd/addenda/customized.xsd">
+                    <EDICOM_GENERICA>
+                        <t t-set="elements" t-value="record.name.split('|')"/>
+                        <elementos t-if="len(record.name.split('|'))">
+                            <elemento>
+                                <etiqueta>OC</etiqueta>
+                                <descripcion>Orden de Compra</descripcion>
+                                <valor t-raw="str(elements[0])"></valor>
+                            </elemento>
+                            <elemento>
+                                <etiqueta>CP</etiqueta>
+                                <descripcion>Codigo Planta</descripcion>
+                                <valor t-raw="str(elements[1])"></valor>
+                            </elemento>
+                            <elemento t-if="len(elements)>=3">
+                                <etiqueta>NC</etiqueta>
+                                <descripcion>NOMBRE DEL REQUISITOR</descripcion>
+                                <valor t-raw="str(elements[2])"></valor>
+                            </elemento>
+                            <elemento t-if="len(elements)>=4">
+                                <etiqueta>CC</etiqueta>
+                                <descripcion>CENTRO DE COSTOS</descripcion>
+                                <valor t-raw="str(elements[3])"></valor>
+                            </elemento>
+                        </elementos>
+                    </EDICOM_GENERICA>
+                </customized>
+            </Addenda>
+        </template>
+        <record id="l10n_mx_edi_addenda_bosh_A_C" model="ir.ui.view">
+            <field name="l10n_mx_edi_addenda_flag">True</field>
+        </record>
+    </data>
+</odoo>

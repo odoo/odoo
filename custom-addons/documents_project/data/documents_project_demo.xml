@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="project.project_project_3" model="project.project">
+            <field name="use_documents">False</field>
+        </record>
+    </data>
+
+    <!-- Demo data seems to be installed before post init hooks are executed,
+        so we need to generate the project folders here -->
+    <function model="project.project" name="_create_missing_folders">
+        <value model="project.project" search="[('use_documents', '=', True)]"/>
+    </function>
+
+    <record id="project_1_document_1" model="documents.document">
+        <field name="name">Daily Meeting Notes (today)</field>
+        <field name="datas" type="base64" file="documents_project/data/files/daily_meeting_notes_today.txt"/>
+        <field name="folder_id" model="documents.folder" eval="obj().env.ref('project.project_project_1').documents_folder_id.id"/>
+        <field name="res_model">project.task</field>
+        <field name="res_id" ref="project.project_1_task_13"/>
+        <field name="owner_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+    </record>
+
+    <record id="project_1_document_2" model="documents.document">
+        <field name="name">Daily Meeting Notes (yesterday)</field>
+        <field name="datas" type="base64" file="documents_project/data/files/daily_meeting_notes_yesterday.txt"/>
+        <field name="folder_id" model="documents.folder" eval="obj().env.ref('project.project_project_1').documents_folder_id.id"/>
+        <field name="res_model">project.task</field>
+        <field name="res_id" ref="project.project_1_task_13"/>
+        <field name="owner_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+    </record>
+
+    <record id="project_1_document_3" model="documents.document">
+        <field name="name">First Floor Plan</field>
+        <field name="datas" type="base64" file="documents_project/data/files/first_floor_plan.jpeg"/>
+        <field name="folder_id" model="documents.folder" eval="obj().env.ref('project.project_project_1').documents_folder_id.id"/>
+        <field name="res_model">project.project</field>
+        <field name="res_id" ref="project.project_project_1"/>
+        <field name="owner_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+    </record>
+
+    <record id="project_1_document_4" model="documents.document">
+        <field name="name">Important Customer Letter</field>
+        <field name="datas" type="base64" file="documents_project/data/files/important_customer_letter.pdf"/>
+        <field name="folder_id" model="documents.folder" eval="obj().env.ref('project.project_project_1').documents_folder_id.id"/>
+        <field name="res_model">project.project</field>
+        <field name="res_id" ref="project.project_project_1"/>
+        <field name="owner_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+    </record>
+
+    <!-- Share link for some documents to make them accessible in the portal -->
+    <record id="project_1_documents_share_link" model="documents.share">
+        <field name="name">Daily Meeting Notes Share Link</field>
+        <field name="folder_id" model="documents.folder" eval="obj().env.ref('project.project_project_1').documents_folder_id.id"/>
+        <field name="type">ids</field>
+        <field name="action">download</field>
+        <field name="document_ids" eval="[
+            Command.link(ref('project_1_document_1')),
+            Command.link(ref('project_1_document_2')),
+        ]"/>
+    </record>
+</odoo>

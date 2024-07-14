@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="social.StreamPostCommentsOriginalPost" t-inherit-mode="extension">
+        <xpath expr="//a[hasclass('o_social_post_published_date')]" position="after">
+            <div t-if="isConvertibleToLead?.()"
+                class="o_social_icon_dropdown o_social_manage_post dropdown">
+                <button
+                    t-attf-class="btn bg-white dropdown-toggle #{bubble_design ? 'bg-200 px-3 rounded-pill' : ''}"
+                    type="button"
+                    t-attf-id="post_actions_0"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"/>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end" t-attf-aria-labelledby="post_actions_0">
+                    <a
+                        class="o_social_generate_lead_post dropdown-item text-decoration-none"
+                        href="#"
+                        t-on-click="generateLeadFromPost">
+                        Create Lead
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-inherit="social.StreamPostComment" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_social_manage_comment')]/div[hasclass('dropdown-menu')]" position="inside">
+            <a t-if="isConvertibleToLead?.()"
+                class="o_social_generate_lead_comment dropdown-item text-decoration-none" href="#"
+                t-on-click="generateLeadFromComment">Create Lead</a>
+        </xpath>
+    </t>
+</templates>

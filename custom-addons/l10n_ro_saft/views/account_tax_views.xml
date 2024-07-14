@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_tax_form_inherit_l10n_ro_saft" model="ir.ui.view">
+            <field name="name">account.tax.form.inherit.l10n_ro_saft</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <field name="country_id" position="after">
+                    <field name="l10n_ro_saft_tax_type_id" invisible="amount_type == 'group' or country_code != 'RO'"/>
+                    <field name="l10n_ro_saft_tax_code" invisible="amount_type == 'group' or country_code != 'RO'"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

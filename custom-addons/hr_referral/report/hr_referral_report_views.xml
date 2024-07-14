@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="employee_referral_report_view_pivot" model="ir.ui.view">
+            <field name="name">employee.referral.report.view.pivot</field>
+            <field name="model">hr.referral.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Employees Analysis" sample="1">
+                    <field name="ref_user_id" type="row"/>
+                    <field name="earned_points" type="measure"/>
+                    <field name="employee_referral_hired" type="measure"/>
+                    <field name="employee_referral_refused" type="measure"/>
+                    <field name="applicant_id" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="employee_referral_report_view_graph" model="ir.ui.view">
+            <field name="name">employee.referral.report.view.graph</field>
+            <field name="model">hr.referral.report</field>
+            <field name="arch" type="xml">
+                <graph string="Employees Analysis" sample="1">
+                    <field name="medium_id"/>
+                    <field name="referral_state"/>
+                    <field name="applicant_id" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="hr_referral_report_view_form" model="ir.ui.view">
+            <field name="name">hr.referral.report.view.form</field>
+            <field name="model">hr.referral.report</field>
+            <field name="arch" type="xml">
+                <form string="Employees Analysis">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="applicant_id"/>
+                                <field name="job_id"/>
+                                <field name="department_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                            <group>
+                                <field name="ref_user_id" widget="many2one_avatar_user" string="Referer"/>
+                                <field name="medium_id"/>
+                                <field name="referral_state"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_referral_report_view_tree" model="ir.ui.view">
+            <field name="name">hr.referral.report.view.tree</field>
+            <field name="model">hr.referral.report</field>
+            <field name="arch" type="xml">
+                <tree string="Employees Analysis">
+                    <field name="applicant_id"/>
+                    <field name="job_id" optional="show"/>
+                    <field name="department_id" optional="show"/>
+                    <field name="ref_user_id" widget="many2one_avatar_user" optional="show" string="Referer"/>
+                    <field name="medium_id" optional="show"/>
+                    <field name="referral_state" optional="show"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="employee_referral_report_view_search" model="ir.ui.view">
+            <field name="name">employee.referral.report.view.search</field>
+            <field name="model">hr.referral.report</field>
+            <field name="arch" type="xml">
+                <search string="Employees Analysis">
+                    <field name="ref_user_id"/>
+                    <field name="job_id"/>
+                    <field name="department_id"/>
+                    <field name="medium_id"/>
+                    <field name="write_date"/>
+                    <filter string="Date" name="year" date="write_date" default_period="this_month"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Employee" name="ref_user_id" context="{'group_by':'ref_user_id'}"/>
+                        <filter string="Job" name="job_id" context="{'group_by':'job_id'}"/>
+                        <filter string="Department" name="department_id" context="{'group_by':'department_id'}"/>
+                        <filter string="Company" name="company_id" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="employee_referral_report_action" model="ir.actions.act_window">
+            <field name="name">Employees Referral Analysis</field>
+            <field name="res_model">hr.referral.report</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="search_view_id" ref="employee_referral_report_view_search"/>
+            <field name="context">{
+                'search_default_year': True
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No data to display
+                </p>
+                <p>
+                    This reports allow you to follow the referrals and their evolution.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_report_employee_referral_all"
+            name="Reporting"
+            action="employee_referral_report_action"
+            parent="menu_hr_referral_root"
+            groups="hr_recruitment.group_hr_recruitment_manager"
+            sequence="30"/>
+
+    </data>
+</odoo>

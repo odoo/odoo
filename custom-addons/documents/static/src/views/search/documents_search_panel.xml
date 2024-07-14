@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="documents.SearchPanelContent" t-inherit="web.SearchPanelContent" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_search_panel')]" position="inside">
+            <span class="o_resize" t-on-click.stop.prevent="" t-on-mousedown.stop.prevent="_onStartResize"/>
+        </xpath>
+        <xpath expr="//label[hasclass('o_search_panel_label')]" position="inside">
+            <div class="ms-auto">
+                <t t-if="supportedEditionFields.includes(section.fieldName)">
+                    <div class="o_documents_search_panel_section_edit h-100" t-on-click.stop.prevent="(ev) => this.openEditPopover(ev, section, null, group.id)">
+                        <span class="fa fa-cog pe-2 ps-3"/>
+                    </div>
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//section" position="attributes">
+            <attribute name="t-att-data-section-id">section.id</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="documents.SearchPanel.Regular" t-inherit="documents.SearchPanelContent" t-inherit-mode="primary"/>
+
+    <t t-name="documents.SearchPanel.Category" t-inherit="web.SearchPanel.Category" t-inherit-mode="primary">
+        <xpath expr="//li[contains(@class, 'o_search_panel_category_value')]" position="attributes">
+            <attribute name="class" add="pe-0" separator=" "/>
+            <attribute name="t-att-class">{'o_treeEntry' : isChildList, 'o_has_treeEntry': value.childrenIds.length || valueId === 'TRASH', 'o_all_or_trash_category' : !valueId || valueId === 'TRASH'}</attribute>
+            <attribute name="t-att-title">value.display_name</attribute>
+            <attribute name="t-att-data-value-id">valueId</attribute>
+            <attribute name="t-on-dragenter.stop.prevent">(ev) => this.onDragEnter(section, value, ev)</attribute>
+            <attribute name="t-on-dragleave.stop.prevent">(ev) => this.onDragLeave(section, ev)</attribute>
+            <attribute name="t-on-dragover.stop.prevent"> </attribute>
+            <attribute name="t-on-drop.stop.prevent">(ev) => this.onDrop(section, value, ev)</attribute>
+        </xpath>
+        <xpath expr="//*[contains(@class, 'o_search_panel_label')]" position="inside">
+            <div class="ms-auto">
+                <div t-if="valueId and valueId != 'TRASH' and supportedEditionFields.includes(section.fieldName)" class="o_documents_search_panel_section_edit h-100" t-on-click.stop.prevent="(ev) => this.openEditPopover(ev, section, value.id, null)">
+                    <span class="fa fa-cog pe-2 ps-3"/>
+                </div>
+                <span t-if="isUploadingInFolder(valueId)" class="fa fa-circle-o-notch fa-spin"/>
+            </div>
+        </xpath>
+        <xpath expr="//i[@t-if='value.childrenIds.length']" position="replace">
+            <i class="align-self-center fa fa-fw"
+               t-if="valueId !== 'TRASH'"
+               t-att-class="state.expanded[section.id][valueId] || !value.childrenIds.length  ? 'fa-caret-down' : 'fa-caret-right'"/>
+        </xpath>
+        <xpath expr="//button[hasclass('o_toggle_fold')]" position="inside">
+            <span t-if="valueId === 'TRASH'" class="fa fa-trash"/>
+        </xpath>
+    </t>
+
+    <t t-name="documents.SearchPanel.FiltersGroup" t-inherit="web.SearchPanel.FiltersGroup" t-inherit-mode="primary">
+        <xpath expr="//li[contains(@class, 'o_search_panel_filter_value')]" position="attributes">
+            <attribute name="t-on-dragenter.stop.prevent">(ev) => this.onDragEnter(section, values.get(valueId), ev)</attribute>
+            <attribute name="t-on-dragleave.stop.prevent">(ev) => this.onDragLeave(section, ev)</attribute>
+            <attribute name="t-on-dragover.stop.prevent"> </attribute>
+            <attribute name="t-on-drop.stop.prevent">(ev) => this.onDrop(section, values.get(valueId), ev)</attribute>
+            <attribute name="t-attf-class">{{supportedEditionFields.includes(section.fieldName) ? 'o_documents_search_panel_editable' : ''}}</attribute>
+        </xpath>
+        <xpath expr="//div//label//span[contains(@class, 'o_search_panel_counter')]" position="after">
+            <t t-if="supportedEditionFields.includes(section.fieldName)">
+                <div class="o_documents_search_panel_section_edit h-100" t-on-click.stop.prevent="(ev) => this.openEditPopover(ev, section, value.id, null)">
+                    <span class="fa fa-cog pe-2 ps-3"/>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div//label//span[hasclass('o_search_panel_counter')]" position="attributes">
+            <attribute name="class" add="ms-2 me-3" remove="mx-2" separator=" "/>
+        </xpath>
+    </t>
+
+    <t t-name="documents.SearchPanelContent.Small" t-inherit="documents.SearchPanelContent" t-inherit-mode="primary">
+        <xpath expr="//li[contains(@class, 'o_search_panel_filter_group')]" position="attributes">
+            <attribute name="t-on-touchstart">(ev) => this.onSectionValueTouchStart(ev, section, null, groupId)</attribute>
+            <attribute name="t-on-touchend">(ev) => this.onSectionValueTouchEnd()</attribute>
+            <attribute name="t-on-touchmove">(ev) => this.onSectionValueTouchMove()</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="documents.SearchPanel.Small" t-inherit="web.SearchPanel.Small" t-inherit-mode="primary">
+        <xpath expr="//t[@t-call='web.SearchPanelContent']" position="replace">
+            <t t-call="documents.SearchPanelContent.Small"/>
+        </xpath>
+    </t>
+
+    <t t-name="documents.SearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
+        <xpath expr="//t[@t-call='web.SearchPanel.Regular']" position="replace">
+            <t t-call="documents.SearchPanel.Regular"/>
+        </xpath>
+        <xpath expr="//t[@t-call='web.SearchPanel.Small']" position="replace">
+            <t t-call="documents.SearchPanel.Small"/>
+        </xpath>
+    </t>
+
+    <t t-name="documents.SearchPanel.Category.Small" t-inherit="web.SearchPanel.Category" t-inherit-mode="primary">
+        <xpath expr="//li[contains(@class, 'o_search_panel_category_value')]" position="attributes">
+            <attribute name="t-on-touchstart">(ev) => this.onSectionValueTouchStart(ev, section, value.id, null)</attribute>
+            <attribute name="t-on-touchend">(ev) => this.onSectionValueTouchEnd()</attribute>
+            <attribute name="t-on-touchmove">(ev) => this.onSectionValueTouchMove()</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="documents.SearchPanel.FiltersGroup.Small" t-inherit="web.SearchPanel.FiltersGroup" t-inherit-mode="primary">
+        <xpath expr="//li[contains(@class, 'o_search_panel_filter_value')]" position="attributes">
+            <attribute name="t-on-touchstart">(ev) => this.onSectionValueTouchStart(ev, section, valueId, null)</attribute>
+            <attribute name="t-on-touchend">(ev) => this.onSectionValueTouchEnd()</attribute>
+            <attribute name="t-on-touchmove">(ev) => this.onSectionValueTouchMove()</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="documents.DocumentsSearchPanelItemSettingsPopover">
+        <div class="o_search_panel_value_edit">
+            <a t-if="props.createChildEnabled" t-on-click.stop.prevent="props.onCreateChild" class="o_search_panel_value_edit_create py-1 list-group-item list-group-item-action row d-flex justify-content-between align-items-center g-0 cursor-pointer">
+                New
+            </a>
+            <a t-on-click.stop.prevent="props.onEdit" class="o_search_panel_value_edit_edit py-1 list-group-item list-group-item-action row d-flex justify-content-between align-items-center g-0 cursor-pointer">
+                Edit
+            </a>
+        </div>
+    </t>
+</templates>

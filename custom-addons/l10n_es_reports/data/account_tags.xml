@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+       <!-- Tags available to feed the Balance Sheet report with accounts specifically chosen by the
+       accountants. Each tag correspond to a section in the BS, none of them being really fixed by
+       the law what accounts can be there. Using them is thus totally optional (reason why it's not
+       linked to any account in l10n_es and defined here instead -->
+
+        <record id="balance_sheet_11440_account" model="account.account.tag">
+            <field name="name">Inversiones en empresas del grupo y asociadas a largo plazo - Derivados</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="balance_sheet_11450_account" model="account.account.tag">
+            <field name="name">Inversiones en empresas del grupo y asociadas a largo plazo - Otros activos financieros</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="balance_sheet_11460_account" model="account.account.tag">
+            <field name="name">Inversiones en empresas del grupo y asociadas a largo plazo - Otras inversiones</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="balance_sheet_11700_account" model="account.account.tag">
+            <field name="name">Deudores comerciales no corrientes</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="balance_sheet_12440_account" model="account.account.tag">
+            <field name="name">Inversiones en empresas del grupo y asociadas a corto plazo - Derivados</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="balance_sheet_12460_account" model="account.account.tag">
+            <field name="name">Inversiones en empresas del grupo y asociadas a corto plazo - Otras inversiones</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="balance_sheet_12560_account" model="account.account.tag">
+            <field name="name">Inversiones financieras a corto plazo - Otras inversiones</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <record id="balance_sheet_31600_account" model="account.account.tag">
+            <field name="name">Acreedores comerciales no corrientes</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+    </data>
+</odoo>

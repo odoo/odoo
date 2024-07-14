@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="whatsapp.MessagingMenu.content" t-inherit="mail.MessagingMenu.content" t-inherit-mode="extension">
+        <xpath expr="//t[@name='searchBar']//ChannelSelector" position="before">
+            <t t-if="state.addingWhatsappChannel" t-set="category" t-value="store.discuss.whatsapp"/>
+        </xpath>
+
+        <xpath expr="//t[@name='searchBar']" position="after">
+            <button t-if="ui.isSmall and store.discuss.activeTab === 'whatsapp' and !state.addingWhatsappChannel" class="w-100 p-2 btn btn-secondary m-1" t-on-click.stop="() => this.state.addingWhatsappChannel = true">
+                Search WhatsApp Channel
+            </button>
+        </xpath>
+
+        <xpath expr="//t[contains(@t-foreach, 'threads')]//*[contains(@t-set-slot, 'icon')]" position="inside">
+            <ThreadIcon t-if="thread.type === 'whatsapp'" className="'o-mail-whatsapp-threadIcon rounded-circle align-items-center o-bg-inherit position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'" thread="thread" />
+        </xpath>
+    </t>
+</templates>

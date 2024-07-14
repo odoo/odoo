@@ -1,0 +1,23 @@
+<odoo>
+    <record id="view_shipping_method_sendcloud" model="ir.ui.view">
+        <field name="name">SendCloud Shipping Wizard</field>
+        <field name="model">sendcloud.shipping.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Shipping Product">
+                <field name="sendcloud_products_code" invisible="1"/>
+                <field name="carrier_id" invisible="1"/>
+                <div colspan="2" class="alert alert-info" role="status">
+                    <p><i class="fa fa-info-circle"/> Available shipping products depend on enabled carriers in your Sendcloud account.</p>
+                </div>
+                <div class="g-col-sm-2"><div class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small">Delivery Product</div></div>
+                <field name="shipping_products" widget="sendcloud_product_selection"/>
+                <div class="g-col-sm-2"><div class="o_horizontal_separator mt-4 mb-3 text-uppercase fw-bolder small">Return Product</div></div>
+                <field name="return_products" widget="sendcloud_product_selection"/>
+                <footer>
+                    <button name="action_validate" type="object" string="Confirm" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

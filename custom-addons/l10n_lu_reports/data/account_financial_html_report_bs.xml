@@ -1,0 +1,774 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_l10n_lu_bs" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.lu"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="custom_handler_model_id" ref="model_l10n_lu_report_handler"/>
+        <field name="column_ids">
+            <record id="account_financial_report_l10n_lu_bs_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_l10n_lu_bs_line_1" model="account.report.line">
+                <field name="name">ASSETS</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_l10n_lu_bs_line_1_1" model="account.report.line">
+                        <field name="name">A. Subscribed capital unpaid</field>
+                        <field name="code">LU_BS_101</field>
+                        <field name="aggregation_formula">LU_BS_103.balance + LU_BS_105.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_lu_bs_line_1_1_1" model="account.report.line">
+                                <field name="name">I. Subscribed capital not called</field>
+                                <field name="code">LU_BS_103</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">102</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_1_1_2" model="account.report.line">
+                                <field name="name">II. Subscribed capital called but unpaid</field>
+                                <field name="code">LU_BS_105</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">103</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_line_1_2" model="account.report.line">
+                        <field name="name">B. Formation expenses</field>
+                        <field name="code">LU_BS_107</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">20</field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_line_1_3" model="account.report.line">
+                        <field name="name">C. Fixed assets</field>
+                        <field name="code">LU_BS_109</field>
+                        <field name="aggregation_formula">LU_BS_111.balance + LU_BS_125.balance + LU_BS_135.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_lu_bs_line_1_3_1" model="account.report.line">
+                                <field name="name">I. Intangible assets</field>
+                                <field name="code">LU_BS_111</field>
+                                <field name="aggregation_formula">LU_BS_113.balance + LU_BS_115.balance + LU_BS_121.balance + LU_BS_123.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_3_1_1" model="account.report.line">
+                                        <field name="name">1. Costs of development</field>
+                                        <field name="code">LU_BS_113</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">211</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_3_1_2" model="account.report.line">
+                                        <field name="name">2. Concessions, patents, licences, trade marks and similar rights and assets, if they were</field>
+                                        <field name="code">LU_BS_115</field>
+                                        <field name="aggregation_formula">LU_BS_117.balance + LU_BS_119.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_l10n_lu_bs_line_1_3_1_2_1" model="account.report.line">
+                                                <field name="name">a) acquired for valuable consideration and need not be shown under C.I.3</field>
+                                                <field name="code">LU_BS_117</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">2121</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_lu_bs_line_1_3_1_2_2" model="account.report.line">
+                                                <field name="name">b) created by the undertaking itself</field>
+                                                <field name="code">LU_BS_119</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">2122</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_3_1_3" model="account.report.line">
+                                        <field name="name">3. Goodwill, to the extent that it was acquired for valuable consideration</field>
+                                        <field name="code">LU_BS_121</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">213</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_3_1_4" model="account.report.line">
+                                        <field name="name">4. Payments on account and intangible assets under development</field>
+                                        <field name="code">LU_BS_123</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">214</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_1_3_2" model="account.report.line">
+                                <field name="name">II. Tangible assets</field>
+                                <field name="code">LU_BS_125</field>
+                                <field name="aggregation_formula">LU_BS_127.balance + LU_BS_129.balance + LU_BS_131.balance + LU_BS_133.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_3_2_1" model="account.report.line">
+                                        <field name="name">1. Land and buildings</field>
+                                        <field name="code">LU_BS_127</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">221</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_3_2_2" model="account.report.line">
+                                        <field name="name">2. Plant and machinery</field>
+                                        <field name="code">LU_BS_129</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">222</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_3_2_3" model="account.report.line">
+                                        <field name="name">3. Other fixtures and fittings, tools and equipment</field>
+                                        <field name="code">LU_BS_131</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">223</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_3_2_4" model="account.report.line">
+                                        <field name="name">4. Payments on account and tangible assets in the course of construction</field>
+                                        <field name="code">LU_BS_133</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">224</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_1_3_3" model="account.report.line">
+                                <field name="name">III. Financial assets</field>
+                                <field name="code">LU_BS_135</field>
+                                <field name="aggregation_formula">LU_BS_137.balance + LU_BS_139.balance + LU_BS_141.balance + LU_BS_143.balance + LU_BS_145.balance + LU_BS_147.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_3_3_1" model="account.report.line">
+                                        <field name="name">1. Shares in affiliated undertakings</field>
+                                        <field name="code">LU_BS_137</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">231</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_3_3_2" model="account.report.line">
+                                        <field name="name">2. Loans to affiliated undertaking</field>
+                                        <field name="code">LU_BS_139</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">232</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_3_3_3" model="account.report.line">
+                                        <field name="name">3. Participating interests</field>
+                                        <field name="code">LU_BS_141</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">233</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_3_3_4" model="account.report.line">
+                                        <field name="name">4. Loans to undertakings with which the undertaking is linked by virtue of participating interests</field>
+                                        <field name="code">LU_BS_143</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">234</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_3_3_5" model="account.report.line">
+                                        <field name="name">5. Investments held as fixed assets</field>
+                                        <field name="code">LU_BS_145</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">235</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_3_3_6" model="account.report.line">
+                                        <field name="name">6. Other loans</field>
+                                        <field name="code">LU_BS_147</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">236</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_line_1_4" model="account.report.line">
+                        <field name="name">D. Current assets</field>
+                        <field name="code">LU_BS_151</field>
+                        <field name="aggregation_formula">LU_BS_153.balance + LU_BS_163.balance + LU_BS_189.balance + LU_BS_197.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_lu_bs_line_1_4_1" model="account.report.line">
+                                <field name="name">I. Stocks</field>
+                                <field name="code">LU_BS_153</field>
+                                <field name="aggregation_formula">LU_BS_155.balance + LU_BS_157.balance + LU_BS_159.balance + LU_BS_161.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_4_1_1" model="account.report.line">
+                                        <field name="name">1. Raw materials and consumables</field>
+                                        <field name="code">LU_BS_155</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">30</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_4_1_2" model="account.report.line">
+                                        <field name="name">2. Work in progress</field>
+                                        <field name="code">LU_BS_157</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">31</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_4_1_3" model="account.report.line">
+                                        <field name="name">3. Finished goods and goods for resale</field>
+                                        <field name="code">LU_BS_159</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">32 + 36</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_4_1_4" model="account.report.line">
+                                        <field name="name">4. Payments on account</field>
+                                        <field name="code">LU_BS_161</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">37 + 34</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_1_4_2" model="account.report.line">
+                                <field name="name">II. Debtors</field>
+                                <field name="code">LU_BS_163</field>
+                                <field name="aggregation_formula">LU_BS_165.balance + LU_BS_171.balance + LU_BS_177.balance + LU_BS_183.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_4_2_1" model="account.report.line">
+                                        <field name="name">1. Trade debtors</field>
+                                        <field name="code">LU_BS_165</field>
+                                        <field name="aggregation_formula">LU_BS_167.balance + LU_BS_169.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_l10n_lu_bs_line_1_4_2_1_1" model="account.report.line">
+                                                <field name="name">a) becoming due and payable within one year</field>
+                                                <field name="code">LU_BS_167</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">4011 + 4012 + 4013 + 4014 + 4019 + 44113</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_lu_bs_line_1_4_2_1_2" model="account.report.line">
+                                                <field name="name">b) becoming due and payable after more than one year</field>
+                                                <field name="code">LU_BS_169</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">4021 + 4029 + 44123</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_4_2_2" model="account.report.line">
+                                        <field name="name">2. Amounts owed by affiliated undertakings</field>
+                                        <field name="code">LU_BS_171</field>
+                                        <field name="aggregation_formula">LU_BS_173.balance + LU_BS_175.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_l10n_lu_bs_line_1_4_2_2_1" model="account.report.line">
+                                                <field name="name">a) becoming due and payable within one year</field>
+                                                <field name="code">LU_BS_173</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">4111</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_lu_bs_line_1_4_2_2_2" model="account.report.line">
+                                                <field name="name">b) becoming due and payable after more than one year</field>
+                                                <field name="code">LU_BS_175</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">4112</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_4_2_3" model="account.report.line">
+                                        <field name="name">3. Amounts owed by undertakings with which the undertaking is linked by virtue of participating interests</field>
+                                        <field name="code">LU_BS_177</field>
+                                        <field name="aggregation_formula">LU_BS_179.balance + LU_BS_181.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_l10n_lu_bs_line_1_4_2_3_1" model="account.report.line">
+                                                <field name="name">a) becoming due and payable within one year</field>
+                                                <field name="code">LU_BS_179</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">4121</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_lu_bs_line_1_4_2_3_2" model="account.report.line">
+                                                <field name="name">b) becoming due and payable after more than one year</field>
+                                                <field name="code">LU_BS_181</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">4122</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_4_2_4" model="account.report.line">
+                                        <field name="name">4. Other debtors</field>
+                                        <field name="code">LU_BS_183</field>
+                                        <field name="aggregation_formula">LU_BS_185.balance + LU_BS_187.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_l10n_lu_bs_line_1_4_2_4_1" model="account.report.line">
+                                                <field name="name">a) becoming due and payable within one year</field>
+                                                <field name="code">LU_BS_185</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">421</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_lu_bs_line_1_4_2_4_2" model="account.report.line">
+                                                <field name="name">b) becoming due and payable after more than one year</field>
+                                                <field name="code">LU_BS_187</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">422</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_1_4_3" model="account.report.line">
+                                <field name="name">III. Investments</field>
+                                <field name="code">LU_BS_189</field>
+                                <field name="aggregation_formula">LU_BS_191.balance + LU_BS_209.balance + LU_BS_195.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_4_3_1" model="account.report.line">
+                                        <field name="name">1. Shares in affiliated undertakings</field>
+                                        <field name="code">LU_BS_191</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">501</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_4_3_2" model="account.report.line">
+                                        <field name="name">2. Own shares</field>
+                                        <field name="code">LU_BS_209</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">503</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_1_4_3_3" model="account.report.line">
+                                        <field name="name">3. Other investments</field>
+                                        <field name="code">LU_BS_195</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">502 + 508</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_1_4_4" model="account.report.line">
+                                <field name="name">IV. Cash at bank and in hand</field>
+                                <field name="code">LU_BS_197</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">5130 + 5131 + 516 + 5170 + 5171 + 518</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_line_1_5" model="account.report.line">
+                        <field name="name">E. Prepayments</field>
+                        <field name="code">LU_BS_199</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">486 + 481 + 484</field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_line_1_6" model="account.report.line">
+                        <field name="name">TOTAL (ASSETS)</field>
+                        <field name="code">LU_BS_201</field>
+                        <field name="aggregation_formula">LU_BS_101.balance + LU_BS_107.balance + LU_BS_109.balance + LU_BS_151.balance + LU_BS_199.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_l10n_lu_bs_line_2" model="account.report.line">
+                <field name="name">CAPITAL, RESERVES AND LIABILITIES</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_l10n_lu_bs_line_2_1" model="account.report.line">
+                        <field name="name">A. Capital and reserves</field>
+                        <field name="code">LU_BS_301</field>
+                        <field name="aggregation_formula">LU_BS_303.balance + LU_BS_305.balance + LU_BS_307.balance + LU_BS_309.balance + LU_BS_319.balance + LU_BS_321.balance + LU_BS_323.balance + LU_BS_325.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_lu_bs_line_2_1_1" model="account.report.line">
+                                <field name="name">I. Subscribed capital</field>
+                                <field name="code">LU_BS_303</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-105 - 101 - 104 - 106</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_2_1_2" model="account.report.line">
+                                <field name="name">II. Share premium account</field>
+                                <field name="code">LU_BS_305</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-11</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_2_1_3" model="account.report.line">
+                                <field name="name">III. Revaluation reserve</field>
+                                <field name="code">LU_BS_307</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-12</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_2_1_4" model="account.report.line">
+                                <field name="name">IV. Reserves</field>
+                                <field name="code">LU_BS_309</field>
+                                <field name="aggregation_formula">LU_BS_311.balance + LU_BS_313.balance + LU_BS_315.balance + LU_BS_429.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_1_4_1" model="account.report.line">
+                                        <field name="name">1. Legal reserve</field>
+                                        <field name="code">LU_BS_311</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-131</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_1_4_2" model="account.report.line">
+                                        <field name="name">2. Reserve for own shares</field>
+                                        <field name="code">LU_BS_313</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-132</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_1_4_3" model="account.report.line">
+                                        <field name="name">3. Reserves provided for by the articles of association</field>
+                                        <field name="code">LU_BS_315</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-133</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_1_4_4" model="account.report.line">
+                                        <field name="name">4. Other reserves, including the fair value reserve</field>
+                                        <field name="code">LU_BS_429</field>
+                                        <field name="aggregation_formula">LU_BS_431.balance + LU_BS_433.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_l10n_lu_bs_line_2_1_4_4_1" model="account.report.line">
+                                                <field name="name">a) other available reserves</field>
+                                                <field name="code">LU_BS_431</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-1381</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_lu_bs_line_2_1_4_4_2" model="account.report.line">
+                                                <field name="name">b) other non available reserves</field>
+                                                <field name="code">LU_BS_433</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-1382</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_2_1_5" model="account.report.line">
+                                <field name="name">V. Profit or loss brought forward</field>
+                                <field name="code">LU_BS_319</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_1_5_past_pnl" model="account.report.expression">
+                                        <field name="label">past_pnl</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="subformula">cross_report</field>
+                                        <field name="formula">LU_PL_669.balance</field>
+                                        <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_1_5_accounts" model="account.report.expression">
+                                        <field name="label">accounts</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-14</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_1_5_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">LU_BS_319.past_pnl + LU_BS_319.accounts</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_2_1_6" model="account.report.line">
+                                <field name="name">VI. Profit or loss for the financial year</field>
+                                <field name="code">LU_BS_321</field>
+                                <field name="action_id" ref="account_financial_report_l10n_lu_pl_action"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_1_6_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="subformula">cross_report</field>
+                                        <field name="formula">LU_PL_669.balance</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_2_1_7" model="account.report.line">
+                                <field name="name">VII. Interim dividends</field>
+                                <field name="code">LU_BS_323</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-15</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_2_1_8" model="account.report.line">
+                                <field name="name">VIII. Capital investment subsidies</field>
+                                <field name="code">LU_BS_325</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-16</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_line_2_2" model="account.report.line">
+                        <field name="name">B. Provisions</field>
+                        <field name="code">LU_BS_331</field>
+                        <field name="aggregation_formula">LU_BS_333.balance + LU_BS_335.balance + LU_BS_337.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_lu_bs_line_2_2_1" model="account.report.line">
+                                <field name="name">1. Provisions for pensions and similar obligations</field>
+                                <field name="code">LU_BS_333</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-181</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_2_2_2" model="account.report.line">
+                                <field name="name">2. Provisions for taxation</field>
+                                <field name="code">LU_BS_335</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-183 - 182</field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_2_2_3" model="account.report.line">
+                                <field name="name">3. Other provisions</field>
+                                <field name="code">LU_BS_337</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-188</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_line_2_3" model="account.report.line">
+                        <field name="name">C. Creditors</field>
+                        <field name="code">LU_BS_435</field>
+                        <field name="aggregation_formula">LU_BS_437.balance + LU_BS_355.balance + LU_BS_361.balance + LU_BS_367.balance + LU_BS_373.balance + LU_BS_379.balance + LU_BS_385.balance + LU_BS_451.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_lu_bs_line_2_3_1" model="account.report.line">
+                                <field name="name">1. Debenture loans</field>
+                                <field name="code">LU_BS_437</field>
+                                <field name="aggregation_formula">LU_BS_439.balance + LU_BS_445.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_3_1_1" model="account.report.line">
+                                        <field name="name">a) Convertible loans</field>
+                                        <field name="code">LU_BS_439</field>
+                                        <field name="aggregation_formula">LU_BS_441.balance + LU_BS_443.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_l10n_lu_bs_line_2_3_1_1_1" model="account.report.line">
+                                                <field name="name">i) becoming due and payable within one year</field>
+                                                <field name="code">LU_BS_441</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-1921 - 1911</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_lu_bs_line_2_3_1_1_2" model="account.report.line">
+                                                <field name="name">ii) becoming due and payable after more than one year</field>
+                                                <field name="code">LU_BS_443</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-1922 - 1912</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_3_1_2" model="account.report.line">
+                                        <field name="name">b) Non convertible loans</field>
+                                        <field name="code">LU_BS_445</field>
+                                        <field name="aggregation_formula">LU_BS_447.balance + LU_BS_449.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_l10n_lu_bs_line_2_3_1_2_1" model="account.report.line">
+                                                <field name="name">i) becoming due and payable within one year</field>
+                                                <field name="code">LU_BS_447</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-1931</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_lu_bs_line_2_3_1_2_2" model="account.report.line">
+                                                <field name="name">ii) becoming due and payable after more than one year</field>
+                                                <field name="code">LU_BS_449</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-1932</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_2_3_2" model="account.report.line">
+                                <field name="name">2. Amounts owed to credit institutions</field>
+                                <field name="code">LU_BS_355</field>
+                                <field name="aggregation_formula">LU_BS_357.balance + LU_BS_359.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_3_2_1" model="account.report.line">
+                                        <field name="name">a) becoming due and payable within one year</field>
+                                        <field name="code">LU_BS_357</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-1941 - 5132 - 5172</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_3_2_2" model="account.report.line">
+                                        <field name="name">b) becoming due and payable after more than one year</field>
+                                        <field name="code">LU_BS_359</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-1942</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_2_3_3" model="account.report.line">
+                                <field name="name">3. Payments received on account of orders in so far as they are shown separately as deductions from stocks</field>
+                                <field name="code">LU_BS_361</field>
+                                <field name="aggregation_formula">LU_BS_363.balance + LU_BS_365.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_3_3_1" model="account.report.line">
+                                        <field name="name">a) becoming due and payable within one year</field>
+                                        <field name="code">LU_BS_363</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-431</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_3_3_2" model="account.report.line">
+                                        <field name="name">b) becoming due and payable after more than one year</field>
+                                        <field name="code">LU_BS_365</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-432</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_2_3_4" model="account.report.line">
+                                <field name="name">4. Trade creditors</field>
+                                <field name="code">LU_BS_367</field>
+                                <field name="aggregation_formula">LU_BS_369.balance + LU_BS_371.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_3_4_1" model="account.report.line">
+                                        <field name="name">a) becoming due and payable within one year</field>
+                                        <field name="code">LU_BS_369</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4015 - 44112 - 44111</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_3_4_2" model="account.report.line">
+                                        <field name="name">b) becoming due and payable after more than one year</field>
+                                        <field name="code">LU_BS_371</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4412\(44123) - 4025</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_2_3_5" model="account.report.line">
+                                <field name="name">5. Bills of exchange payable</field>
+                                <field name="code">LU_BS_373</field>
+                                <field name="aggregation_formula">LU_BS_375.balance + LU_BS_377.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_3_5_1" model="account.report.line">
+                                        <field name="name">a) becoming due and payable within one year</field>
+                                        <field name="code">LU_BS_375</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4421</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_3_5_2" model="account.report.line">
+                                        <field name="name">b) becoming due and payable after more than one year</field>
+                                        <field name="code">LU_BS_377</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4422</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_2_3_6" model="account.report.line">
+                                <field name="name">6. Amounts owed to affiliated undertakings</field>
+                                <field name="code">LU_BS_379</field>
+                                <field name="aggregation_formula">LU_BS_381.balance + LU_BS_383.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_3_6_1" model="account.report.line">
+                                        <field name="name">a) becoming due and payable within one year</field>
+                                        <field name="code">LU_BS_381</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4511</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_3_6_2" model="account.report.line">
+                                        <field name="name">b) becoming due and payable after more than one year</field>
+                                        <field name="code">LU_BS_383</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4512</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_2_3_7" model="account.report.line">
+                                <field name="name">7. Amounts owed to undertakings with which the undertaking is linked by virtue of participating interests</field>
+                                <field name="code">LU_BS_385</field>
+                                <field name="aggregation_formula">LU_BS_387.balance + LU_BS_389.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_3_7_1" model="account.report.line">
+                                        <field name="name">a) becoming due and payable within one year</field>
+                                        <field name="code">LU_BS_387</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4521</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_3_7_2" model="account.report.line">
+                                        <field name="name">b) becoming due and payable after more than one year</field>
+                                        <field name="code">LU_BS_389</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4522</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_lu_bs_line_2_3_8" model="account.report.line">
+                                <field name="name">8. Other creditors</field>
+                                <field name="code">LU_BS_451</field>
+                                <field name="aggregation_formula">LU_BS_393.balance + LU_BS_395.balance + LU_BS_397.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_3_8_1" model="account.report.line">
+                                        <field name="name">a) Tax authorities</field>
+                                        <field name="code">LU_BS_393</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-461</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_3_8_2" model="account.report.line">
+                                        <field name="name">b) Social security authorities</field>
+                                        <field name="code">LU_BS_395</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-462</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_lu_bs_line_2_3_8_3" model="account.report.line">
+                                        <field name="name">c) Other creditors</field>
+                                        <field name="code">LU_BS_397</field>
+                                        <field name="aggregation_formula">LU_BS_399.balance + LU_BS_401.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_l10n_lu_bs_line_2_3_8_3_1" model="account.report.line">
+                                                <field name="name">i) becoming due and payable within one year</field>
+                                                <field name="code">LU_BS_399</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-471</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_lu_bs_line_2_3_8_3_2" model="account.report.line">
+                                                <field name="name">ii) becoming due and payable after more than one year</field>
+                                                <field name="code">LU_BS_401</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-472</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_line_2_4" model="account.report.line">
+                        <field name="name">D. Deferred income</field>
+                        <field name="code">LU_BS_403</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-483 - 485 - 482 - 487</field>
+                    </record>
+                    <record id="account_financial_report_l10n_lu_bs_line_2_5" model="account.report.line">
+                        <field name="name">TOTAL (CAPITAL, RESERVES AND LIABILITIES)</field>
+                        <field name="code">LU_BS_405</field>
+                        <field name="aggregation_formula">LU_BS_301.balance + LU_BS_331.balance + LU_BS_435.balance + LU_BS_403.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

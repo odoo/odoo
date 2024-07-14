@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<odoo noupdate="1">
+    <record id="whatsapp_template_sale_order" model="whatsapp.template">
+        <field name="name">Sale Order</field>
+        <field name="template_name">sale</field>
+        <field name="lang_code">en</field>
+        <field name="template_type">utility</field>
+        <field name="header_type">document</field>
+        <field name="report_id" ref="sale.action_report_saleorder"/>
+        <field name="footer_text">Write 'stop' to stop receiving messages</field>
+        <field name="phone_field">partner_id.mobile</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="body">Hello {{1}},
+
+Congratulations! Your order *{{2}}* from *{{3}}* has been confirmed for a total of *{{4}}{{5}}*.
+
+To track your order: {{6}}
+
+Thank you.
+        </field>
+        <field name="variable_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {
+                'name': '{{1}}',
+                'demo_value': 'Azure Interior',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'partner_id'
+            }),
+            (0, 0, {
+                'name': '{{2}}',
+                'demo_value': 'SO00025',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'name'
+            }),
+            (0, 0, {
+                'name': '{{3}}',
+                'demo_value': 'My Company',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'company_id'
+            }),
+            (0, 0, {
+                'name': '{{4}}',
+                'demo_value': '$',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'currency_id.symbol'
+            }),
+            (0, 0, {
+                'name': '{{5}}',
+                'demo_value': '1000',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'amount_total'
+            }),
+            (0, 0, {
+                'name': '{{6}}',
+                'demo_value': 'https://...',
+                'line_type': 'body',
+                'field_type': 'portal_url'
+            })
+        ]" />
+    </record>
+</odoo>

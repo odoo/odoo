@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Pricer section added in "Configuration" in Point of Sale -->
+    <menuitem
+        id="pos_menu_pricer_configuration"
+        name="Pricer"
+        parent="point_of_sale.menu_point_config_product"
+        sequence="11"/>
+
+    <menuitem
+        id="menu_pos_pricer_stores"
+        name="Pricer Stores"
+        parent="pos_menu_pricer_configuration"
+        sequence="4"
+        action="action_open_pricer_stores"
+        groups="point_of_sale.group_pos_manager"/>
+    <menuitem
+        id="menu_pos_pricer_tags"
+        name="Pricer Tags"
+        parent="pos_menu_pricer_configuration"
+        sequence="5"
+        action="action_open_pricer_tags"
+        groups="point_of_sale.group_pos_manager"/>
+</odoo>

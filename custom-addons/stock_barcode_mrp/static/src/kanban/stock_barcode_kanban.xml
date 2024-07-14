@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="stock_barcode_mrp.KanbanRenderer" t-inherit="stock_barcode.KanbanRenderer">
+        <xpath expr="//div[hasclass('o_kanban_tip_filter')]/span[1]" position="replace">
+                <span t-if="packageEnabled and props.list.resModel == 'stock.picking'">Scan a transfer, a product or a package to filter your records</span>
+                <span t-elif="props.list.resModel == 'mrp.production'">Scan an order or a product to filter your records</span>
+        </xpath>
+    </t>
+
+</templates>

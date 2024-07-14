@@ -1,0 +1,39 @@
+<odoo>
+    <record id="xml_polizas_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_mx_xml_polizas.xml_polizas_wizard.form</field>
+        <field name="model">l10n_mx_xml_polizas.xml_polizas_wizard</field>
+        <field name="arch" type="xml">
+            <form string="XML Polizas Export">
+                <field name="filter_partial_month" invisible="1"/>
+                <field name="filter_partial_journals" invisible="1"/>
+                <field name="filter_all_entries" invisible="1"/>
+                <div class="alert alert-info" role="alert" invisible="not filter_partial_month">
+                    The filter is selecting <strong>an incomplete period</strong>. The resulting XML files may be incomplete.
+                </div>
+                <div class="alert alert-info" role="alert" invisible="not filter_partial_journals">
+                    The filter is selecting <strong>only some of the journals</strong>. The resulting XML files may be incomplete.
+                </div>
+                <div class="alert alert-info" role="alert" invisible="not filter_all_entries">
+                    The resulting XML will contain also <strong>unposted entries</strong>. The resulting XML files may be incorrect.
+                </div>
+                <group>
+                    <field name="export_type"/>
+                    <field name="order_number" placeholder="ABC6987654/99" invisible="export_type not in ['AF', 'FC']" required="export_type in ['AF', 'FC']"/>
+                    <field name="process_number" placeholder="AB123451234512" invisible="export_type not in ['DE', 'CO']" required="export_type in ['DE', 'CO']"/>
+                </group>
+                <footer>
+                    <button name="export_xml" string="Export" type="object" class="btn-primary"/>
+                    <button special="cancel" string="Cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="xml_polizas_action">
+        <field name="view_mode">form</field>
+        <field name="name">Export XML Polizas Wizard</field>
+        <field name="res_model">l10n_mx_xml_polizas.xml_polizas_wizard</field>
+        <field name="target">new</field>
+    </record> 
+
+</odoo>

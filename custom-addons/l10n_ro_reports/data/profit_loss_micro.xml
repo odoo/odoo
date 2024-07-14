@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_financial_report_ro_pnl_micro" model="account.report">
+        <field name="name">Code 20 - Abbreviated Profit and Loss (micro-entity)</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.ro"/>
+        <field name="filter_period_comparison" eval="True"/>
+        <field name="custom_handler_model_id" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_ro_pnl_micro_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_ro_pnl_micro_1_01" model="account.report.line">
+                <field name="name">1. Net turnover | 01</field>
+                <field name="code">RO_PNL_micro_1_01</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-7411D - 701 - 702 - 703 - 704 - 705 - 706 - 707 - 708 - 709</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_micro_2_02" model="account.report.line">
+                <field name="name">2. Other incomes | 02</field>
+                <field name="code">RO_PNL_micro_2_02</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-7411C - 741\(7411) - 711 - 712 - 721 - 722 - 725 - 751 - 755 - 758 - 761 - 762 - 764 - 765 - 766 - 767 - 768 - 7815</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_micro_3_03" model="account.report.line">
+                <field name="name">3. Cost of raw materials and consumables | 03</field>
+                <field name="code">RO_PNL_micro_3_03</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ro_pnl_micro_3_03_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">602 + 601 + 6091</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_micro_4_04" model="account.report.line">
+                <field name="name">4. Staff costs | 04</field>
+                <field name="code">RO_PNL_micro_4_04</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ro_pnl_micro_4_04_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">642 + 643 + 641 + 644 + 645 + 646</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_micro_5_05" model="account.report.line">
+                <field name="name">5. Value adjustments | 05</field>
+                <field name="code">RO_PNL_micro_5_05</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">654 + 681 + 686 + 754 + 7812 + 7813 + 7814 + 7818 + 786</field>
+            </record>
+            <record id="account_financial_report_ro_pnl_micro_6_06" model="account.report.line">
+                <field name="name">6. Other expenses | 06</field>
+                <field name="code">RO_PNL_micro_6_06</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ro_pnl_micro_6_06_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">635 + 605 + 607 + 614 + 651 + 613 + 663 + 608 + 652 + 667 + 655 + 658 + 668 + 603 + 612 + 609\(6091) + 62\(620,629) + 611 + 664 + 665 + 606 + 604 + 666 + 615</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_micro_7_07" model="account.report.line">
+                <field name="name">7. TAXES | 07</field>
+                <field name="code">RO_PNL_micro_7_07</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="expression_ids">
+                    <record id="account_financial_report_ro_pnl_micro_7_07_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">691 + 695 + 698</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_ro_pnl_micro_8" model="account.report.line">
+                <field name="name">8. NET PROFIT OR LOSS OF THE REPORTING PERIOD</field>
+                <field name="code">RO_PNL_micro_8</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_ro_pnl_micro_8_08" model="account.report.line">
+                        <field name="name">Profit | 08</field>
+                        <field name="code">RO_PNL_micro_8_08</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="hide_if_zero" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_micro_8_08_balance_unfiltered" model="account.report.expression">
+                                <field name="label">balance_unfiltered</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RO_PNL_micro_1_01.balance + RO_PNL_micro_2_02.balance - RO_PNL_micro_3_03.balance - RO_PNL_micro_4_04.balance - RO_PNL_micro_5_05.balance - RO_PNL_micro_6_06.balance - RO_PNL_micro_7_07.balance</field>
+                            </record>
+                            <record id="account_financial_report_ro_pnl_micro_8_08_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">RO_PNL_micro_8_08.balance_unfiltered</field>
+                                <field name="subformula">if_above(RON(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_ro_pnl_micro_8_09" model="account.report.line">
+                        <field name="name">Loss | 09</field>
+                        <field name="code">RO_PNL_micro_8_09</field>
+                        <field name="hierarchy_level" eval="3"/>
+                        <field name="hide_if_zero" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_ro_pnl_micro_8_09_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">-RO_PNL_micro_8_08.balance_unfiltered</field>
+                                <field name="subformula">if_above(RON(0))</field></record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,54 @@
+.o_studio_navbar {
+  --NavBar-brand-color: #{rgba($o-white, .9)};
+  --NavBar-entry-color: #{rgba($o-white, .9)};
+  --NavBar-entry-backgroundColor: $o-web-studio-bg-dark;
+  --NavBar-entry-backgroundColor--hover: #{$o-gray-700};
+  --NavBar-entry-backgroundColor--focus: #{$o-gray-700};
+  --NavBar-menuToggle-color: #{rgba($o-white, .9)};
+  --NavBar-entry-borderColor-active: #{$o-gray-700};
+  --NavBar-entry-backgroundColor--active: #{$o-gray-700};
+  --NavBar-entry-color--active: #{$o-white};
+  --NavBar-entry-color--hover: #{$o-white};
+
+  background: $o-web-studio-bg-dark;
+  border-color: $o-web-studio-bg-dark;
+
+  &.o_main_navbar {
+    grid-template-areas: "apps brand sections studiomenu systray";
+    grid-template-columns:
+      minmax($o-navbar-height, max-content)
+      max-content
+      minmax($o-navbar-height, max-content)
+      minmax(max-content, 1fr)
+      fit-content(100%)
+  }
+
+  .o_menu_sections {
+    color: lightgrey;
+    height: $o-web-studio-menu-height - 1;
+  }
+
+  .o-studio--menu {
+    grid-area: studiomenu;
+    display: flex;
+  }
+
+  .o_web_edit_menu,
+  .o_web_create_new_model {
+    color: $o-web-studio-text-inactive;
+    margin-left: 15px;
+    padding: 2px 10px 2px 10px;
+    font-size: 12px;
+  }
+
+  .o_studio_buttons {
+    grid-area: systray;
+    display: flex;
+    margin: -$o-navbar-padding-v 0;
+
+    .o_web_studio_leave > a {
+      // Allows to keep the same alignment as the navbar entries
+      line-height: calc(var(--o-navbar-height) - #{$o-navbar-padding-v * 2});
+    }
+  }
+}

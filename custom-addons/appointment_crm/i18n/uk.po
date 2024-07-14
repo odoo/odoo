@@ -1,0 +1,103 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* appointment_crm
+# 
+# Translators:
+# Wil Odoo, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:22+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: appointment_crm
+#: model:crm.tag,name:appointment_crm.appointment_crm_tag
+msgid "Appointment"
+msgstr "Призначення"
+
+#. module: appointment_crm
+#: model:ir.model,name:appointment_crm.model_appointment_invite
+msgid "Appointment Invite"
+msgstr "Запрошення на зустріч"
+
+#. module: appointment_crm
+#: model:ir.model,name:appointment_crm.model_appointment_type
+msgid "Appointment Type"
+msgstr "Тип зустрічі"
+
+#. module: appointment_crm
+#: model:ir.model,name:appointment_crm.model_calendar_event
+msgid "Calendar Event"
+msgstr "Календар подій"
+
+#. module: appointment_crm
+#. odoo-javascript
+#: code:addons/appointment_crm/static/src/views/appointment_calendar/appointment_crm_calendar_controller.xml:0
+#, python-format
+msgid "Click in your calendar to pick meeting time proposals for"
+msgstr "Клацніть у своєму календарі, щоб вибрати час зустрічі"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_appointment_type__lead_create
+msgid "Create Opportunities"
+msgstr "Створіть нагоди"
+
+#. module: appointment_crm
+#: model:ir.model.fields,help:appointment_crm.field_appointment_type__lead_create
+msgid ""
+"For each scheduled appointment, create a new opportunity and assign it to "
+"the responsible user."
+msgstr ""
+"Для кожної запланованої зустрічі створіть нову нагоду і призначте її "
+"відповідальному користувачеві."
+
+#. module: appointment_crm
+#: model_terms:ir.ui.view,arch_db:appointment_crm.appointment_type_view_form
+msgid "Leads"
+msgstr "Ліди"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_appointment_type__lead_count
+msgid "Leads Count"
+msgstr "Підрахунок лідів"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_appointment_type__lead_ids
+msgid "Leads/Opportunity"
+msgstr "Ліди/Нагоди"
+
+#. module: appointment_crm
+#: model:ir.model.fields,help:appointment_crm.field_appointment_invite__opportunity_id
+msgid ""
+"Link an opportunity/lead to the appointment invite created.\n"
+"Used when creating an invitation from the Meeting action in the crm form view."
+msgstr ""
+"Пов’яжіть нагоду/лід зі створеним запрошенням на зустріч.\n"
+"Використовується під час створення запрошення з дії «Зустріч» у перегляді форми crm."
+
+#. module: appointment_crm
+#. odoo-python
+#: code:addons/appointment_crm/models/calendar_event.py:0
+#, python-format
+msgid "Meeting linked to Lead/Opportunity %s"
+msgstr "Зустріч, пов’язана з лідом/нагодою %s"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_calendar_event__opportunity_id
+msgid "Opportunity"
+msgstr "Нагода"
+
+#. module: appointment_crm
+#: model:ir.model.fields,field_description:appointment_crm.field_appointment_invite__opportunity_id
+msgid "Opportunity/Lead"
+msgstr "Нагода/Лід"

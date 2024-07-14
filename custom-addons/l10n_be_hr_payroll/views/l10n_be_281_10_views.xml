@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_281_10_form_wizard" model="ir.ui.view">
+        <field name="name">l10n_be.281_10.form</field>
+        <field name="model">l10n_be.281_10</field>
+        <field name="arch" type="xml">
+            <form string="Create 281.10 Form">
+                <header>
+                    <button name="action_generate_declarations" string="Populate" type="object" class="btn-primary" invisible="lines_count"/>
+                    <button name="action_generate_declarations" string="Populate" type="object" class="btn-secondary" invisible="not lines_count"/>
+                    <button name="action_generate_xml" string="Create XML" type="object" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <field name="state" invisible="1"/>
+                    <field name="xml_filename" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_declarations" type="object" class="oe_stat_button" icon="fa-users" invisible="not lines_count">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="lines_count"/></span>
+                                <span class="o_stat_text">Eligible Employees</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="year" class="o_hr_narrow_field"/>
+                            <field name="type_sending"/>
+                            <field name="type_treatment" class="o_hr_narrow_field"/>
+                            <field name="is_test"/>
+                        </group>
+                    </group>
+                    <div invisible="state != 'get'">
+                        <h2>Generation Complete</h2>
+                        <p invisible="not xml_file">
+                            Download the 281.10 XML file: <field name="xml_file" readonly="1" filename="xml_filename"/>
+                            <field name="xml_validation_state" widget="state_selection" nolabel="1"/>
+                            <field name="error_message" invisible="xml_validation_state != 'invalid'" nolabel="1"/>
+                        </p>
+                    </div>
+                    <p name="save_warning" invisible="state != 'generate'">The files won't be posted in the employee portal if you don't have the Documents app.</p>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_be_281_10_action_view_tree" model="ir.ui.view">
+        <field name="name">l10n_be.281_10.view.tree</field>
+        <field name="model">l10n_be.281_10</field>
+        <field name="arch" type="xml">
+            <tree string="281.10 Forms">
+                <field name="year"/>
+                <field name="type_sending"/>
+                <field name="type_treatment"/>
+                <field name="is_test"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_be_281_10_action" model="ir.actions.act_window">
+        <field name="name">Create 281.10 Form</field>
+        <field name="res_model">l10n_be.281_10</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_be_l10n_be_281_10"
+        name="281.10 Sheet"
+        action="l10n_be_281_10_action"
+        parent="l10n_be_hr_payroll.menu_reporting_l10n_be"
+        sequence="150"
+    />
+
+</odoo>

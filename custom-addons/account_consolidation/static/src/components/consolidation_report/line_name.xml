@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_consolidation.ConsolidationReportLineName" t-inherit="account_reports.AccountReportLineNameCustomizable">
+        <xpath expr="//td" position="replace">
+            <td
+                t-att-colspan="props.line.colspan || 1"
+                t-on-click="() => this.toggleFoldable()"
+            >
+                <t t-if="props.line.unfoldable">
+                    <span class="o_account_reports_caret_icon">
+                        <i t-att-class="props.line.unfolded ? 'fa fa-caret-down' : 'fa fa-caret-right'"/>
+                    </span>
+                </t>
+
+                <span class="acc_rep_line_name">
+                    <t t-out="props.line.name"/>
+                </span>
+            </td>
+        </xpath>
+    </t>
+</templates>

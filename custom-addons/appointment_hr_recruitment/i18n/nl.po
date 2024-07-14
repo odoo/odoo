@@ -1,0 +1,110 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* appointment_hr_recruitment
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,body_html:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <h2>Congratulations!</h2>\n"
+"            <div style=\"font-size: 13px;\">\n"
+"                Your application is really interesting and we'd like to plan an interview with you.<br>\n"
+"                Can you please use the button below to schedule it with one of our recruiters?\n"
+"                <br><br>\n"
+"            </div>\n"
+"            <a t-att-href=\"env['ir.config_parameter'].sudo().get_param('web.base.url') + '/book/interview'\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Plan my interview</a>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <h2>Gefeliciteerd!</h2>\n"
+"            <div style=\"font-size: 13px;\">\n"
+"                We hebben een grote interesse in je sollicitatie en hadden graag een interview met jou gepland.<br>\n"
+"                Kan je met behulp van onderstaande knop een afspraak vastleggen met één van onze recruiters?\n"
+"                <br><br>\n"
+"            </div>\n"
+"            <a t-att-href=\"env['ir.config_parameter'].sudo().get_param('web.base.url') + '/book/interview'\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Mijn interview in plannen</a>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
+
+#. module: appointment_hr_recruitment
+#: model:ir.model.fields,field_description:appointment_hr_recruitment.field_appointment_invite__applicant_id
+#: model:ir.model.fields,field_description:appointment_hr_recruitment.field_calendar_event__applicant_id
+msgid "Applicant"
+msgstr "Sollicitant"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model,name:appointment_hr_recruitment.model_appointment_invite
+msgid "Appointment Invite"
+msgstr "Afspraak uitnodigen"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model,name:appointment_hr_recruitment.model_appointment_type
+msgid "Appointment Type"
+msgstr "Afspraak soort"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model,name:appointment_hr_recruitment.model_calendar_event
+msgid "Calendar Event"
+msgstr "Agenda gebeurtenis"
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,subject:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid ""
+"Can we plan an interview together for your {{ (object.job_id.name + ' ') or "
+"'' }}application?"
+msgstr ""
+"Kunnen we een interview inplannen voor je {{ (object.job_id.name + ' ') or "
+"'' }}application?"
+
+#. module: appointment_hr_recruitment
+#: model:appointment.type,name:appointment_hr_recruitment.appointment_type_interviews
+msgid "Interviews availabilities"
+msgstr "Beschikbaarheden interviews"
+
+#. module: appointment_hr_recruitment
+#: model:ir.model.fields,help:appointment_hr_recruitment.field_appointment_invite__applicant_id
+#: model:ir.model.fields,help:appointment_hr_recruitment.field_calendar_event__applicant_id
+msgid ""
+"Link an applicant to the appointment invite created.\n"
+"Used when creating an invitation from the Meeting action in the applicant form view."
+msgstr ""
+"Koppel een sollicitant aan de gemaakte afspraakuitnodiging.\n"
+"Wordt gebruikt bij het aanmaken van een uitnodiging vanuit de Vergadering-actie in de sollicitant-formulierweergave."
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,name:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid "Recruitment: Schedule interview"
+msgstr "Werving: Interview inplannen"
+
+#. module: appointment_hr_recruitment
+#: model:mail.template,description:appointment_hr_recruitment.email_template_data_applicant_schedule_interview
+msgid ""
+"Send this email when you want to schedule an interview with a candidate"
+msgstr ""
+"Deze e-mail verzenden als je een interview wilt inplannen met een kandidaat"

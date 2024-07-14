@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_termination_fees">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <div class="oe_structure"></div>
+                    <h2><span t-field="o.name">Odoo</span></h2>
+
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td><strong>Company Information</strong></td>
+                            <td>
+                                <div><span t-field="o.company_id.name">Odoo</span></div>
+                                <div><span t-field="o.company_id.street">Rue du Paradis</span></div>
+                                <div><span t-if="o.company_id.street2" t-field="o.company_id.street2">Boulevard de Waterloo</span></div>
+                                <div>
+                                    <span t-field="o.company_id.city">Eghezee</span>
+                                    <span t-field="o.company_id.state_id">Limburg</span>
+                                    <span t-field="o.company_id.zip">6870</span>
+                                </div>
+                                <div><span t-field="o.company_id.country_id">Belgium</span></div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td><strong>Name</strong></td>
+                            <td><span t-field="o.employee_id">Marc Demo</span></td>
+                            <td><strong>Designation</strong></td>
+                            <td><span t-field="o.employee_id.job_id">Developer</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Address</strong></td>
+                            <td colspan="3">
+                                <span class="w-100 d-block">
+                                    <span t-out="o.employee_id.private_street">Rue du Paradis</span><br/>
+                                    <span t-if="o.employee_id.private_street2" t-out="o.employee_id.private_street2">Boulevard de Waterloo</span><br/>
+                                    <span t-out="o.employee_id.private_zip">56789</span> <span t-out="o.employee_id.private_city">Antwerp</span><br/>
+                                    <span t-out="o.employee_id.private_country_id.name">Belgium</span><br/>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email</strong></td>
+                            <td><span t-field="o.employee_id.work_email">Marc.demo@email.com</span></td>
+                            <td><strong>Identification No</strong></td>
+                            <td><span t-field="o.employee_id.identification_id">123456789</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reference</strong></td>
+                            <td><span t-field="o.number">REF-1234</span></td>
+                            <td><strong>Bank Account</strong></td>
+                            <td><span t-field="o.employee_id.bank_account_id">XXXX-XXXX-XXXX-1234</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Start notice period</strong></td>
+                            <td><span t-field="o.date_from">2023-08-14</span></td>
+                            <td><strong>Registration Number</strong></td>
+                            <td><span t-field="o.employee_id.registration_number">REG-5678</span></td>
+                        </tr>
+                    </table>
+
+                    <div class="oe_structure"></div>
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr class="table-secondary">
+                                <th colspan="4"><strong>Employee</strong></th>
+                            </tr>
+                            <tr t-foreach="o.line_ids.filtered(lambda line: line.category_id.code in ['BASIC', 'DIV. IMPOS'])" t-as="line">
+                                <td width="50%"><span t-field="line.name">Marc Demo</span></td>
+                                <td><span t-out="line.amount" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>1000</span></td>
+                                <td t-if="line.rate == 100">* <span t-field="line.quantity">2</span> =</td>
+                                <td t-else=""><span t-field="line.rate">50</span> % =</td>
+                                <td><span t-out="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>2000</span></td>
+                            </tr>
+                            <tr class="table-secondary" t-foreach="o.line_ids.filtered(lambda line: line.code == 'ANNUAL_SALARY_REVALUED')" t-as="line">
+                                <td class="text-center"><span t-field="line.name">Name</span></td>
+                                <td colspan="2"></td>
+                                <td><span t-out="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>999.99</span></td>
+                            </tr>
+
+                            <t t-set="line_count" t-value="0" />
+                            <tr t-foreach="o.line_ids.filtered(lambda line: line.category_id.code == 'NOTICE_DURATION')" t-as="line">
+                                <t t-if="line_count == 0">
+                                    <td rowspan="3">Notice duration</td>
+                                </t>
+                                <td><span t-out="line.quantity">1</span></td>
+                                <td><span t-out="line.name">Demon Name</span></td>
+                                <td><span t-out="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>0.00</span></td>
+                                <t t-set="line_count" t-value="line_count+1" />
+                            </tr>
+                            <t t-foreach="o.line_ids.filtered(lambda line: line.category_id.code == 'NOTICE_SALARY' and line.code != 'EMPLOYERCOST')" t-as="line">
+                                <tr class="table-secondary" t-if="line.code in ['NET', 'BASIC']">
+                                    <td class="text-center"><span t-field="line.name"/></td>
+                                    <td colspan="2"></td>
+                                    <td><span t-out="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>999.99</span></td>
+                                </tr>
+                                <tr t-else="">
+                                    <td colspan="3"><span t-field="line.name"/></td>
+                                    <td><span t-out="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>999.99</span></td>
+                                </tr>
+                            </t>
+                            <t t-foreach="o.line_ids.filtered(lambda line: line.code in ['ONSS', 'GROSS', 'P.P', 'ATTACH_SALARY', 'ASSIG_SALARY', 'CHILD_SUPPORT', 'DEDUCTION', 'REIMBURSEMENT', 'NET'])" t-as="line">
+                                <tr>
+                                    <td colspan="3"><span t-field="line.name"/></td>
+                                    <td><span t-out="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>999.99</span></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <div class="oe_structure"></div>
+                    <p class="text-end"><strong>Established on <span t-field="o.compute_date">2023-08-14</span></strong></p>
+                    <p class="text-end"><strong>Authorized signature</strong></p>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</odoo>

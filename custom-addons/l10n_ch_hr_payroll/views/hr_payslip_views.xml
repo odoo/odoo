@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payslip_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.payslip.view.form.inherit.l10n.ch.hr.payroll</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <group name="accounting" position="after">
+                <group name="l10n_ch_insurances" string="Swiss Insurances">
+                    <field name="l10n_ch_social_insurance_id"/>
+                    <field name="l10n_ch_compensation_fund_id"/>
+                    <field name="l10n_ch_accident_insurance_line_id"/>
+                    <field name="l10n_ch_additional_accident_insurance_line_ids" widget="many2many_tags"/>
+                    <field name="l10n_ch_sickness_insurance_line_ids" widget="many2many_tags"/>
+                    <field name="l10n_ch_lpp_insurance_id"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

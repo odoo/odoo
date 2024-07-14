@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_subscription_report_analysis_action" model="ir.actions.act_window">
+        <field name="name">Subscriptions Analysis</field>
+        <field name="res_model">sale.subscription.report</field>
+        <field name="view_mode">graph,tree,pivot</field>
+        <field name="domain">[('is_subscription', '=', True), ('subscription_state', 'not in', ['2_renewal', '5_renewed'] )]</field>
+        <field name="context">{
+            'search_default_filter_progress': 1,
+            'search_default_filter_paused': 1,
+            'search_default_recurring': 1,
+            'search_default_non_recurring': 0,
+            }
+        </field>
+    </record>
+
+    <record id="sale_subscription_report_analysis_view_graph" model="ir.ui.view">
+        <field name="name">sale.subscription.report.view.graph</field>
+        <field name="model">sale.subscription.report</field>
+        <field name="arch" type="xml">
+            <graph string="Subscription Analysis" sample="1">
+                <field name="recurring_monthly" type="measure"/>
+                <field name="product_uom_qty" string="Quantity"/>
+                <field name="nbr" invisible="1"/>
+                <field name="discount" invisible="1"/>
+                <field name="discount_amount" invisible="1"/>
+                <field name="weight" invisible="1"/>
+                <field name="margin" invisible="1"/>
+                <field name="qty_delivered" invisible="1"/>
+                <field name="qty_to_deliver" invisible="1"/>
+                <field name="qty_invoiced" invisible="1"/>
+                <field name="qty_to_invoice" invisible="1"/>
+                <field name="price_total" invisible="1"/>
+                <field name="untaxed_amount_to_invoice" invisible="1"/>
+                <field name="untaxed_amount_invoiced" invisible="1"/>
+                <field name="volume" invisible="1"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="sale_subscription_report_analysis_action_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="sale_subscription_report_analysis_view_graph"/>
+        <field name="act_window_id" ref="sale_subscription_report_analysis_action"/>
+    </record>
+
+    <record id="sale_subscription_report_analysis_view_pivot" model="ir.ui.view">
+         <field name="name">sale.subscription.report.view.pivot</field>
+         <field name="model">sale.subscription.report</field>
+         <field name="arch" type="xml">
+             <pivot string="Subscription Analysis" sample="1">
+                 <field name="template_id" type="row"/>
+                 <field name="user_id" type="col"/>
+                 <field name="recurring_monthly" type="measure"/>
+                 <field name="product_uom_qty" string="Quantity"/>
+                 <field name="nbr" invisible="1"/>
+                 <field name="discount" invisible="1"/>
+                 <field name="discount_amount" invisible="1"/>
+                 <field name="weight" invisible="1"/>
+                 <field name="margin" invisible="1"/>
+                 <field name="qty_delivered" invisible="1"/>
+                 <field name="qty_to_deliver" invisible="1"/>
+                 <field name="qty_invoiced" invisible="1"/>
+                 <field name="qty_to_invoice" invisible="1"/>
+                 <field name="price_total" invisible="1"/>
+                 <field name="untaxed_amount_to_invoice" invisible="1"/>
+                 <field name="untaxed_amount_invoiced" invisible="1"/>
+                 <field name="volume" invisible="1"/>
+             </pivot>
+         </field>
+    </record>
+
+    <record id="sale_subscription_report_analysis_action_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="50"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="sale_subscription_report_analysis_view_pivot"/>
+        <field name="act_window_id" ref="sale_subscription_report_analysis_action"/>
+    </record>
+
+    <record id="sale_subscription_report_analysis_view_tree" model="ir.ui.view">
+        <field name="name">sale.subscription.report.view.tree</field>
+        <field name="model">sale.subscription.report</field>
+        <field name="arch" type="xml">
+            <tree string="Subscription Analysis" create="0" delete="0" action="action_open_subscription_order" type="object">
+                <field name="name"/>
+                <field name="partner_id" optional="show"/>
+                <field name="first_contract_date" optional="hide"/>
+                <field name="date" optional="hide"/>
+                <field name="end_date" optional="hide"/>
+                <field name="product_id" optional="hide"/>
+                <field name="categ_id" optional="show"/>
+                <field name="template_id" optional="show"/>
+                <field name="product_uom_qty" optional="hide" string="Quantity"/>
+                <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                <field name="team_id" optional="show"/>
+                <field name="company_id" optional="show" groups="base.group_multi_company"/>
+                <field name="recurring_monthly" optional="show" sum="Sum of Monthly Recurring"/>
+                <field name="recurring_total" optional="hide"/>
+                <field name="recurring_yearly" optional="hide" sum="Sum of Yearly Recurring Revenue"/>
+                <field name="subscription_state" widget="badge"
+                   decoration-success="subscription_state == '3_progress'"
+                   decoration-warning="subscription_state == '4_paused'"
+                   decoration-danger="subscription_state == '6_churn'"
+                   decoration-primary="subscription_state == '7_upsell'"
+                   decoration-info="subscription_state in ['1_draft', '2_renewal']"
+                   readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="sale_subscription_report_analysis_action_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="100"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="sale_subscription_report_analysis_view_tree"/>
+        <field name="act_window_id" ref="sale_subscription_report_analysis_action"/>
+    </record>
+
+    <record id="sale_subscription_report_view_cohort" model="ir.ui.view">
+        <field name="name">sale.subscription.report.cohort</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <cohort string="Subscription"
+                    measure="__count"
+                    date_start="first_contract_date"
+                    date_stop="end_date"
+                    interval="month"
+                    sample="1">
+                <field name="percentage_satisfaction" invisible="1"/>
+                <field name="currency_rate" invisible="1"/>
+                <field name="kpi_1month_mrr_delta" invisible="1"/>
+                <field name="kpi_1month_mrr_percentage" invisible="1"/>
+                <field name="kpi_3months_mrr_delta" invisible="1"/>
+                <field name="kpi_3months_mrr_percentage" invisible="1"/>
+                <field name="rating_last_value" invisible="1"/>
+                <field name="recurring_total" invisible="1"/>
+                <field name="amount_total" invisible="1"/>
+                <field name="amount_untaxed" invisible="1"/>
+                <field name="amount_tax" invisible="1"/>
+                <field name="recurring_monthly" invisible="1"/>
+            </cohort>
+        </field>
+    </record>
+
+    <record id="sale_subscription_report_cohort_action" model="ir.actions.act_window">
+        <field name="name">Retention Analysis</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">cohort</field>
+        <field name="domain">[
+            ('is_subscription', '=',True), ('subscription_state', 'not in', ['1_draft', '2_renewal', '5_renewed', '7_upsell'])]
+        </field>
+        <field name="view_id" ref="sale_subscription_report_view_cohort"/>
+    </record>
+
+    <record id="sale_subscription_report_search" model="ir.ui.view">
+        <field name="name">sale.subscription.report.search</field>
+        <field name="model">sale.subscription.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Subscription"/>
+                <field name="client_order_ref"/>
+                <field name="template_id"/>
+                <field name="user_id"/>
+                <field name="team_id" string="Sales Team"/>
+                <field name="product_id"/>
+                <field name="partner_id" operator="child_of"/>
+                <filter name="filter_my_subscriptions" string="My Subscriptions" domain="[('user_id','=',uid)]"/>
+                <separator/>
+                <filter name="filter_quotations" string="Quotations" domain="[('subscription_state', '=', '1_draft')]"/>
+                <filter name="filter_progress" string="In Progress" domain="[('subscription_state', '=', '3_progress')]"/>
+                <filter name="filter_paused" string="Paused" domain="[('subscription_state', '=', '4_paused')]"/>
+                <filter name="filter_churn" string="Churned" domain="[('subscription_state', '=', '6_churn')]" help="Closed subscriptions"/>
+                <separator/>
+                <filter name="filter_to_renew" string="To renew" domain="[('next_invoice_date', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="Recurring" name="recurring" domain="[('product_tmpl_id.recurring_invoice', '=', True)]"/>
+                <filter string="Non-recurring" name="non_recurring" domain="[('product_tmpl_id.recurring_invoice', '!=', True)]"/>
+                <separator/>
+                <filter name="filter_good" string="Good Health" domain="[('health', '=', 'done')]"/>
+                <filter name="filter_bad" string="Bad Health" domain="[('health', '=', 'bad')]"/>
+                <separator/>
+                <filter name="filter_first_contract_date" date="first_contract_date"/>
+                <filter name="filter_next_invoice_date" date="next_invoice_date"/>
+                <filter name="filter_date_end" date="end_date"/>
+                <group expand="1" string="Group By">
+                    <filter string="Subscription State" name="group_by_subscription_state" domain="[]" context="{'group_by': 'subscription_state'}"/>
+                    <filter string="Sales Team" name="group_by_team" domain="[]" context="{'group_by': 'team_id'}"/>
+                    <filter string="Salesperson" name="group_by_sales_person" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string="Customer" name="group_by_customer" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Country" name="group_by_country" domain="[]" context="{'group_by': 'country_id'}"/>
+                    <filter string="Template" name="group_by_template" domain="[]" context="{'group_by': 'template_id'}"/>
+                    <filter string="Plan" name="group_by_plan_id" domain="[]" context="{'group_by': 'plan_id'}"/>
+                    <filter string="Product" name="group_by_product" domain="[]" context="{'group_by': 'product_id'}"/>
+                    <filter string="First Contract Date" name="group_by_first_contract_date" domain="[]" context="{'group_by': 'first_contract_date'}"/>
+                    <filter string="Next Invoice Date" name="group_by_next_invoice_date" domain="[]" context="{'group_by': 'next_invoice_date'}"/>
+                    <filter string="End Date" name="group_by_end_month" domain="[]" context="{'group_by': 'end_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_order_product_search_inherit" model="ir.ui.view">
+        <field name="name">sale.report.search</field>
+        <field name="model">sale.report</field>
+        <field name="inherit_id" ref="sale.view_order_product_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='Sales']" position='after'>
+                <separator/>
+                <filter string="Recurring" name="recurring" domain="[('product_tmpl_id.recurring_invoice', '=', True)]"/>
+                <filter string="Non-recurring" name="non_recurring" domain="[('product_tmpl_id.recurring_invoice', '!=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale.action_order_report_all" model="ir.actions.act_window">
+        <field name="name">Sales Analysis</field>
+        <field name="res_model">sale.report</field>
+        <field name="context">{
+            'search_default_Sales': 1,
+            'group_by_no_leaf': 1,
+            'group_by': [],
+            'search_default_filter_order_date': 1,
+            'search_default_recurring': 0,
+            'search_default_non_recurring': 1,
+        }</field>
+        <field name="domain">[('state', '!=', 'cancel')]</field>
+    </record>
+
+    <menuitem id="menu_sale_subscription_report" name="Reporting" parent="menu_sale_subscription_root" sequence="40"/>
+    <menuitem id="menu_sale_subscription_analysis" name="Subscriptions" parent="menu_sale_subscription_report" action="sale_subscription_report_analysis_action" sequence="1"/>
+    <menuitem id="menu_sale_subscription_report_cohort" name="Retention" parent="menu_sale_subscription_report" action="sale_subscription_report_cohort_action" sequence="2"/>
+</odoo>

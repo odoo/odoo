@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web_gantt.GanttPopover">
+        <div style="max-width: 320px;"> <!-- the chosen value is rather arbitrary: the idea was to have enough space (but not too much) for some particular known cases-->
+            <div class="popover-header d-flex justify-content-between py-2 pe-2">
+                <h4 class="p-0 pt-1">
+                    <t t-esc="props.title" />
+                </h4>
+                <span class="ms-4 mt-1 me-2 cursor-pointer" t-on-click.stop="props.close">
+                    <i class="fa fa-close" />
+                </span>
+            </div>
+            <div class="popover-body">
+                <t t-call="{{ props.template }}" t-call-context="props.context" />
+            </div>
+            <t t-if="props.button">
+                <div class="popover-footer border-top p-3">
+                    <button class="btn btn-primary btn-sm" t-on-click="onClick" t-esc="props.button.text"></button>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web_gantt.GanttPopover.default">
+        <ul class="p-0 mb-0 list-unstyled">
+            <li class="pe-2">
+                <strong>Name</strong>: <span t-esc="name" />
+            </li>
+            <li class="pe-2">
+                <strong>Start</strong>: <span t-esc="start" />
+            </li>
+            <li class="pe-2">
+                <strong>Stop</strong>: <span t-esc="stop" />
+            </li>
+        </ul>
+    </t>
+
+</templates>

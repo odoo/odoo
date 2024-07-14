@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_activity_schedule_view_form" model="ir.ui.view">
+        <field name="name">mail.activity.schedule.inherit.account.tax</field>
+        <field name="model">mail.activity.schedule</field>
+        <field name="inherit_id" ref="mail.mail_activity_schedule_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_schedule_activities_done']" position="attributes">
+                <attribute name="invisible">has_error or activity_category == 'tax_report' or chaining_type == 'trigger'</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_find_duplicates" model="ir.cron">
+        <field name="name">Data Merge: Find Duplicate Records</field>
+        <field name="model_id" ref="model_data_merge_model"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_find_duplicates()</field>
+        <field name="active" eval="True"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="nextcall" eval="(DateTime.now().replace(hour=1, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+    </record>
+    <record id="ir_cron_cleanup" model="ir.cron">
+        <field name="name">Data Merge: Cleanup Records</field>
+        <field name="model_id" ref="model_data_merge_group"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_cleanup()</field>
+        <field name="active" eval="True"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="nextcall" eval="(DateTime.now().replace(hour=1, minute=30) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+    </record>
+</odoo>

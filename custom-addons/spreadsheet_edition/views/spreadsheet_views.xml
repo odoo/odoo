@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Spreadsheet revisions -->
+    <record id="spreadsheet_revision_action" model="ir.actions.act_window">
+        <field name="name">Revisions</field>
+        <field name="res_model">spreadsheet.revision</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="spreadsheet_revision_view_search" model="ir.ui.view">
+        <field name="name">spreadsheet.revision search view</field>
+        <field name="model">spreadsheet.revision</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="res_model"/>
+                <field name="res_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="spreadsheet_revision_view_tree" model="ir.ui.view">
+        <field name="name">spreadsheet.revision list view</field>
+        <field name="model">spreadsheet.revision</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="create_date"/>
+                <field name="name"/>
+                <field name="revision_id"/>
+                <field name="res_model"/>
+                <field name="res_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Technical / Spreadsheet -->
+    <menuitem id="menu_technical_spreadsheet"
+        name="Spreadsheet"
+        sequence="5"
+        parent="base.menu_custom"/>
+
+    <menuitem id="menu_technical_spreadsheet_revision"
+        name="Revisions"
+        parent="menu_technical_spreadsheet" sequence="10"
+        action="spreadsheet_revision_action"/>
+</odoo>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_journal_dashboard_inherit_l10n_be_codabox" model="ir.ui.view">
+            <field name="name">account.journal.dashboard.inherit.l10n_be_codabox</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr='//div[@name="bank_journal_cta"]' position='inside'>
+                    <t t-if="journal_type == 'bank' and dashboard.bank_statements_source == 'l10n_be_codabox'">
+                        <t t-if="dashboard.l10n_be_codabox_is_connected">
+                            <a type="object" name="l10n_be_codabox_manually_fetch_coda_transactions" class="oe_inline" groups="account.group_account_manager">Fetch from CodaBox</a>
+                        </t>
+                        <t t-else="">
+                            <a name="l10n_be_codabox_action_open_settings" type="object" class="text-warning">
+                                <i class="fa fa-exclamation-triangle me4"/>
+                                CodaBox disconnected
+                            </a>
+                        </t>
+                    </t>
+                </xpath>
+                <xpath expr='//button[@id="new_misc_entry_button"]' position='after'>
+                    <t t-if="journal_type == 'general' and dashboard.l10n_be_codabox_journal_is_soda">
+                        <t t-if="dashboard.l10n_be_codabox_is_connected">
+                            <a type="object" name="l10n_be_codabox_manually_fetch_soda_transactions" class="oe_inline" groups="account.group_account_manager">Fetch from CodaBox</a>
+                        </t>
+                        <t t-else="">
+                            <a name="l10n_be_codabox_action_open_settings" type="object" class="text-warning">
+                                <i class="fa fa-exclamation-triangle me4"/>
+                                CodaBox disconnected
+                            </a>
+                        </t>
+                    </t>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

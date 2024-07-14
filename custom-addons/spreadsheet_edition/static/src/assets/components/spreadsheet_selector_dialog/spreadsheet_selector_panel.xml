@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="spreadsheet_edition.SpreadsheetSelectorPanel"
+       >
+        <div class="o-sp-dialog-cp">
+            <div class="o-sp-searchview">
+                <input type="text"
+                    class="o-sp-searchview-input o_input"
+                    placeholder="Search..."
+                    t-on-input="onSearchInput"/>
+                <i class="o-sp-searchview-icon oi oi-search"
+                    role="img"
+                    aria-label="Search..."
+                    title="Search..."></i>
+            </div>
+            <div class="o-pager">
+                <Pager offset="state.pagerProps.offset"
+                    limit="state.pagerProps.limit"
+                    total="state.pagerProps.total"
+                    onUpdate.bind="onUpdatePager"
+                    isEditable="false" />
+            </div>
+        </div>
+        <div class="o-sp-dialog-items">
+            <div t-if="props.displayBlank" class="o-sp-dialog-item o-sp-dialog-item-blank">
+                <img class="o-sp-dialog-item-img"
+                    tabindex="0"
+                    t-on-focus="() => this._selectItem(false)"
+                    t-on-dblclick="props.onSpreadsheetDblClicked"
+                    t-att-class="{ selected: state.selectedSpreadsheetId === false }"
+                    src="spreadsheet/static/img/spreadsheet.svg"
+                    t-att-title="Blank"/>
+                <div class="o-sp-dialog-item-label">Blank spreadsheet</div>
+            </div>
+            <div t-foreach="state.spreadsheets"
+                t-as="spreadsheet"
+                t-key="spreadsheet.id"
+                class="o-sp-dialog-item">
+                <div t-if="!spreadsheet.thumbnail"
+                    class="o-sp-dialog-no-preview o-sp-dialog-item-img d-flex flex-grow-1 align-items-center justify-content-center"
+                    tabindex="0"
+                    t-on-focus="() => this._selectItem(spreadsheet.id)"
+                    t-on-dblclick="props.onSpreadsheetDblClicked"
+                    t-att-class="{ selected: state.selectedSpreadsheetId === spreadsheet.id}"
+                    t-att-data-id="spreadsheet.id">
+                    <p class="text-truncate text-muted m-1">No preview</p>
+                </div>
+                <div t-else="1"
+                    class="o-sp-dialog-item-img"
+                    tabindex="0"
+                    t-on-focus="() => this._selectItem(spreadsheet.id)"
+                    t-on-dblclick="props.onSpreadsheetDblClicked"
+                    t-att-class="{ selected: state.selectedSpreadsheetId === spreadsheet.id}"
+                    t-att-data-id="spreadsheet.id">
+                    <img t-att-src="getUrl(spreadsheet.thumbnail)"
+                        t-att-title="spreadsheet.name"/>
+                </div>
+                <div class="o-sp-dialog-item-label"
+                    t-esc="spreadsheet.name"/>
+            </div>
+            <!-- ghost items are used to properly space last elements. -->
+            <div t-foreach="Array(state.pagerProps.limit)" t-as="i" t-key="i_index"
+                class="o-sp-dialog-item o-sp-dialog-ghost-item mh-0" />
+        </div>
+    </t>
+
+</templates>

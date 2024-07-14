@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp_workorder.MrpWorkcenterDialog">
+        <Dialog size="'md'" title="props.title" modalRef="modalRef">
+                <div class="o_mrp_workcenter_dialog w-100">
+                    <t t-foreach="workcenters" t-as="workcenter" t-key="workcenter.id">
+                        <button
+                            class="btn d-flex align-items-center text-start py-2 fs-3 pointer-cursor"
+                            t-att-class="{'active': active}"
+                            t-on-click="() => this.selectWorkcenter(workcenter)">
+                            <input t-att-type="props.radioMode ? 'radio' : 'checkbox'" t-att-name="workcenter.display_name" class="form-check-input position-relative me-2" t-att-checked="active"/>
+                            <t t-out="workcenter.display_name"/>
+                        </button>
+                    </t>
+                    <t t-set-slot="footer">
+                        <button class="btn btn-primary" t-att-class="{'disabled': props.radioMode &amp;&amp; !state.activeWorkcenters.length}" t-on-click="confirm">Confirm</button>
+                    </t>
+                </div>
+        </Dialog>
+    </t>
+</templates>

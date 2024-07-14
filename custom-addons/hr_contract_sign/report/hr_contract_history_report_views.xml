@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_history_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.history.form</field>
+        <field name="model">hr.contract.history</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_history_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='contract_history']//tree/field[@name='state']" position="after">
+                <field name="sign_request_count" column_invisible="True"/>
+                <button name="open_sign_requests" string=" document" type="object" icon="fa-paperclip"
+                        invisible="sign_request_count != 1"/>
+                <button name="open_sign_requests" string=" documents" type="object" icon="fa-paperclip"
+                        invisible="sign_request_count &lt;= 1"/>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_sign_contract_wizard" string="Signature Request" type="object" groups="sign.group_sign_user"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="resource_sale_planning" inherit_id="planning.resource_planning">
+        <xpath expr="//t[@t-set='show_name']" position="after">
+            <t t-set="show_sale_line_id" t-value="any(s.sale_line_id for s in slots)" />
+        </xpath>
+        <xpath expr="//th[@name='role_header']" position="after">
+            <th t-if="show_sale_line_id" class="align-middle">Sales Order Item</th>
+        </xpath>
+        <xpath expr="//td[@name='role_record']" position="after">
+            <td t-if="show_sale_line_id" class="align-middle"><t t-if="slot.sale_line_id" t-esc="slot.sale_line_id.display_name" /></td>
+        </xpath>
+    </template>
+</odoo>

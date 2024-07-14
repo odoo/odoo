@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- Simplified ir.actions form to ease creation for end user -->
+    <record id="ir_actions_server_view_form_marketing_automation" model="ir.ui.view" >
+        <field name="name">Server Action</field>
+        <field name="model">ir.actions.server</field>
+        <field name="inherit_id" ref="base.view_server_action_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='model_id']" position="attributes">
+                <attribute name="options">{"no_open": True}</attribute>
+                <attribute name="readonly">1</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

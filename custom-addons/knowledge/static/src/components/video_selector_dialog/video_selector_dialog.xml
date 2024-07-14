@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- /video template -->
+    <t t-name="knowledge.VideoSelectorDialog">
+        <Dialog size="'xl'" title="title" bodyClass="'o_knowledge_video_selector_dialog'">
+            <VideoSelector
+                selectMedia.bind="selectMedia"
+                errorMessages.bind="errorMessages"/>
+            <t t-set-slot="footer">
+                <button
+                    class="btn btn-primary"
+                    t-on-click="onInsertVideoBtnClick"
+                    t-att-disabled="this.state.enableInsertVideoButton ? undefined : 'disabled'"
+                    data-hotkey="I">
+                    Insert Video
+                </button>
+                <button class="btn btn-secondary" t-on-click="this.props.close.bind(this)" data-hotkey="C">
+                    Cancel
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

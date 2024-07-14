@@ -1,0 +1,215 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* currency_rate_live
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:11+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bnm
+msgid "Bank Negara Malaysia"
+msgstr "Bank Negara Malaysia"
+
+#. module: currency_rate_live
+#: model_terms:ir.ui.view,arch_db:currency_rate_live.res_config_settings_view_form
+msgid ""
+"<i title=\"Update now\" role=\"img\" aria-label=\"Update now\" class=\"fa "
+"fa-fw fa-refresh\"/>"
+msgstr ""
+"<i title=\"Update now\" role=\"img\" aria-label=\"Update now\" class=\"fa "
+"fa-fw fa-refresh\"/>"
+
+#. module: currency_rate_live
+#: model:ir.model,name:currency_rate_live.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: currency_rate_live
+#: model:ir.model,name:currency_rate_live.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
+
+#. module: currency_rate_live
+#: model:ir.actions.server,name:currency_rate_live.ir_cron_currency_update_ir_actions_server
+msgid "Currency: rate update"
+msgstr "貨幣:匯率更新"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_interval_unit__daily
+msgid "Daily"
+msgstr "每天"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__ecb
+msgid "European Central Bank"
+msgstr "歐洲中央銀行"
+
+#. module: currency_rate_live
+#: model_terms:ir.ui.view,arch_db:currency_rate_live.res_config_settings_view_form
+msgid "Interval"
+msgstr "間隔"
+
+#. module: currency_rate_live
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_company__currency_interval_unit
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_config_settings__currency_interval_unit
+msgid "Interval Unit"
+msgstr "間隔單位"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_interval_unit__manually
+msgid "Manually"
+msgstr "手動"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_interval_unit__monthly
+msgid "Monthly"
+msgstr "每月"
+
+#. module: currency_rate_live
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_company__currency_next_execution_date
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_config_settings__currency_next_execution_date
+msgid "Next Execution Date"
+msgstr "下一執行日期"
+
+#. module: currency_rate_live
+#: model_terms:ir.ui.view,arch_db:currency_rate_live.res_config_settings_view_form
+msgid "Next Run"
+msgstr "下次執行"
+
+#. module: currency_rate_live
+#: model_terms:ir.ui.view,arch_db:currency_rate_live.res_config_settings_view_form
+msgid "Service"
+msgstr "服務"
+
+#. module: currency_rate_live
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_company__currency_provider
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_config_settings__currency_provider
+msgid "Service Provider"
+msgstr "服務商"
+
+#. module: currency_rate_live
+#. odoo-python
+#: code:addons/currency_rate_live/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"The selected exchange rate provider requires the GTQ and USD currencies to "
+"be active."
+msgstr "所選匯率提供商要求 GTQ和USD貨幣處於活動狀態"
+
+#. module: currency_rate_live
+#. odoo-python
+#: code:addons/currency_rate_live/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Unable to connect to the online exchange rate platform %s. The web service "
+"may be temporarily down. Please try again in a moment."
+msgstr "無法連接到在線匯率平台%s,網絡服務可能會暫時關閉。請稍後重試。"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_interval_unit__weekly
+msgid "Weekly"
+msgstr "每週"
+
+#. module: currency_rate_live
+#. odoo-python
+#: code:addons/currency_rate_live/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Your main currency (%s) is not supported by this exchange rate provider. "
+"Please choose another one."
+msgstr "此匯率提供商不支持您的主要貨幣（%s),請選擇其他貨幣。"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__cbuae
+msgid "[AE] Central Bank of the UAE"
+msgstr "[AE] 阿聯酋中央銀行"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bnb
+msgid "[BG] Bulgaria National Bank"
+msgstr "[BG]保加利亞國家銀行"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bbr
+msgid "[BR] Central Bank of Brazil"
+msgstr "[BR] 巴西中央銀行"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__boc
+msgid "[CA] Bank of Canada"
+msgstr "[CA] 加拿大銀行"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__fta
+msgid "[CH] Federal Tax Administration of Switzerland"
+msgstr "[CH] 瑞士聯邦稅務局"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__mindicador
+msgid "[CL] Central Bank of Chile via mindicador.cl"
+msgstr "[CL] 智利中央銀行 - 經 mindicador.cl"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__cnb
+msgid "[CZ] Czech National Bank"
+msgstr "[CZ] 捷克國家銀行"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__cbegy
+msgid "[EG] Central Bank of Egypt"
+msgstr "[EG] 埃及中央銀行"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__banguat
+msgid "[GT] Bank of Guatemala"
+msgstr "[GT] 危地馬拉銀行"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__banxico
+msgid "[MX] Bank of Mexico"
+msgstr "[MX] 墨西哥銀行"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bcrp
+msgid "[PE] SUNAT (replaces Bank of Peru)"
+msgstr "[PE] SUNAT (取代 秘魯銀行)"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__nbp
+msgid "[PL] National Bank of Poland"
+msgstr "[PL] 波蘭國家銀行"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bnr
+msgid "[RO] National Bank of Romania"
+msgstr "[RO] 羅馬尼亞國家銀行"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__tcmb
+msgid "[TR] Central Bank of the Republic of Turkey"
+msgstr "[TR] 土耳其共和國中央銀行"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__hmrc
+msgid "[UK] HM Revenue & Customs"
+msgstr "[UK] 英國稅務及海關總署"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__xe_com
+msgid "xe.com"
+msgstr "xe.com"

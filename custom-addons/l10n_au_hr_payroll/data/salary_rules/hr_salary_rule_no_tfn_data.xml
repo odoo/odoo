@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sources
+        https://www.ato.gov.au/
+        https://oac.chris21.com/OAC_ichrisp/Help/ichrisUG/646250.htm
+    -->
+<!-- No TFN provided -->
+    <!-- Extra Pay Rule for inputs -->
+    <record id="l10n_au_extra_pay_structure_no_tfn" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+        <field name="name">Extra Pay</field>
+        <field name="code">GROSS.COMMISSION</field>
+        <field name="sequence">99</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'EXTRA' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['EXTRA'].amount
+result_name = inputs['EXTRA'].name
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_no_tfn"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="l10n_au_withholding_no_tfn" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_withholding"/>
+        <field name="name">PAYG Withholding</field>
+        <field name="code">WITHHOLD</field>
+        <field name="sequence">100</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = -payslip._rule_parameter("l10n_au_withholding_no_tfn")["foreign" if employee.is_non_resident else "national"]
+result = categories['GROSS']
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_no_tfn"/>
+    </record>
+    <record id="l10n_au_withholding_net_no_tfn" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_net_withholding"/>
+        <field name="name">Total Withholding Amount</field>
+        <field name="code">WITHHOLD.TOTAL</field>
+        <field name="sequence">160</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['WITHHOLD'] + min(-categories['WITHHOLD'], categories["WITHHOLD.OFFSET"])
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_no_tfn"/>
+    </record>
+
+    <record id="l10n_au_allowance_structure_no_tfn" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Allowance</field>
+        <field name="sequence">199</field>
+        <field name="code">ALW</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = payslip.input_line_ids.filtered(lambda x: x.input_type_id.l10n_au_is_allowance)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+allowances = payslip.input_line_ids.filtered(lambda x: x.input_type_id.l10n_au_is_allowance)
+result = sum(allowances.mapped('amount'))
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_no_tfn"/>
+    </record>
+
+    <!-- Include Extra Pay in NET -->
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_au_hr_payroll.hr_payroll_structure_au_no_tfn')),
+            ('code', '=', 'NET')]"/>
+        <value eval="{
+            'amount_python_compute': &quot;result = categories['BASIC'] + categories['ALW'] + categories['DED'] + result_rules['GROSS.COMMISSION']['total']&quot;
+        }"/>
+    </function>
+</odoo>

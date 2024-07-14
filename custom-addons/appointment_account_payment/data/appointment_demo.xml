@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+
+    <record id="appointment_type_online_cooking_lesson" model="appointment.type">
+        <field name="name">Online Cooking Lesson</field>
+        <field name="max_schedule_days">45</field>
+        <field name="message_intro" type="html">
+            <p>Discover the secrets kept in high-end kitchens with one of our starred chefs, from the comfort of your own home.</p>
+        </field>
+        <field name="message_confirmation" type="html">
+            <p>Thank you for your reservation. We will soon contact you to discuss menu options.</p>
+        </field>
+        <field name="reminder_ids" eval="[(6, 0, [ref('calendar.alarm_notif_1')])]"/>
+        <field name="staff_user_ids" eval="[(6, 0, [ref('base.user_admin'), ref('base.user_demo')])]"/>
+        <field name="avatars_display">show</field>
+        <field name="has_payment_step">True</field>
+        <field name="product_id" ref="product_appointment_type_online_cooking_lesson"/>
+    </record>
+
+</data></odoo>

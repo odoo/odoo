@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_view_form_inherit" model="ir.ui.view">
+        <field name="name">project.view.form</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="sale_timesheet.project_project_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="has_helpdesk_team" invisible="1"/>
+            </xpath>
+            <xpath expr="//page[@name='billing_employee_rate']" position="attributes">
+                <attribute name="invisible">not allow_billable or not partner_id</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

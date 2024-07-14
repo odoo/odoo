@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_document_file_kanban_mrp_plm" model="ir.ui.view">
+        <field name="name">mrp.document kanban.mrp.plm</field>
+        <field name="inherit_id" ref="mrp.view_document_file_kanban_mrp"/>
+        <field name="model">mrp.document</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="mimetype" position="after">
+                <field name="active"/>
+                <field name="res_model"/>
+                <field name="origin_attachment_id"/>
+            </field>
+            <xpath expr="//div[hasclass('o_kanban_image')]" position="before">
+                <div class="ribbon ribbon-top-right" invisible="active">
+                    <span class="text-bg-danger">Archived</span>
+                </div>
+                <div class="ribbon ribbon-top-right" invisible="origin_attachment_id or not active">
+                    <span class="text-bg-primary">New</span>
+                </div>
+            </xpath>
+            <xpath expr="//a[@type='delete']" position="replace">
+                <a t-if="widget.deletable" type="delete" class="dropdown-item" invisible="res_model == 'mrp.eco'">Delete</a>
+                <a name="toggle_active" type="object" class="dropdown-item" t-if="record.active.raw_value and record.res_model.raw_value=='mrp.eco'">Remove</a>
+                <a name="toggle_active" type="object" class="dropdown-item" t-if="!record.active.raw_value and record.res_model.raw_value=='mrp.eco'">Undo</a>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_kanban_global_area')]" position="attributes">
+                <attribute name="t-att-style">(!record.active.raw_value) &amp;&amp; "background: linear-gradient(45deg, white 25%, lightgrey 25%, lightgrey 50%, white 50%, white 75%, lightgrey 75%); background-size: 20px 20px;"</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_document_search_mrp_plm" model="ir.ui.view">
+        <field name="name">mrp.document search.mrp.plm</field>
+        <field name="inherit_id" ref="base.view_attachment_search"/>
+        <field name="model">mrp.document</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//separator" position="after">
+                <filter name="all" string="All" domain="['|', ('active', '=', True), ('active', '=', False)]"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/> 
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

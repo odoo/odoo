@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="whatsapp.Composer" t-inherit="mail.Composer" t-inherit-mode="extension">
+        <xpath expr="//div[contains(@class, 'o-mail-Composer-actions')]" position="attributes">
+            <attribute name="t-if">!thread || thread.type != 'whatsapp' || state.active</attribute>
+        </xpath>
+        <xpath expr="//FileUploader" position="attributes">
+            <attribute name="multiUpload">thread and thread.type == 'whatsapp' ? false : true</attribute>
+        </xpath>
+        <xpath expr="//FileUploader/t/button" position="attributes">
+            <attribute name="t-att-disabled" add="or (thread and thread.type === 'whatsapp' and props.composer.attachments.length > 0)" separator=" " />
+        </xpath>
+        <xpath expr="//*[@t-if='!extended' and @t-call='mail.Composer.sendButton']" position="attributes">
+            <attribute name="t-if" add="and (!thread or thread.type != 'whatsapp' or state.active)" separator=" " />
+        </xpath>
+    </t>
+</templates>

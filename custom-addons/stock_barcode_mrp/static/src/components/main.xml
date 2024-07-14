@@ -1,0 +1,53 @@
+<templates>
+    <t t-inherit="stock_barcode.MainComponent" t-inherit-mode="extension" t-translation="off">
+        <xpath expr="//div[hasclass('o_barcode_lines')]/t[1]" position="before">
+            <t t-if="env.model.resModel=='mrp.production' and env.model.record.product_id and !state.displayByProduct">
+                <Header line="env.model.record" displayUOM="groups.group_uom" openDetails.bind="toggleHeaderView"/>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('o_barcode_lines_header')]" position="attributes">
+             <attribute name="t-if">!state.displayByProduct</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_barcode_lines')]" position="after">
+            <div t-elif="state.view === 'headerProductPage'"> <!-- MRP Header Edit Form View -->
+                <View t-props="headerFormViewProps"/>
+            </div>
+        </xpath>
+        <xpath expr="//button[hasclass('o_cancel_operation')]" position="before">
+            <t t-if="env.model.resModel=='mrp.production'">
+                <button class="btn-lg btn btn-light text-uppercase" t-on-click="newScrapProduct">
+                    Scrap
+                </button>
+            </t>
+        </xpath>
+        <xpath expr="//button[hasclass('o_add_line')]" position="before">
+            <t t-if="env.model.resModel=='mrp.production' and env.model.record.product_id">
+                <button t-if="groups.group_mrp_byproducts" class="o_by_products btn btn-secondary" t-on-click.prevent.stop="openByProductLines">
+                    Register by product
+                </button>
+            </t>
+        </xpath>
+        <xpath expr="//button[hasclass('o_validate_page')]" position="replace">
+            <button t-if="env.model.displayValidateButton" t-on-click="validate"
+                class="o_validate_page btn"
+                t-att-disabled="!env.model.canBeValidate"
+                t-attf-class="{{highlightValidateButton ? 'btn-success' : 'btn-secondary'}}">
+                <i class="fa fa-check me-1"/>
+                <t t-if="env.model.resModel=='mrp.production'" t-out="produceBtnLabel"/>
+                <t t-else="">Validate</t>
+            </button>
+        </xpath>
+        <!-- By products page buttons -->
+        <xpath expr="//div[hasclass('o_action_buttons')]" position="after">
+            <div t-if="state.displayByProduct" class="o_action_buttons o_barcode_control d-flex">
+                <button class="o_add_byproduct btn btn-secondary" t-on-click="onOpenProductPage">
+                    <i class="fa fa-plus me-1"/> Add By Product
+                </button>
+                <button class="o_save_byproduct btn btn-secondary" t-on-click="onValidateByProduct">
+                    <i class="fa fa-check me-1"/> Validate
+                </button>
+            </div>
+
+        </xpath>
+    </t>
+</templates>

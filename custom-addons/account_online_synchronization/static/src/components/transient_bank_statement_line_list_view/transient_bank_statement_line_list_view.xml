@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account_online_synchronization.TransientBankStatementLineRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//table" position="before">
+            <t t-if="env.searchModel.context.has_manual_entries">
+                <div class="alert alert-warning text-center mb-0" role="alert">
+                    You have <a href="" t-on-click.prevent="() => this.openManualEntries()">entries</a>
+                    within this period that were not created using the online synchronization. This might cause duplicate entries.
+                </div>
+            </t>
+            <t t-if="env.searchModel.context.is_fetch_before_creation">
+                <div class="alert alert-warning text-center mb-0" role="alert">
+                    You are importing transactions before the creation of your online synchronization
+                    (<t t-out="env.searchModel.context.account_online_link_create_date"/>).
+                    This might cause duplicate entries.
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="TransientBankStatementLineButtonTemplate" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+            <button type="button" class="btn btn-primary" data-hotkey="i" t-on-click.stop="onClickImportTransactions">
+                Import Transactions
+            </button>
+        </xpath>
+    </t>
+</templates>

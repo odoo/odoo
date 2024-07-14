@@ -1,0 +1,146 @@
+.o_stock_barcode_main_menu_container {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+
+    @include media-breakpoint-down(md) {
+        @include o-position-absolute(0, 0, 0, 0);
+        overflow-y: auto;
+        min-height: 0;
+        justify-content: flex-start;
+    }
+}
+
+.o_stock_barcode_main_menu {
+    text-align: center;
+    padding: 24px 16px;
+    font-size: 1.2em;
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+
+    .o_stock_mobile_barcode_container{
+        position:  relative;
+        display: inline-block;
+        .o_stock_mobile_barcode{
+            width: 100%;
+            bottom: 0px;
+            position: absolute;
+            opacity: 0.75;
+            font-size: 12px;
+            .o_mobile_barcode_camera{
+                margin: 5px;
+                font-size: 2.2em;
+            }
+        }
+    }
+
+    .o_stock_barcode_menu {
+        line-height: 1.9;
+    }
+
+    .message_demo_barcodes {
+        font-size: 0.9em;
+    }
+
+    >ul {
+      display: inline-block;
+    }
+    
+    .o_stock_barcode_container {
+        span.o_stock_barcode_laser {
+            @include o-position-absolute(50%, -15px, auto, -15px);
+            height: 5px;
+            background: rgba(red, 0.6);
+            box-shadow: 0 1px 10px 1px rgba(red, 0.8);
+            animation: o_barcode_scanner_intro 1s cubic-bezier(0.6, -0.28, 0.735, 0.045) 0.4s;
+        }
+
+        img {
+            width: 200px;
+
+            @include media-breakpoint-down(sm) {
+                width: 140px;
+                height: 94px;
+            }
+        }
+        .o_stock_mobile_barcode {
+            height: 94px;
+        }
+    }
+
+    @include media-breakpoint-up(md) {
+        flex: 0 0 auto;
+        width: 550px;
+        border-radius: 4px;
+        margin-top: -24px;
+
+        .o_stock_barcode_menu {
+            line-height: 2.6;
+        }
+
+        button.btn-primary {
+            font-size: 1.25rem;
+        }
+    }
+
+    @include media-breakpoint-up(sm) {
+        .row .col .btn {
+            height: 100%;
+        }
+    }
+
+    @include media-breakpoint-down(sm) {
+        .row .col {
+            min-width: 100%;
+        }
+    }
+}
+
+.o_kanban_renderer .o_kanban_record {
+    @for $size from 2 through length($o-colors) { // Starts at 2 because first index = no color.
+        .o_barcode_picking_type.oe_kanban_card.oe_kanban_color_#{$size - 1} {
+            background-color: rgba(nth($o-colors, $size), 0.2);
+        }
+    }
+}
+
+// Defines animation for highlighting flash.
+$highlighting-colors: (
+    "primary": theme-color("primary"),
+    "white": white
+);
+
+@each $c-name, $c-value in $highlighting-colors {
+    @keyframes highlighting-flash-#{$c-name} {
+        0% {
+            background-color: #{$c-value};
+        }
+        20% {
+            background-color: transparent;
+        }
+        21% {
+            background-color: #{$c-value};
+        }
+        100% {
+            background-color: transparent;
+        }
+    }
+}
+
+@keyframes o_barcode_scanner_intro {
+    25% {
+        top: 75%;
+    }
+    50% {
+        top: 0;
+    }
+    75% {
+        top: 100%;
+    }
+    100% {
+        top: 50%;
+    }
+}

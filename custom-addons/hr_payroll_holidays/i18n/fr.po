@@ -1,0 +1,284 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_payroll_holidays
+# 
+# Translators:
+# Wil Odoo, 2023
+# Jolien De Paepe, 2023
+# Manon Rondou, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Manon Rondou, 2024\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.actions.act_window,help:hr_payroll_holidays.hr_leave_work_entry_action
+msgid ""
+"A great way to keep track on employee’s PTOs, sick days, and approval "
+"status."
+msgstr ""
+"La meilleure façon de suivre vos congés payés, jours de maladies et autres "
+"demandes d'approbation. "
+
+#. module: hr_payroll_holidays
+#: model:ir.model,name:hr_payroll_holidays.model_mail_activity
+msgid "Activity"
+msgstr "Activité"
+
+#. module: hr_payroll_holidays
+#: model:ir.model,name:hr_payroll_holidays.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+
+#. module: hr_payroll_holidays
+#: model:ir.model.fields.selection,name:hr_payroll_holidays.selection__hr_leave__payslip_state__done
+msgid "Computed in current payslip"
+msgstr "Calculé dans la fiche de paie actuelle"
+
+#. module: hr_payroll_holidays
+#: model:ir.model,name:hr_payroll_holidays.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paramètres de configuration"
+
+#. module: hr_payroll_holidays
+#: model:ir.actions.server,name:hr_payroll_holidays.ir_actions_server_report_to_next_month
+msgid "Defer to Next Month"
+msgstr "Reporter au mois suivant"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.res_config_settings_view_form
+msgid "Deferred Time Off"
+msgstr "Congés reportés"
+
+#. module: hr_payroll_holidays
+#: model:ir.model.fields,field_description:hr_payroll_holidays.field_res_company__deferred_time_off_manager
+#: model:ir.model.fields,field_description:hr_payroll_holidays.field_res_config_settings__deferred_time_off_manager
+msgid "Deferred Time Off Manager"
+msgstr "Responsable des congés à reporter"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.hr_leave_view_search
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.view_hr_leave_allocation_inherit_filter
+msgid "Employee Code"
+msgstr "Code de l'employé"
+
+#. module: hr_payroll_holidays
+#: model:ir.model,name:hr_payroll_holidays.model_hr_contract
+msgid "Employee Contract"
+msgstr "Contrat d'employé"
+
+#. module: hr_payroll_holidays
+#: model:mail.activity.type,name:hr_payroll_holidays.mail_activity_data_hr_leave_to_defer
+msgid "Leave to Defer"
+msgstr "Congé à reporter"
+
+#. module: hr_payroll_holidays
+#: model:ir.actions.server,name:hr_payroll_holidays.ir_actions_server_mark_as_reported
+msgid "Mark as deferred"
+msgstr "Marquer comme reporté"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.actions.act_window,help:hr_payroll_holidays.hr_leave_work_entry_action
+msgid "Meet the time off dashboard."
+msgstr "Découvrez le tableau de bord des congés."
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"Not enough attendance work entries to report the time off %s. Please make "
+"the operation manually"
+msgstr ""
+"Pas assez de prestations pour déclarer le congé %s. Veuillez effectuer "
+"l'opération manuellement"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Only an employee time off to defer can be reported to next month"
+msgstr "Seul un congé à reporter peut être reporté au mois suivant"
+
+#. module: hr_payroll_holidays
+#: model:ir.model,name:hr_payroll_holidays.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Fiche de paie"
+
+#. module: hr_payroll_holidays
+#: model:ir.model.fields,field_description:hr_payroll_holidays.field_hr_leave__payslip_state
+msgid "Payslip State"
+msgstr "Statut de la fiche de paie"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Please create manually the work entry for %s"
+msgstr "Veuillez créer manuellement la prestation pour %s"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.res_config_settings_view_form
+msgid "Postpone time off after payslip validation"
+msgstr "Report du congé après validation de la fiche de paie"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.hr_leave_view_form_inherit
+msgid "Report to Next Month"
+msgstr "Reporter au mois suivant"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.res_config_settings_view_form
+msgid "Responsible"
+msgstr "Responsable"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"The next month work entries are not generated yet or are validated already "
+"for time off %s"
+msgstr ""
+"Les prestations du mois prochain ne sont pas encore générées ou ont été déjà"
+" validées pour le congé %s"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"The selected period is covered by a validated payslip. You can't create a "
+"time off for that period."
+msgstr ""
+"La période sélectionnée est couverte par une fiche de paie validée. Vous ne "
+"pouvez pas créer un congé pour cette période."
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"The time off %s can not be reported because it is defined over more than 2 "
+"months"
+msgstr ""
+"Le congé %s ne peut pas être reporté parce qu'il est défini sur plus de 2 "
+"mois"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid "There is no work entries linked to this time off to report"
+msgstr "Il n'y a pas de prestations liées à ce congé à reporter"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_payslip.py:0
+#, python-format
+msgid ""
+"There is some remaining time off to defer for these employees: \n"
+"\n"
+" %s"
+msgstr ""
+"Il reste des congés à reporter pour ces employés :\n"
+"\n"
+"%s"
+
+#. module: hr_payroll_holidays
+#: model:ir.actions.act_window,name:hr_payroll_holidays.hr_leave_work_entry_action
+#: model:ir.model,name:hr_payroll_holidays.model_hr_leave
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.res_config_settings_view_form
+msgid "Time Off"
+msgstr "Congés"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_payslip.py:0
+#, python-format
+msgid "Time Off Not Related To An Allocation"
+msgstr "Congé sans lien avec une allocation"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_payslip.py:0
+#, python-format
+msgid "Time Off To Defer"
+msgstr "Congés à reporter"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_payslip.py:0
+#, python-format
+msgid "Time Off Without Joined Document"
+msgstr "Congés sans documents joints"
+
+#. module: hr_payroll_holidays
+#: model:ir.actions.act_window,name:hr_payroll_holidays.hr_leave_action_open_to_defer
+msgid "Time Off to Defer"
+msgstr "Congés à reporter"
+
+#. module: hr_payroll_holidays
+#: model:ir.ui.menu,name:hr_payroll_holidays.menu_work_entry_leave_to_approve
+msgid "Time Off to Report"
+msgstr "Congés à rapporter"
+
+#. module: hr_payroll_holidays
+#: model_terms:ir.ui.view,arch_db:hr_payroll_holidays.hr_leave_view_search
+msgid "To Defer"
+msgstr "À reporter"
+
+#. module: hr_payroll_holidays
+#: model:ir.model.fields.selection,name:hr_payroll_holidays.selection__hr_leave__payslip_state__normal
+msgid "To compute in next payslip"
+msgstr "À calculer dans la prochaine fiche de paie"
+
+#. module: hr_payroll_holidays
+#: model:ir.model.fields.selection,name:hr_payroll_holidays.selection__hr_leave__payslip_state__blocked
+msgid "To defer to next payslip"
+msgstr "À reporter à la prochaine fiche de paie"
+
+#. module: hr_payroll_holidays
+#. odoo-python
+#: code:addons/hr_payroll_holidays/models/hr_leave.py:0
+#, python-format
+msgid "Validated Time Off to Defer"
+msgstr "Congés validés à reporter"
+
+#. module: hr_payroll_holidays
+#. odoo-javascript
+#: code:addons/hr_payroll_holidays/static/src/xml/templates.xml:0
+#, python-format
+msgid "You have some"
+msgstr "Vous avez des "
+
+#. module: hr_payroll_holidays
+#. odoo-javascript
+#: code:addons/hr_payroll_holidays/static/src/views/hooks.js:0
+#, python-format
+msgid "You have some <button>time off</button> to defer to the next month."
+msgstr "Vous avez des <button>congés</button> à reporter au mois suivant."
+
+#. module: hr_payroll_holidays
+#. odoo-javascript
+#: code:addons/hr_payroll_holidays/static/src/xml/templates.xml:0
+#, python-format
+msgid "time off"
+msgstr "congés"
+
+#. module: hr_payroll_holidays
+#. odoo-javascript
+#: code:addons/hr_payroll_holidays/static/src/xml/templates.xml:0
+#, python-format
+msgid "to defer to the next month."
+msgstr "à reporter au mois prochain."

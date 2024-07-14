@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_salary_offer_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.salary.offer.view.form.inherit</field>
+        <field name="model">hr.contract.salary.offer</field>
+        <field name="inherit_id" ref="hr_contract_salary.hr_contract_salary_offer_view_form"/>
+        <field name="arch" type="xml">
+            <field name="final_yearly_costs" position="after">
+                <field name="contract_type_id"/>
+            </field>
+            <group name="group_offer_to" position="after">
+                <group name="group_car" string="Car">
+                    <field name="new_car"/>
+                    <field name="show_new_car" invisible="1"/>
+                    <field name="car_id"/>
+                    <field name="l10n_be_canteen_cost" invisible="1"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="hr_contract_salary_offer_view_tree" model="ir.ui.view">
+        <field name="name">hr.contract.salary.offer.view.tree.inherit</field>
+        <field name="model">hr.contract.salary.offer</field>
+        <field name="inherit_id" ref="hr_contract_salary.hr_contract_salary_offer_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="before">
+                <field name="car_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_contract_salary_offer_view_search" model="ir.ui.view">
+        <field name="name">hr.contract.salary.offer.view.search.inherit</field>
+        <field name="model">hr.contract.salary.offer</field>
+        <field name="inherit_id" ref="hr_contract_salary.hr_contract_salary_offer_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="applicants" position="after">
+                <separator/>
+                <filter name="with_car_id" domain="[('car_id', '!=', False)]" string="With a Vehicle"/>
+            </filter>
+            <filter name="group_by_contract_template_id" position="after">
+                <filter string="Contract Type" name="group_by_contract_type_id" domain="[]" context="{'group_by': 'contract_type_id'}"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

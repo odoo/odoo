@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cp200_employees_thirteen_month_gross_salary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_salary"/>
+        <field name="name">Gross Salary</field>
+        <field name="code">SALARY</field>
+        <field name="sequence">20</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['BASIC']
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+    </record>
+
+    <record id="cp200_employees_thirteen_month_onss_rule" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">Social contribution</field>
+        <field name="code">ONSS</field>
+        <field name="sequence">41</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result=not contract.no_onss</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">SALARY</field>
+        <field name="amount_percentage">-13.07</field>
+        <field name="partner_id" ref="res_partner_onss"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+    </record>
+
+    <record id="cp200_employees_thirteen_month_p_p" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_pp"/>
+        <field name="name">Withholding Tax</field>
+        <field name="code">P.P</field>
+        <field name="sequence">102</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = payslip._get_thirteen_month_withholding_taxes(localdict)</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+    </record>
+
+    <record id="cp200_employees_thirteen_month_pp_total" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_withholding_taxes_total"/>
+        <field name="name">Withholding Taxes (Total)</field>
+        <field name="code">PPTOTAL</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">110</field>
+        <field name="condition_select">none</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -categories['PP']
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_thirteen_month_mis_ex_onss" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_spec_soc_contribution"/>
+        <field name="name">Special social cotisation</field>
+        <field name="code">M.ONSS</field>
+        <field name="amount_select">fix</field>
+        <field name="sequence">165</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = payslip._get_be_special_social_cotisations(localdict)</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+        <!-- TODO master: Remove this rule -->
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_thirteen_month_onss_employer_basic" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS Basic (Employer)</field>
+        <field name="code">ONSSEMPLOYERBASIC</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_global_rate') - 13.07
+result = result_rules['SALARY']['total']</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_thirteen_month_onss_employer_ffe" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS FFE (Employer)</field>
+        <field name="code">ONSSEMPLOYERFFE</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+worker_count = payslip.company_id._get_workers_count()
+result_rate = payslip._get_ffe_contribution_rate(worker_count)
+result = result_rules['SALARY']['total']</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_thirteen_month_onss_employer_special_ffe" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS Special FFE (Employer)</field>
+        <field name="code">ONSSEMPLOYERMFFE</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_special_ffe_rate')
+result = result_rules['SALARY']['total']</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_thirteen_month_onss_employer_cpae" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS CPAE (Employer)</field>
+        <field name="code">ONSSEMPLOYERCPAE</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_cpae_rate')
+result = result_rules['SALARY']['total']</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_thirteen_month_onss_employer_wage_restreint" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS Wage Restreint (Employer)</field>
+        <field name="code">ONSSEMPLOYERRESTREINT</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_wage_restreint')
+result = result_rules['SALARY']['total']</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_thirteen_month_onss_employer_temporary_unemployment" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS Temporary Unemployment (Employer)</field>
+        <field name="code">ONSSEMPLOYERUNEMP</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_temporary_unemployment_rate')
+result = result_rules['SALARY']['total']</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="cp200_employees_termination_thirteen_month_onss_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer"/>
+        <field name="name">Accounting: ONSS (Employer)</field>
+        <field name="code">ONSSEMPLOYER</field>
+        <field name="sequence">502</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['ONSSEMPLOYERBASIC']['total'] + result_rules['ONSSEMPLOYERFFE']['total'] + result_rules['ONSSEMPLOYERMFFE']['total'] + result_rules['ONSSEMPLOYERCPAE']['total'] + result_rules['ONSSEMPLOYERRESTREINT']['total'] + result_rules['ONSSEMPLOYERUNEMP']['total']</field>
+        <field name="partner_id" ref="res_partner_onss"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_thirteen_month"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+</odoo>

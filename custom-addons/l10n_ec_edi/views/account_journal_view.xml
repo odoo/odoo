@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_journal_form" model="ir.ui.view">
+            <field name="name">account.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="l10n_latam_invoice_document.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type']" position="after">
+                    <field name="l10n_ec_is_purchase_liquidation"
+                        invisible="country_code != 'EC' or type != 'purchase'"/>
+                    <field name="l10n_ec_withhold_type"
+                        invisible="country_code != 'EC' or type != 'general'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

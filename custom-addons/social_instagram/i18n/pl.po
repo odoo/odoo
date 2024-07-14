@@ -1,0 +1,388 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* social_instagram
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: social_instagram
+#: model_terms:ir.ui.view,arch_db:social_instagram.instagram_preview
+msgid "34 SECONDS AGO"
+msgstr "34 SEKUNDY TEMU"
+
+#. module: social_instagram
+#: model_terms:ir.ui.view,arch_db:social_instagram.social_stream_post_view_kanban
+msgid "<i class=\"fa fa-comments me-1\" title=\"Comments\"/>"
+msgstr "<i class=\"fa fa-comments me-1\" title=\"Comments\"/>"
+
+#. module: social_instagram
+#: model_terms:ir.ui.view,arch_db:social_instagram.social_stream_post_view_kanban
+msgid "<i class=\"fa fa-heart me-1\" title=\"Likes\"/>"
+msgstr "<i class=\"fa fa-heart me-1\" title=\"Likes\"/>"
+
+#. module: social_instagram
+#: model_terms:ir.ui.view,arch_db:social_instagram.instagram_preview
+msgid "<span class=\"fw-bold pe-1\">My_instagram_page</span>"
+msgstr "<span class=\"fw-bold pe-1\">My_instagram_page</span>"
+
+#. module: social_instagram
+#: model_terms:ir.ui.view,arch_db:social_instagram.instagram_preview
+msgid "<span class=\"mt-1 fw-bold\">My Instagram Page</span>"
+msgstr "<span class=\"mt-1 fw-bold\">Mój profil Instagram</span>"
+
+#. module: social_instagram
+#: model_terms:ir.ui.view,arch_db:social_instagram.instagram_preview
+msgid ""
+"<span>Your image has to be within the 4:5 and the 1.91:1 aspect ratio as required by Instagram.</span><br/>\n"
+"                <span>We don't automatically resize your image to avoid undesired result.</span><br/>\n"
+"                <span>More information on:</span>"
+msgstr ""
+"<span>Twoje zdjęcie musi mieścić się w proporcjach 4:5 i 1,91:1 wymaganych przez Instagram.</span><br/>\n"
+"<span>Nie zmieniamy automatycznie rozmiaru obrazu, aby uniknąć niepożądanego rezultatu.</span><br/>\n"
+"<span> Więcej informacji: </span>"
+
+#. module: social_instagram
+#: model:ir.model.fields,field_description:social_instagram.field_social_post__instagram_access_token
+#: model:ir.model.fields,field_description:social_instagram.field_social_post_template__instagram_access_token
+msgid "Access Token"
+msgstr "Token dostępu"
+
+#. module: social_instagram
+#. odoo-python
+#: code:addons/social_instagram/models/social_post.py:0
+#: model_terms:ir.ui.view,arch_db:social_instagram.instagram_preview
+#, python-format
+msgid "An image is required when posting on Instagram."
+msgstr "Zdjęcie jest wymagane przy publikowaniu na Instagramie."
+
+#. module: social_instagram
+#: model_terms:ir.ui.view,arch_db:social_instagram.res_config_settings_view_form
+msgid "App ID"
+msgstr "ID aplikacji"
+
+#. module: social_instagram
+#: model_terms:ir.ui.view,arch_db:social_instagram.res_config_settings_view_form
+msgid "App Secret"
+msgstr "Sekret aplikacji"
+
+#. module: social_instagram
+#. odoo-javascript
+#: code:addons/social_instagram/static/src/xml/social_instagram_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:social_instagram.social_stream_post_view_kanban
+#, python-format
+msgid "Author Image"
+msgstr "Obraz autora"
+
+#. module: social_instagram
+#: model:ir.model.fields,help:social_instagram.field_res_config_settings__instagram_use_own_account
+msgid ""
+"Check this if you want to use your personal Instagram Developer Account "
+"instead of the provided one."
+msgstr ""
+"Zaznacz to, jeśli chcesz użyć swojego osobistego konta deweloperskiego na "
+"Instagramie zamiast dostarczonego."
+
+#. module: social_instagram
+#: model:ir.model,name:social_instagram.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ustawienia konfiguracji"
+
+#. module: social_instagram
+#. odoo-python
+#: code:addons/social_instagram/controllers/main.py:0
+#, python-format
+msgid "Could not find any account to add."
+msgstr "Nie można znaleźć żadnego konta do dodania."
+
+#. module: social_instagram
+#: model:ir.model.fields,field_description:social_instagram.field_social_post__display_instagram_preview
+#: model:ir.model.fields,field_description:social_instagram.field_social_post_template__display_instagram_preview
+msgid "Display Instagram Preview"
+msgstr "Wyświetl podgląd Instagrama"
+
+#. module: social_instagram
+#: model:ir.model.fields,help:social_instagram.field_social_account__instagram_facebook_account_id
+msgid ""
+"Facebook Account ID provided by the Facebook API, this should never be set manually.\n"
+"        The Instagram (\"Professional\") account is always linked to a Facebook account."
+msgstr ""
+"Identyfikator konta Facebook dostarczany przez API Facebooka, nigdy nie powinien być ustawiony ręcznie.\n"
+"Konto na Instagramie (\"Professional\") jest zawsze połączone z kontem na Facebooku."
+
+#. module: social_instagram
+#: model:ir.model.fields.selection,name:social_instagram.selection__social_media__media_type__instagram
+#: model:social.media,name:social_instagram.social_media_instagram
+msgid "Instagram"
+msgstr "Instagram"
+
+#. module: social_instagram
+#: model:ir.model.fields,field_description:social_instagram.field_social_account__instagram_access_token
+msgid "Instagram Access Token"
+msgstr "Token dostępu do Instagrama"
+
+#. module: social_instagram
+#: model:ir.model.fields,help:social_instagram.field_social_account__instagram_access_token
+msgid ""
+"Instagram Access Token provided by the Facebook API, this should never be set manually.\n"
+"        It's used to authenticate requests when posting to or reading information from this account."
+msgstr ""
+"Instagram Access Token dostarczany przez API Facebooka, nigdy nie należy go ustawiać ręcznie.\n"
+"Służy do uwierzytelniania żądań podczas wysyłania na to konto lub odczytywania z niego informacji."
+
+#. module: social_instagram
+#: model:ir.model.fields,field_description:social_instagram.field_social_account__instagram_account_id
+msgid "Instagram Account ID"
+msgstr "ID konta na Instagramie"
+
+#. module: social_instagram
+#: model:ir.model.fields,help:social_instagram.field_social_account__instagram_account_id
+msgid ""
+"Instagram Account ID provided by the Facebook API, this should never be set "
+"manually."
+msgstr ""
+"Instagram Account ID dostarczany przez API Facebooka, nigdy nie powinien być"
+" ustawiony ręcznie."
+
+#. module: social_instagram
+#: model:ir.model.fields,field_description:social_instagram.field_res_config_settings__instagram_app_id
+msgid "Instagram App ID"
+msgstr "ID aplikacji Instagrama"
+
+#. module: social_instagram
+#: model:ir.model.fields,field_description:social_instagram.field_res_config_settings__instagram_client_secret
+msgid "Instagram App Secret"
+msgstr "Sekret aplikacji Instagrama"
+
+#. module: social_instagram
+#. odoo-javascript
+#: code:addons/social_instagram/static/src/js/stream_post_kanban_record.js:0
+#: model:ir.model.fields,field_description:social_instagram.field_social_stream_post__instagram_comments_count
+#, python-format
+msgid "Instagram Comments"
+msgstr "Komentarze na Instagramie"
+
+#. module: social_instagram
+#: model_terms:ir.ui.view,arch_db:social_instagram.res_config_settings_view_form
+msgid "Instagram Developer Account"
+msgstr "Konto deweloperskie Instagrama"
+
+#. module: social_instagram
+#: model:ir.model.fields,field_description:social_instagram.field_social_account__instagram_facebook_account_id
+msgid "Instagram Facebook Account ID"
+msgstr "Identyfikator konta Instagram Facebook"
+
+#. module: social_instagram
+#: model:ir.model.fields,field_description:social_instagram.field_social_stream_post__instagram_facebook_author_id
+msgid "Instagram Facebook Author ID"
+msgstr "Identyfikator autora Instagram Facebook"
+
+#. module: social_instagram
+#: model:ir.model.fields,field_description:social_instagram.field_social_post__instagram_image_id
+#: model:ir.model.fields,field_description:social_instagram.field_social_post_template__instagram_image_id
+msgid "Instagram Image"
+msgstr "Obraz instagrama"
+
+#. module: social_instagram
+#: model:ir.model.fields,field_description:social_instagram.field_social_stream_post__instagram_likes_count
+msgid "Instagram Likes"
+msgstr "Polubienia na Instagramie"
+
+#. module: social_instagram
+#: model:ir.model.fields,field_description:social_instagram.field_social_live_post__instagram_post_id
+#: model:ir.model.fields,field_description:social_instagram.field_social_stream_post__instagram_post_id
+msgid "Instagram Post ID"
+msgstr "ID posta na Instagramie"
+
+#. module: social_instagram
+#: model:ir.model.fields,field_description:social_instagram.field_social_stream_post__instagram_post_link
+msgid "Instagram Post URL"
+msgstr "URL posta na Instagramie"
+
+#. module: social_instagram
+#: model:social.stream.type,name:social_instagram.stream_type_instagram_posts
+msgid "Instagram Posts"
+msgstr "Posty na Instagramie"
+
+#. module: social_instagram
+#: model:ir.model.fields,field_description:social_instagram.field_social_post__instagram_preview
+#: model:ir.model.fields,field_description:social_instagram.field_social_post_template__instagram_preview
+msgid "Instagram Preview"
+msgstr "Podgląd Instagrama"
+
+#. module: social_instagram
+#. odoo-python
+#: code:addons/social_instagram/controllers/main.py:0
+#, python-format
+msgid "Instagram did not provide a valid access token."
+msgstr "Instagram nie dostarczył ważnego tokena dostępu."
+
+#. module: social_instagram
+#. odoo-javascript
+#: code:addons/social_instagram/static/src/xml/social_instagram_templates.xml:0
+#, python-format
+msgid "Likes"
+msgstr "Polubienia"
+
+#. module: social_instagram
+#: model:ir.model.fields,field_description:social_instagram.field_social_media__media_type
+msgid "Media Type"
+msgstr "Typ mediów"
+
+#. module: social_instagram
+#. odoo-python
+#: code:addons/social_instagram/models/social_post.py:0
+#: model_terms:ir.ui.view,arch_db:social_instagram.instagram_preview
+#, python-format
+msgid "Only .jpg/.jpeg images can be posted on Instagram."
+msgstr "Na Instagramie można zamieszczać tylko zdjęcia w formacie .jpg/.jpeg."
+
+#. module: social_instagram
+#: model_terms:ir.ui.view,arch_db:social_instagram.instagram_preview
+msgid "Only the first attached image will be posted on Instagram."
+msgstr ""
+"Na Instagramie zostanie opublikowane tylko pierwsze załączone zdjęcie."
+
+#. module: social_instagram
+#: model_terms:ir.ui.view,arch_db:social_instagram.instagram_preview
+msgid "Post Image"
+msgstr "Opublikuj obraz"
+
+#. module: social_instagram
+#. odoo-python
+#: code:addons/social_instagram/controllers/main.py:0
+#, python-format
+msgid "Read More about Instagram Accounts"
+msgstr ""
+
+#. module: social_instagram
+#: model:ir.model,name:social_instagram.model_social_account
+msgid "Social Account"
+msgstr "Konto w mediach społecznościowych"
+
+#. module: social_instagram
+#: model:ir.model,name:social_instagram.model_social_live_post
+msgid "Social Live Post"
+msgstr "Post na żywo w mediach społecznościowych"
+
+#. module: social_instagram
+#: model:ir.model,name:social_instagram.model_social_media
+msgid "Social Media"
+msgstr "Media społecznościowe"
+
+#. module: social_instagram
+#: model:ir.model,name:social_instagram.model_social_post
+msgid "Social Post"
+msgstr "Post w mediach społecznościowych"
+
+#. module: social_instagram
+#: model:ir.model,name:social_instagram.model_social_post_template
+msgid "Social Post Template"
+msgstr "Szablon postów społecznościowych"
+
+#. module: social_instagram
+#: model:ir.model,name:social_instagram.model_social_stream
+msgid "Social Stream"
+msgstr "Kanał społecznościowy"
+
+#. module: social_instagram
+#: model:ir.model,name:social_instagram.model_social_stream_post
+msgid "Social Stream Post"
+msgstr "Post w kanale społecznościowym"
+
+#. module: social_instagram
+#: model:ir.model.fields,help:social_instagram.field_social_stream_post__instagram_facebook_author_id
+msgid ""
+"The Facebook ID of this Instagram post author, used to fetch the profile "
+"picture."
+msgstr ""
+"Identyfikator Facebooka tego autora postu na Instagramie, używany do "
+"pobierania zdjęcia profilowego."
+
+#. module: social_instagram
+#. odoo-python
+#: code:addons/social_instagram/controllers/main.py:0
+#, python-format
+msgid "There was a authentication issue during your request."
+msgstr "Podczas Twojego zapytania wystąpił problem z uwierzytelnianiem."
+
+#. module: social_instagram
+#. odoo-python
+#: code:addons/social_instagram/controllers/main.py:0
+#, python-format
+msgid "Unauthorized. Please contact your administrator."
+msgstr "Brak autoryzacji. Skontaktuj się z administratorem."
+
+#. module: social_instagram
+#: model:ir.model.fields,field_description:social_instagram.field_res_config_settings__instagram_use_own_account
+msgid "Use your own Instagram Account"
+msgstr "Użyj własnego konta na Instagramie"
+
+#. module: social_instagram
+#: model:ir.model.fields,help:social_instagram.field_social_post__instagram_access_token
+#: model:ir.model.fields,help:social_instagram.field_social_post_template__instagram_access_token
+msgid "Used to allow access to Instagram to retrieve the post image"
+msgstr ""
+"Używany, aby umożliwić dostęp do Instagrama w celu pobrania obrazu postu"
+
+#. module: social_instagram
+#: model:ir.model.fields,help:social_instagram.field_social_media__media_type
+msgid ""
+"Used to make comparisons when we need to restrict some features to a "
+"specific media ('facebook', 'twitter', ...)."
+msgstr ""
+"Używane do porównań w wypadku, gdy musimy ograniczyć niektóre "
+"funkcjonalności do poszczególnych platform ('facebook', 'twitter', ...)."
+
+#. module: social_instagram
+#. odoo-python
+#: code:addons/social_instagram/models/social_media.py:0
+#, python-format
+msgid "You don't have an active subscription. Please buy one here: %s"
+msgstr "Nie masz aktywnej subskrypcji. Możesz ją zakupić tutaj: %s"
+
+#. module: social_instagram
+#. odoo-python
+#: code:addons/social_instagram/controllers/main.py:0
+#, python-format
+msgid ""
+"You need to link your Instagram page to your Facebook account to post with Odoo Social.\n"
+" Please create one and make sure it is linked to your account."
+msgstr ""
+
+#. module: social_instagram
+#. odoo-python
+#: code:addons/social_instagram/models/social_post.py:0
+#: model_terms:ir.ui.view,arch_db:social_instagram.instagram_preview
+#, python-format
+msgid "Your image appears to be corrupted, please try loading it again."
+msgstr "Twój obraz wydaje się być uszkodzony, spróbuj załadować go ponownie."
+
+#. module: social_instagram
+#. odoo-python
+#: code:addons/social_instagram/models/social_post.py:0
+#, python-format
+msgid ""
+"Your image has to be within the 4:5 and the 1.91:1 aspect ratio as required "
+"by Instagram."
+msgstr ""
+"Twoje zdjęcie musi mieścić się w proporcjach 4:5 i 1,91:1 wymaganych przez "
+"Instagram."
+
+#. module: social_instagram
+#: model_terms:ir.ui.view,arch_db:social_instagram.instagram_preview
+msgid "https://www.facebook.com/help/instagram/1631821640426723"
+msgstr "https://www.facebook.com/help/instagram/1631821640426723"

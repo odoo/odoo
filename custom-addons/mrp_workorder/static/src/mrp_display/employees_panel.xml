@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp_workorder.MrpDisplayEmployeesPanel">
+        <div class="o_search_panel o_mrp_employees_panel position-absolute position-md-sticky top-0 z-index-1 bottom-0 flex-grow-0 flex-shrink-0 h-100 bg-view border-end"
+             t-att-class="env.searchModel.searchPanelInfo.className" t-ref="root">
+            <ul class="list-group h-100 overflow-auto pb-5">
+                <li t-foreach="props.employees.connected" t-as="employee" t-key="employee.id"
+                    class="list-group-item py-3 cursor-pointer d-flex align-items-center border-end-0 border-top-0"
+                    t-on-click="() => props.setSessionOwner(employee.id,pin)"
+                    t-att-class="{'bg-view': !employee.workorder.length, 'o_admin_user': employee.id == props.employees.admin.id}">
+                    <img t-attf-src="/web/image/hr.employee/{{employee.id}}/avatar_128"
+                        class="rounded o_avatar_connected"
+                        t-att-class="{'opacity-50': !employee.workorder.length and employee.id != props.employees.admin.id}"/>
+                    <div class="d-flex flex-column ps-3 w-100">
+                        <div class="fw-bold"
+                             t-att-class="{'opacity-50': !employee.workorder.length and employee.id != props.employees.admin.id}"
+                             t-esc="employee.name"
+                             readonly="1"/>
+                        <div t-foreach="employee.workorder" t-as="wo" t-key="wo.id" class="d-flex justify-content-between">
+                            <span class="text-muted" t-esc="wo.work_order_name + (wo.operation_name ? (' - ' + wo.operation_name) : '')"/>
+                            <span t-esc="Math.round(wo.duration) + '\''"/>
+                        </div>
+                    </div>
+                    <i t-if="employee.workorder.length == 0" class="oi oi-close fa-lg cursor-pointer ms-auto me-0"
+                       t-on-click.stop="() => props.logout(employee.id)"
+                       t-att-barcode_trigger="employee.id == props.employees.admin.id ? 'logout' : false"/>
+                </li>
+            </ul>
+            <button class="btn btn-light d-flex align-items-center gap-2 position-fixed position-lg-absolute bottom-0 w-100 border-top rounded-0 py-3"
+                t-on-click="props.popupAddEmployee">
+                <i class="fa fa-plus"/>
+                <span>Add Operator</span>
+            </button>
+        </div>
+    </t>
+</templates>

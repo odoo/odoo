@@ -1,0 +1,438 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_barcode_mrp
+# 
+# Translators:
+# Hongu Cosmin <cosmin513@gmail.com>, 2024
+# Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Cozmin Candea <office@terrabit.ro>, 2024
+# Martin Trigaux, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-23 16:33+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2024\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+msgid ""
+"<i class=\"fa fa-fw fa-lg fa-barcode me-3\" title=\"Serial/Lot Number\" "
+"invisible=\"product_tracking not in ['serial', 'lot']\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-lg fa-barcode me-3\" title=\"Număr serial / Lot\" "
+"invisible=\"tracking not in ['serial', 'lot']\"/>"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid ""
+"<i class=\"fa fa-fw fa-lg fa-barcode me-3\" title=\"Serial/Lot Number\" "
+"invisible=\"tracking not in ['serial', 'lot']\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-lg fa-barcode me-3\" title=\"Număr serial / Lot\" "
+"invisible=\"tracking not in ['serial', 'lot']\"/>"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "<i class=\"fa fa-fw fa-lg fa-cube me-3\" title=\"Quantity\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-cube me-3\" title=\"Cantitate\"/>"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid ""
+"<i class=\"fa fa-fw fa-lg fa-long-arrow-right me-3\" title=\"Destination "
+"Location\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-lg fa-long-arrow-right me-3\" title=\"Locație "
+"destinație\"/>"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid ""
+"<i class=\"fa fa-fw fa-lg fa-map-marker text-center me-3\" title=\"Source "
+"Location\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-lg fa-map-marker text-center me-3\" title=\"Locație "
+"sursă\"/>"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "<i class=\"fa fa-fw fa-lg fa-tags me-3\" title=\"Product\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-tags me-3\" title=\"Produs\"/>"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.res_config_settings_view_form
+msgid "<i class=\"fa fa-print\"/> Print barcode commands and operation types"
+msgstr ""
+"<i class=\"fa fa-print\"/> Imprimați comenzile de coduri de bare și tipurile"
+" de operațiuni"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.res_config_settings_view_form
+msgid "<i class=\"fa fa-print\"/> Print barcode demo sheet"
+msgstr "<i class=\"fa fa-print\"/> Imprimați foaia demo de cod de bare"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/components/main.js:0
+#, python-format
+msgid "Add Component"
+msgstr "Adăugare Integrant"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.view_picking_type_form
+msgid "Allow full order validation"
+msgstr "Permiteți validarea completă a comenzii"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,help:stock_barcode_mrp.field_stock_move_line__pick_type_create_components_lots
+msgid "Allow to create new lot/serial numbers for the components"
+msgstr "Permiteți crearea de noi numere de lot / serie pentru componente"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.view_picking_type_form
+msgid "Allow user to produce all even if no components were scanned"
+msgstr ""
+"Permiteți utilizatorului să producă tot, chiar dacă nu au fost scanate "
+"componente"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/components/main.js:0
+#, python-format
+msgid "Are you sure you want to cancel this manufacturing order?"
+msgstr "Ești sigur că vrei să anulezi această comandă de producție?"
+
+#. module: stock_barcode_mrp
+#: model:ir.actions.client,name:stock_barcode_mrp.stock_barcode_mo_client_action
+msgid "Barcode MO Client Action"
+msgstr "Acțiune client cod de bare MO"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.res_config_settings_view_form
+msgid "Barcode Nomenclature"
+msgstr "Nomenclator cod de bare"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Cancel Manufacturing Order"
+msgstr "Anulează comanda de producție"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/components/main.js:0
+#, python-format
+msgid "Cancel manufacturing order?"
+msgstr "Anulați comanda de producție?"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.res_config_settings_view_form
+msgid "Configure Product Barcodes"
+msgstr "Configurați codurile de bare ale produsului"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_barcode_form
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Confirm"
+msgstr "Confirmă"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_stock_picking_type__count_mo_confirmed
+msgid "Count Mo Confirmed"
+msgstr "Număr MO confirmate"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_stock_move_line__pick_type_create_components_lots
+msgid "Create New Lots/Serial Numbers for Components"
+msgstr "Creați loturi/numere de serie noi pentru componente"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.actions.act_window,help:stock_barcode_mrp.mrp_action_kanban
+msgid "Create a new Manufacturing Order"
+msgstr "Creați o nouă comandă de producție"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Destination Location"
+msgstr "Locația destinație"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_barcode_form
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Discard"
+msgstr "Abandonează"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_mrp_production__is_completed
+msgid "Is Completed"
+msgstr "Este finalizat"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_stock_move_line__manual_consumption
+msgid "Manual Consumption"
+msgstr "Consum manual"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_mrp_production__move_byproduct_line_ids
+msgid "Move Byproduct Line"
+msgstr "Linie de mișcare a produsului secundar"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_mrp_production__move_raw_line_ids
+msgid "Move Raw Line"
+msgstr "Linie de mișcare a materialelor prime"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_mrp_production__backorder_ids
+msgid "Mrp Production"
+msgstr "Producție MRP"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "New"
+msgstr "Nou(ă)"
+
+#. module: stock_barcode_mrp
+#. odoo-python
+#: code:addons/stock_barcode_mrp/models/mrp_production.py:0
+#, python-format
+msgid "No Manufacturing Order ready for this %(barcode_type)s"
+msgstr "Nicio comandă de producție pregătită pentru acest %(barcode_type)s"
+
+#. module: stock_barcode_mrp
+#. odoo-python
+#: code:addons/stock_barcode_mrp/models/mrp_production.py:0
+#, python-format
+msgid "No product or order found for barcode %s"
+msgstr "Niciun produs sau comandă găsită pentru codul de bare %s"
+
+#. module: stock_barcode_mrp
+#: model:ir.actions.act_window,name:stock_barcode_mrp.mrp_action_kanban
+msgid "Operations"
+msgstr "Operații"
+
+#. module: stock_barcode_mrp
+#: model:ir.model,name:stock_barcode_mrp.model_stock_picking_type
+msgid "Picking Type"
+msgstr "Tip ridicare"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Print Finished Product Label (PDF)"
+msgstr "Tipăriți eticheta produsului finit (PDF)"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Print Finished Product Label (ZPL)"
+msgstr "Tipăriți eticheta produsului finit (ZPL)"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Print Production Order"
+msgstr "Tipăriți comanda de producție"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/components/main.js:0
+#, python-format
+msgid "Produce"
+msgstr "Produceți"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/components/main.js:0
+#, python-format
+msgid "Produce All"
+msgstr "Produceți tot"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Product"
+msgstr "Produs"
+
+#. module: stock_barcode_mrp
+#: model:ir.model,name:stock_barcode_mrp.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Mișcări de produs (linie mișcare stoc)"
+
+#. module: stock_barcode_mrp
+#: model:ir.model,name:stock_barcode_mrp.model_product_product
+msgid "Product Variant"
+msgstr "Variantă produs"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Product not Allowed"
+msgstr "Produsul nu este permis"
+
+#. module: stock_barcode_mrp
+#: model:ir.model,name:stock_barcode_mrp.model_mrp_production
+msgid "Production Order"
+msgstr "Comanda de Producție"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Quantity"
+msgstr "Cantitate"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Scan a component"
+msgstr "Scanați o componentă"
+
+#. module: stock_barcode_mrp
+#. odoo-python
+#: code:addons/stock_barcode_mrp/models/mrp_production.py:0
+#, python-format
+msgid "Scan a product to filter the orders."
+msgstr "Scanați un produs pentru a filtra comenzile."
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/kanban/stock_barcode_kanban.xml:0
+#, python-format
+msgid "Scan a transfer, a product or a package to filter your records"
+msgstr ""
+"Scanați un transfer, un produs sau un pachet pentru a filtra înregistrările"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/kanban/stock_barcode_kanban.xml:0
+#, python-format
+msgid "Scan an order or a product to filter your records"
+msgstr "Scanați o comandă sau un produs pentru a filtra înregistrările"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Scan your final product or more components"
+msgstr "Scanați produsul final sau mai multe componente"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.stock_move_line_product_selector
+msgid "Serial/Lot Number"
+msgstr "Număr serial / Lot"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Source Location"
+msgstr "Locație sursă"
+
+#. module: stock_barcode_mrp
+#: model:ir.model,name:stock_barcode_mrp.model_stock_move
+msgid "Stock Move"
+msgstr "Mișcare stoc"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "The Manufacturing Order has been cancelled"
+msgstr "Comanda de producție a fost anulată"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid ""
+"The lines with a kit have been replaced with their components. Please check "
+"the picking before the final validation."
+msgstr ""
+"Liniile cu un kit au fost înlocuite cu componentele lor. Vă rugăm să "
+"verificați ridicarea înainte de validarea finală."
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "The manufacturing order has been validated"
+msgstr "Comanda de producție a fost validată"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "This order is already done"
+msgstr "Această comandă este deja finalizată"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "This order is cancelled"
+msgstr "Această comandă este anulată"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.stock_mrp_picking_type_kanban
+msgid "To Process"
+msgstr "Procesare"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "To produce more products create a new MO."
+msgstr "Pentru a produce mai multe produse, creați o nouă MO."
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.actions.act_window,help:stock_barcode_mrp.mrp_action_kanban
+msgid "Transfers allow you to move products from one location to another."
+msgstr "Transferurile vă permit să mutați produsele dintr-o locație în alta."
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Unit of Measure"
+msgstr "Unitatea de măsură"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,help:stock_barcode_mrp.field_stock_move_line__manual_consumption
+msgid ""
+"When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
+"If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also."
+msgstr ""
+"Când este activat, înregistrarea consumului pentru acea componentă este înregistrată manual exclusiv.\n"
+"Dacă nu este activat și consumul oricăreia dintre componentele este editat manual pe comanda de fabricație, Odoo presupune că consumul manual este de asemenea."
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "You can't add the final product of a MO as a byproduct."
+msgstr "Nu puteți adăuga produsul final al unei MO ca produs secundar."

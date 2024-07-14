@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_structure_pl_employee_salary" model="hr.payroll.structure">
+        <field name="name">Poland: Regular Pay</field>
+        <field name="code">PLMONTHLY</field>
+        <field name="country_id" ref="base.pl"/>
+        <field name="type_id" ref="l10n_pl_hr_payroll.structure_type_employee_pl"/>
+        <field name="report_id" ref="l10n_pl_hr_payroll.action_report_payslip_pl"/>
+    </record>
+    <record id="l10n_pl_hr_payroll.structure_type_employee_pl" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_structure_pl_employee_salary"/>
+    </record>
+</odoo>

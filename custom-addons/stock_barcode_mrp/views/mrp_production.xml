@@ -1,0 +1,219 @@
+<odoo>
+
+    <record id="mrp_barcode_kanban" model="ir.ui.view">
+        <field name="name">mrp.barcode.kanban</field>
+        <field name="model">mrp.production</field>
+        <!--High priority to not be the standard view of MO in mrp app-->
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" js_class="stock_barcode_list_kanban" import="false">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="product_uom_id"/>
+                <field name="product_qty"/>
+                <field name="state"/>
+                <field name="date_start"/>
+                <field name="user_id"/>
+                <field name="activity_state"/>
+                <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb8">
+                                <field name="priority" widget="priority"/>
+                                <div class="o_kanban_record_headings ms-1">
+                                    <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
+                                </div>
+                                <strong>
+                                        <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'danger', 'waiting': 'warning', 'confirmed': 'warning', 'done': 'success'}}"/>
+                                </strong>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <t t-esc="record.product_id.value + ' - ' + record.product_qty.value + ' ' + record.product_uom_id.value"/>
+                                    <field name="activity_ids" widget="kanban_activity"/>
+                                    <field name="json_popover" nolabel="1" widget="stock_rescheduling_popover" invisible="not json_popover"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <t t-esc="record.date_start.value and record.date_start.value.split(' ')[0] or False"/>
+                                    <field name="user_id" widget="many2one_avatar_user" invisible="not user_id" readonly="state in ['cancel', 'done']"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="mrp_barcode_form" model="ir.ui.view">
+        <field name="name">mrp.form.view.barcode</field>
+        <field name="model">mrp.production</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="company_id" invisible="1" />
+                <group>
+                    <field name="bom_id" readonly="1" invisible="not bom_id" />
+                    <field name="product_id" readonly="1" invisible="bom_id" />
+                    <field name="date_start" readonly="1" />
+                    <field name="origin" readonly="1" invisible="not origin" />
+                    <field name="state" readonly="1" />
+                    <field name="priority" readonly="1" invisible="not priority"/>
+                    <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                    <field name="components_availability" readonly="1" />
+                    <field name="move_raw_ids" readonly="1" invisible="not move_raw_ids">
+                        <kanban>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click">
+                                        <div class="row">
+                                            <div class="col-6 o_kanban_record_title">
+                                                <field name="product_id" readonly="state == 'done'"/>
+                                            </div>
+                                            <div class="col-6 text-end">
+                                                <field name="product_uom_qty" readonly="state == 'done'"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <field name="description_picking"/>
+                                            </div>
+                                            <div class="col-6 text-end">
+                                                <field name="state"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </group>
+                <div class="o_barcode_control d-flex fixed-bottom">
+                    <button string="Discard" class="btn btn-secondary o_discard" special="cancel"/>
+                    <button string="Confirm" class="btn btn-primary o_save" special="save"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="mrp_product_selector" model="ir.ui.view">
+        <field name="name">mrp.product.selector</field>
+        <field name="model">mrp.production</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form class="o_barcode_line_form flex-column">
+                <!-- This part saves the `qty_done` calculated in `qty_producing` onchange,
+                    any move lines deleted where not saved when fields are invisible, so d-none was used -->
+                <field name="move_raw_ids" class="d-none" readonly="state in ['cancel', 'done']">
+                    <tree>
+                        <field name="state" />
+                        <field name="bom_line_id"  />
+                        <field name="product_id" readonly="state == 'done'" domain="[('id', '!=', parent.product_id)]"/>
+                        <field name="product_uom_qty"  readonly="state == 'done'"/>
+                        <field name="move_line_ids" >
+                            <tree>
+                                <field name="product_id" />
+                                <field name="qty_done" />
+                            </tree>
+                        </field>
+                    </tree>
+                </field>
+                <field name="move_byproduct_ids" invisible="1">
+                    <tree>
+                        <field name="state" />
+                        <field name="product_id" readonly="state == 'done'" domain="[('id', '!=', parent.product_id)]"/>
+                        <field name="product_uom_qty"  readonly="state == 'done'"/>
+                        <field name="move_line_ids" >
+                            <tree>
+                                <field name="product_id" />
+                                <field name="qty_done" />
+                            </tree>
+                        </field>
+                    </tree>
+                </field>
+                <field name="state" invisible="1" />
+                <div class="row mt-4 mb-4">
+                    <field name="company_id" force_save="1" invisible="1"/>
+                    <div class="col-12 d-flex align-items-baseline">
+                        <i class="fa fa-fw fa-lg fa-tags me-3" title="Product"/>
+                        <field name="product_id" placeholder="Product"
+                            context="{'default_detailed_type': 'product'}"
+                            domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]"
+                            required="1"
+                            readonly="id" nolabel="1" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 my-2 d-flex align-items-baseline">
+                        <i class="fa fa-fw fa-lg fa-cube me-3" title="Quantity"/>
+                        <field name="is_completed" invisible="1"/>
+                        <field name="qty_producing" class="w-100 w-md-50 text-end o_qty_done_field_completed" invisible="not is_completed" options="{'type': 'number'}" placeholder="Quantity"/>
+                        <field name="qty_producing" class="w-100 w-md-50 text-end o_qty_done_field_not_completed" invisible="is_completed or not id" options="{'type': 'number'}" placeholder="Quantity"/>
+                        <field name="product_qty" class="w-100 w-md-50 text-end o_qty_done_field_not_completed" required="1" invisible="id"/>
+                        <field name="product_qty" widget="change_production_qty" invisible="not id"/>
+                    </div>
+                    <div class="col-6 my-2 d-flex align-items-baseline" groups="uom.group_uom">
+                        <field name="product_uom_id" placeholder="Unit of Measure"
+                            options="{'no_open': True}" readonly="1"/>
+                    </div>
+                </div>
+                <div class="row justify-content-center justify-content-md-start">
+                    <div class="col-12 col-sm-10 col-md-8 my-2 ms-md-5 align-items-baseline"
+                        invisible="product_tracking == 'serial' or not id">
+                        <widget name="digipad" quantity_field="qty_producing"/>
+                    </div>
+                    <div class="col-12 col-sm-10 col-md-8 my-2 ms-md-5 align-items-baseline"
+                        invisible="product_tracking == 'serial' or id">
+                        <widget name="digipad" quantity_field="product_qty"/>
+                    </div>
+                </div>
+                <div class="row" groups="stock.group_stock_multi_locations">
+                    <div class="col-12 col-md-6 my-2 d-flex align-items-baseline">
+                        <i class="fa fa-fw fa-lg fa-long-arrow-right me-3" title="Destination Location"/>
+                        <field name="location_dest_id" placeholder="Destination Location" readonly="1"
+                            options="{'no_create': True}"/>
+                    </div>
+                </div>
+                <field name="product_tracking" invisible="1"/>
+                <div class="row" groups="stock.group_production_lot">
+                    <div class="col-12 col-md-6 my-2 d-flex align-items-baseline">
+                        <i class="fa fa-fw fa-lg fa-barcode me-3" title="Serial/Lot Number" invisible="product_tracking not in ['serial', 'lot']"/>
+                        <field name="lot_producing_id" placeholder="Serial/Lot Number" options="{'no_open': True}"
+                               context="{'default_product_id': product_id, 'default_company_id': company_id}"
+                               invisible="product_tracking == 'none'"/>
+                    </div>
+                </div>
+                <div class="fixed-bottom">
+                    <div class="o_barcode_control d-flex">
+                        <button string="Discard" class="btn btn-secondary o_discard" special="cancel"/>
+                        <button string="Confirm" class="btn btn-primary o_save" special="save"/>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="mrp_action_kanban" model="ir.actions.act_window">
+        <field name="name">Operations</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="stock_barcode_mrp.mrp_barcode_kanban"/>
+        <field name="context">{
+            'search_default_filter_confirmed': 1,
+            'search_default_filter_to_close': 1,
+            'search_default_filter_ready': 1,
+            'search_default_filter_in_progress': 1,
+            'search_default_todo': 1,
+
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Manufacturing Order
+            </p><p>
+                Transfers allow you to move products from one location to another.
+            </p>
+        </field>
+    </record>
+</odoo>

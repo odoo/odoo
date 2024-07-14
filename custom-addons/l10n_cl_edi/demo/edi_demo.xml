@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_cl_demo_certificate" model="l10n_cl.certificate">
+        <field name="signature_filename">Demo</field>
+        <field name="subject_serial_number">23841194-7</field>
+        <field name="signature_pass_phrase">asadadad</field>
+        <field name="private_key" type="char" file="l10n_cl_edi/tests/private_key_test.key"/>
+        <field name="certificate" type="char" file="l10n_cl_edi/tests/cert_test.cert"/>
+        <field name="cert_expiration" eval="str(datetime.now().year+1)+'-12-31'"/>
+        <field name="company_id" eval="ref('l10n_cl.demo_company_cl')"/>
+    </record>
+
+    <data noupdate="1">
+        <record id="l10n_cl.demo_company_cl" model="res.company">
+            <field name="l10n_cl_dte_service_provider">SIIDEMO</field>
+            <field name="l10n_cl_dte_email">dtecl@example.com</field>
+            <field name="l10n_cl_sii_regional_office">ur_SaO</field>
+            <field name="l10n_cl_dte_resolution_number">0</field>
+            <field name="l10n_cl_dte_resolution_date">2014-01-20</field>
+            <field name="l10n_cl_activity_description">FURNITURE MANUFACTURING</field>
+            <field name="l10n_cl_company_activity_ids" eval="[ref('eco_new_acti_310001')]"/>
+        </record>
+
+        <function model="res.company" name="_prepare_cl_demo_objects">
+            <value eval="[ref('l10n_cl.demo_company_cl')]"/>
+        </function>
+
+    </data>
+
+</odoo>

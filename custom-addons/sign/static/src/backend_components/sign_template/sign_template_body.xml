@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sign.SignTemplateBody">
+        <SignTemplateTopBar 
+            manageTemplateAccess="props.manageTemplateAccess"
+            hasSignRequests="props.hasSignRequests"
+            signTemplate="props.signTemplate"
+            onTemplateNameChange="(e) => this.onTemplateNameChange(e)"
+        />
+        <iframe class="o_iframe o_sign_pdf_iframe" t-ref="PDFIframe" t-att-src="PDFViewerURL" t-att-disabled="props.hasSignRequests"/>
+    </t>
+</templates>

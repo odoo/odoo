@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_appraisal_form" model="ir.ui.view">
+        <field name="name">hr.appraisal.form.inherit.hr_appraisal_skills</field>
+        <field name="model">hr.appraisal</field>
+        <field name="inherit_id" ref="hr_appraisal.view_hr_appraisal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='appraisal']" position="after">
+                <page string="Skills" name="page_skills">
+                    <div class="o_hr_skills_group o_group_skills col-lg-12 ps-0 pe-0 position-relative w-100">
+                        <span class="o_appraisal_overlay" invisible="state != 'new'">
+                            Skills tab will be active once the appraisal is confirmed.
+                        </span>
+                        <field mode="tree" nolabel="1" name="skill_ids"
+                                widget="appraisal_skills_one2many"
+                                context="{'appraisal_state': state}"
+                                readonly="state != 'pending' or ('uid' not in manager_user_ids and not is_manager)"
+                                class="o_appraisal_skill o_field_appraisal_skills_one2many">
+                            <tree>
+                                <field name="skill_type_id" optional="hidden"/>
+                                <field name="skill_id" width="200px"
+                                        options="{'no_create_edit': True}"
+                                        context="{'from_skill_dropdown': True}"/>
+                                <field name="skill_level_id"
+                                        domain="[('skill_type_id', '=', skill_type_id)]"
+                                        width="100px"
+                                        options="{'no_create': True}"
+                                        context="{'from_skill_level_dropdown': True}"/>
+                                <field name="level_progress" widget="progressbar" width="200px"/>
+                                <field name="justification"/>
+                            </tree>
+                        </field>
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

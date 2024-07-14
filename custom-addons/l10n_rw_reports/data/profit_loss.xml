@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_financial_report_rw_pnl" model="account.report">
+        <field name="name">Profit and loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.rw"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_rw_pnl0_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_rw_operating_profit" model="account.report.line">
+                <field name="name">Operating profit</field>
+                <field name="code">rw_operating_profit</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_rw_operating_profit_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">rw_revenue.balance + rw_other_income.balance + rw_change_inventories.balance + rw_change_fair_value_investment.balance + rw_depreciation.balance - (rw_costs_material.balance + rw_employee_expense.balance + rw_impairment_losses.balance + rw_other_expenses.balance)</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_rw_revenue" model="account.report.line">
+                        <field name="name">Revenue</field>
+                        <field name="code">rw_revenue</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rw_revenue_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-40 -41 - 42 - 43</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rw_other_income" model="account.report.line">
+                        <field name="name">Other income</field>
+                        <field name="code">rw_other_income</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rw_other_income_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-611 - 6281 - 6251 - 6241 - 6231 - 6221 - 6211 - 671 - 9991 - 999997</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rw_change_inventories" model="account.report.line">
+                        <field name="name">Change in inventories</field>
+                        <field name="code">rw_change_inventories</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rw_change_inventories_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-613</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rw_cost_material" model="account.report.line">
+                        <field name="name">Costs of material</field>
+                        <field name="code">rw_costs_material</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rw_cost_material_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">510 + 511 + 513 + 521 + 522</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rw_employee_expense" model="account.report.line">
+                        <field name="name">Employee benefits expense</field>
+                        <field name="code">rw_employee_expense</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rw_employee_expense_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">512</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rw_change_fair_value_investment" model="account.report.line">
+                        <field name="name">Change in fair value of investment property</field>
+                        <field name="code">rw_change_fair_value_investment</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rw_change_fair_value_investment_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-614</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rw_depreciation" model="account.report.line">
+                        <field name="name">Depreciation, amortisation and impairment of non-financial assets</field>
+                        <field name="code">rw_depreciation</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rw_depreciation_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-615</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rw_impairment_losses" model="account.report.line">
+                        <field name="name">Impairment losses of financial assets</field>
+                        <field name="code">rw_impairment_losses</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rw_impairment_losses_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">616</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rw_other_expenses" model="account.report.line">
+                        <field name="name">Other expenses</field>
+                        <field name="code">rw_other_expenses</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rw_other_expenses_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">514 + 515 + 516 + 520 + 6212 + 6222 + 6242 + 6252 + 612 + 626 + 627 + 6282 + 6232 + 9992 + 999998</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_rw_profit_before_tax" model="account.report.line">
+                <field name="name">Profit before tax</field>
+                <field name="code">rw_profit_before_tax</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_rw_profit_before_tax_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">rw_operating_profit.balance + rw_share_profit_equity.balance + rw_finance_income.balance - (rw_finance_costs.balance  + rw_other_finance.balance)</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_rw_share_profit_equity" model="account.report.line">
+                        <field name="name">Share of profit from equity accounted investments</field>
+                        <field name="code">rw_share_profit_equity</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rw_share_profit_equity_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-680</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rw_finance_costs" model="account.report.line">
+                        <field name="name">Finance costs</field>
+                        <field name="code">rw_finance_costs</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rw_finance_costs_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">681</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rw_finance_income" model="account.report.line">
+                        <field name="name">Finance income</field>
+                        <field name="code">rw_finance_income</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rw_finance_income_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-682</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_rw_other_financial_items" model="account.report.line">
+                        <field name="name">Other financial items</field>
+                        <field name="code">rw_other_finance</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_rw_other_financial_items_expr" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">683</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_rw_tax_expense" model="account.report.line">
+                <field name="name">Tax expense</field>
+                <field name="code">rw_tax_expenses</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_rw_tax_expense_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">63 + 64 + 65 + 66 + 67\(671)</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_rw_profit_continuing_operation" model="account.report.line">
+                <field name="name">Profit for the year from continuing operations</field>
+                <field name="code">rw_profit_continuing_operation</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_rw_profit_continuing_operation_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">rw_profit_before_tax.balance - rw_tax_expenses.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_rw_loss_discontinued_operations" model="account.report.line">
+                <field name="name">Loss for the year from discontinued operations</field>
+                <field name="code">rw_loss_discontinued_operations</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_rw_loss_discontinued_operations_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">69</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_rw_profit-loss_year" model="account.report.line">
+                <field name="name">Profit/Loss for the year</field>
+                <field name="code">rw_profit_loss_year</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_rw_profit-loss_year_expr" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">rw_profit_continuing_operation.balance - rw_loss_discontinued_operations.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="action_account_report_rw_pnl" model="ir.actions.client">
+        <field name="name">Profit and Loss</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('account_financial_report_rw_pnl')}"/>
+    </record>
+
+    <record id="account_financial_report_rw_profit_loss" model="account.report.line">
+        <field name="action_id" ref="action_account_report_rw_pnl"/>
+    </record>
+</odoo>

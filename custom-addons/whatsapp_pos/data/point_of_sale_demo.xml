@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="pos.config" id="point_of_sale.pos_config_main" forcecreate="0">
+        <field name="whatsapp_enabled">True</field>
+        <field name="receipt_template_id" ref="whatsapp_pos.whatsapp_template_pos"/>
+        <field name="invoice_template_id" ref="whatsapp_account.whatsapp_template_invoice"/>
+    </record>
+</odoo>

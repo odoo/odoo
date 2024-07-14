@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mrp_workcenter_request_action_from_workcenter" model="ir.actions.act_window">
+        <field name="name">Maintenance Requests</field>
+        <field name="res_model">maintenance.request</field>
+        <field name="binding_model_id" ref="mrp.model_mrp_workcenter"/>
+        <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
+        <field name="context">{
+            'default_maintenance_for': 'workcenter',
+            'default_workcenter_id': active_id,
+
+        }</field>
+        <field name="domain">[('workcenter_id', '=', active_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new maintenance request
+            </p><p>
+                Follow the process of the request and communicate with the collaborator.
+            </p>
+        </field>
+    </record>
+
+    <!-- MRP.WORKCENTER -->
+    <record id="mrp_workcenter_view_form_inherit_maintenance" model="ir.ui.view">
+        <field name="name">mrp.workcenter.form.inherit.maintenance</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Equipment" name="equipment">
+                    <field name="equipment_ids" widget="many2many">
+                        <tree string="Equipment">
+                            <field name="name"/>
+                            <field name="technician_user_id"/>
+                            <field name="category_id"/>
+                            <field name="mtbf"/>
+                            <field name="mttr"/>
+                            <field name="estimated_next_failure" string="Est. Next Failure"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <div name="button_box" position="inside">
+                <button name="%(mrp_workcenter_request_action_from_workcenter)d"
+                    type="action"
+                    class="oe_stat_button"
+                    context="{'search_default_active': True, 'default_company_id': company_id, 'default_maintenance_team_id': maintenance_team_id}"
+                    icon="fa-wrench">
+                    <field string="Maintenance" name="maintenance_open_count" widget="statinfo"/>
+                </button>
+            </div>
+            <xpath expr="//notebook" position="inside">
+                <page string="Maintenance" name="maintenance">
+                    <group>
+                        <group name="maintenance">
+                            <field name="effective_date"/>
+                            <field name="maintenance_team_id" context="{'default_company_id':company_id}"/>
+                            <field name="technician_user_id" domain="[('share', '=', False)]"/>
+                        </group>
+                        <group name="statistics">
+                            <label for="expected_mtbf" string="Expected Mean Time Between Failure"/>
+                            <div class="o_row">
+                                <field name="expected_mtbf"/> days
+                            </div>
+                            <label for="mtbf" string="Mean Time Between Failure"/>
+                            <div class="o_row">
+                                <field name="mtbf"/> days
+                            </div>
+                            <label for="estimated_next_failure" string="Estimated Next Failure"/>
+                            <div class="o_row">
+                                <field name="estimated_next_failure"/>
+                            </div>
+                            <field name="latest_failure_date" string="Latest Failure"/>
+                            <label for="mttr" string="Mean Time To Repair"/>
+                            <div class="o_row">
+                                <field name="mttr"/> days
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//sheet" position="after">
+                    <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_workcenter_view_kanban_inherit_maintenance" model="ir.ui.view">
+        <field name="name">mrp.workcenter.view.kanban.inherit.maintenance</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='plan_order']" position="after">
+                <div>
+                    <a name="%(maintenance.hr_equipment_request_action)d" type="action">Maintenance</a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- MRP.PRODUCTION -->
+    <record id="mrp_production_view_form_inherit_maintenance" model="ir.ui.view">
+        <field name="name">mrp.production.view.form.inherit.maintenance</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <button name="action_cancel" position="before">
+                <button name="button_maintenance_req" type="object" string="Maintenance Request"/>
+            </button>
+            <div name="button_box" position="inside">
+                <button name="open_maintenance_request_mo" type="object" class="oe_stat_button" icon="fa-wrench" invisible="maintenance_count == 0" context="{'search_default_production_id': id}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="maintenance_count"/></span>
+                        <span class="o_stat_text">Maintenance</span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

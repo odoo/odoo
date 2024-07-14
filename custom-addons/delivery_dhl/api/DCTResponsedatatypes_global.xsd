@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://www.dhl.com/DCTResponsedatatypes" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.dhl.com/DCTResponsedatatypes" elementFormDefault="unqualified"
+	attributeFormDefault="unqualified">
+	<xsd:element name="DCTResponseDataTypes">
+		<xsd:annotation>
+			<xsd:documentation>Comment describing your root element
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="OrgnSvcAreaType">
+		<xsd:sequence>
+			<xsd:element name="FacilityCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ServiceAreaCode" minOccurs="1">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="DestSvcAreaType">
+		<xsd:sequence>
+			<xsd:element name="FacilityCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ServiceAreaCode" minOccurs="1">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="BkgDetailsType">
+		<xsd:sequence>
+			<xsd:element name="QtdShp" minOccurs="0" maxOccurs="unbounded" type="QtdShpType" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="SrvCombType">
+		<xsd:sequence>
+			<xsd:element name="GlobalServiceName" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="45" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="GlobalServiceCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="6" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="LocalServiceCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="LocalServiceTypeName" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="45" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ChargeCodeType" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3" />
+						<xsd:enumeration value="FEE" />
+						<xsd:enumeration value="SCH" />
+						<xsd:enumeration value="XCH" />
+						<xsd:enumeration value="NRI" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="SOfferedCustAgreement" minOccurs="1">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="1" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="SrvComb" minOccurs="0">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Prod" minOccurs="0" type="ProdType" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="ProdType">
+		<xsd:sequence>
+			<xsd:element name="VldSrvComb" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="SpecialServiceType" type="xsd:string" minOccurs="0" maxOccurs="1">
+						</xsd:element>
+						<!-- xsd:element name="VldMrkSrvComb" minOccurs="0" maxOccurs="unbounded"> <xsd:complexType> <xsd:sequence> <xsd:element name="LocalChargeCode" type="xsd:string" minOccurs="0" maxOccurs="1"> </xsd:element>
+							</xsd:sequence> </xsd:complexType> </xsd:element -->
+						<xsd:element name="LocalServiceType" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+						</xsd:element>
+						<xsd:element name="CombRSrv" minOccurs="0" maxOccurs="unbounded">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="RestrictedSpecialServiceType" minOccurs="0" type="xsd:string" maxOccurs="1">
+									</xsd:element>
+									<xsd:element name="RestrictedLocalServiceType" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="TotalDiscount" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="1" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="NoteType">
+		<xsd:sequence>
+			<xsd:element name="ActionStatus" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+			<xsd:element name="Condition" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="ConditionCode" minOccurs="0">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:minLength value="0"></xsd:minLength>
+									<xsd:maxLength value="10"></xsd:maxLength>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name="ConditionData" minOccurs="0">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="QtdShpExChrgType">
+		<xsd:sequence>
+			<xsd:element name="SpecialServiceType" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="6"></xsd:maxLength>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="LocalServiceType" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="3"></xsd:maxLength>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="GlobalServiceName" type="xsd:string" minOccurs="0" maxOccurs="1">
+			</xsd:element>
+			<xsd:element name="LocalServiceTypeName" type="xsd:string" minOccurs="0" maxOccurs="1">
+			</xsd:element>
+			<xsd:element name="SOfferedCustAgreement" type="xsd:string" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="ChargeCodeType" type="xsd:string" minOccurs="0"></xsd:element>
+			<xsd:element name="InsPrmRateInPercentage" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="8" />
+						<xsd:fractionDigits value="4" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="CurrencyCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ChargeValue" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ChargeTaxAmount" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ChargeTaxRate" minOccurs="0" maxOccurs="unbounded">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="6" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<!-- Added for Brazil DCT change -->
+			<xsd:element name="ChargeTaxAmountDet" minOccurs="0" type="ChargeTaxAmountDetType" maxOccurs="unbounded" />
+			<xsd:element name="QtdSExtrChrgInAdCur" minOccurs="0" type="QtdSExtrChrgInAdCurType" maxOccurs="unbounded" />
+			<!-- Added for Brazil DCT change -->
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- Start:Added for Brazil DCT changes -->
+	<xsd:complexType name="WeightChargeTaxDetType">
+		<xsd:sequence>
+			<xsd:element name="TaxTypeRate" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="8" />
+						<xsd:fractionDigits value="6" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="TaxTypeCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="6"></xsd:maxLength>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="WeightChargeTax" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="BaseAmt" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="ChargeTaxAmountDetType">
+		<xsd:sequence>
+			<xsd:element name="TaxTypeRate" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="8" />
+						<xsd:fractionDigits value="6" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="TaxTypeCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="6"></xsd:maxLength>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="TaxAmount" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="BaseAmount" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="QtdSInAdCurType">
+		<xsd:sequence>
+			<xsd:element name="CustomsValue" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ExchangeRate" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="6" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="CurrencyCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="CurrencyRoleTypeCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="5" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="WeightCharge" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="TotalAmount" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="TotalTaxAmount" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="WeightChargeTax" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="WeightChargeTaxDet" minOccurs="0" type="WeightChargeTaxDetType" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="QtdSExtrChrgInAdCurType">
+		<xsd:sequence>
+			<xsd:element name="ChargeValue" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ChargeExchangeRate" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="6" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ChargeTaxAmount" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ChargeTaxRate" minOccurs="0" maxOccurs="unbounded">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="6" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="CurrencyCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="CurrencyRoleTypeCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="5" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ChargeTaxAmountDet" minOccurs="0" type="ChargeTaxAmountDetType" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- End:Added for Brazil DCT changes -->
+	<xsd:complexType name="QtdShpType">
+		<xsd:sequence>
+			<xsd:element name="OriginServiceArea" minOccurs="1" maxOccurs="1" type="OrgnSvcAreaType" />
+			<xsd:element name="DestinationServiceArea" minOccurs="1" maxOccurs="1" type="DestSvcAreaType" />
+			<xsd:element name="GlobalProductCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="6"></xsd:maxLength>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="LocalProductCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="3"></xsd:maxLength>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+
+			<xsd:element name="ProductShortName" type="xsd:string" minOccurs="0" maxOccurs="1">
+			</xsd:element>
+			<xsd:element name="LocalProductName" type="xsd:string" minOccurs="0" maxOccurs="1">
+			</xsd:element>
+			<xsd:element name="NetworkTypeCode" type="xsd:string" minOccurs="0" maxOccurs="1">
+			</xsd:element>
+			<xsd:element name="POfferedCustAgreement" type="xsd:string" minOccurs="0" maxOccurs="1">
+			</xsd:element>
+			<xsd:element name="TransInd" type="xsd:string" minOccurs="0" maxOccurs="1"></xsd:element>
+			<xsd:element name="PickupDate" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:date" />
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="PickupCutoffTime" type="xsd:string" minOccurs="0" maxOccurs="1"></xsd:element>
+			<xsd:element name="BookingTime" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:annotation>
+						<xsd:documentation>
+							Booking Time
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:restriction base="xsd:duration" />
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="CurrencyCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ExchangeRate" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="6" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="WeightCharge" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="WeightChargeTax" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="weightChargeTaxRate" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="6" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="TotalTransitDays" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:int"></xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="PickupPostalLocAddDays" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:int"></xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="DeliveryPostalLocAddDays" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:int"></xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="PickupNonDHLCourierCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="1" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="DeliveryNonDHLCourierCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="1" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="DeliveryDate" minOccurs="0" maxOccurs="unbounded" type="DeliveryDate" />
+			<xsd:element name="DeliveryTime" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:annotation>
+						<xsd:documentation>
+							Delivery Time
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:restriction base="xsd:duration" />
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="DeliveryTimeGMTOffset" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:annotation>
+						<xsd:documentation>
+							Delivery Time GMT Offset
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="6" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="DimensionalWeight" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="15" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="WeightUnit" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:maxLength value="3"></xsd:maxLength>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="PickupDayOfWeekNum" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="1" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="DestinationDayOfWeekNum" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="1" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="QuotedWeight" type="QuotedWeight" minOccurs="0" />
+			<xsd:element name="QuotedWeightUOM" type="QuotedWeightUOM" minOccurs="0" />
+			<xsd:element name="QtdShpExChrg" minOccurs="0" type="QtdShpExChrgType" maxOccurs="unbounded" />
+			<xsd:element name="PricingDate" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:date" />
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="ShippingCharge" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="TotalTaxAmount" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="TotalDiscount" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<!-- Added for Brazil DCT changes -->
+			<xsd:element name="QtdSInAdCur" minOccurs="0" type="QtdSInAdCurType" maxOccurs="unbounded" />
+			<xsd:element name="WeightChargeTaxDet" minOccurs="0" type="WeightChargeTaxDetType" maxOccurs="unbounded" />
+			<!-- End : Added for Brazil DCT changes -->
+
+			<xsd:element name="PickupWindowEarliestTime" minOccurs="1">
+				<xsd:simpleType>
+					<xsd:annotation>
+						<xsd:documentation>Pickup window start time</xsd:documentation>
+					</xsd:annotation>
+					<xsd:restriction base="xsd:string" />
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="PickupWindowLatestTime" minOccurs="1">
+				<xsd:simpleType>
+					<xsd:annotation>
+						<xsd:documentation>Pickup window end time</xsd:documentation>
+					</xsd:annotation>
+					<xsd:restriction base="xsd:string" />
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="BookingCutoffOffset" minOccurs="1">
+				<xsd:simpleType>
+					<xsd:annotation>
+						<xsd:documentation>Booking cut off time offset</xsd:documentation>
+					</xsd:annotation>
+					<xsd:restriction base="xsd:string" />
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="PickupLeadTime" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="1" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="PickupCloseTime" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="1" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="WeightChargeDisc" minOccurs="0" type="WeightChargeDisc" maxOccurs="unbounded" />
+			<xsd:element name="QtdShpExChrgDisc" minOccurs="0" type="QtdShpExChrgDisc" maxOccurs="unbounded" />
+			<!-- <xsd:element name="QtdShpExChrg" minOccurs="0" type="QtdShpExChrg" /> -->
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:simpleType name="QuotedWeight">
+		<xsd:annotation>
+			<xsd:documentation>Weight of piece or shipment</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:decimal">
+			<xsd:fractionDigits value="3" />
+			<xsd:minInclusive value="0.000" />
+			<xsd:maxInclusive value="999999.999" />
+			<xsd:totalDigits value="10" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="QuotedWeightUOM">
+		<xsd:annotation>
+			<xsd:documentation>WeightUOM</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1" />
+			<xsd:maxLength value="3" />
+			<xsd:enumeration value="KG" />
+			<xsd:enumeration value="Lbs" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name="MrkSrvType">
+		<xsd:sequence>
+			<xsd:choice>
+				<xsd:element name="LocalProductCode" type="xsd:string" minOccurs="0" maxOccurs="1" />
+				<xsd:element name="LocalServiceType" type="xsd:string" minOccurs="0" maxOccurs="1" />
+			</xsd:choice>
+			<xsd:choice>
+				<xsd:element name="ProductShortName" type="xsd:string" minOccurs="0" maxOccurs="1" />
+				<xsd:element name="GlobalServiceName" type="xsd:string" minOccurs="0" maxOccurs="1" />
+			</xsd:choice>
+			<xsd:choice>
+				<xsd:element name="LocalProductName" type="xsd:string" minOccurs="0" maxOccurs="1" />
+				<xsd:element name="LocalServiceTypeName" type="xsd:string" minOccurs="0" maxOccurs="1" />
+			</xsd:choice>
+			<xsd:choice>
+				<!-- Added for Brazil DCT change -->
+				<xsd:element name="ProductDesc" type="xsd:string" minOccurs="0" maxOccurs="1" />
+				<xsd:element name="ServiceDesc" type="xsd:string" minOccurs="0" maxOccurs="1" />
+			</xsd:choice>
+			<!-- Added for Brazil DCT change -->
+			<xsd:element name="NetworkTypeCode" type="xsd:string" minOccurs="0" maxOccurs="1">
+			</xsd:element>
+			<xsd:choice>
+				<xsd:element name="POfferedCustAgreement" type="xsd:string" minOccurs="0" maxOccurs="1" />
+				<xsd:element name="SOfferedCustAgreement" type="xsd:string" minOccurs="0" maxOccurs="1" />
+			</xsd:choice>
+			<xsd:element name="TransInd" type="xsd:string" minOccurs="0" maxOccurs="1">
+			</xsd:element>
+			<xsd:element name="ChargeCodeType" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+			</xsd:element>
+			<!--Start: Added for Brazil DCT change -->
+			<xsd:element name="MrkSrvInd" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="1" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<!--End: Added for Brazil DCT change -->
+			<xsd:element name="LocalProductCtryCd" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="2" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="LocalProductDesc" type="xsd:string" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="GlobalProductDesc" type="xsd:string" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="GlobalServiceType" type="xsd:string" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="BillingServiceIndicator" type="xsd:string" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="LocalServiceName" type="xsd:string" minOccurs="0" maxOccurs="1" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="ProdNtwrkType">
+		<xsd:sequence>
+			<xsd:element name="NetworkTypeCode" minOccurs="1">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="2" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="SrvType">
+		<xsd:sequence>
+			<xsd:element name="GlobalProductCode" type="xsd:string" minOccurs="1" maxOccurs="1">
+			</xsd:element>
+			<xsd:element name="MrkSrv" type="MrkSrvType" minOccurs="0" maxOccurs="unbounded">
+			</xsd:element>
+			<xsd:element name="SBTP" type="SBTPType" minOccurs="0" maxOccurs="1"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="SBTPType">
+		<xsd:sequence>
+			<xsd:element name="Prod" type="ProdType" minOccurs="0" maxOccurs="1"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="DeliveryDate">
+		<xsd:sequence>
+			<xsd:element name="DeliveryType" type="xsd:string" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="DlvyDateTime" type="xsd:string" minOccurs="0" maxOccurs="1" />
+			<xsd:element name="DeliveryDateTimeOffset" type="xsd:string" minOccurs="0" maxOccurs="1" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="WeightChargeDisc">
+		<xsd:sequence>
+			<xsd:element name="DiscAmt" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="BaseAmount" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="CurrencyCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="DiscType" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="1" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="DiscPercentage" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="QtdShpExChrgDisc">
+		<xsd:sequence>
+			<xsd:element name="DiscAmt" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="5" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="BaseAmt" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="CurrencyCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="CurrencyRoleTypeCode" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:length value="5" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="DiscPercentage" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:decimal">
+						<xsd:totalDigits value="18" />
+						<xsd:fractionDigits value="3" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+</xsd:schema>

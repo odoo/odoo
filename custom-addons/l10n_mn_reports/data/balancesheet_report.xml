@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_report_balancesheet" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="country_id" ref="base.mn"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_report_balancesheet_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="report_line_balanceta" model="account.report.line">
+                <field name="name">ASSETS</field>
+                <field name="code">MN_TA</field>
+                <field name="hierarchy_level">0</field>
+                <field name="aggregation_formula">MN_CA.balance + MN_PNCA.balance</field>
+                <field name="children_ids">
+                    <record id="report_line_balanceca" model="account.report.line">
+                        <field name="name">1.1 Current Assets</field>
+                        <field name="code">MN_CA</field>
+                        <field name="aggregation_formula">MN_MONEY.balance + MN_TREC.balance + MN_TAXREC.balance + MN_OREC.balance + MN_FINASST.balance + MN_PROD.balance + MN_PRE.balance + MN_OCA.balance + MN_SASST.balance</field>
+                        <field name="children_ids">
+                            <record id="report_line_balanceca1" model="account.report.line">
+                                <field name="name">1.1.1 Cash and cash equivalents</field>
+                                <field name="code">MN_MONEY</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">10 + 11</field>
+                            </record>
+                            <record id="report_line_balanceca2" model="account.report.line">
+                                <field name="name">1.1.2 Trade Receivables</field>
+                                <field name="code">MN_TREC</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1201 + 1202 + 1203</field>
+                            </record>
+                            <record id="report_line_balanceca3" model="account.report.line">
+                                <field name="name">1.1.3 Tax and Social security contributions receivables</field>
+                                <field name="code">MN_TAXREC</field>
+                                <field name="aggregation_formula">MN_PRETAX.balance + MN_PREINSU.balance</field>
+                                <field name="children_ids">
+                                    <record id="report_line_balanceca31" model="account.report.line">
+                                        <field name="name">Prepaid Taxes</field>
+                                        <field name="code">MN_PRETAX</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1204</field>
+                                    </record>
+                                    <record id="report_line_balanceca32" model="account.report.line">
+                                        <field name="name">Prepaid insurance Social security contributions</field>
+                                        <field name="code">MN_PREINSU</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1205</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="report_line_balanceca4" model="account.report.line">
+                                <field name="name">1.1.4 Other Non-Trade Receivables</field>
+                                <field name="code">MN_OREC</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1206 + 1209</field>
+                            </record>
+                            <record id="report_line_balanceca5" model="account.report.line">
+                                <field name="name">1.1.5 Other Financial Assets</field>
+                                <field name="code">MN_FINASST</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">13</field>
+                            </record>
+                            <record id="report_line_balanceca6" model="account.report.line">
+                                <field name="name">1.1.6 Inventory</field>
+                                <field name="code">MN_PROD</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">14</field>
+                            </record>
+                            <!-- we need add groupby by update way, because older version of report_line_balanceca6 might has aggregation_formula expression. -->
+                            <record id="report_line_balanceca6" model="account.report.line">
+                                <field name="groupby">account_id</field>
+                            </record>
+
+                            <record id="report_line_balanceca7" model="account.report.line">
+                                <field name="name">1.1.7 Prepaid expenses/bills</field>
+                                <field name="code">MN_PRE</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">MN_PREEX.balance + MN_PREPAY.balance</field>
+                                <field name="children_ids">
+                                    <record id="report_line_balanceca71" model="account.report.line">
+                                        <field name="name">Prepaid expenses</field>
+                                        <field name="code">MN_PREEX</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1501</field>
+                                    </record>
+                                    <record id="report_line_balanceca72" model="account.report.line">
+                                        <field name="name">Prepaid bills</field>
+                                        <field name="code">MN_PREPAY</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">1502</field>
+                                    </record>
+                                </field>
+                            </record>
+
+                            <record id="report_line_balanceca8" model="account.report.line">
+                                <field name="name">1.1.8 Other Current Assets</field>
+                                <field name="code">MN_OCA</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">16</field>
+                            </record>
+                            <record id="report_line_balanceca9" model="account.report.line">
+                                <field name="name">1.1.9 Non-current assets held for sale (assets for sale)</field>
+                                <field name="code">MN_SASST</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">17</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="report_line_balancenca" model="account.report.line">
+                        <field name="name">1.2 Non-current Assets</field>
+                        <field name="code">MN_PNCA</field>
+                        <field name="aggregation_formula">MN_FA.balance + MN_IA.balance + MN_BA.balance + MN_LTINV.balance + MN_EXASST.balance + MN_DTAX.balance + MN_IRE.balance + MN_ONCA.balance</field>
+                        <field name="children_ids">
+                            <record id="report_line_balancenca1" model="account.report.line">
+                                <field name="name">1.2.1 Fixed Assets</field>
+                                <field name="code">MN_FA</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">20</field>
+                            </record>
+                            <record id="report_line_balancenca2" model="account.report.line">
+                                <field name="name">1.2.2 Intangible Assets</field>
+                                <field name="code">MN_IA</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">21</field>
+                            </record>
+                            <record id="report_line_balancenca3" model="account.report.line">
+                                <field name="name">1.2.3 Biological Assets</field>
+                                <field name="code">MN_BA</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">24</field>
+                            </record>
+                            <record id="report_line_balancenca4" model="account.report.line">
+                                <field name="name">1.2.4 Long-term Investment</field>
+                                <field name="code">MN_LTINV</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">22</field>
+                            </record>
+                            <record id="report_line_balancenca5" model="account.report.line">
+                                <field name="name">1.2.5 Exploration and evaluation assets</field>
+                                <field name="code">MN_EXASST</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">23</field>
+                            </record>
+                            <record id="report_line_balancenca6" model="account.report.line">
+                                <field name="name">1.2.6 Deferred tax assets</field>
+                                <field name="code">MN_DTAX</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">25</field>
+                            </record>
+                            <record id="report_line_balancenca7" model="account.report.line">
+                                <field name="name">1.2.7 Real estate for investment</field>
+                                <field name="code">MN_IRE</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">26</field>
+                            </record>
+                            <record id="report_line_balancenca8" model="account.report.line">
+                                <field name="name">1.2.8 Other Non-current Assets</field>
+                                <field name="code">MN_ONCA</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">27</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="report_line_balancele" model="account.report.line">
+                <field name="name">LIABILITIES AND EQUITIES</field>
+                <field name="code">MN_LE</field>
+                <field name="hierarchy_level">0</field>
+                <field name="aggregation_formula">MN_LIA.balance + MN_EQ.balance</field>
+                <field name="children_ids">
+                    <record id="report_line_balanceliab" model="account.report.line">
+                        <field name="name">2.1 Liabilities</field>
+                        <field name="code">MN_LIA</field>
+                        <field name="aggregation_formula">MN_CLIA.balance + MN_NCLIA.balance</field>
+                        <field name="children_ids">
+                            <record id="report_line_balancecliab" model="account.report.line">
+                                <field name="name">2.1.1 Short-term liabilities</field>
+                                <field name="code">MN_CLIA</field>
+                                <field name="aggregation_formula">MN_TPAY.balance + MN_SPAY.balance + MN_TXPAY.balance + MN_SIFPAY.balance + MN_STLOAN.balance + MN_LIPAY.balance + MN_DIVPAY.balance + MN_PREINC.balance + MN_RESLIA.balance + MN_OCLIA.balance + MN_DEPLIA.balance</field>
+                                <field name="children_ids">
+                                    <record id="report_line_balancecliab1" model="account.report.line">
+                                        <field name="name">2.1.1.1 Trade Payables</field>
+                                        <field name="code">MN_TPAY</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-31</field>
+                                    </record>
+                                    <record id="report_line_balancecliab2" model="account.report.line">
+                                        <field name="name">2.1.1.2 Salary Payables</field>
+                                        <field name="code">MN_SPAY</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-33</field>
+                                    </record>
+                                    <record id="report_line_balancecliab3" model="account.report.line">
+                                        <field name="name">2.1.1.3 Tax Payables</field>
+                                        <field name="code">MN_TXPAY</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-3401</field>
+                                    </record>
+                                    <record id="report_line_balancecliab4" model="account.report.line">
+                                        <field name="name">2.1.1.4 Payables for Social Security</field>
+                                        <field name="code">MN_SIFPAY</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-3402</field>
+                                    </record>
+                                    <record id="report_line_balancecliab5" model="account.report.line">
+                                        <field name="name">2.1.1.5 Short term loan</field>
+                                        <field name="code">MN_STLOAN</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-3501</field>
+                                    </record>
+                                    <record id="report_line_balancecliab6" model="account.report.line">
+                                        <field name="name">2.1.1.6 Interest payments</field>
+                                        <field name="code">MN_LIPAY</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-3502</field>
+                                    </record>
+                                    <record id="report_line_balancecliab7" model="account.report.line">
+                                        <field name="name">2.1.1.7 Dividend Payable</field>
+                                        <field name="code">MN_DIVPAY</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-36</field>
+                                    </record>
+                                    <record id="report_line_balancecliab8" model="account.report.line">
+                                        <field name="name">2.1.1.8 Prepaid income</field>
+                                        <field name="code">MN_PREINC</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-32</field>
+                                    </record>
+                                    <record id="report_line_balancecliab9" model="account.report.line">
+                                        <field name="name">2.1.1.9 Contingent liabilities</field>
+                                        <field name="code">MN_RESLIA</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-37</field>
+                                    </record>
+                                    <record id="report_line_balancecliab10" model="account.report.line">
+                                        <field name="name">2.1.1.10 Other short-term liabilities</field>
+                                        <field name="code">MN_OCLIA</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-38</field>
+                                    </record>
+                                    <record id="report_line_balancecliab11" model="account.report.line">
+                                        <field name="name">2.1.1.11 Liabilities related to non-current assets held for sale (assets for sale)</field>
+                                        <field name="code">MN_DEPLIA</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-39</field>
+                                    </record>
+                                </field>
+                            </record>
+
+                            <record id="report_line_balancencliab" model="account.report.line">
+                                <field name="name">2.1.2 Long-term liabilities</field>
+                                <field name="code">MN_NCLIA</field>
+                                <field name="aggregation_formula">MN_LTLOAN.balance + MN_NRESLIA.balance + MN_DTAXPAY.balance + MN_ONCLIA.balance</field>
+                                <field name="children_ids">
+                                    <record id="report_line_balancencliab1" model="account.report.line">
+                                        <field name="name">2.1.2.1 Long-term loan</field>
+                                        <field name="code">MN_LTLOAN</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4001</field>
+                                    </record>
+                                    <record id="report_line_balancencliab2" model="account.report.line">
+                                        <field name="name">2.1.2.2 Contingent liabilities</field>
+                                        <field name="code">MN_NRESLIA</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4002</field>
+                                    </record>
+                                    <record id="report_line_balancencliab3" model="account.report.line">
+                                        <field name="name">2.1.2.3 Deferred tax debt</field>
+                                        <field name="code">MN_DTAXPAY</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4003</field>
+                                    </record>
+                                    <record id="report_line_balancencliab4" model="account.report.line">
+                                        <field name="name">2.1.2.4 Other long-term liabilities</field>
+                                        <field name="code">MN_ONCLIA</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-4009</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="report_line_balanceequity" model="account.report.line">
+                        <field name="name">2.2 Owners' equity</field>
+                        <field name="code">MN_EQ</field>
+                        <field name="aggregation_formula">MN_SEQ.balance + MN_PEQ.balance + MN_PUEQ.balance + MN_STOCK.balance + MN_CAPIT.balance + MN_REVAL.balance + MN_EXHEQ.balance + MN_OEQ.balance + MN_EQPROF.balance</field>
+                        <field name="children_ids">
+                            <record id="report_line_balanceequity1" model="account.report.line">
+                                <field name="name">2.2.1 Equity - State owned</field>
+                                <field name="code">MN_SEQ</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-4101</field>
+                            </record>
+                            <record id="report_line_balanceequity2" model="account.report.line">
+                                <field name="name">2.2.2 Equity - Private</field>
+                                <field name="code">MN_PEQ</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-4102</field>
+                            </record>
+                            <record id="report_line_balanceequity3" model="account.report.line">
+                                <field name="name">2.2.3 Ownership - Equity</field>
+                                <field name="code">MN_PUEQ</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-4103</field>
+                            </record>
+                            <record id="report_line_balanceequity4" model="account.report.line">
+                                <field name="name">2.2.4 Treasure Shares</field>
+                                <field name="code">MN_STOCK</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-42</field>
+                            </record>
+                            <record id="report_line_balanceequity5" model="account.report.line">
+                                <field name="name">2.2.5 Share Premium</field>
+                                <field name="code">MN_CAPIT</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-43</field>
+                            </record>
+                            <record id="report_line_balanceequity6" model="account.report.line">
+                                <field name="name">2.2.6 Property Revaluation Reserve</field>
+                                <field name="code">MN_REVAL</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-44</field>
+                            </record>
+                            <record id="report_line_balanceequity7" model="account.report.line">
+                                <field name="name">2.2.7 General Reserve</field>
+                                <field name="code">MN_EXHEQ</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-4501</field>
+                            </record>
+                            <record id="report_line_balanceequity8" model="account.report.line">
+                                <field name="name">2.2.8 Other part of Owners' Equity</field>
+                                <field name="code">MN_OEQ</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-4509</field>
+                            </record>
+                            <record id="report_line_balanceequity9" model="account.report.line">
+                                <field name="name">2.2.9 Retained earnings</field>
+                                <field name="code">MN_EQPROF</field>
+                                <field name="groupby"></field>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">MN_EQPROF_CURRENT_YEAR.balance + MN_EQPROF_PREV_YEAR.balance</field>
+                                <field name="children_ids">
+                                    <record id="report_line_balanceequity9_current_year_earning" model="account.report.line">
+                                        <field name="name">2.2.9.1 Retained earnings for the current period</field>
+                                        <field name="code">MN_EQPROF_CURRENT_YEAR</field>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_current_year_earnings_line_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">MNPL_PROFIT.balance + MNPL_COMPRE.balance</field>
+                                                <field name="date_scope">from_fiscalyear</field>
+                                                <field name="subformula">cross_report</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="report_line_balanceequity9_previous_year_earning" model="account.report.line">
+                                        <field name="name">2.2.9.2 Retained earnings from previous periods</field>
+                                        <field name="code">MN_EQPROF_PREV_YEAR</field>
+                                        <field name="expression_ids">
+                                            <record id="report_line_balanceequity9_previous_year_earning_allocations" model="account.report.expression">
+                                                <field name="label">allocations</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="['|',
+                                                    ('account_id.account_type', '=', 'equity_unaffected'),
+                                                    ('account_id.code', '=like', '46%')]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="date_scope">from_beginning</field>
+                                            </record>
+                                            <record id="report_line_balanceequity9_previous_year_earning_profit_loss" model="account.report.expression">
+                                                <field name="label">profit_loss</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="subformula">cross_report</field>
+                                                <field name="formula">MNPL_PROFIT.balance + MNPL_COMPRE.balance</field>
+                                                <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                            </record>
+                                            <record id="report_line_balanceequity9_previous_year_earning_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">MN_EQPROF_PREV_YEAR.allocations + MN_EQPROF_PREV_YEAR.profit_loss</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_mn_off_sheet" model="account.report.line">
+                <field name="name">OFF BALANCE SHEET ACCOUNTS</field>
+                <field name="code">MN_OS</field>
+                <field name="groupby">account_id</field>
+                <field name="hide_if_zero" eval="1"/>
+                <field name="foldable" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="domain_formula">-sum([('account_id.account_type', '=', 'off_balance')])</field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,500 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_easypost
+# 
+# Translators:
+# Wil Odoo, 2023
+# Daye Jeong, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Daye Jeong, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_carrier_form_inherit_delivery_easypost
+msgid ""
+"<b>Copy your API keys in Odoo</b>\n"
+"                <br/>"
+msgstr ""
+"<b>Odoo에서 API 키 복사</b>\n"
+"                <br/>"
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_carrier_form_inherit_delivery_easypost
+msgid ""
+"<b>Once your account is created, go to your Dashboard and click on the arrow next to your username to configure your carrier accounts. </b>\n"
+"                <b>You can add new carrier accounts on the right side of the same page.</b>\n"
+"                <br/>"
+msgstr ""
+"<b>계정이 생성되면, 현황판으로 이동하여 사용자 이름 옆에 있는 화살표를 클릭해서 배송업체 계정을 구성하십시오. </b>\n"
+"                <b>같은 페이지의 오른쪽에 배송업체 계정을 새로 추가 할 수 있습니다.</b>\n"
+"                <br/>"
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_stock_package_type_form_inherit_easypost
+msgid "<span invisible=\"package_carrier_type != 'easypost'\">Inches</span>"
+msgstr "<span invisible=\"package_carrier_type != 'easypost'\">인치</span>"
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/delivery_carrier.py:0
+#, python-format
+msgid "A production key is required in order to load your easypost carriers."
+msgstr "easypost 운송을 불러오려면 생산 키가 필요합니다."
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/delivery_carrier.py:0
+#, python-format
+msgid "A production key is required in order to load your insurance fees."
+msgstr "보험료를 불러오려면 프로덕션 키가 필요합니다."
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_carrier_form_inherit_delivery_easypost
+msgid "API keys"
+msgstr "API 키"
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_easypost_carrier_type
+msgid "Cancel"
+msgstr "취소"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_stock_package_type__package_carrier_type
+msgid "Carrier"
+msgstr "운송업체"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_easypost_service__easypost_carrier
+#: model:ir.model.fields,field_description:delivery_easypost.field_stock_package_type__easypost_carrier
+msgid "Carrier Prefix"
+msgstr "운송업체 접두사"
+
+#. module: delivery_easypost
+#: model:ir.model,name:delivery_easypost.model_delivery_carrier_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier_easypost__carrier_type
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_carrier_form_inherit_delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_easypost_carrier_type
+msgid "Carrier Type"
+msgstr "운송업체 유형"
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_carrier_form_inherit_delivery_easypost
+msgid "Carrier accounts"
+msgstr "운송업체 계정"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier_easypost__create_uid
+#: model:ir.model.fields,field_description:delivery_easypost.field_easypost_service__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier_easypost__create_date
+#: model:ir.model.fields,field_description:delivery_easypost.field_easypost_service__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_carrier_form_inherit_delivery_easypost
+msgid "Default Package Type"
+msgstr "기본 패키지 유형"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier__easypost_default_package_type_id
+msgid "Default Package Type for Easypost"
+msgstr "Easypost에 대한 기본 패키지 유형"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier__easypost_default_service_id
+msgid "Default Service Level"
+msgstr "기본 서비스 수준"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier_easypost__delivery_carrier_id
+msgid "Delivery Carrier"
+msgstr "배송 회사"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier_easypost__display_name
+#: model:ir.model.fields,field_description:delivery_easypost.field_easypost_service__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_carrier_form_inherit_delivery_easypost
+msgid ""
+"Do not forget to load your Easypost carrier accounts for a valid "
+"configuration."
+msgstr "유효한 구성을 위해 Easypost 운송업체 계정을 로드하는 것을 잊지 마십시오."
+
+#. module: delivery_easypost
+#: model:ir.model.fields.selection,name:delivery_easypost.selection__delivery_carrier__easypost_label_file_type__epl2
+msgid "EPL2"
+msgstr "EPL2"
+
+#. module: delivery_easypost
+#: model:ir.model.fields.selection,name:delivery_easypost.selection__delivery_carrier__delivery_type__easypost
+#: model:ir.model.fields.selection,name:delivery_easypost.selection__stock_package_type__package_carrier_type__easypost
+msgid "Easypost"
+msgstr "Easypost"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier__easypost_delivery_type
+msgid "Easypost Carrier Type"
+msgstr "Easypost 운송업체 유형"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier__easypost_delivery_type_id
+msgid "Easypost Carrier Type ID, technical for API request"
+msgstr "API 요청에 대한 기술적인 Easypost 운송업체 유형 ID."
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_carrier_form_inherit_delivery_easypost
+msgid "Easypost Configuration"
+msgstr "Easypost 환경 설정"
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/delivery_carrier.py:0
+#, python-format
+msgid "Easypost Documents:"
+msgstr "Easypost 문서:"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier__easypost_label_file_type
+msgid "Easypost Label File Type"
+msgstr "Easypost 라벨 파일 유형"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_stock_picking__ep_order_ref
+msgid "Easypost Order Reference"
+msgstr "Easypost 주문 번호"
+
+#. module: delivery_easypost
+#: model:ir.model,name:delivery_easypost.model_easypost_service
+msgid "Easypost Service"
+msgstr "Easypost 서비스"
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.res_config_settings_view_form_stock
+msgid "Easypost Shipping Methods"
+msgstr "Easypost 배송 방법"
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_carrier_form_inherit_delivery_easypost
+msgid "Easypost Tutorial"
+msgstr "Easypost 자습서"
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_carrier_form_inherit_delivery_easypost
+msgid "Easypost Website"
+msgstr "Easypost 웹사이트"
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/easypost_request.py:0
+#, python-format
+msgid "Easypost returned an error: %s"
+msgstr "Easypost에서 오류가 발생했습니다: %s"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,help:delivery_easypost.field_delivery_carrier__easypost_production_api_key
+msgid "Enter your API production key from Easypost account"
+msgstr "Easypost 계정에서 API 프로덕션 키를 입력하십시오"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,help:delivery_easypost.field_delivery_carrier__easypost_test_api_key
+msgid "Enter your API test key from Easypost account."
+msgstr "Easypost 계정에서 API 테스트 키를 입력하십시오."
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_carrier_form_inherit_delivery_easypost
+msgid "Go to"
+msgstr "이동하기"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier_easypost__id
+#: model:ir.model.fields,field_description:delivery_easypost.field_easypost_service__id
+msgid "ID"
+msgstr "ID"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,help:delivery_easypost.field_delivery_carrier__easypost_default_service_id
+msgid "If not set, the less expensive available service level will be chosen."
+msgstr "설정하지 않으면 사용 가능한 저렴한 서비스 수준이 선택됩니다."
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier__easypost_insurance_fee_minimum
+msgid "Insurance fee minimum (USD)"
+msgstr "보험료 최소 금액 (USD)"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier__easypost_insurance_fee_rate
+msgid "Insurance fee rate (USD)"
+msgstr "보험료율 (USD)"
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/easypost_request.py:0
+#, python-format
+msgid ""
+"It seems Easypost do not provide shipments for this order.                We"
+" advise you to try with another package type or service level."
+msgstr ""
+"Easypost가 이 주문에 대한 배송을 제공하지 않는 것 같습니다. 다른 패키지 유형 또는 서비스 수준으로 시도하는 것이 좋습니다."
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_carrier_form_inherit_delivery_easypost
+msgid "Label Format"
+msgstr "라벨 양식"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier_easypost__write_uid
+#: model:ir.model.fields,field_description:delivery_easypost.field_easypost_service__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier_easypost__write_date
+#: model:ir.model.fields,field_description:delivery_easypost.field_easypost_service__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_carrier_form_inherit_delivery_easypost
+msgid "Load your Easypost carrier accounts"
+msgstr "Easypost 운송 업체 계정 불러오기"
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_carrier_form_inherit_delivery_easypost
+msgid "Options"
+msgstr "옵션"
+
+#. module: delivery_easypost
+#: model:ir.model.fields.selection,name:delivery_easypost.selection__delivery_carrier__easypost_label_file_type__pdf
+msgid "PDF"
+msgstr "PDF"
+
+#. module: delivery_easypost
+#: model:ir.model.fields.selection,name:delivery_easypost.selection__delivery_carrier__easypost_label_file_type__png
+msgid "PNG"
+msgstr "PNG"
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/easypost_request.py:0
+#, python-format
+msgid "Package type used in pack %s is not configured for easypost."
+msgstr "%s 포장에 사용된 패키지 유형은 easypost에 설정되어 있지 않습니다."
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/easypost_request.py:0
+#: code:addons/delivery_easypost/models/easypost_request.py:0
+#, python-format
+msgid "Please provide at least one item to ship."
+msgstr "최소한 하나의 배송 품목을 입력해 주세요."
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier__easypost_production_api_key
+msgid "Production API Key"
+msgstr "프로덕트 API 키"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "공급업체"
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/delivery_carrier.py:0
+#, python-format
+msgid "Return Label<br/>"
+msgstr "반송 라벨<br/>"
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/easypost_request.py:0
+#, python-format
+msgid "Sale Order/Stock Picking is missing."
+msgstr "판매 주문/재고 선별이 누락되었습니다."
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_easypost_carrier_type
+msgid "Select"
+msgstr "선택"
+
+#. module: delivery_easypost
+#: model:ir.actions.act_window,name:delivery_easypost.act_delivery_easypost_carrier_type
+msgid "Select a carrier"
+msgstr "운송업체 선택"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_easypost_service__name
+msgid "Service Level Name"
+msgstr "서비스 수준 이름"
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/delivery_carrier.py:0
+#, python-format
+msgid "Shipment created into Easypost<br/><b>Tracking Numbers:</b> %s<br/>"
+msgstr "Easypost에서 생성된 <br/><b>트래킹 번호: </b> %s <br/>"
+
+#. module: delivery_easypost
+#: model:ir.model,name:delivery_easypost.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "배송 방법"
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_carrier_form_inherit_delivery_easypost
+msgid "Sign up"
+msgstr "가입"
+
+#. module: delivery_easypost
+#: model:ir.model,name:delivery_easypost.model_stock_package_type
+msgid "Stock package type"
+msgstr "재고 포장 유형"
+
+#. module: delivery_easypost
+#: model:ir.model.fields,field_description:delivery_easypost.field_delivery_carrier__easypost_test_api_key
+msgid "Test API Key"
+msgstr "테스트 API 키"
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/easypost_request.py:0
+#, python-format
+msgid ""
+"The %s carrier is missing (Missing field(s) :\n"
+" Default Package Type)"
+msgstr ""
+"%s 캐리어가 누락되었습니다 (누락된 필드 :\n"
+" 기본 패키지 유형)"
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/easypost_request.py:0
+#, python-format
+msgid ""
+"The %s carrier is missing (Missing field(s) :\n"
+" Delivery Carrier Type)"
+msgstr ""
+"%s 운송업체가 누락되었습니다(누락된 필드 : \n"
+"배송업체 유형)"
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/easypost_request.py:0
+#, python-format
+msgid ""
+"The %s carrier is missing (Missing field(s) :\n"
+" Production API Key)"
+msgstr ""
+"%s 운송업체가 누락되었습니다(누락된 필드 : \n"
+"프로덕션 API 키)"
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/easypost_request.py:0
+#, python-format
+msgid ""
+"The %s carrier is missing (Missing field(s) :\n"
+" Test API Key)"
+msgstr ""
+"%s 운송업체가 누락되었습니다(누락된 필드 : \n"
+"테스트 API 키)"
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/easypost_request.py:0
+#, python-format
+msgid ""
+"The estimated price cannot be computed because the weight of your product is"
+" missing."
+msgstr "상품의 무게가 누락되어 예상 가격을 계산할 수 없습니다."
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/easypost_request.py:0
+#, python-format
+msgid ""
+"The estimated shipping price cannot be computed because the weight is missing for the following product(s): \n"
+" %s"
+msgstr ""
+"다음 품목의 중량 정보가 누락되어 예상 배송 비용을 계산할 수 없습니다.\n"
+"%s"
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/easypost_request.py:0
+#, python-format
+msgid ""
+"There is no rate available for the selected service level for one of your "
+"package. Please choose another service level."
+msgstr "패키지 중 하나에 대해 선택한 서비스 수준에 사용할 수 있는 요금이 없습니다. 다른 서비스 수준을 선택하십시오."
+
+#. module: delivery_easypost
+#: model:ir.model,name:delivery_easypost.model_stock_picking
+msgid "Transfer"
+msgstr "전송"
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/delivery_carrier.py:0
+#, python-format
+msgid "Unable to retrieve your default insurance rates."
+msgstr "기본 보험료율을 검색할 수 없습니다."
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/easypost_request.py:0
+#, python-format
+msgid "Unknown error"
+msgstr "알 수 없는 오류"
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/easypost_request.py:0
+#, python-format
+msgid "Unspecified field"
+msgstr "지정하지 않은 필드"
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/delivery_carrier.py:0
+#, python-format
+msgid "You can't cancel Easypost shipping."
+msgstr "Easypost 배송을 취소할 수 없습니다."
+
+#. module: delivery_easypost
+#. odoo-python
+#: code:addons/delivery_easypost/models/easypost_request.py:0
+#, python-format
+msgid ""
+"You have no carrier linked to your Easypost Account.                Please "
+"connect to Easypost, link your account to carriers and then retry."
+msgstr ""
+"Easypost 계정에 연결된 배송업체가 없습니다. Easypost에 연결하고 계정을 배송업체에 연결한 다음 다시 시도하십시오."
+
+#. module: delivery_easypost
+#: model:ir.model.fields.selection,name:delivery_easypost.selection__delivery_carrier__easypost_label_file_type__zpl
+msgid "ZPL"
+msgstr "ZPL"
+
+#. module: delivery_easypost
+#: model_terms:ir.ui.view,arch_db:delivery_easypost.view_delivery_carrier_form_inherit_delivery_easypost
+msgid "to create a new account:"
+msgstr "새 계정 만들려면 :"

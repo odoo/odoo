@@ -1,0 +1,108 @@
+body.o_in_studio .o-overlay-container {
+    .o_we_crop_widget {
+        .o_we_cropper_wrapper {
+            position: unset;
+        }
+        .o_we_crop_buttons {
+            bottom: unset;
+        }
+    }
+}
+
+.o-web-studio-report-editor-wysiwyg .odoo-editor-editable {
+
+    .text-nowrap {
+        white-space: break-spaces !important;
+    }
+
+
+    [t-field],
+    [t-esc],
+    [t-out],
+    [t-raw] {
+        background-color: rgba(36, 154, 255, 0.16) !important;
+    }
+
+    [t-field] {
+        &:empty::before {
+            content: attr(oe-expression-readable);
+        }
+    }
+
+    [t-esc]:empty::before {
+        content: "Expr";
+    }
+    [t-raw]:empty::before {
+        content: "Expr";
+    }
+    [t-out]:empty::before {
+        content: attr(oe-expression-readable);
+    }
+    t[t-set] {
+      display: none !important;
+    }
+
+    t[data-oe-t-inline] {
+        display: inline;
+    }
+    t:not([data-oe-t-inline]) {
+        display: block;
+    }
+    t[data-oe-t-inline]:not([data-oe-t-group-active]) {
+        display: unset;
+    }
+    [data-oe-t-group]:not([data-oe-t-group-active]) {
+        display: none !important;
+    }
+    [data-oe-t-group][data-oe-t-selectable] {
+        outline: 1px dashed rgba(0, 0, 102, 0.4) !important;
+    }
+
+    [oe-origin-tag='table'] {
+        display: flex;
+        flex-direction: column;
+    }
+    [oe-origin-tag='thead'] {
+        display: flex;
+        flex-direction: column;
+        font-weight: bold;
+    }
+    [oe-origin-tag='tbody'] {
+        display: flex;
+        flex-direction: column;
+    }
+    [oe-origin-tag='tfoot'] {
+        display: flex;
+        flex-direction: column;
+
+    }
+    [oe-origin-tag='th'] {
+        flex-shrink: 0;
+    }
+    [oe-origin-tag='tr'] {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+
+        &:has(> t) {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+            > t {
+                gap: 10px;
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+            }
+        }
+    }
+
+    [oe-origin-tag='td'] {
+        flex-shrink: 0;
+    }
+}
+
+.o-web-studio-field-dynamic-placeholder {
+    width: 265px;
+}

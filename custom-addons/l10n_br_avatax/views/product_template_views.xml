@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_product_template_form" model="ir.ui.view">
+            <field name="name">product.template.form.inherit.iap</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <field name="product_tag_ids" position="before">
+                    <field name="l10n_br_cest_code" invisible="'BR' not in fiscal_country_codes"/>
+                    <field name="l10n_br_ncm_code_id" invisible="'BR' not in fiscal_country_codes"/>
+                    <field name="l10n_br_source_origin" invisible="'BR' not in fiscal_country_codes"/>
+                    <field name="l10n_br_sped_type" invisible="'BR' not in fiscal_country_codes"/>
+                    <field name="l10n_br_use_type" invisible="'BR' not in fiscal_country_codes"/>
+                    <field name="l10n_br_transport_cost_type" invisible="type != 'service' or 'BR' not in fiscal_country_codes"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,340 @@
+.account_report {
+    .fit-content { width: fit-content }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Control panel
+    //------------------------------------------------------------------------------------------------------------------
+    .o_control_panel_main_buttons {
+        .dropdown-item {
+            padding: 0;
+            .btn-link {
+                width: 100%;
+                text-align: left;
+                padding: 3px 20px;
+                border-radius: 0;
+            }
+        }
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Sections
+    //------------------------------------------------------------------------------------------------------------------
+    .section_selector {
+        display: flex;
+        gap: 4px;
+        margin: 16px 16px 8px 16px;
+        justify-content: center;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Alert
+    //------------------------------------------------------------------------------------------------------------------
+    .warnings { margin-bottom: 1rem }
+    .alert {
+        margin-bottom: 0;
+        border-radius: 0;
+
+        a:hover { cursor:pointer }
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // No content
+    //------------------------------------------------------------------------------------------------------------------
+    .o_view_nocontent { z-index: -1 }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Table
+    //------------------------------------------------------------------------------------------------------------------
+    .table {
+        background-color: $o-view-background-color;
+        border-collapse: separate; //!\\ Allows to add padding to the table
+        border-spacing: 0; //!\\ Removes default spacing between cells due to 'border-collapse: separate'
+        font-size: 0.8rem;
+        margin: 0 auto 24px;
+        padding: 24px;
+        width: auto;
+        min-width: 800px;
+        border: 1px solid $o-gray-300;
+        border-radius: 0.25rem;
+
+        > :not(caption) > * > * { padding: 0.25rem 0.75rem } //!\\ Override of bootstrap, keep selector
+
+        > thead {
+            > tr {
+                th:first-child {
+                    color: lightgrey;
+                }
+                th:not(:first-child) {
+                    text-align: center;
+                    vertical-align: middle;
+                }
+            }
+            > tr:not(:last-child) > th:not(:first-child) { border: 1px solid $o-gray-300 }
+        }
+
+        > tbody {
+            > tr {
+                &.unfolded { font-weight: bold }
+                > td {
+                    a { cursor: pointer }
+                    .clickable { color: $o-enterprise-action-color }
+                    &.muted { color: var(--AccountReport-muted-data-color, $o-gray-300) }
+                    &:empty::after{ content: "\00a0" } //!\\ Prevents the collapse of empty table rows
+                }
+
+                &:not(.empty) > td { border-bottom: 1px solid var(--AccountReport-fine-line-separator-color, $o-gray-200) }
+                &.total { font-weight: bold }
+                &.o_bold_tr { font-weight: bold }
+
+                &.unfolded {
+                    > td { border-bottom: 1px solid $o-gray-300 }
+                    .btn_action { opacity: 1 }
+                    .btn_more { opacity: 1 }
+                }
+
+                &:hover {
+                    &.empty > * { --table-accent-bg: transparent }
+                    .auditable {
+                        color: $o-enterprise-action-color !important;
+
+                        > a:hover { cursor: pointer }
+                    }
+                    .muted { color: $o-gray-800 }
+                    .btn_action, .btn_more {
+                        opacity: 1;
+                        color: $o-enterprise-action-color;
+                    }
+                    .btn_edit { color: $o-enterprise-action-color }
+                    .btn_dropdown { color: $o-enterprise-action-color }
+                    .btn_foldable { color: $o-enterprise-action-color }
+                    .btn_ellipsis { color: $o-enterprise-action-color }
+                    .btn_footnote_go { color: $o-enterprise-action-color }
+                    .btn_debug { color: $o-enterprise-action-color }
+                }
+            }
+        }
+    }
+
+    table.striped {
+        //!\\ Changes the background of every even column starting with the 3rd one
+        > thead > tr:not(:first-child) > th:nth-child(2n+3) { background: $o-gray-100 }
+        > tbody {
+            > tr:not(.line_level_0):not(.empty) > td:nth-child(2n+3) { background: $o-gray-100 }
+            > tr.line_level_0 > td:nth-child(2n+3) { background: $o-gray-300 }
+        }
+    }
+
+    thead.sticky {
+        background-color: $o-view-background-color;
+        position: sticky;
+        top: 0;
+        z-index: 999;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Line
+    //------------------------------------------------------------------------------------------------------------------
+    .line_name {
+        > .wrapper {
+            display: flex;
+
+            > .content {
+                display: flex;
+                sup { top: auto }
+            }
+        }
+
+        .name { white-space: nowrap }
+        &.unfoldable:hover { cursor: pointer }
+    }
+
+    .line_cell {
+        > .wrapper {
+            display: flex;
+            align-items: center;
+
+            > .content { display: flex }
+        }
+
+        &.date > .wrapper { justify-content: center }
+        &.numeric > .wrapper { justify-content: flex-end }
+        .name { white-space: nowrap }
+    }
+
+    .line_level_0 {
+        color: $o-gray-700;
+        font-weight: bold;
+
+        > td {
+            border-bottom: 0 !important;
+            background-color: $o-gray-300;
+        }
+        .muted { color: $o-gray-400 !important }
+        .btn_debug { color: $o-gray-400 }
+    }
+
+    @for $i from 2 through 16 {
+        .line_level_#{$i} {
+            $indentation: (($i + 1) * 8px) - 20px; // 20px are for the btn_foldable width
+
+            > td {
+                color: $o-gray-700;
+
+                &.line_name.unfoldable .wrapper { column-gap: calc(#{ $indentation }) }
+                &.line_name:not(.unfoldable) .wrapper { padding-left: $indentation }
+            }
+        }
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Link
+    //------------------------------------------------------------------------------------------------------------------
+    .link { color: $o-enterprise-action-color }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // buttons
+    //------------------------------------------------------------------------------------------------------------------
+    .btn_debug, .btn_dropdown, .btn_foldable, .btn_foldable_empty, .btn_sortable, .btn_ellipsis,
+    .btn_more, .btn_footnote_go, .btn_footnote_delete, .btn_action, .btn_edit {
+        border: none;
+        color: $o-gray-300;
+        font-size: inherit;
+        font-weight: normal;
+        padding: 0;
+        text-align: center;
+        width: 20px;
+        white-space: nowrap;
+
+        &:hover {
+            color: $o-enterprise-action-color !important;
+            cursor: pointer;
+        }
+    }
+
+    .btn_sortable > .fa-long-arrow-up, .btn_sortable > .fa-long-arrow-down { color: $o-enterprise-action-color }
+    .btn_foldable { color: $o-gray-500 }
+    .btn_foldable_empty:hover { cursor: default  }
+    .btn_ellipsis > i { vertical-align: bottom }
+    .btn_more { opacity: 1 }
+    .btn_footnote_go { color: $o-gray-600 }
+    .btn_footnote_delete {
+        margin-left: 4px;
+        vertical-align: baseline;
+    }
+    .btn_action {
+        opacity: 0;
+        background-color: $o-view-background-color;
+        color: $o-gray-600;
+        width: auto;
+        padding: 0 0.25rem;
+        margin: 0 0.25rem;
+        border: 1px solid $o-gray-300;
+        border-radius: 0.25rem;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Dropdown
+    //------------------------------------------------------------------------------------------------------------------
+    .dropdown { display: inline }
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Footnote
+    //------------------------------------------------------------------------------------------------------------------
+    .footnotes {
+        border-top: 1px solid $o-gray-300;
+        font-size: 0.8rem;
+        padding: 24px 0;
+
+        > li {
+            line-height: 24px;
+            margin-left: 24px;
+            &:hover > button { color: $o-enterprise-action-color }
+        }
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+// Dialogs
+//----------------------------------------------------------------------------------------------------------------------
+.account_report_footnote_dialog {
+    textarea {
+        border: 1px solid $o-gray-300;
+        border-radius: 0.25rem;
+        height: 120px;
+        padding: .5rem;
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+// Popovers
+//----------------------------------------------------------------------------------------------------------------------
+.account_report_popover_edit {
+    padding: .5rem 1rem;
+    box-sizing: content-box;
+
+    .edit_popover_boolean label { padding: 0 12px 0 4px }
+
+    .edit_popover_string {
+        width: 260px;
+        padding: 8px;
+        border-color: $o-gray-200;
+    }
+
+    .btn {
+        color: $o-white;
+        background-color: $o-enterprise-action-color;
+    }
+}
+
+.account_report_popover_ellipsis {
+    > p {
+        float: left;
+        margin: 1rem;
+        width: 360px;
+    }
+}
+
+.account_report_btn_clone {
+    margin: 1rem 1rem 0 0;
+    border: none;
+    color: $o-gray-300;
+    font-size: inherit;
+    font-weight: normal;
+    padding: 0;
+    text-align: center;
+    width: 20px;
+
+    &:hover {
+        color: $o-enterprise-action-color !important;
+        cursor: pointer;
+    }
+}
+
+.account_report_popover_debug {
+    width: 640px;
+
+    > .line_debug {
+        display: flex;
+        flex-direction: row;
+        padding: .25rem 1rem;
+
+        &:first-child { padding-top: 1rem }
+        &:last-child { padding-bottom: 1rem }
+
+        > span:first-child {
+            color: $o-gray-600;
+            max-width: 20%; //!\\ Not the same as 'width' because of 'display: flex'
+            min-width: 20%; //!\\ Not the same as 'width' because of 'display: flex'
+        }
+        > span:last-child {
+            color: $o-gray-800;
+            max-width: 80%; //!\\ Not the same as 'width' because of 'display: flex'
+            min-width: 80%; //!\\ Not the same as 'width' because of 'display: flex'
+        }
+
+        > code { color: $o-enterprise-color }
+    }
+
+    > .totals_separator { margin: .25rem 1rem }
+    > .engine_separator { margin: 1rem }
+}

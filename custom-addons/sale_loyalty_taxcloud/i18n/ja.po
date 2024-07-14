@@ -1,0 +1,81 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_loyalty_taxcloud
+# 
+# Translators:
+# Wil Odoo, 2023
+# Junko Augias, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_loyalty_taxcloud
+#. odoo-python
+#: code:addons/sale_loyalty_taxcloud/models/sale_order.py:0
+#, python-format
+msgid ""
+"Any order that has discounts and uses TaxCloud must be invoiced all at once to prevent faulty tax computation with Taxcloud.\n"
+"The following orders must be completely invoiced:\n"
+"%s"
+msgstr ""
+"値引があり、TaxCloudを使用するオーダは、Taxcloudでの税金計算の誤りを防ぐため、すべて一度に請求書を発行する必要があります。\n"
+"以下のオーダは全て請求される必要があります：\n"
+"%s"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model.fields,field_description:sale_loyalty_taxcloud.field_account_move_line__reward_id
+msgid "Discount reward"
+msgstr "値引リワード"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model,name:sale_loyalty_taxcloud.model_account_move
+msgid "Journal Entry"
+msgstr "仕訳"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model,name:sale_loyalty_taxcloud.model_account_move_line
+msgid "Journal Item"
+msgstr "仕訳項目"
+
+#. module: sale_loyalty_taxcloud
+#. odoo-python
+#: code:addons/sale_loyalty_taxcloud/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"Orders with coupons or promotions programs that use TaxCloud for automatic tax computation cannot be modified after having been invoiced.\n"
+"To modify this order, you must first cancel or refund all existing invoices."
+msgstr ""
+"TaxCloudを使用して自動税額計算を行うクーポンまたはプロモーションプログラムを使用したオーダは、請求書発行後に変更することはできません。\n"
+"このオーダを変更するには、まず既存のすべての請求書を取消するか、払い戻す必要があります。"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model,name:sale_loyalty_taxcloud.model_sale_order
+msgid "Sales Order"
+msgstr "販売オーダ"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model,name:sale_loyalty_taxcloud.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "販売オーダ明細"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model.fields,field_description:sale_loyalty_taxcloud.field_account_move_line__price_taxcloud
+#: model:ir.model.fields,field_description:sale_loyalty_taxcloud.field_sale_order_line__price_taxcloud
+msgid "Taxcloud Price"
+msgstr "Taxcloud価格"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model.fields,help:sale_loyalty_taxcloud.field_account_move_line__reward_id
+msgid "The loyalty reward that created this line."
+msgstr "この明細を作成したロイヤリティ特典"

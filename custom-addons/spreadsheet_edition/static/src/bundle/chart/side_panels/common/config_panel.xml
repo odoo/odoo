@@ -1,0 +1,26 @@
+<odoo>
+    <t t-name="spreadsheet_edition.CommonOdooChartConfigPanel">
+        <div class="o-section">
+            <div class="o-section-title">Model</div>
+            <div><t t-esc="modelDisplayName" /> (<t t-esc="model" />)</div>
+        </div>
+        <div class="o-section">
+            <div class="o-section-title">Domain</div>
+            <DomainSelector resModel="model" domain="domain" t-key="'odoo_chart_' + props.figureId" />
+            <div class="btn btn-link o_edit_domain" t-on-click="openDomainEdition">
+                <i class="oi oi-arrow-right me-1" />Edit domain</div>
+        </div>
+        <div>
+            <!-- requires <irMenuSelector> component -->
+            <t t-call="spreadsheet_edition.OdooMenuChartPanelSection" />
+        </div>
+        <div class="o-section pt-1">
+            <div class="o_pivot_last_update">
+                <i>Last updated at <t t-esc="getLastUpdate()" /></i>
+            </div>
+            <div class="btn btn-link o_refresh_measures" t-on-click="refresh">
+                <i class="oi oi-arrow-right me-1" />Refresh values</div>
+            <br />
+        </div>
+    </t>
+</odoo>

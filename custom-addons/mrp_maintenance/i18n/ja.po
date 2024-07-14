@@ -1,0 +1,569 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mrp_maintenance
+# 
+# Translators:
+# Wil Odoo, 2023
+# Junko Augias, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_production_view_form_inherit_maintenance
+msgid "<span class=\"o_stat_text\">Maintenance</span>"
+msgstr "<span class=\"o_stat_text\">整備</span>"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_equipment_view_form_inherit_mrp
+msgid "<span class=\"o_stat_text\">Work Center</span>"
+msgstr "<span class=\"o_stat_text\">作業区</span>"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_needaction
+msgid "Action Needed"
+msgstr "要アクション"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_ids
+msgid "Activities"
+msgstr "活動"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "例外活動文字装飾"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_state
+msgid "Activity State"
+msgstr "活動状態"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "活動種別アイコン"
+
+#. module: mrp_maintenance
+#: model_terms:ir.actions.act_window,help:mrp_maintenance.mrp_workcenter_request_action_from_workcenter
+msgid "Add a new maintenance request"
+msgstr "新規整備依頼を追加"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__recurring_leaves_count
+msgid "Additional Leaves to Plan Ahead"
+msgstr "計画的な追加休暇"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_attachment_count
+msgid "Attachment Count"
+msgstr "添付数"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__block_workcenter
+msgid "Block Workcenter"
+msgstr "作業区のブロック"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_maintenance_request__recurring_leaves_count
+msgid ""
+"Block the workcenter for this many time slots in the future in advance."
+msgstr "作業区を、あらかじめこの数だけ先の時間枠にブロックしておきます。"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__company_id
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__company_id
+msgid "Company"
+msgstr "会社"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__estimated_next_failure
+msgid "Computed as Latest Failure Date + MTBF"
+msgstr "最終の故障日付＋MBTF（平均故障間隔）として計算済"
+
+#. module: mrp_maintenance
+#: model_terms:ir.actions.act_window,help:mrp_maintenance.maintenance_workcenter_action
+msgid "Create a new work center"
+msgstr "新規作業区を作成"
+
+#. module: mrp_maintenance
+#: model:maintenance.equipment,name:mrp_maintenance.equipment_furniture1
+msgid "Crosscut Saw: 8 ppi."
+msgstr "横引きのこ：1インチあたり8枚歯"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__maintenance_open_count
+msgid "Current Maintenance"
+msgstr "現在保守整備中のもの"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_request_view_form_inherit_mrp
+msgid "Discard"
+msgstr "破棄"
+
+#. module: mrp_maintenance
+#: model:maintenance.equipment,name:mrp_maintenance.equipment_furniture3
+msgid "Drill Machine"
+msgstr "ボール盤"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__effective_date
+msgid "Effective Date"
+msgstr "有効日"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__equipment_id
+#: model:ir.model.fields.selection,name:mrp_maintenance.selection__maintenance_request__maintenance_for__equipment
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Equipment"
+msgstr "備品"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Est. Next Failure"
+msgstr "次回故障予測"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Estimated Next Failure"
+msgstr "次回の故障予想"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__estimated_next_failure
+msgid "Estimated time before next failure (in days)"
+msgstr "次の故障までの推定時間（単位：日）"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__expected_mtbf
+msgid "Expected MTBF"
+msgstr "予測MBTF（平均故障間隔）"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__expected_mtbf
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Expected Mean Time Between Failure"
+msgstr "予想平均故障間隔"
+
+#. module: mrp_maintenance
+#: model_terms:ir.actions.act_window,help:mrp_maintenance.mrp_workcenter_request_action_from_workcenter
+msgid ""
+"Follow the process of the request and communicate with the collaborator."
+msgstr "依頼プロセスに従って協力者とコミュニケーションします。"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_follower_ids
+msgid "Followers"
+msgstr "フォロワー"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "フォロワー (取引先)"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesomeのアイコン 例. fa-tasks"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__maintenance_for
+msgid "For"
+msgstr "以下用:"
+
+#. module: mrp_maintenance
+#: model:maintenance.equipment.category,name:mrp_maintenance.equipment_furniture_tools
+msgid "Furniture Tools"
+msgstr "家具用工具"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__has_message
+msgid "Has Message"
+msgstr "メッセージあり"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_exception_icon
+msgid "Icon"
+msgstr "アイコン"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "例外活動を示すアイコン"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "チェックした場合は、新しいメッセージに注意が必要です。"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__message_has_error
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "チェックした場合は、一部のメッセージに配信エラーが発生されました。"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_is_follower
+msgid "Is Follower"
+msgstr "フォロー中　"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_maintenance_request__block_workcenter
+msgid ""
+"It won't be possible to plan work orders or other maintenances on this "
+"workcenter during this time."
+msgstr "この間、この作業区で作業オーダやその他の整備の計画を立てることはできません。"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Latest Failure"
+msgstr "最終故障"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__latest_failure_date
+msgid "Latest Failure Date"
+msgstr "最終故障日"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__leave_ids
+msgid "Leaves"
+msgstr "休暇"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__mtbf
+msgid "MTBF"
+msgstr "MTBF（平均故障間隔）"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__mttr
+msgid "MTTR"
+msgstr "MTTR"
+
+#. module: mrp_maintenance
+#: model:ir.ui.menu,name:mrp_maintenance.menu_equipment_dashboard
+msgid "Machines & Tools"
+msgstr "機械・工具"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__maintenance_ids
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_kanban_inherit_maintenance
+msgid "Maintenance"
+msgstr "メンテナンス"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__maintenance_count
+msgid "Maintenance Count"
+msgstr "整備数"
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_maintenance_equipment
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__equipment_ids
+msgid "Maintenance Equipment"
+msgstr "整備機器"
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_maintenance_request
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_production_view_form_inherit_maintenance
+msgid "Maintenance Request"
+msgstr "整備依頼"
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#: model:ir.actions.act_window,name:mrp_maintenance.mrp_workcenter_request_action_from_workcenter
+#, python-format
+msgid "Maintenance Requests"
+msgstr "整備依頼"
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_maintenance_stage
+msgid "Maintenance Stage"
+msgstr "整備状況"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__maintenance_team_id
+msgid "Maintenance Team"
+msgstr "保守整備チーム"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__production_id
+msgid "Manufacturing Order"
+msgstr "製造オーダ"
+
+#. module: mrp_maintenance
+#: model_terms:ir.actions.act_window,help:mrp_maintenance.maintenance_workcenter_action
+msgid ""
+"Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
+"            workers and/or machines, they are used for costing, scheduling, capacity planning, etc."
+msgstr ""
+"製造工程は作業区で処理されます。作業区は作業員および/または機械で構成され、コスト計算、\n"
+"　　　　スケジューリング、生産能力計画などに使用されます。"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Mean Time Between Failure"
+msgstr "平均故障間隔"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__mtbf
+msgid ""
+"Mean Time Between Failure, computed based on done corrective maintenances."
+msgstr "平均故障間隔（Mean Time Between Failure）：実施された修正メンテナンスに基づいて計算される。"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__mttr
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Mean Time To Repair"
+msgstr "平均修復時間"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_has_error
+msgid "Message Delivery error"
+msgstr "メッセージ配信エラー"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_ids
+msgid "Messages"
+msgstr "メッセージ"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "活動期限"
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#, python-format
+msgid "New Maintenance Request"
+msgstr "新規修理要求"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "次の活動カレンダーイベント"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "次の活動期限"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_summary
+msgid "Next Activity Summary"
+msgstr "次の活動概要"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_type_id
+msgid "Next Activity Type"
+msgstr "次の活動タイプ"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_needaction_counter
+msgid "Number of Actions"
+msgstr "アクション数"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_has_error_counter
+msgid "Number of errors"
+msgstr "エラー数"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_production__maintenance_count
+msgid "Number of maintenance requests"
+msgstr "修理要求数"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "アクションを必要とするメッセージの数"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "配信エラーが発生されたメッセージ数"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_request_view_search_inherit_mrp
+msgid "Operation"
+msgstr "工程"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__production_company_id
+msgid "Production Company"
+msgstr "製造会社"
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_mrp_production
+msgid "Production Order"
+msgstr "製造オーダ"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__rating_ids
+msgid "Ratings"
+msgstr "評価"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_production__request_ids
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_workcenter_view_kanban_inherit_mrp
+msgid "Request"
+msgstr "依頼"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_stage__create_leaves
+msgid "Request Confirmed"
+msgstr "依頼確認済"
+
+#. module: mrp_maintenance
+#. odoo-javascript
+#: code:addons/mrp_maintenance/static/src/components/menuPopup.xml:0
+#, python-format
+msgid "Request Maintenance"
+msgstr "整備を依頼"
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#, python-format
+msgid "Request planned for %s"
+msgstr "%s用に計画された依頼"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_user_id
+msgid "Responsible User"
+msgstr "担当ユーザ"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS配信エラー"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_request_view_form_inherit_mrp
+msgid "Save"
+msgstr "保存"
+
+#. module: mrp_maintenance
+#: model:maintenance.equipment,name:mrp_maintenance.equipment_furniture2
+msgid "Scrub Plane"
+msgstr "かんな"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"活動に基づいての状態\n"
+"延滞: 期限は既に過ぎました\n"
+"当日: 活動日は本日です\n"
+"予定: 将来の活動。"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__technician_user_id
+msgid "Technician"
+msgstr "担当技術者"
+
+#. module: mrp_maintenance
+#. odoo-javascript
+#: code:addons/mrp_maintenance/static/src/components/maintenance_request_form_view.js:0
+#, python-format
+msgid "The maintenance request has successfully been created."
+msgstr "整備依頼が正常に作成されました。"
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#, python-format
+msgid ""
+"The schedule has changed from %(desired_date)s to %(effective_date)s due to "
+"planned manufacturing orders."
+msgstr "予定は計画的な製造オーダのため、%(desired_date)sから%(effective_date)sに変更されました。"
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#, python-format
+msgid "The workcenter is missing for %s."
+msgstr "%sの作業区がありません。"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__effective_date
+msgid "This date will be used to compute the Mean Time Between Failure."
+msgstr "この日付は平均故障間隔を計算するために使用されます。"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "記録上の例外活動の種類。"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__website_message_ids
+msgid "Website Messages"
+msgstr "ウェブサイトメッセージ"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__website_message_ids
+msgid "Website communication history"
+msgstr "ウェブサイト通信履歴"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_maintenance_stage__create_leaves
+msgid ""
+"When this box is unticked, and the maintenance is of the type 'Work Center', no leave is created on the respective work center when a maintenance request is created.\n"
+"If the box is ticked, the work center is automatically blocked for the listed duration, either at the specified date, or as soon as possible, if the work center is unavailable then."
+msgstr ""
+"このボックスにチェックが入っておらず、メンテナンスのタイプが\"作業区\"である場合、整備依頼が作成されても、それぞれの作業区に休暇は作成されません。\n"
+"このボックスにチェックが入っている場合、作業区は指定された期間、自動的にブロックされます。"
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_mrp_workcenter
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_equipment__workcenter_id
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__workcenter_id
+#: model:ir.model.fields.selection,name:mrp_maintenance.selection__maintenance_request__maintenance_for__workcenter
+msgid "Work Center"
+msgstr "作業区"
+
+#. module: mrp_maintenance
+#: model:ir.actions.act_window,name:mrp_maintenance.maintenance_workcenter_action
+#: model:ir.ui.menu,name:mrp_maintenance.menu_workcenter_tree
+msgid "Work Centers"
+msgstr "作業区"
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_mrp_workorder
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__workorder_id
+msgid "Work Order"
+msgstr "作業オーダ"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_request_view_search_inherit_mrp
+msgid "Workcenter"
+msgstr "作業区"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "days"
+msgstr "日"
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#, python-format
+msgid "work centers"
+msgstr "作業区"

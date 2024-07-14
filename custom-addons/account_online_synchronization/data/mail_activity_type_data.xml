@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="bank_sync_activity_update_consent" model="mail.activity.type">
+            <field name="name">Bank Synchronization: Update consent</field>
+            <field name="icon">fa-university</field>
+            <field name="decoration_type">warning</field>
+            <field name="res_model">account.online.link</field>
+            <field name="delay_count">0</field>
+        </record>
+
+        <record id="bank_sync_consent_renewal" model="mail.message.subtype">
+            <field name="name">Consent Renewal</field>
+            <field name="default" eval="False"/>
+            <field name="hidden" eval="True"/>
+            <field name="res_model">account.journal</field>
+            <field name="sequence" eval="900"/>
+            <field name="track_recipients" eval="True"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record id="stock_move_line_product_selector" model="ir.ui.view">
+    <field name="name">stock.product.selector</field>
+    <field name="model">stock.move.line</field>
+    <field name="inherit_id" ref="stock_barcode.stock_move_line_product_selector"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[@groups='stock.group_production_lot']" position="after">
+            <field name="picking_type_use_existing_lots" invisible="1"/>
+            <field name="use_expiration_date" invisible="1"/>
+            <field name="is_expired" invisible="1"/>
+            <div class="row" groups="stock.group_production_lot">
+                <div class="col-12 col-md-6 my-2 d-flex align-items-baseline"
+                    invisible="not use_expiration_date">
+                    <i class="fa fa-fw fa-lg fa-calendar me-3" title="Expiration Date"/>
+                    <field name="expiration_date" force_save="1" widget="date"
+                    readonly="picking_type_use_existing_lots"/>
+                    <span class="fa fa-exclamation-triangle text-danger ms-4"
+                        invisible="not is_expired or not picking_type_use_existing_lots">
+                        This lot is expired
+                    </span>
+                </div>
+            </div>
+        </xpath>
+    </field>
+</record>
+
+</odoo>

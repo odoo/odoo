@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="whatsapp.DiscussSidebarChannel" t-inherit="mail.DiscussSidebarChannel" t-inherit-mode="extension">
+        <xpath expr="//ThreadIcon" position="attributes">
+            <attribute name="t-if" add="or thread.type === 'whatsapp'" separator=" " />
+        </xpath>
+    </t>
+</templates>

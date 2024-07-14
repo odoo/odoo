@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_picking_batch_form" model="ir.ui.view">
+        <field name="name">stock.picking.batch.form.quality.control.inherit</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_done'][1]" position="attributes">
+                <attribute name="invisible">state != 'in_progress' or quality_check_todo or show_check_availability</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_done'][2]" position="attributes">
+                <attribute name="invisible">state != 'in_progress' or not quality_check_todo and not show_check_availability</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_done']" position="after">
+                <field name="quality_check_todo" invisible="1"/>
+                <button name="action_done" string="Validate" type="object"
+                    invisible="not quality_check_todo or not picking_ids or state != 'in_progress'"/>
+                <button string="Quality Checks" name="action_open_quality_check_wizard" type="object"
+                    class="oe_highlight" groups="quality.group_quality_user"
+                    invisible="not quality_check_todo or state in ('done', 'cancel')"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_line_tree"  model="ir.ui.view">
+        <field name="name">stock_picking_batch.move.line.tree.inherit</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock_picking_batch.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="check_state" column_invisible="True"/>
+                <button type="object" class="btn-secondary text-muted" name="action_open_quality_check_wizard" icon="fa-check" invisible="check_state != 'in_progress'" title="Check Quality"/>
+                <button type="object" class="btn-secondary text-danger" name="action_open_quality_check_wizard" icon="fa-check" invisible="check_state != 'fail'" title="Check Quality"/>
+                <button type="object" class="btn-secondary text-success" name="action_open_quality_check_wizard" icon="fa-check" invisible="check_state != 'pass'" title="Check Quality"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

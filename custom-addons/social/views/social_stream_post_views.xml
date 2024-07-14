@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="action_social_stream_post" model="ir.actions.act_window">
+        <field name="name">Feed</field>
+        <field name="res_model">social.stream.post</field>
+        <field name="view_mode">kanban</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No Stream added yet!
+          </p>
+          <p>
+            <a href="#" class="o_social_js_add_stream">Add a stream</a> to keep an eye on your own posts and monitor all social activities.
+          </p>
+        </field>
+        <field name="context">{'search_default_group_by_stream': 1, 'search_default_search_my_streams': 1}</field>
+    </record>
+
+    <record id="menu_social_stream_post" model="ir.ui.menu">
+        <field name="action" ref="action_social_stream_post" />
+    </record>
+
+    <record id="social_stream_post_view_kanban" model="ir.ui.view">
+        <field name="name">social.stream.post.view.kanban</field>
+        <field name="model">social.stream.post</field>
+        <field name="arch" type="xml">
+            <kanban
+                create="0"
+                quick_create="false"
+                edit="0"
+                records_draggable="false"
+                group_create="false"
+                js_class="social_stream_post_kanban_view">
+                <field name="id"/>
+                <field name="author_name"/>
+                <field name="author_link"/>
+                <field name="post_link"/>
+                <field name="published_date"/>
+                <field name="formatted_published_date"/>
+                <field name="account_id"/>
+                <field name="message"/>
+                <field name="media_type"/>
+                <field name="is_author"/>
+                <field name="link_url"/>
+                <field name="link_image_url"/>
+                <field name="link_title"/>
+                <field name="link_description"/>
+                <field name="stream_post_image_ids"/>
+                <field name="stream_post_image_urls"/>
+                <field name="stream_id" readonly="1"/>
+                <templates>
+                    <div t-name="kanban-box" class="o_social_stream_post_kanban_global p-0 mb-3">
+                        <div class="o_social_stream_post_message py-2">
+                            <div class="d-flex justify-content-between mb-2 px-2">
+                                <t t-set="author_info">
+                                    <span class="o_social_stream_post_author_image o_social_author_image o_avatar position-relative d-flex gap-1 rounded overflow-hidden"/>
+                                    <span class="o_social_stream_post_author_name text-truncate ms-2" t-esc="record.author_name.value or 'Unknown'" t-att-title="record.author_name.value or 'Unknown'"/>
+                                </t>
+
+                                <div class="o_social_author_information d-flex align-items-center">
+                                    <a t-if="record.author_link.value"
+                                        class="o_social_stream_post_author d-flex align-items-center"
+                                        t-att-href="record.author_link.value"
+                                        t-att-title="record.author_name.value or 'Unknown'"
+                                        t-out="author_info"
+                                        target="_blank"/>
+
+                                    <div t-else=""
+                                        class="o_social_stream_post_author d-flex align-items-center"
+                                        t-out="author_info"/>
+                                </div>
+
+                                <a t-att-href="record.post_link.value" target="_blank">
+                                    <time class="o_social_stream_post_published_date small"
+                                        t-esc="record.formatted_published_date.value"
+                                        t-att-title="record.published_date.value"/>
+                                </a>
+                            </div>
+                            <t t-set="has_attachments" t-value="record.stream_post_image_ids.raw_value.length !== 0 || record.link_url.value"/>
+                            <div name="o_social_stream_post_message_body"
+                                t-attf-class="o_social_stream_post_message_body px-2 pb-2 #{has_attachments ? 'o_social_stream_post_with_attachments' : 'mb-2 border-bottom'}">
+
+                                <div class="o_social_stream_post_message_text overflow-hidden mb-2">
+                                    <field name="message" widget="social_post_formatter"/>
+                                </div>
+                                <a t-if="record.link_url.value"
+                                    class="o_social_stream_post_link p-2 d-flex bg-100"
+                                    t-att-href="record.link_url.raw_value"
+                                    target="_blank">
+                                    <img t-if="record.link_image_url.raw_value" class="me-2 flex-shrink-0" t-att-src="record.link_image_url.raw_value" alt="Link Image"/>
+                                    <div class="o_social_stream_post_link_text">
+                                        <div class="o_social_stream_post_link_title fw-bold text-truncate" t-esc="record.link_title.value"/>
+                                        <div class="o_social_stream_post_link_description text-truncate" t-esc="record.link_description.value"/>
+                                    </div>
+                                </a>
+                                <div t-if="has_attachments"
+                                    class="o_social_stream_post_image d-flex mx-n2 overflow-hidden"
+                                    t-att-data-images="record.stream_post_image_urls.raw_value">
+                                    <t t-set="image_urls_json" t-value="JSON.parse(record.stream_post_image_urls.raw_value)"/>
+
+                                    <t t-foreach="image_urls_json.length > 2 ? image_urls_json.slice(0, 2) : image_urls_json" t-as="image_url" t-key="image_url_index">
+                                        <t t-if="image_url_index == 1 and record.stream_post_image_ids.raw_value.length > 2">
+                                            <a class="o_social_stream_post_image_more position-relative d-flex ms-1"
+                                               t-att-data-index="image_url_index" t-att-data-image-urls="image_urls_json">
+                                                <img t-att-src="image_urls_json[1]" alt="Post Image" />
+                                                <div class="o_social_stream_post_image_more_overlay d-flex align-items-center h-100 w-100 text-white justify-content-center position-absolute h1 m-0" style="user-select: none;">
+                                                    +<t t-esc="image_urls_json.length - 2"/>
+                                                </div>
+                                            </a>
+                                        </t>
+                                        <img t-else="" class="o_social_stream_post_image_more" t-att-src="image_url" alt="Post Image"
+                                             t-att-data-index="image_url_index" t-att-data-image-urls="image_urls_json"/>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="social_stream_post_view_search" model="ir.ui.view">
+        <field name="name">social.stream.post.view.search</field>
+        <field name="model">social.stream.post</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="message" string="Post Message"/>
+                <filter string="My Streams" domain="[('stream_id.create_uid','=',uid)]" name="search_my_streams"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_stream" string="By Stream" context="{'group_by': 'stream_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</data>
+</odoo>

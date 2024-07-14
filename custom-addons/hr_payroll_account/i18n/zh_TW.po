@@ -1,0 +1,262 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_payroll_account
+# 
+# Translators:
+# Tony Ng, 2024
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "賬目總表範本"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_chart_template.py:0
+#, python-format
+msgid "Account Payslip Houserental"
+msgstr "賬戶工資單租房"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_contract_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_salary_rule_view_form
+msgid "Accounting"
+msgstr "會計"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__move_id
+msgid "Accounting Entry"
+msgstr "會計分錄"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+#, python-format
+msgid "Adjustment Entry"
+msgstr "調整分錄"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract__analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_contract_history__analytic_account_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__analytic_account_id
+msgid "Analytic Account"
+msgstr "分析帳戶"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid "Are you sure you want to proceed?"
+msgstr "確定要繼續？"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.res_config_settings_view_form
+msgid "Batch Account Move Lines"
+msgstr "批次賬戶分錄資料行"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__batch_payroll_move_lines
+#: model:ir.model.fields,field_description:hr_payroll_account.field_res_company__batch_payroll_move_lines
+#: model:ir.model.fields,field_description:hr_payroll_account.field_res_config_settings__batch_payroll_move_lines
+msgid "Batch Payroll Move Lines"
+msgstr "批次薪酬分錄資料行"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract_history
+msgid "Contract history"
+msgstr "契約歷程"
+
+#. module: hr_payroll_account
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_run_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid "Create Draft Entry"
+msgstr "建立草稿記項"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_credit
+msgid "Credit Account"
+msgstr "貸方科目"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__date
+msgid "Date Account"
+msgstr "日期帳戶"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_debit
+msgid "Debit Account"
+msgstr "借方科目"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract
+msgid "Employee Contract"
+msgstr "員工契約"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_res_config_settings__batch_payroll_move_lines
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.res_config_settings_view_form
+msgid ""
+"Enable this option to merge all the accounting entries for the same period "
+"into a single account move line. This will anonymize the accounting entries "
+"but also disable single payment generations."
+msgstr "啟用此選項，可將同一期間的所有會計記項合併為一個賬戶分錄資料行。這會使會計記項匿名化，但亦會停止產生單次付款。"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payroll_structure.py:0
+#, python-format
+msgid ""
+"Incorrect journal: The journal must be in the same currency as the company"
+msgstr "日記賬不正確：日記賬必須與公司使用相同貨幣"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_journal
+msgid "Journal"
+msgstr "日記賬"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_payslip__date
+msgid "Keep empty to use the period of the validation(Payslip) date."
+msgstr "為空使用這個期間審核(薪資單)日期"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_chart_template.py:0
+#, python-format
+msgid "No existing account for code %s"
+msgstr "代碼 %s 沒有現存賬戶"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__not_computed_in_net
+msgid "Not computed in net accountably"
+msgstr "會計上未計入淨額"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+#, python-format
+msgid "One of the contract for these payslips has no structure type."
+msgstr "這些工資單中，有合約未有結構類型。"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+#, python-format
+msgid "One of the payroll structures has no account journal defined on it."
+msgstr "其中一個工資結構未有定義賬戶日記賬。"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip
+msgid "Pay Slip"
+msgstr "薪資單"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/wizard/account_payment_register.py:0
+#, python-format
+msgid "Payment done at %s"
+msgstr "付款已完成於 %s"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_payment
+msgid "Payments"
+msgstr "付款"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_account_payment_register
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_payslip_view_form
+msgid "Register Payment"
+msgstr "登記付款"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_chart_template.py:0
+#, python-format
+msgid "SLR"
+msgstr "SLR(可用病假)"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_chart_template.py:0
+#, python-format
+msgid "Salaries"
+msgstr "薪酬"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payroll_structure__journal_id
+#: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip__journal_id
+msgid "Salary Journal"
+msgstr "薪資日記帳"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr "薪酬制度"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payroll_structure
+msgid "Salary Structure"
+msgstr "薪資結構"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+#, python-format
+msgid ""
+"The Expense Journal \"%s\" has not properly configured the default Account!"
+msgstr "開支日記賬「%s」未正確配置預設賬戶。"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+#, python-format
+msgid "The credit account on the NET salary rule is not reconciliable"
+msgstr "淨工資規則中的信用/貸方賬戶，無法進行對賬"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/hr_payslip.py:0
+#, python-format
+msgid "The employee bank account is untrusted"
+msgstr "員工的銀行賬戶並非受信任"
+
+#. module: hr_payroll_account
+#: model:ir.model.fields,help:hr_payroll_account.field_hr_salary_rule__not_computed_in_net
+msgid ""
+"This field allows you to delete the value of this rule in the \"Net Salary\""
+" rule at the accounting level to explicitly display the value of this rule "
+"in the accounting. For example, if you want to display the value of your "
+"representation fees, you can check this field."
+msgstr "此欄位允許你在會計層面上，刪除「淨薪金」規則內此規則的值，以在會計數據上明確顯示此規則的值。例如，若要顯示代表費用的值，可勾選此欄位。"
+
+#. module: hr_payroll_account
+#. odoo-python
+#: code:addons/hr_payroll_account/models/account_journal.py:0
+#, python-format
+msgid "You cannot delete the journal linked to a Salary Structure"
+msgstr "不可刪除連結至工資結構的日記賬"

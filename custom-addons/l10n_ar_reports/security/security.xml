@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="account_ar_vat_line_rule" model="ir.rule">
+        <field name="name">VAT line for Analysis in Argentinean Localization</field>
+        <field name="model_id" ref="model_account_ar_vat_line"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>

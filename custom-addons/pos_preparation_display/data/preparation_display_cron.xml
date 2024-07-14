@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="preparation_display_delete_cron" model="ir.cron">
+            <field name="name">delete_preparation_display_order</field>
+            <field name="model_id" ref="pos_preparation_display.model_pos_preparation_display_order"/>
+            <field name="state">code</field>
+            <field name="code">model._clean_preparation_data()</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="nextcall" eval="(DateTime.now().replace(hour=3, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,17 @@
+.o_barcode_client_action .o_barcode_lines .o_barcode_line.o_header {
+    box-shadow: inset 0px 0px 0px 3px $o-enterprise-color;
+    background-color: #5f0653;
+    color: white;
+    position: sticky;
+    top: 0px;
+    z-index: 10;
+
+    &.o_header_completed {
+        background-color: $o-enterprise-action-color;
+        box-shadow: inset 0px 0px 0px 3px #0db3bb;
+    }
+
+    & .h5 {
+        color: white;
+    }
+}

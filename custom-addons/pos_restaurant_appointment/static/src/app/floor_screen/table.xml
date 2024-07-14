@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant_appointment.Table" t-inherit="pos_restaurant.Table" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('infos')]" position="after">
+            <div t-if="firstAppointment" class="appointment-infos" t-att-style="textStyle">
+                <div>
+                    <span class="p-0 d-flex justify-content-between">
+                        <span>
+                            <i class="fa fa-clock-o"/> <t t-esc="firstAppointment.start" />
+                        </span>
+                        <span>
+                            <i class="fa fa-user-o"/> <t t-esc="firstAppointment.resource_total_capacity_reserved" />
+                        </span>
+                    </span>
+                </div>
+                    <span class="p-0"> <t t-esc="firstAppointment.customer_name" /> </span>
+            </div>
+        </xpath>
+    </t>
+</templates>

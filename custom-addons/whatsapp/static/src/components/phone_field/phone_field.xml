@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="whatsapp.PhoneField" t-inherit="web.PhoneField" t-inherit-mode="extension">
+        <xpath expr="//div[contains(@class, 'o_phone_content')]//a" position="after">
+            <t t-if="props.enableWhatsAppButton and props.record.data[props.name].length > 0">
+                <SendWhatsAppButton t-props="props" />
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="whatsapp.FormPhoneField" t-inherit="web.FormPhoneField" t-inherit-mode="extension">
+        <xpath expr="//div[contains(@class, 'o_phone_content')]" position="inside">
+            <t t-if="props.enableWhatsAppButton and  props.record.data[props.name].length > 0">
+                <SendWhatsAppButton t-props="props" />
+            </t>
+        </xpath>
+    </t>
+
+</templates>

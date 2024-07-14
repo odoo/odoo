@@ -1,0 +1,152 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sign_itsme
+# 
+# Translators:
+# Egon Raamat <egon@avalah.ee>, 2023
+# Martin Trigaux, 2023
+# Leaanika Randmets, 2023
+# JanaAvalah, 2023
+# Anna, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Anna, 2023\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sign_itsme
+#: model_terms:ir.ui.view,arch_db:sign_itsme.sign_request_logs_user
+msgid ""
+"<small>Name: The signatory has provided this identity through itsme®</small>"
+msgstr "<small>Nimi: Allkirjastanu tuvastas ennast itsme® kaudu</small>"
+
+#. module: sign_itsme
+#: model:sign.item.role,name:sign_itsme.sign_item_role_itsme_customer
+msgid "Customer (identified with itsme®)"
+msgstr "Klient (tuvastatud itsme® kaudu)"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/components/document_signable.js:0
+#, python-format
+msgid "Error"
+msgstr "Viga"
+
+#. module: sign_itsme
+#: model:ir.model.fields,field_description:sign_itsme.field_sign_item_role__auth_method
+msgid "Extra Authentication Step"
+msgstr "Täiendav etapp tuvastamiseks"
+
+#. module: sign_itsme
+#: model:ir.model.fields,help:sign_itsme.field_sign_item_role__auth_method
+msgid "Force the signatory to identify using a second authentication method"
+msgstr "Nõudke allakirjastajalt teist tuvastamise viisi"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/dialogs/itsme_dialog.xml:0
+#, python-format
+msgid "Go Back"
+msgstr "Mine tagasi"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/components/document_signable.js:0
+#, python-format
+msgid "Identification refused"
+msgstr ""
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/dialogs/itsme_dialog.xml:0
+#, python-format
+msgid "Identify with itsme"
+msgstr "Tuvasta ennast itsme kaudu"
+
+#. module: sign_itsme
+#: model_terms:ir.ui.view,arch_db:sign_itsme.sign_request_logs_user
+msgid "Name"
+msgstr "Nimi"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/dialogs/itsme_dialog.xml:0
+#, python-format
+msgid "Please confirm your identity to finalize your signature."
+msgstr "Allkirja kinnitamiseks, palun tuvastage ennast. "
+
+#. module: sign_itsme
+#. odoo-python
+#: code:addons/sign_itsme/models/sign_request_item.py:0
+#, python-format
+msgid "Sign request item is not validated yet."
+msgstr "Allkirjastamise üksus pole veel kinnitatud."
+
+#. module: sign_itsme
+#: model:ir.model,name:sign_itsme.model_sign_item_role
+msgid "Signature Item Party"
+msgstr "Allkirja üksuse osapool"
+
+#. module: sign_itsme
+#: model:ir.model,name:sign_itsme.model_sign_request
+msgid "Signature Request"
+msgstr "Allkirja päring"
+
+#. module: sign_itsme
+#: model:ir.model,name:sign_itsme.model_sign_request_item
+msgid "Signature Request Item"
+msgstr "Allkirjataotluse üksus"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/components/document_signable.js:0
+#, python-format
+msgid ""
+"The itsme® identification data could not be forwarded to Odoo, the signature"
+" could not be saved."
+msgstr ""
+
+#. module: sign_itsme
+#: model:ir.model.fields.selection,name:sign_itsme.selection__sign_item_role__auth_method__itsme
+msgid "Via itsme®"
+msgstr "itsme® kaudu"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/components/document_signable.js:0
+#, python-format
+msgid ""
+"You have rejected the identification request or took too long to process it."
+" You can try again to finalize your signature."
+msgstr ""
+
+#. module: sign_itsme
+#. odoo-python
+#: code:addons/sign_itsme/controllers/main.py:0
+#, python-format
+msgid "itsme® IAP service could not be found."
+msgstr "itsme® IAP-teenust ei leitud."
+
+#. module: sign_itsme
+#: model:ir.model.fields,field_description:sign_itsme.field_sign_request_item__itsme_signer_birthdate
+msgid "itsme® Signer's Birthdate"
+msgstr "itsme® allkirjastaja sünnikuupäev"
+
+#. module: sign_itsme
+#: model:ir.model.fields,field_description:sign_itsme.field_sign_request_item__itsme_signer_name
+msgid "itsme® Signer's Name"
+msgstr "itsme® allkirjastaja nimi"
+
+#. module: sign_itsme
+#: model:ir.model.fields,field_description:sign_itsme.field_sign_request_item__itsme_validation_hash
+msgid "itsme® Validation Token"
+msgstr "itsme® valideerimis token"

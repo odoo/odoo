@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_ar_vat_line_search" model="ir.ui.view">
+         <field name="name">account.ar.vat.line.search</field>
+         <field name="model">account.ar.vat.line</field>
+         <field name="arch" type="xml">
+            <search>
+                <field name="move_id"/>
+                <field name="partner_id"/>
+                <field name="afip_responsibility_type_id"/>
+                <field name="journal_id"/>
+                <field name="document_type_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="move_type"/>
+                <separator/>
+                <filter name="posted" string="Posted" domain="[('state','=','posted')]" help="Posted Journal Items"/>
+                <separator/>
+                <filter string="Sales VAT" name="sales_vat" domain="[('move_type', 'in', ['out_invoice', 'out_refund'])]" />
+                <filter string="Purchase VAT" name="purchase_vat" domain="[('move_type', 'in', ['in_invoice', 'in_refund'])]" />
+                <separator/>
+                <filter string="With Document Type" name="with_document_type" domain="[('document_type_id','!=', False)]"/>
+                <group expand="0" string="Group By...">
+                    <filter name="groupby_move_id" string="Entry" context="{'group_by': 'move_id'}"/>
+                    <filter name="groupby_afip_responsibility_type_id" string="AFIP responsibility" context="{'group_by': 'afip_responsibility_type_id'}"/>
+                    <filter name="groupby_date" string="Date" context="{'group_by': 'date'}"/>
+                    <filter name="groupby_partner_id" string="Partner" context="{'group_by': 'partner_id'}"/>
+                    <filter name="groupby_type" string="Type" context="{'group_by': 'move_type'}"/>
+                    <filter name="groupby_document_type_id" string="Document Type" context="{'group_by': 'document_type_id'}"/>
+                    <filter name="groupby_company_id" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+               </group>
+               <filter name="filter_date_last_month" invisible="1" string="Date: Last month" domain="[('date', '&lt;', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')), ('date', '&gt;=', (context_today() + relativedelta(months=-1, day=1)).strftime('%Y-%m-%d'))]"/>
+            </search>
+         </field>
+    </record>
+
+    <record id="view_account_ar_vat_line_form" model="ir.ui.view">
+         <field name="name">account.ar.vat.line.form</field>
+         <field name="model">account.ar.vat.line</field>
+         <field name="arch" type="xml">
+            <form string="VAT Summary">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="move_id"/>
+                            <field name="partner_id"/>
+                            <field name="invoice_date"/>
+                            <field name="move_type"/>
+                            <field name="state"/>
+                            <field name="journal_id"/>
+                            <field name="afip_responsibility_type_id"/>
+                            <field name="document_type_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="not_taxed"/>
+                            <field name="base_25"/>
+                            <field name="vat_25"/>
+                            <field name="base_5"/>
+                            <field name="vat_5"/>
+                            <field name="base_10"/>
+                            <field name="vat_10"/>
+                            <field name="base_21"/>
+                            <field name="vat_21"/>
+                            <field name="base_27"/>
+                            <field name="vat_27"/>
+                            <field name="vat_per"/>
+                            <field name="perc_iibb"/>
+                            <field name="perc_earnings"/>
+                            <field name="city_tax"/>
+                            <field name="other_taxes"/>
+                            <field name="total"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+         </field>
+    </record>
+
+    <record id="view_account_ar_vat_line_tree" model="ir.ui.view">
+         <field name="name">account.ar.vat.line.tree</field>
+         <field name="model">account.ar.vat.line</field>
+         <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="date"/>
+                <field name="move_id"/>
+                <field name="partner_id"/>
+                <field name="not_taxed" sum="Total"/>
+                <field name="base_25" sum="Total"/>
+                <field name="vat_25" sum="Total"/>
+                <field name="base_5" sum="Total"/>
+                <field name="vat_5" sum="Total"/>
+                <field name="base_10" sum="Total"/>
+                <field name="vat_10" sum="Total"/>
+                <field name="base_21" sum="Total"/>
+                <field name="vat_21" sum="Total"/>
+                <field name="base_27" sum="Total"/>
+                <field name="vat_27" sum="Total"/>
+                <field name="vat_per" sum="Total"/>
+                <field name="perc_iibb" sum="Total"/>
+                <field name="perc_earnings" sum="Total"/>
+                <field name="city_tax" sum="Total"/>
+                <field name="other_taxes" sum="Total"/>
+                <field name="total" sum="Total"/>
+                <button name="open_journal_entry" string="Open" type="object" icon="fa-external-link" help="Open journal entry"/>
+            </tree>
+         </field>
+    </record>
+
+    <record id="view_account_ar_vat_line_pivot" model="ir.ui.view">
+         <field name="name">account.ar.vat.line.pivot</field>
+         <field name="model">account.ar.vat.line</field>
+         <field name="arch" type="xml">
+            <pivot>
+                <field name="move_type" type="row"/>
+                <field name="afip_responsibility_type_id" type="row"/>
+                <field name="not_taxed" type="measure"/>
+                <field name="base_25" type="measure"/>
+                <field name="vat_25" type="measure"/>
+                <field name="base_5" type="measure"/>
+                <field name="vat_5" type="measure"/>
+                <field name="base_10" type="measure"/>
+                <field name="vat_10" type="measure"/>
+                <field name="base_21" type="measure"/>
+                <field name="vat_21" type="measure"/>
+                <field name="base_27" type="measure"/>
+                <field name="vat_27" type="measure"/>
+                <field name="vat_per" type="measure"/>
+                <field name="perc_iibb" type="measure"/>
+                <field name="perc_earnings" type="measure"/>
+                <field name="city_tax" type="measure"/>
+                <field name="other_taxes" type="measure"/>
+                <field name="total" type="measure"/>
+            </pivot>
+         </field>
+    </record>
+
+    <record id="action_account_ar_vat_line" model="ir.actions.act_window">
+        <field name="name">VAT Summary</field>
+        <field name="res_model">account.ar.vat.line</field>
+        <field name="view_mode">pivot,tree</field>
+        <field name="context">{'search_default_posted': 1, 'search_default_filter_date_last_month': 1}</field>
+    </record>
+
+    <menuitem id="menu_current_account" parent="l10n_ar.account_reports_ar_statements_menu" sequence="20" action="action_account_ar_vat_line"/>
+
+</odoo>

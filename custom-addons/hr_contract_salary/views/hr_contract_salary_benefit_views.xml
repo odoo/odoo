@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_benefit_action" model="ir.actions.act_window">
+        <field name="name">Benefits</field>
+        <field name="res_model">hr.contract.salary.benefit</field>
+        <field name="context">{'search_default_groupby_structure_type': 1}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="hr_contract_benefit_view_tree" model="ir.ui.view">
+        <field name="name">hr.contract.salary.benefit.view.tree</field>
+        <field name="model">hr.contract.salary.benefit</field>
+        <field name="arch" type="xml">
+            <tree string="Salary Package Benefit">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="res_field_id"/>
+                <field name="field" column_invisible="True"/>
+                <field name="structure_type_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_contract_benefit_view_search" model="ir.ui.view">
+        <field name="name">hr.contract.salary.benefit.view.search</field>
+        <field name="model">hr.contract.salary.benefit</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <group string="Group By">
+                    <filter string="Structure Type" name="groupby_structure_type" context="{'group_by':'structure_type_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_contract_benefit_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.salary.benefit.view.form</field>
+        <field name="model">hr.contract.salary.benefit</field>
+        <field name="arch" type="xml">
+            <form string="Salary Package Benefit">
+                <field name="has_admin_access" invisible="1"/>
+                <sheet>
+                    <label for="name" string="Benefits"/>
+                    <div class="oe_title mb-3">
+                        <h1><field name="name" placeholder="e.g. Meal Vouchers"/></h1>
+                    </div>
+                    <group class="px-3">
+                        <group class="o_form_fw_labels">
+                            <field name="res_field_public"
+                                invisible="has_admin_access"/>
+                            <field name="cost_res_field_public"
+                                invisible="has_admin_access"/>
+                            <field name="field" invisible="1"/>
+                            <field name="benefit_type_id"/>
+                            <field name="sequence" invisible="1"/>
+                            <field name="res_field_id"
+                                groups="base.group_erp_manager"
+                                options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                            <field name="cost_res_field_id"
+                                groups="base.group_erp_manager"
+                                options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                            <field name="impacts_net_salary"/>
+                            <field name="requested_documents_field_ids"
+                                options="{'no_create': True, 'no_edit': True, 'no_open': True}"
+                                groups="base.group_erp_manager"
+                                widget="many2many_tags"/>
+                            <label for="requested_documents_fields_string"
+                                class="m-0"
+                                invisible="has_admin_access"/>
+                            <div invisible="has_admin_access"
+                                class="alert alert-warning m-0 w-100" role="alert">
+                                <span>
+                                    This field can only be modified by a server administrator, contact them if these field requires modifications.
+                                </span>
+                                <span invisible="requested_documents_fields_string">
+                                    There are currently no requested fields.
+                                </span>
+                                <span invisible="not requested_documents_fields_string">
+                                    The current requested documents are the followings: <field name="requested_documents_fields_string" nolabel="1"/>
+                                </span>
+                            </div>
+                            <field name="benefit_ids" widget="many2many_tags"/>
+                            <field name="requested_documents" invisible="1"/>
+                            <separator string="Activity"/>
+                            <field name="activity_type_id" options="{'no_create_edit': True}"/>
+                            <field name="activity_creation" widget="radio" invisible="not activity_type_id" required="activity_type_id"/>
+                            <field name="activity_creation_type" widget="radio" invisible="not activity_type_id" required="activity_type_id"/>
+                            <field name="activity_responsible_id" options="{'no_create_edit': True}" invisible="not activity_type_id" required="activity_type_id"/>
+                            <separator string="sign"/>
+                            <field name="sign_template_id"/>
+                            <field name="sign_copy_partner_id" invisible="not sign_template_id"
+                                   options="{'no_quick_create': True}"
+                                   context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
+                            <field name="sign_frenquency" widget="radio" invisible="not sign_template_id"/>
+                        </group>
+                        <group>
+                            <field name="field" invisible="1"/>
+                            <field name="structure_type_id"/>
+                            <field name="uom" required="1"/>
+                            <field name="sequence" invisible="1"/>
+                            <separator string="Display"/>
+                            <field name="show_name"/>
+                            <field name="display_type" required="1"/>
+                            <field name="value_ids" invisible="display_type not in ['dropdown', 'radio', 'dropdown-group']">
+                                <tree editable="bottom">
+                                    <control>
+                                        <create name="add_line_control" string="Add a line"/>
+                                        <create name="add_section_control" string="Add a section" context="{'default_display_type': 'section'}"/>
+                                    </control>
+                                    <field name="display_type" column_invisible="True"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="value"
+                                        invisible="display_type == 'section'"
+                                        required="display_type != 'section'"/>
+                                    <field name="color"
+                                        invisible="display_type == 'section'"
+                                        required="display_type != 'section'"/>
+                                    <field name="hide_description" invisible="display_type == 'section'"/>
+                                </tree>
+                            </field>
+                            <field name="icon"/>
+                            <field name="hide_description"/>
+                            <field name="folded"/>
+                            <field name="fold_label" invisible="not folded"/>
+                            <field name="fold_res_field_id" invisible="not folded" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                            <field name="fold_field" invisible="1"/>
+                            <field name="manual_res_field_id" invisible="display_type != 'manual'" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                            <field name="manual_field" invisible="1"/>
+                            <field name="slider_min" invisible="display_type != 'slider'"/>
+                            <field name="slider_max" invisible="display_type != 'slider'"/>
+                            <field name="slider_step" invisible="display_type != 'slider'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <menuitem
+        id="salary_package_menu"
+        name="Salary Package Configurator"
+        parent="hr.menu_human_resources_configuration"
+        sequence="100"/>
+
+    <menuitem
+        id="salary_package_benefit"
+        action="hr_contract_benefit_action"
+        parent="hr_contract_salary.salary_package_menu"
+        sequence="1"/>
+
+</odoo>

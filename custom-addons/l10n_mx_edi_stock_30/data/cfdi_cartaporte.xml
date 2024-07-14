@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="cfdi_cartaporte_30" inherit_id="l10n_mx_edi_stock.cfdi_cartaporte" primary="True">
+        <xpath expr="//*[name()='cartaporte20:TiposFigura']" position="attributes">
+            <attribute name="t-att-NombreFigura">figure.operator_id.name</attribute>
+        </xpath>
+
+        <xpath expr="//*[name()='cartaporte20:CartaPorte']" position="attributes">
+            <attribute name="t-att-IdCCP">idccp</attribute>
+            <attribute name="Version">3.0</attribute>
+        </xpath>
+
+        <xpath expr="//*[name()='cartaporte20:IdentificacionVehicular']" position="attributes">
+            <attribute name="t-att-PesoBrutoVehicular">peso_bruto_vehicular</attribute>
+        </xpath>
+
+        <xpath expr="//*[name()='cartaporte20:Ubicaciones']" position="replace">
+            <cartaporte20:Ubicaciones xmlns:cartaporte20="http://www.sat.gob.mx/CartaPorte20">
+                <cartaporte20:Ubicacion
+                    TipoUbicacion="Origen"
+                    t-att-IDUbicacion="origen['id_ubicacion']"
+                    t-att-FechaHoraSalidaLlegada="origen['fecha_hora_salida_llegada']"
+                    t-att-RFCRemitenteDestinatario="origen['rfc_remitente_destinatario']"
+                    t-att-NumRegIdTrib="origen['num_reg_id_trib']"
+                    t-att-ResidenciaFiscal="origen['residencia_fiscal']">
+                    <cartaporte20:Domicilio
+                        t-att-Calle="origen['domicilio']['calle']"
+                        t-att-CodigoPostal="origen['domicilio']['codigo_postal']"
+                        t-att-Estado="origen['domicilio']['estado']"
+                        t-att-Pais="origen['domicilio']['pais']"
+                        t-att-Municipio="origen['domicilio']['municipio']"/>
+                </cartaporte20:Ubicacion>
+                <cartaporte20:Ubicacion
+                    TipoUbicacion="Destino"
+                    t-att-IDUbicacion="destino['id_ubicacion']"
+                    t-att-DistanciaRecorrida="destino['distancia_recorrida']"
+                    t-att-FechaHoraSalidaLlegada="destino['fecha_hora_salida_llegada']"
+                    t-att-RFCRemitenteDestinatario="destino['rfc_remitente_destinatario']"
+                    t-att-NumRegIdTrib="destino['num_reg_id_trib']"
+                    t-att-ResidenciaFiscal="destino['residencia_fiscal']">
+                    <cartaporte20:Domicilio
+                        t-att-Calle="destino['domicilio']['calle']"
+                        t-att-CodigoPostal="destino['domicilio']['codigo_postal']"
+                        t-att-Estado="destino['domicilio']['estado']"
+                        t-att-Pais="destino['domicilio']['pais']"
+                        t-att-Municipio="destino['domicilio']['municipio']"/>
+                </cartaporte20:Ubicacion>
+            </cartaporte20:Ubicaciones>
+        </xpath>
+    </template>
+</odoo>

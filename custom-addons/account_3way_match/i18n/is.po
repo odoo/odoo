@@ -1,0 +1,130 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_3way_match
+# 
+# Translators:
+# Heiðar Sigurðsson, 2024
+# Martin Trigaux, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Martin Trigaux, 2024\n"
+"Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: is\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);\n"
+
+#. module: account_3way_match
+#: model:ir.model.fields,help:account_3way_match.field_account_bank_statement_line__release_to_pay_manual
+#: model:ir.model.fields,help:account_3way_match.field_account_move__release_to_pay_manual
+#: model:ir.model.fields,help:account_3way_match.field_account_payment__release_to_pay_manual
+msgid ""
+"  * Yes: you should pay the bill, you have received the products\n"
+"  * No, you should not pay the bill, you have not received the products\n"
+"  * Exception, there is a difference between received and billed quantities\n"
+"This status is defined automatically, but you can force it by ticking the 'Force Status' checkbox."
+msgstr ""
+
+#. module: account_3way_match
+#: model_terms:ir.ui.view,arch_db:account_3way_match.account_invoice_filter_inherit_account_3way_match
+msgid "Bills in Exception"
+msgstr ""
+
+#. module: account_3way_match
+#: model_terms:ir.ui.view,arch_db:account_3way_match.account_invoice_filter_inherit_account_3way_match
+msgid "Bills to Pay"
+msgstr "Reikningar til greiðslu"
+
+#. module: account_3way_match
+#: model_terms:ir.ui.view,arch_db:account_3way_match.account_invoice_filter_inherit_account_3way_match
+msgid "Bills to Validate"
+msgstr "Ósamþykktir reikningar"
+
+#. module: account_3way_match
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay__exception
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay_manual__exception
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move_line__can_be_paid__exception
+msgid "Exception"
+msgstr "Exception"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_bank_statement_line__force_release_to_pay
+#: model:ir.model.fields,field_description:account_3way_match.field_account_move__force_release_to_pay
+#: model:ir.model.fields,field_description:account_3way_match.field_account_payment__force_release_to_pay
+msgid "Force Status"
+msgstr ""
+
+#. module: account_3way_match
+#: model:ir.model.fields,help:account_3way_match.field_account_bank_statement_line__force_release_to_pay
+#: model:ir.model.fields,help:account_3way_match.field_account_move__force_release_to_pay
+#: model:ir.model.fields,help:account_3way_match.field_account_payment__force_release_to_pay
+msgid ""
+"Indicates whether the 'Should Be Paid' status is defined automatically or "
+"manually."
+msgstr ""
+
+#. module: account_3way_match
+#: model:ir.model,name:account_3way_match.model_account_journal
+msgid "Journal"
+msgstr "Dagbók"
+
+#. module: account_3way_match
+#: model:ir.model,name:account_3way_match.model_account_move
+msgid "Journal Entry"
+msgstr "Dagbókarfærsla"
+
+#. module: account_3way_match
+#: model:ir.model,name:account_3way_match.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: account_3way_match
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay__no
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay_manual__no
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move_line__can_be_paid__no
+msgid "No"
+msgstr "No"
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_bank_statement_line__release_to_pay
+#: model:ir.model.fields,field_description:account_3way_match.field_account_move__release_to_pay
+#: model:ir.model.fields,field_description:account_3way_match.field_account_payment__release_to_pay
+msgid "Release To Pay"
+msgstr ""
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_move_line__can_be_paid
+msgid "Release to Pay"
+msgstr ""
+
+#. module: account_3way_match
+#: model:ir.model.fields,field_description:account_3way_match.field_account_bank_statement_line__release_to_pay_manual
+#: model:ir.model.fields,field_description:account_3way_match.field_account_move__release_to_pay_manual
+#: model:ir.model.fields,field_description:account_3way_match.field_account_payment__release_to_pay_manual
+msgid "Should Be Paid"
+msgstr ""
+
+#. module: account_3way_match
+#: model:ir.model.fields,help:account_3way_match.field_account_bank_statement_line__release_to_pay
+#: model:ir.model.fields,help:account_3way_match.field_account_move__release_to_pay
+#: model:ir.model.fields,help:account_3way_match.field_account_payment__release_to_pay
+msgid ""
+"This field can take the following values :\n"
+"  * Yes: you should pay the bill, you have received the products\n"
+"  * No, you should not pay the bill, you have not received the products\n"
+"  * Exception, there is a difference between received and billed quantities\n"
+"This status is defined automatically, but you can force it by ticking the 'Force Status' checkbox."
+msgstr ""
+
+#. module: account_3way_match
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay__yes
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move__release_to_pay_manual__yes
+#: model:ir.model.fields.selection,name:account_3way_match.selection__account_move_line__can_be_paid__yes
+msgid "Yes"
+msgstr "Yes"

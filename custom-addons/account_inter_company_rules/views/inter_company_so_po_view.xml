@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_company_inter_change_inherit_form">
+            <field name="name">res.company.form.inherit</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Inter-Company Transactions" name="inter_company_transactions" groups="base.group_no_one">
+                        <group>
+                            <group>
+                                <field name="rule_type" widget="radio"/>
+                                <field name="intercompany_user_id" require="1" invisible="rule_type == 'not_synchronize'" required="rule_type != 'not_synchronize'"/>
+                            </group>
+                            <group>
+                                <div class="alert alert-info" role="alert" invisible="rule_type == 'not_synchronize'" colspan="2">
+                                    <field name="intercompany_transaction_message" readonly='1' class="oe_inline"/>
+                                </div>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+	</data>
+</odoo>

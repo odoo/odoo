@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_financial_report_export" model="ir.ui.view">
+            <field name="name">l10n_be_reports.periodic.vat.xml.export.form</field>
+            <field name="model">l10n_be_reports.periodic.vat.xml.export</field>
+            <field name="arch" type="xml">
+                <form string="Export Options">
+                    <div class="mb-4">
+                        Choose option(s) before exporting XML:
+                    </div>
+                    <group>
+                         <group>
+                             <field name="ask_restitution"/>
+                             <field name="ask_payment"/>
+                             <field name="client_nihil"/>
+                             <field name="comment"/>
+                         </group>
+                    </group>
+                    <footer>
+                        <button string='Export XML' name="print_xml" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,209 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* currency_rate_live
+# 
+# Translators:
+# Zsolt Godó <zsolttokio@gmail.com>, 2023
+# Ákos Nagy <akos.nagy@oregional.hu>, 2023
+# Martin Trigaux, 2023
+# krnkris, 2023
+# gezza <geza.nagy@oregional.hu>, 2023
+# Tamás Németh <ntomasz81@gmail.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:46+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2023\n"
+"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: currency_rate_live
+#: model_terms:ir.ui.view,arch_db:currency_rate_live.res_config_settings_view_form
+msgid ""
+"<i title=\"Update now\" role=\"img\" aria-label=\"Update now\" class=\"fa "
+"fa-fw fa-refresh\"/>"
+msgstr ""
+"<i title=\"Update now\" role=\"img\" aria-label=\"Update now\" class=\"fa "
+"fa-fw fa-refresh\"/>"
+
+#. module: currency_rate_live
+#: model:ir.model,name:currency_rate_live.model_res_company
+msgid "Companies"
+msgstr "Vállalatok"
+
+#. module: currency_rate_live
+#: model:ir.model,name:currency_rate_live.model_res_config_settings
+msgid "Config Settings"
+msgstr "Beállítások módosítása"
+
+#. module: currency_rate_live
+#: model:ir.actions.server,name:currency_rate_live.ir_cron_currency_update_ir_actions_server
+msgid "Currency: rate update"
+msgstr ""
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_interval_unit__daily
+msgid "Daily"
+msgstr "Naponta"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__ecb
+msgid "European Central Bank"
+msgstr "Európai Központi Bank"
+
+#. module: currency_rate_live
+#: model_terms:ir.ui.view,arch_db:currency_rate_live.res_config_settings_view_form
+msgid "Interval"
+msgstr "Intervallum"
+
+#. module: currency_rate_live
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_company__currency_interval_unit
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_config_settings__currency_interval_unit
+msgid "Interval Unit"
+msgstr "Időköz egység"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_interval_unit__manually
+msgid "Manually"
+msgstr "Kézzel"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_interval_unit__monthly
+msgid "Monthly"
+msgstr "Havi"
+
+#. module: currency_rate_live
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_company__currency_next_execution_date
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_config_settings__currency_next_execution_date
+msgid "Next Execution Date"
+msgstr "A következő végrehajtás dátuma"
+
+#. module: currency_rate_live
+#: model_terms:ir.ui.view,arch_db:currency_rate_live.res_config_settings_view_form
+msgid "Next Run"
+msgstr ""
+
+#. module: currency_rate_live
+#: model_terms:ir.ui.view,arch_db:currency_rate_live.res_config_settings_view_form
+msgid "Service"
+msgstr "Szolgáltatás"
+
+#. module: currency_rate_live
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_company__currency_provider
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_config_settings__currency_provider
+msgid "Service Provider"
+msgstr "Szolgáltató"
+
+#. module: currency_rate_live
+#. odoo-python
+#: code:addons/currency_rate_live/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"The selected exchange rate provider requires the GTQ and USD currencies to "
+"be active."
+msgstr ""
+
+#. module: currency_rate_live
+#. odoo-python
+#: code:addons/currency_rate_live/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Unable to connect to the online exchange rate platform %s. The web service "
+"may be temporarily down. Please try again in a moment."
+msgstr ""
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_interval_unit__weekly
+msgid "Weekly"
+msgstr "Heti"
+
+#. module: currency_rate_live
+#. odoo-python
+#: code:addons/currency_rate_live/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Your main currency (%s) is not supported by this exchange rate provider. "
+"Please choose another one."
+msgstr ""
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__cbuae
+msgid "[AE] Central Bank of the UAE"
+msgstr ""
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bbr
+msgid "[BR] Central Bank of Brazil"
+msgstr ""
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__boc
+msgid "[CA] Bank of Canada"
+msgstr ""
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__fta
+msgid "[CH] Federal Tax Administration of Switzerland"
+msgstr ""
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__mindicador
+msgid "[CL] Central Bank of Chile via mindicador.cl"
+msgstr ""
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__cnb
+msgid "[CZ] Czech National Bank"
+msgstr ""
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__cbegy
+msgid "[EG] Central Bank of Egypt"
+msgstr ""
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__banguat
+msgid "[GT] Bank of Guatemala"
+msgstr ""
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__banxico
+msgid "[MX] Bank of Mexico"
+msgstr ""
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bcrp
+msgid "[PE] SUNAT (replaces Bank of Peru)"
+msgstr ""
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__nbp
+msgid "[PL] National Bank of Poland"
+msgstr ""
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bnr
+msgid "[RO] National Bank of Romania"
+msgstr ""
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__tcmb
+msgid "[TR] Central Bank of the Republic of Turkey"
+msgstr ""
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__hmrc
+msgid "[UK] HM Revenue & Customs"
+msgstr ""
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__xe_com
+msgid "xe.com"
+msgstr "xe.com"

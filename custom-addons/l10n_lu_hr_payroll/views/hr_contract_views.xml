@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit.l10n.lu.hr.payroll</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+        <field name="arch" type="xml">
+            <field name="wage_type" position="after">
+                <label for="l10n_lu_wage_with_sacrifices" invisible="country_code != 'LU' or wage_type == 'hourly'"/>
+                <div class="o_row">
+                    <field name="l10n_lu_wage_with_sacrifices" invisible="country_code != 'LU' or wage_type == 'hourly'" string="Wages With Sacrifices"/>
+                    <span>/ month</span>
+                </div>
+            </field>
+            <group name="salary" position="after">
+                <group name="l10n_lu_advantages" string="Advantages" invisible="country_code != 'LU' or wage_type == 'hourly'">
+                    <label for="l10n_lu_meal_voucher_amount"/>
+                    <div class="o_row">
+                        <field name="l10n_lu_meal_voucher_amount" string="Meal Vouchers"/>
+                        <span>/ worked day</span>
+                    </div>
+                    <label for="l10n_lu_extra_holidays"/>
+                    <div class="o_row">
+                        <field name="l10n_lu_extra_holidays" string="Extra Time Off"/>
+                        <span>days / year</span>
+                    </div>
+                    <label for="l10n_lu_atn_transport" invisible="country_code != 'LU' or wage_type == 'hourly'"/>
+                    <div class="o_row" invisible="country_code != 'LU' or wage_type == 'hourly'">
+                        <field name="l10n_lu_atn_transport" class="o_hr_narrow_field" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

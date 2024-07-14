@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="appointment.AppointmentBookingGanttPopover" t-inherit="web_gantt.GanttPopover" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('popover-footer')]/button" position="attributes">
+            <attribute name="class">btn btn-sm</attribute>
+            <attribute name="t-att-class">props.appointmentTypeId ? 'btn-secondary': 'btn-primary'</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('popover-footer')]/button" position="before">
+            <button class="btn btn-sm btn-primary me-1" t-if="props.appointmentTypeId" t-on-click="onClickAttended">
+                <t t-if="props.attendedState">Unconfirm Check-In</t>
+                <t t-else="">Confirm Check-In</t>
+            </button>
+        </xpath>
+    </t>
+</templates>

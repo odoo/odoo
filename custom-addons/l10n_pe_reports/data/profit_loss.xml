@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_financial_report_pnl" model="account.report">
+        <field name="name">Profit and Loss</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_analytic" eval="False"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.pe"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_pnl_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_pnl_A_4" model="account.report.line">
+                <field name="name">Gross profit</field>
+                <field name="code">PE_PNL_A_4</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pnl_A_4_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PE_PNL_A.balance - PE_PNL_A_3.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_pnl_A" model="account.report.line">
+                        <field name="name">Operating Income</field>
+                        <field name="code">PE_PNL_A</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pnl_A_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">PE_PNL_A_1.balance + PE_PNL_A_2.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_pnl_A_1" model="account.report.line">
+                                <field name="name">Income from ordinary activities</field>
+                                <field name="code">PE_PNL_A_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_pnl_A_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-70 - 72</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_pnl_A_2" model="account.report.line">
+                                <field name="name">Sublease income and other</field>
+                                <field name="code">PE_PNL_A_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_pnl_A_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-754</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pnl_A_3" model="account.report.line">
+                        <field name="name">Sales costs</field>
+                        <field name="code">PE_PNL_A_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pnl_A_3_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">69</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pnl_A_5" model="account.report.line">
+                        <field name="name">Other operating income</field>
+                        <field name="code">PE_PNL_A_5</field>
+                        <field name="hide_if_zero" eval="1"/>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pnl_A_5_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[
+                                         '|', ('account_id.code', '=like', '61%'),
+                                         '|', ('account_id.code', '=like', '66%'),
+                                         '|', ('account_id.code', '=like', '68%'),
+                                         '|', ('account_id.code', '=like', '71%'),
+                                         '|', ('account_id.code', '=like', '73%'),
+                                         '|', ('account_id.code', '=like', '74%'),
+                                         '|', '&amp;', ('account_id.code', '=like', '75%'),
+                                                  '!', ('account_id.code', '=like', '754%'),
+                                         '|', ('account_id.code', '=like', '76%'),
+                                         '|', ('account_id.code', '=like', '78%'),
+                                         '|', ('account_id.code', '=like', '79%'),
+                                              ('account_id.code', '=like', '99900%'),
+                                 ]"/>
+                                <field name="subformula">sum_if_pos</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pnl_E" model="account.report.line">
+                <field name="name">Operating Expenses</field>
+                <field name="code">PE_PNL_E</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pnl_E_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PE_PNL_B_3.balance + PE_PNL_B_4.balance + PE_PNL_B_5.balance</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_pnl_B_3" model="account.report.line">
+                        <field name="name">Sales and distribution expenses</field>
+                        <field name="code">PE_PNL_B_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pnl_B_3_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">60 + 63</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pnl_B_4" model="account.report.line">
+                        <field name="name">Administrative expenses</field>
+                        <field name="code">PE_PNL_B_4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pnl_B_4_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">62 + 65</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_pnl_B_5" model="account.report.line">
+                        <field name="name">Other operating expenses</field>
+                        <field name="code">PE_PNL_B_5</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hide_if_zero" eval="1"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pnl_B_5_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[
+                                         '|', ('account_id.code', '=like', '61%'),
+                                         '|', ('account_id.code', '=like', '66%'),
+                                         '|', ('account_id.code', '=like', '68%'),
+                                         '|', ('account_id.code', '=like', '71%'),
+                                         '|', ('account_id.code', '=like', '73%'),
+                                         '|', ('account_id.code', '=like', '74%'),
+                                         '|', '&amp;', ('account_id.code', '=like', '75%'),
+                                                  '!', ('account_id.code', '=like', '754%'),
+                                         '|', ('account_id.code', '=like', '76%'),
+                                         '|', ('account_id.code', '=like', '78%'),
+                                         '|', ('account_id.code', '=like', '79%'),
+                                              ('account_id.code', '=like', '99900%'),
+                                 ]"/>
+                                <field name="subformula">-sum_if_neg</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pnl_B_6" model="account.report.line">
+                <field name="name">Operating profit</field>
+                <field name="code">PE_PNL_B_6</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pnl_B_6_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PE_PNL_A_4.balance - PE_PNL_E.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pnl_B_7" model="account.report.line">
+                <field name="name">Other revenues and expenses</field>
+                <field name="code">PE_PNL_B_7</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pnl_B_7_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PE_PNL_C.balance + PE_PNL_B_1.balance - PE_PNL_B_2.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_pnl_C" model="account.report.line">
+                        <field name="name">Exchange difference, net</field>
+                        <field name="code">PE_PNL_C</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_pnl_C_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-776 - 676</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pnl_B_1" model="account.report.line">
+                <field name="name">Financial income</field>
+                <field name="code">PE_PNL_B_1</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pnl_B_1_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">-77\(776)</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pnl_B_2" model="account.report.line">
+                <field name="name">Financial expenses</field>
+                <field name="code">PE_PNL_B_2</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pnl_B_2_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">67\(676)</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pnl_C_2" model="account.report.line">
+                <field name="name">Result before taxes</field>
+                <field name="code">PE_PNL_C_2</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pnl_C_2_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PE_PNL_B_6.balance + PE_PNL_B_7.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pnl_D" model="account.report.line">
+                <field name="name">Income tax expense</field>
+                <field name="code">PE_PNL_D</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pnl_D_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">64</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_pnl_F" model="account.report.line">
+                <field name="name">Net Profit</field>
+                <field name="code">PE_PNL_F</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_pnl_F_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">PE_PNL_C_2.balance - PE_PNL_D.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+    <record id="action_account_report_pe_pnl" model="ir.actions.client">
+        <field name="name">Profit and Loss</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'model': 'account.report', 'report_id': ref('l10n_pe_reports.account_financial_report_pnl')}"/>
+    </record>
+    <record id="account_financial_report_bs_E_U_CY_U" model="account.report.line">
+        <field name="action_id" ref="action_account_report_pe_pnl"/>
+    </record>
+</odoo>

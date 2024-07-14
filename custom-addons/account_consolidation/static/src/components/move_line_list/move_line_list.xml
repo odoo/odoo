@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="account_consolidation.MoveLineListView" t-inherit="account_accountant.MoveLineListView">
+        <xpath expr="//Layout" position="before">
+            <div class="alert alert-info text-center" role="status">
+                    <span t-if="context.currencies_are_different and context.consolidation_rate lt 100.0">
+                        Take into account that the consolidation (<t t-out="context.currencies.chart"/>) and the consolidated company (<t t-out="context.currencies.company"/>) have different currencies and the company is consolidated at <t t-out="context.consolidation_rate"/>%.
+                    </span>
+                    <span t-elif="context.currencies_are_different">
+                        Take into account that the consolidation (<t t-out="context.currencies.chart"/>) and the consolidated company (<t t-out="context.currencies.company"/>) have different currencies.
+                    </span>
+                    <span t-elif="context.consolidation_rate lt 100.0">
+                        Take into account that this company is consolidated at <t t-out="context.consolidation_rate"/>%.
+                    </span>
+            </div>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,20 @@
+// Don't display the alert message when we are in the editor
+body.editor_enable {
+    .o_appointment {
+        .alert.o_not_editable {
+            display: none;
+        }
+        // Avoid the placeholder's opacity reduction making text too bright to see.
+        .o_appointment_card_user_fct, .o_wappointment_card_user_fct, .o_wappointment_card_user_dsc {
+            .o_editable {
+                &::before {
+                    opacity: 1 !important;
+                }
+            }
+        }
+        // Make sure the intro field appears on edition, as it is not displayed if html-empty.
+        + .o_appointment_intro {
+            display: block !important;
+        }
+    }
+}

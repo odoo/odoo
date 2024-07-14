@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="feature_module_appointment" model="website.configurator.feature">
+            <field name="name">Appointment</field>
+            <field name="description">Self-service booking system</field>
+            <field name="sequence">14</field>
+            <field name="website_config_preselection">schedule_appointments</field>
+            <field name="module_id" ref="base.module_website_appointment"/>
+            <field name="icon">fa-address-card</field>
+            <field name="menu_company">False</field>
+            <field name="menu_sequence">55</field>
+            <field name="feature_url">/appointment</field>
+        </record>
+
+        <record id="feature_module_helpdesk" model="website.configurator.feature">
+            <field name="name">Helpdesk</field>
+            <field name="description">Offer support with a ticketing system</field>
+            <field name="sequence">20</field>
+            <field name="module_id" ref="base.module_website_helpdesk"/>
+            <field name="icon">fa-life-ring</field>
+            <field name="feature_url">/helpdesk</field>
+        </record>
+    </data>
+</odoo>

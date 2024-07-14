@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="icp_report_sbr">
+			<!-- XBRL instance based on taxonomy report namespace https://www.nltaxonomie.nl/nt18/bd/20231213/entrypoints/bd-rpt-icp-opgaaf-2024.xsd -->
+			<!-- Intellectual Property State of the Netherlands -->
+			<!-- Created on: 19-10-2021 16:00:00 -->
+			<xbrli:xbrl t-att="{'xml:lang': 'nl'}" xmlns:bd-i="http://www.nltaxonomie.nl/nt18/bd/20231213/dictionary/bd-data" xmlns:bd-t="http://www.nltaxonomie.nl/nt18/bd/20231213/dictionary/bd-tuples" xmlns:link="http://www.xbrl.org/2003/linkbase" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:iso4217="http://www.xbrl.org/2003/iso4217" xmlns:xbrli="http://www.xbrl.org/2003/instance">
+				<link:schemaRef xlink:type="simple" xlink:href="http://www.nltaxonomie.nl/nt18/bd/20231213/entrypoints/bd-rpt-icp-opgaaf-2024.xsd"/>
+				<xbrli:context id="CD_Opgaaf">
+					<xbrli:entity>
+						<xbrli:identifier scheme="www.belastingdienst.nl/omzetbelastingnummer"><t t-esc="identifier"/></xbrli:identifier>
+					</xbrli:entity>
+					<xbrli:period>
+						<xbrli:startDate><t t-esc="startDate"/></xbrli:startDate>
+						<xbrli:endDate><t t-esc="endDate"/></xbrli:endDate>
+					</xbrli:period>
+				</xbrli:context>
+				<t t-foreach="contexts" t-as="ctx">
+					<xbrli:context t-att-id="ctx['contextRef']">
+						<xbrli:entity>
+							<xbrli:identifier scheme="www.belastingdienst.nl/omzetbelastingnummer"><t t-esc="ctx['VATIdentificationNumberNational']"/></xbrli:identifier>
+						</xbrli:entity>
+						<xbrli:period>
+							<xbrli:startDate><t t-esc="ctx['startDate']"/></xbrli:startDate>
+							<xbrli:endDate><t t-esc="ctx['endDate']"/></xbrli:endDate>
+						</xbrli:period>
+					</xbrli:context>
+				</t>
+				<xbrli:unit id="EUR" t-if="IntraCommunitySupplies or IntraCommunityServices or IntraCommunityABCSupplies or CallOffStocksTransfersCurrentPeriod">
+					<xbrli:measure>iso4217:EUR</xbrli:measure>
+				</xbrli:unit>
+				<bd-i:MessageReferenceSupplierICP contextRef="CD_Opgaaf"><t t-esc="MessageReferenceSupplierVAT"/></bd-i:MessageReferenceSupplierICP>
+				<bd-i:SoftwareVendorAccountNumber contextRef="CD_Opgaaf"><t t-esc="SoftwareVendorAccountNumber"/></bd-i:SoftwareVendorAccountNumber>
+				<bd-i:SoftwarePackageName contextRef="CD_Opgaaf"><t t-esc="SoftwarePackageName"/></bd-i:SoftwarePackageName>
+				<bd-i:SoftwarePackageVersion contextRef="CD_Opgaaf"><t t-esc="SoftwarePackageVersion"/></bd-i:SoftwarePackageVersion>
+				<bd-i:DateTimeCreation contextRef="CD_Opgaaf"><t t-esc="DateTimeCreation"/></bd-i:DateTimeCreation>
+				<bd-t:ProfessionalAssociationForTaxServiceProvidersSpecification t-if="ProfessionalAssociationForTaxServiceProvidersName">
+					<bd-i:ProfessionalAssociationForTaxServiceProvidersName t-if="ProfessionalAssociationForTaxServiceProvidersName" contextRef="CD_Opgaaf"><t t-esc="ProfessionalAssociationForTaxServiceProvidersName"/></bd-i:ProfessionalAssociationForTaxServiceProvidersName>
+				</bd-t:ProfessionalAssociationForTaxServiceProvidersSpecification>
+				<bd-i:TaxConsultantNumber t-if="TaxConsultantNumber" contextRef="CD_Opgaaf"><t t-esc="TaxConsultantNumber"/></bd-i:TaxConsultantNumber>
+				<bd-i:ContactInitials contextRef="CD_Opgaaf"><t t-esc="ContactInitials"/></bd-i:ContactInitials>
+				<bd-i:ContactPrefix t-if="ContactPrefix" contextRef="CD_Opgaaf"><t t-esc="ContactPrefix"/></bd-i:ContactPrefix>
+				<bd-i:ContactSurname contextRef="CD_Opgaaf"><t t-esc="ContactSurname"/></bd-i:ContactSurname>
+				<bd-i:ContactTelephoneNumber contextRef="CD_Opgaaf"><t t-esc="ContactTelephoneNumber"/></bd-i:ContactTelephoneNumber>
+				<bd-i:VATIdentificationNumberNLFiscalEntityDivision contextRef="CD_Opgaaf"><t t-esc="VATIdentificationNumberNLFiscalEntityDivision"/></bd-i:VATIdentificationNumberNLFiscalEntityDivision>
+
+				<!-- INTRACOMMUNAUTAIRE PRESTATIES -->
+
+				<t t-foreach="IntraCommunitySupplies" t-as="ics">
+					<bd-t:IntraCommunitySupplies>
+						<bd-i:CountryCodeISO-EC contextRef="CD_Opgaaf"><t t-esc="ics['CountryCodeISO']"/></bd-i:CountryCodeISO-EC>
+						<bd-i:SuppliesAmount contextRef="CD_Opgaaf" unitRef="EUR" decimals="INF"><t t-esc="ics['SuppliesAmount']"/></bd-i:SuppliesAmount>
+						<bd-i:VATIdentificationNumberNational contextRef="CD_Opgaaf"><t t-esc="ics['VATIdentificationNumberNational']"/></bd-i:VATIdentificationNumberNational>
+					</bd-t:IntraCommunitySupplies>
+				</t>
+
+				<t t-foreach="IntraCommunityServices" t-as="ics">
+					<bd-t:IntraCommunityServices>
+						<bd-i:CountryCodeISO-EC contextRef="CD_Opgaaf"><t t-esc="ics['CountryCodeISO']"/></bd-i:CountryCodeISO-EC>
+						<bd-i:ServicesAmount contextRef="CD_Opgaaf" unitRef="EUR" decimals="INF"><t t-esc="ics['ServicesAmount']"/></bd-i:ServicesAmount>
+						<bd-i:VATIdentificationNumberNational contextRef="CD_Opgaaf"><t t-esc="ics['VATIdentificationNumberNational']"/></bd-i:VATIdentificationNumberNational>
+					</bd-t:IntraCommunityServices>
+				</t>
+
+				<t t-foreach="IntraCommunityABCSupplies" t-as="abcs">
+					<bd-t:IntraCommunityABCSupplies>
+						<bd-i:CountryCodeISO-EC contextRef="CD_Opgaaf"><t t-esc="abcs['CountryCodeISO']"/></bd-i:CountryCodeISO-EC>
+						<bd-i:SuppliesAmount contextRef="CD_Opgaaf" unitRef="EUR" decimals="INF"><t t-esc="abcs['SuppliesAmount']"/></bd-i:SuppliesAmount>
+						<bd-i:VATIdentificationNumberNational contextRef="CD_Opgaaf"><t t-esc="abcs['VATIdentificationNumberNational']"/></bd-i:VATIdentificationNumberNational>
+					</bd-t:IntraCommunityABCSupplies>
+				</t>
+
+				<!-- STOCK ON DEMAND - VOORRAAD OP AFROEP -->
+
+				<t t-foreach="CallOffStocksTransfersCurrentPeriod" t-as="costcp">
+					<bd-t:CallOffStocksTransfersCurrentPeriod>
+						<bd-i:CountryCodeISO-EC contextRef="CD_Opgaaf"><t t-esc="costcp['CountryCodeISO']"/></bd-i:CountryCodeISO-EC>
+						<bd-i:VATIdentificationNumberNational contextRef="CD_Opgaaf"><t t-esc="costcp['VATIdentificationNumberNational']"/></bd-i:VATIdentificationNumberNational>
+					</bd-t:CallOffStocksTransfersCurrentPeriod>
+				</t>
+			</xbrli:xbrl>
+		</template>
+	</data>
+</odoo>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="report_273S">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div style="font-size:12px">
+                            <div class="page container-fuid">
+                                <div class="row text-center">
+                                    <div class="col-6">
+                                        <div class="float-start p-2">
+                                            <div>Service Public Fédéral FINANCES</div>
+                                            <div>Administration générale de la Fiscalité</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="float-end border p-2">
+                                            <div class="fw-bold">Réservé à l'administration</div>
+                                            <div>Date de réception de la déclaration :</div>
+                                            <div class="mt-2">...................................................................................</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 row text-center fw-bold">
+                                    <div class="col-12">
+                                        <div>DECLARATION AU PRECOMPTE MOBILIER (Pr.M)</div>
+                                        <div class="mt-2">REVENUS MOBILIERS des DROITS D'AUTEUR et DROITS VOISINS</div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 row fw-bold">
+                                    <div class="col-12">
+                                        N°273S - 2020
+                                    </div>
+                                </div>
+                                <div class="mt-4 row">
+                                    <div class="col-12">
+                                        <div class="fw-bold">IDENTIFICATION DU REDEVABLE</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 border p-2">
+                                        <div class="mb-2">N° d’entreprise ou, à défaut, n° national : <t t-esc="company_info['identification']"/></div>
+                                        <div class="mb-2">Nom, prénoms, dénomination sociale ou officielle : <t t-esc="company_info['name']"/></div>
+                                        <div class="mb-2">Domicile, siège social ou siège du principal établissement administratif (adresse complète) : <t t-esc="company_info['address']"/></div>
+                                        <div class="row">
+                                            <div class="col-6">N° téléphone : <t t-esc="company_info['phone']"/></div>
+                                            <div class="col-6">Adresse e-mail : <t t-esc="company_info['email']"/></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 row">
+                                    <div class="col-12 border p-2">
+                                        <div class="mb-2 fw-bold">DATE D’ATTRIBUTION OU DE MISE EN PAIEMENT DES REVENUS : <t t-esc="period.strftime('%d/%m/%Y')"/></div>
+                                        <div>Le précompte mobilier est supporté par le débiteur des revenus à la décharge du bénéficiaire :<div class="ms-2 border p-1 d-inline-block"></div></div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 row">
+                                    <div class="col-12">
+                                        <div class="mb-2 text-uppercase fw-bold">Cadre I. - Calcul du Précompte Mobilier (Pr.M) à payer</div>
+                                    </div>
+                                </div>
+                                <div class="mt-2 row">
+                                    <div class="col-12">
+                                        <table class="table table-sm table-bordered border-0">
+                                            <thead class="text-uppercase">
+                                                <tr>
+                                                    <th class="align-text-top" scope="col">#</th>
+                                                    <th class="align-text-top" scope="col">Montant brut des revenus</th>
+                                                    <th class="align-text-top" scope="col">Frais déductibles</th>
+                                                    <th class="align-text-top" scope="col">Montant imposable</th>
+                                                    <th class="align-text-top" scope="col">Taux du Pr.M</th>
+                                                    <th class="align-text-top" scope="col">Montant du Pr.M</th>
+                                                    <th class="align-text-top" scope="col">Réduction CPDI</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="text-end">
+                                                <tr>
+                                                    <th scope="row" class="text-start">1</th>
+                                                    <td><t t-esc="to_monetary(declaration['gross_amount'])"/></td>
+                                                    <td><t t-esc="to_monetary(declaration['deductable_costs']['fixed'] + declaration['deductable_costs']['actual'])"/></td>
+                                                    <td><t t-esc="to_monetary(declaration['taxable_amount'])"/></td>
+                                                    <td><t t-esc="'%.2f %s' % (declaration['rate'], '%')"/></td>
+                                                    <td><t t-esc="to_monetary(declaration['tax_amount'])"/></td>
+                                                    <td><t t-esc="to_monetary(0)"/></td>
+                                                </tr>
+                                                <tr class="align-text-bottom">
+                                                    <td class="border-0 fw-bold">Totaux :</td>
+                                                    <td><t t-esc="to_monetary(declaration['gross_amount'])"/></td>
+                                                    <td class="border-0"></td>
+                                                    <td><t t-esc="to_monetary(declaration['taxable_amount'])"/></td>
+                                                    <td class="border-0"></td>
+                                                    <td><t t-esc="to_monetary(declaration['tax_amount'])"/></td>
+                                                    <td><t t-esc="to_monetary(0)"/></td>
+                                                </tr>
+                                                <tr class="align-text-bottom">
+                                                    <td colspan="5" class="border-0 fw-bold">Montant à payer :</td>
+                                                    <td colspan="2"><t t-esc="to_monetary(declaration['tax_amount'])"/></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="page container-fluid" style="page-break-before: always">
+                                <div class="row">
+                                    <div class="col-12 text-uppercase fw-bold">Cadre II. - Bénéficiaire(s) des revenus</div>
+                                </div>
+                                <div class="mt-2 row">
+                                    <div class="col-12">
+                                        <table class="table table-sm table-bordered border-0">
+                                            <thead class="text-uppercase">
+                                                <tr>
+                                                    <th class="align-text-top" scope="col">#</th>
+                                                    <th class="align-text-top" scope="col">
+                                                        <div class="text-center">Identification du bénéficiaire</div>
+                                                        <div class="small">a) Nom et prénom, ou dénomination</div>
+                                                        <div class="small">b) Rue et numéro/boîte</div>
+                                                        <div class="small">c) Code pays, code postal et commun</div>
+                                                        <div class="small">d) Numéro d'identification fiscale (facultatif)</div>
+                                                    </th>
+                                                    <th class="align-text-top" scope="col">Montant brut des revenus</th>
+                                                    <th class="align-text-top" scope="col">
+                                                        <div class="text-center">Frais déduits</div>
+                                                        <div class="small">a) Forfaitaires</div>
+                                                        <div class="small">b) Réels</div>
+                                                    </th>
+                                                    <th class="align-text-top" scope="col">Réduction CPDI</th>
+                                                    <th class="align-text-top" scope="col">Pr.M versé</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="text-end">
+                                                <t t-foreach="beneficiaries" t-as="beneficiary">
+                                                    <tr>
+                                                        <th scope="row" class="text-start"><t t-esc="beneficiary_index + 1"/></th>
+                                                        <td class="text-start">
+                                                            <div>a) <t t-esc="beneficiary['identification']['name']"/></div>
+                                                            <div>b) <t t-esc="beneficiary['identification']['street']"/></div>
+                                                            <div>c) <t t-esc="beneficiary['identification']['country']"/> <t t-esc="beneficiary['identification']['zip']"/> <t t-esc="beneficiary['identification']['city']"/></div>
+                                                            <div>d) </div>
+                                                        </td>
+                                                        <td><t t-esc="to_monetary(beneficiary['gross_amount'])"/></td>
+                                                        <td>
+                                                            <div>a) <t t-esc="to_monetary(beneficiary['deductable_costs']['fixed'])"/></div>
+                                                            <div>b) <t t-esc="to_monetary(beneficiary['deductable_costs']['actual'])"/></div>
+                                                        </td>
+                                                        <td><t t-esc="to_monetary(beneficiary['tax_amount'])"/></td>
+                                                        <td><t t-esc="to_monetary(0)"/></td>
+                                                    </tr>
+                                                </t>
+                                                <tr class="align-text-bottom">
+                                                    <td colspan="2" class="border-start-0 border-bottom-0 fw-bold">Totaux :</td>
+                                                    <td><t t-esc="to_monetary(declaration['gross_amount'])"/></td>
+                                                    <td>
+                                                        <div>a) <t t-esc="to_monetary(declaration['deductable_costs']['fixed'])"/></div>
+                                                        <div>b) <t t-esc="to_monetary(declaration['deductable_costs']['actual'])"/></div>
+                                                    </td>
+                                                    <td><t t-esc="to_monetary(0)"/></td>
+                                                    <td><t t-esc="to_monetary(declaration['tax_amount'])"/></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

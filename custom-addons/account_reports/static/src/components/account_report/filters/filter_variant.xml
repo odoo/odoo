@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportFilterVariant">
+        <Dropdown togglerClass="'btn btn-secondary'">
+            <t t-set-slot="toggler">
+                <i class="fa fa-book me-1"/>Report: <t t-esc="selectedVariantName"/>
+            </t>
+
+            <t t-foreach="controller.options.available_variants" t-as="variant" t-key="variant_index">
+                <DropdownItem
+                    class="{ 'selected': controller.options.selected_variant_id === variant.id }"
+                    onSelected="() => this.filterVariant(variant.id)"
+                >
+                    <t t-esc="variant.name"/>
+                </DropdownItem>
+            </t>
+            <t t-if="controller.options.has_inactive_variants">
+                <div role="separator" class="dropdown-divider"/>
+                <DropdownItem onSelected="(ev) => controller.reportAction(ev, 'action_view_all_variants', {})">
+                    Enable more ...
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

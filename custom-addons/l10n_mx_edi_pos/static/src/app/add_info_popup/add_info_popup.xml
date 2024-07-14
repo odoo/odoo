@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="l10n_mx_edi_pos.AddInfoPopup">
+        <div class="popup mx-edi-invoice-popup">
+            <div class="modal-header">
+                <h4 class="modal-title title">
+                    Additional Invoicing Information
+                </h4>
+            </div>
+            <main class="body modal-body text-start">
+                <div class="mb-3">
+                    <label for="mx_detail_usage" class="form-label">Usage: </label>
+                    <select class="detail form-select" id="mx_detail_usage" name="l10n_mx_edi_usage" t-model="state.l10n_mx_edi_usage">
+                        <t t-foreach="pos.l10n_mx_edi_usage" t-as="l10n_mx_edi_usage" t-key="l10n_mx_edi_usage.value">
+                            <option t-att-value="l10n_mx_edi_usage.value"
+                                    t-att-selected="l10n_mx_edi_usage.value === state.l10n_mx_edi_usage ? 'selected' : undefined">
+                                <t t-out="l10n_mx_edi_usage.name"/>
+                            </option>
+                        </t>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="mx_detail_invoice_to_public" class="form-label">Invoice to public: </label>
+                    <select class="detail form-select" name="l10n_mx_edi_cfdi_to_public" t-model="state.l10n_mx_edi_cfdi_to_public">
+                        <option t-att-selected="state.l10n_mx_edi_cfdi_to_public ? 'selected' : undefined"
+                                value="1">Yes</option>
+                        <option t-att-selected="state.l10n_mx_edi_cfdi_to_public ? undefined : 'selected'"
+                                value="0">No</option>
+                    </select>
+                </div>
+            </main>
+            <footer class="footer modal-footer">
+                <div class="button confirm disable highlight btn btn-lg btn-primary" t-on-click="confirm">
+                    Confirm
+                </div>
+                <div class="button cancel btn btn-lg btn-secondary" t-on-click="cancel">
+                    Discard
+                </div>
+            </footer>
+        </div>
+    </t>
+
+</templates>

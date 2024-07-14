@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_rule_category_comp_part" model="hr.salary.rule.category">
+        <field name="name">Company Part</field>
+        <field name="code">COMPPART</field>
+    </record>
+
+    <record id="hr_salary_rule_category_caf" model="hr.salary.rule.category">
+        <field name="name">Family Allowance (CAF)</field>
+        <field name="code">CAF</field>
+        <field name="parent_id" ref="hr_payroll.DED"/>
+    </record>
+
+    <record id="hr_salary_rule_category_thirteen_month" model="hr.salary.rule.category">
+        <field name="name">13th Month</field>
+        <field name="code">13THMONTH</field>
+    </record>
+
+    <record id="hr_salary_rule_category_avs_salary" model="hr.salary.rule.category">
+        <field name="name">AVS Salary</field>
+        <field name="code">AVSSALARY</field>
+    </record>
+
+    <record id="hr_salary_rule_category_ac_salary" model="hr.salary.rule.category">
+        <field name="name">AC Salary</field>
+        <field name="code">ACSALARY</field>
+    </record>
+
+    <record id="hr_salary_rule_category_acc_salary" model="hr.salary.rule.category">
+        <field name="name">ACC Salary</field>
+        <field name="code">ACCSALARY</field>
+    </record>
+
+    <!-- To be removed in master -->
+    <record id="hr_salary_rule_category_aanp_salary" model="hr.salary.rule.category">
+        <field name="name">AANP Salary</field>
+        <field name="code">AANPSALARY</field>
+    </record>
+
+    <record id="hr_salary_rule_category_laac_salary" model="hr.salary.rule.category">
+        <field name="name">LAAC Salary</field>
+        <field name="code">LAACSALARY</field>
+    </record>
+
+    <record id="hr_salary_rule_category_ijm_salary" model="hr.salary.rule.category">
+        <field name="name">IJM Salary</field>
+        <field name="code">IJMSALARY</field>
+    </record>
+</odoo>

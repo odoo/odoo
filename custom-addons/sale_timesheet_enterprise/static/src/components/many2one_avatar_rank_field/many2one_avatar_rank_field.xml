@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="sale_timesheet_enterprise.Many2OneAvatarRankField">
+        <t t-if="props.size === 'button'">
+            <div class="d-flex align-items-stretch fw-bold text-white">
+                <div t-attf-class="d-flex align-items-center rounded-start-2 px-2 {{rankingClassBackground}}">#<t t-esc="props.rank"/></div>
+                <img t-attf-src="{{ this.imgSrc }}" alt="Avatar" width="32" height="32" class="rounded-0 rounded-end-2"/>
+            </div>
+        </t>
+        <t t-elif="props.size === 'small'">
+            <td>#<t t-esc="props.rank"/></td>
+            <td class="p-0"><img t-attf-src="{{ this.imgSrc }}" alt="Avatar" width="32" height="32" class="rounded border"/></td>
+        </t>
+        <div t-else="props.size === 'medium'" class="position-relative d-flex justify-content-center align-items-center">
+            <img t-attf-src="{{ this.imgSrc }}" alt="Avatar" width="100" height="100" t-attf-class="position-relative rounded-3 {{rankingClassBorder}} mb-2"/>
+            <div t-attf-class="position-absolute bottom-0 start-50 translate-middle-x d-flex flex-row align-items-center px-2 rounded-3 {{rankingClassBorder}} {{rankingClassBackground}} text-white text-center fw-bold">
+                #<t t-esc="props.rank"/>
+            </div>
+        </div>
+    </t>
+</templates>

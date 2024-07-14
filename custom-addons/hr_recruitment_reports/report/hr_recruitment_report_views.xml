@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="recruitment_report_view_pivot" model="ir.ui.view">
+            <field name="name">hr.recruitment.report.pivot</field>
+            <field name="model">hr.recruitment.report</field>
+            <field name="mode">primary</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <pivot string="Recruitment Analysis" sample="1" js_class="recruitment_report_pivot">
+                    <field name="job_id" type="row"/>
+                    <field name="count" type="measure"/>
+                    <field name="hired" type="measure"/>
+                    <field name="refused" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="recruitment_report_view_source_pivot" model="ir.ui.view">
+            <field name="model">hr.recruitment.report</field>
+            <field name="mode">primary</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <pivot string="Source Analysis" sample="1" js_class="recruitment_report_pivot">
+                    <field name="source_id" type="row"/>
+                    <field name="count" type="measure"/>
+                    <field name="hired" type="measure"/>
+                    <field name="refused" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="recruitment_report_view_graph" model="ir.ui.view">
+            <field name="name">hr.recruitment.report.graph</field>
+            <field name="model">hr.recruitment.report</field>
+            <field name="mode">primary</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <graph js_class="recruitment_report_view_graph" string="Recruitment Analysis" type="line" sample="1">
+                    <field name="create_date" interval="month"/>
+                    <field name="count" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="recruitment_report_source_view_graph" model="ir.ui.view">
+            <field name="model">hr.recruitment.report</field>
+            <field name="mode">primary</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <graph string="Source Analysis" sample="1">
+                    <field name="source_id"/>
+                    <field name="state"/>
+                    <field name="count" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="recruitment_report_hr_recruitment_view_graph" model="ir.ui.view">
+            <field name="name">hr.recruitment.report.view.graph</field>
+            <field name="model">hr.recruitment.report</field>
+            <field name="inherit_id" ref="hr_recruitment_reports.recruitment_report_source_view_graph" />
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//graph" position="attributes">
+                      <attribute name="type">line</attribute>
+                      <attribute name="stacked">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='source_id']" position="replace">
+                    <field name="create_date"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_recruitment_report_view_tree" model="ir.ui.view">
+            <field name="name">hr.recruitment.report.view.tree</field>
+            <field name="model">hr.recruitment.report</field>
+            <field name="arch" type="xml">
+                <tree string="Recruitment Analysis">
+                    <field name="name"/>
+                    <field name="job_id" optional="show"/>
+                    <field name="source_id" optional="show"/>
+                    <field name="medium_id" optional="show"/>
+                    <field name="create_date" optional="show"/>
+                    <field name="stage_id" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="recruitment_report_view_search" model="ir.ui.view">
+            <field name="name">hr.recruitment.report.search</field>
+            <field name="model">hr.recruitment.report</field>
+            <field name="arch" type="xml">
+                <search string="Recruitment Analysis">
+                    <field name="company_id" filter_domain="[('company_id', 'ilike', self)]"/>
+                    <field name="job_id"/>
+                    <field name="name" filter_domain="[('name', 'ilike', self)]"/>
+                    <field name="refuse_reason_id" filter_domain="[('refuse_reason_id', 'ilike', self)]"/>
+                    <field name="create_date"/>
+                    <field name="date_closed"/>
+                    <filter string="Last 365 Days Applicant" name="year" domain="[
+                        ('create_date', '>=', (context_today() + relativedelta(days=-365)).strftime('%Y-%m-%d')),
+                        ('create_date', '&lt;', (context_today() + relativedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                    <separator/>
+                    <filter name="filter_create_date" date="create_date"/>
+                    <group expand="1" string="Group By">
+                        <filter string="State" name="groupby_state" context="{'group_by': 'state'}"/>
+                        <filter string="Job Position" name="groupby_job" context="{'group_by':'job_id'}"/>
+                        <filter string="Applicant Name" name="groupby_name" context="{'group_by':'name'}"/>
+                        <filter string="Source" name="groupby_source" context="{'group_by': 'source_id'}"/>
+                        <filter string="Medium" name="groupby_medium" context="{'group_by': 'medium_id'}"/>
+                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="recruitment_report_action" model="ir.actions.act_window">
+            <field name="name">Recruitment Analysis</field>
+            <field name="res_model">hr.recruitment.report</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="search_view_id" ref="recruitment_report_view_search"/>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'graph', 'view_id': ref('recruitment_report_hr_recruitment_view_graph')}),
+            ]"/>
+            <field name="context">{
+                'search_default_year': True,
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No data to display
+                </p>
+                <p>
+                    This reports allow you to follow the evolution of the number of applicants and hired employees over time.
+                </p>
+            </field>
+        </record>
+
+        <record id="recruitment_report_job_action" model="ir.actions.act_window">
+            <field name="name">Recruitment Analysis</field>
+            <field name="res_model">hr.recruitment.report</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="search_view_id" ref="recruitment_report_view_search"/>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'graph', 'view_id': ref('recruitment_report_source_view_graph')}),
+            ]"/>
+            <field name="context">{
+                'search_default_year': True,
+                'search_default_job_id': active_id,
+            }</field>
+            <field name="help">This report performs analysis on your recruitment.</field>
+        </record>
+
+        <record id="recruitment_report_source_action" model="ir.actions.act_window">
+            <field name="name">Source Analysis</field>
+            <field name="res_model">hr.recruitment.report</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="search_view_id" ref="recruitment_report_view_search"/>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'graph', 'view_id': ref('recruitment_report_source_view_graph')}),
+            ]"/>
+            <field name="context">{
+                'search_default_year': True,
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No data to display
+                </p>
+                <p>
+                    This reports allow you to compare various measures grouped by your sources of applicants.
+                </p>
+            </field>
+        </record>
+
+        <record id="recruitment_report_source_job_action" model="ir.actions.act_window">
+            <field name="name">Source Analysis</field>
+            <field name="res_model">hr.recruitment.report</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="search_view_id" ref="recruitment_report_view_search"/>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'graph', 'view_id': ref('recruitment_report_source_view_graph')}),
+            ]"/>
+            <field name="context">{
+                'search_default_year': True,
+                'search_default_job_id': active_id,
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No data to display
+                </p>
+                <p>
+                    This reports allow you to compare various measures grouped by your sources of applicants.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="hr_recruitment.hr_applicant_report_menu"
+            name="Recruitment Analysis"
+            parent="hr_recruitment.report_hr_recruitment"
+            action="recruitment_report_action" sequence="1"/>
+
+        <menuitem id="hr_applicant_report_source_menu"
+            parent="hr_recruitment.report_hr_recruitment"
+            action="recruitment_report_source_action" sequence="2"/>
+
+        <record id="recruitment_report_team_view_graph" model="ir.ui.view">
+            <field name="model">hr.recruitment.report</field>
+            <field name="mode">primary</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <graph string="Source Analysis" stacked="0" sample="1">
+                    <field name="user_id"/>
+                    <field name="state"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="recruitment_report_team_action" model="ir.actions.act_window">
+            <field name="name">Team Performance</field>
+            <field name="res_model">hr.recruitment.report</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="search_view_id" ref="recruitment_report_view_search"/>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'graph', 'view_id': ref('recruitment_report_team_view_graph')}),
+            ]"/>
+            <field name="context">{
+                'search_default_year': True,
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No data to display
+                </p>
+                <p>
+                    This reports allow you to compare the recruiters and their performance.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="hr_applicant_report_team_menu"
+            parent="hr_recruitment.report_hr_recruitment"
+            action="recruitment_report_team_action" sequence="4"/>
+    </data>
+</odoo>

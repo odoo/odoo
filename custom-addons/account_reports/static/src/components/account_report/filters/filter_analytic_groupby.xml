@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportFilterAnalyticGroupby">
+        <Dropdown togglerClass="'btn btn-secondary'">
+            <t t-set-slot="toggler">
+                <i class="fa fa-folder-open me-1"/>Analytic Group By
+            </t>
+
+            <div class="dropdown-item">
+                <label>Accounts</label>
+                <MultiRecordSelector t-props="getMultiRecordSelectorProps('account.analytic.account', 'analytic_accounts_groupby')"/>
+            </div>
+
+            <div class="dropdown-item">
+                <label>Plans</label>
+                <MultiRecordSelector t-props="getMultiRecordSelectorProps('account.analytic.plan', 'analytic_plans_groupby')"/>
+            </div>
+        </Dropdown>
+    </t>
+</templates>

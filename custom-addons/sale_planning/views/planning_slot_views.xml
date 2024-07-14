@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="planning_slot_view_search_inherit_sale_planning" model="ir.ui.view">
+        <field name="name">planning.slot.search.inherit.sale.planning</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_search_base"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="before">
+                <field name="sale_order_id" string="Sales Order" filter_domain="['|', ('sale_line_id', 'ilike', self), ('sale_order_id', 'ilike', self)]"/>
+            </xpath>
+            <xpath expr="//filter[@name='my_role']" position="after">
+                <filter string="My Sales Orders" name="my_sale_orders" domain="[('sale_order_id.user_id','=', uid)]" groups="sales_team.group_sale_salesman"/>
+            </xpath>
+            <xpath expr="//filter[@name='group_by_start_datetime']" position="before">
+                <filter name="group_by_sale_order_line" string="Sales Order Item" context="{'group_by': 'sale_line_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="planning_slot_view_form_inherit_sale_planning" model="ir.ui.view">
+        <field name="name">planning.slot.form.inherit.sale.planning</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_form"/>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <field name="start_datetime" position="attributes">
+                <attribute name="readonly">sale_line_plannable and not start_datetime</attribute>
+                <attribute name="required">not sale_line_plannable or end_datetime</attribute>
+            </field>
+            <field name="end_datetime" position="attributes">
+                <attribute name="readonly">sale_line_plannable and not end_datetime</attribute>
+                <attribute name="required">not sale_line_plannable or start_datetime</attribute>
+            </field>
+            <field name="role_id" position="after">
+                <field name="sale_line_id" groups="!sales_team.group_sale_salesman"
+                       options="{'no_create': True, 'no_open': True}"
+                       context="{'with_planning_remaining_hours': True, 'with_price_unit': True}"/>
+                <field name="sale_line_id" groups="sales_team.group_sale_salesman"
+                       options="{'no_create': True}"
+                       context="{'with_planning_remaining_hours': True, 'with_price_unit': True}"/>
+                <field name="sale_line_plannable" invisible="1"/>
+            </field>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="sale_order_id" invisible="1"/>
+                <button class="oe_stat_button"
+                    type="object" name="action_view_sale_order" icon="fa-dollar"
+                    invisible="not sale_order_id"
+                    groups="sales_team.group_sale_salesman_all_leads">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Sales Order</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="planning_slot_view_gantt_inherit_sale_planning" model="ir.ui.view">
+        <field name="name">planning.slot.gantt.inherit.sale.planning</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_gantt"/>
+        <field name="arch" type="xml">
+            <xpath expr="//gantt" position="attributes">
+                <attribute name="plan">true</attribute>
+                <attribute name="progress_bar" separator="," add="sale_line_id"/>
+            </xpath>
+            <xpath expr="//gantt" position="inside">
+                <field name="sale_line_id" />
+            </xpath>
+            <xpath expr="//div[@id='allocated_hours']" position="after">
+                <div t-if="sale_line_id" id="sale_line">
+                    <strong>Sales Order Item  — </strong>
+                    <t t-esc="sale_line_id[1]"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="planning_view_gantt_group_by_sale_order_item" model="ir.ui.view">
+        <field name="name">planning.slot.gantt</field>
+        <field name="inherit_id" ref="planning_slot_view_gantt_inherit_sale_planning"/>
+        <field name="model">planning.slot</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <gantt position="attributes">
+                <attribute name="default_group_by">sale_line_id</attribute>
+            </gantt>
+        </field>
+    </record>
+
+    <record id="planning_slot_view_calendar_inherit_sale_planning" model="ir.ui.view">
+        <field name="name">planning.slot.calendar.inherit.sale.planning</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_calendar"/>
+        <field name="arch" type="xml">
+            <field name="role_id" position="after">
+                <field name="sale_line_id" invisible="not sale_line_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="planning_slot_view_tree_inherit_sale_planning" model="ir.ui.view">
+        <field name="name">planning.slot.tree.inherit.sale.planning</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="before">
+                <field name="sale_line_id" optional="show" options="{'no_create': True}"/>
+                <field name="sale_line_plannable" column_invisible="True"/>
+            </field>
+            <field name="start_datetime" position="attributes">
+                <attribute name="column_invisible">context.get('planning_slots_to_schedule', False)</attribute>
+                <attribute name="readonly">sale_line_plannable and not start_datetime and not end_datetime</attribute>
+                <attribute name="required">not sale_line_plannable and start_datetime and end_datetime</attribute>
+                </field>
+            <field name="resource_id" position="attributes">
+                <attribute name="column_invisible">context.get('planning_slots_to_schedule', False)</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="planning_slot_view_kanban_inherit_sale_planning" model="ir.ui.view">
+        <field name="name">planning.slot.kanban.inherit.sale.planning</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_kanban"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@name='role']" position="after">
+                <div><field name="sale_line_id"/></div>
+            </xpath>
+            <xpath expr="//div[hasclass('o_kanban_record_top')]" position="attributes">
+                <attribute name="invisible">not start_datetime</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
+                <em invisible="start_datetime">
+                    (<field name="allocated_hours" widget="float_time"/>)
+                    (<field name="allocated_percentage"/>%)
+                </em>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Override action contexts to allow group_expand to apply for project_id and task_id -->
+    <record id="planning.planning_action_my_calendar" model="ir.actions.act_window">
+        <field name="domain">[('start_datetime', '!=', False), ('end_datetime', '!=', False)]</field>
+        <field name="context">{
+            'search_default_my_shifts': 1, 'search_default_open_shifts': 1, 'search_default_unwanted_shifts': 1,
+            'planning_expand_employee': 1, 'planning_expand_role': 1, 'planning_expand_sale_line_id': 1,
+        }</field>
+    </record>
+
+    <record id="planning.planning_action_schedule_by_resource" model="ir.actions.act_window">
+        <field name="domain">[('start_datetime', '!=', False), ('end_datetime', '!=', False)]</field>
+        <field name="context">{
+            'search_default_group_by_employee': 1, 'planning_expand_employee': 1, 'planning_expand_role': 1,
+            'planning_expand_sale_line_id': 1, 'planning_expand_resource': 1,
+        }</field>
+    </record>
+
+    <record id="planning.planning_action_schedule_by_role" model="ir.actions.act_window">
+        <field name="domain">[('start_datetime', '!=', False), ('end_datetime', '!=', False)]</field>
+        <field name="context">{
+            'search_default_group_by_employee': 2, 'planning_groupby_role': True,
+            'planning_expand_sale_line_id': 1,
+        }</field>
+    </record>
+
+    <record id="planning_view_form_in_gantt_inherit_sale_planning" model="ir.ui.view">
+        <field name="name">planning.slot.form.gantt</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_form_in_gantt"/>
+        <field name="arch" type="xml">
+            <xpath expr="//footer/button[@special='cancel']" position="before">
+                <field name="sale_line_plannable" invisible="1"/>
+                <button string="Unschedule" type="object" name="action_unschedule" class="btn btn-secondary" close="1"
+                    groups="planning.group_planning_manager"
+                    invisible="not id or not sale_line_plannable" data-hotkey="z"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="planning_action_schedule_by_sale_order_item_view_pivot_inherit" model="ir.ui.view">
+        <field name="name">planning.action.schedule.by.sale.order.pivot.inherit</field>
+        <field name="inherit_id" ref="planning.planning_view_pivot"/>
+        <field name="model">planning.slot</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='start_datetime']" position="replace">
+                <field name="sale_line_id" type="row"/>
+            </xpath>
+            <field name="resource_id" position="replace"/>
+        </field>
+    </record>
+
+    <record id="planning_action_schedule_by_sale_order_item_view_graph_inherit" model="ir.ui.view">
+        <field name="name">planning.action.schedule.by.sale.order.graph.inherit</field>
+        <field name="inherit_id" ref="planning.planning_action_schedule_by_resource_view_graph_inherit"/>
+        <field name="model">planning.slot</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='resource_id']" position="replace">
+                <field name="sale_line_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_planning_action_schedule_by_sale_order" model="ir.actions.act_window">
+        <field name="name">Schedule by Sales Order</field>
+        <field name="res_model">planning.slot</field>
+        <field name="view_mode">gantt,calendar,tree,form,kanban,pivot,graph</field>
+        <field name="domain">[('start_datetime', '!=', False), ('end_datetime', '!=', False)]</field>
+        <field name="context">{
+            'planning_groupby_sale_order': True, 'with_price_unit': True,
+            'planning_expand_employee': 1, 'planning_expand_role': 1, 'planning_expand_sale_line_id': 1,
+        }</field>
+        <field name="groups_id" eval="[(4, ref('planning.group_planning_manager'))]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No shifts found. Let's create one!
+            </p>
+            <p>
+                Schedule your human and material resources across roles, projects and sales orders.
+            </p>
+        </field>
+    </record>
+
+    <record id="planning_action_schedule_by_sale_order_item_view_gantt" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">gantt</field>
+        <field name="view_id" ref="planning_view_gantt_group_by_sale_order_item"/>
+        <field name="act_window_id" ref="sale_planning_action_schedule_by_sale_order"/>
+    </record>
+
+    <record id="planning_action_schedule_by_sale_order_item_view_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="planning.planning_view_calendar"/>
+        <field name="act_window_id" ref="sale_planning_action_schedule_by_sale_order"/>
+    </record>
+
+    <record id="planning_action_schedule_by_sale_order_item_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="planning.planning_view_tree"/>
+        <field name="act_window_id" ref="sale_planning_action_schedule_by_sale_order"/>
+    </record>
+
+    <record id="planning_action_schedule_by_sale_order_item_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="planning.planning_view_kanban"/>
+        <field name="act_window_id" ref="sale_planning_action_schedule_by_sale_order"/>
+    </record>
+
+    <record id="planning_action_schedule_by_sale_order_item_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="planning_action_schedule_by_sale_order_item_view_pivot_inherit"/>
+        <field name="act_window_id" ref="sale_planning_action_schedule_by_sale_order"/>
+    </record>
+
+    <record id="planning_action_schedule_by_sale_order_item_view_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="50"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="planning_action_schedule_by_sale_order_item_view_graph_inherit"/>
+        <field name="act_window_id" ref="sale_planning_action_schedule_by_sale_order"/>
+    </record>
+
+    <menuitem
+            id="sale_planning_menu_schedule_by_sale_order"
+            name="By Sales Order"
+            sequence="40"
+            parent="planning.planning_menu_schedule"
+            action="sale_planning_action_schedule_by_sale_order"
+            groups="planning.group_planning_manager"/>
+
+</odoo>

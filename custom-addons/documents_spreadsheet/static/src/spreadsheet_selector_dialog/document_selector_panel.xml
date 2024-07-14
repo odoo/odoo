@@ -1,0 +1,10 @@
+<odoo>
+    <t t-name="documents_spreadsheet.DocumentSelectorPanel" t-inherit="spreadsheet_edition.SpreadsheetSelectorDialog" t-inherit-mode="extension">
+        <xpath expr="//Notebook" position="inside">
+            <t t-set-slot="1" title="getPageTitle('SPREADSHEET')" isVisible="true">
+                <DocumentsSelectorPanel onSpreadsheetSelected.bind="onSpreadsheetSelected"
+                    onSpreadsheetDblClicked.bind="_confirm" />
+            </t>
+        </xpath>
+    </t>
+</odoo>

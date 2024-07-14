@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="account_fiscal_position_taxcloud_us" model="account.fiscal.position">
+        <field name="name">Automatic Tax Mapping (TaxCloud)</field>
+        <field name="is_taxcloud" eval="True"/>
+        <field name="auto_apply" eval="False"/>
+        <field name="country_id" ref="base.us"/>
+    </record>
+
+</odoo>

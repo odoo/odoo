@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<odoo>
+    <data>
+        <template id="dte_subtemplate">
+            <Encabezado>
+                <IdDoc>
+                    <TipoDTE t-out="move.l10n_latam_document_type_id.code"/>
+                    <Folio t-out="int(move.l10n_latam_document_number)"/>
+                    <FchEmis t-out="move.invoice_date"/>
+                    <IndServicio t-if="move.l10n_latam_document_type_id._is_doc_type_voucher()" t-out="'3'"/>
+                    <FmaPago t-if="not move.l10n_latam_document_type_id._is_doc_type_voucher()" t-out="move.invoice_payment_term_id.l10n_cl_sii_code or 2"/>
+                    <IndMntNeto t-if="move.invoice_line_ids and move.l10n_latam_document_type_id._is_doc_type_voucher()" t-out="'2'"/>
+                    <FchVenc t-if="not move.l10n_latam_document_type_id._is_doc_type_voucher()" t-out="move.invoice_date_due or get_cl_current_strftime('%Y-%m-%d')"/>
+                </IdDoc>
+                <Emisor>
+                    <RUTEmisor t-out="format_vat(move.company_id.vat)"/>
+                <t t-if="move.l10n_latam_document_type_id._is_doc_type_voucher()">
+                    <RznSocEmisor t-out="format_length(move.company_id.partner_id.name, 100)"/>
+                    <GiroEmisor t-if="not move.partner_id._l10n_cl_is_foreign()" t-out="format_length(move.company_id.l10n_cl_activity_description, 80)"/>
+                    <CdgSIISucur t-if="move.journal_id.l10n_cl_point_of_sale_number" t-out="format_length(move.journal_id.l10n_cl_point_of_sale_number, 9)"/>
+                </t>
+                <t t-if="not move.l10n_latam_document_type_id._is_doc_type_voucher()">
+                    <RznSoc t-out="format_length(move.company_id.partner_id.name, 100)"/>
+                    <GiroEmis t-out="format_length(move.company_id.l10n_cl_activity_description, 80)"/>
+                </t>
+                    <Telefono t-if="move.company_id.phone and not move.l10n_latam_document_type_id._is_doc_type_voucher()" t-out="format_length(move.company_id.phone, 20)"/>
+                    <CorreoEmisor t-if="move.company_id.l10n_cl_dte_email and not move.l10n_latam_document_type_id._is_doc_type_voucher()" t-out="move.company_id.l10n_cl_dte_email"/>
+                <t t-if="not move.l10n_latam_document_type_id._is_doc_type_voucher()" t-foreach="move.company_id.l10n_cl_company_activity_ids" t-as="activity">
+                    <Acteco t-out="activity.code"/>
+                </t>
+                    <Sucursal t-if="move.journal_id.l10n_cl_point_of_sale_name and not move.l10n_latam_document_type_id._is_doc_type_voucher()" t-out="format_length(move.journal_id.l10n_cl_point_of_sale_name, 9)"/>
+                    <DirOrigen t-out="format_length('%s %s' % (move.company_id.partner_id.street, (move.company_id.partner_id.street2 or '')), 70)"/>
+                    <CmnaOrigen t-out="move.company_id.partner_id.city or ''"/>
+                    <CdgVendedor t-if="not move.l10n_latam_document_type_id._is_doc_type_voucher() and move.user_id" t-out="format_length(move.user_id.name, 60)"/>
+                </Emisor>
+                <Receptor>
+                    <RUTRecep t-out="'55555555-5' if move.partner_id._l10n_cl_is_foreign() and move.partner_id.l10n_cl_sii_taxpayer_type == '4' else format_vat(move.commercial_partner_id.vat)"/>
+                    <RznSocRecep t-out="format_length(move.commercial_partner_id.name, 100)"/>
+                    <Extranjero t-if="move.partner_id._l10n_cl_is_foreign() and move.partner_id.l10n_cl_sii_taxpayer_type == '4'">
+                        <NumId t-out="move.partner_id.vat"/>
+                        <Nacionalidad t-if="move.partner_id._l10n_cl_is_foreign()" t-out="move.partner_id.country_id.l10n_cl_customs_code or '999'"/>
+                        <IdAdicRecep t-if="move.l10n_latam_document_type_id._is_doc_type_export()" t-out="format_length(move.partner_id.country_id.name or move.commercial_partner_id.country_id.name, 20)"/>
+                    </Extranjero>
+                    <GiroRecep t-if="not move.partner_id._l10n_cl_is_foreign() and not move.l10n_latam_document_type_id._is_doc_type_export() and not move.l10n_latam_document_type_id._is_doc_type_voucher()" t-out="format_length(move.partner_id.l10n_cl_activity_description or move.commercial_partner_id.l10n_cl_activity_description, 40)"/>
+                    <Contacto t-out="format_length(move.partner_id.phone or move.commercial_partner_id.phone or move.partner_id.email or '', 80)"/>
+                    <CorreoRecep t-if="(move.partner_id.email or move.commercial_partner_id.email or move.partner_id.l10n_cl_dte_email or move.commercial_partner_id.l10n_cl_dte_email) and not move.l10n_latam_document_type_id._is_doc_type_voucher()" t-out="move.partner_id.email or move.commercial_partner_id.email or move.partner_id.l10n_cl_dte_email or move.commercial_partner_id.l10n_cl_dte_email"/>
+                    <DirRecep t-out="format_length(move.partner_id.street or move.commercial_partner_id.street or '' + ' ' + move.partner_id.street2 or move.commercial_partner_id.street2 or '', 70)"/>
+                    <CmnaRecep t-out="move._l10n_cl_get_comuna_recep()"/>
+                </Receptor>
+            <t t-if="move.l10n_latam_document_type_id._is_doc_type_export()">
+                <Transporte>
+                <t t-if="move.partner_shipping_id not in (move.partner_id | move.commercial_partner_id)">
+                    <DirDest t-out="format_length(move.partner_shipping_id.street or '' + ' ' + move.partner_shipping_id.street2 or '', 70)"/>
+                    <CmnaDest t-out="move._l10n_cl_get_comuna_recep(recep=False)"/>
+                    <CiudadDest t-out="format_length(move.partner_shipping_id.city or '', 20)"/>
+                </t>
+                    <Aduana>
+                        <CodModVenta>01</CodModVenta>
+                        <TotClauVenta t-out="float_repr(amounts['total_amount'], amounts['main_currency_round'])"/>
+                    </Aduana>
+                </Transporte>
+            </t>
+                <Totales>
+                    <TpoMoneda t-if="amounts.get('main_currency_name')" t-out="format_length(amounts['main_currency_name'], 15)"/>
+                    <MntNeto t-if="amounts['subtotal_amount_taxable'] != 0" t-out="float_rr(amounts['subtotal_amount_taxable'], amounts['main_currency_round'])"/>
+                    <MntExe t-if="amounts['subtotal_amount_exempt'] != 0" t-out="float_rr(amounts['subtotal_amount_exempt'], amounts['main_currency_round'])"/>
+                    <TasaIVA t-if="amounts['vat_percent']" t-out="amounts['vat_percent']"/>
+                    <IVA t-if="amounts['vat_amount'] != 0" t-out="float_rr(amounts['vat_amount'], amounts['main_currency_round'])"/>
+                <t t-foreach="withholdings" t-as="tax">
+                    <ImptoReten>
+                        <TipoImp t-out="tax['tax_code']"/>
+                        <TasaImp t-out="tax['tax_percent']"/>
+                        <MontoImp t-out="float_repr(tax['tax_amount'], 0)"/>
+                    </ImptoReten>
+                </t>
+                    <MntTotal t-out="float_repr(amounts['total_amount'], 0) if not move.l10n_latam_document_type_id._is_doc_type_export() else float_repr(amounts['total_amount'], 2)"/>
+                </Totales>
+                <OtraMoneda t-if="amounts.get('second_currency', False)">
+                    <t t-set="round_currency" t-value="amounts['second_currency']['round_currency']"/>
+                    <TpoMoneda t-out="format_length(amounts['second_currency']['name'], 15)"/>
+                    <TpoCambio t-out="float_repr(amounts['second_currency']['rate'], 2)"/>
+                    <MntNetoOtrMnda t-if="amounts['second_currency']['subtotal_amount_taxable']" t-out="float_rr(amounts['second_currency']['subtotal_amount_taxable'], round_currency)"/>
+                    <MntExeOtrMnda t-if="amounts['second_currency']['subtotal_amount_exempt']" t-out="float_rr(amounts['second_currency']['subtotal_amount_exempt'], round_currency)"/>
+                    <IVAOtrMnda t-if="amounts['second_currency']['vat_amount']" t-out="float_repr(amounts['second_currency']['vat_amount'], round_currency)"/>
+                <t t-foreach="withholdings" t-as="tax">
+                    <ImptRetOtrMnda>
+                        <TipoImpOtrMnda t-out="tax['tax_code']"/>
+                        <TasaImpOtrMnda t-out="tax['tax_percent']"/>
+                        <ValorImpOtrMnda t-out="move.currency_id.compute(tax['tax_amount'], move.currency_id)"/>
+                    </ImptRetOtrMnda>
+                </t>
+                    <MntTotOtrMnda t-out="float_repr(amounts['second_currency']['total_amount'], round_currency)"/>
+                </OtraMoneda>
+            </Encabezado>
+        <t t-set="line_number" t-value="1"/>
+        <t t-foreach="move.invoice_line_ids.filtered(lambda r: r.display_type not in ('line_note', 'line_section') and r.price_subtotal &gt;= 0)" t-as="line">
+            <t t-set="line_amounts" t-value="line._l10n_cl_get_line_amounts()"/>
+            <t t-if="'second_currency' in line_amounts" t-set="line_second_currency_round" t-value="line_amounts['second_currency']['round_currency']"/>
+            <Detalle>
+                <NroLinDet t-out="line_number"/>
+                <CdgItem t-if="line.product_id.default_code">
+                    <TpoCodigo>INT1</TpoCodigo>
+                    <VlrCodigo t-out="line.product_id.default_code"/>
+                </CdgItem>
+                <IndExe t-if="line_amounts['exempt']" t-out="'1'"/>
+                <NmbItem t-out="format_length(line.product_id.name, 80) or format_length(line.name, 80)"/>
+                <DscItem t-out="format_length(line.name, 1000)"/>
+            <t t-if="line.price_unit > 0.0 or line.price_total > 0.0">
+                <QtyItem t-out="float_repr(line.quantity, 6)"/>
+                <UnmdItem t-out="format_uom(line.product_uom_id)"/>
+                <PrcItem t-out="float_rr(line_amounts['price_item'], 6)"/>
+            </t>
+                <OtrMnda t-if="line_amounts.get('second_currency', False)">
+                    <PrcOtrMon t-out="float_rr(line_amounts['second_currency']['price'], line_second_currency_round)"/>
+                    <Moneda t-out="line_amounts['second_currency']['currency_name']"/>
+                    <FctConv t-out="line_amounts['second_currency']['conversion_rate']"/>
+                    <DctoOtrMnda t-if="line_amounts['second_currency'].get('amount_discount', False)" t-out="float_rr(line_amounts['second_currency']['amount_discount'], line_second_currency_round)"/>
+                    <MontoItemOtrMnda t-out="float_rr(line_amounts['second_currency']['total_amount'], line_second_currency_round)"/>
+                </OtrMnda>
+            <t t-if="line.discount > 0">
+                <DescuentoPct t-out="float_repr(line.discount, 2)"/>
+                <DescuentoMonto t-out="float_repr(line_amounts['total_discount'], 0)"/>
+            </t>
+            <t t-foreach="line.tax_ids.filtered(lambda x: x.tax_group_id in [env.ref('account.{cid}_tax_group_retenciones'.format(cid=line.company_id.id)), env.ref('account.{cid}_tax_group_ila'.format(cid=line.company_id.id))])" t-as="tax">
+                <CodImpAdic t-out="tax.l10n_cl_sii_code"/>
+            </t>
+                <MontoItem t-out="float_rr(line_amounts['price_subtotal'], line_amounts['decimal_places'])"/>
+            </Detalle>
+            <t t-set="line_number" t-value="line_number + 1"/>
+        </t>
+    <t t-set="discount_line_number" t-value="1"/>
+    <t t-foreach="amounts['global_discounts']" t-as="discount_line">
+        <DscRcgGlobal>
+            <NroLinDR t-out="discount_line_number"/>
+            <TpoMov>D</TpoMov>
+            <GlosaDR t-out="format_length(discount_line['name'], 40)"/>
+            <TpoValor t-out="'&#36;'"/>
+            <ValorDR t-out="float_repr(discount_line['global_discount_main_value'], amounts['main_currency_round'])"/>
+            <ValorDROtrMnda t-if="discount_line['global_discount_second_value']"
+                            t-out="float_repr(discount_line['global_discount_second_value'], amounts['main_currency_round'])"/>
+            <IndExeDR t-if="not discount_line['tax_ids']" t-out="1"/>
+        </DscRcgGlobal>
+        <t t-set="discount_line_number" t-value="discount_line_number + 1"/>
+    </t>
+    <t t-if="move.l10n_cl_reference_ids">
+        <t t-set="reference_number" t-value="1"/>
+            <t t-foreach="move.l10n_cl_reference_ids" t-as="reference_id">
+            <Referencia>
+                <NroLinRef t-out="reference_number"/>
+                <TpoDocRef t-out="reference_id.l10n_cl_reference_doc_type_id.code"/>
+                <FolioRef t-out="reference_id.origin_doc_number[:18]"/>
+                <FchRef t-out="reference_id.date"/>
+                <CodRef t-out="reference_id.reference_doc_code"/>
+                <RazonRef t-if="reference_id.reason" t-out="reference_id.reason[:90]"/>
+            </Referencia>
+            <t t-set="reference_number" t-value="reference_number + 1"/>
+            </t>
+    </t>
+            <t t-out="dte"/>
+        </template>
+
+        <template id="liquidacion_dte">
+            <Liquidacion t-att-ID="doc_id">
+                        <t t-call="l10n_cl_edi.dte_subtemplate"/>
+            </Liquidacion>
+        </template>
+
+        <template id="documento_dte">
+            <Documento t-att-ID="doc_id">
+                        <t t-call="l10n_cl_edi.dte_subtemplate"/>
+            </Documento>
+        </template>
+
+        <template id="exportaciones_dte">
+            <Exportaciones t-att-ID="doc_id">
+                        <t t-call="l10n_cl_edi.dte_subtemplate"/>
+            </Exportaciones>
+        </template>
+
+        <template id="dte_template">
+        <DTE xmlns="http://www.sii.cl/SiiDte" version="1.0">
+            <t t-if="move.l10n_latam_document_type_id.code == '43'">
+                <t t-call="l10n_cl_edi.liquidacion_dte"/>
+            </t>
+            <t t-elif="move.partner_id._l10n_cl_is_foreign() and move.partner_id.l10n_cl_sii_taxpayer_type == '4' and move.l10n_latam_document_type_id._is_doc_type_export()">
+                <t t-call="l10n_cl_edi.exportaciones_dte"/>
+            </t>
+            <t t-else="">
+                <t t-call="l10n_cl_edi.documento_dte"/>
+            </t>
+        </DTE>
+        </template>
+    </data>
+</odoo>

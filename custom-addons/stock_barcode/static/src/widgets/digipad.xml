@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div t-name="stock_barcode.DigipadTemplate" class="o_digipad_widget">
+        <t t-set="commonCssClasses" t-translation="off">o_digipad_button btn d-flex justify-content-center align-items-center border w-100 py-2</t>
+        <!-- Digits, erase and dot buttons -->
+        <div class="o_digipad_digit_buttons me-2">
+            <div t-foreach="buttons" t-as="button" t-key="button.index" t-att-data-button="button.value"
+                class="btn-primary" t-att-class="commonCssClasses"
+                t-on-click="() => this._onCLickButton(button.value)">
+                <div t-if="button.value == 'erase'" class="fa fa-lg fa-long-arrow-left"/>
+                <div t-else="" t-out="button.value"/>
+            </div>
+        </div>
+        <div class="o_digipad_special_buttons">
+            <!-- +1 / -1 buttons -->
+            <div class="btn-secondary o_increase" t-att-class="commonCssClasses"
+                 t-on-click="() => this._increment()"
+                 t-att-data-button="increase">+1</div>
+            <div class="btn-secondary o_decrease" t-att-class="commonCssClasses"
+                 t-on-click="() => this._increment(-1)"
+                 t-att-data-button="decrease">-1</div>
+            <!-- Product packagings buttons -->
+            <div t-foreach="packageButtons" t-as="button" t-key="button.id" t-att-data-qty="button.qty"
+                 t-on-click="() => this._increment(button.qty)"
+                 class="o_packaging_button btn btn-secondary border w-100 py-2">
+                <div class="text-capitalize">
+                    <span t-out="'+' + button.qty"/>
+                    <span t-if="displayUOM" class="small-text ms-1" t-out="button.product_uom_id[1]"/>
+                </div>
+                <div name="packaging_name" class="small-text" t-out="button.name"/>
+            </div>
+        </div>
+    </div>
+
+</templates>

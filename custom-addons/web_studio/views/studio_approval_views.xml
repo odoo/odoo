@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Approval Entries -->
+    <record id="studio_approval_entry_tree_view" model="ir.ui.view">
+        <field name="name">studio.approval.entry.tree</field>
+        <field name="model">studio.approval.entry</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="write_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="studio_approval_entry_form_view" model="ir.ui.view">
+        <field name="name">studio.approval.entry.form</field>
+        <field name="model">studio.approval.entry</field>
+        <field name="arch" type="xml">
+            <form string="Studio Approval Entry">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="rule_id"/>
+                        </group>
+                        <group>
+                            <field name="model"/>
+                            <field name="res_id"/>
+                            <field name="reference" widget="reference" string="Record"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="studio_approval_entry_search_view" model="ir.ui.view">
+        <field name="name">studio.approval.entry.search</field>
+        <field name="model">studio.approval.entry</field>
+        <field name="arch" type="xml">
+            <search string="Approval Entries">
+                <field name="name"/>
+                <field name="model"/>
+                <field name="res_id"/>
+                <field name="user_id"/>
+                <field name="rule_id" invisible="1"/>
+                <separator/>
+                <filter string="My entries" name="my_entries" domain="[('user_id','=',uid)]"/>
+                <separator/>
+                <filter string="Approved" name="approved" domain="[('approved','=', True)]"/>
+                <filter string="Rejected" name="rejected" domain="[('user_id','=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="User" name="user" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Model" name="model" domain="[]" context="{'group_by':'model'}"/>
+                    <filter string="Method" name="model" domain="[]" context="{'group_by':'method'}"/>
+                    <filter string="Action" name="model" domain="[]" context="{'group_by':'action_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="studio_approval_entry_action" model="ir.actions.act_window">
+        <field name="name">Studio Approval Entries</field>
+        <field name="res_model">studio.approval.entry</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_studio_approval_entry" name="Studio Approval Entries" sequence="11" action="studio_approval_entry_action" parent="base.next_id_2" groups="base.group_system"/>
+    <!-- Approval Rules -->
+    <record id="studio_approval_rule_tree_view" model="ir.ui.view">
+        <field name="name">studio.approval.tree</field>
+        <field name="model">studio.approval.rule</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="group_id"/>
+                <field name="responsible_id"/>
+                <field name="message"/>
+                <field name="model_id"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="studio_approval_rule_form_view" model="ir.ui.view">
+        <field name="name">studio.approval.form</field>
+        <field name="model">studio.approval.rule</field>
+        <field name="arch" type="xml">
+            <form string="Studio Approval Rule">
+                <sheet>
+                    <div class="oe_button_box" name="button_box" invisible="not id">
+                        <button class="oe_stat_button" type="action" name="%(studio_approval_entry_action)d"
+                                icon="fa-thumbs-up"
+                                context="{'search_default_rule_id':id, 'default_chart_id': id}">
+                            <field string="Entries" name="entries_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <field name="active" invisible="1"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="message"/>
+                            <field name="group_id"/>
+                            <field name="responsible_id"/>
+                            <field name="users_to_notify" widget="many2many_tags"/>
+                            <field name="notification_order" widget="radio" options="{'horizontal': true}"/>
+                            <field name="exclusive_user" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name="model_id" />
+                            <field name="model_name" invisible="1"/>
+                            <field name="method" required="not action_id" readonly="action_id"/>
+                            <field name="action_id" required="not method" readonly="method"/>
+                            <field name="domain" widget="domain" options="{'model': 'model_name'}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="studio_approval_rule_search_view" model="ir.ui.view">
+        <field name="name">studio.approval.search</field>
+        <field name="model">studio.approval.rule</field>
+        <field name="arch" type="xml">
+            <search string="Approval Rules">
+                <field name="name"/>
+                <field name="group_id"/>
+                <field name="model_id"/>
+                <separator/>
+                <filter string="Active" name="active" domain="[('active','=',True)]"/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Group" name="group" domain="[]" context="{'group_by':'group_id'}"/>
+                    <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>
+                    <filter string="Method" name="model" domain="[]" context="{'group_by':'method'}"/>
+                    <filter string="Action" name="model" domain="[]" context="{'group_by':'action_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="studio_approval_rule_action" model="ir.actions.act_window">
+        <field name="name">Studio Approval Rules</field>
+        <field name="res_model">studio.approval.rule</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+    <menuitem id="menu_studio_approval_rule" name="Studio Approval Rules" sequence="10" action="studio_approval_rule_action" parent="base.next_id_2" groups="base.group_system"/>
+
+</odoo>

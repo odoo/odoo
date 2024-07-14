@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="documents_recruitment_new_tag" model="documents.tag" forcecreate="0">
+            <field name="name">Inbox</field>
+            <field name="facet_id" ref="documents_recruitment_documents_facet"/>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="documents_recruitment_plans_tag" model="documents.tag" forcecreate="0">
+            <field name="name">Recruitment Reserve</field>
+            <field name="facet_id" ref="documents_recruitment_documents_facet"/>
+            <field name="sequence">15</field>
+        </record>
+
+        <record id="documents_recruitment_sheet_tag" model="documents.tag" forcecreate="0">
+            <field name="name">Cancelled</field>
+            <field name="facet_id" ref="documents_recruitment_documents_facet"/>
+            <field name="sequence">20</field>
+        </record>
+    </data>
+</odoo>

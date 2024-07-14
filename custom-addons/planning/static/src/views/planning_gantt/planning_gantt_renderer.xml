@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="planning.PlanningGanttRenderer.RowHeader" t-inherit="web_gantt.GanttRenderer.RowHeader">
+        <xpath expr="//t[@t-esc='row.name']" position="replace">
+            <t t-if="row.progressBar and row.progressBar.is_material_resource">
+                <div t-attf-class="o_colorlist_item_color_{{ row.progressBar.resource_color }} o_material_resource d-inline-flex flex-shrink-0 align-items-center justify-content-center me-1 rounded bg-200">
+                    <i class="fa fa-wrench"/>
+                </div>
+            </t>
+            <Avatar t-if="hasAvatar(row)" t-props="getAvatarProps(row)"/>
+            <t t-else="" t-esc="row.name"/>
+        </xpath>
+    </t>
+
+    <t t-name="planning.PlanningGanttRenderer.Pill" t-inherit="web_gantt.GanttRenderer.Pill">
+        <xpath expr="//div[hasclass('o_gantt_pill_wrapper')]" position="after">
+            <t t-if="isPlanningManager and !model.useSampleModel and pill.grid.column[1] > 1">
+                <t t-foreach="[...Array(pill.grid.column[1] - 1).keys()]" t-as="i" t-key="i">
+                    <t t-set="split_tool_grid" t-value="{ column: [pill.grid.column[0] + i + 1, 1], row: pill.grid.row}"/>
+                    <div class="o_gantt_pill_split_tool"
+                         t-att-style="getGridPosition(split_tool_grid)"
+                         t-att-data-split-tool-pill-id="pill.id + '_' + i"
+                         t-on-click="(ev) => this.onPillSplitToolClicked(ev, pill, i)"
+                         t-if="!env.isSmall">
+                        <div class="o_slot_dashed_cut_line"/>
+                        <i class="fa fa-lg fa-scissors fa-rotate-270"/>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

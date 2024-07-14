@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="create_fsm_task_view_form" model="ir.ui.view" >
+            <field name="inherit_id" ref="helpdesk_fsm.create_fsm_task_view_form" />
+            <field name="model">helpdesk.create.fsm.task</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='project_id']" position="after">
+                    <field name="allow_worksheets" invisible="1" />
+                    <field name="worksheet_template_id" invisible="not allow_worksheets" options="{'no_create': 1, 'no_edit': 1, 'no_open': 1}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

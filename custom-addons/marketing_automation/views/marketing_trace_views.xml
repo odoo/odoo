@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Trace -->
+    <record id="marketing_trace_view_form" model="ir.ui.view">
+        <field name="name">marketing.trace.view.form</field>
+        <field name="model">marketing.trace</field>
+        <field name="arch" type="xml">
+            <form string="Participant">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="activity_id"/>
+                            <field name="schedule_date"/>
+                        </group>
+                        <group>
+                            <field name="participant_id"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                    <h3>Mass Mailing Statistics</h3>
+                    <field name="mailing_trace_ids" nolabel="1"/>
+                    <group>
+                        <field name="state_msg"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="marketing_trace_view_tree" model="ir.ui.view">
+        <field name="name">marketing.trace.view.tree</field>
+        <field name="model">marketing.trace</field>
+        <field name="arch" type="xml">
+            <tree string="Traces">
+                <field name="schedule_date"/>
+                <field name="activity_id"/>
+                <field name="participant_id"/>
+                <field name="state"/>
+                <field name="is_test" column_invisible="True"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="marketing_trace_view_graph" model="ir.ui.view">
+        <field name="name">marketing.trace.view.graph</field>
+        <field name="model">marketing.trace</field>
+        <field name="arch" type="xml">
+            <graph sample="1">
+                <field name="activity_id"/>
+                <field name="state"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="marketing_trace_view_pivot" model="ir.ui.view">
+        <field name="name">marketing.trace.view.pivot</field>
+        <field name="model">marketing.trace</field>
+        <field name="arch" type="xml">
+            <pivot sample="1">
+                <field name="state" type="row"/>
+                <field name="activity_id" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="marketing_trace_view_search" model="ir.ui.view">
+        <field name="name">marketing.trace.view.search</field>
+        <field name="model">marketing.trace</field>
+        <field name="arch" type="xml">
+            <search string="Search Traces">
+                <field name="activity_id"/>
+                <field name="participant_id"/>
+                <filter string="Running" name="running" domain="[('state', '=', 'running')]" />
+                <filter string="Completed" name="completed" domain="[('state', '=', 'completed')]" />
+                <separator/>
+                <filter name="filter_schedule_date" date="schedule_date"/>
+                <separator/>
+                <filter string="Exclude Test" name="exclude_test" domain="[('is_test', '=', False)]" />
+            </search>
+        </field>
+    </record>
+
+    <record id="marketing_trace_action" model="ir.actions.act_window">
+        <field name="name">Traces</field>
+        <field name="res_model">marketing.trace</field>
+        <field name="view_mode">graph,pivot,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p><p>
+                Here you will be able to check the results of your mailings from all Marketing Automation Campaigns.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="marketing_trace_menu"
+        parent="marketing_automation_reporting_menu"
+        action="marketing_trace_action"
+        groups="marketing_automation.group_marketing_automation_user"
+        sequence="16"/>
+</odoo>

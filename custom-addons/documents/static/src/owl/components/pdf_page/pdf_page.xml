@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="documents.component.PdfPage">
+        <div t-att-data-id="props.pageId"
+            t-att-class="{ 'o_pdf_page_focused': props.isFocused, 'o_pdf_thumbnail_dragover': state.isHover,
+                           'o_pdf_page_selected': props.isSelected, 'o_pdf_page_preview': props.isPreview,
+                           'o_pdf_page': !props.isPreview }"
+        >
+            <div t-if="!props.isPreview" class="o_documents_pdf_button_wrapper">
+                <i class="o_documents_pdf_page_selector fa"
+                    t-att-class="{'fa-check-circle': props.isSelected, 'fa-circle-thin': !props.isSelected }"
+                    aria-label="select" title="select" t-on-click.stop="onClickSelect"/>
+            </div>
+            <div class="o_documents_pdf_canvas_wrapper"
+                draggable="true"
+                t-on-dragstart.stop="onDragStart"
+                t-on-drop="onDrop"
+                t-on-dragover.stop="onDragOver"
+                t-on-dragenter.stop="onDragEnter"
+                t-on-dragleave.stop="onDragLeave"
+                t-on-click.stop="onClickWrapper"
+                t-ref="canvasWrapper"
+            >
+                <div t-if="!props.isPreview" class="o_bottom_selection" t-on-click.stop="onClickSelect"/>
+            </div>
+            <div class="o_documents_pdf_selected_overlay position-absolute start-0 bottom-0 w-100 h-100 pe-none"/>
+        </div>
+    </t>
+</templates>

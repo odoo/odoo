@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+
+<t t-name="spreadsheet_edition.Breadcrumbs"  t-inherit="web.Breadcrumbs" t-inherit-mode="primary" >
+    <xpath expr="//div[hasclass('o_breadcrumb')]" position="attributes">
+        <attribute name="class" remove="flex-md-column" add="gap-2" separator=" " />
+    </xpath>
+    <xpath expr="//t[@t-set='visiblePathBreadcrumbs']" position="replace">
+        <t t-set="visiblePathBreadcrumbs" t-value="breadcrumbs.slice(-2, -1)"/>
+    </xpath>
+    <xpath expr="//t[@t-set='collapsedBreadcrumbs']" position="replace">
+        <t t-set="collapsedBreadcrumbs" t-value="breadcrumbs.slice(0, -2).reverse()"/>
+    </xpath>
+    <xpath expr="(//div[hasclass('active')])[2]" position="replace">
+        <div class="active d-flex">
+            <SpreadsheetName name="props.spreadsheetName" isReadonly="props.isReadonly" onSpreadsheetNameChanged="props.onSpreadsheetNameChanged" />
+        </div>
+    </xpath>
+    <xpath expr="//div[hasclass('active')]" position="replace">
+        <div class="active d-flex">
+            <SpreadsheetName name="props.spreadsheetName" isReadonly="props.isReadonly" onSpreadsheetNameChanged="props.onSpreadsheetNameChanged" />
+        </div>
+    </xpath>
+</t>
+
+
+<div t-name="spreadsheet_edition.ControlPanel.SpreadsheetInfo">
+        <t t-set-slot="control-panel-status-indicator">
+            <div class="user-select-none">
+                <div class="o_spreadsheet_status o_spreadsheet_sync_status text-muted">
+                    <t t-if="collaborative.isSynced">
+                        <i class="fa fa-check"/>  Saved
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-spin fa-spinner"/> Saving
+                    </t>
+                </div>
+                <t t-set="connectedUsers" t-value="collaborative.connectedUsers"/>
+                <div t-if="connectedUsers.length > 0"
+                    class="o_spreadsheet_status o_spreadsheet_number_users"
+                    t-att-class="connectedUsers.length > 1 ? 'text-info' : 'text-muted'"
+                    t-att-data-tooltip-template="connectedUsers.length > 1 and 'spreadsheet_edition.SpreadsheetUsersTooltip'"
+                    t-att-data-tooltip-info="tooltipInfo"
+                >
+                    <t t-if="connectedUsers.length === 1">
+                        <i class="fa fa-user"/> 1
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-users"/> <t t-esc="connectedUsers.length"/>
+                    </t>
+                </div>
+                <div class="o_spreadsheet_status"
+                    t-if="locale.mismatchedLocaleTitle">
+                    <i class="fa fa-globe text-danger" t-att-title="mismatchedLocaleTitle"/>
+                </div>
+            </div>
+        </t>
+    </div>
+
+</templates>

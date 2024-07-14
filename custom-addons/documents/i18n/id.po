@@ -1,0 +1,3801 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* documents
+# 
+# Translators:
+# Wil Odoo, 2023
+# Abe Manyo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Abe Manyo, 2024\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.js:0
+#, python-format
+msgid " + Add a tag"
+msgstr "+ Tambahkan tag"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "%s (remaining pages)"
+msgstr "%s (halaman tersisa)"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#, python-format
+msgid "%s Documents"
+msgstr "%s Dokume"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#, python-format
+msgid "%s Documents (%s locked)"
+msgstr "%s Dokumen (%s dikunci)"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_panel.js:0
+#, python-format
+msgid "%s file(s) not moved because they are locked by another user"
+msgstr "%s file tidak dipindahkan karena mereka dikunci oleh user lain"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "%s new document(s) created"
+msgstr "%s dokumen baru dibuat"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "%s page(s) deleted"
+msgstr "%s halaman dihapus"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "(Remaining pages"
+msgstr "(Sisa halaman"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.public_page_layout
+msgid ", expired on"
+msgstr ", kadaluwarsa pada"
+
+#. module: documents
+#: model_terms:digest.tip,tip_description:documents.digest_tip_documents_0
+msgid ""
+". Scanned files will appear automatically in your workspace. Then, process "
+"your documents in bulk with the split tool: launch user defined actions, "
+"request a signature, convert to vendor bills with AI, etc."
+msgstr ""
+". File yang discan akan muncul secara otomatis di ruang kerja Anda. Lalu, "
+"proses dokumen Anda secara bulk dengan split tool: jalankan action yang "
+"didefinisikan user, minta tanda tangan, konversi menjadi tagihan vendor "
+"dengan AI, dsb."
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_fiscal_year_2017
+msgid "2023"
+msgstr "2023"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_fiscal_year_2018
+msgid "2024"
+msgstr "2024"
+
+#. module: documents
+#: model_terms:digest.tip,tip_description:documents.digest_tip_documents_0
+msgid "<b class=\"tip_title\">Tip: Become a paperless company</b>"
+msgstr "<b class=\"tip_title\">Tip: Menjadi perusahaan yang paperless</b>"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid "<b>Deselect this page</b> as we plan to process all bills first."
+msgstr ""
+"<b>Batalkan memilih halaman ini</b> karena kami berencana untuk memproses "
+"semua tagihan terlebih dahulu."
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_files_page
+msgid ""
+"<br/>\n"
+"                    is sharing content with you"
+msgstr ""
+"<br/>\n"
+"                    sedang membagi konten dengan Anda"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid "<b>Select</b> this page to continue."
+msgstr "<b>Pilih</b> halaman ini untuk melanjutkan."
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.public_page_layout
+msgid "<br/>Powered by"
+msgstr "<br/>Powered by"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "<i class=\"fa fa fa-folder text-primary me-2\" title=\"Workspace\"/>"
+msgstr "<i class=\"fa fa fa-folder text-primary me-2\" title=\"Ruang kerja\"/>"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+msgid "<i class=\"fa fa-download fa-fw\"/>  Download All"
+msgstr "<i class=\"fa fa-download fa-fw\"/> Unduh Semua"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+msgid "<i class=\"fa fa-lock oe_inline\" title=\"Locked\" invisible=\"not lock_uid\"/>"
+msgstr "<i class=\"fa fa-lock oe_inline\" title=\"Dikunci\" invisible=\"not lock_uid\"/>"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid ""
+"<i class=\"fa fa-tag o_documents_tag_color ms-2\" invisible=\"not tag_ids\" "
+"title=\"Tags\"/>"
+msgstr ""
+"<i class=\"fa fa-tag o_documents_tag_color ms-2\" invisible=\"not tag_ids\" "
+"title=\"Tag\"/>"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+msgid "<i class=\"fa fa-upload\"/>  Upload"
+msgstr "<i class=\"fa fa-upload\"/> Unggah"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+msgid "<span class=\"o_stat_text\">Actions</span>"
+msgstr "<span class=\"o_stat_text\">Tindakan</span>"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.documents_document_res_partner_view
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+msgid "<span class=\"o_stat_text\">Documents</span>"
+msgstr "<span class=\"o_stat_text\">Dokumen</span>"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+msgid "<span class=\"o_stat_text\">Related <br/> Record</span>"
+msgstr "<span class=\"o_stat_text\">Record <br/> Terkait</span>"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+msgid "<span title=\"Requested Document\">Requested Document</span>"
+msgstr "<span title=\"Requested Document\">Dokumen yang Diminta</span>"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.public_page_layout
+msgid "<span>&amp;nbsp;Documents.</span>"
+msgstr "<span>&amp;nbsp;Dokumen.</span>"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_kanban
+msgid "<span><b> Request</b></span>"
+msgstr "<span><b> Permintaan</b></span>"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_kanban
+msgid "<span><b>Requested Document</b></span>"
+msgstr "<span><b>Dokumen-Dokumen yang Diminta</b></span>"
+
+#. module: documents
+#: model:mail.template,body_html:documents.mail_template_document_request_reminder
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"                    <tbody>\n"
+"                        <!-- HEADER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\">\n"
+"                                        <span style=\"font-size: 10px;\">\n"
+"                                            Document Request: <br>\n"
+"                                            <t t-if=\"object.create_share_id.name\">\n"
+"                                                <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.create_share_id.name or ''\">Inbox Financial</span>\n"
+"                                            </t>\n"
+"                                        </span><br>\n"
+"                                    </td><td valign=\"middle\" align=\"right\">\n"
+"                                        <img t-attf-src=\"/logo.png?company={{ object.create_uid.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.create_uid.company_id.name\">\n"
+"                                    </td></tr>\n"
+"                                    <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- CONTENT -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                                        <div>\n"
+"                                            Hello <t t-out=\"object.create_share_id.owner_id.name or ''\">OdooBot</t>,\n"
+"                                            <br><br>\n"
+"                                            This is a friendly reminder to upload your requested document:\n"
+"                                            <br><br>\n"
+"                                            <center>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.create_share_id.name\">\n"
+"                                                        <b t-out=\"object.create_share_id.name or ''\">Inbox Financial</b>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.create_share_id.activity_note\">\n"
+"                                                        <i t-out=\"object.create_share_id.activity_note or ''\">Example of a note.</i>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <br>\n"
+"                                                <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                                    <a t-att-href=\"object.create_share_id.full_url\" style=\"background-color: #875A7B; padding: 20px 30px 20px 30px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                                        Upload the requested document\n"
+"                                                    </a>\n"
+"                                                </div>\n"
+"                                            </center><br>\n"
+"                                            Please provide us with the missing document before the link expires (planned on <t t-out=\"object.create_share_id.date_deadline or ''\">2021-05-17</t>).\n"
+"                                            <br><br>\n"
+"                                            Thank you,\n"
+"                                            <t t-if=\"user and user.signature\">\n"
+"                                                <br>\n"
+"                                                <t t-out=\"user.signature\">--<br>Mitchell Admin</t>\n"
+"                                                <br>\n"
+"                                            </t>\n"
+"                                        </div>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- FOOTER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\" align=\"left\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.name or ''\">YourCompany</t>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.email\">\n"
+"                                            | <a t-attf-href=\"'mailto:%s' % {{ object.create_uid.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.email\">info@yourcompany.com</a>\n"
+"                                        </t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.website\">\n"
+"                                            | <a t-att-href=\"object.create_uid.company_id.website\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.website\">http://www.example.com</a>\n"
+"                                        </t>\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                    </table>\n"
+"                    </td></tr>\n"
+"                    <!-- POWERED BY -->\n"
+"                    <tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                          <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"                            <t t-if=\"object.create_share_id.date_deadline\">\n"
+"                                This link expires on <b t-out=\"object.create_share_id.date_deadline\">2021-05-17</b>.<br>\n"
+"                            </t>\n"
+"                            Powered by <a target=\"_blank\" href=\"https://www.odoo.com/app/documents\" style=\"color: #875A7B;\">Odoo Documents</a>\n"
+"                          </td></tr>\n"
+"                        </table>\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"            "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"                    <tbody>\n"
+"                        <!-- HEADER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\">\n"
+"                                        <span style=\"font-size: 10px;\">\n"
+"                                            Permintaan Dokumen: <br>\n"
+"                                            <t t-if=\"object.create_share_id.name\">\n"
+"                                                <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.create_share_id.name or ''\">Inbox Keuangan</span>\n"
+"                                            </t>\n"
+"                                        </span><br>\n"
+"                                    </td><td valign=\"middle\" align=\"right\">\n"
+"                                        <img t-attf-src=\"/logo.png?company={{ object.create_uid.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.create_uid.company_id.name\">\n"
+"                                    </td></tr>\n"
+"                                    <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- CONTENT -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                                        <div>\n"
+"                                            Halo <t t-out=\"object.create_share_id.owner_id.name or ''\">OdooBot</t>,\n"
+"                                            <br><br>\n"
+"                                            Ini adalah pengingat Anda untuk mengungah dokumen yang diminta:\n"
+"                                            <br><br>\n"
+"                                            <center>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.create_share_id.name\">\n"
+"                                                        <b t-out=\"object.create_share_id.name or ''\">Inbox Keuangan</b>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.create_share_id.activity_note\">\n"
+"                                                        <i t-out=\"object.create_share_id.activity_note or ''\">Contoh nota.</i>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <br>\n"
+"                                                <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                                    <a t-att-href=\"object.create_share_id.full_url\" style=\"background-color: #875A7B; padding: 20px 30px 20px 30px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                                        Unggah dokumen yang diminta\n"
+"                                                    </a>\n"
+"                                                </div>\n"
+"                                            </center><br>\n"
+"                                            Mohon sediakan kami dengan dokumen yang kurang sebelum link kadaluwarsa (pada tanggal <t t-out=\"object.create_share_id.date_deadline or ''\">2021-05-17</t>).\n"
+"                                            <br><br>\n"
+"                                            Terima kasih,\n"
+"                                            <t t-if=\"user and user.signature\">\n"
+"                                                <br>\n"
+"                                                <t t-out=\"user.signature\">--<br>Mitchell Admin</t>\n"
+"                                                <br>\n"
+"                                            </t>\n"
+"                                        </div>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- FOOTER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\" align=\"left\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.name or ''\">YourCompany</t>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.email\">\n"
+"                                            | <a t-attf-href=\"'mailto:%s' % {{ object.create_uid.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.email\">info@yourcompany.com</a>\n"
+"                                        </t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.website\">\n"
+"                                            | <a t-att-href=\"object.create_uid.company_id.website\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.website\">http://www.example.com</a>\n"
+"                                        </t>\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                    </table>\n"
+"                    </td></tr>\n"
+"                    <!-- POWERED BY -->\n"
+"                    <tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                          <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"                            <t t-if=\"object.create_share_id.date_deadline\">\n"
+"                                Link ini kadaluwarsa pada <b t-out=\"object.create_share_id.date_deadline\">2021-05-17</b>.<br>\n"
+"                            </t>\n"
+"                            Powered by <a target=\"_blank\" href=\"https://www.odoo.com/app/documents\" style=\"color: #875A7B;\">Odoo Documents</a>\n"
+"                          </td></tr>\n"
+"                        </table>\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"            "
+
+#. module: documents
+#: model:mail.template,body_html:documents.mail_template_document_request
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"                    <tbody>\n"
+"                        <!-- HEADER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\">\n"
+"                                        <span style=\"font-size: 10px;\">\n"
+"                                            Document Request: <br>\n"
+"                                            <t t-if=\"object.name\">\n"
+"                                                <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Inbox Financial</span>\n"
+"                                            </t>\n"
+"                                        </span><br>\n"
+"                                    </td><td valign=\"middle\" align=\"right\" t-if=\"not object.create_uid.company_id.uses_default_logo\">\n"
+"                                        <img t-attf-src=\"/logo.png?company={{ object.create_uid.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.create_uid.company_id.name\">\n"
+"                                    </td></tr>\n"
+"                                    <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- CONTENT -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                                        <div>\n"
+"                                            Hello <t t-out=\"object.owner_id.name or ''\">OdooBot</t>,\n"
+"                                            <br><br>\n"
+"                                            <t t-out=\"object.create_uid.name or ''\">OdooBot</t> (<t t-out=\"object.create_uid.email or ''\">odoobot@example.com</t>) asks you to provide the following document:\n"
+"                                            <br><br>\n"
+"                                            <center>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.name\">\n"
+"                                                        <b t-out=\"object.name or ''\">Inbox Financial</b>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.activity_note\">\n"
+"                                                        <i t-out=\"object.activity_note or ''\">Example of a note.</i>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <br>\n"
+"                                                <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                                    <a t-att-href=\"object.full_url\" style=\"background-color: #875A7B; padding: 20px 30px 20px 30px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                                        Upload the requested document\n"
+"                                                    </a>\n"
+"                                                </div>\n"
+"                                            </center><br>\n"
+"                                            Please provide us with the missing document<t t-if=\"object.date_deadline\"> before the link expires (planned on <t t-out=\"object.date_deadline\">2021-05-17</t>)</t>.\n"
+"                                            <t t-if=\"user and user.signature\">\n"
+"                                                <br>\n"
+"                                                <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                                                <br>\n"
+"                                            </t>\n"
+"                                        </div>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- FOOTER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\" align=\"left\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.name or ''\">YourCompany</t>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.email\">\n"
+"                                            | <a t-attf-href=\"'mailto:%s' % {{ object.create_uid.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                                        </t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.website\">\n"
+"                                            | <a t-attf-href=\"'%s' % {{ object.create_uid.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.website or ''\">http://www.example.com</a>\n"
+"                                        </t>\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                    </table>\n"
+"                    </td></tr>\n"
+"                    <!-- POWERED BY -->\n"
+"                    <tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                          <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"                            <t t-if=\"object.date_deadline\">\n"
+"                                This link expires on <b t-out=\"object.date_deadline or ''\">2021-05-17</b>.<br>\n"
+"                            </t>\n"
+"                            Powered by <a target=\"_blank\" href=\"https://www.odoo.com/app/documents\" style=\"color: #875A7B;\">Odoo Documents</a>\n"
+"                          </td></tr>\n"
+"                        </table>\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"            "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"                    <tbody>\n"
+"                        <!-- HEADER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\">\n"
+"                                        <span style=\"font-size: 10px;\">\n"
+"                                            Permintaan Dokumen: <br>\n"
+"                                            <t t-if=\"object.name\">\n"
+"                                                <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Inbox Keuangan</span>\n"
+"                                            </t>\n"
+"                                        </span><br>\n"
+"                                    </td><td valign=\"middle\" align=\"right\" t-if=\"not object.create_uid.company_id.uses_default_logo\">\n"
+"                                        <img t-attf-src=\"/logo.png?company={{ object.create_uid.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.create_uid.company_id.name\">\n"
+"                                    </td></tr>\n"
+"                                    <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- CONTENT -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                                        <div>\n"
+"                                            Halo <t t-out=\"object.owner_id.name or ''\">OdooBot</t>,\n"
+"                                            <br><br>\n"
+"                                            <t t-out=\"object.create_uid.name or ''\">OdooBot</t> (<t t-out=\"object.create_uid.email or ''\">odoobot@example.com</t>) meminta Anda untuk menyediakan dokumen berikut:\n"
+"                                            <br><br>\n"
+"                                            <center>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.name\">\n"
+"                                                        <b t-out=\"object.name or ''\">Inbox Keuangan</b>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.activity_note\">\n"
+"                                                        <i t-out=\"object.activity_note or ''\">Contoh nota.</i>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <br>\n"
+"                                                <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                                    <a t-att-href=\"object.full_url\" style=\"background-color: #875A7B; padding: 20px 30px 20px 30px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                                        Unggah dokumen yang diminta\n"
+"                                                    </a>\n"
+"                                                </div>\n"
+"                                            </center><br>\n"
+"                                            Silakan sediakan kami dengan dokumen yang hilang<t t-if=\"object.date_deadline\"> sebelum link ini kadaluwarsa (pada <t t-out=\"object.date_deadline\">2021-05-17</t>)</t>.\n"
+"                                            <t t-if=\"user and user.signature\">\n"
+"                                                <br>\n"
+"                                                <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                                                <br>\n"
+"                                            </t>\n"
+"                                        </div>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- FOOTER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\" align=\"left\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.name or ''\">YourCompany</t>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.email\">\n"
+"                                            | <a t-attf-href=\"'mailto:%s' % {{ object.create_uid.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                                        </t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.website\">\n"
+"                                            | <a t-attf-href=\"'%s' % {{ object.create_uid.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.website or ''\">http://www.example.com</a>\n"
+"                                        </t>\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                    </table>\n"
+"                    </td></tr>\n"
+"                    <!-- POWERED BY -->\n"
+"                    <tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                          <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"                            <t t-if=\"object.date_deadline\">\n"
+"                                Link ini kadaluwarsa pada <b t-out=\"object.date_deadline or ''\">2021-05-17</b>.<br>\n"
+"                            </t>\n"
+"                            Powered by <a target=\"_blank\" href=\"https://www.odoo.com/app/documents\" style=\"color: #875A7B;\">Odoo Documents</a>\n"
+"                          </td></tr>\n"
+"                        </table>\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"            "
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_defaults
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"Kamus Python yang akan dievaluasi untuk memberikan nilai baku ketika membuat"
+" catatan baru untuk alias ini."
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_workflow_rule
+msgid ""
+"A set of condition and actions which will be available to all attachments "
+"matching the conditions"
+msgstr ""
+"Rangkaian ketentuan dan tindakan yang akan tersedia untuk semua lampiran "
+"yang cocok dengan ketentuan"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_folder.py:0
+#, python-format
+msgid ""
+"A workspace cannot have one of his child defined as Parent Workspace in "
+"order to avoid a recursion issue."
+msgstr ""
+"Ruang kerja tidak boleh memiliki salah satu anaknya didefinisikan sebagai "
+"Ruang Kerja Induk untuk mencegah masalah recursion."
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_folder__parent_folder_id
+msgid "A workspace will inherit the tags of its parent workspace"
+msgstr "Ruang kerja akan mewarisi tag dari ruang kerja induknya"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+msgid "Access"
+msgstr "Akses"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_panel.js:0
+#, python-format
+msgid "Access Error"
+msgstr "Akses Eror"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__group_ids
+msgid "Access Groups"
+msgstr "Kelompok Akses"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+msgid "Access Rights"
+msgstr "Hak Akses"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__access_token
+msgid "Access Token"
+msgstr "Token Akses"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__action
+#, python-format
+msgid "Action"
+msgstr "Tindakan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__name
+msgid "Action Button Name"
+msgstr "Nama Tombol Action"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__action_count
+msgid "Action Count"
+msgstr "Jumlah Action"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Action Name"
+msgstr "Nama Tindakan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_needaction
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_needaction
+msgid "Action Needed"
+msgstr "Tindakan Diperluka"
+
+#. module: documents
+#. odoo-javascript
+#. odoo-python
+#: code:addons/documents/models/documents_folder.py:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: model:ir.ui.menu,name:documents.workflow_rules_menu
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+#, python-format
+msgid "Actions"
+msgstr "Action"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__active
+#: model:ir.model.fields,field_description:documents.field_documents_folder__active
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_tree
+msgid "Active"
+msgstr "Aktif"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_ids
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Activities"
+msgstr "Aktivitas"
+
+#. module: documents
+#: model:ir.model,name:documents.model_mail_activity
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "Activity"
+msgstr "Aktivitas"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Dekorasi Pengecualian Aktivitas"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__activity_note
+msgid "Activity Note"
+msgstr "Catatan Aktivitas"
+
+#. module: documents
+#: model:ir.ui.menu,name:documents.mail_activity_plan_menu
+msgid "Activity Plans"
+msgstr "Rencana-Rencana Kegiatan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_state
+msgid "Activity State"
+msgstr "Status Aktivitas"
+
+#. module: documents
+#: model:ir.model,name:documents.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Tipe Aktivitas"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikon Jenis Aktifitas"
+
+#. module: documents
+#: model:ir.actions.act_window,name:documents.mail_activity_type_action_document
+#: model:ir.ui.menu,name:documents.mail_activity_type_menu
+msgid "Activity Types"
+msgstr "Jenis Aktivitas"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__activity_type_id
+#: model:ir.model.fields,field_description:documents.field_documents_share__activity_type_id
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__activity_type_id
+msgid "Activity type"
+msgstr "Jenis aktivitas"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_action__action__add
+#: model_terms:ir.ui.view,arch_db:documents.documents_upload_url_view
+msgid "Add"
+msgstr "Tambah"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Add File"
+msgstr "Tambah File"
+
+#. module: documents
+#: model:ir.actions.act_window,name:documents.action_url_form
+msgid "Add Url"
+msgstr "Tambahkan Url"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_controller_mixin.xml:0
+#, python-format
+msgid "Add a Link"
+msgstr "Tambahkan Tautan"
+
+#. module: documents
+#: model_terms:ir.actions.act_window,help:documents.mail_activity_plan_action_document
+msgid "Add a new plan"
+msgstr "Tambahkan rencana baru"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Add new file"
+msgstr "Tambah file baru"
+
+#. module: documents
+#: model:res.groups,name:documents.group_documents_manager
+msgid "Administrator"
+msgstr "Administrator"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_marketing_assets_ads
+msgid "Ads"
+msgstr "Iklan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_id
+msgid "Alias"
+msgstr "Alias"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_contact
+msgid "Alias Contact Security"
+msgstr "Alias Kontak Keamanan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_domain_id
+msgid "Alias Domain"
+msgstr "Alias Domain"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_domain
+msgid "Alias Domain Name"
+msgstr "Nama Alias Domain"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_full_name
+msgid "Alias Email"
+msgstr "Alias Email"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_name
+msgid "Alias Name"
+msgstr "Nama Alias"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_status
+msgid "Alias Status"
+msgstr "Status Alias"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_status
+msgid "Alias status assessed on the last message received."
+msgstr "Status alias dinilai pada pesan terakhir yang diterima."
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_model_id
+msgid "Aliased Model"
+msgstr "Model Alias"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/controllers/documents.py:0
+#, python-format
+msgid "All files uploaded"
+msgstr "Semua file terunggah"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__action
+msgid "Allows to"
+msgstr "Mengizinkan untuk"
+
+#. module: documents
+#: model:ir.module.category,description:documents.module_category_documents_management
+msgid "Allows you to manage your documents."
+msgstr "Mengizinkan Anda untuk mengatur dokumen Anda"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_workflow_rule.py:0
+#, python-format
+msgid "Already linked Documents"
+msgstr "Dokumen yang sudah Terhubung"
+
+#. module: documents
+#: model_terms:digest.tip,tip_description:documents.digest_tip_documents_0
+msgid ""
+"An easy way to process incoming mails is to configure your scanner to send "
+"PDFs to"
+msgstr ""
+"Cara mudah memproses email masuk adalah dengan mengonfigurasi scanner Anda "
+"untuk mengirim PDF ke"
+
+#. module: documents
+#: model_terms:digest.tip,tip_description:documents.digest_tip_documents_0
+msgid ""
+"An easy way to process incoming mails is to configure your scanner to send "
+"PDFs to your workspace email. Scanned files will appear automatically in "
+"your workspace. Then, process your documents in bulk with the split tool: "
+"launch user defined actions, request a signature, convert to vendor bills "
+"with AI, etc."
+msgstr ""
+"Cara mudah memproses email masuk adalah dengan mengonfigurasi scanner Anda "
+"untuk mengirim PDF ke email ruang kerja Anda. File yang discan akan muncul "
+"secara otomatis di ruang kerja Anda. Lalu, proses dokumen Anda secara bulk "
+"dengan split tool: jalankan action yang didefinisikan user, minta tanda "
+"tangan, konversikan tagihan vendor dengan AI, dsb."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/hooks.js:0
+#, python-format
+msgid "An error occured while uploading."
+msgstr "Error terjadi saat mengunggah."
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+msgid "Archive"
+msgstr "Arsip"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Archive original file(s)"
+msgstr "Arsipkan file asli"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+msgid "Archived"
+msgstr "Diarsipkan"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_search
+msgid "Moved to trash"
+msgstr "Dipindahkan ke tong sampah"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_search
+msgid "Archived Workspace"
+msgstr "Ruang kerja yang Diarsip"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Are you sure that you want to delete the focused page ?"
+msgstr "Apakah Anda yakin ingin menghapis halaman yang difokus ?"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Are you sure that you want to delete the selected page(s)"
+msgstr "Apakah Anda yakin ingin menghapus halaman yang dipilih"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Are you sure that you want to delete this page ?"
+msgstr "Apakah Anda yakin ingin menghapus halaman ini ?"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#, python-format
+msgid "Are you sure you want to permanently erase the document?"
+msgstr "Apakah Anda yakin ingin secara permanen menghapus dokumen?"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#, python-format
+msgid "Are you sure you want to permanently erase the documents?"
+msgstr "Apakah Anda yakin ingin secara permanen menghapus dokumen-dokumen?"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid ""
+"As this PDF contains multiple documents, let's split and process in bulk."
+msgstr ""
+"Karena PDF ini memiliki lebih dari satu dokumen, mari pisahkan dan proses "
+"secara bulk."
+
+#. module: documents
+#: model:documents.workflow.rule,name:documents.documents_rule_finance_afv
+msgid "Ask for Validation"
+msgstr "Minta Validasi"
+
+#. module: documents
+#: model:documents.facet,name:documents.documents_marketing_assets
+msgid "Assets"
+msgstr "Aktiva"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Attached To"
+msgstr "Dilampirkan Pada"
+
+#. module: documents
+#: model:ir.model,name:documents.model_ir_attachment
+#: model:ir.model.fields,field_description:documents.field_documents_document__attachment_id
+msgid "Attachment"
+msgstr "Lampiran"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_attachment_count
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_attachment_count
+msgid "Attachment Count"
+msgstr "Hitungan Lampiran"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__description
+msgid "Attachment Description"
+msgstr "Deskripsi Lampiran"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__attachment_name
+msgid "Attachment Name"
+msgstr "Nama Lampiran"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__attachment_type
+msgid "Attachment Type"
+msgstr "Tipe Lampiran"
+
+#. module: documents
+#: model_terms:documents.folder,description:documents.documents_finance_folder
+msgid ""
+"Automate your inbox using scanned documents or emails sent to <span "
+"class=\"o_folder_description_alias\"><strong>inbox-financial</strong> email "
+"alias</span>."
+msgstr ""
+"Otomatiskan inbox Anda menggunakan dokumen yang discan atau email yang "
+"dikirim ke <span class=\"o_folder_description_alias\">alias email "
+"<strong>inbox-financial</strong></span>."
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__available_rule_ids
+msgid "Available Rules"
+msgstr "Aturan Tersedia"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_documents_bill
+msgid "Bill"
+msgstr "Bon"
+
+#. module: documents
+#: model:documents.folder,name:documents.documents_marketing_brand1_folder
+msgid "Brand 1"
+msgstr "Brand 1"
+
+#. module: documents
+#: model:documents.folder,name:documents.documents_marketing_brand2_folder
+msgid "Brand 2"
+msgstr "Brand 2"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_marketing_assets_brochures
+msgid "Brochures"
+msgstr "Brosur"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_mail_activity_type__folder_id
+msgid "By defining a folder, the upload activities will generate a document"
+msgstr ""
+"Dengan mendefinisikan folder, kegiatan mengunggah akan membuat dokumen"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.format_file_size
+msgid "Bytes"
+msgstr "Bytes"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__can_upload
+msgid "Can Upload"
+msgstr "Dapat Mengunggah"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/hooks.js:0
+#, python-format
+msgid "Can't share documents of different workspaces."
+msgstr "Tidak dapat membagikan dokumen dari ruang kerja yang berbeda."
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.documents_link_to_record_form_view
+msgid "Cancel"
+msgstr "Batal"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_folder.py:0
+#, python-format
+msgid ""
+"Cannot move folder under the given parent as this would create a recursive "
+"hierarchy"
+msgstr ""
+"Tidak dapat menggerakkan folder di bawah induknya karena ini akan membuat "
+"hierarki recursive"
+
+#. module: documents
+#: model_terms:documents.folder,description:documents.documents_internal_folder
+msgid "Categorize, share and keep track of all your internal documents."
+msgstr "Kategorikan, bagikan dan tetap lacak semua dokumen internal Anda."
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_facet
+#: model:ir.model.fields,field_description:documents.field_documents_tag__facet_id
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__facet_id
+#: model_terms:ir.ui.view,arch_db:documents.facet_view_tree
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+#: model_terms:ir.ui.view,arch_db:documents.tag_view_form
+msgid "Category"
+msgstr "Kategori"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__checksum
+msgid "Checksum/SHA1"
+msgstr "Checksum/SHA1"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_workflow_rule.py:0
+#, python-format
+msgid "Choose a record to link"
+msgstr "Pilih record untuk dihubungkan"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "Choose or Configure Email Servers"
+msgstr "Pilih atau Konfigurasi Server Email"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid "Click on a card to <b>select the document</b>."
+msgstr "Klik pada kartu untuk <b>memilih dokumen</b>."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid "Click on a thumbnail to <b>preview the document</b>."
+msgstr "Klik pada thumbnail untuk <b>pratinjau dokumen</b>."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid ""
+"Click on the <b>page separator</b>: we don't want to split these two pages "
+"as they belong to the same document."
+msgstr ""
+"Klik pada <b>separator halaman</b>: kita tidak ingin memisahkan dua halaman "
+"ini karena mereka berasal dari dokumen yang sama."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Close"
+msgstr "Tutup"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Close split tools"
+msgstr "Tutup split tool"
+
+#. module: documents
+#. openerp-web
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid "Click the cross to <b>exit preview</b>."
+msgstr "Klik silang untuk <b>keluar dari pratinjau</b>."
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__company_id
+#: model:ir.model.fields,field_description:documents.field_documents_folder__company_id
+msgid "Company"
+msgstr "Perusahaan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__condition_type
+msgid "Condition type"
+msgstr "Tipe kondisi"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Conditions"
+msgstr "Kondisi"
+
+#. module: documents
+#: model:ir.model,name:documents.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfig"
+
+#. module: documents
+#: model:ir.ui.menu,name:documents.Config
+msgid "Configuration"
+msgstr "Konfigurasi"
+
+#. module: documents
+#: model:ir.model,name:documents.model_res_partner
+#: model:ir.model.fields,field_description:documents.field_documents_document__partner_id
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__partner_id
+#: model:ir.model.fields,field_description:documents.field_documents_share__partner_id
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__criteria_partner_id
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Contact"
+msgstr "Kontak"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Contains"
+msgstr "Berisi"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_documents_Contracts
+#: model:documents.tag,name:documents.documents_internal_template_contracts
+msgid "Contracts"
+msgstr "Kontrak"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_controller_mixin.xml:0
+#, python-format
+msgid "Control panel buttons"
+msgstr "Tombol panel kendali"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__create_model
+msgid "Create"
+msgstr "Buat"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__create_share_id
+msgid "Create Share"
+msgstr "Buat Share"
+
+#. module: documents
+#: model:documents.workflow.rule,name:documents.documents_rule_internal_mark
+msgid "Create Vendor Bill"
+msgstr "Buat Tagihan Vendor"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__activity_option
+msgid "Create a new activity"
+msgstr "Buat aktivitas baru"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__create_uid
+#: model:ir.model.fields,field_description:documents.field_documents_facet__create_uid
+#: model:ir.model.fields,field_description:documents.field_documents_folder__create_uid
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__create_uid
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__create_uid
+#: model:ir.model.fields,field_description:documents.field_documents_share__create_uid
+#: model:ir.model.fields,field_description:documents.field_documents_tag__create_uid
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__create_uid
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__create_uid
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__create_date
+#: model:ir.model.fields,field_description:documents.field_documents_facet__create_date
+#: model:ir.model.fields,field_description:documents.field_documents_folder__create_date
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__create_date
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__create_date
+#: model:ir.model.fields,field_description:documents.field_documents_share__create_date
+#: model:ir.model.fields,field_description:documents.field_documents_tag__create_date
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__create_date
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Creation Date"
+msgstr "Tanggal Pembuatan"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_rule__condition_type__criteria
+msgid "Criteria"
+msgstr "Kriteria"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_bounced_content
+msgid "Custom Bounced Message"
+msgstr "Pesan Kustom yang Dikembalikan"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_request_wizard__activity_date_deadline_range_type__days
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__activity_date_deadline_range_type__days
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_rule__activity_date_deadline_range_type__days
+msgid "Days"
+msgstr "Hari"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_defaults
+msgid "Default Values"
+msgstr "Nilai Baku"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "Default values for uploaded documents"
+msgstr "Default value untuk dokumen yang diunggah"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_folder__deletion_delay
+#: model:ir.model.fields,help:documents.field_res_config_settings__deletion_delay
+msgid "Delay after permanent deletion of the document in the trash (days)"
+msgstr "Jeda setelah penghapusan permanen dokumen di tong sampah (hari)"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#: code:addons/documents/static/src/views/form/folder_form_controller.js:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: code:addons/documents/static/src/views/list/documents_list_controller.js:0
+#: code:addons/documents/static/src/views/list/folder_list_controller.js:0
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_tree
+#, python-format
+msgid "Delete"
+msgstr "Hapus"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Delete focused or selected pages"
+msgstr "Hapus halaman yang difokus atau dipilih"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#, python-format
+msgid "Delete permanently"
+msgstr "Hapus permanen"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_res_config_settings__deletion_delay
+msgid "Deletion Delay"
+msgstr "Jeda Penghapusan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__deletion_delay
+msgid "Deletion delay"
+msgstr "Jeda penghapusan"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.res_config_settings_view_form
+msgid "Deletion delay (days)"
+msgstr "Jeda penghapusan (hari)"
+
+#. module: documents
+#: model:documents.workflow.rule,name:documents.documents_rule_internal_deprecate
+msgid "Deprecate"
+msgstr "Usang"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_internal_status_deprecated
+msgid "Deprecated"
+msgstr "Usang"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__description
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+msgid "Description"
+msgstr "Deskripsi"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#: model_terms:ir.ui.view,arch_db:documents.documents_request_form_view
+#: model_terms:ir.ui.view,arch_db:documents.documents_upload_url_view
+#: model_terms:ir.ui.view,arch_db:documents.folder_deletion_form
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+#: model_terms:ir.ui.view,arch_db:documents.tag_view_form
+#, python-format
+msgid "Discard"
+msgstr "Buang"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__display_name
+#: model:ir.model.fields,field_description:documents.field_documents_facet__display_name
+#: model:ir.model.fields,field_description:documents.field_documents_folder__display_name
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__display_name
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__display_name
+#: model:ir.model.fields,field_description:documents.field_documents_share__display_name
+#: model:ir.model.fields,field_description:documents.field_documents_tag__display_name
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__display_name
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.js:0
+#, python-format
+msgid "Do you really want to unlink this record?"
+msgstr "Apakah Anda betul-betul ingin membatalkan link record ini?"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#, python-format
+msgid "Do you want to exit without saving or gather pages into one document ?"
+msgstr ""
+"Apakah Anda ingin keluar tanpa menyimpan atau mengumpulkan halaman menjadi "
+"satu dokumen ?"
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_document
+#: model_terms:ir.ui.view,arch_db:documents.document_view_kanban
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+#: model_terms:ir.ui.view,arch_db:documents.documents_view_list
+msgid "Document"
+msgstr "Dokumen"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__document_count
+#: model:ir.model.fields,field_description:documents.field_res_partner__document_count
+msgid "Document Count"
+msgstr "Jumlah Dokumen"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+#: model_terms:ir.ui.view,arch_db:documents.documents_request_form_view
+msgid "Document Name"
+msgstr "Nama Dokumen"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__owner_id
+msgid "Document Owner"
+msgstr "Pemilik Dokumen"
+
+#. module: documents
+#: model:ir.actions.act_window,name:documents.mail_activity_plan_action_document
+msgid "Document Plans"
+msgstr "Dokument Rencana"
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_request_wizard
+msgid "Document Request"
+msgstr "Permintaan Dokumen"
+
+#. module: documents
+#: model:mail.template,subject:documents.mail_template_document_request
+msgid ""
+"Document Request {{ object.name != False and ': '+ object.name or '' }}"
+msgstr ""
+"Permintaan Dokumen {{ object.name != False and ': '+ object.name or '' }}"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_document.py:0
+#: code:addons/documents/models/documents_document.py:0
+#: code:addons/documents/models/mail_activity.py:0
+#, python-format
+msgid "Document Request: %s Uploaded by: %s"
+msgstr "Permintaan Dokumen: %s Diunggah oleh: %s"
+
+#. module: documents
+#: model:mail.template,name:documents.mail_template_document_request_reminder
+msgid "Document Request: Reminder"
+msgstr "Permintaan Dokumen: Pengingat"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__has_write_access
+msgid "Document User Upload Rights"
+msgstr "Hak Unggah User Dokumen"
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_workflow_action
+msgid "Document Workflow Tag Action"
+msgstr "Action Tag Alur Kerja Dokumen"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__type__ids
+msgid "Document list"
+msgstr "Daftar dokumen"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_kanban
+msgid "Document preview"
+msgstr "Pratinjau dokumen"
+
+#. module: documents
+#: model:mail.template,name:documents.mail_template_document_request
+msgid "Document: Document Request"
+msgstr "Dokumen: Permintaan Dokumen"
+
+#. module: documents
+#. odoo-javascript
+#. odoo-python
+#: code:addons/documents/models/documents_folder.py:0
+#: code:addons/documents/models/res_partner.py:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: model:documents.facet,name:documents.documents_finance_documents
+#: model:ir.actions.act_window,name:documents.document_action
+#: model:ir.model.fields,field_description:documents.field_documents_folder__document_ids
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__document_ids
+#: model:ir.model.fields,field_description:documents.field_res_users__document_count
+#: model:ir.module.category,name:documents.module_category_documents_management
+#: model:ir.ui.menu,name:documents.dashboard
+#: model:ir.ui.menu,name:documents.menu_root
+#: model_terms:ir.ui.view,arch_db:documents.action_view_search
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+#: model_terms:ir.ui.view,arch_db:documents.documents_view_activity
+#: model_terms:ir.ui.view,arch_db:documents.res_config_settings_view_form
+#, python-format
+msgid "Documents"
+msgstr "Dokumen"
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_link_to_record_wizard
+msgid "Documents Link to Record"
+msgstr "Link Dokumen ke Record"
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_share
+msgid "Documents Share"
+msgstr "Documents Share"
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_folder
+msgid "Documents Workspace"
+msgstr "Ruang Kerja Dokumen"
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_mixin
+msgid "Documents creation mixin"
+msgstr "Dokumen creation mixin"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Does not contain"
+msgstr "Tidak berisi"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__domain
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__domain
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__type__domain
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_rule__condition_type__domain
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Domain"
+msgstr "Ruang Lingkup"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__action__download
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_files_page
+#, python-format
+msgid "Download"
+msgstr "Unduh"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+msgid "Download #{document.name}"
+msgstr "Unduh #{document.name}"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_files_page
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+msgid "Download all files"
+msgstr "Unduh semua file"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__action__downloadupload
+msgid "Download and Upload"
+msgstr "Unduh dan Unggah"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_files_page
+msgid "Download file"
+msgstr "Unduh file"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/helper/documents_drop_zone.xml:0
+#, python-format
+msgid "Drop files here to upload"
+msgstr "Letakkan file di sini untuk diunggah"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__activity_date_deadline_range
+#: model:ir.model.fields,field_description:documents.field_documents_share__activity_date_deadline_range
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__activity_date_deadline_range
+msgid "Due Date In"
+msgstr "Jatuh Tempo Pada"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__activity_date_deadline_range_type
+#: model:ir.model.fields,field_description:documents.field_documents_share__activity_date_deadline_range_type
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__activity_date_deadline_range_type
+msgid "Due type"
+msgstr "Tipe jatuh tempo"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/form/folder_form_controller.js:0
+#, python-format
+msgid "Duplicate"
+msgstr "Gandakan"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_panel.js:0
+#: code:addons/documents/static/src/views/search/documents_search_panel.xml:0
+#, python-format
+msgid "Edit"
+msgstr "Edit"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.js:0
+#, python-format
+msgid "Edit the linked record"
+msgstr "Edit record yang di-link"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_email
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "Email Alias"
+msgstr "Email Alias"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__email_cc
+msgid "Email cc"
+msgstr "Email cc"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#: code:addons/documents/static/src/views/hooks.js:0
+#: model:ir.model.fields.selection,name:documents.selection__documents_document__thumbnail_status__error
+#, python-format
+msgid "Error"
+msgstr "Error!"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Escape Preview/Deselect/Exit"
+msgstr "Keluar dari Pratinjau/Batalkan Pilihan/Exit"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__excluded_tag_ids
+msgid "Excluded Tags"
+msgstr "Tag yang Dikecualikan"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.js:0
+#, python-format
+msgid "Exit Split Tools"
+msgstr "Keluar dari Split Tool"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#, python-format
+msgid "Exit without saving"
+msgstr "Keluar tanpa menyimpan"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_documents_expense
+msgid "Expense"
+msgstr "Pengeluaran"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__state__expired
+msgid "Expired"
+msgstr "Berakhir"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/list/documents_list_controller.js:0
+#: code:addons/documents/static/src/views/list/folder_list_controller.js:0
+#, python-format
+msgid "Export"
+msgstr "Ekspor"
+
+#. module: documents
+#: model:ir.model.constraint,message:documents.constraint_documents_facet_name_unique
+msgid "Facet already exists in this folder"
+msgstr "Facet sudah ada di folder ini"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__favorited_ids
+msgid "Favorite of"
+msgstr "Favorit dari"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_document__type__binary
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+msgid "File"
+msgstr "File"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__datas
+msgid "File Content (base64)"
+msgstr "Konten File (base64)"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__raw
+msgid "File Content (raw)"
+msgstr "Konten File (raw)"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__file_extension
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "File Extension"
+msgstr "Ekstensi File"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__file_size
+msgid "File Size"
+msgstr "Ukuran File"
+
+#. module: documents
+#: model:ir.model,name:documents.model_ir_binary
+msgid "File streaming helper model for controllers"
+msgstr "File streaming helper model untuk controller"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/controllers/documents.py:0
+#, python-format
+msgid "File uploaded by:"
+msgstr "File diunggah oleh:"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.res_config_settings_view_form
+msgid "Files Centralization"
+msgstr "Sentralisasi File"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_deletion_form
+msgid "Files will be sent to trash and deleted forever after"
+msgstr "File akan dikirim ke kotak sampah dan dihapus selamanya setelah"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/form/folder_form_controller.js:0
+#: code:addons/documents/static/src/views/list/folder_list_controller.js:0
+#, python-format
+msgid "Files will be sent to trash and deleted forever after %s days."
+msgstr ""
+"File-File akan dikirim ke kotak sampah dan dihapus selamanya setelah %s "
+"hari."
+
+#. module: documents
+#: model:documents.folder,name:documents.documents_finance_folder
+msgid "Finance"
+msgstr "Keuangan"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_documents_financial
+msgid "Financial"
+msgstr "Keuangan"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_documents_fiscal
+msgid "Fiscal"
+msgstr "Fiskal"
+
+#. module: documents
+#: model:documents.facet,name:documents.documents_finance_fiscal_year
+msgid "Fiscal years"
+msgstr "Tahun fiskal"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Focus first page of next group"
+msgstr "Fokus halaman pertama kelompok berikutnya"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Focus first page of previous group"
+msgstr "Fokus halaman pertama dari kelompok sebelumnya"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Focus next page"
+msgstr "Fokus halaman berikutnya"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Focus previous page"
+msgstr "Fokus halaman sebelumnya"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_mail_activity_type__folder_id
+msgid "Folder"
+msgstr "Folder"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_follower_ids
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_follower_ids
+msgid "Followers"
+msgstr "Follower"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_partner_ids
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Follower (Mitra)"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Ikon font awesome, misalnya fa-tasks"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Future Activities"
+msgstr "Kegiatan - Kegiatan Mendatang"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#, python-format
+msgid "Gather in one document"
+msgstr "Kumpulkan di satu dokumen"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.format_file_size
+msgid "Gb"
+msgstr "Gb"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+#: model_terms:ir.ui.view,arch_db:documents.facet_view_search
+msgid "Group By"
+msgstr "Dikelompokkan berdasarkan"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_folder__read_group_ids
+msgid ""
+"Groups able to see the workspace and read its documents without create/edit "
+"rights."
+msgstr ""
+"Kelompok akan dapat melihat ruang kerja dan membaca dokumennya tanpa hak "
+"membuat/mengedit."
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_folder__group_ids
+msgid "Groups able to see the workspace and read/create/edit its documents."
+msgstr ""
+"Kelompok akan dapat melihat ruang kerja dan baca/buat/edit dokumennya."
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_internal_knowledge_hr
+msgid "HR"
+msgstr "HR"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__has_message
+#: model:ir.model.fields,field_description:documents.field_documents_share__has_message
+msgid "Has Message"
+msgstr "Memiliki Pesan"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: model:ir.model.fields,field_description:documents.field_documents_document__previous_attachment_ids
+#, python-format
+msgid "History"
+msgstr "Riwayat"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__id
+#: model:ir.model.fields,field_description:documents.field_documents_facet__id
+#: model:ir.model.fields,field_description:documents.field_documents_folder__id
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__id
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__id
+#: model:ir.model.fields,field_description:documents.field_documents_share__id
+#: model:ir.model.fields,field_description:documents.field_documents_tag__id
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__id
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__id
+msgid "ID"
+msgstr "ID"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_parent_thread_id
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
+msgstr ""
+"ID dari catatan induk alias (contoh: proyek yang menahan pembuatan alias "
+"tugas)"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_exception_icon
+msgid "Icon"
+msgstr "Ikon"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikon untuk menunjukkan sebuah aktivitas pengecualian."
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__message_needaction
+#: model:ir.model.fields,help:documents.field_documents_share__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jika dicentang, pesan baru memerlukan penanganan dan perhatian Anda."
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__message_has_error
+#: model:ir.model.fields,help:documents.field_documents_document__message_has_sms_error
+#: model:ir.model.fields,help:documents.field_documents_share__message_has_error
+#: model:ir.model.fields,help:documents.field_documents_share__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Jika dicentang, beberapa pesan mempunyai kesalahan dalam pengiriman."
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_bounced_content
+msgid ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
+msgstr ""
+"Jika di tetapkan, konten ini akan secara otomatis dikirimkan untuk pengguna "
+"tanpa wewenang daripada pesan default."
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Image/Video"
+msgstr "Gambar/Video"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_marketing_assets_images
+msgid "Images"
+msgstr "Gambar"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_status_inbox
+#: model:documents.tag,name:documents.documents_internal_status_inbox
+#: model:mail.activity.type,name:documents.mail_documents_activity_data_Inbox
+msgid "Inbox"
+msgstr "Kotak Pesan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__include_sub_folders
+msgid "Include Sub Folders"
+msgstr "Temasuk Sub Folder"
+
+#. module: documents
+#: model_terms:documents.folder,description:documents.documents_internal_folder
+msgid ""
+"Incoming letters sent to <span class=\"o_folder_description_alias\">inbox "
+"email alias</span> will be added to your inbox automatically."
+msgstr ""
+"Surat masuk yang dikirim ke  <span "
+"class=\"o_folder_description_alias\">inbox alias email</span> akan "
+"ditambahkan ke inbox Anda secara otomatis."
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__index_content
+msgid "Indexed Content"
+msgstr "Konten Terindeks"
+
+#. module: documents
+#: model:documents.folder,name:documents.documents_internal_folder
+msgid "Internal"
+msgstr "Internal"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__is_editable_attachment
+msgid "Is Editable Attachment"
+msgstr "Apakah Lampiran Dapat Diedit"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__is_favorited
+msgid "Is Favorited"
+msgstr "Apakah Difavorit"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_is_follower
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_is_follower
+msgid "Is Follower"
+msgstr "Adalah Follower"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__is_shared
+msgid "Is Shared"
+msgstr "Apakah Dibagi"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__is_multipage
+msgid "Is considered multipage"
+msgstr "Apakah dianggap multi-halaman"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_model.js:0
+#, python-format
+msgid "Items in trash will be deleted forever after %s days."
+msgstr "Barang di tong sampah akan selamanya dihapus setelah %s hari."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#, python-format
+msgid "Items moved to the trash will be deleted forever after %s days."
+msgstr ""
+"Barang yang digerakkan ke tong sampah akan dihapus selamanya setelah %s "
+"hari."
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.format_file_size
+msgid "Kb"
+msgstr "Kb"
+
+#. module: documents
+#: model:documents.facet,name:documents.documents_internal_knowledge
+msgid "Knowledge"
+msgstr "Pengetahuan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__write_uid
+#: model:ir.model.fields,field_description:documents.field_documents_facet__write_uid
+#: model:ir.model.fields,field_description:documents.field_documents_folder__write_uid
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__write_uid
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__write_uid
+#: model:ir.model.fields,field_description:documents.field_documents_share__write_uid
+#: model:ir.model.fields,field_description:documents.field_documents_tag__write_uid
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__write_uid
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__write_date
+#: model:ir.model.fields,field_description:documents.field_documents_facet__write_date
+#: model:ir.model.fields,field_description:documents.field_documents_folder__write_date
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__write_date
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__write_date
+#: model:ir.model.fields,field_description:documents.field_documents_share__write_date
+#: model:ir.model.fields,field_description:documents.field_documents_tag__write_date
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__write_date
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Late Activities"
+msgstr "Aktifitas terakhir"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_internal_knowledge_legal
+msgid "Legal"
+msgstr "Legal"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid ""
+"Let's process documents in your Inbox.<br/><i>Tip: Use Tags to filter "
+"documents and structure your process.</i>"
+msgstr ""
+"Ayo proses dokumen di Inbox Anda.<br/><i>Tip: Gunakan Tag untuk memfilter "
+"dokumen dan organisasikan proses Anda.</i>"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid "Let's process these bills: send to Finance workspace."
+msgstr "Ayo proses tagihan ini: kirim ke ruang kerja Finance."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid "Let's process this document, coming from our scanner."
+msgstr "Ayo proses dokumen ini, datang dari scanner kami."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid ""
+"Let's tag this mail as legal<br/> <i>Tips: actions can be tailored to your "
+"process, according to the workspace.</i>"
+msgstr ""
+"Ayo tag email ini sebagai legal<br/> <i>Tip: action dapat disesuaikan ke "
+"proses Anda, menurut ruang kerja.</i>"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_folder__user_specific
+msgid "Limit Read Groups to the documents of which they are owner."
+msgstr ""
+"Batasi Kelompok Membaca ke dokumen yang mana mereka merupakan pemilik."
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_folder__user_specific_write
+msgid "Limit Write Groups to the documents of which they are owner."
+msgstr ""
+"Batasi Kelompok Menulis ke dokumen yang mana mereka merupakan pemilik."
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.documents_link_to_record_form_view
+msgid "Link"
+msgstr "Tautan..."
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/controllers/documents.py:0
+#, python-format
+msgid "Link created by:"
+msgstr "Link dibuat pada:"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_rule__create_model__link_to_record
+msgid "Link to record"
+msgstr "Link untuk record"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "Links cannot be shared and therefore will be excluded."
+msgstr "Link tidak dapat dibagikan and oleh karenanya akan dihapus."
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__state__live
+msgid "Live"
+msgstr "Live"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr "Local-part based incoming detection"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+#, python-format
+msgid "Lock"
+msgstr "Kunci"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__is_locked
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Locked"
+msgstr "Dikunci"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__lock_uid
+msgid "Locked by"
+msgstr "Dikunci oleh"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Log a note..."
+msgstr "Log catatan..."
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.public_page_layout
+msgid "Login"
+msgstr "Log masuk"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.public_page_layout
+msgid "Logout"
+msgstr "Keluar"
+
+#. module: documents
+#: model:documents.workflow.rule,name:documents.documents_rule_internal_mad
+msgid "Mark As Draft"
+msgstr "Tandai Sebagai Draf"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__remove_activities
+msgid "Mark all as Done"
+msgstr "Tandai sebagai Selesai"
+
+#. module: documents
+#: model:documents.folder,name:documents.documents_marketing_folder
+msgid "Marketing"
+msgstr "Pemasaran"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.format_file_size
+msgid "Mb"
+msgstr "Mb"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__activity_note
+msgid "Message"
+msgstr "Pesan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_has_error
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_has_error
+msgid "Message Delivery error"
+msgstr "Kesalahan Pengiriman Pesan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_ids
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_ids
+msgid "Messages"
+msgstr "Pesan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__mimetype
+msgid "Mime Type"
+msgstr "Jenis MIME"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Miscellaneous"
+msgstr "Lain-lain"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__model_id
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Model"
+msgstr "Model"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__accessible_model_ids
+msgid "Models"
+msgstr "Model"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_request_wizard__activity_date_deadline_range_type__months
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__activity_date_deadline_range_type__months
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_rule__activity_date_deadline_range_type__months
+msgid "Months"
+msgstr "Bulan"
+
+#. module: documents
+#: model:documents.workflow.rule,name:documents.documents_rule_finance_mti
+msgid "Move To Inbox"
+msgstr "Pindahkan Ke Inbox"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Move this page to trash"
+msgstr "Pindahkan halaman ini ke tong sampah"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__folder_id
+msgid "Move to Workspace"
+msgstr "Pindahkan ke Ruang Kerja"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#: code:addons/documents/static/src/views/form/folder_form_controller.js:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: code:addons/documents/static/src/views/list/folder_list_controller.js:0
+#: model_terms:ir.ui.view,arch_db:documents.folder_deletion_form
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+#, python-format
+msgid "Move to trash"
+msgstr "Pindahkan ke tong sampah"
+
+#. module: documents
+#. odoo-javascript
+#. odoo-python
+#: code:addons/documents/models/documents_folder.py:0
+#: code:addons/documents/static/src/views/form/folder_form_controller.js:0
+#: code:addons/documents/static/src/views/list/folder_list_controller.js:0
+#, python-format
+msgid "Move to trash?"
+msgstr "Pindahkan ke tong sampah?"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector_field.js:0
+#, python-format
+msgid "Multiple values"
+msgstr "Lebih dari satu value"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "My Activities"
+msgstr "Aktivitas Saya"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Deadline Kegiatan Saya"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "My Documents"
+msgstr "Dokumen saya"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "My Favorites"
+msgstr "Favorit Saya"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__name
+#: model:ir.model.fields,field_description:documents.field_documents_facet__name
+#: model:ir.model.fields,field_description:documents.field_documents_folder__name
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__name
+#: model:ir.model.fields,field_description:documents.field_documents_share__name
+#: model:ir.model.fields,field_description:documents.field_documents_tag__name
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+msgid "Name"
+msgstr "Nama"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "Name of the share link"
+msgstr "Nama link share"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_panel.xml:0
+#, python-format
+msgid "New"
+msgstr "Baru"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "New File"
+msgstr "File baru"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "New Group"
+msgstr "Kelompok Baru"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_panel.js:0
+#, python-format
+msgid "New Tag"
+msgstr "Tag Baru"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_panel.js:0
+#, python-format
+msgid "New Workspace"
+msgstr "Ruang Kerja Baru"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Kalender Acara Aktivitas Berikutnya"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Batas Waktu Aktivitas Berikutnya"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_summary
+msgid "Next Activity Summary"
+msgstr "Ringkasan Aktivitas Berikutnya"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_type_id
+msgid "Next Activity Type"
+msgstr "Tipe Aktivitas Berikutnya"
+
+#. module: documents
+#: model_terms:ir.actions.act_window,help:documents.mail_activity_type_action_document
+msgid "No activity types found. Let's create one!"
+msgstr "Tidak ada tipe kegiatan yang ditemukan. Ayo buat baru!"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/helper/documents_action_helper.xml:0
+#, python-format
+msgid "No alias configured"
+msgstr "Tidak ada alias yang dikonfigurasi"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "No document has been selected"
+msgstr "Tidak ada dokumen yang dipilih"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "No limit"
+msgstr "Tanpa batas"
+
+#. module: documents
+#: model_terms:ir.actions.act_window,help:documents.share_action
+msgid "No shared links"
+msgstr "Tidak ada link yang di-share"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_document.py:0
+#, python-format
+msgid "Not a file"
+msgstr "Bukan file"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_document.py:0
+#, python-format
+msgid "Not attached"
+msgstr "Tidak terlampir"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__activity_note
+msgid "Note"
+msgstr "Catatan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_needaction_counter
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Jumlah Action"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__links_count
+msgid "Number of Links"
+msgstr "Jumlah Link"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_has_error_counter
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_has_error_counter
+msgid "Number of errors"
+msgstr "Jumlah kesalahan"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__message_needaction_counter
+#: model:ir.model.fields,help:documents.field_documents_share__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Jumlah pesan yang membutuhkan tindakan"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__message_has_error_counter
+#: model:ir.model.fields,help:documents.field_documents_share__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Jumlah pesan dengan kesalahan pengiriman"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.public_page_layout
+msgid "Odoo Logo"
+msgstr "Logo Odoo"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.public_page_layout
+msgid "Odoo Website"
+msgstr "Website Odoo"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__limited_to_single_record
+msgid "One record limit"
+msgstr "Batas satu record"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "Open chatter"
+msgstr "Buka obrolan"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_force_thread_id
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr ""
+"ID Opsional dari file (catatan) di mana semua pesan masuk akan dilampirkan, "
+"bahkan jika mereka tidak menjawabnya. Jika diatur, hal ini akan "
+"menonaktifkan pembuatan catatan baru sepenuhnya."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/helper/documents_action_helper.xml:0
+#, python-format
+msgid "Or send emails to"
+msgstr "Atau kirim email ke"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_internal_knowledge_other
+msgid "Other"
+msgstr "Lainnya"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__user_specific
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+msgid "Own Documents Only"
+msgstr "Hanya Dokumen Sendiri"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__user_specific_write
+msgid "Own Documents Only (Write)"
+msgstr "Hanya Dokumen Sendiri (Tulis)"
+
+#. module: documents
+#: model:ir.model.constraint,message:documents.constraint_documents_folder_check_user_specific
+msgid ""
+"Own Documents Only may not be enabled for write groups if it is not enabled "
+"for read groups."
+msgstr ""
+"Hanya Dokumen Sendiri mungkin tidak diaktifkan untuk kelompok tulis bila "
+"tidak diaktifkan untuk kelompok baca."
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__owner_id
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__requestee_id
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__criteria_owner_id
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Owner"
+msgstr "Pemilik"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+msgid "Owner: #{document.owner_id.name}"
+msgstr "Pemilik: #{document.owner_id.name}"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "PDF/Document"
+msgstr "PDF/Dokumen"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_parent_model_id
+msgid "Parent Model"
+msgstr "Model Induk"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__parent_path
+msgid "Parent Path"
+msgstr "Parent Path"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_parent_thread_id
+msgid "Parent Record Thread ID"
+msgstr "Catatan Induk ID File"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__parent_folder_id
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_search
+msgid "Parent Workspace"
+msgstr "Ruang Kerja Induk"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_parent_model_id
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"Model induk dengan alias. Model yang memiliki referensi alias ini tidak "
+"selalu berarti model yang diberikan oleh alias_model_id (contoh: proyek "
+"(parent_model) dan tugas (model))"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_panel.js:0
+#, python-format
+msgid "Partial transfer"
+msgstr "Transfer parsial"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.not_available
+msgid "Please contact the person that shared this link for more information."
+msgstr ""
+"Mohon hubungi orang yang membagikan link ini untuk informasi lebih lanjut."
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
+"Kebijakan untuk mengirimkan pesan di dokumen menggunakan mailgateway.\n"
+"- semua orang: setiap orang dapat mengirim\n"
+"- rekanan: hanya rekanan yang diijinkan\n"
+"- pengikut: hanya pengikut dokumen terkait\n"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_document__thumbnail_status__present
+msgid "Present"
+msgstr "Hadir"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_internal_template_presentations
+msgid "Presentations"
+msgstr "Presentasi"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_internal_template_project
+msgid "Project"
+msgstr "Proyek"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__rating_ids
+#: model:ir.model.fields,field_description:documents.field_documents_share__rating_ids
+msgid "Ratings"
+msgstr "Rating"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+msgid "Read Access"
+msgstr "Hak Membaca"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__read_group_ids
+msgid "Read Groups"
+msgstr "Kelompok Baca"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__resource_ref
+msgid "Record"
+msgstr "Catatan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "Rekam ID Thread"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__domain_folder_id
+msgid "Related Workspace"
+msgstr "Ruang Kerja Terkait"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Remaining Pages"
+msgstr "Halaman-Halaman Tersisa"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/activity/documents_activity_controller.js:0
+#, python-format
+msgid "Reminder emails have been sent."
+msgstr "Email pengingat telah dikirim"
+
+#. module: documents
+#: model:mail.template,subject:documents.mail_template_document_request_reminder
+msgid ""
+"Reminder to upload your document{{ object.name and ' : ' + object.name or ''"
+" }}"
+msgstr ""
+"Pengingat untuk mengunggah dokumen Anda{{ object.name and ' : ' + "
+"object.name or '' }}"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_action__action__remove
+msgid "Remove"
+msgstr "Hapus"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "Replace"
+msgstr "Ganti"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_action__action__replace
+msgid "Replace by"
+msgstr "Ganti dengan"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_controller_mixin.xml:0
+#: model:ir.model.fields.selection,name:documents.selection__documents_document__type__empty
+#: model_terms:ir.ui.view,arch_db:documents.documents_request_form_view
+#, python-format
+msgid "Request"
+msgstr "Permintaan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__request_activity_id
+msgid "Request Activity"
+msgstr "Minta Kegiatan"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.documents_request_form_view
+msgid "Request To"
+msgstr "Minta Untuk"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/web/activity/activity_menu_patch.xml:0
+#, python-format
+msgid "Request a Document"
+msgstr "Minta Dokumen"
+
+#. module: documents
+#: model:ir.actions.act_window,name:documents.action_request_form
+msgid "Request a file"
+msgstr "Minta file"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Requested"
+msgstr "Diminta"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_request_page
+msgid ""
+"Requested\n"
+"                                ∙"
+msgstr ""
+"Diminta\n"
+"                                ∙"
+
+#. module: documents
+#: model:mail.activity.type,name:documents.mail_documents_activity_data_md
+msgid "Requested Document"
+msgstr "Dokumen yang Diminta"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__required_tag_ids
+msgid "Required Tags"
+msgstr "Tag yang Diminta"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__res_model_name
+msgid "Res Model Name"
+msgstr "Nama Res Model"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__res_id
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__res_id
+msgid "Resource ID"
+msgstr "ID Sumber Daya"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__res_model
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__res_model
+msgid "Resource Model"
+msgstr "Model Sumber Daya"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__res_name
+msgid "Resource Name"
+msgstr "Nama Sumber Daya"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__activity_user_id
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__activity_user_id
+msgid "Responsible"
+msgstr "Penanggung Jawab"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_user_id
+msgid "Responsible User"
+msgstr "Tanggung-jawab"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/form/folder_form_controller.js:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: code:addons/documents/static/src/views/list/folder_list_controller.js:0
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+#, python-format
+msgid "Restore"
+msgstr "Pulihkan"
+
+#. module: documents
+#: code:addons/documents/models/folder.py:0
+#, python-format
+msgid "Restricted Folder"
+msgstr "Folder Terbatas"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_has_sms_error
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Kesalahan Pengiriman SMS`"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_internal_knowledge_sales
+msgid "Sales"
+msgstr "Penjualan"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+#: model_terms:ir.ui.view,arch_db:documents.tag_view_form
+msgid "Save"
+msgstr "Simpan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__activity_option
+msgid "Schedule Activity"
+msgstr "Jadwalkan Aktivitas"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/kanban/documents_kanban_renderer.js:0
+#: code:addons/documents/static/src/views/list/documents_list_renderer.js:0
+#, python-format
+msgid "Select all"
+msgstr "Pilih semua"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select focused page"
+msgstr "Pilih halaman yang difokus"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select next page"
+msgstr "Pilih halaman berikutnya"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select next pages of the group"
+msgstr "Pilih halaman berikutnya dari kelompok"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select previous page"
+msgstr "Pilih halaman sebelumnya"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select previous pages of the group"
+msgstr "Pilih halaman sebelumnya dari kelompok"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select/Deselect all pages"
+msgstr "Pilih/Batalkan Pilihan semua halaman"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid "Send this letter to the legal department, by assigning the right tags."
+msgstr ""
+"Kirim surat ini ke departemen legal, dengan memberikan tag yang tepat."
+
+#. module: documents
+#: model:documents.workflow.rule,name:documents.documents_rule_internal_legal
+msgid "Send to Legal"
+msgstr "Kirim ke Legal"
+
+#. module: documents
+#: model:mail.template,description:documents.mail_template_document_request
+msgid "Sent to partner when requesting a document from them"
+msgstr "Kirim ke partner saat meminta dokumen dari mereka"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_facet__sequence
+#: model:ir.model.fields,field_description:documents.field_documents_folder__sequence
+#: model:ir.model.fields,field_description:documents.field_documents_tag__sequence
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__sequence
+msgid "Sequence"
+msgstr "Urutan"
+
+#. module: documents
+#: model:documents.workflow.rule,name:documents.documents_rule_finance_2018contracts
+msgid "Set As 2024 Contracts"
+msgstr "Tetapkan Sebagai Kontrak 2024"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__partner_id
+msgid "Set Contact"
+msgstr "Atur Kontak"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__user_id
+msgid "Set Owner"
+msgstr "Atur Pemilik"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__tag_action_ids
+msgid "Set Tags"
+msgstr "Tetapkan Tag"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.res_config_settings_view_form
+msgid "Set deletion delay for documents in the Trash"
+msgstr "Tetapkan jeda penghapusan untuk dokumen di Tong Sampah"
+
+#. module: documents
+#: model:mail.template,description:documents.mail_template_document_request_reminder
+msgid ""
+"Set reminders in activities to notify users who didn't upload their "
+"requested document"
+msgstr ""
+"Tetapkan pengingat di kegiatan untuk menotifikasi user yang tidak menunggah "
+"dokumen mereka yang diminta"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__has_owner_activity
+msgid "Set the activity on the document owner"
+msgstr "Tetapkan kegiatan pada pemilik dokumen"
+
+#. module: documents
+#: model:ir.actions.act_window,name:documents.configuration_action
+#: model:ir.actions.act_window,name:documents.settings_action
+#: model:ir.ui.menu,name:documents.settings_menu
+msgid "Settings"
+msgstr "Pengaturan"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_controller_mixin.xml:0
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+#, python-format
+msgid "Share"
+msgstr "Bagikan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__share_link_ids
+msgid "Share Links"
+msgstr "Share Links"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/controllers/documents.py:0
+#, python-format
+msgid "Share link"
+msgstr "Share link"
+
+#. module: documents
+#: model:ir.actions.act_window,name:documents.share_action
+msgid "Share links"
+msgstr "Share link-link"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_share.py:0
+#, python-format
+msgid "Share selected files"
+msgstr "Share file yang dipilih"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_share.py:0
+#, python-format
+msgid "Share selected workspace"
+msgstr "Share ruang kerja yang dipilih"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_controller_mixin.xml:0
+#, python-format
+msgid "Share this domain"
+msgstr "Share domain ini"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "Share this selection"
+msgstr "Share pilihan ini"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__type
+msgid "Share type"
+msgstr "Tipe share"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__create_share_id
+msgid "Share used to create this document"
+msgstr "Share digunakan untuk membuat dokumen ini"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "Shared"
+msgstr "Dibagikan"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__document_ids
+msgid "Shared Documents"
+msgstr "Dokumen yang Dibagi"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__tag_ids
+msgid "Shared Tags"
+msgstr "Tag yang Di-Share"
+
+#. module: documents
+#: model:ir.ui.menu,name:documents.share_menu
+msgid "Shares & Emails"
+msgstr "Share & Email"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Show all records which has next action date is before today"
+msgstr "Tampilkan semua dokumen dengan aksi berikut sebelum hari ini"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "Size"
+msgstr "Ukuran"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_files_page
+msgid "Size:"
+msgstr "Ukuran:"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/hooks.js:0
+#, python-format
+msgid "Some files could not be uploaded (max size: %s)."
+msgstr "Beberapa file tidak dapat diunggah (ukuran maksimum: %s)."
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.not_available
+msgid "Sorry, this link is no longer valid."
+msgstr "Sorry, link ini tidak lagi valid."
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__link_model
+msgid "Specific Model Linked"
+msgstr "Model Spesifik Dihubungkan"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "Split"
+msgstr "Pisahkan"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/attachments/document_file_viewer.xml:0
+#: code:addons/documents/static/src/attachments/document_file_viewer.xml:0
+#, python-format
+msgid "Split PDF"
+msgstr "Pisah PDF"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Split selected pages"
+msgstr "Pisah halaman yang dipilih"
+
+#. module: documents
+#: model:documents.facet,name:documents.documents_finance_status
+#: model:documents.facet,name:documents.documents_internal_status
+#: model:ir.model.fields,field_description:documents.field_documents_share__state
+msgid "Status"
+msgstr "Status"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status berdasarkan aktivitas\n"
+"Terlambat: Batas waktu telah terlewati\n"
+"Hari ini: Tanggal aktivitas adalah hari ini\n"
+"Direncanakan: Aktivitas yang akan datang."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#, python-format
+msgid "Stay here"
+msgstr "Tunggu Di sini"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__children_folder_ids
+msgid "Sub workspaces"
+msgstr "Sub-workspace"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__activity_summary
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__activity_summary
+msgid "Summary"
+msgstr "Ringkasan"
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_tag
+#: model:ir.model.fields,field_description:documents.field_documents_facet__tag_ids
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__tag_id
+#: model:ir.model.fields,field_description:documents.field_mail_activity_type__tag_ids
+#: model_terms:ir.ui.view,arch_db:documents.tag_view_search
+msgid "Tag"
+msgstr "Tag"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__facet_ids
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_tree
+msgid "Tag Categories"
+msgstr "Tag Kategori"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.facet_view_form
+msgid "Tag Category"
+msgstr "Kategori tag"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.tag_view_form
+msgid "Tag Name"
+msgstr "Nama Tag"
+
+#. module: documents
+#: model:ir.model.constraint,message:documents.constraint_documents_tag_facet_name_unique
+msgid "Tag already exists for this facet"
+msgstr "Tag sudah tersedia untuk facet ini"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_folder__facet_ids
+msgid "Tag categories defined for this workspace"
+msgstr "Kategori tag yang didefinisikan untuk ruang kerja ini"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: model:ir.actions.act_window,name:documents.facet_action
+#: model:ir.model.fields,field_description:documents.field_documents_document__tag_ids
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__tag_ids
+#: model:ir.ui.menu,name:documents.category_menu
+#: model_terms:ir.ui.view,arch_db:documents.facet_view_form
+#: model_terms:ir.ui.view,arch_db:documents.facet_view_tree
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+#, python-format
+msgid "Tags"
+msgstr "Label"
+
+#. module: documents
+#: model:documents.facet,name:documents.documents_internal_template
+msgid "Templates"
+msgstr "Contoh"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_internal_template_text
+msgid "Text"
+msgstr "Teks"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_facet__tooltip
+msgid "Text shown when hovering on this tag category or its tags"
+msgstr ""
+"Teks yang ditunjukkan saat menaruh mouse di atas kategori tag ini atau tag-"
+"tagnya"
+
+#. module: documents
+#: model:ir.model.constraint,message:documents.constraint_res_config_settings_check_deletion_delay
+msgid "The deletion delay should be positive."
+msgstr "Jeda penghapusan harus selalu positif."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/hooks.js:0
+#, python-format
+msgid "The links and requested documents are not shareable."
+msgstr "Link dan dokumen yang diminta tidak dapat di-share."
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_model_id
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
+msgstr ""
+"Model (Jenis Dokumen Odoo) di mana alias ini dikaitkan. Email masuk yang "
+"tidak menjawab catatan yang sudah ada akan menyebabkan pembuatan rekor baru "
+"model ini (misalnya tugas proyek)"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_name
+msgid ""
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
+msgstr ""
+"Nama email alias, misalnya 'pekerjaan' jika Anda ingin menangkap email untuk"
+" <jobs@example.odoo.com>"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/hooks.js:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.js:0
+#, python-format
+msgid "The share url has been copied to your clipboard."
+msgstr "URL untuk share telah disalin ke papan klip Anda."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.js:0
+#, python-format
+msgid "The share url has been copied to your clipboard. Links were excluded."
+msgstr "URL share telah disalin ke papan klip Anda. Link dikecualikan."
+
+#. module: documents
+#: model:ir.model.constraint,message:documents.constraint_documents_share_share_unique
+msgid "This access token already exists"
+msgstr "Token akses ini sudah tersedia"
+
+#. module: documents
+#: model:ir.model.constraint,message:documents.constraint_documents_document_attachment_unique
+msgid "This attachment is already a document"
+msgstr "Lampiran ini sudah menjadi dokumen"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__group_ids
+msgid "This attachment will only be available for the selected user groups"
+msgstr "Lampiran ini hanya tersedia untuk kelompok user yang dipilih"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_request_page
+msgid ""
+"This document has been requested.\n"
+"                <b onclick=\"document.querySelector('.o_request_upload').click()\" style=\"cursor:pointer;\">Upload it</b>."
+msgstr ""
+"Dokumen ini sudah diminta.\n"
+"                <b onclick=\"document.querySelector('.o_request_upload').click()\" style=\"cursor:pointer;\">Unggah</b>."
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_document.py:0
+#, python-format
+msgid "This file has been restored"
+msgstr "File ini telah dipulihkan"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_document.py:0
+#, python-format
+msgid ""
+"This file has been sent to the trash and will be deleted forever on the %s"
+msgstr ""
+"File ini telah dikirim ke tong sampah dan akan dihapus selamanya pada %s"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__company_id
+#: model:ir.model.fields,help:documents.field_documents_folder__company_id
+msgid "This workspace will only be available to the selected company"
+msgstr "Ruang kerja ini hanya tersedia untuk perusahaan yang dipilih"
+
+#. module: documents
+#: model_terms:ir.actions.act_window,help:documents.mail_activity_type_action_document
+msgid ""
+"Those represent the different categories of things you have to do (e.g. "
+"\"Call\" or \"Send email\")."
+msgstr ""
+"Mereka mewakili kategori-kategori berbeda untuk kegiatan yang harus Anda "
+"lakukan (contohnya \"Telepon\" atau \"Kirim email\")."
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__thumbnail
+msgid "Thumbnail"
+msgstr "Thumbnail"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__thumbnail_status
+msgid "Thumbnail Status"
+msgstr "Status Thumbnail"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/helper/documents_action_helper.xml:0
+#, python-format
+msgid "Tip: configure your scanner to send all documents to this address."
+msgstr ""
+"Tip: konfigurasikan scanner Anda untuk mengirim semua dokumen ke alamat ini."
+
+#. module: documents
+#: model:digest.tip,name:documents.digest_tip_documents_0
+msgid "Tip: Become a paperless company"
+msgstr "Tip: Menjadi perusahaan yang paperless"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_status_tc
+#: model:documents.tag,name:documents.documents_internal_status_tc
+msgid "To Validate"
+msgstr "Untuk Divalidasi"
+
+#. module: documents
+#: model:mail.activity.type,name:documents.mail_documents_activity_data_tv
+msgid "To validate"
+msgstr "Untuk divalidasi"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Today Activities"
+msgstr "Aktivitas Hari ini"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_controller_mixin.xml:0
+#, python-format
+msgid "Toggle Dropdown"
+msgstr "Toggle Dropdown"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/kanban/documents_kanban_renderer.js:0
+#, python-format
+msgid "Toggle favorite"
+msgstr "Toggle favorite"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_facet__tooltip
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__note
+#: model_terms:ir.ui.view,arch_db:documents.facet_view_form
+msgid "Tooltip"
+msgstr "Tooltip"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_model.js:0
+#, python-format
+msgid "Trash"
+msgstr "Sampah"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__is_editable_attachment
+msgid "True if we can edit the link attachment."
+msgstr "True bila kita dapat mengedit lampiran link."
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__type
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Type"
+msgstr "Jenis"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Jenis dari aktivitas pengecualian pada rekaman data."
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__url
+#: model:ir.model.fields,field_description:documents.field_documents_share__full_url
+#: model:ir.model.fields.selection,name:documents.selection__documents_document__type__url
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+#: model_terms:ir.ui.view,arch_db:documents.documents_upload_url_view
+msgid "URL"
+msgstr "URL"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_document.py:0
+#, python-format
+msgid ""
+"URL %s does not seem complete, as it does not begin with http(s):// or "
+"ftp://"
+msgstr ""
+"URL %s sepertinya tidak selesai, karena tidak dimulai dengan http(s):// atau"
+" ftp://"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__url_preview_image
+msgid "URL Preview Image"
+msgstr "Gambar Pratinjau URL"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+msgid "Unlock"
+msgstr "Buka"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#, python-format
+msgid "Unnamed"
+msgstr "Belum ada nama"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_controller_mixin.xml:0
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+#, python-format
+msgid "Upload"
+msgstr "Unggah"
+
+#. module: documents
+#: model_terms:ir.actions.act_window,help:documents.document_action
+msgid ""
+"Upload <span class=\"fw-normal\">a file or</span> drag <span class=\"fw-"
+"normal\">it here.</span>"
+msgstr ""
+"Unggah <span class=\"fw-normal\">file atau</span> tarol <span class=\"fw-"
+"normal\">ke sini.</span>"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "Upload Document"
+msgstr "Unggah Dokumen"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__email_drop
+msgid "Upload by Email"
+msgstr "Unggah lewat Email"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "Upload by email"
+msgstr "Upload melalui email"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/mail_activity.py:0
+#, python-format
+msgid "Upload file request"
+msgstr "Upload permintaan file"
+
+#. module: documents
+#: model:ir.model,name:documents.model_res_users
+#: model:res.groups,name:documents.group_documents_user
+msgid "User"
+msgstr "Pengguna"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_documents_vat
+msgid "VAT"
+msgstr "PPN"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__date_deadline
+msgid "Valid Until"
+msgstr "Berlaku hingga"
+
+#. module: documents
+#: model:documents.workflow.rule,name:documents.documents_rule_finance_validate
+msgid "Validate"
+msgstr "Validasi"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_status_validated
+#: model:documents.tag,name:documents.documents_internal_status_validated
+msgid "Validated"
+msgstr "Sudah Divalidasi"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_files_page
+msgid "Validity date:"
+msgstr "Tanggal validitas:"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_marketing_assets_Videos
+msgid "Videos"
+msgstr "Video-Video"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid ""
+"Want to become a <b>paperless company</b>? Let's discover Odoo Documents."
+msgstr ""
+"Ingin menjadi <b>perusahaan yang paperless</b>? Ayo gunakan Odoo Documents."
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__website_message_ids
+#: model:ir.model.fields,field_description:documents.field_documents_share__website_message_ids
+msgid "Website Messages"
+msgstr "Pesan situs"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__website_message_ids
+#: model:ir.model.fields,help:documents.field_documents_share__website_message_ids
+msgid "Website communication history"
+msgstr "Sejarah komunikasi situs"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_request_wizard__activity_date_deadline_range_type__weeks
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__activity_date_deadline_range_type__weeks
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_rule__activity_date_deadline_range_type__weeks
+msgid "Weeks"
+msgstr "Minggu"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#, python-format
+msgid "What do you want to do with the remaining pages ?"
+msgstr "Apa yang And ingin lakukan untuk halaman-halaman yang tersisa ?"
+
+#. module: documents
+#: model:ir.actions.act_window,name:documents.workflow_rule_action
+msgid "Workflow Actions"
+msgstr "Action Workflow"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__workflow_rule_id
+msgid "Workflow Rule"
+msgstr "Peraturan Workflow"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__folder_id
+#: model:ir.model.fields,field_description:documents.field_documents_facet__folder_id
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__folder_id
+#: model:ir.model.fields,field_description:documents.field_documents_share__folder_id
+#: model:ir.model.fields,field_description:documents.field_documents_tag__folder_id
+#: model_terms:ir.ui.view,arch_db:documents.facet_view_search
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_tree
+msgid "Workspace"
+msgstr "Ruang Kerja"
+
+#. module: documents
+#: model:ir.actions.act_window,name:documents.folder_action
+#: model:ir.ui.menu,name:documents.folder_menu
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_tree
+msgid "Workspaces"
+msgstr "Ruang Kerja"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid ""
+"Wow... 6 documents processed in a few seconds, You're good.<br/>The tour is "
+"complete. Try uploading your own documents now."
+msgstr ""
+"Wow... 6 dokumen diproses dalam beberapa detik, Anda hebat.<br/>Tur sudah "
+"selesai. Coba unggah dokumen Anda sekarang."
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+msgid "Write Access"
+msgstr "Akses Menulis"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__group_ids
+msgid "Write Groups"
+msgstr "Kelompok Tulis"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Write a tooltip for the action here"
+msgstr "Tulis tooltip untuk action di sini"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__attachment_type
+msgid ""
+"You can either upload a file from your computer or copy/paste an internet "
+"link to your file."
+msgstr ""
+"Anda dapat mengunggah file dari komputer Anda maupun salin/tempel dari "
+"tautan internet ke file Anda."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_controller_mixin.xml:0
+#, python-format
+msgid "You cannot upload content in this workspace"
+msgstr "Anda tidak dapat mengunggah konten di ruang kerja ini"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_document.py:0
+#, python-format
+msgid "You don't have the right to move documents to that workspace."
+msgstr ""
+"Anda tidak memiliki hak untuk menggerakkan dokumen ke ruang kerja tersebut."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_panel.js:0
+#, python-format
+msgid "You don't have the rights to move documents to that workspace"
+msgstr ""
+"Anda tidak memiliki hak-hak untuk menggerakkan dokumen ke ruang kerja "
+"tersebut."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/helper/documents_drop_zone.xml:0
+#, python-format
+msgid "You must be in a specific workspace to upload files"
+msgstr "Anda harus berada di ruang kerja tertentu untuk mengunggah file"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "Youtube Video"
+msgstr "Video Youtube"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_deletion_form
+msgid "days."
+msgstr "hari."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "delete"
+msgstr "hapus"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "document"
+msgstr "dokumen"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+#, python-format
+msgid "documents"
+msgstr "dokumen"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "documents selected"
+msgstr "dokumen yang dipilih"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "download"
+msgstr "unduh"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "e.g. Discuss proposal"
+msgstr "mis. Diskusi Proposal"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+msgid "e.g. Finance"
+msgstr "contohnya Keuangan"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.documents_request_form_view
+msgid "e.g. Missing Expense"
+msgstr "contoh Pengeluaran Hilang"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.facet_view_form
+msgid "e.g. Status"
+msgstr "contoh Statu"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.tag_view_form
+msgid "e.g. To Validate"
+msgstr "contoh Untuk Memvalidasi"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "e.g. Validate document"
+msgstr "contoh Validasi dokumen"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "e.g. domain.com"
+msgstr "contoh domain.com"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.documents_upload_url_view
+msgid "e.g. https://www.youtube.com/watch?v=CP96yVnXNrY"
+msgstr "contoh https://www.youtube.com/watch?v=CP96yVnXNrY"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "file_extension"
+msgstr "file_extension"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_files_page
+msgid "files"
+msgstr "file-file"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__is_readonly_model
+msgid "is_readonly_model"
+msgstr "is_readonly_model"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "restore"
+msgstr "pulihkan"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_page/pdf_page.xml:0
+#: code:addons/documents/static/src/owl/components/pdf_page/pdf_page.xml:0
+#, python-format
+msgid "select"
+msgstr "pilih"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "selected"
+msgstr "terpilih"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.public_page_layout
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+msgid "shared by"
+msgstr "dibagikan oleh"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/hooks.js:0
+#, python-format
+msgid "status code: %s, message: %s"
+msgstr "kode status: %s, pesan: %s"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "unnamed"
+msgstr "tanpa nama"

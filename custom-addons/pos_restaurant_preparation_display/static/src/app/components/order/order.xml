@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_preparation_display.Order" t-inherit="pos_preparation_display.Order" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_pdis_order_card_header_top')]" position="inside">
+            <div class="o_pdis_seats flex-shrink-0 ps-2 text-end" t-if="this.props.order.customerCount">
+                <i class="fa fa-users pe-1" aria-hidden="true"></i>
+                <span t-esc="this.props.order.customerCount" />
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_pdis_tracker')]" position="before">
+            <div class="o_pdis_table" t-if="this.props.order.table and this.props.order.table.name">
+                <span>T<t t-esc="this.props.order.table.name"/> </span>
+            </div>
+        </xpath>
+    </t>
+</templates>

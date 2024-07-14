@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="planning_slot_view_form_inherit_project_timesheet_forecast_sale" model="ir.ui.view">
+        <field name="name">planning.slot.form.inherit.project.timesheet.forecast.sale</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="sale_planning.planning_slot_view_form_inherit_sale_planning"/>
+        <field name="arch" type="xml">
+            <field name='sale_line_id' position="attributes">
+                <attribute name="context">{'with_remaining_hours': True}</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="project_timesheet_forecast.project_timesheet_action_schedule_by_role" model="ir.actions.act_window">
+        <field name="domain">[('start_datetime', '!=', False), ('end_datetime', '!=', False)]</field>
+    </record>
+</odoo>

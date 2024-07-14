@@ -1,0 +1,583 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* documents_spreadsheet
+# 
+# Translators:
+# Haojun Zou <apollo_zhj@msn.com>, 2023
+# Robin Calvin, 2023
+# Martin Trigaux, 2023
+# Simon S, 2023
+# Kristoffer Grundström <lovaren@gmail.com>, 2023
+# Kim Asplund <kim.asplund@gmail.com>, 2023
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
+# Lasse L, 2023
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/wizard/save_spreadsheet_template.py:0
+#, python-format
+msgid "\"%s\" saved as template"
+msgstr "\"%s\" sparad som mall"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.share_page
+msgid "#{'Download '}#{document.name}"
+msgstr ""
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/spreadsheet_template.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopia)"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/bundle/actions/spreadsheet_action.js:0
+#, python-format
+msgid "%s - Template"
+msgstr "%s - Mall"
+
+#. module: documents_spreadsheet
+#: model:ir.model.constraint,message:documents_spreadsheet.constraint_spreadsheet_contributor_spreadsheet_user_unique
+msgid "A combination of the spreadsheet and the user already exist"
+msgstr "En kombination av kalkylbladet och användaren finns redan"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.save_spreadsheet_template_view_form
+msgid ""
+"Any user will be able to create a new spreadsheet based on this template."
+msgstr ""
+"Alla användare kommer att kunna skapa ett nytt kalkylblad baserat på denna "
+"mall."
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid ""
+"Ask an admin to configure the workspace to be accessible to the users you "
+"want."
+msgstr ""
+"Be en administratör att konfigurera arbetsområdet så att det blir "
+"tillgängligt för de användare du vill."
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#, python-format
+msgid "Blank spreadsheet"
+msgstr "Tomt kalkylblad"
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid ""
+"By default, the spreadsheets in this workspace will only be seen and updated"
+" by their <strong>creator</strong>."
+msgstr ""
+"Som standard kommer kalkylbladen i det här arbetsområdet endast att kunna "
+"ses och uppdateras av deras <strong>skapare</strong>."
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.save_spreadsheet_template_view_form
+msgid "Cancel"
+msgstr "Avbryt"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.res_config_settings_view_form_inherit_documents_spreadsheet
+msgid "Centralize your spreadsheets"
+msgstr "Centralisera dina kalkylblad"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_res_company
+msgid "Companies"
+msgstr "Bolag"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_res_config_settings
+msgid "Config Settings"
+msgstr "Inställningar"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.save_spreadsheet_template_view_form
+msgid "Confirm"
+msgstr "Bekräfta"
+
+#. module: documents_spreadsheet
+#: model:ir.actions.act_window,name:documents_spreadsheet.spreadsheet_contributor_action
+#: model:ir.ui.menu,name:documents_spreadsheet.menu_technical_spreadsheet_contributor
+msgid "Contributors"
+msgstr "Bidragsgivare"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_documents_shared_spreadsheet
+msgid "Copy of a shared spreadsheet"
+msgstr ""
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#, python-format
+msgid "Create"
+msgstr "Skapa "
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/spreadsheet_template_dialog.js:0
+#, python-format
+msgid "Create a Spreadsheet or select a Template"
+msgstr ""
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__create_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__create_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__create_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__create_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__create_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__create_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__create_date
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#, python-format
+msgid "Discard"
+msgstr "Förkasta"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__display_name
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__display_name
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__display_name
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_documents_document
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__document_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__document_id
+msgid "Document"
+msgstr "Dokument"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_documents_share
+msgid "Documents Share"
+msgstr "Dokument Dela"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_res_company__documents_spreadsheet_folder_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_res_config_settings__documents_spreadsheet_folder_id
+msgid "Documents Spreadsheet Folder"
+msgstr "Mapp för dokumentkalkylblad"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_template_view_tree
+msgid "Edit"
+msgstr "Redigera"
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid "Enjoy collaborative work on your spreadsheets."
+msgstr "Njut av samarbete på dina kalkylblad."
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__excel_export
+msgid "Excel Export"
+msgstr "Excel Export"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Format issue"
+msgstr ""
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_share__freezed_spreadsheet_ids
+msgid "Freezed Spreadsheet"
+msgstr ""
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__handler
+msgid "Handler"
+msgstr "Handläggare"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__id
+msgid "ID"
+msgstr "ID"
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid "If you want to work together on those spreadsheets :"
+msgstr "Om du vill arbeta tillsammans med dessa kalkylblad :"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__write_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__write_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__write_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__write_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__write_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__write_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__last_update_date
+msgid "Last update date"
+msgstr "Datum för senaste uppdatering"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_template_view_tree
+msgid "Make a copy"
+msgstr "Gör en kopia"
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid ""
+"Manage and work with all the <strong>spreadsheets</strong> created in other "
+"applications."
+msgstr ""
+"Hantera och arbeta med alla <strong>kalkylblad</strong> som skapats i andra "
+"applikationer."
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid "Move them to another workspace"
+msgstr "Flytta dem till ett annat arbetsområde"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_template_view_search
+msgid "My Templates"
+msgstr "Mina mallar"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__name
+msgid "Name"
+msgstr "Namn"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.xml:0
+#, python-format
+msgid "New Spreadsheet"
+msgstr "Nytt kalkylblad"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/spreadsheet_template_dialog.js:0
+#, python-format
+msgid "New sheet saved in Documents"
+msgstr "Nytt ark sparat i Dokument"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_template_view_tree
+msgid "New spreadsheet"
+msgstr "Nytt kalkylblad"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#: code:addons/documents_spreadsheet/static/src/bundle/actions/spreadsheet_action.js:0
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_selector_dialog/document_selector_panel.js:0
+#, python-format
+msgid "New spreadsheet created in Documents"
+msgstr "Nytt kalkylblad skapat i Documents"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/spreadsheet_template.py:0
+#: code:addons/documents_spreadsheet/static/src/bundle/actions/spreadsheet_template/spreadsheet_template_action.js:0
+#, python-format
+msgid "New spreadsheet template created"
+msgstr "Ny mall för kalkylblad skapad"
+
+#. module: documents_spreadsheet
+#: model:ir.model.constraint,message:documents_spreadsheet.constraint_documents_shared_spreadsheet__unique
+msgid "Only one freezed spreadsheet per document share"
+msgstr ""
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Open with Odoo Spreadsheet"
+msgstr ""
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Restore"
+msgstr "Återställ"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Restore file?"
+msgstr ""
+
+#. module: documents_spreadsheet
+#: model:ir.actions.act_window,name:documents_spreadsheet.save_spreadsheet_template_action
+msgid "Save as template"
+msgstr "Spara som mall"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_clone_xlsx_dialog/spreadsheet_clone_xlsx_dialog.xml:0
+#, python-format
+msgid "Send source file to trash"
+msgstr ""
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__sequence
+msgid "Sequence"
+msgstr "Sekvens"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__server_revision_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__server_revision_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__server_revision_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__server_revision_id
+msgid "Server Revision"
+msgstr ""
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__share_id
+msgid "Share"
+msgstr "Dela Dokument"
+
+#. module: documents_spreadsheet
+#: model:documents.folder,name:documents_spreadsheet.documents_spreadsheet_folder
+#: model:ir.model.fields.selection,name:documents_spreadsheet.selection__documents_document__handler__spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.document_view_search_spreadsheet
+msgid "Spreadsheet"
+msgstr "Kalkylblad"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_spreadsheet_contributor
+msgid "Spreadsheet Contributor"
+msgstr "Bidragsgivare till kalkylblad"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__spreadsheet_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__spreadsheet_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__spreadsheet_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__spreadsheet_data
+msgid "Spreadsheet Data"
+msgstr "Data i kalkylblad"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_document_view_kanban
+msgid "Spreadsheet Preview"
+msgstr "Förhandsgranskning av kalkylblad"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__spreadsheet_revision_ids
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__spreadsheet_revision_ids
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__spreadsheet_revision_ids
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__spreadsheet_revision_ids
+msgid "Spreadsheet Revision"
+msgstr "Revidering av kalkylblad"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__spreadsheet_snapshot
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__spreadsheet_snapshot
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__spreadsheet_snapshot
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__spreadsheet_snapshot
+msgid "Spreadsheet Snapshot"
+msgstr "Snapshot av kalkylblad"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_spreadsheet_template
+msgid "Spreadsheet Template"
+msgstr "Mall för kalkylblad"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_save_spreadsheet_template
+msgid "Spreadsheet Template Save Wizard"
+msgstr "Guide för att spara mall för kalkylblad"
+
+#. module: documents_spreadsheet
+#: model:ir.actions.act_window,name:documents_spreadsheet.spreadsheet_template_action
+#: model:ir.ui.menu,name:documents_spreadsheet.menu_technical_spreadsheet_template
+msgid "Spreadsheet Templates"
+msgstr "Mallar för kalkylblad"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__spreadsheet_binary_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__spreadsheet_binary_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__spreadsheet_binary_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__spreadsheet_binary_data
+msgid "Spreadsheet file"
+msgstr "Fil för kalkylblad"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid ""
+"Spreadsheet files cannot be handled from the Trash. Would you like to "
+"restore this document?"
+msgstr ""
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_clone_xlsx_dialog/spreadsheet_clone_xlsx_dialog.xml:0
+#, python-format
+msgid ""
+"Spreadsheet files cannot be previewed or edited in Odoo. Opening your file "
+"with Odoo Spreadsheet will allow you to do so."
+msgstr ""
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.res_config_settings_view_form_inherit_documents_spreadsheet
+msgid "Spreadsheets"
+msgstr "Kalkylblad"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/inspector/documents_inspector.js:0
+#, python-format
+msgid ""
+"Spreadsheets mass download not yet supported.\n"
+" Download spreadsheets individually instead."
+msgstr ""
+"Massnedladdning av kalkylblad stöds ännu inte.\n"
+" Ladda istället ner kalkylblad individuellt."
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__template_name
+msgid "Template Name"
+msgstr "Mallens namn"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "The file is not a xlsx file"
+msgstr "Filen är inte en xlsx-fil"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "The spreadsheet you are trying to access does not exist."
+msgstr ""
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "The xlsx file is corrupted"
+msgstr "xlsx-filen är skadad"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "The xlsx file is too big"
+msgstr "xlsx-filen är för stor"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__thumbnail
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__thumbnail
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__thumbnail
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__thumbnail
+msgid "Thumbnail"
+msgstr "Miniatyr"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/bundle/components/control_panel/spreadsheet_breadcrumbs.xml:0
+#: code:addons/documents_spreadsheet/static/src/bundle/components/control_panel/spreadsheet_breadcrumbs.xml:0
+#, python-format
+msgid "Toggle favorite"
+msgstr "Växla favorit"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "Untitled spreadsheet"
+msgstr "Kalkylblad utan titel"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/bundle/actions/spreadsheet_template/spreadsheet_template_action.js:0
+#, python-format
+msgid "Untitled spreadsheet template"
+msgstr "Kalkylbladsmall utan titel"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__user_id
+msgid "User"
+msgstr "Användare"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.res_config_settings_view_form_inherit_documents_spreadsheet
+#, python-format
+msgid "Workspace"
+msgstr "Arbetsområde"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/controllers/documents.py:0
+#, python-format
+msgid "You cannot upload spreadsheets in a shared folder"
+msgstr ""
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/controllers/share.py:0
+#: code:addons/documents_spreadsheet/controllers/share.py:0
+#: code:addons/documents_spreadsheet/controllers/share.py:0
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "You don't have access to this document"
+msgstr ""
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_selector_dialog/document_selector_panel.xml:0
+#, python-format
+msgid "getPageTitle('SPREADSHEET')"
+msgstr "getPageTitle('SPREADSHEET')"

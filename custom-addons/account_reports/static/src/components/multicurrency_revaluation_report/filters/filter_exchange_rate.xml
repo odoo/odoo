@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.MulticurrencyRevaluationReportFilterExchangeRate">
+        <Dropdown togglerClass="'btn btn-secondary'">
+            <t t-set-slot="toggler">
+                <i class="fa fa-line-chart"/> Exchange Rates
+            </t>
+
+            <t t-foreach="Object.values(this.controller.options.currency_rates)" t-as="currencyRate" t-key="currencyRate_index">
+                <div class="dropdown-item">
+                    <label class="d-flex align-items-center">
+                        1 <t t-esc="currencyRate.currency_main"/> <i class="fa fa-arrow-right"/> <t t-esc="currencyRate.currency_name"/>
+                    </label>
+
+                    <div>
+                        <input
+                            type="number"
+                            min="0"
+                            step="0.000001"
+                            t-att-value="currencyRate.rate"
+                            t-att-name="currencyRate.currency_id"
+                        />
+                    </div>
+
+                    <button
+                        class="btn btn-sm btn-primary"
+                        t-on-click="() => this.filterExchangeRate()"
+                    >
+                        Apply
+                    </button>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

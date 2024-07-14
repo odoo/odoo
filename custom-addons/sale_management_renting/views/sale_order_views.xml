@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="sale_order_form_view" model="ir.ui.view">
+        <field name="name">rental.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_management.sale_order_form_quote"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='optional_products']/field/form/group/field[@name='product_id']" position="attributes">
+                <attribute name="domain">
+                    ['|', ('sale_ok', '=', True),
+                          '&amp;', ('rent_ok', '=', True), ('rent_ok', '=', parent.is_rental_order),
+                     '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]
+                </attribute>
+            </xpath>
+            <xpath expr="//notebook/page[@name='optional_products']/field/tree/field[@name='product_id']" position="attributes">
+                <attribute name="domain">
+                    ['|', ('sale_ok', '=', True),
+                          '&amp;', ('rent_ok', '=', True), ('rent_ok', '=', parent.is_rental_order),
+                     '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <div t-name="sign.MobileInputBottomSheet" class="o_sign_item_bottom_sheet">
+        <label class="o_sign_label">
+            <t t-esc="label"/>
+            <input t-if="type === 'text'" type="text" class="o_sign_item_bottom_sheet_field" t-att-placeholder="placeholder" t-att-value="value"/>
+            <textarea t-if="type === 'textarea'" class="o_sign_item_bottom_sheet_field" t-att-placeholder="placeholder" t-att-value="value" t-esc="value"/>
+        </label>
+        <button class="o_sign_next_button btn btn-primary btn-block">
+            <t t-esc="buttonText"/>
+        </button>
+    </div>
+</templates>

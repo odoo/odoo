@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_hk_ir56g_view_form" model="ir.ui.view">
+        <field name="name">l10n_hk_ir56g.view.form</field>
+        <field name="model">l10n_hk.ir56g</field>
+        <field name="arch" type="xml">
+            <form string="IR56G Sheet">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_declarations" type="object" class="oe_stat_button" icon="fa-users">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="lines_count"/></span>
+                                <span class="o_stat_text">Eligible Employees</span>
+                            </div>
+                        </button>
+                    </div>
+                    <field name="state" invisible="1" />
+                    <group>
+                        <group>
+                            <field name="start_year" class="o_hr_narrow_field" options="{'type': 'number'}" />
+                            <field name="start_month" class="o_hr_narrow_field"/>
+                        </group>
+                    </group>
+                    <group string="Extra">
+                        <field name="type_of_form" />
+                        <field name="submission_date" />
+                        <field name="year_of_employer_return" placeholder="YYYY" required="type_of_form == 'O'"/>
+                        <field name="name_of_signer" />
+                        <field name="designation_of_signer" />
+                    </group>
+                    <div class="mt-3" invisible="not pdf_error" >
+                        <p class="oe_inline">
+                            <field name="pdf_error" readonly="1" nolabel="1"/>
+                        </p>
+                    </div>
+                    <p name="save_warning" invisible="state != 'done'">The files won't be posted in the employee portal if you don't have the Documents app.</p>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_hk_ir56g_view_tree" model="ir.ui.view">
+        <field name="name">l10n_hk.ir56g.view.tree</field>
+        <field name="model">l10n_hk.ir56g</field>
+        <field name="arch" type="xml">
+            <tree string="IR56G Sheets">
+                <field name="display_name" string="Name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_hk_ir56g_action" model="ir.actions.act_window">
+        <field name="name">IR56G Sheet</field>
+        <field name="res_model">l10n_hk.ir56g</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+    </record>
+
+    <record id="view_l10n_hk_ir56g_line_form" model="ir.ui.view">
+        <field name="name">l10n_hk.ir56g.line.view.form</field>
+        <field name="model">l10n_hk.ir56g.line</field>
+        <field name="arch" type="xml">
+            <form string="IR56G Line">
+                <sheet>
+                    <h3 class="mb-3">
+                        <field name="employee_id" widget="many2one_avatar_user" readonly="1"/>
+                    </h3>
+                    <div class="d-flex">
+                        <label class="mr16" for="leave_hk_date"/>
+                        <field name="leave_hk_date" />
+                    </div>
+                    <div class="d-flex">
+                        <label class="mr16" for="is_salary_tax_borne" string="Whether the employee's Salaries Tax will be borne by employer"/>
+                        <field name="is_salary_tax_borne" />
+                    </div>
+                    <div class="d-flex">
+                        <label class="mr16" for="has_money_payable_held_under_ird" string="Any money, including any money payable, held under section 52(7) of the Inland Revenue Ordinance"/>
+                        <field name="has_money_payable_held_under_ird" />
+                    </div>
+                    <div class="d-flex ml16" invisible="not has_money_payable_held_under_ird">
+                        <label class="mr16" for="amount_money_payable" string="- Estimated amount HK$"/>
+                        <field name="amount_money_payable" />
+                    </div>
+                    <div class="d-flex ml16" invisible="has_money_payable_held_under_ird">
+                        <label class="mr16" for="reason_no_money_payable" string="Reason"/>
+                        <field name="reason_no_money_payable" required="not has_money_payable_held_under_ird"/>
+                    </div>
+                    <div class="d-flex">
+                        <label class="mr16" for="reason_departure" string="Reason for departure"/>
+                        <field name="reason_departure" />
+                        <field class="ml16" name="other_reason_departure" placeholder="Other reason for departure" invisible="reason_departure != 'other'" required="reason_departure == 'other'"/>
+                    </div>
+                    <div class="d-flex">
+                        <label class="mr16" for="will_return_hk" string="Whether the employee would return to Hong Kong"/>
+                        <field name="will_return_hk" />
+                    </div>
+                    <div class="d-flex ml16" invisible="not will_return_hk">
+                        <label class="mr16" for="date_return" string="- Probable date of return is"/>
+                        <field name="date_return" required="will_return_hk"/>
+                    </div>
+                    <div class="d-flex">
+                        <label class="mr16" for="has_non_exercised_stock_options" string="Whether the employee has any share options granted by your company or any other corporation in respect of his/her employment with your company that are not yet exercised, assigned or released"/>
+                        <field name="has_non_exercised_stock_options" />
+                    </div>
+                    <div class="d-flex ml16 mt8" invisible="not has_non_exercised_stock_options">
+                        <label class="mr16" for="amount_non_exercised_stock_options" string="- No. of shares not yet exercised"/>
+                        <field name="amount_non_exercised_stock_options" />
+                    </div>
+                    <div class="d-flex ml16" invisible="not has_non_exercised_stock_options">
+                        <label class="mr16" for="date_grant" string="- Date of grant"/>
+                        <field name="date_grant" required="has_non_exercised_stock_options"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

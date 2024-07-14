@@ -1,0 +1,18 @@
+.whelpdesk_tags_dropdown {
+    // Show a maximum of 7 items. 
+    max-height: $dropdown-padding-y * 2 + ($dropdown-font-size * $o-line-height-base + $dropdown-item-padding-y * 2) * 7;
+}
+
+.whelpdesk_search_description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    
+    p {
+        margin-bottom: 0;
+    }
+}
+
+#about_team [data-oe-field="description"] *:last-child {
+    margin-bottom: 0;
+}

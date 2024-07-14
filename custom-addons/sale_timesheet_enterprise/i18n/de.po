@@ -1,0 +1,595 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_timesheet_enterprise
+# 
+# Translators:
+# Wil Odoo, 2023
+# Martin Trigaux, 2024
+# Larissa Manderfeld, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:12+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.js:0
+#, python-format
+msgid " days"
+msgstr " Tage"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.js:0
+#, python-format
+msgid " hours"
+msgstr " Stunden"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.js:0
+#, python-format
+msgid "%(billableTime)s / %(billable_time_target)s (%(billingRate)s%)"
+msgstr "%(billableTime)s / %(billable_time_target)s (%(billingRate)s%)"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.js:0
+#, python-format
+msgid "%(currentBillableTimeText)s / %(currentTargetTotalTimeText)s "
+msgstr "%(currentBillableTimeText)s / %(currentTargetTotalTimeText)s "
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.js:0
+#, python-format
+msgid "%(percentage)s%"
+msgstr "%(percentage)s %"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.js:0
+#, python-format
+msgid "%(totalTime)s "
+msgstr "%(totalTime)s "
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.js:0
+#, python-format
+msgid "(%(percentage)s%)"
+msgstr "(%(percentage)s%)"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.view_employee_form
+msgid ""
+"<span class=\"w-100\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">per month</span>"
+msgstr ""
+"<span class=\"w-100\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">pro Monat</span>"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.sale_timesheet_enterprise_advance_payment_inv_timesheet_view_form
+msgid ""
+"<span>\n"
+"                            Some employees currently have active timers for the timesheets you are trying to invoice.\n"
+"                            Creating the invoice will automatically stop these timers.\n"
+"                        </span>"
+msgstr ""
+"<span>\n"
+"                            Einige Mitarbeiter haben derzeit aktive Timer für die Zeiterfassung, die Sie in Rechnung stellen möchten.\n"
+"                            Wenn Sie die Rechnung erstellen, werden diese Timer automatisch gestoppt.\n"
+"                        </span>"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.res_config_settings_view_form
+msgid "<span>%</span>"
+msgstr "<span>%</span>"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields.selection,name:sale_timesheet_enterprise.selection__res_config_settings__invoiced_timesheet__all
+msgid "All recorded timesheets"
+msgstr "Alle erfassten Zeitnachweise"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_account_analytic_line
+msgid "Analytic Account"
+msgstr "Kostenstelle"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/many2one_avatar_rank_field/many2one_avatar_rank_field.xml:0
+#: code:addons/sale_timesheet_enterprise/static/src/components/many2one_avatar_rank_field/many2one_avatar_rank_field.xml:0
+#: code:addons/sale_timesheet_enterprise/static/src/components/many2one_avatar_rank_field/many2one_avatar_rank_field.xml:0
+#, python-format
+msgid "Avatar"
+msgstr "Avatar"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.js:0
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_res_config_settings__group_use_timesheet_leaderboard
+#, python-format
+msgid "Billing Rate Leaderboard"
+msgstr "Rangliste nach Abrechnungssatz"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_res_company__billing_rate_target
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_res_config_settings__group_timesheet_leaderboard_show_rates
+msgid "Billing Rate Target"
+msgstr "Zielabrechnungssatz"
+
+#. module: sale_timesheet_enterprise
+#: model:res.groups,name:sale_timesheet_enterprise.group_timesheet_leaderboard_show_rates
+msgid "Billing Rate/Total Time indicators"
+msgstr "Angaben über Abrechnungssatz/Gesamtzeit"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_hr_employee__billable_time_target
+msgid "Billing Time Target"
+msgstr "Zielabrechnungszeit"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_res_config_settings__billing_rate_target
+msgid "Billing rate target for the employees"
+msgstr "Zielabrechnungssatz für die Mitarbeiter"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.xml:0
+#, python-format
+msgid "Billing:"
+msgstr "Abrechnung:"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.res_config_settings_view_form
+msgid ""
+"Boost productivity and competitiveness by displaying a leaderboard based on "
+"the billing rates."
+msgstr ""
+"Steigern Sie die Produktivität und die Wettbewerbsfähigkeit, indem Sie eine "
+"Rangliste auf der Grundlage der Abrechnungssätze anzeigen."
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.xml:0
+#, python-format
+msgid "Close"
+msgstr "Schließen"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_res_company
+msgid "Companies"
+msgstr "Unternehmen"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurationseinstellungen "
+
+#. module: sale_timesheet_enterprise
+#: model:ir.ui.menu,name:sale_timesheet_enterprise.hr_timesheet_menu_configuration_settings
+msgid "Configuration"
+msgstr "Konfiguration"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_hr_timesheet_tip__create_uid
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_hr_timesheet_tip__create_date
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.timesheet_view_grid_by_invoice_type
+msgid "Day"
+msgstr "Tag"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_overtime_indication/timesheet_overtime_indication.js:0
+#, python-format
+msgid ""
+"Difference between the number of %s ordered on the sales order item and the "
+"number of %s delivered"
+msgstr ""
+"Differenz zwischen der Anzahl in der Verkaufsauftragsposition bestellter %s "
+"und der Anzahl gelieferter %s"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_hr_timesheet_tip__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_project_task__portal_progress
+msgid "Display progress of current task."
+msgstr "Fortschritte der aktuellen Aufgabe anzeigen."
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_res_config_settings__group_timesheet_leaderboard_show_rates
+msgid "Display the Billing Rate on My Timesheets view"
+msgstr "Abrechnungssatz in „Meine Zeiterfassungen“ anzeigen"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_hr_employee
+msgid "Employee"
+msgstr "Mitarbeiter"
+
+#. module: sale_timesheet_enterprise
+#: model:hr.timesheet.tip,name:sale_timesheet_enterprise.timesheet_tip_5
+msgid ""
+"Even small tasks like answering an email should be recorded and rounded up "
+"to a quarter of an hour."
+msgstr ""
+"Selbst kleine Aufgaben wie die Beantwortung einer E-Mail sollten "
+"aufgezeichnet und auf eine Viertelstunde aufgerundet werden."
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.project_sharing_inherit_project_task_view_tree
+msgid "Hours Spent"
+msgstr "Aufgewendete Stunden"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.project_sharing_inherit_project_task_view_tree
+msgid "Hours Spent on Sub-Tasks"
+msgstr "Für Teilaufgaben aufgewendete Stunden"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_hr_timesheet_tip__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_timesheet_enterprise
+#: model:hr.timesheet.tip,name:sale_timesheet_enterprise.timesheet_tip_2
+msgid ""
+"If you help a colleague on a project, your time should be recorded on this "
+"project's timesheet as well."
+msgstr ""
+"Wenn Sie einem Kollegen bei einem Projekt helfen, sollte Ihre Zeit auch auf "
+"dem Zeiterfassungsbogen für dieses Projekt eingetragen werden."
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.res_config_settings_view_form
+msgid "Invoice"
+msgstr "Rechnung"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.res_config_settings_view_form
+msgid "Invoicing Policy"
+msgstr "Abrechnungspolitik"
+
+#. module: sale_timesheet_enterprise
+#: model:hr.timesheet.tip,name:sale_timesheet_enterprise.timesheet_tip_3
+msgid ""
+"It's part of the job to search for information. A customer can't expect you "
+"to know everything on the spot. These hours should also be billable."
+msgstr ""
+"Es gehört zu Ihrem Job, nach Informationen zu suchen. Ein Kunde kann nicht "
+"erwarten, dass Sie alles auf Anhieb wissen. Diese Stunden sollten auch in "
+"Rechnung gestellt werden können."
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_account_move_line
+msgid "Journal Item"
+msgstr "Buchungszeile"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_hr_timesheet_tip__write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert von"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_hr_timesheet_tip__write_date
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: sale_timesheet_enterprise
+#: model:res.groups,name:sale_timesheet_enterprise.group_use_timesheet_leaderboard
+msgid "Leaderboard"
+msgstr "Rangliste"
+
+#. module: sale_timesheet_enterprise
+#. odoo-python
+#: code:addons/sale_timesheet_enterprise/models/res_company.py:0
+#: model:hr.timesheet.tip,name:sale_timesheet_enterprise.timesheet_tip_4
+#, python-format
+msgid "Make it a habit to record timesheets every day."
+msgstr "Machen Sie es sich zur Gewohnheit, Ihre Zeiten jeden Tag zu erfassen."
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.timesheet_view_grid_by_invoice_type
+msgid "Month"
+msgstr "Monat"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.actions.act_window,help:sale_timesheet_enterprise.hr_timesheet_tip_action
+msgid "Motivate employees to fill timesheets with these tips."
+msgstr ""
+"Motivieren Sie Mitarbeiter mit diesen Tipps, Ihre Zeiterfassungen "
+"auszufüllen."
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.actions.act_window,help:sale_timesheet_enterprise.hr_timesheet_tip_action
+msgid "No tips found. Let's create one!"
+msgstr "Keine Tipps gefunden. Erstellen wir einen!"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_project_task__portal_effective_hours
+msgid "Portal Effective Hours"
+msgstr "Portal tatsächliche Stunden"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_project_task__portal_progress
+msgid "Portal Progress"
+msgstr "Portalfortschritt"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_project_task__portal_remaining_hours
+msgid "Portal Remaining Hours"
+msgstr "Portal restliche Stunden"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_project_task__portal_subtask_effective_hours
+msgid "Portal Subtask Effective Hours"
+msgstr "Portal Teilaufgabe tatsächliche Stunden"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_project_task__portal_total_hours_spent
+msgid "Portal Total Hours Spent"
+msgstr "Portal Insgesamt aufgewendete Stunden"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.project_sharing_inherit_project_task_view_tree
+msgid "Progress"
+msgstr "Fortschritt"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_project_project
+msgid "Project"
+msgstr "Projekt"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.xml:0
+#, python-format
+msgid "Record timesheets to determine your billing rate!"
+msgstr "Erfassen Sie Ihre Zeiten, um Ihren Abrechnungssatz zu bestimmen!"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.xml:0
+#, python-format
+msgid "Record timesheets to earn your rank!"
+msgstr "Erfassen Sie Ihre Zeiten, um im Rang zu steigern!"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.project_sharing_inherit_project_task_view_tree
+msgid "Remaining Hours"
+msgstr "Verbleibende Stunden"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Verkaufsauftragszeile"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.res_config_settings_view_form
+msgid ""
+"Set a target billing rate for your employees. If their current rate falls "
+"below the target, it will be highlighted in red."
+msgstr ""
+"Legen Sie einen Zielabrechnungssatz für Ihre Mitarbeiter fest. Wenn ihr "
+"aktueller Satz unter die Zielvorgabe fällt, wird er in Rot angezeigt."
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.res_config_settings_view_form
+msgid "Set employee billing time targets"
+msgstr "Mitarbeiterziele für Abrechnungszei festlegen"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.xml:0
+#, python-format
+msgid "Show less"
+msgstr "Weniger anzeigen"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.xml:0
+#, python-format
+msgid "Show more"
+msgstr "Mehr anzeigen"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_res_config_settings__group_use_timesheet_leaderboard
+msgid "Show the leaderboard on My Timesheets view"
+msgstr "Abrechnungssatz in „Meine Zeiterfassungen“ anzeigen"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_res_config_settings__billing_rate_target
+msgid "Target"
+msgstr "Ziel"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_project_task
+msgid "Task"
+msgstr "Aufgabe"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.constraint,message:sale_timesheet_enterprise.constraint_hr_employee_check_billable_time_target
+msgid "The billable time target cannot be negative."
+msgstr "Das Ziel für abrechenbare Zeit darf nicht negativ sein."
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.constraint,message:sale_timesheet_enterprise.constraint_res_company_check_billing_rate
+msgid "The billing rate target percentage must be between 0 and 100."
+msgstr ""
+"Der Prozentsatz des Zielabrechnungsatzes muss zwischen 0 und 100 liegen."
+
+#. module: sale_timesheet_enterprise
+#. odoo-python
+#: code:addons/sale_timesheet_enterprise/models/project_task.py:0
+#, python-format
+msgid ""
+"This Sale Order Item doesn't have a target value of planned hours. Planned "
+"hours :"
+msgstr ""
+"Für diese Verkaufsauftragsposition gibt es keinen Sollwert für die geplanten"
+" Stunden. Geplante Stunden:"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.xml:0
+#, python-format
+msgid "This month"
+msgstr "Diesen Monat"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_project_task__portal_subtask_effective_hours
+msgid "Time spent on the sub-tasks (and their own sub-tasks) of this task."
+msgstr ""
+"Aufgewendete Zeit für Teilaufgaben (und deren Teilaufgaben) dieser Aufgabe."
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_project_task__portal_effective_hours
+msgid "Time spent on this task, excluding its sub-tasks."
+msgstr "Aufgewendete Zeiten für diese Aufgabe, ohne Teilaufgaben"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_project_task__portal_total_hours_spent
+msgid "Time spent on this task, including its sub-tasks."
+msgstr "Zeitaufwand für diese Aufgabe, einschließlich Teilaufgaben"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.timesheet_view_grid_by_invoice_type
+msgid "Timesheets"
+msgstr "Zeiterfassungen"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_res_config_settings__invoiced_timesheet
+msgid "Timesheets Invoicing"
+msgstr "Abrechnung von Zeiterfassungen"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model,name:sale_timesheet_enterprise.model_hr_timesheet_tip
+msgid "Timesheets Leaderboard Tip"
+msgstr "Tipp für Rangliste nach Zeiterfassungen"
+
+#. module: sale_timesheet_enterprise
+#: model:hr.timesheet.tip,name:sale_timesheet_enterprise.timesheet_tip_1
+msgid ""
+"Timesheets are the lifeblood of our company; they have a direct impact on "
+"revenues."
+msgstr ""
+"Zeiterfassungen sind der Lebensnerv unseres Unternehmens; sie haben einen "
+"direkten Einfluss auf die Einnahmen."
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.res_config_settings_view_form
+msgid "Timesheets taken into account when invoicing your time"
+msgstr ""
+"Zeiterfassungsbögen werden bei der Abrechnung Ihrer Zeit berücksichtigt"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,field_description:sale_timesheet_enterprise.field_hr_timesheet_tip__name
+msgid "Tip Name"
+msgstr "Tippname"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.xml:0
+#, python-format
+msgid "Tip of the day"
+msgstr "Tipp des Tages"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.actions.act_window,name:sale_timesheet_enterprise.hr_timesheet_tip_action
+#: model:ir.ui.menu,name:sale_timesheet_enterprise.hr_timesheet_menu_configuration_tips
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.hr_timesheet_tip_view_form
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.hr_timesheet_tip_view_tree
+msgid "Tips"
+msgstr "Trinkgelder"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.project_sharing_inherit_project_task_view_tree
+msgid "Total Hours"
+msgstr "Gesamtstunden"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.js:0
+#, python-format
+msgid "Total Time Leaderboard"
+msgstr "Rangliste der Gesamtzeit"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_project_task__portal_remaining_hours
+msgid ""
+"Total remaining time, can be re-estimated periodically by the assignee of "
+"the task."
+msgstr ""
+"Verbleibende Gesamtzeit, kann periodisch neu berechnet werden durch den der "
+"Aufgabe zugewiesenen verantwortlichen Mitarbeiter."
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.xml:0
+#, python-format
+msgid "Total:"
+msgstr "Gesamt:"
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/views/timesheet_leaderboard_dialog/timesheet_leaderboard_dialog.js:0
+#, python-format
+msgid "Total: %(totalTime)s"
+msgstr "Gesamt: %(totalTime)s"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields.selection,name:sale_timesheet_enterprise.selection__res_config_settings__invoiced_timesheet__approved
+msgid "Validated timesheets only"
+msgstr "Nur validierte Zeiterfassungen"
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.timesheet_view_grid_by_invoice_type
+msgid "Week"
+msgstr "Woche"
+
+#. module: sale_timesheet_enterprise
+#: model:ir.model.fields,help:sale_timesheet_enterprise.field_res_config_settings__invoiced_timesheet
+msgid ""
+"With the 'all recorded timesheets' option, all timesheets will be invoiced without distinction, even if they haven't been validated. Additionally, all timesheets will be accessible in your customers' portal. \n"
+"When you choose the 'validated timesheets only' option, only the validated timesheets will be invoiced and appear in your customers' portal."
+msgstr ""
+"Mit der Option „Alle erfassten Zeitnachweise“ werden alle Zeiterfassungen ohne Ausnahme in Rechnung gestellt, auch wenn sie nicht validiert wurden. Außerdem sind alle Zeiterfassungen in Ihrem Kundenportal verfügbar.\n"
+"Wenn Sie die Option „Nur validierte Zeiterfassungen“ auswählen, werden nur die validierten Zeiterfassungen in Rechnung gestellt und in Ihrem Kundenportal angezeigt."
+
+#. module: sale_timesheet_enterprise
+#: model_terms:ir.ui.view,arch_db:sale_timesheet_enterprise.hr_timesheet_tip_view_tree
+msgid "e.g. Make it a habit to record timesheets every day."
+msgstr ""
+"z. B. Machen Sie es sich zur Gewohnheit, Ihre Zeiten jeden Tag zu erfassen."
+
+#. module: sale_timesheet_enterprise
+#. odoo-javascript
+#: code:addons/sale_timesheet_enterprise/static/src/components/timesheet_leaderboard/timesheet_leaderboard.xml:0
+#, python-format
+msgid "o_timesheet_leaderboard_confetti"
+msgstr "o_timesheet_leaderboard_confetti"

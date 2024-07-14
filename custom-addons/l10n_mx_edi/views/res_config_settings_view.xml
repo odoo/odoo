@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_mx_edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='invoicing_settings']" position="after">
+                <block id="l10n_mx_edi_settings"
+                       title="MX Electronic invoicing"
+                       invisible="country_code != 'MX'">
+
+                    <setting string="Authorized Certification Provider (PAC)"
+                             help="Configure your credentials to sign your CFDI documents.">
+                        <div class="row mt16">
+                            <label string="PAC" for="l10n_mx_edi_pac" class="col-lg-3 o_light_label"/>
+                            <field name="l10n_mx_edi_pac"/>
+                        </div>
+                        <div class="row">
+                            <label string="Username" for="l10n_mx_edi_pac_username" class="col-lg-3 o_light_label"/>
+                            <field name="l10n_mx_edi_pac_username"/>
+                        </div>
+                        <div class="row">
+                            <label string="Password" for="l10n_mx_edi_pac_password" class="col-lg-3 o_light_label"/>
+                            <field name="l10n_mx_edi_pac_password" password="True"/>
+                        </div>
+                        <div class="row">
+                            <label string="Testing" for="l10n_mx_edi_pac_test_env" class="col-lg-3 o_light_label"/>
+                            <field name="l10n_mx_edi_pac_test_env" class="oe_inline"/>
+                        </div>
+                    </setting>
+
+                    <setting string="Service Tax Administration (SAT)"
+                             help="CFDI configuration.">
+                        <div class="row">
+                            <label for="l10n_mx_edi_fiscal_regime" class="col-lg-3 o_light_label"/>
+                            <field name="l10n_mx_edi_fiscal_regime"/>
+                        </div>
+                    </setting>
+
+                    <setting string="Certificates"
+                             class="w-100"
+                             help="Add your certificates to sign your CFDI documents.">
+                        <field name="l10n_mx_edi_certificate_ids" class="w-100" string="Certificates"/>
+                    </setting>
+
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

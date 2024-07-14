@@ -1,0 +1,17 @@
+<odoo>
+    <!-- Quality Control From Stock Picking -->
+
+    <!-- For Drawer -->
+    <record id="quality_point1" model="quality.point">
+        <field name="product_ids" eval="[(4, ref('product.product_product_27'))]"/>
+        <field name="picking_type_ids" eval="[(4, ref('stock.picking_type_in'))]"/>
+        <field name="note">Quality Control For Drawer's Parts By Manufacturing Department.</field>
+    </record>
+
+    <!-- For Office Lamp -->
+    <record id="quality_point2" model="quality.point">
+        <field name="product_ids" eval="[(4, ref('product.product_delivery_02'))]"/>
+        <field name="picking_type_ids" eval="[(4, ref('stock.picking_type_in'))]"/>
+        <field name="note">Quality Control For Office Lamp By Manufacturing Department.</field>
+    </record>
+</odoo>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sources
+        https://www.ato.gov.au/
+        https://oac.chris21.com/OAC_ichrisp/Help/ichrisUG/646250.htm
+    -->
+    <!-- Schedule 4 - Tax table for return to work payments  -->
+    <record id="l10n_au_return_to_work_structure_4" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="name">Return To Work payment</field>
+        <field name="code">B2WORK</field>
+        <field name="sequence">90</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+b2work_type = payslip.env.ref('l10n_au_hr_payroll.input_b2work')
+result = sum(payslip.input_line_ids.filtered(lambda l: l.input_type_id == b2work_type).mapped('amount'))
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_return_to_work"/>
+    </record>
+
+    <record id="l10n_au_return_to_work_gross_structure_4" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+        <field name="name">Gross Payment</field>
+        <field name="code">GROSS</field>
+        <field name="sequence">91</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['BASIC']
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_return_to_work"/>
+    </record>
+
+    <record id="l10n_au_withholding_return_to_work_structure_4" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_withholding"/>
+        <field name="name">PAYG Withholding</field>
+        <field name="code">WITHHOLD</field>
+        <field name="sequence">100</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if employee.l10n_au_tfn_declaration != "provided":
+    no_tfn_rates = payslip._rule_parameter("l10n_au_withholding_no_tfn")
+    result_rate = -no_tfn_rates["foreign"] if employee.is_non_resident else -no_tfn_rates["national"]
+else:
+    result_rate = -payslip._rule_parameter("l10n_au_withholding_b2work")
+result = categories['GROSS']
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_return_to_work"/>
+    </record>
+
+    <record id="l10n_au_withholding_total_return_to_work_structure_4" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_net_withholding"/>
+        <field name="name">Total Withholding Amount</field>
+        <field name="code">WITHHOLD.TOTAL</field>
+        <field name="sequence">101</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['WITHHOLD']
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_return_to_work"/>
+    </record>
+
+    <record id="l10n_au_child_support_return_to_work_structure_4" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_child_support"/>
+        <field name="name">Child Support</field>
+        <field name="code">CHILD.SUPPORT</field>
+        <field name="sequence">190</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = employee.l10n_au_child_support_deduction or employee.l10n_au_child_support_garnishee</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+net_salary = categories['GROSS'] + categories['ALW'] + categories['DED']
+result = -payslip._l10n_au_compute_child_support(net_salary)
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_return_to_work"/>
+    </record>
+
+    <record id="l10n_au_return_to_work_structure_4_net_salary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="name">Net Salary</field>
+        <field name="sequence">200</field>
+        <field name="code">NET</field>
+        <field name="appears_on_employee_cost_dashboard">True</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['GROSS'] + categories['ALW'] + categories['DED']
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_return_to_work"/>
+    </record>
+
+    <record id="l10n_au_super_contribution_structure_4" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_super_contribution"/>
+        <field name="name">Super Guarantee</field>
+        <field name="code">SUPER</field>
+        <field name="sequence">300</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+rate = payslip._rule_parameter("l10n_au_withholding_super")
+result = categories['GROSS'] * rate/100 + contract.l10n_au_salary_sacrifice_superannuation
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_return_to_work"/>
+    </record>
+</odoo>

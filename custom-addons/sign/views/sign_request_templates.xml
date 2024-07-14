@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sign._doc_sign" name="Document Sign">
+        <div t-if="current_request_item and current_request_item.state == 'sent' and sign_request.state in ['sent', 'shared']" class="o_sign_validate_banner bg-odoo">
+            <button type="button" class="btn btn-primary o_validate_button">Validate &amp; Send Completed Document</button>
+        </div>
+        <div class="o_sign_cp d-none" t-if="not no_sign_cp">
+            <div class="o_sign_cp_pager">
+                <t t-call="sign.signer_status_wrapper"/>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div t-if="not hasItems and not isPDF" class="row">
+                <div class="col-lg-12">
+                    <a class="o_sign_image_document" t-attf-href="/sign/download/{{sign_request.id}}/{{sign_request.access_token}}/origin" target="_blank">
+                        <img t-if="webimage" class="img img-fluid" t-attf-src="/sign/download/{{sign_request.id}}/{{sign_request.access_token}}/origin" alt="Signature"/>
+                        <div t-if="not webimage" class="o_image" t-att-data-mimetype="sign_request.template_id.attachment_id.mimetype"/>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <t t-if="hasItems or isPDF">
+            <t t-call="sign.items_view"/>
+        </t>
+
+        <input id="o_sign_input_sign_request_id" type="hidden" t-att-value="sign_request.id"/>
+        <input id="o_sign_input_sign_request_token" type="hidden" t-att-value="sign_request.access_token"/>
+        <input id="o_sign_input_sign_request_state" type="hidden" t-att-value="sign_request.state"/>
+        <input id="o_sign_input_access_token" type="hidden" t-att-value="token"/>
+        <t t-if="sign_request.nb_closed == 0">
+            <input id="o_sign_input_template_editable" type="hidden"/>
+        </t>
+        <input id="o_sign_input_auth_method" type="hidden" t-att-value="current_request_item.role_id.auth_method if current_request_item else False"/>
+        <input id="o_sign_signer_name_input_info" type="hidden" t-att-value="current_request_item.partner_id.name if current_request_item and current_request_item.partner_id else None"/>
+        <input id="o_sign_signer_phone_input_info" type="hidden" t-att-value="current_request_item.partner_id.mobile if current_request_item and current_request_item.partner_id else None"/>
+        <input id="o_sign_input_optional_redirect_url" type="hidden" t-att-value="sign_request.template_id.redirect_url"/>
+        <input id="o_sign_input_optional_redirect_url_text" type="hidden" t-att-value="sign_request.template_id.redirect_url_text"/>
+        <input t-if="current_request_item and current_request_item.state == 'sent'" id="o_sign_ask_location_input" type="hidden"/>
+        <input id="o_sign_input_sign_frame_hash" type="hidden" t-att-value="frame_hash"/>
+        <t t-if="not current_request_item.partner_id">
+            <input id="o_sign_is_public_user" type="hidden"/>
+        </t>
+    </template>
+
+    <template id="sign.doc_sign" name="Document Sign">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+                <t t-call-assets="sign.assets_public_sign" t-js="false"/>
+                <script type="text/javascript">
+                    odoo.__session_info__ = <t t-out="json.dumps(request.env['ir.http'].get_frontend_session_info_sign())"/>;
+                </script>
+                <t t-call-assets="sign.assets_public_sign" t-css="false"/>
+                <t t-call="web.conditional_assets_tests">
+                    <t t-set="ignore_missing_deps" t-value="True"/>
+                </t>
+
+                <script type="text/javascript">
+                    odoo.define("sign.document_custom_page", ["@sign/components/sign_request/document_signable"], function (require) {
+                        var { initDocumentToSign } = require("@sign/components/sign_request/document_signable");
+                        initDocumentToSign(document);
+                    });
+                </script>
+            </t>
+            <t t-set="body_classname" t-value="'o_sign_document_body'"/>
+            <div class="o_sign_document">
+                <header>
+                    <div class="o_sign_info justify-content-between d-flex">
+                        <div class="o_logo_wrapper justify-content-start d-flex">
+                            <div class="o_logo d-flex">
+                                <a href="/"><img t-attf-src="/logo.png?company={{ company_id }}" alt="Logo"/></a>
+                            </div>
+                            <div class="o_odoo">
+                                <a href="https://www.odoo.com/app/sign?utm_source=db&amp;utm_medium=sign"><img src="/sign/static/img/odoo_signed.png" alt="Signed"/></a>
+                            </div>
+                        </div>
+                        <div class="justify-content-end d-flex">
+                            <t t-call="sign.signer_status_wrapper"/>
+                            <t t-set="has_actions" t-value="(current_request_item and current_request_item.state == 'sent') or sign_request.state == 'signed'"/>
+                            <div class="dropdown" t-if="portal or has_actions">
+                                <a role="button" class="fa fa-bars btn" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu"/>
+                                <div class="dropdown-menu dropdown-menu-end" role="menu">
+                                    <a t-if="sign_request.state == 'sent'" role="menuitem" href="#" class="dropdown-item o_sign_refuse_document_button">Refuse Document</a>
+                                    <a t-if="sign_request.state == 'signed'" role="menuitem" t-attf-href="/sign/download/{{sign_request.id}}/{{sign_request.access_token}}/completed" class="dropdown-item">Document <i class="fa fa-download"/></a>
+                                    <a t-if="sign_request.state == 'signed'" role="menuitem" t-attf-href="/sign/download/{{sign_request.id}}/{{sign_request.access_token}}/log" class="dropdown-item">Certificate <i class="fa fa-download"/></a>
+                                    <div t-if="portal and has_actions" class="dropdown-divider"></div>
+                                    <a t-if="portal" role="menuitem" t-attf-href="/my/" class="dropdown-item">Home</a>
+                                    <a t-if="portal" role="menuitem" t-attf-href="/my/signature/{{current_request_item.id}}?{{ keep_query() }}" class="dropdown-item">Details</a>
+                                </div>
+                            </div>
+                            <div class="o_sign_dropdown_placeholder" t-if="not (portal or has_actions)"/>
+                        </div>
+                    </div>
+                </header>
+                <t t-set="no_sign_cp" t-value="True"/>
+                <t t-call="sign._doc_sign"/>
+            </div>
+        </t>
+    </template>
+
+    <template id="sign.signer_status_wrapper" name="">
+        <div class="o_sign_signer_status_wrapper justify-content-end d-flex">
+            <div t-if="current_request_item" t-attf-class="o_sign_signer_status ps-4 {{{'refused': 'o_sign_signer_refused', 'completed': 'o_sign_signer_completed'}.get(current_request_item.state, '')}}" t-att-data-id="current_request_item.id">
+                <img t-if="current_request_item.state == 'completed' and current_request_item.signature" class="mobile-hide" t-attf-src="data:image/png;base64,{{current_request_item.signature}}" alt="Signature"/>
+                <div class="o_sign_signer_status_info flex-column">
+                    <div class="text-start"><b><t t-esc="current_request_item.partner_id.name if current_request_item.partner_id else 'Public user'"/></b></div>
+                    <div class="text-start"><small><i>
+                        <t t-if="current_request_item.state == 'sent'"> Is Signing </t>
+                        <t t-if="current_request_item.state == 'canceled'"> Canceled </t>
+                        <t t-if="current_request_item.state == 'refused'"> Refused on <t t-esc="current_request_item.signing_date"/></t>
+                        <t t-if="current_request_item.state == 'completed'"> Signed on <t t-esc="current_request_item.signing_date"/></t>
+                    </i></small></div>
+                </div>
+            </div>
+            <div class="o_sign_non_current_signers justify-content-end">  <!-- this div makes sure all non-current signers will be shown/hidden together when the space is/isn't enough -->
+                <t t-foreach="state_to_sign_request_items_map.get('sent')" t-as="sign">
+                    <div t-if="sign.access_token != token" class="o_sign_signer_status o_sign_signer_waiting ps-4" t-att-data-id="sign.id">
+                        <div class="o_sign_signer_status_info flex-column">
+                            <div class="text-start"><b><t t-esc="sign.partner_id.name if sign.partner_id else 'Public user'"/></b></div>
+                            <div class="text-start"><small><i> Waiting Signature<t t-if="(env.user.partner_id == sign.partner_id) and sign.ignored"> (Ignored)</t> </i></small></div>
+                        </div>
+                    </div>
+                </t>
+                <t t-foreach="state_to_sign_request_items_map.get('canceled')" t-as="sign">
+                    <div t-if="sign.access_token != token" class="o_sign_signer_status o_sign_signer_waiting" t-att-data-id="sign.id">
+                        <div class="o_sign_signer_status_info flex-column ps-4">
+                            <div class="text-start"><b><t t-esc="sign.partner_id.name if sign.partner_id else 'Public user'"/></b></div>
+                            <div class="text-start"><small><i> Canceled </i></small></div>
+                        </div>
+                    </div>
+                </t>
+                <t t-foreach="state_to_sign_request_items_map.get('refused')" t-as="sign">
+                    <div t-if="sign.access_token != token" class="o_sign_signer_status o_sign_signer_refused">
+                        <div class="o_sign_signer_status_info flex-column ps-4">
+                            <div class="text-start"><b><t t-esc="sign.partner_id.name if sign.partner_id else 'Public user'"/></b></div>
+                            <div class="text-start"><small><i> Refused on <t t-esc="sign.signing_date"/></i></small></div>
+                        </div>
+                    </div>
+                </t>
+                <t t-foreach="state_to_sign_request_items_map.get('completed')" t-as="sign">
+                    <div t-if="sign.access_token != token" class="o_sign_signer_status o_sign_signer_completed d-flex">
+                        <img t-if="sign.signature" class="mobile-hide" t-attf-src="data:image/png;base64,{{sign.signature}}" alt="Signature"/>
+                        <div class="o_sign_signer_status_info flex-column ps-4">
+                            <div class="text-start"><b><t t-esc="sign.partner_id.name if sign.partner_id else 'Public user'"/></b></div>
+                            <div class="text-start"><small><i> Signed on <t t-esc="sign.signing_date"/></i></small></div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <template id="sign.encrypted_ask_password" name="PDF Encrypted Password Request">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+                <t t-call-assets="web.assets_frontend" t-js="false"/>
+                <t t-call-assets="web.assets_frontend" t-css="false"/>
+            </t>
+            <div class="container text-center">
+                <h3>Missing Password</h3>
+                <p>
+                    The PDF's password is required to generate the final document.
+                </p>
+                <form string="PDF is encrypted" role="form" method="post" onsubmit="this.action = this.action + location.hash">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div>
+                        <p class="alert alert-danger mb8" t-if="error" role="alert">
+                            <t t-esc="error"/>
+                        </p>
+                    </div>
+                    <input type="password" required="required" name="password" t-att-autofocus="autofocus" maxlength="50"/>
+                    <input type="submit" value="Generate Document"></input>
+                </form>
+            </div>
+        </t>
+    </template>
+
+    <template id="sign.deleted_sign_request" name="Signature Request Not Found">
+        <t t-call="web.frontend_layout">
+            <t t-set="head">
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+                <t t-call-assets="web.assets_frontend" t-js="false"/>
+                <t t-call-assets="web.assets_frontend" t-css="false"/>
+            </t>
+            <div class="oe_structure oe_empty">
+                <section class="s_text_image pt104 pb104" data-snippet="s_image_text" data-name="Image - Text">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-4 pb32">
+                                <img class="img img-fluid mx-auto" src="/web_editor/shape/http_routing/404.svg"/>
+                            </div>
+                            <div class="col-lg-8 text-lg-start text-center my-auto">
+                                <h1 class="visually-hidden">Error 404</h1>
+                                <h2>We couldn't find the signature request you're looking for!</h2>
+                                <p/>
+                                <p>The Odoo Sign document you are trying to reach does not exist. The signature request might have been deleted or modified.</p>
+                                <p>You can contact the person who invited you to sign the document by email for help.</p>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="s_hr pt32 pb48" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-top-color: var(--400);"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <p class="text-center">Sign up for Odoo Sign to manage your own documents and signature requests!</p>
+                                <ul class="list-inline text-center">
+                                    <li class="list-inline-item mb-2"><a href="https://www.odoo.com/trial?selected_app=sign&amp;utm_source=db&amp;utm_medium=sign_404" target="blank" class="btn btn-secondary">Try Odoo Sign</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="ignore_sign_request_item" name="Signature Request Ignored">
+        <t t-call="web.basic_layout">
+            <t t-set="title" t-value="'Odoo Sign'"/>
+            <div class="oe_structure oe_empty">
+                <section class="s_text_image pt104 pb104" data-snippet="s_image_text" data-name="Image - Text">
+                    <div class="container">
+                        <div class="text-center">
+                            <h1 class="visually-hidden">Operation successful</h1>
+                            <h2>The signature request has been ignored</h2>
+                            You won't receive any notification for this signature request anymore.
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="s_hr pt32 pb48" data-snippet="s_hr" data-name="Separator">
+                                <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-top-color: var(--400);"/>
+                            </div>
+                        </div>
+                            <div class="col-lg-12">
+                                <p class="text-center">Sign up for Odoo Sign to manage your own documents and signature requests!</p>
+                                <ul class="list-inline text-center">
+                                    <li class="list-inline-item mb-2"><a href="https://www.odoo.com/trial?selected_app=sign&amp;utm_source=db&amp;utm_medium=sign_ignored" target="blank" class="btn btn-secondary">Try Odoo Sign</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="sign_iap_credits_banner" name="sign.sign_iap_credits_banner">
+        <div class="row alert alert-warning text-center m-0">
+            <t t-foreach="warnings" t-as="warning">
+                <p class="my-0">
+                    You have less than 20 credits remaining for <t t-out="warning['auth_method']"/> authentication. The <t t-out="warning['auth_method']"/> authentication step will be skipped if you are out of credits.
+                    <button data-bs-toggle="collapse" t-attf-data-bs-target="#sign_warning" type="button"
+                        aria-expanded="false" t-attf-aria-controls="sign_warning"
+                        class="btn btn-link" title="Why am I seeing this?">
+                        <i class="fa fa-question-circle"></i>
+                    </button>
+                    <a class="btn btn-link buy_credits px-0 text-end" t-att-href="warning['iap_url']">
+                        <i class="oi oi-arrow-right"></i> Buy credits
+                    </a>
+                </p>
+            </t>
+            <small class="collapse" t-attf-id="sign_warning">
+                You have templates or requests using a role with an extra-authentication step with few credits remaining.<br/>
+                To remove this warning, disable the extra-authentication step in the <code>Configuration > Roles</code> menu, or buy credits.
+            </small>
+        </div>
+    </template>
+
+    <template id="sign_request_expired" name="sign.sign_request_expired">
+        <t t-call="web.frontend_layout">
+            <div class="h-100 w-100 w-md-75 m-auto py-3 px-5 d-flex flex-column align-items-center justify-content-start text-center gap-3">
+                <div class="card text-bg-light px-5 py-2 justify-content-center">
+                    <h1>This link has expired.</h1>
+                    <h6>
+                        There's no reason to panic, <br/>
+                        you can still sign your document in a few clicks!
+                    </h6>
+                </div>
+                <p class="text-muted small"><i class="fa fa-info-circle"/> Links sent via email expire after a set delay to increase security.</p>
+                <p>You can request a new link to access your document and sign it, it will  be delivered in your inbox right away.</p>
+                <div class="d-flex flex-column align-items-center gap-1">
+                    <a t-attf-class="btn btn-primary {{'disabled' if state == 'sent' else ''}}" t-att-href="resend_expired_link">Send a new link</a>
+                    <small class="text-success" t-if="state == 'sent'"><i class="fa fa-check"/> A fresh link has just been sent to your inbox!</small>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

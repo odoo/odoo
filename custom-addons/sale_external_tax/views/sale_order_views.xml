@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <div name="so_button_below_order_lines" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </div>
+            <div name="so_button_below_order_lines" position="inside">
+                <field name="is_tax_computed_externally" invisible="1"/>
+                <button name="button_external_tax_calculation"
+                        type="object"
+                        string="Compute Taxes"
+                        invisible="locked or state == 'cancel' or not is_tax_computed_externally"
+                        groups="sales_team.group_sale_salesman,account.group_account_invoice"/>
+            </div>
+        </field>
+    </record>
+</odoo>

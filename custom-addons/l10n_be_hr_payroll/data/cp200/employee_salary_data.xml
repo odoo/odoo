@@ -1,0 +1,907 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cp200_employees_salary_holiday_pay_recovery_n" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Holiday Pay Recovery (Year N)</field>
+        <field name="code">HolPayRecN</field>
+        <field name="sequence">14</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+salary_simulation = payslip.env.context.get('salary_simulation')
+
+employee = contract.employee_id
+is_next_year = contract.first_contract_date.year + 1 == payslip.date_from.year if contract.first_contract_date else False 
+
+to_recover = employee.l10n_be_holiday_pay_to_recover_n
+recovered = employee.l10n_be_holiday_pay_recovered_n
+already_done = not float_compare(to_recover, recovered, precision_digits=2)
+hours_per_week = employee.resource_calendar_id.hours_per_week
+holidays = 'LEAVE120' in worked_days and worked_days['LEAVE120'].amount
+
+result = not salary_simulation and is_next_year and to_recover and not already_done and hours_per_week and holidays</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = payslip._get_holiday_pay_recovery_n(localdict)</field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_holiday_pay_recovery_n1" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Holiday Pay Recovery (Year N-1)</field>
+        <field name="code">HolPayRecN1</field>
+        <field name="sequence">14</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+salary_simulation = payslip.env.context.get('salary_simulation')
+
+employee = contract.employee_id
+is_next_year = contract.first_contract_date.year == payslip.date_from.year if contract.first_contract_date else False 
+
+to_recover = employee.l10n_be_holiday_pay_to_recover_n1
+recovered = employee.l10n_be_holiday_pay_recovered_n1
+already_done = not float_compare(to_recover, recovered, precision_digits=2)
+hours_per_week = employee.resource_calendar_id.hours_per_week
+holidays = 'LEAVE120' in worked_days and worked_days['LEAVE120'].amount
+
+result = not salary_simulation and is_next_year and to_recover and not already_done and hours_per_week and holidays</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = payslip._get_holiday_pay_recovery_n1(localdict)</field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_fixed_commission" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Commission</field>
+        <field name="code">COMMISSION</field>
+        <field name="sequence">15</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'COMMISSION' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['COMMISSION'].amount
+result_name = inputs['COMMISSION'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_hiring_bonus" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Hiring Bonus</field>
+        <field name="code">HIRINGBONUS</field>
+        <field name="sequence">15</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'HIRINGBONUS' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['HIRINGBONUS'].amount
+result_name = inputs['HIRINGBONUS'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_rep_fees_regul" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Representation Fees Regularization</field>
+        <field name="code">REPFEESREGUL</field>
+        <field name="sequence">15</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'REPFEESREGUL' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['REPFEESREGUL'].amount
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_additional_gross" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Additional Gross</field>
+        <field name="code">ADDITIONALGROSS</field>
+        <field name="sequence">15</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'ADDITIONALGROSS' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['ADDITIONALGROSS'].amount
+result_name = inputs['ADDITIONALGROSS'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_after_contract_public_holiday" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">After Contract Public Holidays</field>
+        <field name="code">AFTERPUB</field>
+        <field name="sequence">15</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'AFTERPUB' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['AFTERPUB'].amount
+result_name = inputs['AFTERPUB'].name
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_simple_december" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Simple December Pay</field>
+        <field name="code">SIMPLE.DECEMBER</field>
+        <field name="sequence">15</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'SIMPLEDECEMBER' in inputs and inputs['SIMPLEDECEMBER'].amount</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs['SIMPLEDECEMBER'].amount</field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <!-- Salary Rules -->
+    <record id="cp200_employees_salary_atn_internet" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Benefit in Kind (Internet)</field>
+        <field name="code">ATN.INT</field>
+        <field name="sequence">16</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(not payslip.is_outside_contract and contract.internet)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+salary_simulation = payslip.env.context.get('salary_simulation')
+result = 5.0
+if not salary_simulation:
+    first_period_contract_ids = payslip._get_period_contracts()
+    first_period_contract = contract.browse(first_period_contract_ids).filtered(lambda c: c.internet)
+    result = result if (first_period_contract and payslip.contract_id == first_period_contract[0]) else 0
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_atn_mobile" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Benefit in Kind (Phone Subscription)</field>
+        <field name="code">ATN.MOB</field>
+        <field name="sequence">17</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(not payslip.is_outside_contract and contract.mobile)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if contract.mobile and not contract.internet:
+    result = 4.0 + 5.0
+elif contract.mobile and contract.internet:
+    result = 4.0
+salary_simulation = payslip.env.context.get('salary_simulation')
+if not salary_simulation:
+    first_period_contract_ids = payslip._get_period_contracts()
+    first_period_contract = contract.browse(first_period_contract_ids).filtered(lambda c: c.mobile)
+    result = result if (first_period_contract and payslip.contract_id == first_period_contract[0]) else 0
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_atn_laptop" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Benefit in Kind (Laptop)</field>
+        <field name="code">ATN.LAP</field>
+        <field name="sequence">18</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(not payslip.is_outside_contract and contract.has_laptop)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+first_period_contract_ids = payslip._get_period_contracts()
+first_period_contract = contract.browse(first_period_contract_ids).filtered(lambda c: c.has_laptop)
+result = payslip._rule_parameter('cp200_bik_laptop') if (first_period_contract and payslip.contract_id == first_period_contract[0]) else 0
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_gross_salary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_salary"/>
+        <field name="name">Gross Salary</field>
+        <field name="code">SALARY</field>
+        <field name="sequence">20</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['BASIC'] + result_rules['HolPayRecN']['total'] + result_rules['HolPayRecN1']['total']
+if 'COMMISSION' in inputs:
+    result += result_rules['COMMISSION']['total']
+if 'HIRINGBONUS' in inputs:
+    result += result_rules['HIRINGBONUS']['total']
+if 'REPFEESREGUL' in inputs:
+    result += result_rules['REPFEESREGUL']['total']
+if 'ADDITIONALGROSS' in inputs:
+    result += result_rules['ADDITIONALGROSS']['total']
+if 'AFTERPUB' in inputs:
+    result += result_rules['AFTERPUB']['total']
+if contract.internet:
+    result += result_rules['ATN.INT']['total']
+if contract.mobile:
+    result += result_rules['ATN.MOB']['total']
+if contract.has_laptop:
+    result += result_rules['ATN.LAP']['total']
+if 'SIMPLEDECEMBER' in inputs:
+    result += result_rules['SIMPLE.DECEMBER']['total']
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_onss_rule" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_onss"/>
+        <field name="name">Social contribution</field>
+        <field name="code">ONSS</field>
+        <field name="sequence">41</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result=not contract.no_onss</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">SALARY</field>
+        <field name="amount_percentage">-13.07</field>
+        <field name="partner_id" ref="res_partner_onss"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_onss_restructuring" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_onss_restructuring"/>
+        <field name="name">ONSS Restructuring Reduction</field>
+        <field name="code">ONSSRESTRUCTURING</field>
+        <field name="sequence">42</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result=contract.l10n_be_onss_restructuring</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = payslip._get_onss_restructuring(localdict)
+result = min(abs(result_rules['ONSS']['total']), result)
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_employment_bonus_employees" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_employment_bonus"/>
+        <field name="name">Employment Bonus</field>
+        <field name="code">EmpBonus.1</field>
+        <field name="sequence">43</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+wage = result_rules['SALARY']['total']
+result = categories['BASIC'] and wage &lt;= payslip._rule_parameter('work_bonus_reference_wage_high')
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = payslip._get_employment_bonus_employees(localdict)
+onss = result_rules['ONSS']['total'] + result_rules['ONSSRESTRUCTURING']['total']
+result = min(abs(onss), result)
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_onss_total" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_total"/>
+        <field name="name">ONSS (TOTAL)</field>
+        <field name="code">ONSSTOTAL</field>
+        <field name="sequence">43</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = abs(categories['ONSS']) - abs(categories['ONSSRESTRUCTURING']) - abs(categories['EmpBonus'])
+        </field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_company_car" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_impos"/>
+        <field name="name">Benefit in Kind (Company Car)</field>
+        <field name="code">ATN.CAR</field>
+        <field name="sequence">70</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(not payslip.is_outside_contract and contract.transport_mode_car and contract.car_atn)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = contract.car_atn
+salary_simulation = payslip.env.context.get('salary_simulation')
+if not salary_simulation:
+    first_period_contract_ids = payslip._get_period_contracts()
+    first_period_contract = contract.browse(first_period_contract_ids).filtered(lambda c: c.transport_mode_car)
+    result = result if (first_period_contract and payslip.contract_id == first_period_contract[0]) else 0
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_gross_with_ip" model="hr.salary.rule">
+        <field name="name">Total Gross</field>
+        <field name="sequence">90</field>
+        <field name="code">GROSSIP</field>
+        <field name="category_id" ref="l10n_be_hr_payroll.hr_salary_rule_category_gross_with_ip"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.ip)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories['BASIC'] + categories['ALW']</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_ip_part" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_ip_part"/>
+        <field name="name">Intellectual Property</field>
+        <field name="code">IP.PART</field>
+        <field name="sequence">91</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.ip)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = - payslip._get_be_ip(localdict)</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_withholding_taxes" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_pp"/>
+        <field name="name">Withholding Tax</field>
+        <field name="code">P.P</field>
+        <field name="sequence">120</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result=not contract.no_withholding_taxes</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = payslip._get_be_withholding_taxes(localdict)
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_withholding_reduction" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Withholding reduction</field>
+        <field name="code">P.P.DED</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">130</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(categories['EmpBonus'])</field>
+        <field name="amount_python_compute">result = payslip._get_withholding_reduction(localdict)</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_withholding_taxes_total" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_withholding_taxes_total"/>
+        <field name="name">Withholding Taxes (Total)</field>
+        <field name="code">PPTOTAL</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">131</field>
+        <field name="condition_select">none</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -(categories['PP'] + (result_rules['P.P.DED']['total'] if bool(categories['EmpBonus']) else 0))
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_company_car_2" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Benefit in Kind (Company Car)</field>
+        <field name="code">ATN.CAR.2</field>
+        <field name="sequence">160</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.transport_mode_car and contract.car_atn)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = result_rules['ATN.CAR']['quantity']
+result = -result_rules['ATN.CAR']['amount']
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_atn_internet_2" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Benefit in Kind (Internet)</field>
+        <field name="code">ATN.INT.2</field>
+        <field name="sequence">161</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.internet</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = result_rules['ATN.INT']['quantity']
+result = -result_rules['ATN.INT']['amount']
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_atn_laptop_2" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Benefit in Kind (Laptop)</field>
+        <field name="code">ATN.LAP.2</field>
+        <field name="sequence">163</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.has_laptop</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_qty = result_rules['ATN.LAP']['quantity']
+result = -result_rules['ATN.LAP']['amount']
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_mis_ex_onss" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_spec_soc_contribution"/>
+        <field name="name">Special social cotisation</field>
+        <field name="code">M.ONSS</field>
+        <field name="amount_select">fix</field>
+        <field name="sequence">165</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = payslip._get_be_special_social_cotisations(localdict)</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_ch_worker" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Retain on Meal Voucher</field>
+        <field name="code">MEAL_V_EMP</field>
+        <field name="sequence">165</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.meal_voucher_amount)</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">-100.0</field>
+        <field name="amount_percentage_base">contract.meal_voucher_amount - contract.meal_voucher_paid_by_employer</field>
+        <field name="quantity">payslip.meal_voucher_count</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="res_partner_meal_vouchers"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_atn_mobile_2" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Benefit in Kind (Phone Subscription)</field>
+        <field name="code">ATN.MOB.2</field>
+        <field name="sequence">162</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.mobile</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+if contract.mobile:
+    result_qty = result_rules['ATN.MOB']['quantity']
+    result = -result_rules['ATN.MOB']['amount']
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_impulsion_25yo" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_hr_payroll.hr_payroll_head_div_net"/>
+        <field name="name">Net part payable by the Onem (&lt; 25 years old)</field>
+        <field name="code">IMPULSION25</field>
+        <field name="sequence">166</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.l10n_be_impulsion_plan) and contract.l10n_be_impulsion_plan == '25yo'</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = - payslip._get_impulsion_plan_amount(localdict)
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_impulsion_12mo" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_hr_payroll.hr_payroll_head_div_net"/>
+        <field name="name">Net part payable by the Onem (12+ months)</field>
+        <field name="code">IMPULSION12</field>
+        <field name="sequence">166</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.l10n_be_impulsion_plan) and contract.l10n_be_impulsion_plan == '12mo'</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = - payslip._get_impulsion_plan_amount(localdict)
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_public_transport" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Public Transportation (Tram - Bus - Metro)</field>
+        <field name="code">PUB.TRANS</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">169</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.transport_mode_public or contract.transport_mode_train</field>
+        <field name="amount_python_compute">
+if not categories['BASIC']:
+    result = 0
+else:
+    result = contract.public_transport_reimbursed_amount + contract.train_transport_reimbursed_amount
+    salary_simulation = payslip.env.context.get('salary_simulation')
+    if not salary_simulation:
+        first_period_contract_ids = payslip._get_period_contracts()
+        first_period_contracts = contract.browse(first_period_contract_ids).filtered(
+            lambda c: (c.transport_mode_public or c.transport_mode_train) and not (c.time_credit and not c.work_time_rate)
+        )
+        if first_period_contracts:
+            first_period_contract = first_period_contracts
+            result = (contract.public_transport_reimbursed_amount + contract.train_transport_reimbursed_amount) if (first_period_contract and payslip.contract_id == first_period_contract[0]) else 0
+        else:
+            result = 0
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_private_car" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Private car</field>
+        <field name="code">CAR.PRIV</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">170</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.transport_mode_private_car</field>
+        <field name="amount_python_compute">
+if not categories['BASIC']:
+    result = 0
+    result_qty = 0
+else:
+    calendar = contract.resource_calendar_id
+    days_per_week = calendar._get_days_per_week()
+
+    if days_per_week:
+        total_amount = contract.with_context(payslip_date=payslip.date_from)._get_private_car_reimbursed_amount(contract.km_home_work) / 5 * days_per_week
+        daily_amount = total_amount * 3 / 13 / days_per_week
+        cycle_days = inputs['CYCLE'].amount if 'CYCLE' in inputs else 0
+        result = max(0, total_amount - daily_amount * (payslip.private_car_missing_days + cycle_days))
+    else:
+        result = 0
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_cycle_transportation" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Cycle Transportation (Days Count)</field>
+        <field name="code">CYCLE</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">170</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'CYCLE' in inputs and inputs['CYCLE'].amount</field>
+        <field name="amount_python_compute">
+amount_per_km = payslip._rule_parameter('cp200_cycle_reimbursement_per_km')
+amount_max = payslip._rule_parameter('cp200_cycle_reimbursement_max')
+result_qty = inputs['CYCLE'].amount
+result = min(amount_max, amount_per_km * contract.employee_id.km_home_work * 2)
+        </field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_representation_fees" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Representation Fees</field>
+        <field name="code">REP.FEES</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">171</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.representation_fees)</field>
+        <field name="amount_python_compute">result = payslip._get_serious_representation_fees(localdict)</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_representation_fees_volatile" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_div_net"/>
+        <field name="name">Representation Fees (Without Serious Standards)</field>
+        <field name="code">REP.FEES.VOLATILE</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">171</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.representation_fees and payslip._get_representation_fees(localdict) &gt; payslip._get_representation_fees_threshold(localdict)</field>
+        <field name="amount_python_compute">
+result = payslip._get_volatile_representation_fees(localdict)
+if 'REPFEESREGUL' in inputs:
+    result = max(0, result - inputs['REPFEESREGUL'].amount)</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_ip" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_hr_payroll.hr_payroll_head_div_net"/>
+        <field name="name">Intellectual Property</field>
+        <field name="code">IP</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">172</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.ip)</field>
+        <field name="amount_python_compute">result = payslip._get_be_ip(localdict)</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_ip_deduction" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_hr_payroll.hr_payroll_head_div_net"/>
+        <field name="name">Intellectual Property Income Deduction</field>
+        <field name="code">IP.DED</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">173</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.ip)</field>
+        <field name="amount_python_compute">result = payslip._get_be_ip_deduction(localdict)</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_canteen" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_hr_payroll.hr_payroll_head_div_net"/>
+        <field name="name">Canteen Cost</field>
+        <field name="code">CANTEEN</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">174</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.l10n_be_canteen_cost</field>
+        <field name="amount_python_compute">
+result = -contract.l10n_be_canteen_cost if result_rules['BASIC']['total'] else 0
+salary_simulation = payslip.env.context.get('salary_simulation')
+if not salary_simulation:
+    first_period_contract_ids = payslip._get_period_contracts()
+    first_period_contract = contract.browse(first_period_contract_ids).filtered(lambda c: c.l10n_be_canteen_cost)
+    result = result if (first_period_contract and payslip.contract_id == first_period_contract[0]) else 0
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <!-- Double December Pay -->
+    <record id="cp200_employees_salary_double_december_basic" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_double_december_category"/>
+        <field name="name">Double December Pay Basic</field>
+        <field name="code">DOUBLE.DECEMBER.BASIC</field>
+        <field name="sequence">175</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'DOUBLEDECEMBER' in inputs and inputs['DOUBLEDECEMBER'].amount</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = inputs['DOUBLEDECEMBER'].amount</field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <!-- 85% of monthly gross salary is used to compute social contributions -->
+    <record id="cp200_employees_salary_double_december_salary" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_double_december_category"/>
+        <field name="name">Gross Double December Pay Salary</field>
+        <field name="code">DOUBLE.DECEMBER.SALARY</field>
+        <field name="sequence">176</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'DOUBLEDECEMBER' in inputs and inputs['DOUBLEDECEMBER'].amount</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['DOUBLE.DECEMBER.BASIC']['total']
+result = max(0, result / 0.92 * 0.85)
+        </field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_double_december_onss" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_double_december_category"/>
+        <field name="name">Social contribution</field>
+        <field name="code">DOUBLE.DECEMBER.ONSS</field>
+        <field name="sequence">177</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'DOUBLEDECEMBER' in inputs and inputs['DOUBLEDECEMBER'].amount and not contract.no_onss</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">result_rules['DOUBLE.DECEMBER.SALARY']['total']</field>
+        <field name="amount_percentage">-13.07</field>
+        <field name="partner_id" ref="l10n_be_hr_payroll.res_partner_onss"/>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_double_december_gross" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_double_december_category_gross"/>
+        <field name="name">Double December Pay Gross</field>
+        <field name="code">DOUBLE.DECEMBER.GROSS</field>
+        <field name="sequence">178</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'DOUBLEDECEMBER' in inputs and inputs['DOUBLEDECEMBER'].amount</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['DOUBLE.DECEMBER.BASIC']['total'] + result_rules['DOUBLE.DECEMBER.ONSS']['total']</field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_double_december_pp" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_double_december_category"/>
+        <field name="name">Double December Pay Withholding Tax</field>
+        <field name="code">DOUBLE.DECEMBER.P.P</field>
+        <field name="sequence">179</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'DOUBLEDECEMBER' in inputs and inputs['DOUBLEDECEMBER'].amount</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = payslip._get_be_double_holiday_withholding_taxes(localdict)</field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_double_december_net" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_double_december_category"/>
+        <field name="name">Double December Pay Net</field>
+        <field name="code">DOUBLE.DECEMBER.NET</field>
+        <field name="sequence">180</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'DOUBLEDECEMBER' in inputs and inputs['DOUBLEDECEMBER'].amount</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = result_rules['DOUBLE.DECEMBER.GROSS']['total']+ result_rules['DOUBLE.DECEMBER.P.P']['total']</field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_expense_refund" model="hr.salary.rule">
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+result = inputs['EXPENSES'].amount > 0.0 if 'EXPENSES' in inputs else False
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = inputs['EXPENSES'].amount if 'EXPENSES' in inputs else 0
+        </field>
+        <field name="code">EXPENSES</field>
+        <field name="category_id" ref="hr_payroll.ALW"/>
+        <field name="name">Refund Expenses</field>
+        <field name="sequence" eval="190"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_negative_net" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Negative Net</field>
+        <field name="code">NEGATIVE</field>
+        <field name="sequence">198</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'NEGATIVE' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = -inputs['NEGATIVE'].amount</field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <record id="cp200_employees_salary_advance" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.DED"/>
+        <field name="name">Salary Advance</field>
+        <field name="code">ADVANCE</field>
+        <field name="sequence">199</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = 'ADVANCE' in inputs</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = -inputs['ADVANCE'].amount</field>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+    </record>
+
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary')),
+            ('code', '=', 'NET')]"/>
+        <value eval="{'amount_python_compute': &quot;result = categories['BASIC'] + categories['ALW'] + categories['DED'] + result_rules['DOUBLE.DECEMBER.NET']['total']&quot;, 'appears_on_employee_cost_dashboard': True}"/>
+    </function>
+
+    <record id="cp200_employees_salary_remuneration" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_remuneration"/>
+        <field name="name">Accounting: Remuneration</field>
+        <field name="code">REMUNERATION</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">500</field>
+        <field name="condition_select">none</field>
+        <field name="amount_python_compute">
+result = categories['BASIC'] + categories['COMMISSION'] + result_rules['HIRINGBONUS']['total'] + result_rules['REPFEESREGUL']['total'] + result_rules['ADDITIONALGROSS']['total'] +  categories['AFTERPUB'] + result_rules['SIMPLE.DECEMBER']['total'] - abs(result_rules['IP']['total'] if contract.ip else 0)</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_onss_employer_basic" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS Basic (Employer)</field>
+        <field name="code">ONSSEMPLOYERBASIC</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_global_rate') - 13.07
+result = SALARY</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_onss_employer_ffe" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS FFE (Employer)</field>
+        <field name="code">ONSSEMPLOYERFFE</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+worker_count = payslip.company_id._get_workers_count()
+result_rate = payslip._get_ffe_contribution_rate(worker_count)
+result = SALARY</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_onss_employer_special_ffe" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS Special FFE (Employer)</field>
+        <field name="code">ONSSEMPLOYERMFFE</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_special_ffe_rate')
+result = SALARY</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_onss_employer_cpae" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS CPAE (Employer)</field>
+        <field name="code">ONSSEMPLOYERCPAE</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_cpae_rate')
+result = SALARY</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_onss_employer_wage_restreint" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS Wage Restreint (Employer)</field>
+        <field name="code">ONSSEMPLOYERRESTREINT</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_wage_restreint')
+result = SALARY</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_onss_employer_temporary_unemployment" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer_detail"/>
+        <field name="name">Accounting: ONSS Temporary Unemployment (Employer)</field>
+        <field name="code">ONSSEMPLOYERUNEMP</field>
+        <field name="sequence">501</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = payslip._rule_parameter('l10n_be_temporary_unemployment_rate')
+result = SALARY</field>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_onss_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_onss_employer"/>
+        <field name="name">Accounting: ONSS (Employer)</field>
+        <field name="code">ONSSEMPLOYER</field>
+        <field name="sequence">502</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = result_rules['ONSSEMPLOYERBASIC']['total'] + result_rules['ONSSEMPLOYERFFE']['total'] + result_rules['ONSSEMPLOYERMFFE']['total'] + result_rules['ONSSEMPLOYERCPAE']['total'] + result_rules['ONSSEMPLOYERRESTREINT']['total'] + result_rules['ONSSEMPLOYERUNEMP']['total']</field>
+        <field name="partner_id" ref="res_partner_onss"/>
+        <field name="struct_id" ref="hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="appears_on_payroll_report" eval="True"/>
+        <field name="appears_on_employee_cost_dashboard" eval="True"/>
+    </record>
+
+    <record id="cp200_employees_salary_group_insurance" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_hr_payroll.hr_salary_rule_category_group_insurance"/>
+        <field name="name">Group Insurance (Employer)</field>
+        <field name="code">GROUPINSURANCE</field>
+        <field name="sequence">503</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = contract.l10n_be_group_insurance_rate</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result_rate = 8.86
+result = contract.wage_with_holidays * (contract.l10n_be_group_insurance_rate / 100.0) * (contract.resource_calendar_id.work_time_rate / 100.0)</field>
+        <field name="partner_id" ref="l10n_be_hr_payroll.res_partner_onss"/>
+        <field name="struct_id" ref="l10n_be_hr_payroll.hr_payroll_structure_cp200_employee_salary"/>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+</odoo>

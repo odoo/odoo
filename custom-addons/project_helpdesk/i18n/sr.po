@@ -1,0 +1,160 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* project_helpdesk
+# 
+# Translators:
+# Milan Bojovic <mbojovic@outlook.com>, 2023
+# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023
+# Martin Trigaux, 2023
+# コフスタジオ, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: コフスタジオ, 2024\n"
+"Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sr\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: project_helpdesk
+#: model_terms:ir.ui.view,arch_db:project_helpdesk.helpdesk_ticket_convert_to_task_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:project_helpdesk.project_task_convert_to_ticket_wizard_view_form
+msgid "Convert"
+msgstr "Konvertuj"
+
+#. module: project_helpdesk
+#: model:ir.model,name:project_helpdesk.model_helpdesk_ticket_convert_wizard
+msgid "Convert Helpdesk Tickets to Tasks"
+msgstr "Konvertuj tikete podrške u zadatke"
+
+#. module: project_helpdesk
+#: model:ir.model,name:project_helpdesk.model_project_task_convert_wizard
+msgid "Convert Project Tasks to Tickets"
+msgstr "Konvertuj projektne zadatke u tikete"
+
+#. module: project_helpdesk
+#. odoo-python
+#: code:addons/project_helpdesk/models/helpdesk.py:0
+#: model:ir.actions.server,name:project_helpdesk.action_ticket_convert_to_task
+#: model_terms:ir.ui.view,arch_db:project_helpdesk.helpdesk_ticket_convert_to_task_wizard_view_form
+#, python-format
+msgid "Convert to Task"
+msgstr "Konvertuj u zadatak"
+
+#. module: project_helpdesk
+#. odoo-python
+#: code:addons/project_helpdesk/models/project.py:0
+#: model:ir.actions.server,name:project_helpdesk.action_task_convert_to_ticket
+#: model_terms:ir.ui.view,arch_db:project_helpdesk.project_task_convert_to_ticket_wizard_view_form
+#, python-format
+msgid "Convert to Ticket"
+msgstr "Konvertuj u tiket"
+
+#. module: project_helpdesk
+#. odoo-python
+#: code:addons/project_helpdesk/wizard/helpdesk_ticket_convert_wizard.py:0
+#, python-format
+msgid "Converted Tasks"
+msgstr "Konvertovani zadaci"
+
+#. module: project_helpdesk
+#. odoo-python
+#: code:addons/project_helpdesk/wizard/project_task_convert_wizard.py:0
+#, python-format
+msgid "Converted Tickets"
+msgstr "Konvertovani tiketi"
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_helpdesk_ticket_convert_wizard__create_uid
+#: model:ir.model.fields,field_description:project_helpdesk.field_project_task_convert_wizard__create_uid
+msgid "Created by"
+msgstr "Kreirao"
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_helpdesk_ticket_convert_wizard__create_date
+#: model:ir.model.fields,field_description:project_helpdesk.field_project_task_convert_wizard__create_date
+msgid "Created on"
+msgstr "Kreirano"
+
+#. module: project_helpdesk
+#: model_terms:ir.ui.view,arch_db:project_helpdesk.helpdesk_ticket_convert_to_task_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:project_helpdesk.project_task_convert_to_ticket_wizard_view_form
+msgid "Discard"
+msgstr "Poništi"
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_helpdesk_ticket_convert_wizard__display_name
+#: model:ir.model.fields,field_description:project_helpdesk.field_project_task_convert_wizard__display_name
+msgid "Display Name"
+msgstr "Naziv za prikaz"
+
+#. module: project_helpdesk
+#: model:ir.model,name:project_helpdesk.model_helpdesk_ticket
+msgid "Helpdesk Ticket"
+msgstr "Zahtev za pomoć"
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_helpdesk_ticket_convert_wizard__id
+#: model:ir.model.fields,field_description:project_helpdesk.field_project_task_convert_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_helpdesk_ticket_convert_wizard__write_uid
+#: model:ir.model.fields,field_description:project_helpdesk.field_project_task_convert_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Poslednji put ažurirao"
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_helpdesk_ticket_convert_wizard__write_date
+#: model:ir.model.fields,field_description:project_helpdesk.field_project_task_convert_wizard__write_date
+msgid "Last Updated on"
+msgstr "Poslednji put ažurirano"
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_helpdesk_ticket_convert_wizard__project_id
+msgid "Project"
+msgstr "Projekat"
+
+#. module: project_helpdesk
+#. odoo-python
+#: code:addons/project_helpdesk/models/project.py:0
+#, python-format
+msgid "Recurring tasks cannot be converted into tickets."
+msgstr "Ponavljajući zadaci ne mogu biti konvertovani u tikete."
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_helpdesk_ticket_convert_wizard__stage_id
+#: model:ir.model.fields,field_description:project_helpdesk.field_project_task_convert_wizard__stage_id
+msgid "Stage"
+msgstr "Faza"
+
+#. module: project_helpdesk
+#: model:ir.model,name:project_helpdesk.model_project_task
+msgid "Task"
+msgstr "Zadatak"
+
+#. module: project_helpdesk
+#. odoo-python
+#: code:addons/project_helpdesk/wizard/project_task_convert_wizard.py:0
+#, python-format
+msgid "Task converted into ticket %s"
+msgstr "Task converted into ticket %s"
+
+#. module: project_helpdesk
+#: model:ir.model.fields,field_description:project_helpdesk.field_project_task_convert_wizard__team_id
+msgid "Team"
+msgstr "Tim"
+
+#. module: project_helpdesk
+#. odoo-python
+#: code:addons/project_helpdesk/wizard/helpdesk_ticket_convert_wizard.py:0
+#, python-format
+msgid "Ticket converted into task %s"
+msgstr "Ticket converted into task %s"

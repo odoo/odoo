@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_be_social_security_certificate_view_form" model="ir.ui.view">
+        <field name="name">l10n.be.social.security.certificate.view.form</field>
+        <field name="model">l10n.be.social.security.certificate</field>
+        <field name="arch" type="xml">
+            <form string="Social Security Certificate">
+                <group class="w-50">
+                    <label for="date_from" string="Period"/>
+                    <div>
+                        <field name="date_from" class="oe_inline o_hr_narrow_field"/> - <field name="date_to" class="oe_inline o_hr_narrow_field"/>
+                    </div>
+                    <field name="company_id"/>
+                    <field name="aggregation_level"/>
+                    <field name="state" invisible="1"/>
+                </group>
+                <div class="mt-4" invisible="state != 'done'">
+                    <field name="social_security_filename" invisible="1"/>
+                    <h2 invisible="not social_security_sheet" class="oe_inline w-100 mb-2">Generation Complete</h2>
+                    <p invisible="not social_security_sheet" class="w-100">
+                        Download the Social Security Certificate PDF file: <field name="social_security_sheet" readonly="1" filename="social_security_filename"/>
+                    </p>
+                </div>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="btn-primary" invisible="state != 'draft'" data-hotkey="q"/>
+                    <button name="action_validate" string="Validate" type="object" class="btn-primary" invisible="state != 'done'" data-hotkey="v"/>
+                    <button name="print_report" string="Print" type="object" invisible="state != 'done'" data-hotkey="w"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_be_social_security_certificate_action" model="ir.actions.act_window">
+        <field name="name">Social Security Certificate</field>
+        <field name="res_model">l10n.be.social.security.certificate</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_type">report</field>
+    </record>
+
+    <menuitem
+        id="menu_l10n_be_social_security_certificate"
+        name="Social Security Certificate"
+        action="l10n_be_social_security_certificate_action"
+        parent="l10n_be_hr_payroll.menu_reporting_l10n_be"
+        sequence="501"
+    />
+
+</odoo>

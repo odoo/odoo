@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="spreadsheet_edition.PivotDetailsSidePanel" class="o_spreadsheet_pivot_side_panel">
+        <t t-set="def" t-value="pivotDefinition"/>
+        <div class="o_side_panel_section">
+            <div class="o_side_panel_title">Pivot name</div>
+            <EditableName name="env.model.getters.getPivotName(props.pivotId)"
+                          displayName="env.model.getters.getPivotDisplayName(props.pivotId)"
+                          onChanged.bind="onNameChanged"/>
+        </div>
+        <div class="o_side_panel_section">
+            <div class="o_side_panel_title">Model</div>
+            <div class="o_model_name"><t t-esc="def.modelDisplayName"/> (<t t-esc="def.model"/>)</div>
+        </div>
+        <div class="o_side_panel_section">
+            <div class="o_side_panel_title">Domain</div>
+            <DomainSelector resModel="def.model" domain="def.domain" t-key="'pivot_' + props.pivotId"/>
+            <div class="btn btn-link o_edit_domain" t-on-click="openDomainEdition">
+                <i class="oi oi-arrow-right me-1"/>Edit domain
+            </div>
+        </div>
+        <div class="o_side_panel_section">
+            <div class="o_side_panel_title">Dimensions</div>
+            <t t-foreach="def.dimensions" t-as="gp" t-key="gp">
+                <div t-esc="gp"/>
+            </t>
+        </div>
+        <div class="o_side_panel_section" t-if="def.sortedColumn">
+            <div class="o_side_panel_title">Sorting</div>
+            <div t-esc="formatSort()"/>
+        </div>
+        <div class="o_side_panel_section">
+            <div class="o_side_panel_title">Measures</div>
+            <t t-foreach="def.measures" t-as="measure" t-key="measure">
+                <div t-esc="measure"/>
+            </t>
+            <div class="o_pivot_last_update"><i>Last updated at <t t-esc="getLastUpdate()"/></i></div>
+            <div class="btn btn-link o_refresh_measures" t-on-click="refresh"><i class="oi oi-arrow-right me-1"/>Refresh values</div><br/>
+        </div>
+    </div>
+</templates>

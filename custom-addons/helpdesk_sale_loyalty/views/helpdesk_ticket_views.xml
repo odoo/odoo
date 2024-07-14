@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="helpdesk_ticket_view_form_inherit_helpdesk_sale_coupon" model="ir.ui.view">
+        <field name='name'>helpdesk.ticket.form.inherit.sale.coupon</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="priority">60</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <field name="stage_id" position="before">
+                <field name="use_coupons" invisible="1"/>
+                <button type="action" name="%(helpdesk_sale_coupon_generate_action)d" string="Coupon"
+                    invisible="not use_coupons"
+                    context="{'default_ticket_id': id, 'default_company_id': company_id}" data-hotkey="o"/>
+            </field>
+            <button name="action_open_helpdesk_ticket" position="before">
+                <button class="oe_stat_button" name="open_coupons" icon="fa-ticket"
+                    type="object" invisible="coupons_count == 0">
+                    <field name="coupons_count" string="Coupons" widget="statinfo" />
+                </button>
+            </button>
+        </field>
+    </record>
+
+</odoo>

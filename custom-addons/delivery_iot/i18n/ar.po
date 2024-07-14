@@ -1,0 +1,179 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* delivery_iot
+# 
+# Translators:
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: delivery_iot
+#: model:ir.actions.report,print_report_name:delivery_iot.action_report_shipping_docs
+#: model:ir.actions.report,print_report_name:delivery_iot.action_report_shipping_labels
+msgid "'Empty Report - Used for assigning IoT printer'"
+msgstr "\"تقرير فارغ - يُستخدم لتعيين طابعة إنترنت الأشياء\" "
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_stock_picking_type__auto_print_carrier_labels
+msgid "Auto Print Carrier Labels"
+msgstr "طباعة ملصق شركة الشحن تلقائياً "
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_stock_picking_type__auto_print_export_documents
+msgid "Auto Print Export Documents"
+msgstr "طباعة مستندات التصدير تلقائيًا "
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "Carrier Labels"
+msgstr "بطاقات عناوين شركة الشحن "
+
+#. module: delivery_iot
+#: model:ir.model.fields,help:delivery_iot.field_choose_delivery_package__available_scale_ids
+#: model:ir.model.fields,help:delivery_iot.field_stock_picking_type__iot_scale_ids
+msgid ""
+"Choose the scales you want to use for this operation type. Those scales can "
+"be used to weigh the packages created."
+msgstr ""
+"اختر الموازين التي ترغب باستخدامها لهذا النوع من العمليات. يمكن استخدام هذه "
+"الموازين لوزن الحزم المنشأة. "
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "Connect Scale"
+msgstr "توصيل الميزان "
+
+#. module: delivery_iot
+#: model:ir.model,name:delivery_iot.model_choose_delivery_package
+msgid "Delivery Package Selection Wizard"
+msgstr "معالج تحديد باقة التوصيل "
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__iot_ip
+msgid "Domain Address"
+msgstr "عنوان النطاق "
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "Export Documents"
+msgstr "تصدير المستندات "
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "How to connect scales?"
+msgstr "كيف تقوم بوصل الموازين؟ "
+
+#. module: delivery_iot
+#: model:ir.model,name:delivery_iot.model_iot_device
+msgid "IOT Device"
+msgstr "جهاز IoT "
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__iot_device_identifier
+msgid "Identifier"
+msgstr "المُعرف"
+
+#. module: delivery_iot
+#: model:ir.model.fields,help:delivery_iot.field_stock_picking_type__auto_print_carrier_labels
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the carrier labels"
+" of the picking when they are created. Note this requires a printer to be "
+"assigned to this report."
+msgstr ""
+"إذا تم تحديد خانة الاختيار هذه، فسيقوم Odoo تلقائيًا بطباعة ملصقات الناقل "
+"الخاصة بالاختيار عند إنشائها. لاحظ أن هذا يتطلب تخصيص طابعة لهذا التقرير. "
+
+#. module: delivery_iot
+#: model:ir.model.fields,help:delivery_iot.field_stock_picking_type__auto_print_export_documents
+msgid ""
+"If this checkbox is ticked, Odoo will automatically print the export "
+"documents of the picking when they are created. Availability of export "
+"documents depends on the carrier and the destination. Note this requires a "
+"printer to be assigned to this report. "
+msgstr ""
+"إذا تم تحديد خانة الاختيار هذه، فسيقوم Odoo تلقائيًا بطباعة مستندات التصدير "
+"الخاصة بالاختيار عند إنشائها. يعتمد توفر مستندات التصدير على شركة النقل "
+"والوجهة. لاحظ أن هذا يتطلب تخصيص طابعة لهذا التقرير. "
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid ""
+"If you connect your scales through the IoT App, the\n"
+"                            weight of the package will be set automatically when\n"
+"                            you do a \"Put in Pack\" operation."
+msgstr ""
+"إذا قمت بتوصيل موازينك من خلال تطبيق IoT، فإن\n"
+"                            سيتم ضبط وزن الحزمة تلقائيا عندما\n"
+"                            تقوم بعملية \"وضع في الحزمة\". "
+
+#. module: delivery_iot
+#: model_terms:ir.ui.view,arch_db:delivery_iot.iot_device_view_form_inherit
+msgid "Linked Operation Types"
+msgstr "نوع العمليات المربوطة "
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__manual_measurement
+msgid "Manual Measurement"
+msgstr "القياس اليدوي "
+
+#. module: delivery_iot
+#: model:ir.model.fields,help:delivery_iot.field_choose_delivery_package__manual_measurement
+msgid "Manually read the measurement from the device"
+msgstr "قم بقراءة القياسات يدوياً من الجهاز "
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_iot_device__picking_type_ids
+msgid "Operation Types"
+msgstr "أنواع العمليات"
+
+#. module: delivery_iot
+#: model:ir.model,name:delivery_iot.model_stock_picking_type
+msgid "Picking Type"
+msgstr "نوع الانتقاء "
+
+#. module: delivery_iot
+#. odoo-javascript
+#: code:addons/delivery_iot/static/src/field_many2one_iot_scale.xml:0
+#, python-format
+msgid "Read weight"
+msgstr "قراءة الوزن "
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__iot_device_id
+msgid "Scale"
+msgstr "الميزان"
+
+#. module: delivery_iot
+#: model:ir.model.fields,field_description:delivery_iot.field_choose_delivery_package__available_scale_ids
+#: model:ir.model.fields,field_description:delivery_iot.field_stock_picking_type__iot_scale_ids
+#: model_terms:ir.ui.view,arch_db:delivery_iot.view_picking_type_form_inherit
+msgid "Scales"
+msgstr "الموازين "
+
+#. module: delivery_iot
+#: model:ir.actions.report,name:delivery_iot.action_report_shipping_docs
+msgid "Shipping Documents"
+msgstr "مستندات الشحن "
+
+#. module: delivery_iot
+#: model:ir.actions.report,name:delivery_iot.action_report_shipping_labels
+msgid "Shipping Labels"
+msgstr "بطاقات عنوان الشحن "
+
+#. module: delivery_iot
+#: model:ir.model,name:delivery_iot.model_stock_picking
+msgid "Transfer"
+msgstr "تحويل "

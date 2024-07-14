@@ -1,0 +1,243 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* documents_hr
+# 
+# Translators:
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: documents_hr
+#: model_terms:ir.ui.view,arch_db:documents_hr.res_config_settings_view_form
+msgid ""
+"<span name=\"documents_hr_tags\" class=\"o_form_label\" invisible=\"1\">\n"
+"                                Default tags\n"
+"                            </span>"
+msgstr ""
+"<span name=\"documents_hr_tags\" class=\"o_form_label\" invisible=\"1\">\n"
+"                                علامات التصنيف الافتراضية\n"
+"                            </span> "
+
+#. module: documents_hr
+#: model:mail.template,body_html:documents_hr.mail_template_document_folder_link
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
+"        <tr><td valign=\"top\" style=\"text-align: left; font-size: 14px;\">\n"
+"            Dear <t t-esc=\"object.name\"></t>, your personal documents access link is available for you.<br><br>\n"
+"            You'll find all your personal HR documents in this folder.<br><br>\n"
+"            Please keep this link secure.<br><br>\n"
+"            <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                <a t-attf-href=\"{{ object.documents_share_id.full_url }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                    Your Documents\n"
+"                </a>\n"
+"            </div>\n"
+"            Have a nice day,<br>\n"
+"            The HR Team\n"
+"        </td></tr>\n"
+"    </tbody></table>\n"
+"                "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
+"        <tr><td valign=\"top\" style=\"text-align: left; font-size: 14px;\">\n"
+"            عزيزنا <t t-esc=\"object.name\"></t>، أصبح رابط الوصول إلى مستنداتك الخاصة جاهزاً.<br><br>\n"
+"            ستجد كافة مستندات الموارد البشرية الخاصة بك في هذا المجلد.<br><br>\n"
+"            يرجى إبقاء هذا الرابط آمناً.<br><br>\n"
+"            <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                <a t-attf-href=\"{{ object.documents_share_id.full_url }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                    مستنداتك\n"
+"                </a>\n"
+"            </div>\n"
+"            نتمنى لك يوماً رائعاً،<br>\n"
+"            فريق الموارد البشرية\n"
+"        </td></tr>\n"
+"    </tbody></table>\n"
+"                "
+
+#. module: documents_hr
+#: model:documents.tag,name:documents_hr.documents_hr_documents_absences
+msgid "Absences"
+msgstr "الغيابات "
+
+#. module: documents_hr
+#: model_terms:ir.ui.view,arch_db:documents_hr.res_config_settings_view_form
+msgid "Centralize your employees' documents (contracts, payslips, etc.)"
+msgstr "قم بمركزة مستندات موظفيك (العقود، إيصالات الدفع، وما إلى ذلك.) "
+
+#. module: documents_hr
+#: model:documents.tag,name:documents_hr.documents_hr_documents_Cerification
+msgid "Certifications"
+msgstr "الشهادات"
+
+#. module: documents_hr
+#: model:ir.model,name:documents_hr.model_res_company
+msgid "Companies"
+msgstr "الشركات"
+
+#. module: documents_hr
+#: model:ir.model,name:documents_hr.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات "
+
+#. module: documents_hr
+#: model:ir.model,name:documents_hr.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr "معالج المغادرة"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_res_users__document_ids
+msgid "Document"
+msgstr "المستند"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_hr_employee__document_count
+msgid "Document Count"
+msgstr "عدد المستندات"
+
+#. module: documents_hr
+#. odoo-python
+#: code:addons/documents_hr/models/res_users.py:0
+#: model:documents.facet,name:documents_hr.documents_hr_documents
+#: model:ir.model.fields,field_description:documents_hr.field_res_users__document_count
+#: model_terms:ir.ui.view,arch_db:documents_hr.hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:documents_hr.res_users_view_form
+#, python-format
+msgid "Documents"
+msgstr "المستندات"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_res_company__documents_hr_settings
+msgid "Documents Hr Settings"
+msgstr "إعدادات الموارد البشرية للمستندات "
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_hr_employee__documents_share_id
+msgid "Documents Share"
+msgstr "مشاركة المستندات"
+
+#. module: documents_hr
+#: model:ir.model,name:documents_hr.model_hr_employee
+msgid "Employee"
+msgstr "الموظف"
+
+#. module: documents_hr
+#. odoo-python
+#: code:addons/documents_hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"Employee's related user and private email must be set to use \"Send Access Link\" function:\n"
+"%s"
+msgstr ""
+"يجب أن يتم إعداد المستخدم ذو الصلة والبريد الإلكتروني الخاص بالموظف لاستخدام وظيفة \"إرسال رابط الوصول\": \n"
+"%s "
+
+#. module: documents_hr
+#: model:documents.tag,name:documents_hr.documents_hr_documents_employees
+msgid "Employees Documents"
+msgstr "مستندات الموظفين "
+
+#. module: documents_hr
+#: model:documents.folder,name:documents_hr.documents_hr_folder
+msgid "HR"
+msgstr "الموارد البشرية"
+
+#. module: documents_hr
+#. odoo-python
+#: code:addons/documents_hr/models/hr_employee.py:0
+#, python-format
+msgid "HR Documents: %s"
+msgstr "مستندات الموارد البشرية: %s "
+
+#. module: documents_hr
+#: model:mail.template,name:documents_hr.mail_template_document_folder_link
+msgid "HR: Document Access Link"
+msgstr "الموارد البشرية: رابط الوصول إلى المستند "
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_res_config_settings__documents_hr_settings
+msgid "Human Resources"
+msgstr "الموارد البشرية"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_hr_departure_wizard__private_email
+msgid "Private Email"
+msgstr "بريد الكتروني خاص"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_hr_departure_wizard__send_hr_documents_access_link
+msgid "Send Access Link"
+msgstr "إرسال رابط الوصول "
+
+#. module: documents_hr
+#: model:ir.actions.server,name:documents_hr.ir_actions_server_send_access_link
+msgid "Send HR Documents Access Link"
+msgstr "إرسال رابط الوصول إلى مستندات الموارد البشرية "
+
+#. module: documents_hr
+#: model:ir.model.fields,help:documents_hr.field_hr_departure_wizard__send_hr_documents_access_link
+msgid ""
+"Send a share link to the private email of the employee with all the HR files"
+" he owns in Documents app"
+msgstr ""
+"قم بإرسال رابط مشاركة إلى البريد الإلكتروني الخاص للموظف، يحتوي على كافة "
+"ملفات الموارد البشرية إذا كان لديه تطبيق المستندات "
+
+#. module: documents_hr
+#: model:mail.template,description:documents_hr.mail_template_document_folder_link
+msgid "Sent manually when recording an employee departure"
+msgstr "يتم إرساله يدوياً عند تسجيل مغادرة أحد الموظفين "
+
+#. module: documents_hr
+#. odoo-python
+#: code:addons/documents_hr/models/hr_employee.py:0
+#, python-format
+msgid "The access link has been sent to the employee."
+msgstr "تم إرسال رابط الوصول إلى الموظف. "
+
+#. module: documents_hr
+#: model:ir.model,name:documents_hr.model_res_users
+msgid "User"
+msgstr "المستخدم"
+
+#. module: documents_hr
+#: model_terms:ir.ui.view,arch_db:documents_hr.res_config_settings_view_form
+msgid "Workspace"
+msgstr "مساحة العمل"
+
+#. module: documents_hr
+#. odoo-python
+#: code:addons/documents_hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"You must set a work contact address on the Employee in order to use "
+"Document's features."
+msgstr ""
+"عليك تعيين عنوان تواصل للعمل في تطبيق الموظفين حتى تتمكن من استخدام خصائص "
+"المستندات. "
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_res_company__documents_hr_folder
+msgid "hr Workspace"
+msgstr "مساحة عمل الموارد البشرية "
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_res_config_settings__documents_hr_folder
+msgid "hr default workspace"
+msgstr "مساحة العمل الافتراضية للموارد البشرية "
+
+#. module: documents_hr
+#: model:mail.template,subject:documents_hr.mail_template_document_folder_link
+msgid "{{ object.name }}, your personal documents access link is available"
+msgstr "{{ object.name }}، رابط الوصول إلى مستنداتك الشخصية متاح "

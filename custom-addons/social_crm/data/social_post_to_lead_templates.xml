@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="social_post_to_lead_description">
+<div>
+    <div>
+        <span t-esc="object.author_name"/>
+        <span>posted on</span>
+        <a t-att-href="object.post_link"
+            t-esc="object.social_account_id.media_id.name" target="_blank"/>
+        <span>at</span>
+        <span t-esc="post_datetime"/>
+    </div>
+    <blockquote class="my-4">
+        <t t-out="object.post_content"/>
+    </blockquote>
+</div>
+        </template>
+    </data>
+</odoo>

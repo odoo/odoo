@@ -1,0 +1,80 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_loyalty_taxcloud
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_loyalty_taxcloud
+#. odoo-python
+#: code:addons/sale_loyalty_taxcloud/models/sale_order.py:0
+#, python-format
+msgid ""
+"Any order that has discounts and uses TaxCloud must be invoiced all at once to prevent faulty tax computation with Taxcloud.\n"
+"The following orders must be completely invoiced:\n"
+"%s"
+msgstr ""
+"할인이 있고 TaxCloud를 사용하는 모든 주문은 한꺼번에 송장을 발부 받아야만 Taxcloud와의 세금 계산에 문제가 발생하지 않습니다.\n"
+"다음 주문은 완전히 송장 처리되어야 합니다 :\n"
+"%s"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model.fields,field_description:sale_loyalty_taxcloud.field_account_move_line__reward_id
+msgid "Discount reward"
+msgstr "할인 보상"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model,name:sale_loyalty_taxcloud.model_account_move
+msgid "Journal Entry"
+msgstr "전표입력"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model,name:sale_loyalty_taxcloud.model_account_move_line
+msgid "Journal Item"
+msgstr "전표 항목"
+
+#. module: sale_loyalty_taxcloud
+#. odoo-python
+#: code:addons/sale_loyalty_taxcloud/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"Orders with coupons or promotions programs that use TaxCloud for automatic tax computation cannot be modified after having been invoiced.\n"
+"To modify this order, you must first cancel or refund all existing invoices."
+msgstr ""
+"자동 세금 계산을 위해 TaxCloud를 사용하는 쿠폰 또는 프로모션 프로그램이 포함된 주문은 송장 처리 후 수정할 수 없습니다.\n"
+"이 주문을 수정하려면 먼저 기존 송장을 모두 취소하거나 환불해야 합니다."
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model,name:sale_loyalty_taxcloud.model_sale_order
+msgid "Sales Order"
+msgstr "판매 주문"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model,name:sale_loyalty_taxcloud.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "판매 주문 내역"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model.fields,field_description:sale_loyalty_taxcloud.field_account_move_line__price_taxcloud
+#: model:ir.model.fields,field_description:sale_loyalty_taxcloud.field_sale_order_line__price_taxcloud
+msgid "Taxcloud Price"
+msgstr "Taxcloud 가격"
+
+#. module: sale_loyalty_taxcloud
+#: model:ir.model.fields,help:sale_loyalty_taxcloud.field_account_move_line__reward_id
+msgid "The loyalty reward that created this line."
+msgstr "이 항목을 생성시킨 적립 혜택입니다."

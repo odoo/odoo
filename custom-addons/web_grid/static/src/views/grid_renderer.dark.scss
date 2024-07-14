@@ -1,0 +1,27 @@
+// = Grid Renderer
+// ============================================================================
+// No CSS hacks, variables overrides only
+
+.o_grid_renderer {
+    .o_grid_row_total, .o_grid_add_line:not(.o_grid_row){
+      --background-color: #{$o-gray-300};
+      --color: #{$o-black};
+    }
+
+    .o_grid_cell_overlay_total {
+      --background-color: #{rgba($o-gray-400, var(--bg-opacity, 1))};
+    }
+
+    .o_grid_section {
+        --background-color: #{darken($o-gray-200, 4%)};
+
+        .o_grid_cell_overlay_today {
+            --bg-opacity: .5;
+        }
+    }
+
+    .o_grid_column_total_computed {
+        --background-color: #{$o-gray-400};
+        --color: #{$o-black};
+    }
+}

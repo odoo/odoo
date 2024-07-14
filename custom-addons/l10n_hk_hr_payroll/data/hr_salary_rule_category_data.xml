@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="AUTOPAY" model="hr.salary.rule.category">
+        <field name="name">Autopay</field>
+        <field name="code">AUTOPAY</field>
+    </record>
+
+    <record id="MPF" model="hr.salary.rule.category">
+        <field name="name">MPF</field>
+        <field name="code">MPF</field>
+    </record>
+
+    <record id="EEMPF" model="hr.salary.rule.category">
+        <field name="name">Employee MPF</field>
+        <field name="code">EEMPF</field>
+        <field name="parent_id" ref="MPF" />
+    </record>
+
+    <record id="ERMPF" model="hr.salary.rule.category">
+        <field name="name">Employer MPF</field>
+        <field name="code">ERMPF</field>
+        <field name="parent_id" ref="MPF" />
+    </record>
+</odoo>

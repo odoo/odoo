@@ -1,0 +1,792 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="l10n_syscohada.account_reports_syscohada_statements_menu" name="Syscohada" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_readonly"/>
+
+<data  auto_sequence="1">
+    <record id="account_financial_report_syscohada_bilan" model="account.report">
+        <field name="name">Balance Sheet (SYSCOHADA)</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_syscohada_bilan_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_line_syscohada_bilan_actif_passif_total" model="account.report.line">
+                <field name="name">ACTIVE - PASSIVE</field>
+                <field name="code">SYSCOHADA_ACTIF_PASSIF_TOTAL</field>
+                <field name="hide_if_zero" eval="True"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_line_syscohada_bilan_actif_passif_total_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">SYSCOHADA_BZ.balance - SYSCOHADA_DZ.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_syscohada_bilan_actif_total" model="account.report.line">
+                <field name="name">ACTIVE</field>
+                <field name="code">SYSCOHADA_ACTIF_TOT</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_02_3_syscohada_bilan_actif" model="account.report.line">
+                        <field name="name">AD | INTANGIBLE ASSETS</field>
+                        <field name="code">SYSCOHADA_AD</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_02_3_syscohada_bilan_actif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCOHADA_AE.balance + SYSCOHADA_AF.balance + SYSCOHADA_AG.balance + SYSCOHADA_AH.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_03_0_2_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">AE | Development and prospecting costs</field>
+                                <field name="code">SYSCOHADA_AE</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_0_2_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">2191 + 211 + 2911 + 2811 + 2181</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_0_3_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">AF | Patents, licenses, software, and similar rights</field>
+                                <field name="code">SYSCOHADA_AF</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_0_3_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">2913 + 214 + 2193 + 2912 + 2813 + 2814 + 2914 + 212 + 2812 + 213</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_0_4_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">AG | Goodwill and Leasehold Rights</field>
+                                <field name="code">SYSCOHADA_AG</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_0_4_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">2916 + 2816 + 215 + 216 + 2815 + 2915</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_0_5_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">AH | Other intangible assets</field>
+                                <field name="code">SYSCOHADA_AH</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_0_5_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">2918 + 2198 + 2818 + 2817 + 217 + 218\(2181) + 2919 + 2917</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_02_4_syscohada_bilan_actif" model="account.report.line">
+                        <field name="name">AI | PROPERTY, PLANT AND EQUIPMENT</field>
+                        <field name="code">SYSCOHADA_AI</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_02_4_syscohada_bilan_actif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCOHADA_AJ.balance + SYSCOHADA_AK.balance + SYSCOHADA_AL.balance + SYSCOHADA_AM.balance + SYSCOHADA_AN.balance + SYSCOHADA_AP.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_03_1_1_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">AJ | Land</field>
+                                <field name="code">SYSCOHADA_AJ</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_1_1_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">282 + 292 + 22</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_1_2_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">AK | Buildings</field>
+                                <field name="code">SYSCOHADA_AK</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_1_2_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">232 + 2933 + 2937 + 2393 + 2931 + 2833 + 2932 + 2837 + 237 + 233 + 2391 + 2832 + 231 + 2831</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_1_3_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">AL | Fixtures and fittings</field>
+                                <field name="code">SYSCOHADA_AL</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_1_3_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">2835 + 2394 + 2939 + 235 + 2838 + 238 + 2935 + 2934 + 2938 + 234 + 2395 + 2398 + 2834 + 2392</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_1_4_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">AM | Equipment, furniture and biological assets</field>
+                                <field name="code">SYSCOHADA_AM</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_1_4_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">24\(245, 2495) + 284\(2845) + 294\(2945)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_1_5_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">AN | Transportation Equipment</field>
+                                <field name="code">SYSCOHADA_AN</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_1_5_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">245 + 2495 + 2945 + 2845</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_1_6_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">AP | Advances and deposits paid on fixed assets</field>
+                                <field name="code">SYSCOHADA_AP</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_1_6_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">25 + 295</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_02_5_syscohada_bilan_actif" model="account.report.line">
+                        <field name="name">AQ | EQUITY SECURITIES</field>
+                        <field name="code">SYSCOHADA_AQ</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_02_5_syscohada_bilan_actif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCOHADA_AR.balance + SYSCOHADA_AS.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_03_2_1_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">AR | Financial assets</field>
+                                <field name="code">SYSCOHADA_AR</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_2_1_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">296 + 26</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_2_6_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">AS | Other financial assets</field>
+                                <field name="code">SYSCOHADA_AS</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_2_6_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">27 + 297</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_02_6_syscohada_bilan_actif" model="account.report.line">
+                        <field name="name">AZ | TOTAL FIXED ASSETS (I)</field>
+                        <field name="code">SYSCOHADA_AZ</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_02_6_syscohada_bilan_actif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCOHADA_AD.balance + SYSCOHADA_AI.balance + SYSCOHADA_AQ.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_03_3_1_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">BA | CURRENT ASSETS O.A.S</field>
+                                <field name="code">SYSCOHADA_BA</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_3_1_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">498 + 485 + 488</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_3_2_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">BB | INVENTORY AND OUTSTANDING</field>
+                                <field name="code">SYSCOHADA_BB</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_3_2_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">3</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_3_3_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">BG | RECEIVABLES AND ASSIMILATED USES</field>
+                                <field name="code">SYSCOHADA_BG</field>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_3_3_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">SYSCOHADA_BH.balance + SYSCOHADA_BI.balance + SYSCOHADA_BJ.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_line_03_3_4_syscohada_bilan_actif" model="account.report.line">
+                                        <field name="name">BH | Suppliers advances paid</field>
+                                        <field name="code">SYSCOHADA_BH</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_03_3_4_syscohada_bilan_actif_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">409</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_03_4_1_syscohada_bilan_actif" model="account.report.line">
+                                        <field name="name">BI | Customers</field>
+                                        <field name="code">SYSCOHADA_BI</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_03_4_1_syscohada_bilan_actif_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">491 + 41\(419)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_line_03_4_2_syscohada_bilan_actif" model="account.report.line">
+                                        <field name="name">BJ | Other receivables</field>
+                                        <field name="code">SYSCOHADA_BJ</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_line_03_4_2_syscohada_bilan_actif_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">476 + 4747 + 4751 + 497 + 45 + 4711</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_2_02_4_syscohada_bilan_actif" model="account.report.line">
+                        <field name="name">BK | TOTAL CURRENT ASSETS</field>
+                        <field name="code">SYSCOHADA_BK</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_2_02_4_syscohada_bilan_actif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCOHADA_BA.balance + SYSCOHADA_BB.balance + SYSCOHADA_BG.balance</field>
+                                </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_03_5_1_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">BQ | Investment Securities</field>
+                                <field name="code">SYSCOHADA_BQ</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_5_1_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">590 + 50</field>
+                                        </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_5_2_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">BR | Values to be cashed</field>
+                                <field name="code">SYSCOHADA_BR</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_5_2_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">51 + 591</field>
+                                        </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_5_3_syscohada_bilan_actif" model="account.report.line">
+                                <field name="name">BS | Banks, postal cheques, cash registers and similar</field>
+                                <field name="code">SYSCOHADA_BS</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_5_3_syscohada_bilan_actif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">54 + 57 + 592 + 58 + 52 + 55</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_2_02_5_syscohada_bilan_actif" model="account.report.line">
+                        <field name="name">BT | TOTAL CASH AND ASSETS (II)</field>
+                        <field name="code">SYSCOHADA_BT</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_2_02_5_syscohada_bilan_actif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCOHADA_BQ.balance + SYSCOHADA_BR.balance + SYSCOHADA_BS.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_4_02_1_syscohada_bilan_actif" model="account.report.line">
+                        <field name="name">BU | Translation adjustment assets (V)</field>
+                        <field name="code">SYSCOHADA_BU</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_4_02_1_syscohada_bilan_actif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">478</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_03_3_11_syscohada_bilan_actif" model="account.report.line">
+                        <field name="name">BZ | LARGE TOTAL</field>
+                        <field name="code">SYSCOHADA_BZ</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_03_3_11_syscohada_bilan_actif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCOHADA_AZ.balance + SYSCOHADA_BK.balance + SYSCOHADA_BT.balance + SYSCOHADA_BU.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_syscohada_bilan_passif_total" model="account.report.line">
+                <field name="name">PASSIVE</field>
+                <field name="code">SYSCOHADA_PASSIF_TOT</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_line_03_0_1_syscohada_bilan_passif" model="account.report.line">
+                        <field name="name">CA | Capital</field>
+                        <field name="code">SYSCOHADA_CA</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="5"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_03_0_1_syscohada_bilan_passif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-102 - 104 - 101 - 103</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_03_0_4_syscohada_bilan_passif" model="account.report.line">
+                        <field name="name">CB | Contributors uncalled capital</field>
+                        <field name="code">SYSCOHADA_CB</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="5"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_03_0_4_syscohada_bilan_passif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-109</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_03_0_2_syscohada_bilan_passif" model="account.report.line">
+                        <field name="name">CD | Share Capital Premiums</field>
+                        <field name="code">SYSCOHADA_CD</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="5"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_03_0_2_syscohada_bilan_passif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-105</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_03_0_3_syscohada_bilan_passif" model="account.report.line">
+                        <field name="name">CE | Revaluation differences</field>
+                        <field name="code">SYSCOHADA_CE</field>
+                        <field name="hierarchy_level" eval="5"/>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_03_0_3_syscohada_bilan_passif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-106</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_03_1_1_syscohada_bilan_passif" model="account.report.line">
+                        <field name="name">CF | Unavailable Reserves</field>
+                        <field name="code">SYSCOHADA_CF</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="5"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_03_1_1_syscohada_bilan_passif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-112 - 111 - 113</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_03_1_2_syscohada_bilan_passif" model="account.report.line">
+                        <field name="name">CG | Free reserves</field>
+                        <field name="code">SYSCOHADA_CG</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="5"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_03_1_2_syscohada_bilan_passif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-118</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_03_1_5_syscohada_bilan_passif" model="account.report.line">
+                        <field name="name">CH | Retained earnings</field>
+                        <field name="code">SYSCOHADA_CH</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="5"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_03_1_5_syscohada_bilan_passif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-12</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_03_1_6_syscohada_bilan_passif" model="account.report.line">
+                        <field name="name">CJ | Net income for the year</field>
+                        <field name="code">SYSCOHADA_CJ</field>
+                        <field name="hierarchy_level" eval="5"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_03_1_6_syscohada_bilan_passif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCOHADA_XI.balance</field>
+                                <field name="subformula">cross_report</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_03_1_7_syscohada_bilan_passif" model="account.report.line">
+                        <field name="name">CL | Investment Grants</field>
+                        <field name="code">SYSCOHADA_CL</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="5"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_03_1_7_syscohada_bilan_passif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-14</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_03_1_8_syscohada_bilan_passif" model="account.report.line">
+                        <field name="name">CM | Regulated Provisions</field>
+                        <field name="code">SYSCOHADA_CM</field>
+                        <field name="groupby">account_id</field>
+                        <field name="hierarchy_level" eval="5"/>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_03_1_8_syscohada_bilan_passif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-15</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_02_3_syscohada_bilan_passif" model="account.report.line">
+                        <field name="name">CP | TOTAL EQUITY AND SIMILAR RESOURCES (I)</field>
+                        <field name="code">SYSCOHADA_CP</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_02_3_syscohada_bilan_passif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCOHADA_CA.balance + SYSCOHADA_CB.balance + SYSCOHADA_CD.balance + SYSCOHADA_CE.balance + SYSCOHADA_CF.balance + SYSCOHADA_CG.balance + SYSCOHADA_CH.balance + SYSCOHADA_CJ.balance + SYSCOHADA_CL.balance + SYSCOHADA_CM.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_03_2_1_syscohada_bilan_passif" model="account.report.line">
+                                <field name="name">DA | Borrowings and other financial liabilities</field>
+                                <field name="code">SYSCOHADA_DA</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_2_1_syscohada_bilan_passif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-18 - 16</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_2_2_syscohada_bilan_passif" model="account.report.line">
+                                <field name="name">DB | Capital lease liabilities</field>
+                                <field name="code">SYSCOHADA_DB</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_2_2_syscohada_bilan_passif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-17</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_2_3__syscohada_bilan_passif" model="account.report.line">
+                                <field name="name">DC | Financial provision for risks and expenses</field>
+                                <field name="code">SYSCOHADA_DC</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_2_3__syscohada_bilan_passif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-19</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_02_5_syscohada_bilan_passif" model="account.report.line">
+                        <field name="name">DD | TOTAL FINANCIAL LIABILITIES AND SIMILAR RESOURCES (II)</field>
+                        <field name="code">SYSCOHADA_DD</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_02_5_syscohada_bilan_passif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCOHADA_DC.balance + SYSCOHADA_DA.balance + SYSCOHADA_DB.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_02_6_syscohada_bilan_passif" model="account.report.line">
+                        <field name="name">DF | TOTAL STABLE RESOURCES (III)</field>
+                        <field name="code">SYSCOHADA_DF</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_02_6_syscohada_bilan_passif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCOHADA_CP.balance + SYSCOHADA_DD.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_03_3_1_syscohada_bilan_passif" model="account.report.line">
+                                <field name="name">DH | Circulating liabilities OOA</field>
+                                <field name="code">SYSCOHADA_DH</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_3_1_syscohada_bilan_passif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-482 - 484 - 481</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_3_2_syscohada_bilan_passif" model="account.report.line">
+                                <field name="name">DI | Customers, advances received</field>
+                                <field name="code">SYSCOHADA_DI</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_3_2_syscohada_bilan_passif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-419</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_3_3_syscohada_bilan_passif" model="account.report.line">
+                                <field name="name">DJ | Operating Suppliers</field>
+                                <field name="code">SYSCOHADA_DJ</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_3_3_syscohada_bilan_passif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-40\(409) - 490</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_3_3c_syscohada_bilan_passif" model="account.report.line">
+                                <field name="name">DK | Tax and social security liabilities</field>
+                                <field name="code">SYSCOHADA_DK</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_3_3c_syscohada_bilan_passif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-43 - 493 - 494 - 44 - 42 - 492</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_3_4_syscohada_bilan_passif" model="account.report.line">
+                                <field name="name">DM | Other debts</field>
+                                <field name="code">SYSCOHADA_DM</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_3_4_syscohada_bilan_passif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">- 46 -471\(4711) -472 -473 -4746 - 4752 - 477 -495 -496</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_3_5_syscohada_bilan_passif" model="account.report.line">
+                                <field name="name">DN | Provisions for short-term risks</field>
+                                <field name="code">SYSCOHADA_DN</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_3_5_syscohada_bilan_passif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-499 - 599</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_03_3_6_syscohada_bilan_passif" model="account.report.line">
+                        <field name="name">DP | TOTAL CURRENT LIABILITIES</field>
+                        <field name="code">SYSCOHADA_DP</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_03_3_6_syscohada_bilan_passif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCOHADA_DH.balance + SYSCOHADA_DI.balance + SYSCOHADA_DJ.balance + SYSCOHADA_DK.balance + SYSCOHADA_DM.balance + SYSCOHADA_DN.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_03_3_7_syscohada_bilan_passif" model="account.report.line">
+                                <field name="name">DQ | Banks, discount and treasury credits</field>
+                                <field name="code">SYSCOHADA_DQ</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_3_7_syscohada_bilan_passif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-564 - 565</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_line_03_3_8_syscohada_bilan_passif" model="account.report.line">
+                                <field name="name">DR | Banks, financial institutions and treasury credits</field>
+                                <field name="code">SYSCOHADA_DR</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_3_8_syscohada_bilan_passif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-593 - 594 - 561 - 566 - 53</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_03_3_9_syscohada_bilan_passif" model="account.report.line">
+                        <field name="name">DT | TOTAL CASH LIABILITIES</field>
+                        <field name="code">SYSCOHADA_DT</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_03_3_9_syscohada_bilan_passif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCOHADA_DQ.balance + SYSCOHADA_DR.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_line_03_3_10_syscohada_bilan_passif" model="account.report.line">
+                                <field name="name">DV | Currency translation adjustment - passive</field>
+                                <field name="code">SYSCOHADA_DV</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_line_03_3_10_syscohada_bilan_passif_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-479</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_line_03_3_11_syscohada_bilan_passif" model="account.report.line">
+                        <field name="name">DZ | GENERAL TOTAL</field>
+                        <field name="code">SYSCOHADA_DZ</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_line_03_3_11_syscohada_bilan_passif_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SYSCOHADA_DF.balance + SYSCOHADA_DP.balance + SYSCOHADA_DT.balance + SYSCOHADA_DV.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</data>
+</odoo>

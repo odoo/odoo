@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payslip_details_report" model="ir.actions.report">
+        <field name="name">PaySlip Details</field>
+        <field name="model">hr.payslip</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_in_hr_payroll.report_payslipdetails</field>
+        <field name="report_file">l10n_in_hr_payroll.report_payslipdetails</field>
+        <field name="binding_model_id" ref="hr_payroll.model_hr_payslip"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="l10n_in_hr_payroll.paperformat_india_payslip"/>
+    </record>
+
+    <record id="payroll_advice" model="ir.actions.report">
+        <field name="name">Print Advice</field>
+        <field name="model">hr.payroll.advice</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_in_hr_payroll.report_payrolladvice</field>
+        <field name="report_file">l10n_in_hr_payroll.report_payrolladvice</field>
+        <field name="binding_model_id" ref="model_hr_payroll_advice"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_hrsalarybymonth" model="ir.actions.report">
+        <field name="name">Yearly Salary by Head</field>
+        <field name="model">hr.salary.employee.month</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_in_hr_payroll.report_hrsalarybymonth</field>
+        <field name="report_file">l10n_in_hr_payroll.report_hrsalarybymonth</field>
+        <field name="binding_model_id" ref="model_hr_salary_employee_month"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_hryearlysalary" model="ir.actions.report">
+        <field name="name">Yearly Salary by Employee</field>
+        <field name="model">yearly.salary.detail</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_in_hr_payroll.report_hryearlysalary</field>
+        <field name="report_file">l10n_in_hr_payroll.report_hryearlysalary</field>
+        <field name="binding_model_id" ref="model_yearly_salary_detail"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

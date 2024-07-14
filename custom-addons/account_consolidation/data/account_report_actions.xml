@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="trial_balance_report_action" model="ir.actions.client">
+            <field name="name">Consolidated Balance</field>
+            <field name="tag">account_report</field>
+            <field name="context" eval="{'report_id': ref('account_consolidation.consolidated_balance_report')}"/>
+            <field name="params" eval="{'ignore_session': True}"/>
+        </record>
+    </data>
+</odoo>

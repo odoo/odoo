@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="input_advance" model="hr.payslip.input.type">
+        <field name="name">Advance</field>
+        <field name="code">ADVANCE</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_departure" model="hr.payslip.input.type">
+        <field name="name">Holidays payment after departure</field>
+        <field name="code">HOLDEP</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_gratification" model="hr.payslip.input.type">
+        <field name="name">Gratification</field>
+        <field name="code">GRAT</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_bonus" model="hr.payslip.input.type">
+        <field name="name">Bonus</field>
+        <field name="code">BONUS</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_commission" model="hr.payslip.input.type">
+        <field name="name">Commission</field>
+        <field name="code">COMMISSION</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_jubilee_gift" model="hr.payslip.input.type">
+        <field name="name">Jubilee Gift</field>
+        <field name="code">JUBILEE</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_sick_wage" model="hr.payslip.input.type">
+        <field name="name">Sick Wage</field>
+        <field name="code">SICKWAGE</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_accident_wage" model="hr.payslip.input.type">
+        <field name="name">Accident Wage</field>
+        <field name="code">ACCIDENTWAGE</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_military_wage" model="hr.payslip.input.type">
+        <field name="name">Military Wage</field>
+        <field name="code">MILITARYWAGE</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_optional_ijm" model="hr.payslip.input.type">
+        <field name="name">Optional employer part IJM</field>
+        <field name="code">OPTIJM</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_optional_lpp" model="hr.payslip.input.type">
+        <field name="name">Optional employer part LPP</field>
+        <field name="code">OPTLPP</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_optional_lpp_redemption" model="hr.payslip.input.type">
+        <field name="name">Optional employer part LPP Redemption</field>
+        <field name="code">OPTLPPRED</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_optional_cm" model="hr.payslip.input.type">
+        <field name="name">Optional employer part CM</field>
+        <field name="code">OPTCM</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_optional_aanp" model="hr.payslip.input.type">
+        <field name="name">Optional employer part AANP</field>
+        <field name="code">OPTAANP</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_optional_laac" model="hr.payslip.input.type">
+        <field name="name">Optional employer part LAAC</field>
+        <field name="code">OPTLAAC</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_indemnity_apg" model="hr.payslip.input.type">
+        <field name="name">Indemnity APG</field>
+        <field name="code">INDAPG</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_indemnity_ai" model="hr.payslip.input.type">
+        <field name="name">Indemnity AI</field>
+        <field name="code">INDAI</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_annuities_ai" model="hr.payslip.input.type">
+        <field name="name">Annuities AI</field>
+        <field name="code">ANNAI</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_indemnity_accident" model="hr.payslip.input.type">
+        <field name="name">Accident Indemnity</field>
+        <field name="code">INDACC</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_indemnity_illness" model="hr.payslip.input.type">
+        <field name="name">Illness Indemnity</field>
+        <field name="code">INDSICK</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_indemnity_maternity" model="hr.payslip.input.type">
+        <field name="name">Maternity Indemnity</field>
+        <field name="code">INDMAT</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_ca_fee" model="hr.payslip.input.type">
+        <field name="name">CA Fee</field>
+        <field name="code">CAFEE</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_lpp_redemption" model="hr.payslip.input.type">
+        <field name="name">LPP: Redemption</field>
+        <field name="code">LPPRED</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_is_correction" model="hr.payslip.input.type">
+        <field name="name">IS: Correction</field>
+        <field name="code">ISCOR</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_travel_expense" model="hr.payslip.input.type">
+        <field name="name">Travel Expense</field>
+        <field name="code">TRAVEXP</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_car_expense" model="hr.payslip.input.type">
+        <field name="name">Car Expense</field>
+        <field name="code">CAREXP</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_lunch_expense" model="hr.payslip.input.type">
+        <field name="name">Lunch Expense</field>
+        <field name="code">LUNCHEXP</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_nightly_expense" model="hr.payslip.input.type">
+        <field name="name">Nightly Expense</field>
+        <field name="code">NIGHTEXP</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_other_expense" model="hr.payslip.input.type">
+        <field name="name">Other Expense</field>
+        <field name="code">OTHEREXP</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_free_meals" model="hr.payslip.input.type">
+        <field name="name">Free Meals</field>
+        <field name="code">MEALS</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_free_room" model="hr.payslip.input.type">
+        <field name="name">Free Room</field>
+        <field name="code">ROOM</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_free_housing" model="hr.payslip.input.type">
+        <field name="name">Free Housing</field>
+        <field name="code">HOUSING</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_company_car" model="hr.payslip.input.type">
+        <field name="name">Company Car</field>
+        <field name="code">COMPCAR</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_child_allowance" model="hr.payslip.input.type">
+        <field name="name">Child Allowance</field>
+        <field name="code">CHILDALW</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_training_allowance" model="hr.payslip.input.type">
+        <field name="name">Training Allowance</field>
+        <field name="code">TRAININGALW</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_family_allowance" model="hr.payslip.input.type">
+        <field name="name">Family Allowance</field>
+        <field name="code">FAMILYALW</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_birth_allowance" model="hr.payslip.input.type">
+        <field name="name">Birth Allowance</field>
+        <field name="code">BIRTHALW</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_marriage_allowance" model="hr.payslip.input.type">
+        <field name="name">Marriage Allowance</field>
+        <field name="code">MARRIAGEALW</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_representation_fees" model="hr.payslip.input.type">
+        <field name="name">Representation Fees</field>
+        <field name="code">REPFEES</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_car_fees" model="hr.payslip.input.type">
+        <field name="name">Car Fees</field>
+        <field name="code">CARFEES</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_holiday_other_fees" model="hr.payslip.input.type">
+        <field name="name">Other Fees</field>
+        <field name="code">OTHERFEES</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_lpp" model="hr.payslip.input.type">
+        <field name="name">LPP</field>
+        <field name="code">LPP</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+
+    <record id="input_lpp_comp" model="hr.payslip.input.type">
+        <field name="name">LPP Comp. Part.</field>
+        <field name="code">LPP.COMP</field>
+        <field name="country_id" ref="base.ch"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ch_hr_payroll.hr_payroll_structure_ch_employee_salary'))]"/>
+    </record>
+</odoo>

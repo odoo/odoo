@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="knowledge.SidebarSection">
+        <section t-attf-class="o_section #{sectionClass || ''}" t-att-data-section="dataSection">
+            <div class="o_section_header d-flex h4 mb-0">
+                <div class="flex-grow-1 text-truncate" t-out="sectionName"/>
+                <t t-out="headerButtons"/>
+            </div>
+            <ul t-if="props.rootIds.length" class="o_tree">
+                <t t-foreach="props.rootIds" t-as="rootId" t-key="rootId">
+                    <KnowledgeSidebarRow article="env.getArticle(rootId)" unfolded="props.unfoldedIds.has(rootId)" unfoldedIds="props.unfoldedIds" record="props.record"/>
+                </t>
+            </ul>
+            <span t-elif="noContentHelper" class="o_knowledge_empty_info text-muted">
+                <i t-out="noContentHelper" />
+            </span>
+        </section>
+    </t>
+
+    <t t-name="knowledge.SidebarFavoriteSection">
+        <t t-call="knowledge.SidebarSection">
+            <t t-set="sectionName">Favorites</t>
+            <t t-set="dataSection" t-value="'favorites'"/>
+        </t>
+    </t>
+
+    <t t-name="knowledge.SidebarWorkspaceSection">
+        <t t-call="knowledge.SidebarSection">
+            <t t-set="sectionName">Workspace</t>
+            <t t-set="sectionClass" t-value="props.rootIds.length === 0 ? 'pb-3' : ''"/>
+            <t t-set="dataSection" t-value="'workspace'"/>
+            <t t-if="isInternalUser" t-set="headerButtons">
+                <button class="o_knowledge_join_article_members btn btn-link text-secondary rounded p-0"
+                    t-on-click="searchHiddenArticle">
+                    <i class="fa fa-fw fa-eye" title="Join a hidden article"/>
+                </button>
+                <button class="o_section_create btn rounded p-0 ms-1" t-on-click="createRoot">
+                    <i class="fa fa-fw fa-plus" title="Create a new article in workspace"/>
+                </button>
+            </t>
+            <t t-set="noContentHelper">
+                There are no Articles in your Workspace.
+            </t>
+        </t>
+    </t>
+
+    <t t-name="knowledge.SidebarSharedSection">
+        <t t-call="knowledge.SidebarSection" t-if="props.rootIds.length">
+            <t t-set="sectionName">Shared</t>
+            <t t-set="dataSection" t-value="'shared'"/>
+        </t>
+    </t>
+
+    <t t-name="knowledge.SidebarPrivateSection">
+        <t t-call="knowledge.SidebarSection">
+            <t t-set="sectionName">Private</t>
+            <t t-set="sectionClass" t-value="'flex-fill'"/>
+            <t t-set="dataSection" t-value="'private'"/>
+            <t t-set="headerButtons">
+                <button t-attf-class="o_section_create btn rounded p-0 #{ !(isInternalUser || props.rootIds) ? 'border-0' : '' }" role="button"
+                    t-on-click="createRoot">
+                    <i class="fa fa-fw fa-plus" t-attf-title="Create a new private article"/>
+                </button>
+            </t>
+            <t t-set="noContentHelper">
+                You do not have any private Article.
+            </t>
+        </t>
+    </t>
+</templates>

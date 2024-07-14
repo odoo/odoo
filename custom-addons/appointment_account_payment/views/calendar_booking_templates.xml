@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="calendar_booking_view" name="Website Appointment: Booking Not Confirmed">
+    <t t-set="no_breadcrumbs" t-value="True"/>
+    <t t-call="portal.portal_layout">
+        <t t-set="appointment_type" t-value="booking.appointment_type_id"/>
+        <t t-set="staff_user" t-value="booking.staff_user_id"/>
+        <t t-set="resources" t-value="booking.booking_line_ids.appointment_resource_id"/>
+        <t t-set="based_on_users" t-value="appointment_type.schedule_based_on == 'users'"/>
+        <t t-set="total_capacity_reserved" t-value="booking.asked_capacity"/>
+        <div id="wrap" class="o_appointment d-flex bg-o-color-4 p-4 mt-3">
+            <div class="oe_structure"/>
+            <div class="oe_structure container">
+                <h4>
+                    <span t-out="appointment_type.name"/> Appointment
+                    <span t-if="based_on_users and staff_user and staff_user.name not in appointment_type.name"> with <span t-out="staff_user.name"/></span>
+                </h4>
+                <div class="oe_structure"/>
+                <div class="o_appointment_validation_details row justify-content-between">
+                    <div t-attf-class="col-12 o_not_editable {{'col-md-8 pe-md-4 pe-lg-5' if (staff_user and based_on_users) or (len(resources) == 1 and appointment_type.assign_method != 'time_auto_assign') else ''}}">
+                        <div class="alert alert-warning pb16" role="status">
+                            <p t-if="booking.not_available" class="mb-0">
+                                Unfortunately, it looks like this booking is not possible anymore. Please contact us to find an alternative.
+                            </p>
+                            <p t-else="" class="mb-0">
+                                Your appointment has not been booked yet. It will be confirmed upon payment confirmation.
+                            </p>
+                            <a class="alert-link" groups="appointment.group_appointment_manager"
+                                t-attf-href="/web#id=#{appointment_type.id}&amp;view_type=form&amp;model=appointment.type&amp;action=appointment.appointment_type_action">
+                                <span class="text-nowrap"><i class="oi oi-arrow-right mx-2"/>Back to edit mode</span>
+                            </a>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-3">
+                                <label class="text-muted">When</label>
+                            </div>
+                            <div class="col-9 col-lg-6">
+                                <strong><t t-out="start_dt"/></strong>
+                                <i class="text-muted text-xs-nowrap">(timezone: <t t-out="timezone"/>)</i>
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-3">
+                                <label class="text-muted">Duration</label>
+                            </div>
+                            <div class="col-9 col-lg-6">
+                                <t t-out="booking.duration" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/>
+                            </div>
+                        </div>
+                        <div t-if="total_capacity_reserved > 1" class="row mb-4">
+                            <div class="col-3">
+                                <label class="text-muted">For</label>
+                            </div>
+                            <div class="col-9 col-lg-6">
+                                <t t-out="total_capacity_reserved"/> people
+                            </div>
+                        </div>
+                        <div t-if="based_on_users or appointment_type.location_id" class="row mb-4">
+                            <div class="col-3">
+                                <label class="text-muted">Location</label>
+                            </div>
+                            <div class="col-9 col-lg-6">
+                                <span t-if="appointment_type.location_id">
+                                    <div t-att-class="str(appointment_type.location_id.contact_address).strip() and 'fw-bold' or ''"
+                                            t-field="appointment_type.location_id" t-options="{'widget': 'contact', 'fields': ['name']}"/>
+                                    <div t-field="appointment_type.location_id" t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': true}"/>
+                                </span>
+                                <t t-elif="based_on_users" ><span>Online</span></t>
+                            </div>
+                        </div>
+                        <div t-if="based_on_users" class="row mb-4">
+                            <div class="col-3">
+                                <label class="text-muted">Attendees</label>
+                            </div>
+                            <div class="col-9">
+                                <div class="list-group">
+                                    <div class="list-group-item" t-foreach="attendees" t-as="attendee">
+                                        <t t-out="attendee.display_name"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div t-elif="appointment_type.assign_method != 'time_auto_assign'" class="row mb-4">
+                            <div class="col-3">
+                                <label class="text-muted">Resources</label>
+                            </div>
+                            <div class="col-9 col-lg-6">
+                                <div t-foreach="resources" t-as="resource">
+                                    <t t-out="resource.name"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div t-if="not is_html_empty(booking.description)" class="row mb-4">
+                            <div class="col-3">
+                                <label class="text-muted">Details</label>
+                            </div>
+                            <div class="col-9 col-lg-6">
+                                <div t-field="booking.description"/>
+                            </div>
+                        </div>
+                        <div t-if="appointment_type" t-out="appointment_type.message_confirmation" class="mt-4"/>
+                    </div>
+                    <div class="col-sm-4">
+                        <t t-call="appointment.appointment_validated_card"/>
+                    </div>
+                </div>
+                <div class="o_appointment_validation_bottom_btns d-flex mt-3 pt-3 border-top">
+                    <a role="button" class="btn btn-primary d-block ms-auto" t-attf-href="/appointment/#{appointment_type.id}?#{keep_query('*')}">
+                        Schedule another appointment
+                    </a>
+                </div>
+            </div>
+            <div class="oe_structure"/>
+        </div>
+    </t>
+</template>
+</odoo>

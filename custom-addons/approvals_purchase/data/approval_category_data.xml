@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="approval_category_data_rfq" model="approval.category">
+            <field name="name">Create RFQ's</field>
+            <field name="approval_type">purchase</field>
+            <field name="image" type="base64" file="approvals_purchase/static/src/img/RFQ.png"/>
+            <field name="sequence">80</field>
+            <field name="has_product">required</field>
+            <field name="has_quantity">required</field>
+            <field name="automated_sequence" eval="True"/>
+            <field name="sequence_code">APPR</field>
+        </record>
+    </data>
+</odoo>

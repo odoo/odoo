@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mt_ticket_refund_created" model="mail.message.subtype">
+            <field name="name">Refund Created</field>
+            <field name="sequence">9</field>
+            <field name="res_model">helpdesk.ticket</field>
+            <field name="default" eval="False"/>
+            <field name="internal" eval="True"/>
+            <field name="hidden" eval="True"/>
+        </record>
+    </data>
+</odoo>

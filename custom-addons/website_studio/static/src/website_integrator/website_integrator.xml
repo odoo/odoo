@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="website_studio.WebsiteIntegrator.Card.Dropdown">
+  <Dropdown togglerClass="'o_web_studio_more'">
+    <t t-set-slot="toggler">
+      <i class="fa fa-ellipsis-v" />
+    </t>
+    <DropdownItem onSelected="openPageUrl" href="'#'" t-if="openPageUrl">
+      View in website
+    </DropdownItem>
+    <DropdownItem onSelected="configurePage" href="'#'">
+      Configure
+    </DropdownItem>
+    <DropdownItem onSelected="deletePage" href="'#'">
+      Delete
+    </DropdownItem>
+  </Dropdown>
+</t>
+
+<t t-name="website_studio.WebsiteIntegrator.ItemCard">
+    <t t-set="item" t-value="item or {}" />
+    <div class="o-website-studio-item-card d-flex flex-column align-items-center bg-white" t-att-class="cardClass" t-att-data-tooltip="item.tooltip">
+        <div class="o_web_studio_thumbnail" t-on-click="() => onItemClicked and onItemClicked()">
+            <img t-att-src="item.icon.src" t-att-alt="item.icon.alt"/>
+        </div>
+        <div class="o_web_studio_name d-flex w-100 pb-1 gap-1" t-att-class="afterName ? 'justify-content-between' : 'justify-content-center'">
+            <span class="d-block align-self-center ps-2 fw-bold text-wrap text-break" t-esc="item.name"/>
+            <t t-out="afterName" />
+        </div>
+    </div>
+</t>
+
+<t t-name="website_studio.WebsiteIntegrator.ListingOrPage">
+    <div class="d-flex align-items-stretch flex-row gap-3 o-web-studio-card-container pb-5">
+        <div class="o_website_studio_new_card o-website-studio-item-card d-flex flex-column align-items-center" t-att-class="!isDesigner ? 'disabled' : ''" t-on-click="() => this.onNewPage(group.type, website.id)">
+            <div class="o_web_studio_thumbnail">
+                <img t-att-src="'/web_studio/static/src/img/default_icon_app.png'" alt="App icon"/>
+            </div>
+            <div class="o_web_studio_name">
+                <span t-if="group.type === 'listing'">New Listing</span>
+                <span t-else="">New Page</span>
+            </div>
+        </div>
+        <t t-foreach="this.getPages(group.type, website.id)" t-as="page" t-key="page.id">
+            <t t-call="website_studio.WebsiteIntegrator.ItemCard">
+                <t t-set="page" t-value="page" />
+                <t t-set="item" t-value="{...page, name: page.page_name, icon: group.iconData, tooltip: this.computePageUrl(page) }" />
+                <t t-set="onItemClicked" t-value="page.page_type === 'listing' ? this.openPageUrl.bind(this, page) : this.onConfigurePage.bind(this, page)" />
+                <t t-set="openPageUrl" t-value="page.page_type === 'listing' ? onItemClicked : null" />
+                <t t-set="afterName">
+                    <t t-call="website_studio.WebsiteIntegrator.Card.Dropdown">
+                        <t t-set="configurePage" t-value="() => this.onConfigurePage(page)" />
+                        <t t-set="deletePage" t-value="() => this.deletePage(page)" />
+                    </t>
+                </t>
+            </t>
+        </t>
+    </div>
+</t>
+
+<t t-name="website_studio.WebsiteIntegrator.PageGroup">
+    <div class="mb-2">
+        <span class="fs-4 fw-bold" t-esc="group.name" />
+        <span> &#8212; <t t-esc="group.description" /></span>
+    </div>
+
+    <div class="grid gap-3 px-4">
+        <t t-if="this.hasMultiWebsite">
+            <div t-foreach="this.getWebsites()" t-as="website" t-key="website.id" class="g-col-4 d-flex flex-column" >
+                <div class="mx-auto mb-2 w-100 text-center bg-300 rounded-2">
+                    <span class="fs-6 fw-bold" t-esc="website.display_name" />
+                    <button class="btn" t-on-click="() => this.onNewPage(group.type, website.id)">
+                        <i class="fa fa-plus opacity-50 opacity-100-hover"/>
+                    </button>
+                </div>
+                <t t-call="website_studio.WebsiteIntegrator.ListingOrPage" />
+            </div>
+        </t>
+        <div t-else="" class="d-flex gap-4" >
+            <t t-set="website" t-value="this.getWebsites()[0]" />
+            <t t-call="website_studio.WebsiteIntegrator.ListingOrPage" />
+       </div>
+    </div>
+</t>
+
+<t t-name="website_studio.WebsiteIntegrator">
+    <div class="o_website_studio_website_integrator d-flex flex-column gap-4 p-4">
+        <div class="o_website_studio_form">
+            <div class="mb-2">
+                <span class="fs-4 fw-bold">Forms</span>
+                <span> &#8212; Allow visitors of your website to create records themselves</span>
+            </div>
+            <div class="o-web-studio-card-container d-flex flex-row gap-4 ms-4 pb-5">
+                <div class="o-website-studio-item-card o_website_studio_new_card d-flex flex-column align-items-center" t-att-class="!isDesigner ? 'disabled' : ''" t-on-click="onNewForm">
+                    <div class="o_web_studio_thumbnail">
+                        <img t-att-src="'/web_studio/static/src/img/default_icon_app.png'" alt="App icon"/>
+                    </div>
+                    <div class="o_web_studio_name"><span>New Form</span></div>
+                </div>
+                <div t-foreach="state.forms" t-as="form" class="o-website-studio-item-card d-flex flex-column align-items-center" t-key="form.id" t-on-click="() => this.openFormUrl(form.url)">
+                    <div class="o_web_studio_thumbnail">
+                        <img t-att-src="'/web_studio/static/src/img/view_type/form.png'" alt="View form"/>
+                    </div>
+                    <div class="o_web_studio_name"><span t-esc="form.name"/></div>
+                </div>
+            </div>
+        </div>
+        <div t-foreach="this.pageGroups" t-as="group" t-key="group.type" t-attf-class="o_website_studio_#{group.type}">
+            <t t-call="website_studio.WebsiteIntegrator.PageGroup" />
+        </div>
+    </div>
+</t>
+
+</templates>

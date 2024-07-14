@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_quality_check_wizard_inherit_iot" model="ir.ui.view">
+        <field name="name">quality_check_wizard_inherit_iot</field>
+        <field name="model">quality.check.wizard</field>
+        <field name="inherit_id" ref="quality_control.view_quality_check_wizard"/>
+        <field name="arch" type="xml">
+            <field name="test_type" position="after">
+                <field name="ip" invisible="1"/>
+                <field name="identifier" invisible="1"/>
+            </field>
+            <field name="measure" position="attributes">
+                <attribute name="widget">iot_measure</attribute>
+                <attribute name="options">{'ip_field': 'ip', 'identifier': 'identifier'}</attribute>
+            </field>
+            <field name="picture" position="replace">
+                <div class="quality_picture">
+                    <field name="picture" widget="iot_picture" options="{'ip_field': 'ip', 'identifier': 'identifier'}" readonly="quality_state != 'none'"/>
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>

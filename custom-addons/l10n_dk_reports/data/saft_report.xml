@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  add address number to addresses  -->
+    <template id="address" inherit_id="account_saft.address" primary="True">
+        <xpath expr="//StreetName" position="after">
+            <Number t-out="street_split(partner_address.street)['street_number']"/>
+        </xpath>
+    </template>
+    <!--  replace t-call chain for addresses  -->
+    <template id="addresses_contacts" inherit_id="account_saft.addresses_contacts" primary="True">
+        <xpath expr="//t[@t-call='account_saft.address']" position="attributes">
+            <attribute name="t-call">l10n_dk_reports.address</attribute>
+        </xpath>
+    </template>
+    <template id="company_header" inherit_id="account_saft.company_header" primary="True">
+        <xpath expr="//t[@t-call='account_saft.addresses_contacts']" position="attributes">
+            <attribute name="t-call">l10n_dk_reports.addresses_contacts</attribute>
+        </xpath>
+    </template>
+
+    <!--  dk saft report  -->
+    <template id="saft_template" inherit_id="account_saft.saft_template" primary="True">
+        <xpath expr="//Header" position="inside">
+            <TaxEntity t-out="company.name[:70]"/>
+        </xpath>
+
+        <xpath expr="//TaxTable//TaxTableEntry//TaxCodeDetails" position="before">
+            <TaxType>VAT</TaxType>
+            <Description>Moms</Description>
+        </xpath>
+        <xpath expr="//TaxTable//TaxTableEntry//TaxCodeDetails/TaxCode" position="after">
+            <EffectiveDate t-out="tax_vals['effective_date']"/>
+        </xpath>
+
+        <!--  replace t-call chain for partner addresses  -->
+        <xpath expr="//Header/Company/t[@t-call='account_saft.company_header']" position="attributes">
+            <attribute name="t-call">l10n_dk_reports.company_header</attribute>
+        </xpath>
+        <xpath expr="//Owners/Owner/t[@t-call='account_saft.company_header']" position="attributes">
+            <attribute name="t-call">l10n_dk_reports.company_header</attribute>
+        </xpath>
+        <xpath expr="//Customer/t[@t-call='account_saft.addresses_contacts']" position="attributes">
+            <attribute name="t-call">l10n_dk_reports.addresses_contacts</attribute>
+        </xpath>
+        <xpath expr="//Supplier/t[@t-call='account_saft.addresses_contacts']" position="attributes">
+            <attribute name="t-call">l10n_dk_reports.addresses_contacts</attribute>
+        </xpath>
+    </template>
+</odoo>

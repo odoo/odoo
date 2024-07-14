@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="tax_information_inherit_l10n_lu_saft" inherit_id="account_saft.tax_information">
+        <xpath expr="//TaxCode" position="before">
+            <t t-if="company.account_fiscal_country_id.code == 'LU'">
+                <TaxType>TVA-<t t-out="tax_vals['tax_id']"/></TaxType>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="saft_template_inherit_l10n_lu_saft" inherit_id="account_saft.saft_template">
+        <xpath expr="//AuditFile" position="inside">
+            <SourceDocuments t-if="invoice_vals_list and company.account_fiscal_country_id.code == 'LU'">
+                <SalesInvoices>
+                    <NumberOfEntries t-out="len(invoice_vals_list)"/>
+                    <TotalDebit t-out="format_float(total_invoices_debit)"/>
+                    <TotalCredit t-out="format_float(total_invoices_credit)"/>
+                    <Invoice t-foreach="invoice_vals_list" t-as="invoice_vals">
+                        <InvoiceNo t-out="invoice_vals['name'][:70]"/>
+                        <t t-set="partner_id" t-value="invoice_vals['partner_id']"/>
+                        <t t-set="partner_vals" t-value="partner_detail_map[partner_id]"/>
+                        <CustomerInfo t-if="partner_vals['type'] == 'customer'">
+                            <CustomerID t-out="partner_id"/>
+                            <BillingAddress>
+                                <t t-if="partner_vals['addresses']" t-call="account_saft.address">
+                                    <t t-set="partner_address" t-value="partner_vals['addresses'][0]"/>
+                                </t>
+                            </BillingAddress>
+                        </CustomerInfo>
+                        <SupplierInfo t-if="partner_vals['type'] == 'supplier'">
+                            <SupplierID t-out="partner_id"/>
+                            <BillingAddress>
+                                <t t-if="partner_vals['addresses']"  t-call="account_saft.address">
+                                    <t t-set="partner_address" t-value="partner_vals['addresses'][0]"/>
+                                </t>
+                            </BillingAddress>
+                        </SupplierInfo>
+                        <Period t-out="format_date(invoice_vals['date'], '%m')"/>
+                        <PeriodYear t-out="format_date(invoice_vals['date'], '%Y')"/>
+                        <InvoiceDate t-out="invoice_vals['invoice_date']"/>
+                        <InvoiceType t-out="invoice_vals['type'][:9]"/>
+                        <SourceID t-if="invoice_vals['invoice_origin']" t-out="invoice_vals['invoice_origin'][:35]"/>
+                        <GLPostingDate t-out="invoice_vals['date']"/>
+                        <TransactionID t-out="invoice_vals['id']"/>
+                        <Line t-foreach="invoice_vals['invoice_line_vals_list']" t-as="line_vals">
+                            <AccountID t-out="line_vals['account_id']"/>
+                            <OrderReferences>
+                                <OriginatingON t-out="invoice_vals['name'][:70]"/>
+                                <OrderDate t-out="invoice_vals['invoice_date']"/>
+                            </OrderReferences>
+                            <ProductCode t-if="line_vals['product_default_code']" t-out="line_vals['product_default_code'][:70]"/>
+                            <ProductDescription t-if="line_vals['name']" t-out="line_vals['name'][:256]"/>
+                            <Quantity t-out="line_vals['quantity']"/>
+                            <InvoiceUOM t-if="line_vals['product_uom_name']" t-out="line_vals['product_uom_name'][:9]"/>
+                            <UnitPrice t-out="format_float(line_vals['price_unit'] / line_vals['rate'])"/>
+                            <TaxPointDate t-out="invoice_vals['invoice_date']"/>
+                            <Description t-out="(line_vals['name'] or invoice_vals['name'])[:256]"/>
+                            <InvoiceLineAmount>
+                                <Amount t-out="format_float(line_vals['balance'] * invoice_vals['sign'])"/>
+                                <t t-if="line_vals['currency_id'] != company.currency_id.id">
+                                    <CurrencyCode t-out="line_vals['currency_code']"/>
+                                    <CurrencyAmount t-out="format_float(line_vals['amount_currency'] * invoice_vals['sign'])"/>
+                                    <ExchangeRate t-out="format_float(line_vals['rate'], digits=8)"/>
+                                </t>
+                            </InvoiceLineAmount>
+                            <DebitCreditIndicator t-out="'C' if invoice_vals['type'] == 'out_invoice' else 'D'"/>
+                            <TaxInformation t-foreach="line_vals.get('tax_detail_vals_list', [])" t-as="tax_vals">
+                                <t t-set="sign" t-value="invoice_vals['sign']"/>
+                                <t t-call="account_saft.tax_information"/>
+                            </TaxInformation>
+                        </Line>
+                        <DocumentTotals>
+                            <TaxInformationTotals t-foreach="invoice_vals['tax_detail_vals_list']" t-as="tax_vals">
+                                <t t-set="sign" t-value="invoice_vals['sign']"/>
+                                <t t-call="account_saft.tax_information"/>
+                            </TaxInformationTotals>
+                            <NetTotal t-out="format_float(invoice_vals['total_invoice_untaxed_balance'])"/>
+                            <GrossTotal t-out="format_float(invoice_vals['total_invoice_balance'])"/>
+                        </DocumentTotals>
+                    </Invoice>
+                </SalesInvoices>
+            </SourceDocuments>
+        </xpath>
+        <xpath expr="//TaxTable" position="after">
+            <t t-if="company.account_fiscal_country_id.code == 'LU'">
+                <UOMTable t-if="uoms">
+                    <UOMTableEntry t-foreach="uoms" t-as="uom">
+                        <UnitOfMeasure t-out="uom.name[:9]"/>
+                        <Description t-out="uom.category_id.name[:256]"/>
+                    </UOMTableEntry>
+                </UOMTable>
+                <Products t-if="product_vals_list">
+                    <Product t-foreach="product_vals_list" t-as="product_vals">
+                        <ProductCode t-out="product_vals['default_code'][:70]"/>
+                        <ProductGroup t-out="product_vals['product_category'][:70]"/>
+                        <Description t-out="product_vals['name'][:256]"/>
+                        <UOMBase t-out="product_vals['base_uom'][:9]"/>
+                        <UOMStandard t-if="product_vals.get('uom_type') != 'reference'" t-out="product_vals['standard_uom'][:9]"/>
+                        <UOMToUOMBaseConversionFactor t-if="product_vals.get('uom_type') != 'reference'" t-out="product_vals['uom_ratio']"/>
+                    </Product>
+                </Products>
+            </t>
+        </xpath>
+        <xpath expr="//TaxCodeDetails" position="before">
+            <t t-if="company.account_fiscal_country_id.code == 'LU'">
+                <TaxType>TVA-<t t-out="tax_vals['id']"/></TaxType>
+                <Description>Taxe sur la valeur ajoutée</Description>
+            </t>
+        </xpath>
+        <xpath expr="//StandardAccountID" position="after">
+            <t t-if="company.account_fiscal_country_id.code == 'LU'">
+                <AccountType t-out="account_vals['account_type'][:18]"/>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

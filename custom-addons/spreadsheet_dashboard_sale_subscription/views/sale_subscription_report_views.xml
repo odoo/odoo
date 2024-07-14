@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Used when redirecting to the form view from a list in a spreadsheet (dashboard) -->
+    <record id="sale_subscription_report_view_form" model="ir.ui.view">
+        <field name="name">sale.subscription.report.form</field>
+        <field name="model">sale.subscription.report</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="order_reference"/>
+                            <field name="partner_id"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="team_id"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="recurring_monthly"/>
+                            <field name="plan_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

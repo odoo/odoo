@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="social_post_to_lead_view_form" model="ir.ui.view">
+        <field name="name">social.post.to.lead.view.form</field>
+        <field name="model">social.post.to.lead</field>
+        <field name="arch" type="xml">
+            <form string="Convert Post to Lead">
+                <group>
+                    <group name="action" string="Customer" col="1">
+                        <field name="author_name" invisible="1"/>
+                        <field name="conversion_source" invisible="1"/>
+                        <field name="post_content" invisible="1"/>
+                        <field name="post_link" invisible="1"/>
+                        <field name="post_datetime" invisible="1"/>
+                        <field name="social_account_id" invisible="1"/>
+                        <field name="social_stream_post_id" invisible="1"/>
+                        <field name="utm_source_id" invisible="1"/>
+                        <field name="utm_medium_id" invisible="1"/>
+                        <field name="utm_campaign_id" invisible="1"/>
+                        <field name="action" nolabel="1" widget="radio" required="1"/>
+                        <group col="2">
+                            <field name="partner_id" widget="res_partner_many2one"
+                                context="{'res_partner_search_mode': 'customer'}"
+                                invisible="action != 'exist'"
+                                required="action == 'exist'"/>
+                        </group>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_convert_to_lead" string="Convert" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="social_post_to_lead_action" model="ir.actions.act_window">
+        <field name="name">Convert Post to Lead</field>
+        <field name="res_model">social.post.to.lead</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="social_post_to_lead_view_form"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

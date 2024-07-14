@@ -1,0 +1,45 @@
+<templates>
+    <t t-name="web_studio.ViewEditor.InteractiveEditorProperties.Modifiers">
+        <t t-if="this.isAttributeSupported('invisible')" t-call="web_studio.ViewEditor.InteractiveEditorProperties.PythonExpressionCheckbox">
+            <t t-set="name" t-value="'invisible'" />
+            <t t-set="value" t-value="props.node.attrs.invisible || props.node.attrs.column_invisible" />
+            <t t-set="checkboxClassName" t-value="getCheckboxClassName(value)" />
+            <t t-set="boolValue" t-value="this.valueAsBoolean(value)" />
+            <t t-set="string">Invisible</t>
+        </t>
+
+        <t t-if="this.isAttributeSupported('required')" t-call="web_studio.ViewEditor.InteractiveEditorProperties.PythonExpressionCheckbox">
+            <t t-set="name" t-value="'required'" />
+            <t t-set="value" t-value="props.node.attrs.required" />
+            <t t-set="checkboxClassName" t-value="getCheckboxClassName(value)" />
+            <t t-set="boolValue" t-value="this.valueAsBoolean(value)" />
+            <t t-set="string">Required</t>
+        </t>
+
+        <t t-if="this.isAttributeSupported('readonly')" t-call="web_studio.ViewEditor.InteractiveEditorProperties.PythonExpressionCheckbox">
+            <t t-set="name" t-value="'readonly'" />
+            <t t-set="value" t-value="props.node.attrs.readonly" />
+            <t t-set="checkboxClassName" t-value="getCheckboxClassName(value)" />
+            <t t-set="boolValue" t-value="this.valueAsBoolean(value)" />
+            <t t-set="string">Readonly</t>
+        </t>
+    </t>
+
+    <t t-name="web_studio.ViewEditor.InteractiveEditorProperties.PythonExpressionCheckbox" >
+        <div class="o_web_studio_property clearfix o_web_studio_sidebar_checkbox d-flex" t-att-class="props.class">
+            <CheckBox
+                className="checkboxClassName"
+                id="name"
+                name="name"
+                value="boolValue"
+                onChange="(value) => this.onChangeModifier(name, value)"
+            >
+                <t t-esc="string" />
+                <sup t-if="tooltip" class="text-info p-1" t-att-data-tooltip="props.tooltip" t-esc="'?'"/>
+            </CheckBox>
+            <a t-on-click.prevent.stop="() => this.onConditionalButtonClicked(name, value)" role="button" href="#" data-type="invisible" class="btn btn-link o_web_studio_attrs ms-auto">
+                Conditional
+            </a>
+        </div>
+    </t>
+</templates>

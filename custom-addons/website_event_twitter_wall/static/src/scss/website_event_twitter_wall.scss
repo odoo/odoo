@@ -1,0 +1,90 @@
+.o_wevent_event .o-tw-container {
+    .o-tw-cover {
+        display: none !important;
+    }
+
+    & > .navbar {
+        background-color: transparent !important;
+        padding-bottom: 0px;
+
+        & > .container-fluid {
+            padding: 0px;
+        }
+    }
+
+    .container .o-tw-toggle {
+        margin-left: 0px;
+        &:first-of-type {
+            display: none !important;
+        }
+    }
+
+    /** TODO AWA
+    * The following rules will allow the first col-4 to take
+    * the full available width in mobile (= up to md breakpoint).
+    * Because it simply cannot fit all the content in a smaller view.
+    * This should be cleaned in master and implemented with an appropriate
+    * combination of col-12 / col-md-4 / col-md-none.
+    *
+    * Further customization is also made to have a pixel perfect wall
+    * that renders according to the "website event" style.
+    */
+    .row.container-fluid {
+        @extend .container;
+        margin-bottom: 0px !important;
+
+        @media (max-width: 575px) {
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+
+        .col-4:nth-child(1) {
+            flex: 1;
+            max-width: 100%;
+        }
+
+        .col-4:nth-child(2), .col-4:nth-child(3) {
+            display: none;
+        }
+
+        .col-4:nth-child(2) {
+            margin-top: 0px !important;
+        }
+
+        @include media-breakpoint-up(md) {
+            .col-4:nth-child(1) {
+                flex: 0 0 33.33333333%;
+                max-width: 33.33333333%;
+            }
+
+            .col-4:nth-child(2) {
+                display: block;
+            }
+        }
+
+        .o-tw-hashtag {
+            padding: 0px;
+
+            h4 {
+                @include font-size(1rem);
+                color: #6C757D;
+                margin-bottom: 0px;
+            }
+
+            label {
+                @include font-size(2.5rem);
+                line-height: 2.5rem;
+                color: $primary;
+                margin-bottom: 0px;
+            }
+        }
+    }
+
+    .o-tw-tweet span {
+        visibility: hidden;
+    }
+}
+
+.o-tw-view-live .o_wevent_event > .navbar {
+    display: none;
+}

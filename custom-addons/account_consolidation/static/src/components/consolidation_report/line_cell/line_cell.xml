@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_consolidation.ConsolidationReportLineCell">
+        <td
+            data-id="line_cell"
+            class="line_cell"
+            t-att-class="cellClasses"
+        >
+            <div class="content">
+                <t t-if="props.cell.auditable">
+                    <a t-on-click="() => this.audit()">
+                        <t t-component="env.component('AccountReportEllipsis')" t-props="{
+                            name: props.cell.name?.toString(),
+                            no_format: props.cell.no_format,
+                            type: props.cell.figure_type,
+                            maxCharacters: 32,
+                        }"/>
+                    </a>
+                </t>
+                <t t-else="">
+                    <t t-component="env.component('AccountReportEllipsis')" t-props="{
+                        name: props.cell.name?.toString(),
+                        no_format: props.cell.no_format,
+                        type: props.cell.figure_type,
+                        maxCharacters: 32,
+                    }"/>
+                </t>
+            </div>
+        </td>
+    </t>
+</templates>

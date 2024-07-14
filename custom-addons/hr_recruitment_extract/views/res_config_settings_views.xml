@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr.recruitment.extract</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_recruitment.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="recruitment_extract_settings" position="inside">
+                <div class="mt16" invisible="not module_hr_recruitment_extract">
+                    <field name="recruitment_extract_show_ocr_option_selection" class="o_light_label" widget="radio" required="True"/>
+                    <widget name="iap_buy_more_credits" service_name="invoice_ocr" class="ps-1"/>
+                </div>
+            </setting>
+            <xpath expr="//block[@name='recruitment_process_div']//setting[@id='sms']" position="inside">
+                <widget name="iap_buy_more_credits" service_name="sms" hide_service="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

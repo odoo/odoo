@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="stock_barcode_cancel_operation_view" model="ir.ui.view">
+        <field name="name">stock_barcode_cancel_operation</field>
+        <field name="model">stock_barcode.cancel.operation</field>
+        <field name="arch" type="xml">
+            <form string="Cancel operation">
+                <field name="picking_id" invisible="1"/>
+                <p>Are you sure you want to cancel this operation?</p>
+                <footer>
+                    <button name="action_cancel_operation" type="object" class="oe_highlight" data-hotkey="q">
+                        <span>
+                            Cancel
+                            <field name="picking_name" invisible="not picking_id"/>
+                        </span>
+                    </button>
+                    <button string="Don't cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

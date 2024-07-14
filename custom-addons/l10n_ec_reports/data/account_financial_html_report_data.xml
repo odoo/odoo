@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="l10n_ec_balance_sheet" model="account.report">
+            <field name="name">Balance Sheet</field>
+            <field name="root_report_id" ref="account_reports.balance_sheet"/>
+            <field name="filter_analytic_groupby" eval="True"/>
+            <field name="filter_unfold_all" eval="True"/>
+            <field name="filter_journals" eval="True"/>
+            <field name="country_id" ref="base.ec"/>
+            <field name="filter_multi_company">selector</field>
+            <field name="default_opening_date_filter">this_year</field>
+            <field name="column_ids">
+                <record id="l10n_ec_balance_sheet_column" model="account.report.column">
+                    <field name="name">Balance</field>
+                    <field name="expression_label">balance</field>
+                </record>
+            </field>
+            <field name="line_ids">
+                <record id="l10n_ec_balance_sheet_assets" model="account.report.line">
+                    <field name="name">Total Assets</field>
+                    <field name="code">ACTT</field>
+                    <field name="groupby">account_id</field>
+                    <field name="foldable" eval="True"/>
+                    <field name="hierarchy_level">0</field>
+                    <field name="expression_ids">
+                        <record id="l10n_ec_balance_sheet_assets_expresion" model="account.report.expression">
+                            <field name="label">balance</field>
+                            <field name="engine">domain</field>
+                            <field name="formula" eval="[('account_id.code', '=like', '1%')]"/>
+                            <field name="date_scope">normal</field>
+                            <field name="subformula">sum</field>
+                        </record>
+                    </field>
+                </record>
+                <record id="l10n_ec_balance_sheet_liabilities" model="account.report.line">
+                    <field name="name">Total Liabilities</field>
+                    <field name="code">PAST</field>
+                    <field name="groupby">account_id</field>
+                    <field name="foldable" eval="True"/>
+                    <field name="hierarchy_level">0</field>
+                    <field name="expression_ids">
+                        <record id="l10n_ec_balance_sheet_liabilities_expresion" model="account.report.expression">
+                            <field name="label">balance</field>
+                            <field name="engine">domain</field>
+                            <field name="formula" eval="[('account_id.code', '=like', '2%')]"/>
+                            <field name="date_scope">normal</field>
+                            <field name="subformula">-sum</field>
+                        </record>
+                    </field>
+                </record>
+                <record id="l10n_ec_balance_sheet_equity" model="account.report.line">
+                    <field name="name">Equity</field>
+                    <field name="code">CAPT</field>
+                    <field name="aggregation_formula">UNAFFECTED_EARNINGS_EC.balance + RETAINED_EARNINGS_EC.balance</field>
+                    <field name="hierarchy_level">0</field>
+                    <field name="children_ids">
+                        <record id="l10n_ec_balance_sheet_equity_unaffected_earnings0" model="account.report.line">
+                            <field name="name">Unallocated Earnings</field>
+                            <field name="code">UNAFFECTED_EARNINGS_EC</field>
+                            <field name="aggregation_formula">CURR_YEAR_EARNINGS_EC.balance + PREV_YEAR_EARNINGS_EC.balance</field>
+                            <field name="children_ids">
+                                <record id="l10n_ec_balance_sheet_equity_current_year_earnings0" model="account.report.line">
+                                    <field name="name">Current Year Unallocated Earnings</field>
+                                    <field name="code">CURR_YEAR_EARNINGS_EC</field>
+                                    <field name="aggregation_formula">CURR_YEAR_EARNINGS_PNL_EC.balance + CURR_YEAR_EARNINGS_ALLOC_EC.balance</field>
+                                    <field name="children_ids">
+                                        <record id="l10n_ec_balance_sheet_equity_current_year_earnings_line_1" model="account.report.line">
+                                            <field name="name">Current Year Earnings</field>
+                                            <field name="code">CURR_YEAR_EARNINGS_PNL_EC</field>
+                                            <field name="expression_ids">
+                                                <record id="l10n_ec_balance_sheet_equity_current_year_earnings_line_1_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">aggregation</field>
+                                                    <field name="formula">NEP.balance</field>
+                                                    <field name="date_scope">from_fiscalyear</field>
+                                                    <field name="subformula">cross_report</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                        <record id="l10n_ec_balance_sheet_equity_current_year_earnings_line_2" model="account.report.line">
+                                            <field name="name">Current Year Allocated Earnings</field>
+                                            <field name="code">CURR_YEAR_EARNINGS_ALLOC_EC</field>
+                                            <field name="expression_ids">
+                                                <record id="l10n_ec_balance_sheet_equity_current_year_earnings_line_2_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">domain</field>
+                                                    <field name="formula" eval="[('account_id.account_type', '=', 'equity_unaffected')]"/>
+                                                    <field name="date_scope">from_fiscalyear</field>
+                                                    <field name="subformula">-sum</field>
+                                                </record>
+                                            </field>
+                                        </record>
+                                    </field>
+                                </record>
+                                <record id="l10n_ec_balance_sheet_equity_previous_year_earnings0" model="account.report.line">
+                                    <field name="name">Previous Years Unallocated Earnings</field>
+                                    <field name="code">PREV_YEAR_EARNINGS_EC</field>
+                                    <field name="expression_ids">
+                                        <record id="l10n_ec_balance_sheet_equity_previous_year_earnings0_allocated_earnings" model="account.report.expression">
+                                            <field name="label">allocated_earnings</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula" eval="[('account_id.account_type', '=', 'equity_unaffected')]"/>
+                                            <field name="subformula">-sum</field>
+                                            <field name="date_scope">from_beginning</field>
+                                        </record>
+                                        <record id="l10n_ec_balance_sheet_equity_previous_year_earnings0_balance_domain" model="account.report.expression">
+                                            <field name="label">balance_domain</field>
+                                            <field name="engine">domain</field>
+                                            <field name="formula" eval="[('account_id.account_type', 'in', ('income', 'income_other', 'expense_direct_cost', 'expense', 'expense_depreciation'))]"/>
+                                            <field name="subformula">-sum</field>
+                                            <field name="date_scope">from_beginning</field>
+                                        </record>
+                                        <record id="l10n_ec_balance_sheet_equity_previous_year_earnings0_balance" model="account.report.expression">
+                                            <field name="label">balance</field>
+                                            <field name="engine">aggregation</field>
+                                            <field name="formula">PREV_YEAR_EARNINGS_EC.balance_domain + PREV_YEAR_EARNINGS_EC.allocated_earnings - CURR_YEAR_EARNINGS_EC.balance</field>
+                                        </record>
+                                    </field>
+                                </record>
+                            </field>
+                        </record>
+                        <record id="l10n_ec_balance_sheet_equity_retained_ec_earnings0" model="account.report.line">
+                            <field name="name">Retained Earnings</field>
+                            <field name="code">RETAINED_EARNINGS_EC</field>
+                            <field name="groupby">account_id</field>
+                            <field name="foldable" eval="True"/>
+                            <field name="domain_formula">-sum([('account_id.account_type', '=', 'equity')])</field>
+                        </record>
+                    </field>
+                </record>
+                <record id="l10n_ec_balance_sheet_liabilities_and_equity" model="account.report.line">
+                    <field name="name">Liabilities + Equity</field>
+                    <field name="code">PACA</field>
+                    <field name="hierarchy_level">0</field>
+                    <field name="expression_ids">
+                        <record id="l10n_ec_balance_sheet_liabilities_and_equity_expression" model="account.report.expression">
+                            <field name="label">balance</field>
+                            <field name="engine">aggregation</field>
+                            <field name="formula">PAST.balance + CAPT.balance</field>
+                            <field name="green_on_positive" eval="False"/>
+                        </record>
+                    </field>
+                </record>
+            </field>
+        </record>
+
+        <record id="l10n_ec_profit_and_loss" model="account.report">
+            <field name="name">Profit and Loss</field>
+            <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+            <field name="filter_analytic_groupby" eval="True"/>
+            <field name="filter_unfold_all" eval="True"/>
+            <field name="filter_journals" eval="True"/>
+            <field name="country_id" ref="base.ec"/>
+            <field name="filter_multi_company">selector</field>
+            <field name="default_opening_date_filter">this_year</field>
+            <field name="column_ids">
+                <record id="l10n_ec_profit_and_loss_column" model="account.report.column">
+                    <field name="name">Balance</field>
+                    <field name="expression_label">balance</field>
+                </record>
+            </field>
+            <field name="line_ids">
+                <record id="l10n_ec_profit_and_loss_income" model="account.report.line">
+                    <field name="name">Total Revenue</field>
+                    <field name="code">INGT</field>
+                    <field name="groupby">account_id</field>
+                    <field name="foldable" eval="True"/>
+                    <field name="hierarchy_level">0</field>
+                    <field name="expression_ids">
+                        <record id="l10n_ec_profit_and_loss_income_expression" model="account.report.expression">
+                            <field name="label">balance</field>
+                            <field name="engine">domain</field>
+                            <field name="formula" eval="[('account_id.code', '=like', '4%')]"/>
+                            <field name="date_scope">normal</field>
+                            <field name="subformula">-sum</field>
+                        </record>
+                    </field>
+                </record>
+                <record id="l10n_ec_profit_and_loss_expenses" model="account.report.line">
+                    <field name="name">Total Expenses</field>
+                    <field name="code">GAST</field>
+                    <field name="groupby">account_id</field>
+                    <field name="foldable" eval="True"/>
+                    <field name="hierarchy_level">0</field>
+                    <field name="expression_ids">
+                        <record id="l10n_ec_profit_and_loss_expenses_expression" model="account.report.expression">
+                            <field name="label">balance</field>
+                            <field name="engine">domain</field>
+                            <field name="formula" eval="['|', '|', '|', ('account_id.code', '=like', '5%'), ('account_id.code', '=like', '6%'), ('account_id.code', '=like', '7%'), ('account_id.code', '=like', '9%')]"/>
+                            <field name="date_scope">normal</field>
+                            <field name="subformula">sum</field>
+                            <field name="green_on_positive" eval="False"/>
+                        </record>
+                    </field>
+                </record>
+                <record id="l10n_ec_profit_and_loss_results" model="account.report.line">
+                    <field name="name">Total Profit</field>
+                    <field name="code">BENT</field>
+                    <field name="hierarchy_level">0</field>
+                    <field name="expression_ids">
+                        <record id="l10n_ec_profit_and_loss_results_expression" model="account.report.expression">
+                            <field name="label">balance</field>
+                            <field name="engine">aggregation</field>
+                            <field name="formula">INGT.balance - GAST.balance</field>
+                            <field name="green_on_positive" eval="False"/>
+                        </record>
+                    </field>
+                </record>
+            </field>
+        </record>
+        <!-- link from balance sheet to profit & loss report -->
+	    <record id="action_account_report_ecpnl" model="ir.actions.client">
+	        <!--Kept as a separate action to force opening of the Ecuadorian P&L, whatever the previous options.-->
+	        <field name="name">Profit and Loss</field>
+	        <field name="tag">account_report</field>
+	        <field name="context" eval="{'report_id': ref('l10n_ec_profit_and_loss')}"/>
+	    </record>
+	    <record id="l10n_ec_balance_sheet_equity_current_year_earnings_line_1" model="account.report.line">
+	        <field name="action_id" ref="action_account_report_ecpnl"/>
+	    </record>
+    </data>
+</odoo>

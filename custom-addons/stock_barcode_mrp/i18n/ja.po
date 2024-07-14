@@ -1,0 +1,429 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_barcode_mrp
+# 
+# Translators:
+# Wil Odoo, 2023
+# Junko Augias, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-23 16:33+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+msgid ""
+"<i class=\"fa fa-fw fa-lg fa-barcode me-3\" title=\"Serial/Lot Number\" "
+"invisible=\"product_tracking not in ['serial', 'lot']\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-lg fa-barcode me-3\" title=\"Serial/Lot Number\" "
+"invisible=\"product_tracking not in ['serial', 'lot']\"/>"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid ""
+"<i class=\"fa fa-fw fa-lg fa-barcode me-3\" title=\"Serial/Lot Number\" "
+"invisible=\"tracking not in ['serial', 'lot']\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-lg fa-barcode me-3\" title=\"Serial/Lot Number\" "
+"invisible=\"tracking not in ['serial', 'lot']\"/>"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "<i class=\"fa fa-fw fa-lg fa-cube me-3\" title=\"Quantity\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-cube me-3\" title=\"Quantity\"/>"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid ""
+"<i class=\"fa fa-fw fa-lg fa-long-arrow-right me-3\" title=\"Destination "
+"Location\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-lg fa-long-arrow-right me-3\" title=\"Destination "
+"Location\"/>"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid ""
+"<i class=\"fa fa-fw fa-lg fa-map-marker text-center me-3\" title=\"Source "
+"Location\"/>"
+msgstr ""
+"<i class=\"fa fa-fw fa-lg fa-map-marker text-center me-3\" title=\"Source "
+"Location\"/>"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "<i class=\"fa fa-fw fa-lg fa-tags me-3\" title=\"Product\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-tags me-3\" title=\"Product\"/>"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.res_config_settings_view_form
+msgid "<i class=\"fa fa-print\"/> Print barcode commands and operation types"
+msgstr "<i class=\"fa fa-print\"/> バーコードコマンドとオペレーションタイプを印刷"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.res_config_settings_view_form
+msgid "<i class=\"fa fa-print\"/> Print barcode demo sheet"
+msgstr "<i class=\"fa fa-print\"/> バーコード印刷のデモシート"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/components/main.js:0
+#, python-format
+msgid "Add Component"
+msgstr "構成品を追加"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.view_picking_type_form
+msgid "Allow full order validation"
+msgstr "フルオーダ検証を許可"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,help:stock_barcode_mrp.field_stock_move_line__pick_type_create_components_lots
+msgid "Allow to create new lot/serial numbers for the components"
+msgstr "構成品用に新しいロット/シリアル番号の作成を許可する"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.view_picking_type_form
+msgid "Allow user to produce all even if no components were scanned"
+msgstr "スキャンされた構成品がない場合でも全てを製造することをユーザに許可する"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/components/main.js:0
+#, python-format
+msgid "Are you sure you want to cancel this manufacturing order?"
+msgstr "この製造オーダを本当に取消しますか？"
+
+#. module: stock_barcode_mrp
+#: model:ir.actions.client,name:stock_barcode_mrp.stock_barcode_mo_client_action
+msgid "Barcode MO Client Action"
+msgstr "バーコード製造オーダ顧客アクション"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.res_config_settings_view_form
+msgid "Barcode Nomenclature"
+msgstr "バーコード表現規則"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Cancel Manufacturing Order"
+msgstr "製造オーダを取消"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/components/main.js:0
+#, python-format
+msgid "Cancel manufacturing order?"
+msgstr "製造オーダを取消しますか？"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.res_config_settings_view_form
+msgid "Configure Product Barcodes"
+msgstr "製品バーコードを設定"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_barcode_form
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Confirm"
+msgstr "確認"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_stock_picking_type__count_mo_confirmed
+msgid "Count Mo Confirmed"
+msgstr "検証済の製造オーダカウント"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_stock_move_line__pick_type_create_components_lots
+msgid "Create New Lots/Serial Numbers for Components"
+msgstr "構成品用のロット/シリアル番号を新規作成"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.actions.act_window,help:stock_barcode_mrp.mrp_action_kanban
+msgid "Create a new Manufacturing Order"
+msgstr "製造オーダを新規作成"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Destination Location"
+msgstr "移動先ロケーション"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_barcode_form
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Discard"
+msgstr "破棄"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_mrp_production__is_completed
+msgid "Is Completed"
+msgstr "完了済"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_stock_move_line__manual_consumption
+msgid "Manual Consumption"
+msgstr "手動消費"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_mrp_production__move_byproduct_line_ids
+msgid "Move Byproduct Line"
+msgstr "副産品を移動する"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_mrp_production__move_raw_line_ids
+msgid "Move Raw Line"
+msgstr "材料明細を移動する"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,field_description:stock_barcode_mrp.field_mrp_production__backorder_ids
+msgid "Mrp Production"
+msgstr "MRP生産"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "New"
+msgstr "新規"
+
+#. module: stock_barcode_mrp
+#. odoo-python
+#: code:addons/stock_barcode_mrp/models/mrp_production.py:0
+#, python-format
+msgid "No Manufacturing Order ready for this %(barcode_type)s"
+msgstr "この%(barcode_type)s用に準備完了した製造オーダがありません。"
+
+#. module: stock_barcode_mrp
+#. odoo-python
+#: code:addons/stock_barcode_mrp/models/mrp_production.py:0
+#, python-format
+msgid "No product or order found for barcode %s"
+msgstr "バーコード%s用のプロダクトまたはオーダが見つかりません。"
+
+#. module: stock_barcode_mrp
+#: model:ir.actions.act_window,name:stock_barcode_mrp.mrp_action_kanban
+msgid "Operations"
+msgstr "オペレーション"
+
+#. module: stock_barcode_mrp
+#: model:ir.model,name:stock_barcode_mrp.model_stock_picking_type
+msgid "Picking Type"
+msgstr "ピッキングタイプ"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Print Finished Product Label (PDF)"
+msgstr "完成品ラベル(PDF)を印刷"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Print Finished Product Label (ZPL)"
+msgstr "完成品ラベルl (ZPL)を印刷"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Print Production Order"
+msgstr "生産オーダを印刷"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/components/main.js:0
+#, python-format
+msgid "Produce"
+msgstr "製造"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/components/main.js:0
+#, python-format
+msgid "Produce All"
+msgstr "全て生産"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Product"
+msgstr "プロダクト"
+
+#. module: stock_barcode_mrp
+#: model:ir.model,name:stock_barcode_mrp.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "プロダクトの移動(在庫移動ライン)"
+
+#. module: stock_barcode_mrp
+#: model:ir.model,name:stock_barcode_mrp.model_product_product
+msgid "Product Variant"
+msgstr "プロダクトバリアント"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Product not Allowed"
+msgstr "未許可のプロダクト"
+
+#. module: stock_barcode_mrp
+#: model:ir.model,name:stock_barcode_mrp.model_mrp_production
+msgid "Production Order"
+msgstr "製造オーダ"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Quantity"
+msgstr "数量"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Scan a component"
+msgstr "構成品をスキャン"
+
+#. module: stock_barcode_mrp
+#. odoo-python
+#: code:addons/stock_barcode_mrp/models/mrp_production.py:0
+#, python-format
+msgid "Scan a product to filter the orders."
+msgstr "プロダクトをスキャンしてオーダをフィルタする"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/kanban/stock_barcode_kanban.xml:0
+#, python-format
+msgid "Scan a transfer, a product or a package to filter your records"
+msgstr "転送、プロダクト、またはパッケージをスキャンして、レコードをフィルタリング"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/kanban/stock_barcode_kanban.xml:0
+#, python-format
+msgid "Scan an order or a product to filter your records"
+msgstr "オーダまたはプロダクトをスキャンして自分の記録をフィルタする"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "Scan your final product or more components"
+msgstr "完成品または追加で構成品をスキャンする"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.stock_move_line_product_selector
+msgid "Serial/Lot Number"
+msgstr "シリアル/ロット番号"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Source Location"
+msgstr "移動元ロケーション"
+
+#. module: stock_barcode_mrp
+#: model:ir.model,name:stock_barcode_mrp.model_stock_move
+msgid "Stock Move"
+msgstr "在庫移動"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "The Manufacturing Order has been cancelled"
+msgstr "製造オーダが取消されました"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_picking_model.js:0
+#, python-format
+msgid ""
+"The lines with a kit have been replaced with their components. Please check "
+"the picking before the final validation."
+msgstr "キットのある明細は構成品に置き換えられています。最終検証の前にピッキングを確認してください。"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "The manufacturing order has been validated"
+msgstr "製造オーダが検証されました"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "This order is already done"
+msgstr "このオーダは完了済です"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "This order is cancelled"
+msgstr "このオーダは取消済です"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.stock_mrp_picking_type_kanban
+msgid "To Process"
+msgstr "未処理"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "To produce more products create a new MO."
+msgstr "さらにプロダクトを生産するには新規製造オーダを作成して下さい。"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.actions.act_window,help:stock_barcode_mrp.mrp_action_kanban
+msgid "Transfers allow you to move products from one location to another."
+msgstr "転送を使用すると、プロダクトをある場所から別の場所に移動できます。"
+
+#. module: stock_barcode_mrp
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.mrp_product_selector
+#: model_terms:ir.ui.view,arch_db:stock_barcode_mrp.scrap_product_selector
+msgid "Unit of Measure"
+msgstr "単位"
+
+#. module: stock_barcode_mrp
+#: model:ir.model.fields,help:stock_barcode_mrp.field_stock_move_line__manual_consumption
+msgid ""
+"When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
+"If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also."
+msgstr ""
+"有効になっている場合、その構成品の消費登録は手動のみで記録されます。\n"
+"有効でない場合、構成品の消費量が製造オーダ上で手動で編集されると、Odooは手動消費も想定します。"
+
+#. module: stock_barcode_mrp
+#. odoo-javascript
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#: code:addons/stock_barcode_mrp/static/src/models/barcode_mrp_model.js:0
+#, python-format
+msgid "You can't add the final product of a MO as a byproduct."
+msgstr "製造オーダの最終プロダクトを副産品として追加することはできません。"

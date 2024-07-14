@@ -1,0 +1,559 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"> 
+	<xs:element name="IR56F">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Section">  <!-- Section -->
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="3" />
+							<xs:pattern value="[0-9a-zA-Z]*" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ERN">  <!-- ERN -->
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1" />
+							<xs:maxLength value="8" />
+							<xs:pattern value="[0-9]*" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="SubDate">  <!-- Submission Date -->
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="8" />
+							<xs:pattern value="[0-9]*" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ErName">  <!-- Employer’s Name -->
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1" />
+							<xs:maxLength value="70" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="NAME_OF_SIGNER">  <!-- Name of Signer -->
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1" />
+							<xs:maxLength value="27" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Designation">  <!-- Designation -->
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1" />
+							<xs:maxLength value="25" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="NoRecordBatch">  <!-- No. of Records in Batch -->
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="5" />
+							<xs:pattern value="[0-9]*" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="TotIncomeBatch">  <!-- Total Income in Batch -->
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1" />
+							<xs:maxLength value="11" />
+							<xs:pattern value="[0-9]*" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="IR56VER">  <!-- Version Number -->
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:length value="5" />
+							<xs:enumeration value="F0001" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Employee" minOccurs="1" maxOccurs="unbounded">  <!-- Employee’s IR56F record -->
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="SheetNo">  <!-- Sheet No -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="6" />
+										<xs:pattern value="[0-9]*" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="HKID" default="AA000000A">  <!-- Employee’s HKID with Check Digit -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="9" />
+										<xs:pattern value="[A-Z a-z]{0,1}[A-Za-z]{1}[0-9]{6}[Aa0-9]{0,1}" />
+										<xs:pattern value="[A-Za-z]{1}[0-9]{6}[Aa0-9]{0,1}" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="TypeOfForm">  <!-- Status -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="1" />
+										<xs:enumeration value="A" />
+										<xs:enumeration value="O" />
+										<xs:enumeration value="R" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="Surname">  <!-- Employee’s Surname -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1" />
+										<xs:maxLength value="20" />
+										<xs:pattern value="[A-Z a-z'\.\-]*" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="GivenName">  <!-- Employee’s Given Names in Full -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1" />
+										<xs:maxLength value="55" />
+										<xs:pattern value="[A-Z a-z0-9!#$%&amp;\*\(\)_\+\-=\\:&quot;;&apos;&lt;&gt;?,\./@]*" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="NameInChinese">  <!-- Employee’s Full Name in Chinese -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="25" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="Sex">  <!-- Employee’s Sex -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="M" />
+										<xs:enumeration value="F" />
+										<xs:enumeration value="m" />
+										<xs:enumeration value="f" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="MaritalStatus">  <!-- Employee’s Marital Status -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="1" />
+										<xs:enumeration value="2" />
+										<xs:enumeration value="" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="PpNum">  <!-- Employee’s Passport No. and Country of Issue -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="40" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="SpouseName">  <!-- Spouse’s Name -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="50" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="SpouseHKID">  <!-- Spouse’s HKID with Check Digit -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="9" />
+										<xs:pattern value="[A-Z a-z]{0,1}[A-Za-z]{1}[0-9]{6}[Aa0-9]{0,1}" />
+										<xs:pattern value="[A-Za-z]{1}[0-9]{6}[Aa0-9]{0,1}" />
+										<xs:pattern value="[ ]{0,1}" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="SpousePpNum">  <!-- Spouse’s Passport No. and Country of Issue -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="40" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="RES_ADDR_LINE1">  <!-- Employee’s Residential Address -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1" />
+										<xs:maxLength value="30" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="RES_ADDR_LINE2">  <!-- Employee’s Residential Address -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="30" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="RES_ADDR_LINE3">  <!-- Employee’s Residential Address -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="30" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="AreaCodeResAddr">  <!-- Area Code of Employee’s Residential Address -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="1" />
+										<xs:enumeration value="H" />
+										<xs:enumeration value="K" />
+										<xs:enumeration value="N" />
+										<xs:enumeration value="F" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="POS_ADDR_LINE1">  <!-- Employee’s Postal Address -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="30" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="POS_ADDR_LINE2">  <!-- Employee’s Postal Address -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="30" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="POS_ADDR_LINE3">  <!-- Employee’s Postal Address -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="30" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="POS_ADDR_AREA">  <!-- Area Code of Employee’s Residential Address -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="1" />
+										<xs:enumeration value="H" />
+										<xs:enumeration value="K" />
+										<xs:enumeration value="N" />
+										<xs:enumeration value="F" />
+										<xs:enumeration value="" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="Capacity">  <!-- Capacity in which Employed -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="40" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="CESSATION_DATE">  <!-- Start Date of Cessation -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="8" />
+										<xs:pattern value="[0-9]*" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="CESSATION_REASON">  <!-- Reason of Cessation -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="1" />
+										<xs:enumeration value="1" />
+										<xs:enumeration value="2" />
+										<xs:enumeration value="3" />
+										<xs:enumeration value="4" />
+										<xs:enumeration value="5" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="CESSATION_REASON_OTHER">  <!-- Reason for other -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="30" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="RTN_ASS_YR">  <!-- Assessment Year of Employment period -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="4" />
+										<xs:pattern value="[0-9]*" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="StartDateOfEmp">  <!-- Start Date of Employment -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="8" />
+										<xs:pattern value="[0-9]*" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="EndDateOfEmp">  <!-- End Date of Employment -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="8" />
+										<xs:pattern value="[0-9]*" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="PerOfSalary">  <!-- Period of Salary/Wages -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="19" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="AmtOfSalary" type="amount" />  <!-- Amount of Salary/Wages -->
+							<xs:element name="PerOfLeavePay">  <!-- Period of Leave Pay -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="19" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="AmtOfLeavePay" type="amount" />  <!-- Amount of Leave Pay -->
+							<xs:element name="PerOfDirectorFee">  <!-- Period of Director’s Fee -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="19" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="AmtOfDirectorFee" type="amount" />  <!-- Amount of Director’s Fee -->
+							<xs:element name="PerOfCommFee">  <!-- Period of Commission /Fees -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="19" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="AmtOfCommFee" type="amount" />  <!-- Amount of Commission /Fees -->
+							<xs:element name="PerOfBonus">  <!-- Period of Bonus -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="19" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="AmtOfBonus" type="amount" />  <!-- Amount of Bonus -->
+							<xs:element name="PerOfBpEtc">  <!-- Period of Back Pay, Payment in Lieu of Notice, Terminal Awards or 
+									Gratuities, etc. -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="19" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="AmtOfBpEtc" type="amount" />  <!-- Amount of Back Pay, Payment in Lieu of Notice, Terminal Awards or 
+								Gratuities, etc. -->
+							<xs:element name="PerOfPayRetire">  <!-- Period of Certain Payments from Retirement Schemes -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="19" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="AmtOfPayRetire" type="amount" />  <!-- Amount of Certain Payments from Retirement Schemes -->
+							<xs:element name="PerOfSalTaxPaid">  <!-- Period of Salaries Tax Paid by Employer -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="19" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="AmtOfSalTaxPaid" type="amount" />  <!-- Amount of Salaries Tax Paid by Employer -->
+							<xs:element name="PerOfEduBen">  <!-- Period of Education Benefits -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="19" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="AmtOfEduBen" type="amount" />  <!-- Amount of Education Benefits -->
+							<xs:element name="PerOfGainShareOption">  <!-- Period of Gain Realized Under Share Option Scheme -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="19" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="AmtOfGainShareOption" type="amount" />  <!-- Amount of Gain Realized Under Share Option Scheme -->
+							<xs:element name="NatureOtherRAP1">  <!-- Nature of 1st Other Rewards, Allowances or Perquisites -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="35" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="PerOfOtherRAP1">  <!-- Period of 1st Other Rewards, Allowances or Perquisites -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="19" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="AmtOfOtherRAP1" type="amount" />  <!-- Amount of 1st Other Rewards, Allowances or Perquisites -->
+							<xs:element name="NatureOtherRAP2">  <!-- Nature of 2nd Other Rewards, Allowances or Perquisites -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="35" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="PerOfOtherRAP2">  <!-- Period of 2nd Other Rewards, Allowances or Perquisites -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="19" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="AmtOfOtherRAP2" type="amount" />  <!-- Amount of 2nd Other Rewards, Allowances or Perquisites -->
+							<xs:element name="NatureOtherRAP3">  <!-- Nature of 3rd Other Rewards, Allowances or Perquisites -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="35" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="PerOfOtherRAP3">  <!-- Period of 3rd Other Rewards, Allowances or Perquisites -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="19" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="AmtOfOtherRAP3" type="amount" />  <!-- Amount of 3rd Other Rewards, Allowances or Perquisites -->
+							<xs:element name="NATURE_PAYMENT_LEFT">  <!-- Nature of Payment -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="35" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="OTHER_PAYMENTS_AMT" type="amount" />  <!-- Amount of Payment -->
+							<xs:element name="TotalIncome">  <!-- Total Income -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1" />
+										<xs:maxLength value="9" />
+										<xs:pattern value="[0-9]*" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element><xs:element name="PlaceOfResInd">  <!-- Place of Residence Indicator -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="1" />
+										<xs:enumeration value="0" />
+										<xs:enumeration value="1" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="AddrOfPlace1">  <!-- Address of 1st Place of Residence -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="90" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="NatureOfPlace1">  <!-- Nature of 1st Place of Residence -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="19" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="PerOfPlace1">  <!-- Period of 1st Place of Residence -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="19" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="RentPaidEr1" type="rentAmt" />  <!-- Rent of 1st Place of Residence Paid to Landlord by Employer -->
+							<xs:element name="RentPaidEe1" type="rentAmt" />  <!-- Rent of 1st Place of Residence Paid to Landlord by Employee -->
+							<xs:element name="RentRefund1" type="rentAmt" />  <!-- Rent of 1st Place of Residence Refunded to Employee -->
+							<xs:element name="RentPaidErByEe1" type="rentAmt" />  <!-- Rent of 1st Place of Residence Paid to Employer by Employee -->
+							<xs:element name="AddrOfPlace2">  <!-- Address of 2nd Place of Residence -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="90" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="NatureOfPlace2">  <!-- Nature of 2nd Place of Residence -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="19" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element><xs:element name="PerOfPlace2">  <!-- Period of 2nd Place of Residence -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="19" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="RentPaidEr2" type="rentAmt" />  <!-- Rent of 2nd Place of Residence Paid to Landlord by Employer -->
+							<xs:element name="RentPaidEe2" type="rentAmt" />  <!-- Rent of 2nd Place of Residence Paid to Landlord by Employee -->
+							<xs:element name="RentRefund2" type="rentAmt" />  <!-- Rent of 2nd Place of Residence Refunded to Employee -->
+							<xs:element name="RentPaidErByEe2" type="rentAmt" />  <!-- Rent of 2nd Place of Residence Paid to Employer by Employee -->
+							<xs:element name="OverseaIncInd">  <!-- Overseas Income Indicator -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:length value="1" />
+										<xs:enumeration value="0" />
+										<xs:enumeration value="1" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="AmtPaidOverseaCo">  <!-- Amount Paid by Overseas Company -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="9" />
+										<xs:pattern value="[0-9]*" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="NameOfOverseaCo">  <!-- Name of Overseas Company -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="60" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="AddrOfOverseaCo">  <!-- Address of Overseas Company -->
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="60" />
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="amount">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="9" />
+			<xs:pattern value="[0-9]*" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="rentAmt">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="7" />
+			<xs:pattern value="[0-9]*" />
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

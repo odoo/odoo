@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.EditorMenu">
+    <div class="o_web_studio_menu d-flex flex-row pe-3">
+        <Breadcrumbs currentTab="currentTab" switchTab="props.switchTab"/>
+
+        <t t-if="editionFlow.MenuItem" t-component="editionFlow.MenuItem.component" t-props="editionFlow.MenuItem.props" />
+
+        <div class="ms-auto d-flex flex-row gap-0">
+            <ul class="o_menu_sections d-flex flex-row list-unstyled align-items-center gap-0 mb-0 pe-1">
+                <li t-foreach="editorTabs" t-as="tab"
+                    t-key="tab.id"
+                    class="h-100 d-table px-2" role="button"
+                    t-on-click.prevent="() => this.openTab(tab.id)">
+                    <a class="d-table-cell align-middle" href="#" t-esc="tab.name"/>
+                </li>
+            </ul>
+
+            <div class="o_web_studio_views_icons d-flex flex-row gap-2 align-items-center border-start border-dark border-2 ps-2">
+                <a href="#" t-foreach="activeViews" t-as="view" t-key="view.type" t-att-data-tooltip="view.title" t-att-aria-label="view.title" t-att-title="view.title"
+                   t-on-click.prevent="() => { this.props.switchView({viewType: view.type}); }">
+                    <i t-att-class="view.iconClasses" />
+                </a>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="web_studio.EditorMenu.Breadcrumbs">
+    <div class="o_web_studio_breadcrumb ">
+        <ol class="breadcrumb align-items-center">
+            <li t-foreach="breadcrumbs"
+                t-as="crumb"
+                t-key="crumb.id"
+                t-on-click="crumb.handler"
+                class="breadcrumb-item cursor-default"
+                t-att-class="{active: crumb_last, o_back_button: !crumb_last}"
+                t-esc="crumb.data.name"/>
+        </ol>
+    </div>
+</t>
+
+</templates>

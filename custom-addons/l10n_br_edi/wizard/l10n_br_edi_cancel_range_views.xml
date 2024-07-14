@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_br_edi_cancel_range_form" model="ir.ui.view">
+        <field name="name">l10n_br_edi.cancel.range.form</field>
+        <field name="model">l10n_br_edi.cancel.range</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="document_type_id"/>
+                        <field name="start_number"/>
+                        <field name="end_number"/>
+                        <field name="reason"/>
+                    </group>
+                </group>
+
+                <footer>
+                    <button string="Confirm"
+                            data-hotkey="c"
+                            name="action_submit"
+                            type="object"
+                            class="btn btn-primary">
+                    </button>
+                    <button string="Cancel"
+                            data-hotkey="x"
+                            special="cancel"
+                            class="btn btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_br_edi_cancel_range_action_view_form" model="ir.actions.act_window">
+        <field name="name">Invalidate Number Range (BR)</field>
+        <field name="res_model">l10n_br_edi.cancel.range</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="l10n_br_edi.l10n_br_edi_cancel_range_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_journal"/>
+        <field name="binding_view_types">form</field>
+        <field name="context">{"default_journal_id": active_id}</field>
+    </record>
+</odoo>

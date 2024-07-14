@@ -1,0 +1,234 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* industry_fsm_stock
+# 
+# Translators:
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: industry_fsm_stock
+#. odoo-python
+#: code:addons/industry_fsm_stock/models/product.py:0
+#, python-format
+msgid ""
+"Adding or updating this product is restricted due to its tracked status. "
+"Your current access rights do not allow you to perform these actions. Please"
+" contact your administrator to request the necessary permissions."
+msgstr ""
+"إضافة أو تحديث هذا المنتج مقيد بسبب حالة تتبعه. لا تسمح لك صلاحيات الوصول "
+"الحالية الخاصة بك بتنفيذ هذه الإجراءات. يرجى الاتصال بمديرك لطلب الأذونات "
+"اللازمة. "
+
+#. module: industry_fsm_stock
+#: model_terms:ir.ui.view,arch_db:industry_fsm_stock.fsm_stock_tracking_line_view_form
+msgid "Already Delivered"
+msgstr "تم التوصيل بالفعل "
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__company_id
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__company_id
+msgid "Company"
+msgstr "الشركة "
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__create_uid
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__create_date
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__create_date
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: industry_fsm_stock
+#: model_terms:ir.ui.view,arch_db:industry_fsm_stock.fsm_stock_tracking_line_view_form
+msgid "Discard"
+msgstr "إهمال "
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__display_name
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__display_name
+msgid "Display Name"
+msgstr "اسم العرض "
+
+#. module: industry_fsm_stock
+#. odoo-python
+#: code:addons/industry_fsm_stock/wizard/fsm_stock_tracking.py:0
+#, python-format
+msgid "Each line needs a Lot/Serial Number"
+msgstr "يحتاج كل بند إلى رقم الدفعة/الرقم التسلسلي "
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,help:industry_fsm_stock.field_fsm_stock_tracking__tracking
+msgid "Ensure the traceability of a storable product in your warehouse."
+msgstr "تأكد من إمكانية تتبع المنتج القابل للتخزين في مستودعك. "
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_sale_order_line__fsm_lot_id
+msgid "Fsm Lot"
+msgstr "دفعة Fsm "
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__id
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__write_uid
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__write_date
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: industry_fsm_stock
+#: model:ir.model,name:industry_fsm_stock.model_fsm_stock_tracking_line
+msgid "Lines for FSM Stock Tracking"
+msgstr "بنود لتتبع مخزون FSM "
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__lot_id
+msgid "Lot/Serial Number"
+msgstr "رقم الدفعة/الرقم التسلسلي "
+
+#. module: industry_fsm_stock
+#. odoo-javascript
+#: code:addons/industry_fsm_stock/static/src/js/product_catalog/sale_order_line/sale_order_line.xml:0
+#, python-format
+msgid "Lot/Serial number"
+msgstr "رقم اللوط/الرقم المسلسل"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__product_id
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__product_id
+msgid "Product"
+msgstr "المنتج"
+
+#. module: industry_fsm_stock
+#: model:ir.model,name:industry_fsm_stock.model_product_product
+msgid "Product Variant"
+msgstr "متغير المنتج "
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__quantity
+msgid "Quantity"
+msgstr "الكمية"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_product_product__quantity_decreasable
+msgid "Quantity Decreasable"
+msgstr "الكمية قابلة للتقليل "
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_product_product__quantity_decreasable_sum
+msgid "Quantity Decreasable Sum"
+msgstr "مجموع الكمية قابلة للتقليل "
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__sale_order_line_id
+msgid "Sale Order Line"
+msgstr "بند أمر البيع"
+
+#. module: industry_fsm_stock
+#: model:ir.model,name:industry_fsm_stock.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "بند أمر المبيعات"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__is_same_warehouse
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__is_same_warehouse
+msgid "Same warehouse"
+msgstr "نفس المستودع "
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_product_product__serial_missing
+msgid "Serial Missing"
+msgstr "الرقم التسلسلي غير موجود "
+
+#. module: industry_fsm_stock
+#: model:ir.model,name:industry_fsm_stock.model_stock_move
+msgid "Stock Move"
+msgstr "حركة المخزون"
+
+#. module: industry_fsm_stock
+#: model:ir.model,name:industry_fsm_stock.model_project_task
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__task_id
+msgid "Task"
+msgstr "المهمة"
+
+#. module: industry_fsm_stock
+#. odoo-python
+#: code:addons/industry_fsm_stock/models/product.py:0
+#, python-format
+msgid ""
+"The ordered quantity cannot be decreased below the amount already delivered."
+" Instead, create a return in your inventory."
+msgstr ""
+"لا يمكن تقليل الكمية المطلوبة إلى أقل من الكمية التي قد تم إيصالها بالفعل. "
+"عوضاً عن ذلك، قم بإنشاء عملية إرجاع إلى مخزونك. "
+
+#. module: industry_fsm_stock
+#: model:ir.model,name:industry_fsm_stock.model_fsm_stock_tracking
+#: model_terms:ir.ui.view,arch_db:industry_fsm_stock.fsm_stock_tracking_line_line_view_form
+#: model_terms:ir.ui.view,arch_db:industry_fsm_stock.fsm_stock_tracking_line_view_form
+msgid "Track Stock"
+msgstr "تتبع المخزون "
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__tracking
+msgid "Tracking"
+msgstr "التتبع"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__tracking_line_ids
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__wizard_tracking_line
+msgid "Tracking Line"
+msgstr "بند التتبع"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__tracking_validated_line_ids
+msgid "Tracking Validated Line"
+msgstr "تتبع البند الذي تم تصديقه "
+
+#. module: industry_fsm_stock
+#: model_terms:ir.ui.view,arch_db:industry_fsm_stock.fsm_stock_tracking_line_view_form
+msgid "Validate"
+msgstr "تصديق "
+
+#. module: industry_fsm_stock
+#. odoo-python
+#: code:addons/industry_fsm_stock/models/product.py:0
+#, python-format
+msgid "Validate Lot/Serial Number"
+msgstr "تصديق رقم الدفعة/الرقم التسلسلي "
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__wizard_tracking_line_validated
+msgid "Validated Tracking Line"
+msgstr "بند التتبع الذي تم تصديقه "
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__warehouse_id
+msgid "Warehouse"
+msgstr "المستودع "

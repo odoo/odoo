@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_l10n_lu_generate_accounts_report" model="ir.ui.view">
+            <field name="name">l10n_lu.generate.accounts.report.view</field>
+            <field name="model">l10n_lu.generate.accounts.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group col="3">
+                        <label for="avg_nb_employees" colspan="2"/>
+                        <field name="avg_nb_employees" nolabel="1"/>
+                        <label for="size" string="Size (criteria specified by Articles 35 and 47 of the amended law of December 19th 2002)" invisible="coa_only" colspan="2"/>
+                        <field name="size" invisible="coa_only" nolabel="1"/>
+                        <label for="bs" string="Balance sheet version" invisible="coa_only or size == 'large' or size == 'medium'" colspan="2"/>
+                        <field name="bs" invisible="coa_only or size == 'large' or size == 'medium'" nolabel="1"/>
+                        <label for="pl" string="Profit and loss report version" invisible="coa_only or size == 'large'" colspan="2"/>
+                        <field name="pl" invisible="coa_only or size == 'large'" nolabel="1"/>
+                        <label for="coa_only" string="Generate Chart of Accounts only (Non-automated generation of the balance sheet and the profit and loss account)" colspan="2"/>
+                        <field name="coa_only" nolabel="1"/>
+                        <label for="import_notes_as_references" colspan="2"/>
+                        <field name="import_notes_as_references" nolabel="1"/>
+                        <field name="optional_remarks" class="form-control" colspan="3"/>
+                    </group>
+                    <footer>
+                        <button name="get_xml" string="EXPORT XML" type="object" class="oe_highlight"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_l10n_lu_generate_accounts_report" model="ir.actions.act_window">
+            <field name="name">Generate accounts report</field>
+            <field name="res_model">l10n_lu.generate.accounts.report</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_l10n_lu_generate_accounts_report"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

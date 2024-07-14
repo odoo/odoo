@@ -1,0 +1,30 @@
+.o-voip-Softphone {
+    z-index: $zindex-modal - 2;
+
+    width: 300px;
+    max-height: 100vh;
+
+    :focus {
+        outline: 0;
+    }
+}
+
+.o-voip-Softphone-topbar {
+    height: 36px;
+
+    background-color: var(--voip__topBar-bg, #{$o-brand-odoo});
+    color: #FFFFFF;
+
+}
+
+.o-voip-Softphone-error {
+    z-index: $zindex-modal - 1;
+}
+
+.o-voip-Softphone-tab {
+    height: 360px;
+}
+
+.o-voip-Softphone-content {
+    min-height: 440px;
+}

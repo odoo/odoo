@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="appointment_info" inherit_id="appointment.appointment_meeting_details">
+    <xpath expr="//div[hasclass('o_appointment_details_location')]" position="before">
+        <div t-if="appointment_type.product_id" class="d-flex py-1 px-0 bg-transparent o-cc1-text border-0">
+            <i class="fa fa-credit-card fa-fw me-2 mt-1 text-muted"/>
+            <span t-esc="appointment_type.product_id.lst_price"
+                t-options="{'widget': 'monetary', 'display_currency': appointment_type.product_id.currency_id}"/>
+        </div>
+    </xpath>
+</template>
+</odoo>

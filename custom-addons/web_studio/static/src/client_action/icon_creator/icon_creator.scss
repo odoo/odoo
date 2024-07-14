@@ -1,0 +1,212 @@
+@keyframes appCreatorIconFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes appCreatorIconFadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+.o_web_studio_icon_creator {
+  h6 {
+    color: $o-web-studio-text-inactive;
+  }
+
+  .o_web_studio_upload {
+    color: $o-web-studio-text-inactive;
+  } 
+
+  .o_web_studio_uploaded_image {
+    width: 128px;
+    height: 128px;
+    margin-bottom: 32px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+  }
+
+  .o_web_studio_icon {
+    float: left;
+
+    .o_app_icon {
+      width: 128px;
+      height: 128px;
+      box-shadow: 0 7px 16px -5px #000;
+
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+      border-radius: 6px;
+      transition: background 0.2s ease 0s;
+
+      > i {
+        padding-left: 2px;
+        font-size: 6em;
+        transition: color 0.2s ease 0s;
+
+        &.o-fading-in {
+            animation: appCreatorIconFadeIn 0.8s;
+        }
+
+        &.o-fading-out {
+            animation: appCreatorIconFadeOut 0.05s;
+        }
+      }
+    }
+  }
+
+  .o_web_studio_selectors {
+    float: right;
+    position: relative;
+  }
+
+  .o_web_studio_palette,
+  .o_web_studio_icons_library {
+    background-color: white;
+    border-radius: 3px;
+    overflow: hidden;
+    width: 225px;
+    padding: 5px;
+    box-shadow: 0 7px 16px -5px rgba(black, 0.4);
+    @include o-position-absolute(auto, auto, auto, 40px);
+    z-index: 1;
+
+    .o_web_studio_selector {
+      display: inline-block;
+      margin: 5px;
+      border-radius: 0;
+      border: 2px solid white;
+      width: 30px;
+      height: 30px;
+      transition-property: none;
+      &:before {
+        display: none;
+      }
+      &:hover {
+        box-shadow: 0 0 0 2px $o-brand-primary;
+      }
+    }
+  }
+
+  .o_web_studio_icons_library {
+    width: 360px;
+    .o_web_studio_selector {
+      font-size: 1.5em;
+      box-shadow: none;
+    }
+  }
+
+  .o_web_studio_selector {
+    $tmp-selector-size: 22px;
+
+    width: $tmp-selector-size;
+    height: $tmp-selector-size;
+    margin: 6px 0 27px 17px;
+    text-align: center;
+    border-radius: 3px;
+    border: 2px solid $o-web-studio-bg-dark;
+    box-shadow: 0 0 0 1px darken($o-web-studio-bg-light, 50%);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease 0s;
+    transition-property: opacity, box-shadow;
+
+    background-color: white;
+
+    &:before {
+      opacity: 0.5;
+      content: "\f0d7";
+      width: 15px;
+      text-align: right;
+      font-family: "FontAwesome";
+      color: $o-web-studio-text-light;
+      @include o-position-absolute(1px, -15px);
+    }
+
+    .o_web_studio_selector_pointer {
+      @include o-position-absolute(($tmp-selector-size/2)-1, $tmp-selector-size);
+      display: block;
+      width: 30px;
+      border-top: 1px dotted white;
+      transition: all 0.3s ease 0s;
+
+      &:after {
+        content: "\B0";
+        font-weight: 100;
+        line-height: 0;
+        font-size: 50px;
+        color: white;
+        text-shadow: 0 0 1px $o-web-studio-bg-dark;
+        @include o-position-absolute(12px, auto, auto, -16px);
+        transition: all 0.3s ease 0s;
+      }
+    }
+
+    &:nth-child(2) {
+      .o_web_studio_selector_pointer {
+        width: 60px;
+      }
+    }
+
+    &:nth-child(3) {
+      .o_web_studio_selector_pointer {
+        width: 79px;
+        &:after {
+          content: "\f0d8";
+          font-family: "FontAwesome";
+          line-height: 0;
+          font-size: 18px;
+          @include o-position-absolute(-18px, auto, auto, -5px);
+        }
+        &:before {
+          content: "";
+          height: 13px;
+          border-left: 1px dotted white;
+          @include o-position-absolute(-13px, auto, auto, 0);
+        }
+      }
+    }
+
+    .o_web_studio_palette + .o_web_studio_selector_pointer {
+      opacity: 1;
+      border-top: 1px solid white;
+      &:before {
+        border-left-style: solid;
+      }
+    }
+
+    &:hover {
+      box-shadow: 0 0 0 1px $o-web-studio-bg-light;
+      .o_web_studio_selector_pointer {
+        border-top: 1px solid white;
+        &:before {
+          border-left-style: solid;
+        }
+      }
+      &:before,
+      .o_web_studio_selector_pointer {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.o_web_studio_app_creator_right {
+  .o_web_studio_selector_pointer {
+    opacity: 0;
+  }
+  &:hover .o_web_studio_selector_pointer {
+    opacity: 0.5;
+  }
+}

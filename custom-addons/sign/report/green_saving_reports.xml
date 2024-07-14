@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <template id="green_savings_report">
+        <t t-call="web.basic_layout">
+            <t t-call-assets="sign.assets_green_report" t-js="false"/>
+            <t t-set="green_report_container_template" t-value="'sign.green_report_container' if report_type == 'html' else 'sign.green_report_container_pdf'"/>
+            <t t-call="{{ green_report_container_template }}"/>
+
+            <!-- Modal -->
+            <div t-if="report_type == 'html'" role="dialog" class="modal_green_savings modal fade">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-200 align-items-center shadow">
+                            <h3 class="mb-0">How do we calculate?</h3>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <section class="p-3">
+                                <p>The computation is based on the website <a href="https://c.environmentalpaper.org/" target="_blank">https://c.environmentalpaper.org/</a></p>
+                                <p>The total of sheets you saved is based on: the number of sent sign requests x number of sheets in the document x (number of contacts who need to sign + number of contacts in copy if the sign request is signed) = total of pages. We assume that one page weights 0.005 kilograms.</p>
+                            </section>
+                            <section class="px-3">
+                                <h3>I've got a total weight, and now?</h3>
+                                <ol class="pt-3">
+                                    <li>Based on <a href="https://c.environmentalpaper.org/" target="_blank">https://c.environmentalpaper.org/</a> we've got a list of consumption for 1000 kg of paper usage.</li>
+                                    <li>We display to you a ratio based on the saved weight versus 1000 kg of paper usage.</li>
+                                    <li>
+                                    For 1000kg of paper usage, with 10% of recycled paper, environmental savings are based on <a href="https://c.environmentalpaper.org/" target="_blank">https://c.environmentalpaper.org/</a> and:
+                                        <ol class="pt-3">
+                                            <li><b>Wood Use:</b> 4 US Short Tons = 4*907.18474 = 3628.73 kg</li>
+                                            <li><b>Total Energy:</b> 27 Millions BTU = 27,000,000*0.0002931 = 7.91 kWh</li>
+                                            <li><b>Gas:</b> 18,700 Pounds of CO² = 18,700*0.4536 = 8482.32 kg</li>
+                                            <li><b>Water:</b> 23,400 Gallons = 23,400*3.78541 = 88578.59 L</li>
+                                            <li><b>Solid Waste:</b> 1290 Pounds = 1290*0.4536 = 585.14 kg</li>
+                                        </ol>
+                                    </li>
+                                </ol>
+                            </section>
+                            <section class="p-3">
+                                <h3>What about those conversions I see?</h3>
+                                <p class="pt-3">Based on various websites, here are our comparisons:</p>
+                                <ul>
+                                    <li>A shower uses approximately 65 L of water</li>
+                                    <li>To produce 1000 kg of wood, we have to cut 12 trees</li>
+                                    <li>One liter of gas fuel will produce 8.9 kg of CO²</li>
+                                    <li>One can weighs 15 g</li>
+                                    <li>An average computer will consume 750 Wh</li>
+                                </ul>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Container Templates -->
+    <template id="green_report_container">
+        <section t-attf-class="container green-savings-page">
+            <div class="row align-items-stretch pt-4">
+                <!-- Paper Savings -->
+                <t t-call="sign.green_report_el">
+                    <t t-set="green_report_el_id" t-value="'water'"/>
+                    <t t-set="green_report_el_color" t-value="'success'"/>
+                    <t t-set="green_report_el_img" t-value="'paper_savings'"/>
+                    <t t-set="green_report_el_fa" t-value="'recycle'"/>
+                    <t t-set="green_report_el_title">Paper Savings</t>
+                    <t t-set="green_report_el_type" t-value="sheets_sum"/>
+                    <t t-set="green_report_el_text">sheets of paper saved</t>
+                </t>
+
+                <!-- Water -->
+                <t t-call="sign.green_report_el">
+                    <t t-set="green_report_el_id" t-value="'water'"/>
+                    <t t-set="green_report_el_color" t-value="'primary'"/>
+                    <t t-set="green_report_el_img" t-value="'water'"/>
+                    <t t-set="green_report_el_fa" t-value="'tint'"/>
+                    <t t-set="green_report_el_title">Water</t>
+                    <t t-set="green_report_el_type" t-value="water"/>
+                    <t t-set="green_report_el_text">L of water saved</t>
+                    <t t-set="green_report_el_waste" t-value="showers"/>
+                    <t t-set="green_report_el_waste_text_1">showers</t>
+                    <t t-set="green_report_el_waste_text_2">shower</t>
+                </t>
+
+                <!-- Wood -->
+                <t t-call="sign.green_report_el">
+                    <t t-set="green_report_el_id" t-value="'wood'"/>
+                    <t t-set="green_report_el_color" t-value="'success'"/>
+                    <t t-set="green_report_el_img" t-value="'wood_3'"/>
+                    <t t-set="green_report_el_fa" t-value="'tree'"/>
+                    <t t-set="green_report_el_title">Wood</t>
+                    <t t-set="green_report_el_type" t-value="wood"/>
+                    <t t-set="green_report_el_text">kg of wood saved</t>
+                    <t t-set="green_report_el_waste" t-value="trees"/>
+                    <t t-set="green_report_el_waste_text_1">trees</t>
+                    <t t-set="green_report_el_waste_text_2">tree</t>
+                </t>
+
+                <!-- Carbon -->
+                <t t-call="sign.green_report_el">
+                    <t t-set="green_report_el_id" t-value="'carbon'"/>
+                    <t t-set="green_report_el_color" t-value="'secondary'"/>
+                    <t t-set="green_report_el_img" t-value="'carbon_5'"/>
+                    <t t-set="green_report_el_fa" t-value="'car'"/>
+                    <t t-set="green_report_el_title">Carbon Emissions</t>
+                    <t t-set="green_report_el_type" t-value="carbon"/>
+                    <t t-set="green_report_el_text">kg of reduced carbon emissions</t>
+                    <t t-set="green_report_el_waste" t-value="gas_fuel"/>
+                    <t t-set="green_report_el_waste_text_1">liters of car fuel</t>
+                    <t t-set="green_report_el_waste_text_2">liter of car fuel</t>
+                </t>
+
+                <!-- Waste -->
+                <t t-call="sign.green_report_el">
+                    <t t-set="green_report_el_id" t-value="'waste'"/>
+                    <t t-set="green_report_el_color" t-value="'dark'"/>
+                    <t t-set="green_report_el_img" t-value="'waste'"/>
+                    <t t-set="green_report_el_fa" t-value="'trash'"/>
+                    <t t-set="green_report_el_title">Waste</t>
+                    <t t-set="green_report_el_type" t-value="waste"/>
+                    <t t-set="green_report_el_text">kg of waste prevented</t>
+                    <t t-set="green_report_el_waste" t-value="cans"/>
+                    <t t-set="green_report_el_waste_text_1">cans</t>
+                    <t t-set="green_report_el_waste_text_2">can</t>
+                </t>
+
+                <!-- Energy -->
+                <t t-call="sign.green_report_el">
+                    <t t-set="green_report_el_id" t-value="'energy'"/>
+                    <t t-set="green_report_el_color" t-value="'warning'"/>
+                    <t t-set="green_report_el_img" t-value="'energy'"/>
+                    <t t-set="green_report_el_fa" t-value="'bolt'"/>
+                    <t t-set="green_report_el_title">Energy</t>
+                    <t t-set="green_report_el_type" t-value="energy"/>
+                    <t t-set="green_report_el_text">kWh of energy saved</t>
+                    <t t-set="green_report_el_waste" t-value="computer_hours"/>
+                    <t t-set="green_report_el_waste_text_1">hours of computer use</t>
+                    <t t-set="green_report_el_waste_text_2">hour of computer use</t>
+                </t>
+
+                <!-- Modal Trigger -->
+                <div class="col-12 col-lg-4 pb-5 pt-4 text-center text-lg-start ps-lg-3">
+                    <a href="#" name='modal_green_savings' data-bs-toggle="modal" data-bs-target=".modal_green_savings" aria-label="Green Savings Summary">
+                        How are these results calculated?
+                    </a>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!-- Ideally using display grid with flexbox would allow using the same container from html report in pdf, however wkhtmltopdf doesn't support grid -->
+    <template id="green_report_container_pdf">
+        <h1 class="text-center">Green Savings Report</h1>
+        <section t-attf-class="green-savings-page-pdf">
+            <div class="row align-items-stretch pt-4">
+                <!-- Paper Savings -->
+                <t t-call="sign.green_report_el_pdf">
+                    <t t-set="green_report_el_id" t-value="'water'"/>
+                    <t t-set="green_report_el_color" t-value="'success'"/>
+                    <t t-set="green_report_el_img" t-value="'paper_savings'"/>
+                    <t t-set="green_report_el_fa" t-value="'recycle'"/>
+                    <t t-set="green_report_el_title">Paper Savings</t>
+                    <t t-set="green_report_el_type" t-value="sheets_sum"/>
+                    <t t-set="green_report_el_text">sheets of paper saved</t>
+                </t>
+
+                <!-- Water -->
+                <t t-call="sign.green_report_el_pdf">
+                    <t t-set="green_report_el_id" t-value="'water'"/>
+                    <t t-set="green_report_el_color" t-value="'primary'"/>
+                    <t t-set="green_report_el_img" t-value="'water'"/>
+                    <t t-set="green_report_el_fa" t-value="'tint'"/>
+                    <t t-set="green_report_el_title" t-value="'Water'"/>
+                    <t t-set="green_report_el_type" t-value="water"/>
+                    <t t-set="green_report_el_text">L of water saved</t>
+                    <t t-set="green_report_el_waste" t-value="showers"/>
+                    <t t-set="green_report_el_waste_text_1">showers</t>
+                    <t t-set="green_report_el_waste_text_2">shower</t>
+                </t>
+            </div>
+            <div class="row align-items-stretch pt-4">
+                <!-- Wood -->
+                <t t-call="sign.green_report_el_pdf">
+                    <t t-set="green_report_el_id" t-value="'wood'"/>
+                    <t t-set="green_report_el_color" t-value="'success'"/>
+                    <t t-set="green_report_el_img" t-value="'wood_3'"/>
+                    <t t-set="green_report_el_fa" t-value="'tree'"/>
+                    <t t-set="green_report_el_title">Wood</t>
+                    <t t-set="green_report_el_type" t-value="wood"/>
+                    <t t-set="green_report_el_text">kg of wood saved</t>
+                    <t t-set="green_report_el_waste" t-value="trees"/>
+                    <t t-set="green_report_el_waste_text_1">trees</t>
+                    <t t-set="green_report_el_waste_text_2">tree</t>
+                </t>
+
+                <!-- Carbon -->
+                <t t-call="sign.green_report_el_pdf">
+                    <t t-set="green_report_el_id" t-value="'carbon'"/>
+                    <t t-set="green_report_el_color" t-value="'secondary'"/>
+                    <t t-set="green_report_el_img" t-value="'carbon_5'"/>
+                    <t t-set="green_report_el_fa" t-value="'car'"/>
+                    <t t-set="green_report_el_title">Carbon Emissions</t>
+                    <t t-set="green_report_el_type" t-value="carbon"/>
+                    <t t-set="green_report_el_text">kg of reduced carbon emissions</t>
+                    <t t-set="green_report_el_waste" t-value="gas_fuel"/>
+                    <t t-set="green_report_el_waste_text_1">liters of car fuel</t>
+                    <t t-set="green_report_el_waste_text_2">liter of car fuel</t>
+                </t>
+            </div>
+            <div class="row align-items-stretch pt-4">
+                <!-- Waste -->
+                <t t-call="sign.green_report_el_pdf">
+                    <t t-set="green_report_el_id" t-value="'waste'"/>
+                    <t t-set="green_report_el_color" t-value="'dark'"/>
+                    <t t-set="green_report_el_img" t-value="'waste'"/>
+                    <t t-set="green_report_el_fa" t-value="'trash'"/>
+                    <t t-set="green_report_el_title">Waste</t>
+                    <t t-set="green_report_el_type" t-value="waste"/>
+                    <t t-set="green_report_el_text">kg of waste prevented</t>
+                    <t t-set="green_report_el_waste" t-value="cans"/>
+                    <t t-set="green_report_el_waste_text_1">cans</t>
+                    <t t-set="green_report_el_waste_text_2">can</t>
+                </t>
+
+                <!-- Energy -->
+                <t t-call="sign.green_report_el_pdf">
+                    <t t-set="green_report_el_id" t-value="'energy'"/>
+                    <t t-set="green_report_el_color" t-value="'warning'"/>
+                    <t t-set="green_report_el_img" t-value="'energy'"/>
+                    <t t-set="green_report_el_fa" t-value="'bolt'"/>
+                    <t t-set="green_report_el_title">Energy</t>
+                    <t t-set="green_report_el_type" t-value="energy"/>
+                    <t t-set="green_report_el_text">kWh of energy saved</t>
+                    <t t-set="green_report_el_waste" t-value="computer_hours"/>
+                    <t t-set="green_report_el_waste_text_1">hours of computer use</t>
+                    <t t-set="green_report_el_waste_text_2">hour of computer use</t>
+                </t>
+            </div>
+        </section>
+    </template>
+
+    <!-- Element Templates -->
+    <template id="green_report_el_pdf">
+        <div t-attf-id="{{green_report_el_id}}" t-attf-class="green-savings-card-pdf">
+            <div name='modal_green_savings' t-attf-aria-label="{{green_report_el_title}} Summary">
+                <div class="row m-0 w-100">
+                    <div class="col-5 p-0">
+                        <div t-attf-class="display-3 align-items-center justify-content-center text-{{green_report_el_color}} rounded-circle p-3">
+                            <img t-attf-src="/sign/static/img/{{green_report_el_img}}.svg" t-attf-alt="{{green_report_el_title}}" style="height: 100px; width: 200px;"/>
+                        </div>
+                    </div>
+                    <div class="col-7 p-0">
+                        <div class="card-body justify-content-center text-start h-100">
+                            <h3 class="card-title" t-out="green_report_el_title"/>
+                            <p class="card-text"><t t-out="green_report_el_type"/> <t t-out="green_report_el_text"/></p>
+                            <t t-if="green_report_el_waste">
+                                <p class="fw-light">
+                                    <t t-if="green_report_el_waste > 1">
+                                        that's <t t-out="green_report_el_waste"/> <t t-out="green_report_el_waste_text_1"/>
+                                    </t>
+                                    <t t-elif="green_report_el_waste == 1">
+                                        that's <t t-out="green_report_el_waste"/> <t t-out="green_report_el_waste_text_2"/>
+                                    </t>
+                                </p>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="green_report_el">
+        <div t-attf-id="{{green_report_el_id}}" class="col-12 col-md-4 py-4">
+            <div t-attf-class="green-savings-card card card-default p-3 d-flex align-items-stretch h-100" name='modal_green_savings' data-bs-toggle="modal" data-bs-target=".modal_green_savings" t-attf-aria-label="{{green_report_el_title}} Summary">
+                <div class="row m-0 w-100 h-100">
+                    <div class="col-lg-5 p-0">
+                        <div t-attf-class="d-flex w-100 h-100 align-items-center justify-content-center display-3 text-{{green_report_el_color}} rounded-circle p-3">
+                            <img t-attf-src="/sign/static/img/{{green_report_el_img}}.svg" t-attf-alt="{{green_report_el_title}}"/>
+                        </div>
+                    </div>
+                    <div class="col-lg-7 p-0">
+                        <div class="card-body d-flex flex-column text-center justify-content-start text-lg-start h-100">
+                            <h3 class="card-title" t-out="green_report_el_title"/>
+                            <p class="card-text"><t t-out="green_report_el_type"/> <t t-out="green_report_el_text"/></p>
+                            <t t-if="green_report_el_waste">
+                                <p class="fst-italic">
+                                    <t t-if="green_report_el_waste > 1">
+                                        that's <t t-out="green_report_el_waste"/> <t t-out="green_report_el_waste_text_1"/>
+                                    </t>
+                                    <t t-elif="green_report_el_waste == 1">
+                                        that's <t t-out="green_report_el_waste"/> <t t-out="green_report_el_waste_text_2"/>
+                                    </t>
+                                </p>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+</odoo>

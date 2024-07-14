@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <div t-name="knowledge.KnowledgeCommentsThread"
+        t-if="!state.updating"
+        t-on-mouseenter="() => this.highlightComment(true)"
+        t-on-mouseleave="() => this.highlightComment(false)"
+        t-on-click="startCommenting"
+        t-att-data-id="props.knowledgeThreadId"
+        t-att-class="{
+            'o_knowledge_comment_box': true,
+            'o_knowledge_comment_resolved': state.isResolved,
+            'commenting': state.commenting and !state.isResolved,
+            'px-0 mh-25 col-lg m-0': props.forceFullSize,
+            'd-inline-block position-absolute end-100 rounded': !props.forceFullSize,
+            'pt-2': !(state.smallUI || props.record.data.full_width)
+        }"
+        t-attf-style="${!this.props.forceFullSize ? `top: ${this.state.top}px;${this.state.width};${this.state.marginRight};` : ''}"
+        t-ref="targetRef">
+        <div class="o_knowledge_comment_small_ui"
+             t-if="!props.forceFullSize and state.smallUI"
+             t-on-click="openPopover">
+            <img t-on-click="openPopover" class="rounded p-0 o_object_fit_cover cursor-pointer"
+                t-attf-src="/web/image?model=res.partner&amp;field=avatar_128&amp;id={{ state.lastPartnerId }}"/>
+        </div>
+        <t t-elif="props.anchors.length or props.forceFullSize">
+            <ul t-if="props.forceFullSize" class="o_knowledge_comment_anchor list-unstyled" t-on-click="showAnchors">
+                <t t-foreach="state.quotes" t-as="quote" t-key="quote_index">
+                    <li class="ps-2 opacity-75 word-break">
+                        <t t-out="quote"/>
+                    </li>
+                </t>
+            </ul>
+            <t t-if="!props.isCreationMode">
+                <div class="p-0 o_knowledge_comment_box_thread">
+                    <Thread thread="state.thread" showDates="false"
+                            order="'asc'" showEmptyMessage="false" showJumpPresent="false"
+                            />
+                    <div class="ms-1">
+                        <button t-if="props.forceFullSize and !state.commenting" class="btn ms-5" t-on-click="startCommenting">Reply</button>
+                    </div>
+                </div>
+                <div class="o_knowledge_comments_buttons ps-1" t-ref="composerDivRef">
+                    <Composer placeholder="placeholder" composer="state.thread.composer"
+                              t-if="state.commenting" type="'note'" showFullComposer="false" mode="'extended'"
+                              allowUpload="false"/>
+                </div>
+            </t>
+            <div class="o_knowledge_comments_buttons ps-1 emptyThread" t-ref="composerDivRef" t-else="">
+                <KnowledgeCommentCreatorComposer placeholder="placeholder" composer="state.thread.composer"
+                              type="'note'" showFullComposer="false" mode="'extended'"
+                              allowUpload="false" onPostCallback.bind="insertNewThread"/>
+            </div>
+        </t>
+    </div>
+</templates>

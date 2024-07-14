@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="StudioApproval">
+    <div class="o_web_studio_approval d-inline ms-2" t-on-click.stop="toggleApprovalInfo" t-ref="root">
+        <!-- no rules list: first fetch not done, display spinner -->
+        <t t-if="state.rules === null">
+            <i class="fa fa-circle-o-notch fa-spin"/>
+        </t>
+        <t t-else="state.rules.length">
+             <!-- data fetched; display avatar for rules and entries -->
+            <t t-set="num_rules" t-value="state.rules.length"/>
+            <t t-foreach="state.rules" t-as="rule" t-key="rule.id">
+                <t t-if="num_rules lte 3 || (num_rules gt 3 and rule_index lt 2)">
+                    <img
+                        t-if="getEntry(rule.id)"
+                        t-key="rule.id"
+                        t-attf-src="/web/image/res.users/{{getEntry(rule.id).user_id[0]}}/avatar_128"
+                        t-att-title="getEntry(rule.id).user_id[1]"
+                        t-att-alt="getEntry(rule.id).user_id[1]"
+                        t-attf-class="o_web_studio_approval_avatar rounded-circle border border-{{getEntry(rule.id).approved?'info':'danger'}}"
+                    />
+                    <img
+                        t-else=""
+                        t-key="rule.id"
+                        src="/web/static/img/user_menu_avatar.png"
+                        title="Waiting for approval"
+                        alt="User avatar placeholder"
+                        class="o_web_studio_approval_avatar rounded-circle border border-muted"
+                    />
+                </t>
+                <t t-if="rule_last and num_rules gt 3">
+                    <t t-set="extra_rules" t-value="num_rules - 2"/>
+                    <span
+                        t-key="'extra_rules'"
+                        class="o_web_studio_approval_more rounded-circle bg-secondary"
+                        title="Click to see all approval rules.">
+                        +<t t-esc="extra_rules"/>
+                    </span>
+                </t>
+            </t>
+            <t t-if="env.isSmall">
+                <span class="o_web_studio_approval_more rounded-circle bg-primary">
+                    <i class="fa fa-info"/>
+                </span>
+            </t>
+        </t>
+    </div>
+</t>
+
+</templates>

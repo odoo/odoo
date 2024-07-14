@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_mx.partner_demo_company_mx" model="res.partner">
+        <field name="name">ESCUELA KEMPER URGATE</field>
+        <field name="vat">EKU9003173C9</field>
+        <field name="street">Campobasso Norte 3206 - 9000</field>
+        <field name="street2">Fraccionamiento Montecarlo</field>
+        <field name="city">Jesús María</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="state_id" ref="base.state_mx_ags"/>
+        <field name="zip">20928</field>
+        <field name="l10n_mx_edi_fiscal_regime">601</field>
+    </record>
+
+    <record id="l10n_mx.demo_company_mx" model="res.company">
+        <field name="l10n_mx_edi_pac">finkok</field>
+        <field name="l10n_mx_edi_pac_test_env">True</field>
+        <field name="l10n_mx_edi_fiscal_regime">601</field>
+        <field name="partner_id" ref="l10n_mx.partner_demo_company_mx"/>
+    </record>
+
+    <record id="demo_partner" model="res.partner">
+        <field name="name">XENON INDUSTRIAL ARTICLES</field>
+        <field name="street">Campobasso Sur 3201 - 9001</field>
+        <field name="city">Hidalgo</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="state_id" ref="base.state_mx_coah"/>
+        <field name="zip">26670</field>
+        <field name="vat">XIA190128J61</field>
+        <field name="l10n_mx_edi_fiscal_regime">624</field>
+    </record>
+
+    <record id="demo_partner_2" model="res.partner">
+        <field name="name">INMOBILIARIA CVA</field>
+        <field name="street">Campobasso Oeste 3201 - 9001</field>
+        <field name="city">Hidalgo del Parral</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="state_id" ref="base.state_mx_chih"/>
+        <field name="zip">33826</field>
+        <field name="vat">ICV060329BY0</field>
+        <field name="l10n_mx_edi_fiscal_regime">601</field>
+    </record>
+
+    <record id="partner_demo_company_2_mx" model="res.partner">
+        <field name="name">ZAPATERIA URTADO ÑERI</field>
+        <field name="vat">ZUÑ920208KL4</field>
+        <field name="street">Campobasso Norte 3206 - 9000</field>
+        <field name="street2">Fraccionamiento Montecarlo</field>
+        <field name="zip">77060</field>
+        <field name="city">Othón P. Blanco</field>
+        <field name="state_id" ref="base.state_mx_q_roo"/>
+        <field name="country_id" ref="base.mx"/>
+        <field name="phone">+52 222 765 4321</field>
+        <field name="email">info@company2.mxexample.com</field>
+        <field name="website">www.mxexample2.com</field>
+        <field name="l10n_mx_edi_fiscal_regime">601</field>
+    </record>
+
+    <record id="demo_company_2_mx" model="res.company">
+        <field name="name">ZAPATERIA URTADO ÑERI</field>
+        <field name="partner_id" ref="partner_demo_company_2_mx"/>
+        <field name="l10n_mx_edi_pac">solfact</field>
+        <field name="l10n_mx_edi_pac_test_env">True</field>
+        <field name="l10n_mx_edi_fiscal_regime">601</field>
+    </record>
+
+    <record id="demo_certificate" model="l10n_mx_edi.certificate">
+        <field name="content" type="base64" file="l10n_mx_edi/demo/pac_credentials/certificate.cer"/>
+        <field name="key" type="base64" file="l10n_mx_edi/demo/pac_credentials/certificate.key"/>
+        <field name="password">12345678a</field>
+        <field name="company_id" ref="l10n_mx.demo_company_mx"/>
+    </record>
+
+    <record id="demo_certificate_zapa" model="l10n_mx_edi.certificate">
+        <field name="content" type="base64" file="l10n_mx_edi/demo/pac_credentials/certificate_zapa.cer"/>
+        <field name="key" type="base64" file="l10n_mx_edi/demo/pac_credentials/certificate_zapa.key"/>
+        <field name="password">12345678a</field>
+        <field name="company_id" ref="demo_company_2_mx"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('demo_company_2_mx')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('demo_company_2_mx'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>mx</value>
+        <value model="res.company" eval="obj().env.ref('l10n_mx_edi.demo_company_2_mx')"/>
+    </function>
+</odoo>

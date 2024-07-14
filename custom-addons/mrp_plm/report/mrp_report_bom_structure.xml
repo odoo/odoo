@@ -1,0 +1,38 @@
+<odoo>
+    <template id="report_mrp_bom_inherit_mrp_plm" inherit_id="mrp.report_mrp_bom">
+        <xpath expr="//th[@name='th_mrp_bom_h']" position="after">
+            <th t-if="data['show_ecos']">BoM Version</th>
+            <th t-if="data['show_ecos']">ECOs</th>
+        </xpath>
+
+        <xpath expr="//td[@name='td_mrp_bom']" position="after">
+            <td t-if="data['show_ecos']">
+                <span t-esc="data['version']"/>
+            </td>
+            <td t-if="data['show_ecos']">
+                <span t-esc="data['ecos']"/>
+            </td>
+        </xpath>
+
+        <xpath expr="//td[@name='td_mrp_bom_f']" position="after">
+            <td t-if="data['show_ecos']"/>
+            <td t-if="data['show_ecos']"/>
+        </xpath>
+
+        <xpath expr="//td[@name='td_mrp_bom_byproducts_f']" position="after">
+            <td t-if="data['show_ecos']"/>
+            <td t-if="data['show_ecos']"/>
+        </xpath>
+    </template>
+
+    <template id="report_mrp_bom_pdf_line_inherit_mrp_plm" inherit_id="mrp.report_mrp_bom_pdf_line">
+        <xpath expr="//td[@name='td_mrp_code']" position="after">
+            <td t-if="data['show_ecos']">
+                <span t-if="l.get('version')" t-esc="l['version']"/>
+            </td>
+            <td t-if="data['show_ecos']">
+                <span t-if="l.get('ecos')" t-esc="l['ecos']"/>
+            </td>
+        </xpath>
+    </template>
+</odoo>

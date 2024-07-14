@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="account_accountant.BankRecRainbowContent">
+        <t t-set="summary" t-value="this.env.methods.getCounterSummary()"/>
+        <h2>Congrats, you're all done!</h2>
+        <p>You reconciled <strong t-out="summary.counter"/><t t-if="summary.counter gt 1"> transactions in </t><t t-else=""> transaction in </t><strong t-out="summary.humanDuration"/>.
+            <t t-if="summary.counter gt 1">
+                <br/>That's on average <b t-out="summary.secondsPerTransaction"/> seconds per transaction.
+            </t>
+        </p>
+        <BankRecFinishButtons/>
+    </t>
+</templates>

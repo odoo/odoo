@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="consumidor_final_customer" model="res.partner">
+            <field name="name">Consumidor Final</field>
+            <field name="l10n_latam_identification_type_id" ref="l10n_co.national_citizen_id"/>
+            <field name="vat">222222222222</field>
+            <field name="l10n_co_edi_fiscal_regimen">49</field>
+            <field name="country_id" ref="base.co"/>
+            <field name="l10n_co_edi_obligation_type_ids" eval="[(4, ref('obligation_type_5'))]"/>
+        </record>
+    </data>
+</odoo>

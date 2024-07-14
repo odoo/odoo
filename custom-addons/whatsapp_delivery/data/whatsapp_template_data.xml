@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<odoo noupdate="1">
+    <record id="whatsapp_template_sale_order_ship" model="whatsapp.template">
+        <field name="name">Sale Order Ship</field>
+        <field name="template_name">sale_order_ship</field>
+        <field name="lang_code">en</field>
+        <field name="template_type">utility</field>
+        <field name="header_type">document</field>
+        <field name="report_id" ref="stock.action_report_delivery"/>
+        <field name="phone_field">partner_id.mobile</field>
+        <field name="footer_text">Write 'stop' to stop receiving messages</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="body">Hi {{1}},
+
+Your order *{{2}}* from *{{3}}* has been shipped.
+
+To track the shipping: {{4}}
+
+Thank you.
+        </field>
+        <field name="variable_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {
+                'name': '{{1}}',
+                'demo_value': 'Azure Interior',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'partner_id'
+            }),
+            (0, 0, {
+                'name': '{{2}}',
+                'demo_value': 'SO0001',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'name'
+            }),
+            (0, 0, {
+                'name': '{{3}}',
+                'demo_value': 'My company',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'company_id'
+            }),
+            (0, 0, {
+                'name': '{{4}}',
+                'demo_value': 'https://..',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'carrier_tracking_url'
+            })
+        ]" />
+    </record>
+</odoo>

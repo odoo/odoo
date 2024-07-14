@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="asset_modify_form">
+        <field name="name">wizard.asset.modify.form</field>
+        <field name="model">asset.modify</field>
+        <field name="arch" type="xml">
+            <form string="Modify Asset">
+                <field name="asset_id" invisible="1"/>
+                <field name="gain_value" invisible="1"/>
+                <field name="select_invoice_line_id" invisible="1"/>
+                <field name="gain_or_loss" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <group col="2" invisible="modify_action == 'resume'">
+                    <field name="modify_action" widget="radio" required="1" options="{'horizontal': true}"/>
+                </group>
+                <group invisible="not modify_action">
+                    <group>
+                        <field name="date"/>
+
+                        <label for="method_number" invisible="modify_action not in ('modify', 'resume')"/>
+                        <div class="o_row" invisible="modify_action not in ('modify', 'resume')">
+                            <field name="method_number" required="1"/>
+                            <field name="method_period" required="1" nolabel="1"/>
+                        </div>
+
+                        <field name="invoice_ids"
+                               options="{'no_quick_create': True}"
+                               context="{'default_move_type': 'out_invoice', 'input_full_display_name': True}"
+                               invisible="modify_action != 'sell'"
+                               required="modify_action == 'sell'"
+                               widget="many2many_tags"/>
+
+                        <field name="invoice_line_ids"
+                               options="{'no_create': True, 'no_quick_create': True}"
+                               invisible="modify_action != 'sell' and not select_invoice_line_id"
+                               required="select_invoice_line_id"
+                               domain="[('move_id', 'in', invoice_ids), ('display_type', '=', 'product')]"
+                               widget="many2many_tags"/>
+
+                        <field name="gain_account_id"
+                               invisible="gain_or_loss != 'gain'"
+                               required="gain_or_loss == 'gain'"/>
+
+                        <field name="loss_account_id"
+                               invisible="gain_or_loss != 'loss'"
+                               required="gain_or_loss == 'loss'"/>
+
+                        <field name="value_residual" invisible="modify_action not in ('modify', 'resume')"/>
+                        <field name="salvage_value" invisible="modify_action not in ('modify', 'resume')"/>
+                        <field name="account_asset_id" invisible="modify_action != 'modify'" required="gain_value"/>
+                        <field name="account_asset_counterpart_id" invisible="modify_action != 'modify'" required="gain_value"/>
+                        <field name="account_depreciation_id" invisible="modify_action != 'modify'" required="gain_value"/>
+                        <field name="account_depreciation_expense_id" invisible="modify_action != 'modify'" required="gain_value"/>
+
+                        <field name="name"
+                               placeholder="Add an internal note"
+                               required="modify_action in ('modify', 'resume')"/>
+                    </group>
+                    <group>
+                        <field name="informational_text" nolabel="1" colspan="2"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="pause"
+                            string="Pause"
+                            type="object"
+                            class="btn-primary"
+                            data-hotkey="p"
+                            invisible="modify_action != 'pause'"/>
+                    <button name="modify"
+                            string="Modify"
+                            type="object"
+                            class="btn-primary"
+                            data-hotkey="q"
+                            invisible="modify_action != 'modify'"/>
+                    <button name="modify"
+                            string="Resume"
+                            type="object"
+                            class="btn-primary"
+                            data-hotkey="r"
+                            invisible="modify_action != 'resume'"/>
+                    <button name="sell_dispose"
+                            string="Sell"
+                            type="object"
+                            class="btn-primary"
+                            data-hotkey="s"
+                            invisible="modify_action != 'sell'" />
+                    <button name="sell_dispose"
+                            string="Dispose"
+                            type="object"
+                            class="btn-primary"
+                            data-hotkey="t"
+                            invisible="modify_action != 'dispose'" />
+                    <button string="Cancel"
+                            class="btn-secondary"
+                            special="cancel"
+                            data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

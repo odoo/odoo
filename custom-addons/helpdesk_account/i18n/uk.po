@@ -1,0 +1,116 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* helpdesk_account
+# 
+# Translators:
+# Wil Odoo, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: helpdesk_account
+#: model:ir.model,name:helpdesk_account.model_account_move_reversal
+msgid "Account Move Reversal"
+msgstr "Сторно проведення"
+
+#. module: helpdesk_account
+#. odoo-python
+#: code:addons/helpdesk_account/controllers/portal.py:0
+#, python-format
+msgid "Credit Note"
+msgstr "Сторно"
+
+#. module: helpdesk_account
+#. odoo-python
+#: code:addons/helpdesk_account/controllers/portal.py:0
+#: code:addons/helpdesk_account/models/helpdesk_ticket.py:0
+#: model:ir.model.fields,field_description:helpdesk_account.field_helpdesk_ticket__invoice_ids
+#: model_terms:ir.ui.view,arch_db:helpdesk_account.helpdesk_ticket_view_form_inherit_helpdesk_invoicing
+#, python-format
+msgid "Credit Notes"
+msgstr "Сторно"
+
+#. module: helpdesk_account
+#: model:ir.model.fields,field_description:helpdesk_account.field_helpdesk_ticket__invoices_count
+msgid "Credit Notes Count"
+msgstr "Підрахунок сторно"
+
+#. module: helpdesk_account
+#: model:ir.model,name:helpdesk_account.model_helpdesk_ticket
+#: model:ir.model.fields,field_description:helpdesk_account.field_account_move_reversal__helpdesk_ticket_id
+msgid "Helpdesk Ticket"
+msgstr "Заявка служби підтримки"
+
+#. module: helpdesk_account
+#. odoo-python
+#: code:addons/helpdesk_account/wizard/account_move_reversal.py:0
+#, python-format
+msgid "Helpdesk Ticket #%s"
+msgstr "Заявка служби підтримки %s"
+
+#. module: helpdesk_account
+#: model_terms:ir.ui.view,arch_db:helpdesk_account.view_account_move_reversal_inherit_helpdesk_account
+msgid "Invoices to Refund"
+msgstr "Рахунки до повернення"
+
+#. module: helpdesk_account
+#: model:ir.model,name:helpdesk_account.model_account_move
+msgid "Journal Entry"
+msgstr "Запис у журналі"
+
+#. module: helpdesk_account
+#: model:ir.model.fields,field_description:helpdesk_account.field_account_move_reversal__move_ids
+msgid "Move"
+msgstr "Переміщення"
+
+#. module: helpdesk_account
+#: model:ir.actions.act_window,name:helpdesk_account.helpdesk_ticket_action_refund
+#: model_terms:ir.ui.view,arch_db:helpdesk_account.helpdesk_ticket_view_form_inherit_helpdesk_invoicing
+msgid "Refund"
+msgstr "Відшкодування"
+
+#. module: helpdesk_account
+#. odoo-python
+#: code:addons/helpdesk_account/models/account_move.py:0
+#, python-format
+msgid "Refund %(status)s"
+msgstr "Відшкодування %(status)s"
+
+#. module: helpdesk_account
+#: model:mail.message.subtype,name:helpdesk_account.mt_ticket_refund_created
+msgid "Refund Created"
+msgstr "Відшкодування створено"
+
+#. module: helpdesk_account
+#. odoo-python
+#: code:addons/helpdesk_account/wizard/account_move_reversal.py:0
+#, python-format
+msgid "Refund created"
+msgstr "Повернення створене"
+
+#. module: helpdesk_account
+#: model:ir.model.fields,field_description:helpdesk_account.field_account_move_reversal__helpdesk_sale_order_id
+msgid "Sales Order"
+msgstr "Замовлення на продаж"
+
+#. module: helpdesk_account
+#: model:ir.model.fields,field_description:helpdesk_account.field_account_move_reversal__suitable_move_ids
+msgid "Suitable Move"
+msgstr "Зручне переміщення"
+
+#. module: helpdesk_account
+#: model:ir.model.fields,field_description:helpdesk_account.field_account_move_reversal__suitable_sale_order_ids
+msgid "Suitable Sale Order"
+msgstr "Відповідне замовлення на продаж"

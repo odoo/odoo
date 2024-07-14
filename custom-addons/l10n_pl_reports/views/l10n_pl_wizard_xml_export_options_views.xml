@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_financial_report_export" model="ir.ui.view">
+            <field name="name">l10n_pl_reports.periodic.vat.xml.export.form</field>
+            <field name="model">l10n_pl_reports.periodic.vat.xml.export</field>
+            <field name="arch" type="xml">
+                <form string="Export Options">
+                    <div>
+                        Choose option(s) before exporting XML
+                    </div>
+                    <group>
+                         <group>
+                             <field name="partner_is_company" invisible="1"/>
+                             <field name="l10n_pl_birthdate" invisible="partner_is_company" required="not partner_is_company"/>
+                             <field name="l10n_pl_repayment_amount"/>
+                             <field name="l10n_pl_repayment_timeframe" invisible="l10n_pl_repayment_amount == 0" required="l10n_pl_repayment_amount != 0"/>
+                             <field name="l10n_pl_repayment_future_tax"/>
+                             <field name="l10n_pl_repayment_future_tax_amount" invisible="not l10n_pl_repayment_future_tax" required="l10n_pl_repayment_future_tax"/>
+                             <field name="l10n_pl_repayment_future_tax_type" invisible="not l10n_pl_repayment_future_tax" required="l10n_pl_repayment_future_tax"/>
+                         </group>
+                         <group>
+                             <field name="l10n_pl_paid_before_deadline"/>
+                             <field name="l10n_pl_is_amendment"/>
+                             <field name="l10n_pl_reason_amendment" invisible="not l10n_pl_is_amendment"/>
+                         </group>
+                    </group>
+                    <footer>
+                        <button string='Export XML' name="print_xml" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

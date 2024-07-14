@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="appointment.Appointment.appointment_info_no_slot" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_appointment_no_slot_overall_helper_txt')]" position="inside">
+            <div t-if="appointmentsCount !== 1" class="text-center">
+                <a href="/appointment">Go back to Appointment</a> or <a href="/contactus">contact us</a>.
+            </div>
+            <div t-else="" class="text-center">
+                <a href="/contactus">Contact us</a>.
+            </div>
+        </xpath>
+    </t>
+
+</templates>

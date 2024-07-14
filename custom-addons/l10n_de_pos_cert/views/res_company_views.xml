@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.account</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <page name="general_info" position="after">
+                <page string="Fiskaly" name="fiskaly" invisible="not is_country_germany">
+                    <group>
+                        <group>
+                            <button name="l10n_de_action_fiskaly_register" groups="base.group_erp_manager" string="Fiskaly Registration" type="object"
+                                class="btn-primary" invisible="not is_country_germany or l10n_de_fiskaly_organization_id"
+                                confirm="The name, address, VAT, tax number and W-IdNr will be sent to the financial authority through Fiskaly. Make sure those are correct."/>
+                            <field name="is_country_germany" invisible="1"/>
+                            <field name="l10n_de_fiskaly_organization_id" readonly="1" invisible="not is_country_germany or not l10n_de_fiskaly_organization_id"/>
+                            <field name="l10n_de_fiskaly_api_key" readonly="1" invisible="not is_country_germany or not l10n_de_fiskaly_organization_id"/>
+                            <field name="l10n_de_fiskaly_api_secret" password="1" readonly="1" invisible="not is_country_germany or not l10n_de_fiskaly_organization_id"/>
+                        </group>
+                        <group>
+                            <button name="l10n_de_action_fiskaly_create_new_keys" groups="base.group_erp_manager" string="New keys" type="object"
+                                class="btn-primary" invisible="not is_country_germany or not l10n_de_fiskaly_organization_id"
+                                confirm="This will request a new api key and secret which will replace the current ones. Do you want to proceed?"/>
+                        </group>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>

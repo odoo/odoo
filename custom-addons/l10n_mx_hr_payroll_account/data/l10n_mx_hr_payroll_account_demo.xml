@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_company_mx_certificate" model="l10n_mx_edi.certificate">
+        <field name="content" type="base64" file="l10n_mx_edi/demo/pac_credentials/certificate.cer"/>
+        <field name="key" type="base64" file="l10n_mx_edi/demo/pac_credentials/certificate.key"/>
+        <field name="password">12345678a</field>
+    </record>
+
+    <record id="res_partner_company_mx" model="res.partner">
+        <field name="name">My Mexican Company</field>
+        <field name="currency_id" ref="base.MXN"/>
+        <field name="name">My MX Company</field>
+        <field name="vat">EKU9003173C9</field>
+        <field name="street">Campobasso Norte 3206 - 9000</field>
+        <field name="street2">Fraccionamiento Montecarlo</field>
+        <field name="city">Jesús María</field>
+        <field name="country_id" ref="base.mx"/>
+        <field name="state_id" ref="base.state_mx_ags"/>
+        <field name="zip">20928</field>
+        <field name="l10n_mx_edi_fiscal_regime">601</field>
+    </record>
+
+    <record id="l10n_mx_hr_payroll.res_company_mx" model="res.company">
+        <field name="l10n_mx_edi_pac">finkok</field>
+        <field name="l10n_mx_edi_pac_test_env" eval="True"/>
+        <field name="l10n_mx_edi_fiscal_regime">601</field>
+        <field name="l10n_mx_edi_certificate_ids" eval="[(6, 0, [ref('res_company_mx_certificate')])]"/>
+        <field name="partner_id" ref="l10n_mx_hr_payroll_account.res_partner_company_mx"/>
+    </record>
+
+    <data noupdate="1">
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[]"/>
+            <value name="template_code" eval="'mx'"/>
+            <value name="company" model="res.company" eval="ref('l10n_mx_hr_payroll.res_company_mx')"/>
+        </function>
+    </data>
+</odoo>

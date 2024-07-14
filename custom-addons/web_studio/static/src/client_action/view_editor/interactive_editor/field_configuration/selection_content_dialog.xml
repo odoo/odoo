@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.SelectionContentDialog">
+    <Dialog size="'sm'" title="title" contentClass="'o_web_studio_selection_editor'">
+        <div class="d-flex flex-column gap-3">
+        <h5>Specify all possible values</h5>
+            <div>
+                <ul class="o_web_studio_selection_editor list-unstyled mb-0" t-ref="itemsList">
+                    <t t-foreach="selectionToItems" t-as="item" t-key="item.key">
+                        <t t-call="web_studio.InteractiveItemsList.EditableItem"/>
+                    </t>
+                </ul>
+                <ul class="o_web_studio_add_selection list-unstyled">
+                    <t t-call="web_studio.InteractiveItemsList.EditableItem">
+                        <t t-set="item" t-value="newItem" />
+                    </t>
+                </ul>
+            </div>
+            <div t-if="shouldFullEdit and editedItem" class="o_web_studio_selection_full_edit border-top d-flex flex-row flex-wrap gap-2 pt-2 align-items-end">
+                <t t-set="editedSelection" t-value="getSelectionFromItem(editedItem)" />
+                <div class="flex-shrink-0 w-100">Editing item: <b t-esc="oldValue.get(editedSelection)[0]" /></div>
+                <label style="max-width: 40%;">Label
+                    <input t-model="editedSelection[1]" class="w-100" />
+                </label>
+                <label style="max-width: 30%;">Value
+                    <input t-model="editedSelection[0]" class="w-100" />
+                </label>
+                <div>
+                    <button class="btn btn-primary btn btn-primary fa fa-check" t-on-click="() => this.editItem(editedItem)"/>
+                    <button class="btn btn-danger fa fa-times" style="height: 20%;" t-on-click="() => this.discardItemChanges(editedItem)"/>
+                </div>
+            </div>
+        </div>
+        <t t-set-slot="footer">
+            <button t-attf-class="btn btn-primary {{ selection.length ? '' : 'disabled'}}" t-on-click.stop="onConfirm">Confirm</button>
+            <button class="btn btn-secondary" t-on-click.stop="props.close">Cancel</button>
+        </t>
+    </Dialog>
+</t>
+
+<t t-name="web_studio.InteractiveItemsList.EditableItem" t-inherit="web_studio.InteractiveItemsList.Item">
+    <xpath expr="//span[contains(@class, 'o-web-studio-interactive-list-item-label')]" position="attributes" >
+        <attribute name="t-if">!item.isInEdition</attribute>
+        <attribute name="t-esc">item.label</attribute>
+    </xpath>
+    <xpath expr="//span[contains(@class, 'o-web-studio-interactive-list-item-label')]" position="after" >
+        <input t-if="item.isInEdition" class="form-control o-web-studio-interactive-list-item-input" placeholder="Add new value" t-on-input="(ev) => this.setItemValue(item, ev.target.value)" t-att-value="item.id === 'new' ? item.name : item.label" t-on-keypress="(ev) => this.onKeyPressed(item, ev.key)" />
+    </xpath>
+
+    <xpath expr="//button[contains(@class, 'o-web-studio-interactive-list-edit-item')]" position="attributes">
+        <attribute name="class" remove="fa-pencil-square-o" separator=" " />
+        <attribute name="t-att-class"> { 'fa-pencil-square-o': !item.isInEdition, 'fa-check': item.isInEdition } </attribute>
+        <attribute name="t-attf-data-tooltip"> {{ item.isInEdition ? 'Add selection' : 'Edit selection' }} </attribute>
+    </xpath>
+
+    <xpath expr="//button[contains(@class, 'o-web-studio-interactive-list-remove-item')]" position="attributes">
+        <attribute name="t-if">!item.isInEdition</attribute>
+    </xpath>
+    <xpath expr="//button[contains(@class, 'o-web-studio-interactive-list-remove-item')]" position="after">
+        <button t-if="item.isInEdition" type="button" class="btn btn-secondary fa fa-times o-web-studio-interactive-list-discard-changes" aria-label="Discard changes" data-tooltip="Discard changes" t-on-click="() => this.discardItemChanges(item) " />
+    </xpath>
+</t>
+
+</templates>

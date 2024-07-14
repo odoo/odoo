@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="appraisal_skills_update_template">
+        <ul>
+            <t t-foreach="updated_skills" t-as="skill">
+                <t t-if="skill['justification']">
+                    <li>
+                        <t t-esc="skill['name']"/>: <t t-esc="skill['old_level']"/> &#8594; <t t-esc="skill['new_level']"/> - <t t-esc="skill['justification']"/>
+                    </li>
+                </t>
+                <t t-else="">
+                    <li>
+                        <t t-esc="skill['name']"/>: <t t-esc="skill['old_level']"/> &#8594; <t t-esc="skill['new_level']"/>
+                    </li>
+                </t>
+            </t>
+            <t t-foreach="added_skills" t-as="skill">
+                <li>
+                    <t t-esc="skill"/> has been added.
+                </li>
+            </t>
+            <t t-foreach="deleted_skills" t-as="skill">
+                <li>
+                    <t t-esc="skill"/> has been deleted.
+                </li>
+            </t>
+        </ul>
+    </template>
+</odoo>

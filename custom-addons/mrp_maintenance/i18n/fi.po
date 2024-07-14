@@ -1,0 +1,589 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mrp_maintenance
+# 
+# Translators:
+# Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2023
+# Jukka Paulin <jukka.paulin@gmail.com>, 2023
+# Petteri Torssonen <info@collapick.com>, 2023
+# Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2023
+# Jussi Lehto <jussi@gulfeo.com>, 2023
+# Sari Mäyrä <sari.mayra@sv-oy.fi>, 2023
+# Johanna Valkonen <miujohanna@gmail.com>, 2023
+# Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2023
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2023
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2023
+# Martin Trigaux, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_production_view_form_inherit_maintenance
+msgid "<span class=\"o_stat_text\">Maintenance</span>"
+msgstr "<span class=\"o_stat_text\">Huolto</span>"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_equipment_view_form_inherit_mrp
+msgid "<span class=\"o_stat_text\">Work Center</span>"
+msgstr "<span class=\"o_stat_text\">Työkeskus</span>"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_needaction
+msgid "Action Needed"
+msgstr "Vaatii toimenpiteitä"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_ids
+msgid "Activities"
+msgstr "Toimenpiteet"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Toimenpiteen poikkeuksen tyyli"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_state
+msgid "Activity State"
+msgstr "Toimenpiteen tila"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Toimenpiteen ikoni"
+
+#. module: mrp_maintenance
+#: model_terms:ir.actions.act_window,help:mrp_maintenance.mrp_workcenter_request_action_from_workcenter
+msgid "Add a new maintenance request"
+msgstr "Lisää uusi huoltopyyntö"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__recurring_leaves_count
+msgid "Additional Leaves to Plan Ahead"
+msgstr "Lisävapaat ennakkosuunnittelua varten"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_attachment_count
+msgid "Attachment Count"
+msgstr "Liitteiden määrä"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__block_workcenter
+msgid "Block Workcenter"
+msgstr "Ryhmän työpiste"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_maintenance_request__recurring_leaves_count
+msgid ""
+"Block the workcenter for this many time slots in the future in advance."
+msgstr ""
+"Lukitse työkeskus etukäteen näin monelle ajanjaksolle tulevaisuudessa."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__company_id
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__company_id
+msgid "Company"
+msgstr "Yritys"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__estimated_next_failure
+msgid "Computed as Latest Failure Date + MTBF"
+msgstr "Laskettu viimeisimpänä vikaantumispäivämääränä + MTBF:nä"
+
+#. module: mrp_maintenance
+#: model_terms:ir.actions.act_window,help:mrp_maintenance.maintenance_workcenter_action
+msgid "Create a new work center"
+msgstr "Luo uusi työpiste"
+
+#. module: mrp_maintenance
+#: model:maintenance.equipment,name:mrp_maintenance.equipment_furniture1
+msgid "Crosscut Saw: 8 ppi."
+msgstr "Poikkileikkaussaha: 8 ppi."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__maintenance_open_count
+msgid "Current Maintenance"
+msgstr "Tämänhetkinen huolto"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_request_view_form_inherit_mrp
+msgid "Discard"
+msgstr "Hylkää"
+
+#. module: mrp_maintenance
+#: model:maintenance.equipment,name:mrp_maintenance.equipment_furniture3
+msgid "Drill Machine"
+msgstr "Porakone"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__effective_date
+msgid "Effective Date"
+msgstr "Toimeenpanopäivä"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__equipment_id
+#: model:ir.model.fields.selection,name:mrp_maintenance.selection__maintenance_request__maintenance_for__equipment
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Equipment"
+msgstr "Laite"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Est. Next Failure"
+msgstr "Arvioitu seuraava vikaantuminen"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Estimated Next Failure"
+msgstr "Arvioitu seuraava vikaantuminen"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__estimated_next_failure
+msgid "Estimated time before next failure (in days)"
+msgstr "Arvioitu aika ennen seuraavaa vikaa (päivinä)"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__expected_mtbf
+msgid "Expected MTBF"
+msgstr "Odotettu keskimääräinen arvo vikaantumiseen (MTBF)"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__expected_mtbf
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Expected Mean Time Between Failure"
+msgstr "Odotettu keskimääräinen vikaantumisaika (MTBF)"
+
+#. module: mrp_maintenance
+#: model_terms:ir.actions.act_window,help:mrp_maintenance.mrp_workcenter_request_action_from_workcenter
+msgid ""
+"Follow the process of the request and communicate with the collaborator."
+msgstr "Seuraa pyynnön käsittelyä ja ole yhteydessä yhteistyökumppaniin."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_follower_ids
+msgid "Followers"
+msgstr "Seuraajat"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seuraajat (kumppanit)"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome -ikoni esim.. fa-tasks"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__maintenance_for
+msgid "For"
+msgstr "Kohde"
+
+#. module: mrp_maintenance
+#: model:maintenance.equipment.category,name:mrp_maintenance.equipment_furniture_tools
+msgid "Furniture Tools"
+msgstr "Huonekalutyökalut"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__has_message
+msgid "Has Message"
+msgstr "Sisältää viestin"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_exception_icon
+msgid "Icon"
+msgstr "Kuvake"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Kuvake joka kertoo poikkeustoiminnosta."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jos valittu, uudet viestit vaativat huomiotasi."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__message_has_error
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_is_follower
+msgid "Is Follower"
+msgstr "On seuraaja"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_maintenance_request__block_workcenter
+msgid ""
+"It won't be possible to plan work orders or other maintenances on this "
+"workcenter during this time."
+msgstr ""
+"Tänä aikana ei ole mahdollista suunnitella työtilauksia tai muita "
+"huoltotöitä tähän työkeskukseen."
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Latest Failure"
+msgstr "Viimeisin vikaantuminen"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__latest_failure_date
+msgid "Latest Failure Date"
+msgstr "Viimeisin vikaantumisen päivä"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__leave_ids
+msgid "Leaves"
+msgstr "Vapaat"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__mtbf
+msgid "MTBF"
+msgstr "MTBF"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__mttr
+msgid "MTTR"
+msgstr "MTTR"
+
+#. module: mrp_maintenance
+#: model:ir.ui.menu,name:mrp_maintenance.menu_equipment_dashboard
+msgid "Machines & Tools"
+msgstr "Koneet ja työkalut"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__maintenance_ids
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_kanban_inherit_maintenance
+msgid "Maintenance"
+msgstr "Huolto"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__maintenance_count
+msgid "Maintenance Count"
+msgstr "Huoltojen määrä"
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_maintenance_equipment
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__equipment_ids
+msgid "Maintenance Equipment"
+msgstr "Huoltovälineet"
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_maintenance_request
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_production_view_form_inherit_maintenance
+msgid "Maintenance Request"
+msgstr "Huoltopyyntö"
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#: model:ir.actions.act_window,name:mrp_maintenance.mrp_workcenter_request_action_from_workcenter
+#, python-format
+msgid "Maintenance Requests"
+msgstr "Huoltopyynnöt"
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_maintenance_stage
+msgid "Maintenance Stage"
+msgstr "Huollon tila"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__maintenance_team_id
+msgid "Maintenance Team"
+msgstr "Huoltotiimi"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__production_id
+msgid "Manufacturing Order"
+msgstr "Valmistustilaus"
+
+#. module: mrp_maintenance
+#: model_terms:ir.actions.act_window,help:mrp_maintenance.maintenance_workcenter_action
+msgid ""
+"Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
+"            workers and/or machines, they are used for costing, scheduling, capacity planning, etc."
+msgstr ""
+"Valmistustoiminnot käsitellään työkeskuksissa. Työkeskus voi koostua\n"
+"            työntekijöistä ja/tai koneista, ja niitä käytetään kustannuslaskentaan, aikataulutukseen, kapasiteetin suunnitteluun jne."
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Mean Time Between Failure"
+msgstr "Keskimääräinen vikaantumisaika"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__mtbf
+msgid ""
+"Mean Time Between Failure, computed based on done corrective maintenances."
+msgstr ""
+"Keskimääräinen vikaantumisaika (Mean Time Between Failure), joka lasketaan "
+"tehtyjen korjaavien huoltojen perusteella."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__mttr
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "Mean Time To Repair"
+msgstr "Keskimääräinen korjausaika"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_has_error
+msgid "Message Delivery error"
+msgstr "Ongelma viestin toimituksessa"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_ids
+msgid "Messages"
+msgstr "Viestit"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Toimenpiteeni määräaika"
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#, python-format
+msgid "New Maintenance Request"
+msgstr "Uusi huoltopyyntö"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Seuraavan toimenpiteen kalenterimerkintä"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Seuraavan toimenpiteen eräpäivä"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_summary
+msgid "Next Activity Summary"
+msgstr "Seuraavan toimenpiteen kuvaus"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_type_id
+msgid "Next Activity Type"
+msgstr "Seuraavan toimenpiteen tyyppi"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Toimenpiteiden määrä"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_has_error_counter
+msgid "Number of errors"
+msgstr "Virheiden määrä"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_production__maintenance_count
+msgid "Number of maintenance requests"
+msgstr "Huoltopyyntöjen lukumäärä"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Toimenpiteitä vaativien viestien määrä"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Toimitusvirheellisten viestien määrä"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_request_view_search_inherit_mrp
+msgid "Operation"
+msgstr "Toiminto"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__production_company_id
+msgid "Production Company"
+msgstr "Tuotantoyhtiö"
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_mrp_production
+msgid "Production Order"
+msgstr "Valmistustilaus"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__rating_ids
+msgid "Ratings"
+msgstr "Arviointi"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_production__request_ids
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_workcenter_view_kanban_inherit_mrp
+msgid "Request"
+msgstr "Pyyntö"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_stage__create_leaves
+msgid "Request Confirmed"
+msgstr "Pyyntö vahvistettu"
+
+#. module: mrp_maintenance
+#. odoo-javascript
+#: code:addons/mrp_maintenance/static/src/components/menuPopup.xml:0
+#, python-format
+msgid "Request Maintenance"
+msgstr "Pyydä huoltoa"
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#, python-format
+msgid "Request planned for %s"
+msgstr "Suunniteltu pyyntö %s"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__activity_user_id
+msgid "Responsible User"
+msgstr "Vastuuhenkilö"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Tekstiviestin toimitusvirhe"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_request_view_form_inherit_mrp
+msgid "Save"
+msgstr "Tallenna"
+
+#. module: mrp_maintenance
+#: model:maintenance.equipment,name:mrp_maintenance.equipment_furniture2
+msgid "Scrub Plane"
+msgstr "Pensaslentokone"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Tila aktiviteetin perusteella\n"
+"Myöhässä: Eräpäivä on menneisyydessä\n"
+"Tänään: Eräpäivä on tänään\n"
+"Suunniteltu: Tulevaisuudessa."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__technician_user_id
+msgid "Technician"
+msgstr "Teknikko"
+
+#. module: mrp_maintenance
+#. odoo-javascript
+#: code:addons/mrp_maintenance/static/src/components/maintenance_request_form_view.js:0
+#, python-format
+msgid "The maintenance request has successfully been created."
+msgstr "Huoltopyyntö on luotu onnistuneesti."
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#, python-format
+msgid ""
+"The schedule has changed from %(desired_date)s to %(effective_date)s due to "
+"planned manufacturing orders."
+msgstr ""
+"Aikataulu on muuttunut %(desired_date)ssta %(effective_date)s:ksi "
+"suunniteltujen valmistustilausten vuoksi."
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#, python-format
+msgid "The workcenter is missing for %s."
+msgstr "Työkeskus puuttuu kohdasta %s."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__effective_date
+msgid "This date will be used to compute the Mean Time Between Failure."
+msgstr ""
+"Tätä päivämäärää käytetään vikojen välisen keskimääräisen ajan laskemiseen."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Poikkeusaktiviteetin tyyppi tietueella."
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,field_description:mrp_maintenance.field_mrp_workcenter__website_message_ids
+msgid "Website Messages"
+msgstr "Verkkosivun ilmoitukset"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_mrp_workcenter__website_message_ids
+msgid "Website communication history"
+msgstr "Verkkosivun viestihistoria"
+
+#. module: mrp_maintenance
+#: model:ir.model.fields,help:mrp_maintenance.field_maintenance_stage__create_leaves
+msgid ""
+"When this box is unticked, and the maintenance is of the type 'Work Center', no leave is created on the respective work center when a maintenance request is created.\n"
+"If the box is ticked, the work center is automatically blocked for the listed duration, either at the specified date, or as soon as possible, if the work center is unavailable then."
+msgstr ""
+"Kun tämä ei ole valittuna ja kunnossapito on tyyppiä \"Työkeskus\", kyseiseen työkeskukseen ei luoda vapaata, kun kunnossapitopyyntö luodaan.\n"
+"Jos valintaruutu on rastitettu, työkeskuta estetään automaattisesti luetelluksi ajaksi joko määritettynä päivänä tai mahdollisimman pian, jos työkeskus ei ole silloin käytettävissä."
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_mrp_workcenter
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_equipment__workcenter_id
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__workcenter_id
+#: model:ir.model.fields.selection,name:mrp_maintenance.selection__maintenance_request__maintenance_for__workcenter
+msgid "Work Center"
+msgstr "Työpiste"
+
+#. module: mrp_maintenance
+#: model:ir.actions.act_window,name:mrp_maintenance.maintenance_workcenter_action
+#: model:ir.ui.menu,name:mrp_maintenance.menu_workcenter_tree
+msgid "Work Centers"
+msgstr "Työpisteet"
+
+#. module: mrp_maintenance
+#: model:ir.model,name:mrp_maintenance.model_mrp_workorder
+#: model:ir.model.fields,field_description:mrp_maintenance.field_maintenance_request__workorder_id
+msgid "Work Order"
+msgstr "Työtilaus"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.maintenance_request_view_search_inherit_mrp
+msgid "Workcenter"
+msgstr "Työpiste"
+
+#. module: mrp_maintenance
+#: model_terms:ir.ui.view,arch_db:mrp_maintenance.mrp_workcenter_view_form_inherit_maintenance
+msgid "days"
+msgstr "päivää"
+
+#. module: mrp_maintenance
+#. odoo-python
+#: code:addons/mrp_maintenance/models/mrp_maintenance.py:0
+#, python-format
+msgid "work centers"
+msgstr "työpisteet"

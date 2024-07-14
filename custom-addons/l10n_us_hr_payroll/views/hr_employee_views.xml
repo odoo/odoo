@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.l10n.us.hr.payroll</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_payroll.payroll_hr_employee_view_form"/>
+        <field name="arch" type="xml">
+            <group name="payroll_group" position="after">
+                <group name="w4_form" string="W-4 Form" invisible="company_country_code != 'US'">
+                    <field name="l10n_us_old_w4"/>
+                    <field name="l10n_us_w4_step_2"/>
+                    <field name="l10n_us_w4_step_3"/>
+                    <field name="l10n_us_w4_step_4a"/>
+                    <field name="l10n_us_w4_step_4b"/>
+                    <field name="l10n_us_w4_allowances_count"/>
+                    <field name="l10n_us_w4_withholding_deduction_allowances"/>
+                    <field name="l10n_us_w4_step_4c"/>
+                </group>
+                <group name="w2_form" string="W-2 Form" invisible="company_country_code != 'US'">
+                    <field name="l10n_us_statutory_employee"/>
+                    <field name="l10n_us_retirement_plan"/>
+                    <field name="l10n_us_third_party_sick_pay"/>
+                </group>
+            </group>
+             <xpath expr="//field[@name='registration_number']" position="after">
+                <field name="l10n_us_filing_status" invisible="company_country_code != 'US'"/>
+                <field name="l10n_us_state_filing_status" invisible="company_country_code != 'US'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

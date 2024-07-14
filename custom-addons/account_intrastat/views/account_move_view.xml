@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_move_line_tree_grouped_inherit_intrastat_fields">
+            <field name="name">account.move.line.tree.grouped.inherit.intrastat.fields</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='analytic_distribution']" position="after">
+                    <field name="intrastat_transaction_id" optional="hide"/>
+                    <field name="intrastat_product_origin_country_id" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--
+            VIEWS FOR REPORT ALERTS
+            These are accessible via actions that appear on the top of the intrastat report when
+            the lines are configured incorrectly or incompletely.
+        -->
+        <record id="account_move_line_tree_view_account_intrastat_transaction_codes" model="ir.ui.view">
+            <field name="name">account.move.line.tree.account.intrastat</field>
+            <field name="model">account.move.line</field>
+            <field name="mode">primary</field>
+            <field eval="110" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Account move line" multi_edit="1" duplicate="false" editable="bottom" expand="context.get('expand', False)">
+                    <field name="move_id" readonly="1"/>
+                    <field name="product_id" readonly="1"/>
+                    <field name="partner_id" readonly="1"/>
+                    <field name="price_subtotal" readonly="1"/>
+                    <field name="date" column_invisible="True"/>
+                    <field name="intrastat_transaction_id"
+                           string="Intrastat transaction code"
+                           domain="[
+                               ('type', '=', 'transaction'),
+                               '|',
+                               ('expiry_date', '&gt;', date or context_today().strftime('%Y-%m-%d')),
+                               ('expiry_date', '=', None),
+                               '|',
+                               ('start_date', '&lt;=', date or context_today().strftime('%Y-%m-%d')),
+                               ('start_date', '=', None)
+                           ]"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

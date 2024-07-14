@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="l10n_mx_edi_cartaporte_report_delivery_comex" inherit_id="l10n_mx_edi_stock.l10n_mx_edi_cartaporte_report_delivery_document">
+        <xpath expr="//div[@id='mx_edi_row_2']" position="inside">
+            <t t-if="o.l10n_mx_edi_cfdi_state == 'sent' and o.l10n_mx_edi_customs_no">
+                <div class="col-3">
+                    <strong>Customs Number</strong>
+                    <p t-field="o.l10n_mx_edi_customs_no"/>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[@id='mx_edi_row_2']/div[1]" position="attributes">
+            <t t-if="o.l10n_mx_edi_cfdi_state == 'sent' and o.l10n_mx_edi_customs_no">
+                <attribute name="t-att-class">'col-6' if not o.l10n_mx_edi_customs_no else 'col-4'</attribute>
+            </t>
+        </xpath>
+        <xpath expr="//th[@name='th_sml_quantity']" position="before">
+            <t t-if="o.l10n_mx_edi_cfdi_state == 'sent' and o.l10n_mx_edi_transport_type == '01' and any(o.move_line_ids.product_id.mapped('l10n_mx_edi_hazardous_material_code'))">
+                <th name="th_sm_hazardous_material_code"><strong>Hazard Code</strong></th>
+                <th name="th_sm_hazard_package_type"><strong>Packaging</strong></th>
+            </t>
+        </xpath>
+        <xpath expr="//div[@id='mx_edi_row_2']" position="after">
+            <t t-if="o.l10n_mx_edi_cfdi_state == 'sent' and o.l10n_mx_edi_transport_type == '01' and any(o.move_line_ids.product_id.mapped('l10n_mx_edi_hazardous_material_code'))">
+                <div class="row mt-3" id="mx_edi_row_4">
+                    <div class="col-4">
+                        <strong>Environment Insurer</strong>
+                        <p t-field="o.l10n_mx_edi_vehicle_id.environment_insurer"/>
+                    </div>
+                    <div class="col-4">
+                        <strong>Environment Policy No</strong>
+                        <p t-field="o.l10n_mx_edi_vehicle_id.environment_insurance_policy"/>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+    <template id="l10n_mx_edi_cartaporte_report_hazard_has_serial_move_line" inherit_id="stock.stock_report_delivery_has_serial_move_line">
+        <xpath expr="//td[@name='move_line_lot_quantity']" position="before">
+            <t t-if="o.l10n_mx_edi_cfdi_state == 'sent' and o.l10n_mx_edi_transport_type == '01' and any(o.move_line_ids.product_id.mapped('l10n_mx_edi_hazardous_material_code'))">
+                <td>
+                    <span t-esc="move_line.product_id.l10n_mx_edi_hazardous_material_code"/>
+                </td>
+                <td>
+                    <span t-esc="move_line.product_id.l10n_mx_edi_hazard_package_type"/>
+                </td>
+            </t>
+        </xpath>
+    </template>
+    <template id="l10n_mx_edi_cartaporte_report_hazard_aggregated_move_lines" inherit_id="stock.stock_report_delivery_aggregated_move_lines">
+        <xpath expr="//td[@name='move_line_aggregated_quantity']" position="before">
+            <t t-if="o.l10n_mx_edi_cfdi_state == 'sent' and o.l10n_mx_edi_transport_type == '01' and any(o.move_line_ids.product_id.mapped('l10n_mx_edi_hazardous_material_code'))">
+                <td>
+                    <span t-esc="aggregated_lines[line]['product'].l10n_mx_edi_hazardous_material_code"/>
+                </td>
+                <td>
+                    <span t-esc="aggregated_lines[line]['product'].l10n_mx_edi_hazard_package_type"/>
+                </td>
+            </t>
+        </xpath>
+    </template>
+</odoo>

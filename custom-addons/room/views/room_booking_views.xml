@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="room_booking_view_search" model="ir.ui.view">
+        <field name="name">Bookings search view</field>
+        <field name="model">room.booking</field>
+        <field name="arch" type="xml">
+            <search string="Booking">
+                <field name="name" string="Meeting name"/>
+                <field name="organizer_id"/>
+                <field name="room_id"/>
+                <field name="office_id"/>
+                <filter name="organizer_id" string="My Meetings" domain="[('organizer_id', '=', uid)]"/>
+                <filter name="group_by_organizer_id" context="{'group_by': 'organizer_id'}"/>
+                <filter name="group_by_room_id" context="{'group_by': 'room_id'}"/>
+                <filter name="group_by_office_id" context="{'group_by': 'office_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="room_booking_view_gantt" model="ir.ui.view">
+        <field name="name">room.booking.view.gantt</field>
+        <field name="model">room.booking</field>
+        <field name="arch" type="xml">
+            <gantt js_class="room_booking_gantt"
+                date_start="start_datetime"
+                date_stop="stop_datetime"
+                default_group_by="room_id"
+                precision="{'day': 'hour:quarter', 'week': 'day:half', 'month': 'day:half', 'year': 'day:full'}"
+                default_scale="day"
+                dynamic_range="1"
+                color="organizer_id"
+                string="Bookings"
+                plan="0">
+                <templates>
+                    <div t-name="gantt-popover">
+                        <div class="o_gantt_popover">
+                            <ul class="ps-1 mb-0 list-unstyled">
+                                <li>
+                                    <strong>Organizer: </strong>
+                                    <t t-out="organizer_id[1]"/>
+                                </li>
+                                <li class="o_gantt_popover_content_item mt-2">
+                                    <t t-out="start_datetime.toFormat('f ')"/>
+                                    <i class="fa fa-long-arrow-right" title="Until"/>
+                                    <t t-out="stop_datetime.toFormat(' f')"/>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </templates>
+            </gantt>
+        </field>
+    </record>
+
+    <record id="room_booking_view_calendar" model="ir.ui.view">
+        <field name="name">room.booking.view.calendar</field>
+        <field name="model">room.booking</field>
+        <field name="arch" type="xml">
+            <calendar date_start="start_datetime" date_stop="stop_datetime" color="room_id" quick_create="0" event_open_popup="1">
+                <field name="room_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="room_booking_view_list" model="ir.ui.view">
+        <field name="name">room.booking.view.list</field>
+        <field name="model">room.booking</field>
+        <field name="arch" type="xml">
+            <tree duplicate="0">
+                <field name="start_datetime"/>
+                <field name="stop_datetime"/>
+                <field name="name" string="Name"/>
+                <field name="room_id"/>
+                <field name="organizer_id" widget="many2one_avatar_user"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="room_booking_view_kanban" model="ir.ui.view">
+        <field name="name">room.booking.view.kanban</field>
+        <field name="model">room.booking</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <strong class="o_kanban_record_title">
+                                    <field name="display_name"/>
+                                </strong>
+                            </div>
+                            <div class="oe_kanban_content">
+                                <ul class="ps-1 mb-0 list-unstyled">
+                                    <li>
+                                        <strong>Room: </strong>
+                                        <field name="room_id"/>
+                                    </li>
+                                    <li>
+                                        <strong>Date: </strong>
+                                        <field name="start_datetime"/>
+                                        <i class="fa fa-long-arrow-right mx-1" title="Until"/>
+                                        <field name="stop_datetime"/>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left"/>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="organizer_id" widget="many2one_avatar_user"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="room_booking_view_form" model="ir.ui.view">
+        <field name="name">room.booking.view.form</field>
+        <field name="model">room.booking</field>
+        <field name="arch" type="xml">
+            <form duplicate="0">
+                <sheet>
+                    <div class="oe_title mb-3">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="E.g. Team Meeting"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="room_id"/>
+                            <field name="stop_datetime" invisible="1"/>
+                            <field name="start_datetime" string="Date" widget="daterange" options="{'end_date_field': 'stop_datetime'}"/>
+                        </group>
+                        <group>
+                            <field name="organizer_id" widget="many2one_avatar_user"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="room_booking_action" model="ir.actions.act_window">
+        <field name="name">Bookings</field>
+        <field name="res_model">room.booking</field>
+        <field name="view_mode">gantt,calendar,list,kanban,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.JournalReportFilterExtraOptions" t-inherit="account_reports.AccountReportFilterExtraOptions">
+        <xpath expr="//t[@t-set-slot='toggler']" position="inside">
+            <t t-if="controller.options.group_by_months">
+                <t t-esc="(controller.options.all_entries) ? 'Grouped by month': ', Grouped by month'"/>
+            </t>
+
+            <t t-if="controller.options.sort_by_date">
+                <t t-set="sortBy" t-value="(controller.options.sort_by_data) ? 'Sorted by date' : 'Sorted by number'"/>
+                <t t-esc="(controller.options.all_entries) ? `${ sortBy }` : `, ${ sortBy }`"/>
+            </t>
+        </xpath>
+
+        <xpath expr="//DropdownItem[contains(@class, 'filter_show_draft_hook')]" position="after">
+            <DropdownItem
+                class="{ 'selected': controller.options.show_payment_lines }"
+                onSelected="() => this.toggleFilter('show_payment_lines')"
+            >
+                Include Payments
+            </DropdownItem>
+
+            <div class="dropdown-divider"/>
+
+            <DropdownItem
+                class="{ 'selected': controller.options.sort_by_date }"
+                onSelected="() => this.toggleFilter('sort_by_date')"
+            >
+                Sort By Date
+            </DropdownItem>
+
+            <div class="dropdown-divider"/>
+
+            <DropdownItem
+                class="{ 'selected': controller.options.group_by_months }"
+                onSelected="() => this.toggleFilter('group_by_months')"
+            >
+                Group By Months
+            </DropdownItem>
+
+            <div class="dropdown-divider"/>
+        </xpath>
+    </t>
+</templates>

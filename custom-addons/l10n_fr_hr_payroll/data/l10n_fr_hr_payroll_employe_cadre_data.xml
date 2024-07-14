@@ -1,0 +1,942 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="structure_type_employee_fr_cadre" model="hr.payroll.structure.type">
+        <field name="name">FR: Employé Cadre</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <!-- Salary Structure -->
+    <record id="hr_payroll_salary_structure_employe_cadre" model="hr.payroll.structure">
+        <field name="name">Employé cadre</field>
+        <field name="country_id" ref="base.fr"/>
+        <field name="type_id" ref="structure_type_employee_fr_cadre"/>
+    </record>
+    <record id="structure_type_employee_fr_cadre" model="hr.payroll.structure.type">
+        <field name="default_struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <!-- HR SALARY RULES-->
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_fr_hr_payroll.hr_payroll_salary_structure_employe_cadre')),
+            ('code', '=', 'BASIC')]"/>
+        <value eval="{
+            'code': 'BASE',
+            'sequence': 1}"/>
+    </function>
+
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_fr_hr_payroll.hr_payroll_salary_structure_employe_cadre')),
+            ('code', '=', 'GROSS')]"/>
+        <value eval="{
+            'name': 'Salaire Brut',
+            'code': 'BRUT',
+            'sequence': 1000,
+            'category_id': ref('hr_payroll.GROSS'),
+            'amount_python_compute': &quot;result = categories['BASE'] + categories['ALW'] - categories['DED']&quot;,
+            }"/>
+    </function>
+
+    <record id="rule_employee_cadre_secu" model="hr.salary.rule">
+        <field name="name">Plafond Securite Sociale</field>
+        <field name="code">SECU</field>
+        <field name="sequence">1010</field>
+        <field name="category_id" ref="SECU"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = contract.employee_id.company_id.plafond_secu</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employee_cadre_tranche_a" model="hr.salary.rule">
+        <field name="name">Plafond Tranche A</field>
+        <field name="code">TA</field>
+        <field name="sequence">1011</field>
+        <field name="category_id" ref="other_totals"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = SECU</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employee_cadre_tranche_b" model="hr.salary.rule">
+        <field name="name">Plafond Tranche B</field>
+        <field name="code">TB</field>
+        <field name="sequence">1012</field>
+        <field name="category_id" ref="other_totals"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = SECU * 4</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employee_cadre_tranche_c" model="hr.salary.rule">
+        <field name="name">Plafond Tranche C</field>
+        <field name="code">TC</field>
+        <field name="sequence">1013</field>
+        <field name="category_id" ref="other_totals"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = SECU * 8</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employee_cadre_tranche_1" model="hr.salary.rule">
+        <field name="name">Plafond Tranche 1</field>
+        <field name="code">T1</field>
+        <field name="sequence">1014</field>
+        <field name="category_id" ref="other_totals"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = SECU</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employee_cadre_tranche_2" model="hr.salary.rule">
+        <field name="name">Plafond Tranche 2</field>
+        <field name="code">T2</field>
+        <field name="sequence">1015</field>
+        <field name="category_id" ref="other_totals"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = SECU * 3</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C1_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">Assurance maladie, maternite, invalidite, deces, solidaritee des personnes agees et handicapees</field>
+        <field name="code">C1</field>
+        <field name="sequence">2040</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0.75</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C1_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">Assurance maladie, maternite, invalidite, deces, solidaritee des personnes agees et handicapees</field>
+        <field name="code">C1P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2045</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">13.10</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C2_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">Vieillesse plafonnee</field>
+        <field name="code">C2</field>
+        <field name="sequence">2050</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">6.65</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],SECU)</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C2_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">Vieillesse plafonnee</field>
+        <field name="code">C2P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2055</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">8.3</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],SECU)</field>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C3_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">Vieillesse deplafonnee</field>
+        <field name="code">C3</field>
+        <field name="sequence">2060</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0.1</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C3_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">Vieillesse deplafonnee</field>
+        <field name="code">C3P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2065</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">1.6</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C4_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">Allocations familiales</field>
+        <field name="code">C4</field>
+        <field name="sequence">2070</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C4_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">Allocations familiales</field>
+        <field name="code">C4P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2075</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">5.4</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C10_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">Assurance chomage</field>
+        <field name="code">C10</field>
+        <field name="sequence">2080</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">2.40</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],TB)</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C10_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">Assurance chomage</field>
+        <field name="code">C10P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2085</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">4</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],TB)</field>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C11_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">AGS (FNGS)</field>
+        <field name="code">C11</field>
+        <field name="sequence">2090</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],TB)</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C11_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">AGS (FNGS)</field>
+        <field name="code">C11P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2095</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0.3</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],TB)</field>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C16_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">ARRCO Cadre Tranche A</field>
+        <field name="code">C16</field>
+        <field name="sequence">2140</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">3</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],TA)</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C16_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">ARRCO Cadre Tranche A</field>
+        <field name="code">C16P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2145</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">4.5</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],TA)</field>
+        <field name="partner_id" ref="hr_retraite_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C17_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">AGIRC et GMP Cadre Tranche B</field>
+        <field name="code">C17</field>
+        <field name="sequence">2150</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories['BRUT'] > TA</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">7.7</field>
+        <field name="amount_percentage_base">min(categories['BRUT']-TA,TB-TA)</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C17_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">AGIRC et GMP Cadre Tranche B</field>
+        <field name="code">C17P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2155</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories['BRUT'] > TA</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">12.6</field>
+        <field name="amount_percentage_base">min(categories['BRUT']-TA,TB-TA)</field>
+        <field name="partner_id" ref="hr_retraite_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C38_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">AGIRC Cadre Tranche C</field>
+        <field name="code">C38</field>
+        <field name="sequence">2160</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories['BRUT'] > TB</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0</field>
+        <field name="amount_percentage_base">min(categories['BRUT']-TB,TC-TB)</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C38_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">AGIRC Cadre Tranche C</field>
+        <field name="code">C38P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2165</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories['BRUT'] > TB</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0</field>
+        <field name="amount_percentage_base">min(categories['BRUT']-TB,TC-TB)</field>
+        <field name="partner_id" ref="hr_retraite_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C39_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">AGFF Cadre Tranche A</field>
+        <field name="code">C18</field>
+        <field name="sequence">2170</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0.8</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],TA)</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C39_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">AGFF Cadre Tranche A</field>
+        <field name="code">C18P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2175</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">1.2</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],TA)</field>
+        <field name="partner_id" ref="hr_retraite_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C18_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">AGFF Non-cadre Tranche B</field>
+        <field name="code">C18</field>
+        <field name="sequence">2180</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories['BRUT'] > TA</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0.9</field>
+        <field name="amount_percentage_base">min(categories['BRUT']-TA,TB-TA)</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C18_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">AGFF Cadre Tranche B</field>
+        <field name="code">C18P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2185</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories['BRUT'] > TA</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">1.3</field>
+        <field name="amount_percentage_base">min(categories['BRUT']-TA,TB-TA)</field>
+        <field name="partner_id" ref="hr_retraite_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C19_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">CET</field>
+        <field name="code">C19</field>
+        <field name="sequence">2190</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0.13</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],TC)</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C19_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">CET</field>
+        <field name="code">C19P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2195</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0.22</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],TC)</field>
+        <field name="partner_id" ref="hr_retraite_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C20_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">APEC</field>
+        <field name="code">C20</field>
+        <field name="sequence">2200</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0.024</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],TB)</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C20_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">APEC</field>
+        <field name="code">C20P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2205</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0.036</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],TB)</field>
+        <field name="partner_id" ref="hr_retraite_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C21_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">Assurance deces cadres</field>
+        <field name="code">C21</field>
+        <field name="sequence">2210</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],TA)</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C21_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">Assurance deces cadres</field>
+        <field name="code">C21P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2215</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">1.5</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],TA)</field>
+        <field name="partner_id" ref="hr_retraite_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C5_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">Accident du travail</field>
+        <field name="code">C5</field>
+        <field name="sequence">2220</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C5_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">Accident du travail</field>
+        <field name="code">C5P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2225</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C40_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">Taxe Prevoyance</field>
+        <field name="code">C40</field>
+        <field name="sequence">2238</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories['PREV'] != 0</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">categories['PREV']</field>
+        <field name="partner_id" ref="hr_prevoyance_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C40_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">Taxe Prevoyance</field>
+        <field name="code">C40P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2239</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = categories['PREV'] != 0</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">8</field>
+        <field name="amount_percentage_base">categories['PREV']</field>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C7_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">FNAL -20 Employes</field>
+        <field name="code">C7</field>
+        <field name="sequence">2240</field>
+        <field name="condition_select">range</field>
+        <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
+        <field name="condition_range_max">19</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],SECU)</field>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C7_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">FNAL -20 Employes</field>
+        <field name="code">C7P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2245</field>
+        <field name="condition_select">range</field>
+        <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
+        <field name="condition_range_max">19</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0.1</field>
+        <field name="amount_percentage_base">min(categories['BRUT'],SECU)</field>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C8_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">FNAL +20 Employes</field>
+        <field name="code">C8</field>
+        <field name="sequence">2250</field>
+        <field name="condition_select">range</field>
+        <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
+        <field name="condition_range_min">20</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C8_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">FNAL +20 Employes</field>
+        <field name="code">C8P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2255</field>
+        <field name="condition_select">range</field>
+        <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
+        <field name="condition_range_min">20</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0.5</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C9_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">Versement Transport</field>
+        <field name="code">C9</field>
+        <field name="sequence">2260</field>
+        <field name="condition_select">range</field>
+        <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
+        <field name="condition_range_min">10</field>
+        <field name="amount_select">percentage</field>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C9_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">Versement Transport</field>
+        <field name="code">C9P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2265</field>
+        <field name="condition_select">range</field>
+        <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
+        <field name="condition_range_min">10</field>
+        <field name="amount_select">percentage</field>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C22_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">Effort a la construction</field>
+        <field name="code">C22</field>
+        <field name="sequence">2270</field>
+        <field name="condition_select">range</field>
+        <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
+        <field name="condition_range_min">20</field>
+        <field name="amount_select">percentage</field>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C22_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">Effort a la construction</field>
+        <field name="code">C22P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2275</field>
+        <field name="condition_select">range</field>
+        <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
+        <field name="condition_range_min">20</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0.45</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C23_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">Taxe d'apprentissage</field>
+        <field name="code">C23</field>
+        <field name="sequence">2280</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="partner_id" ref="hr_cci_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C23_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">Taxe d'apprentissage</field>
+        <field name="code">C23P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2285</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0.5</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="partner_id" ref="hr_cci_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C24_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">Contribution additionnelle au developpement de l'apprentissage</field>
+        <field name="code">C24</field>
+        <field name="sequence">2290</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="partner_id" ref="hr_cci_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C24_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">Contribution additionnelle au developpement de l'apprentissage</field>
+        <field name="code">C24P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2295</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0.18</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="partner_id" ref="hr_cci_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C25_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">Formation professionnelle 10- salaries</field>
+        <field name="code">C25</field>
+        <field name="sequence">2300</field>
+        <field name="condition_select">range</field>
+        <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
+        <field name="condition_range_max">9</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="partner_id" ref="hr_cci_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C25_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">Formation professionnelle 10- salaries</field>
+        <field name="code">C25P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2305</field>
+        <field name="condition_select">range</field>
+        <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
+        <field name="condition_range_max">9</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0.55</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="partner_id" ref="hr_cci_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C26_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">Formation professionnelle 10-19 salaries</field>
+        <field name="code">C26</field>
+        <field name="sequence">2310</field>
+        <field name="condition_select">range</field>
+        <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
+        <field name="condition_range_min">10</field>
+        <field name="condition_range_max">19</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="partner_id" ref="hr_cci_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C26_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">Formation professionnelle 10-19 salaries</field>
+        <field name="code">C26P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2315</field>
+        <field name="condition_select">range</field>
+        <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
+        <field name="condition_range_min">10</field>
+        <field name="condition_range_max">19</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">1.05</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="partner_id" ref="hr_cci_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C27_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">Formation professionnelle 20+ salaries</field>
+        <field name="code">C27</field>
+        <field name="sequence">2320</field>
+        <field name="condition_select">range</field>
+        <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
+        <field name="condition_range_min">20</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="partner_id" ref="hr_cci_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C27_employer" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.COMP"/>
+        <field name="name">Formation professionnelle 20+ salaries</field>
+        <field name="code">C27P</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="sequence">2325</field>
+        <field name="condition_select">range</field>
+        <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
+        <field name="condition_range_min">20</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">1.60</field>
+        <field name="amount_percentage_base">categories['BRUT']</field>
+        <field name="partner_id" ref="hr_cci_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C29_employe" model="hr.salary.rule">
+        <field name="category_id" ref="SALC"/>
+        <field name="name">CSG deductible</field>
+        <field name="code">C29</field>
+        <field name="sequence">2500</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">5.1</field>
+        <field name="amount_percentage_base">(categories['BRUT'] + categories['PREV'])*0.9825</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employee_cadre_total_charges_salariales" model="hr.salary.rule">
+        <field name="name">Total des charges salariales</field>
+        <field name="sequence">2510</field>
+        <field name="code">SALC</field>
+        <field name="category_id" ref="other_totals"/>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories['SALC']</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C30_employe" model="hr.salary.rule">
+        <field name="category_id" ref="RETENUES"/>
+        <field name="name">CRDS</field>
+        <field name="code">C30</field>
+        <field name="sequence">2560</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">0.5</field>
+        <field name="amount_percentage_base">(categories['BRUT'] + categories['PREV'])*0.9825</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employe_cadre_C28_employe" model="hr.salary.rule">
+        <field name="category_id" ref="RETENUES"/>
+        <field name="name">CSG non deductible</field>
+        <field name="code">C28</field>
+        <field name="sequence">2550</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">percentage</field>
+        <field name="amount_percentage">2.4</field>
+        <field name="amount_percentage_base">(categories['BRUT'] + categories['PREV'])*0.9825</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employee_cadre_total_retenues" model="hr.salary.rule">
+        <field name="name">Total Retenues</field>
+        <field name="sequence">99999</field>
+        <field name="category_id" ref="other_totals"/>
+        <field name="code">RET</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="appears_on_payslip" eval="True"/>
+        <field name="amount_python_compute">result = categories['RETENUES']</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employee_cadre_cumul_imposable" model="hr.salary.rule">
+        <field name="name">Cumul Imposable</field>
+        <field name="sequence">99999</field>
+        <field name="category_id" ref="C_IMP"/>
+        <field name="code">C_IMP</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="amount_python_compute">result = BRUT - categories['SALC']</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <function model="hr.salary.rule" name="write">
+        <value model="hr.salary.rule" search="[
+            ('struct_id', '=', ref('l10n_fr_hr_payroll.hr_payroll_salary_structure_employe_cadre')),
+            ('code', '=', 'NET')]"/>
+        <value eval="{
+            'name': 'Net',
+            'sequence': 100000,
+            'category_id': ref('hr_payroll.NET'),
+            'amount_python_compute': &quot;result = BRUT - categories['RETENUES']&quot;,
+            'appears_on_employee_cost_dashboard': True,
+            }"/>
+    </function>
+
+    <record id="rule_employee_cadre_total_charges_patronales" model="hr.salary.rule">
+        <field name="name">Total Charges Patronales</field>
+        <field name="sequence">150000</field>
+        <field name="code">TCOMP</field>
+        <field name="category_id" ref="other_totals"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories['COMP']</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+    <record id="rule_employee_cadre_total" model="hr.salary.rule">
+        <field name="name">Cout total pour l'entreprise</field>
+        <field name="sequence">200000</field>
+        <field name="code">TOTAL</field>
+        <field name="category_id" ref="TOTAL"/>
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories['BRUT'] + categories['COMP']</field>
+        <field name="struct_id" ref="hr_payroll_salary_structure_employe_cadre"/>
+    </record>
+
+</odoo>

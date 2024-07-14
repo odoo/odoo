@@ -1,0 +1,1594 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_hr_balance_sheet" model="account.report">
+        <field name="name">Balance sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_period_comparison" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="country_id" ref="base.hr"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_hr_balance_sheet_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <!-- Actif -->
+            <record id="account_financial_report_hr_active_title0" model="account.report.line">
+                <field name="name">ACTIVE</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_hr_active0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">HR_00.balance + HR_fixed.balance + HR_current.balance + HR_paid_expenses.balance </field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_financial_report_hr_active_sectionA0" model="account.report.line">
+                        <field name="name">A. Receivables for recorded but not paid in capital and non-current financial assets</field>
+                        <field name="code">HR_00</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_hr_active_sectionA0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">00</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_hr_active_sectionB0" model="account.report.line">
+                        <field name="name">B. Fixed asset</field>
+                        <field name="code">HR_fixed</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_hr_active_sectionB0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">HR_intan.balance + HR_mater.balance + HR_Long_term.balance + HR_claims.balance + HR_deferred.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_hr_intangible_asset0" model="account.report.line">
+                                <field name="name">I. Intangible assets</field>
+                                <field name="code">HR_intan</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_intangible_asset0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">HR_rd.balance + HR_concession.balance + HR_goodwill.balance + HR_advance.balance + HR_prep_intang.balance + HR_other_intag.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_hr_rd0" model="account.report.line">
+                                        <field name="name">Research and development</field>
+                                        <field name="code">HR_rd</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_rd0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">010</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_concession0" model="account.report.line">
+                                        <field name="name">Concession rights, patents, commodity, service brands, software and other similar rights and assets</field>
+                                        <field name="code">HR_concession</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_concession0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">011 + 012</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_goodwill0" model="account.report.line">
+                                        <field name="name">Goodwill</field>
+                                        <field name="code">HR_goodwill</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_goodwill0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">013</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_advance0" model="account.report.line">
+                                        <field name="name">Advance payments for purchase of intangible assets</field>
+                                        <field name="code">HR_advance</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_advance0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">015</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_prep_intang0" model="account.report.line">
+                                        <field name="name">Intangible assets in preparation</field>
+                                        <field name="code">HR_prep_intang</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_prep_intang0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">017</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_other_intag0" model="account.report.line">
+                                        <field name="name">Other intangible assets</field>
+                                        <field name="code">HR_other_intag</field>
+                                        <field name="groupby">account_id</field>
+                                         <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_other_intag0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">014 + 016 + 018 + 019</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_mater0" model="account.report.line">
+                                <field name="name">II. Material property</field>
+                                <field name="code">HR_mater</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_mater0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula"> HR_plant_equi.balance + HR_invest_real.balance + HR_other_property.balance + HR_land.balance + HR_building.balance + HR_tools.balance + HR_bio_asset.balance + HR_advance_asset.balance + HR_under_prep_asset.balance </field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_hr_land0" model="account.report.line">
+                                        <field name="name">Land</field>
+                                        <field name="code">HR_land</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_land_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">020 + 021</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_building0" model="account.report.line">
+                                        <field name="name">Building</field>
+                                        <field name="code">HR_building</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_building_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">023+ 024</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_plant_equi0" model="account.report.line">
+                                        <field name="name">Plant and equipment</field>
+                                        <field name="code">HR_plant_equi</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_plant_equi_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">030 + 031 + 034</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_tools0" model="account.report.line">
+                                        <field name="name">Tools, transportation equipment and vehicle</field>
+                                        <field name="code">HR_tools</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_tools_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">032</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_bio_asset0" model="account.report.line">
+                                        <field name="name">Biological asset</field>
+                                        <field name="code">HR_bio_asset</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_bio_asset_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">040 + 041 + 048 + 049</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_advance_asset0" model="account.report.line">
+                                        <field name="name">Advance for tangible asset</field>
+                                        <field name="code">HR_advance_asset</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_advance_asset_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">026 + 036 + 046</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_under_prep_asset0" model="account.report.line">
+                                        <field name="name">Tangible assets under preparation</field>
+                                        <field name="code">HR_under_prep_asset</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_under_prep_asset_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">027 + 037 + 047</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_other_property0" model="account.report.line">
+                                        <field name="name">Other property, plant and equipment</field>
+                                        <field name="code">HR_other_property</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_other_property_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">035 + 028 + 029 + 033 + 038 + 039</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_invest_real0" model="account.report.line">
+                                        <field name="name">Investments in real estate</field>
+                                        <field name="code">HR_invest_real</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_invest_real_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">05</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_long_term0" model="account.report.line">
+                                <field name="name">III. Long-term financial assets</field>
+                                <field name="code">HR_Long_term</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_long_term_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">HR_invest_share0.balance + HR_invest_secu0.balance + HR_loans_deposit0.balance + HR_invest_share1.balance + HR_invest_secu1.balance + HR_loans_deposit1.balance + HR_invest_secu2.balance + HR_loans_third.balance + HR_invest_associates.balance + HR_other_loans.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_hr_invest_share0" model="account.report.line">
+                                            <field name="name">Investments in shares (shares) of entrepreneurs within the group</field>
+                                            <field name="code">HR_invest_share0</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_hr_invest_share0_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">0600</field>
+                                                </record>
+                                            </field>
+                                     </record>
+                                    <record id="account_financial_report_hr_invest_secu0" model="account.report.line">
+                                            <field name="name">Investments in other securities of entrepreneurs within the group</field>
+                                            <field name="code">HR_invest_secu0</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_hr_invest_secu0_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">0601</field>
+                                                </record>
+                                            </field>
+                                     </record>
+                                    <record id="account_financial_report_hr_loans_deposit0" model="account.report.line">
+                                            <field name="name">Loans, deposit, etc given to a Group</field>
+                                            <field name="code">HR_loans_deposit0</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_hr_loans_deposit0_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">061</field>
+                                                </record>
+                                            </field>
+                                     </record>
+                                    <record id="account_financial_report_hr_invest_share1" model="account.report.line">
+                                            <field name="name">Investments in shares (shares) of companies connected by participating interests</field>
+                                            <field name="code">HR_invest_share1</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_hr_invest_share1_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">0620</field>
+                                                </record>
+                                            </field>
+                                     </record>
+                                    <record id="account_financial_report_hr_invest_secu1" model="account.report.line">
+                                            <field name="name">Investments in other securities of companies connected by participating interests</field>
+                                            <field name="code">HR_invest_secu1</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_hr_invest_secu1_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">0621</field>
+                                                </record>
+                                            </field>
+                                     </record>
+                                    <record id="account_financial_report_hr_loans_deposit1" model="account.report.line">
+                                            <field name="name">Loans, deposit, etc given to companies in associated undertakings</field>
+                                            <field name="code">HR_loans_deposit1</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_hr_loans_deposit1_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">063</field>
+                                                </record>
+                                            </field>
+                                     </record>
+                                    <record id="account_financial_report_hr_invest_secu2" model="account.report.line">
+                                            <field name="name">Investments in a securities</field>
+                                            <field name="code">HR_invest_secu2</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_hr_invest_secu2_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">064</field>
+                                                </record>
+                                            </field>
+                                     </record>
+                                    <record id="account_financial_report_hr_HR_loans_third0" model="account.report.line">
+                                            <field name="name">Loans given to third party</field>
+                                            <field name="code">HR_loans_third</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_hr_loans_third0_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">065</field>
+                                                </record>
+                                            </field>
+                                     </record>
+                                    <record id="account_financial_report_hr_HR_invest_associates0" model="account.report.line">
+                                            <field name="name">Investments in associates accounted for using the equity method</field>
+                                            <field name="code">HR_invest_associates</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_hr_invest_associates0_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">066</field>
+                                                </record>
+                                            </field>
+                                     </record>
+                                    <record id="account_financial_report_hr_HR_other_loans0" model="account.report.line">
+                                            <field name="name">Other loans</field>
+                                            <field name="code">HR_other_loans</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_hr_other_loans0_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">067 + 068 + 069</field>
+                                                </record>
+                                            </field>
+                                     </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_claims0" model="account.report.line">
+                                <field name="name">IV. Claims</field>
+                                <field name="code">HR_claims</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_claims_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">HR_receiv_group0.balance + HR_receiv_assio0.balance + HR_long_term_receiv0.balance + HR_other_claims0.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_hr_receiv_group0" model="account.report.line">
+                                            <field name="name">Receivables in a Group</field>
+                                            <field name="code">HR_receiv_group0</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_hr_receiv_group0_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">070</field>
+                                                </record>
+                                            </field>
+                                     </record>
+                                    <record id="account_financial_report_hr_receiv_assio0" model="account.report.line">
+                                            <field name="name">Receivable from associated undertakings</field>
+                                            <field name="code">HR_receiv_assio0</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_hr_receiv_assio0_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">071</field>
+                                                </record>
+                                            </field>
+                                     </record>
+                                    <record id="account_financial_report_hr_long_term_receiv0" model="account.report.line">
+                                            <field name="name">Long term trade receivables</field>
+                                            <field name="code">HR_long_term_receiv0</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_hr_long_term_receiv0_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">072</field>
+                                                </record>
+                                            </field>
+                                     </record>
+                                    <record id="account_financial_report_hr_other_claims0" model="account.report.line">
+                                            <field name="name">Other claims</field>
+                                            <field name="code">HR_other_claims0</field>
+                                            <field name="groupby">account_id</field>
+                                            <field name="foldable" eval="True"/>
+                                            <field name="expression_ids">
+                                                <record id="account_financial_report_hr_other_claims0_balance" model="account.report.expression">
+                                                    <field name="label">balance</field>
+                                                    <field name="engine">account_codes</field>
+                                                    <field name="formula">073 + 074 + 075 + 076 + 077 + 078 + 079</field>
+                                                </record>
+                                            </field>
+                                     </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_deferred0" model="account.report.line">
+                                <field name="name">V. Deferred Tax assets</field>
+                                <field name="code">HR_deferred</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_deferred_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">08</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_hr_active_sectionC0" model="account.report.line">
+                        <field name="name">C. Current asset</field>
+                        <field name="code">HR_current</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_hr_active_sectionC0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">HR_supplies.balance + HR_claims_1.balance + HR_short_term.balance + HR_money.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_hr_supplies0" model="account.report.line">
+                                <field name="name">I. Supplies</field>
+                                <field name="code">HR_supplies</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_supplies_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">HR_raw_mat0.balance + HR_prod_in_progress0.balance + HR_final_prod.balance + HR_trade_goods.balance + HR_bio_asset1.balance + HR_advance_supp0.balance + HR_non_current_assets0.balance </field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_hr_raw_mat0" model="account.report.line">
+                                        <field name="name">Raw materials and material</field>
+                                        <field name="code">HR_raw_mat0</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_raw_mat0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">30 + 31 + 32 + 35 + 36</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_prod_in_progress0" model="account.report.line">
+                                        <field name="name">Production in progress</field>
+                                        <field name="code">HR_prod_in_progress0</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_prod_in_progress0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">60 + 61</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_final_prod0" model="account.report.line">
+                                        <field name="name">Final product</field>
+                                        <field name="code">HR_final_prod</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_final_prod0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">63 + 64</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_trade_goods0" model="account.report.line">
+                                        <field name="name">Trade goods</field>
+                                        <field name="code">HR_trade_goods</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_trade_goods0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">66 + 68\(687)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_bio_asset1" model="account.report.line">
+                                        <field name="name">Biological asset</field>
+                                        <field name="code">HR_bio_asset1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_bio_asset1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">62</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_advance_supp0" model="account.report.line">
+                                        <field name="name">Advance for supplies</field>
+                                        <field name="code">HR_advance_supp0</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_advance_supp0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">37 + 67 + 687</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_non_current_assets0" model="account.report.line">
+                                        <field name="name">Non current assets intended for sale</field>
+                                        <field name="code">HR_non_current_assets0</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_non_current_assets0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">69</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_claims1" model="account.report.line">
+                                <field name="name">II. Claims</field>
+                                <field name="code">HR_claims_1</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_claims1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">HR_receiv_entre0.balance + HR_receiv_comp0.balance + HR_trade_receiv0.balance + HR_receiv_emp0.balance + HR_receiv_gov0.balance + HR_other_claims2.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_hr_receiv_entre0" model="account.report.line">
+                                        <field name="name">Receivables from entrepreneurs within the group</field>
+                                        <field name="code">HR_receiv_entre0</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_receiv_entre0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">122</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_receiv_comp0" model="account.report.line">
+                                        <field name="name">Receivables from companies connected by a participating interest</field>
+                                        <field name="code">HR_receiv_comp0</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_receiv_comp0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">123</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_trade_receiv0" model="account.report.line">
+                                        <field name="name">Trade receivables</field>
+                                        <field name="code">HR_trade_receiv0</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_trade_receiv0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">120 + 121</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_receiv_emp0" model="account.report.line">
+                                        <field name="name">Receivables from employees and members of entrepreneurs</field>
+                                        <field name="code">HR_receiv_emp0</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_receiv_emp0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">130 + 131 + 133</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_receiv_gov0" model="account.report.line">
+                                        <field name="name">Receivables from government and other institutions</field>
+                                        <field name="code">HR_receiv_gov0</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_receiv_gov0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">14 + 15</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_other_claims2" model="account.report.line">
+                                        <field name="name">Other claims</field>
+                                        <field name="code">HR_other_claims2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_other_claims2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">124 + 125 + 126 + 127 + 128 + 129 + 134 + 135 + 136 + 137 + 138 + 139</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_short_term0" model="account.report.line">
+                                <field name="name">III. Short term financial assets </field>
+                                <field name="code">HR_short_term</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_short_term_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">HR_invest_shares2.balance + HR_invest_secu3.balance +HR_loan_deposits3.balance +HR_invest_share4.balance + HR_invest_secu4.balance+HR_loan_deposits4.balance+HR_invest_secu5.balance+HR_loan_deposit5.balance+HR_other_financial.balance</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_hr_invest_shares2" model="account.report.line">
+                                        <field name="name">Investments in shares (shares) of entrepreneurs within the group</field>
+                                        <field name="code">HR_invest_shares2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_invest_shares2_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1100</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_invest_secu3" model="account.report.line">
+                                        <field name="name">Investments in other securities of entrepreneurs within the group</field>
+                                        <field name="code">HR_invest_secu3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_invest_secu3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1101</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_loan_deposits3" model="account.report.line">
+                                        <field name="name">Loans, deposits, etc. given to entrepreneurs within the group</field>
+                                        <field name="code">HR_loan_deposits3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_loan_deposits3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">111</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_invest_share4" model="account.report.line">
+                                        <field name="name">Investments in shares (shares) of companies connected by participating interests</field>
+                                        <field name="code">HR_invest_share4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_invest_share4_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1120</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_invest_secu4" model="account.report.line">
+                                        <field name="name">Investments in other securities of companies connected by participating interests</field>
+                                        <field name="code">HR_invest_secu4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_invest_secu4_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">1121</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_loan_deposits4" model="account.report.line">
+                                        <field name="name">Loans, deposits, etc to companies in associated undertakings</field>
+                                        <field name="code">HR_loan_deposits4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_loan_deposits4_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">113</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_invest_secu5" model="account.report.line">
+                                        <field name="name">Investments in securities</field>
+                                        <field name="code">HR_invest_secu5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_invest_secu5_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">114</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_loan_deposit5" model="account.report.line">
+                                        <field name="name">Loans, deposits and the like</field>
+                                        <field name="code">HR_loan_deposit5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_loan_deposit5_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">115</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_other_financial0" model="account.report.line">
+                                        <field name="name">Other financial assets</field>
+                                        <field name="code">HR_other_financial</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_other_financial0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">116 + 117 + 118 + 119</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_money0" model="account.report.line">
+                                <field name="name">IV. Money in the bank and the cash register </field>
+                                <field name="code">HR_money</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_money_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">10</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_hr_paid_expenses0" model="account.report.line">
+                        <field name="name">D. Paid expenses of the future periods and calculated income</field>
+                        <field name="code">HR_paid_expenses</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_hr_paid_expenses0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">19</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+           <!-- PASSIF -->
+            <record id="account_financial_report_hr_passif_title0" model="account.report.line">
+                <field name="name">PASSIF</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_financial_report_hr_passif0_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">HR_capital.balance + HR_reservation.balance + HR_long_term1.balance + HR_short_term1.balance + HR_deferred1.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                     <!-- Section A -->
+                     <record id="account_financial_report_hr_passive_sectionA0" model="account.report.line">
+                         <field name="name">A. Capital and reserve</field>
+                         <field name="code">HR_capital</field>
+                         <field name="expression_ids">
+                            <record id="account_financial_report_hr_passive_sectionA0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">HR_controlling.balance + HR_profit_loss.balance + HR_retained.balance + HR_fair_reserves.balance + HR_based_capital.balance + HR_capital_reserves.balance + HR_profit_reserves.balance + HR_reval_reserves.balance</field>
+                            </record>
+                         </field>
+                         <field name="children_ids">
+                             <record id="account_financial_report_hr_based_capital0" model="account.report.line">
+                                 <field name="name">I. Based (registered) capital</field>
+                                 <field name="code">HR_based_capital</field>
+                                 <field name="groupby">account_id</field>
+                                 <field name="foldable" eval="True"/>
+                                 <field name="expression_ids">
+                                     <record id="account_financial_report_hr_based_capital_balance" model="account.report.expression">
+                                         <field name="label">balance</field>
+                                         <field name="engine">account_codes</field>
+                                         <field name="formula">-90</field>
+                                     </record>
+                                 </field>
+                             </record>
+                             <record id="account_financial_report_hr_capital_reserves0" model="account.report.line">
+                                 <field name="name">II. Capital reserves</field>
+                                 <field name="code">HR_capital_reserves</field>
+                                 <field name="groupby">account_id</field>
+                                 <field name="foldable" eval="True"/>
+                                 <field name="expression_ids">
+                                     <record id="account_financial_report_hr_based_capital_reserves_balance" model="account.report.expression">
+                                         <field name="label">balance</field>
+                                         <field name="engine">account_codes</field>
+                                         <field name="formula">-91</field>
+                                     </record>
+                                 </field>
+                             </record>
+                             <record id="account_financial_report_hr_profit_reserves0" model="account.report.line">
+                                 <field name="name">III. Profit reserves</field>
+                                 <field name="code">HR_profit_reserves</field>
+                                 <field name="foldable" eval="True"/>
+                                 <field name="expression_ids">
+                                     <record id="account_financial_report_hr_based_profit_reserves_balance" model="account.report.expression">
+                                         <field name="label">balance</field>
+                                         <field name="engine">aggregation</field>
+                                         <field name="formula">HR_legal_reserves0.balance + HR_shares_reserves0.balance + HR_shares_own_and_deduc.balance +HR_stat_reserv.balance +HR_other_reserv.balance</field>
+                                     </record>
+                                 </field>
+                                 <field name="children_ids">
+                                    <record id="account_financial_report_hr_legal_reserves0" model="account.report.line">
+                                        <field name="name">Legal reserves</field>
+                                        <field name="code">HR_legal_reserves0</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_legal_reserves0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-920</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_shares_reserves0" model="account.report.line">
+                                        <field name="name">Reserves for own shares</field>
+                                        <field name="code">HR_shares_reserves0</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_shares_reserves0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-921</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_shares_own_and_deduc0" model="account.report.line">
+                                        <field name="name">Own shares and shares (deductible item)</field>
+                                        <field name="code">HR_shares_own_and_deduc</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_shares_own_and_deduc0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-922</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_stat_reserv0" model="account.report.line">
+                                        <field name="name">Statutory reserves</field>
+                                        <field name="code">HR_stat_reserv</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_stat_reserv0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-923</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_hr_other_reserv0" model="account.report.line">
+                                        <field name="name">Other reserves</field>
+                                        <field name="code">HR_other_reserv</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_hr_other_reserv0_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-924</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                 </field>
+                            </record>
+                             <record id="account_financial_report_hr_reval_reserves0" model="account.report.line">
+                                 <field name="name">IV. Revaluation reserves</field>
+                                 <field name="code">HR_reval_reserves</field>
+                                 <field name="expression_ids">
+                                     <record id="account_financial_report_hr_based_reval_reserves_balance" model="account.report.expression">
+                                         <field name="label">balance</field>
+                                         <field name="engine">account_codes</field>
+                                         <field name="formula">-930 - 932 - 933 - 934 - 935</field>
+                                     </record>
+                                 </field>
+                             </record>
+                             <record id="account_financial_report_hr_fair_reserves0" model="account.report.line">
+                                 <field name="name">V. Fair value reserves</field>
+                                 <field name="code">HR_fair_reserves</field>
+                                 <field name="foldable" eval="True"/>
+                                 <field name="expression_ids">
+                                     <record id="account_financial_report_hr_based_fair_reserves_balance" model="account.report.expression">
+                                         <field name="label">balance</field>
+                                         <field name="engine">aggregation</field>
+                                         <field name="formula">HR_fair_value.balance + HR_cash_flow_prot.balance + HR_effect.balance</field>
+                                     </record>
+                                 </field>
+                                 <field name="children_ids">
+                                     <record id="account_financial_report_hr_fair_value0" model="account.report.line">
+                                         <field name="name">Fair value of available-for-sale financial assets</field>
+                                         <field name="code">HR_fair_value</field>
+                                         <field name="groupby">account_id</field>
+                                         <field name="foldable" eval="True"/>
+                                         <field name="expression_ids">
+                                             <record id="account_financial_report_hr_fair_value0_balance" model="account.report.expression">
+                                                 <field name="label">balance</field>
+                                                 <field name="engine">account_codes</field>
+                                                 <field name="formula">-9310</field>
+                                             </record>
+                                         </field>
+                                     </record>
+                                     <record id="account_financial_report_hr_cash_flow_prot0" model="account.report.line">
+                                         <field name="name">An effective part of cash flow protection</field>
+                                         <field name="code">HR_cash_flow_prot</field>
+                                         <field name="groupby">account_id</field>
+                                         <field name="foldable" eval="True"/>
+                                         <field name="expression_ids">
+                                             <record id="account_financial_report_hr_cash_flow_prot0_balance" model="account.report.expression">
+                                                 <field name="label">balance</field>
+                                                 <field name="engine">account_codes</field>
+                                                 <field name="formula">-9312</field>
+                                             </record>
+                                         </field>
+                                     </record>
+                                     <record id="account_financial_report_hr_effect0" model="account.report.line">
+                                         <field name="name">An effective part of the protection of net investment abroad</field>
+                                         <field name="code">HR_effect</field>
+                                         <field name="groupby">account_id</field>
+                                         <field name="foldable" eval="True"/>
+                                         <field name="expression_ids">
+                                             <record id="account_financial_report_hr_effect0_balance" model="account.report.expression">
+                                                 <field name="label">balance</field>
+                                                 <field name="engine">account_codes</field>
+                                                 <field name="formula">-9313</field>
+                                             </record>
+                                         </field>
+                                     </record>
+                                 </field>
+                            </record>
+                             <record id="account_financial_report_hr_retained0" model="account.report.line">
+                                 <field name="name">VI. Retained earnings or carried over loss</field>
+                                 <field name="code">HR_retained</field>
+                                 <field name="foldable" eval="True"/>
+                                 <field name="expression_ids">
+                                     <record id="account_financial_report_hr_based_retained_balance" model="account.report.expression">
+                                         <field name="label">balance</field>
+                                         <field name="engine">aggregation</field>
+                                         <field name="formula">HR_ret_earn.balance + HR_trans_loss.balance</field>
+                                     </record>
+                                 </field>
+                                 <field name="children_ids">
+                                     <record id="account_financial_report_hr_ret_earn0" model="account.report.line">
+                                         <field name="name">Retained earnings</field>
+                                         <field name="code">HR_ret_earn</field>
+                                         <field name="groupby">account_id</field>
+                                         <field name="foldable" eval="True"/>
+                                         <field name="expression_ids">
+                                             <record id="account_financial_report_hr_ret_earn0_balance" model="account.report.expression">
+                                                 <field name="label">balance</field>
+                                                 <field name="engine">account_codes</field>
+                                                 <field name="formula">-940 - 999999</field>
+                                             </record>
+                                         </field>
+                                     </record>
+                                     <record id="account_financial_report_hr_trans_loss0" model="account.report.line">
+                                         <field name="name">Transferred loss</field>
+                                         <field name="code">HR_trans_loss</field>
+                                         <field name="groupby">account_id</field>
+                                         <field name="foldable" eval="True"/>
+                                         <field name="expression_ids">
+                                             <record id="account_financial_report_hr_trans_loss0_balance" model="account.report.expression">
+                                                 <field name="label">balance</field>
+                                                 <field name="engine">account_codes</field>
+                                                 <field name="formula">-941</field>
+                                             </record>
+                                         </field>
+                                     </record>
+                                 </field>
+                             </record>
+                             <record id="account_financial_report_hr_profit_loss0" model="account.report.line">
+                                 <field name="name">VII. Profit or loss for the year</field>
+                                 <field name="code">HR_profit_loss</field>
+                                 <field name="foldable" eval="True"/>
+                                 <field name="expression_ids">
+                                     <record id="account_financial_report_hr_based_profit_loss_balance" model="account.report.expression">
+                                         <field name="label">balance</field>
+                                         <field name="engine">aggregation</field>
+                                         <field name="formula">HR_profit_loss_before.balance - HR_profit_tax.balance</field>
+                                         <field name="subformula">cross_report</field>
+                                     </record>
+                                 </field>
+                             </record>
+                             <record id="account_financial_report_hr_controlling0" model="account.report.line">
+                                 <field name="name">VIII. Non-controlling interests</field>
+                                 <field name="code">HR_controlling</field>
+                                 <field name="groupby">account_id</field>
+                                 <field name="foldable" eval="True"/>
+                                 <field name="expression_ids">
+                                     <record id="account_financial_report_hr_based_controlling_balance" model="account.report.expression">
+                                         <field name="label">balance</field>
+                                         <field name="engine">account_codes</field>
+                                         <field name="formula">-96</field>
+                                     </record>
+                                 </field>
+                             </record>
+                         </field>
+                    </record>
+                    <!-- Section B -->
+                    <record id="account_financial_report_hr_passive_sectionB0" model="account.report.line">
+                        <field name="name">B. Reservation</field>
+                        <field name="code">HR_reservation</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_hr_passive_sectionB0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">HR_provision_emp_benef.balance + HR_provision_tax_lia.balance + HR_provision_renew.balance + HR_provision_legal.balance +HR_provision_risk.balance + HR_provision_other.balance </field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_hr_provision_emp_benef0" model="account.report.line">
+                                <field name="name">Provision for employee benefits</field>
+                                <field name="code">HR_provision_emp_benef</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_provision_emp_benef_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-280</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_provision_tax_lia0" model="account.report.line">
+                                <field name="name">Provision for tax liabilities</field>
+                                <field name="code">HR_provision_tax_lia</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_provision_tax_lia_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-281</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_provision_legal0" model="account.report.line">
+                                <field name="name">Provisions for legal</field>
+                                <field name="code">HR_provision_legal</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_provision_legal_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-282</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_provision_renew0" model="account.report.line">
+                                <field name="name">Provisions for renewal of natural resources</field>
+                                <field name="code">HR_provision_renew</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_provision_renew_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-283</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_provision_risk0" model="account.report.line">
+                                <field name="name">Provision for risks within warranty period</field>
+                                <field name="code">HR_provision_risk</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_provision_risk_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-284</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_provision_other0" model="account.report.line">
+                                <field name="name">Other provisions</field>
+                                <field name="code">HR_provision_other</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_provision_other_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-285</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- Section C -->
+                    <record id="account_financial_report_hr_passive_sectionC0" model="account.report.line">
+                        <field name="name">C. Long term liabilities</field>
+                        <field name="code">HR_long_term1</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_hr_passive_sectionC0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula"> HR_deferred_tax.balance +HR_other_long_lia.balance +HR_obli_secu.balance + HR_commi_supp.balance+ HR_obli_adv.balance + HR_obli_entre.balance + HR_obli_loan.balance + HR_obli_comp.balance + HR_obli_loan1.balance +HR_obli_loan2.balance + HR_lia_bank.balance</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_hr_obli_entre0" model="account.report.line">
+                                <field name="name">Obligations towards Entrepreneurs within the Group</field>
+                                <field name="code">HR_obli_entre</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_obli_entre_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-2500</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_obli_loan0" model="account.report.line">
+                                <field name="name">Obligations for loans, deposits and the like of entrepreneurs within the group</field>
+                                <field name="code">HR_obli_loan</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_obli_loan_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-2501</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_obli_comp0" model="account.report.line">
+                                <field name="name">Obligations towards companies connected by participating interests</field>
+                                <field name="code">HR_obli_comp</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_obli_comp_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-257</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_obli_loan1" model="account.report.line">
+                                <field name="name">Obligations for loans, deposits and the like of companies connected by a participating interest</field>
+                                <field name="code">HR_obli_loan1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_obli_loan1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-2510</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_obli_loan2" model="account.report.line">
+                                <field name="name">Obligations for loans, deposits and the like interest</field>
+                                <field name="code">HR_obli_loan2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_obli_loan2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-2511</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_lia_bank0" model="account.report.line">
+                                <field name="name">Liabilities to banks and other financial institutions</field>
+                                <field name="code">HR_lia_bank</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_lia_bank0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-252</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_obli_adv0" model="account.report.line">
+                                <field name="name">Obligations for advances</field>
+                                <field name="code">HR_obli_adv</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_obli_adv0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-254</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_commi_supp0" model="account.report.line">
+                                <field name="name">Commitments towards suppliers</field>
+                                <field name="code">HR_commi_supp</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_commi_supp0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-255</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_obli_secu0" model="account.report.line">
+                                <field name="name">Obligations for securities</field>
+                                <field name="code">HR_obli_secu</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_obli_secu0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-256</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_other_long_lia0" model="account.report.line">
+                                <field name="name">Other long-term liabilities</field>
+                                <field name="code">HR_other_long_lia</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_other_long_lia0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-253 - 258 - 259</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_deferred_tax0" model="account.report.line">
+                                <field name="name">Deferred tax liability</field>
+                                <field name="code">HR_deferred_tax</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_deferred_tax0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-260</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- Section D -->
+                    <record id="account_financial_report_hr_passive_sectionD0" model="account.report.line">
+                        <field name="name">D. Short term liabilities</field>
+                        <field name="code">HR_short_term1</field>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_hr_passive_sectionD0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">HR_lia_share_res.balance +HR_other_liab.balance + HR_lia_non_current.balance + HR_lia_tax_contri.balance + HR_lia_emp.balance + HR_lia_secu.balance + HR_commit_supp.balance + HR_lia_adv.balance + HR_lia_bank_other.balance + HR_lia_entre.balance + HR_obli_loans.balance + HR_obli_comp_part_int.balance + HR_obli_loans_part_int.balance + HR_lease_lia.balance </field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_hr_lia_entre0" model="account.report.line">
+                                <field name="name">Liabilities to entrepreneurs within the group</field>
+                                <field name="code">HR_lia_entre</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_lia_entre_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-2000</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_obli_loans0" model="account.report.line">
+                                <field name="name">Obligations for loans, deposits and the like of entrepreneurs within the group</field>
+                                <field name="code">HR_obli_loans</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_obli_loans_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-2001</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_obli_comp_part_int0" model="account.report.line">
+                                <field name="name">Obligations towards companies connected by participating interests</field>
+                                <field name="code">HR_obli_comp_part_int</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_obli_comp_part_int0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-2130</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_obli_loans_part_int0" model="account.report.line">
+                                <field name="name">Obligations for loans, deposits and the like of companies connected by a participating interest</field>
+                                <field name="code">HR_obli_loans_part_int</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_obli_loans_part_int0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-2131</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_lease_lia0" model="account.report.line">
+                                <field name="name">Lease liabilities and deposits received</field>
+                                <field name="code">HR_lease_lia</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_lease_lia0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-214</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_lia_bank_other0" model="account.report.line">
+                                <field name="name">Liabilities towards banks and other financial institutions</field>
+                                <field name="code">HR_lia_bank_other</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_lia_bank_other0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-215</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_lia_adv0" model="account.report.line">
+                                <field name="name">Liabilities for advances received</field>
+                                <field name="code">HR_lia_adv</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_lia_adv0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-225</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_commit_supp0" model="account.report.line">
+                                <field name="name">Commitments towards suppliers</field>
+                                <field name="code">HR_commit_supp</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_commit_supp0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-220 - 221 - 222 - 223</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_lia_secu0" model="account.report.line">
+                                <field name="name">Liabilities for securities</field>
+                                <field name="code">HR_lia_secu</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_lia_secu0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-210 - 211 - 212</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_lia_emp0" model="account.report.line">
+                                <field name="name">Liabilities towards employees</field>
+                                <field name="code">HR_lia_emp</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_lia_emp0_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-230</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_lia_tax_contri" model="account.report.line">
+                                <field name="name">Liabilities for taxes, contributions and similar benefits</field>
+                                <field name="code">HR_lia_tax_contri</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_lia_tax_contri_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-24</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_lia_share_res" model="account.report.line">
+                                <field name="name">Liabilities based on the share in the result</field>
+                                <field name="code">HR_lia_share_res</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_lia_share_res_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-201</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_lia_non_current" model="account.report.line">
+                                <field name="name">Liabilities based on non-current assets intended for sale</field>
+                                <field name="code">HR_lia_non_current</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_lia_non_current_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-218</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_hr_other_liab" model="account.report.line">
+                                <field name="name">Other short-term liabilities</field>
+                                <field name="code">HR_other_liab</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="account_financial_report_hr_other_liab_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-216 - 217 - 224 - 231 - 232 - 233 - 234 - 235 - 236 - 237 - 238 - 239</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- Section E -->
+                    <record id="account_financial_report_hr_passive_sectionE0" model="account.report.line">
+                        <field name="name">E. Deferred payment of costs and the income of the future period</field>
+                        <field name="code">HR_deferred1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="account_financial_report_hr_passive_sectionE0_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-29</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

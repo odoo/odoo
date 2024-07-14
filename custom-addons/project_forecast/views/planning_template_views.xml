@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="planning_slot_template_view_form" model="ir.ui.view">
+        <field name="name">planning.slot.template.form</field>
+        <field name="model">planning.slot.template</field>
+        <field name="inherit_id" ref="planning.planning_slot_template_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='role_id']" position="after">
+                <field name="project_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="planning_slot_template_view_tree" model="ir.ui.view">
+        <field name="name">planning.slot.template.tree</field>
+        <field name="model">planning.slot.template</field>
+        <field name="inherit_id" ref="planning.planning_slot_template_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='role_id']" position="after">
+                <field name="project_id" optional="show" options="{'no_open': 1}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="planning_slot_template_inherit_view_kanban" model="ir.ui.view">
+        <field name="name">planning.slot.template.view.kanban.inherit</field>
+        <field name="model">planning.slot.template</field>
+        <field name="inherit_id" ref="planning.planning_slot_template_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="project_id" />
+            </xpath>
+            <div class="oe_kanban_card oe_kanban_global_click" position="inside">
+                <div>
+                    <div class="o_row">
+                        <field name="project_id" />
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="planning_slot_template_inherit_view_search" model="ir.ui.view">
+        <field name="name">planning.slot.template.view.search.inherit</field>
+        <field name="model">planning.slot.template</field>
+        <field name="inherit_id" ref="planning.planning_slot_template_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='role_id']" position="after">
+                <field name="project_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='my_role']" position="after">
+                <filter string="My Projects" name="my_project" domain="[('project_id.user_id','=', uid)]" groups="project.group_project_user"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,483 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* appointment_account_payment
+# 
+# Translators:
+# Wil Odoo, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Junko Augias, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:10+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: appointment_account_payment
+#. odoo-python
+#: code:addons/appointment_account_payment/models/calendar_booking.py:0
+#, python-format
+msgid ""
+"%(name)s\n"
+"%(date_start)s at %(time_start)s to\n"
+"%(date_end)s at %(time_end)s (%(timezone)s)"
+msgstr ""
+"%(name)s\n"
+"%(date_start)s 以下における %(time_start)s から\n"
+"%(date_end)s 以下における %(time_end)s (%(timezone)s)"
+
+#. module: appointment_account_payment
+#. odoo-python
+#: code:addons/appointment_account_payment/models/calendar_booking.py:0
+#, python-format
+msgid ""
+"%(name)s with %(staff_user)s\n"
+"%(date_start)s at %(time_start)s to\n"
+"%(date_end)s at %(time_end)s (%(timezone)s)"
+msgstr ""
+"%(name)s  %(staff_user)sと\n"
+"%(date_start)s 以下における %(time_start)s から\n"
+"%(date_end)s 以下における %(time_end)s (%(timezone)s)"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "(timezone:"
+msgstr "(時間帯:"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid ""
+"<br/><i class=\"fa fa-cog me-1\" role=\"img\" aria-label=\"Edit\" "
+"title=\"Configure Providers in backend\"/><em>Configure Payment "
+"Providers</em>"
+msgstr ""
+"<br/><i class=\"fa fa-cog me-1\" role=\"img\" aria-label=\"Edit\" "
+"title=\"Configure Providers in backend\"/><em>決済プロバイダー設定</em>"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "<i class=\"fa fa-pencil fa-fw me-1\"/>Edit my appointment"
+msgstr "<i class=\"fa fa-pencil fa-fw me-1\"/>自分の予約を編集"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_type_view_form
+msgid ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Configure Payment "
+"Providers"
+msgstr "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>決済プロバイダー設定 "
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid ""
+"<span class=\"text-nowrap\"><i class=\"oi oi-arrow-right mx-2\"/>Back to "
+"edit mode</span>"
+msgstr ""
+"<span class=\"text-nowrap\"><i class=\"oi oi-arrow-right "
+"mx-2\"/>編集モードに戻る</span>"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "<span>Online</span>"
+msgstr "<span>オンライン</span>"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid ""
+"<strong>No suitable payment option could be found.</strong>\n"
+"                    If you believe that it is an error, please contact the website administrator."
+msgstr ""
+"<strong>適用可能な決済オプションが見つかりませんでした</strong>\n"
+"                                エラーと思われる場合は、サイトの管理者までお問い合わせ下さい。"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid ""
+"<strong>Warning</strong> Make sure you are logged in as the right partner "
+"before making this payment."
+msgstr "<strong>警告</strong>この支払を行う前に適正な取引先にログインしていることを確認して下さい。"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "<strong>Warning</strong> The currency is missing or incorrect."
+msgstr "<strong>警告</strong>通貨がないか、間違っています。"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "<strong>Warning</strong> You must be logged in to pay."
+msgstr "<strong>警告</strong> 支払いにはログインが必要です。"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,help:appointment_account_payment.field_product_product__detailed_type
+#: model:ir.model.fields,help:appointment_account_payment.field_product_template__detailed_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"在庫可能品は在庫管理対象の製品です。在庫アプリのインストールが必要です。\n"
+"消耗品は移動処理の対象ではあるものの、厳密な在庫管理対象ではない製品です。\n"
+"サービス品は物理的なモノが存在しない無形の製品です。"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__booking_token
+msgid "Access Token"
+msgstr "アクセストークン"
+
+#. module: appointment_account_payment
+#: model:ir.model.constraint,message:appointment_account_payment.constraint_appointment_type_check_product_and_payment_step
+msgid "Activating the payment step requires a product"
+msgstr "支払ステップを有効にするには、プロダクトが必要です"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "Amount"
+msgstr "金額"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view_form
+msgid "Answers"
+msgstr "回答"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Appointment"
+msgstr "予約"
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_appointment_answer_input
+msgid "Appointment Answer Inputs"
+msgstr "アポイントメント回答入力"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__appointment_answer_input_ids
+msgid "Appointment Answers"
+msgstr "アポイントメント回答"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__appointment_invite_id
+msgid "Appointment Invite"
+msgstr "アポイントメント招待"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__account_move_id
+msgid "Appointment Invoice"
+msgstr "予約請求書"
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_appointment_type
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__appointment_type_id
+msgid "Appointment Type"
+msgstr "予約タイプ"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__asked_capacity
+msgid "Asked Capacity"
+msgstr "要求されたキャパシティ"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Attendees"
+msgstr "出席者"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view_form
+msgid "Booking"
+msgstr "予約"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields.selection,name:appointment_account_payment.selection__product_template__detailed_type__booking_fees
+#: model:product.template,name:appointment_account_payment.default_booking_product_product_template
+msgid "Booking Fees"
+msgstr "予約料金"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__booking_line_ids
+msgid "Booking Lines"
+msgstr "予約明細"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_appointment_answer_input__calendar_event_id
+msgid "Calendar Event"
+msgstr "カレンダーイベント"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__capacity_reserved
+msgid "Capacity Reserved"
+msgstr "予約済キャパシティ"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__capacity_used
+msgid "Capacity Used"
+msgstr "キャパシティ使用済"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_form
+msgid "Confirm Appointment"
+msgstr "アポイントメントの確認"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__partner_id
+msgid "Contact"
+msgstr "連絡先"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__create_uid
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__create_date
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__name
+msgid "Customer Name"
+msgstr "顧客名"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__description
+msgid "Description"
+msgstr "説明"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Details"
+msgstr "詳細"
+
+#. module: appointment_account_payment
+#: model_terms:appointment.type,message_intro:appointment_account_payment.appointment_type_online_cooking_lesson
+msgid ""
+"Discover the secrets kept in high-end kitchens with one of our starred "
+"chefs, from the comfort of your own home."
+msgstr "ご自宅にいながらにして、星付きシェフと一緒に高級厨房に隠された秘密を発見しましょう。"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__display_name
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__duration
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Duration"
+msgstr "期間"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "For"
+msgstr "以下用:"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__guest_ids
+msgid "Guests"
+msgstr "ゲスト数"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__id
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__not_available
+msgid "Is Not Available"
+msgstr "利用不可"
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_account_move
+msgid "Journal Entry"
+msgstr "仕訳"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__write_uid
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__write_date
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Location"
+msgstr "ロケーション"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__calendar_event_id
+msgid "Meeting"
+msgstr "ミーティング"
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_calendar_booking
+#: model:ir.model.fields,field_description:appointment_account_payment.field_account_bank_statement_line__calendar_booking_ids
+#: model:ir.model.fields,field_description:appointment_account_payment.field_account_move__calendar_booking_ids
+#: model:ir.model.fields,field_description:appointment_account_payment.field_account_payment__calendar_booking_ids
+#: model:ir.model.fields,field_description:appointment_account_payment.field_appointment_answer_input__calendar_booking_id
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__calendar_booking_id
+msgid "Meeting Booking"
+msgstr "ミーティング予約"
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_calendar_booking_line
+msgid "Meeting Resource Booking"
+msgstr "ミーティングリソース予約"
+
+#. module: appointment_account_payment
+#: model:appointment.type,name:appointment_account_payment.appointment_type_online_cooking_lesson
+#: model:product.template,name:appointment_account_payment.product_appointment_type_online_cooking_lesson_product_template
+msgid "Online Cooking Lesson"
+msgstr "オンライン料理レッスン"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__staff_user_id
+msgid "Operator"
+msgstr "担当者"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "Payment for \""
+msgstr "以下の支払 \""
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_type_view_form
+msgid "Pick a Product"
+msgstr "プロダクトを選択"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_form
+msgid "Proceed to Payment"
+msgstr "支払へ進む"
+
+#. module: appointment_account_payment
+#: model:ir.model,name:appointment_account_payment.model_product_template
+#: model:ir.model.fields,field_description:appointment_account_payment.field_appointment_type__product_id
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__product_id
+msgid "Product"
+msgstr "プロダクト"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_product_product__detailed_type
+#: model:ir.model.fields,field_description:appointment_account_payment.field_product_template__detailed_type
+msgid "Product Type"
+msgstr "プロダクトタイプ"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,help:appointment_account_payment.field_appointment_type__has_payment_step
+msgid "Require visitors to pay to confirm their booking"
+msgstr "予約確認のため、訪問者に支払いを要求"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking_line__appointment_resource_id
+msgid "Resource"
+msgstr "リソース"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view_form
+msgid "Resources"
+msgstr "リソース"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "Schedule another appointment"
+msgstr "他の予定をスケジュール"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "Service"
+msgstr "サービス"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__start
+msgid "Start"
+msgstr "開始"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_calendar_booking__stop
+msgid "Stop"
+msgstr "停止"
+
+#. module: appointment_account_payment
+#: model_terms:appointment.type,message_confirmation:appointment_account_payment.appointment_type_online_cooking_lesson
+msgid ""
+"Thank you for your reservation. We will soon contact you to discuss menu "
+"options."
+msgstr "ご予約ありがとうございます。メニューのご相談につきましては、追ってご連絡させて頂きます。"
+
+#. module: appointment_account_payment
+#: model:ir.model.constraint,message:appointment_account_payment.constraint_appointment_answer_input_check_event_or_booking
+msgid "The answer inputs must be linked to a meeting or to a booking"
+msgstr "回答入力は、ミーティングまたは予約にリンクされている必要があります。"
+
+#. module: appointment_account_payment
+#. odoo-python
+#: code:addons/appointment_account_payment/models/calendar_booking.py:0
+#, python-format
+msgid ""
+"The following booking was not confirmed due to insufficient availability or "
+"configuration changes: %s"
+msgstr "以下の予約は、空席が十分でなかったため、または構成が変更されたため、確定されませんでした:%s"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "There is nothing to pay."
+msgstr "支払うものはありません。"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "This invoice is already paid for."
+msgstr "この請求書は既に支払済です。"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.appointment_payment
+msgid "This is a preview of the customer appointment payment form."
+msgstr "これはお客様の予約支払いフォームのプレビューです。"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid ""
+"Unfortunately, it looks like this booking is not possible anymore. Please "
+"contact us to find an alternative."
+msgstr "残念ながら、この予約はできません。代替案をお探しいたしますので、ご連絡下さい。"
+
+#. module: appointment_account_payment
+#: model:ir.model.fields,field_description:appointment_account_payment.field_appointment_type__has_payment_step
+msgid "Up-front Payment"
+msgstr "前払い決済"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "When"
+msgstr "日時"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid ""
+"Your appointment has not been booked yet. It will be confirmed upon payment "
+"confirmation."
+msgstr "予約はまだされていません。ご入金確認後に確定となります。"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "people"
+msgstr "人"
+
+#. module: appointment_account_payment
+#: model_terms:ir.ui.view,arch_db:appointment_account_payment.calendar_booking_view
+msgid "with"
+msgstr "と:"

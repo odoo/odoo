@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="helpdesk_ticket_view_form_inherit_website_helpdesk_forum" model="ir.ui.view">
+        <field name="name">Tickets: Website</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="priority">90</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="use_website_helpdesk_forum" invisible="1"/>
+                <field name="can_share_forum" invisible="1"/>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_share_ticket_on_forum" invisible="not can_share_forum" type="object" string="Share on Forum" data-hotkey="f"/>
+            </xpath>
+            <xpath expr="//button[@name='action_open_helpdesk_ticket']" position="before">
+                <button name="action_open_forum_posts" type="object" class="oe_stat_button" icon="fa-comments" invisible="not use_website_helpdesk_forum or forum_post_count == 0">
+                    <field name="forum_post_count" string="Forum Posts" widget="statinfo" />
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="helpdesk_team_view_form_inherit_website_helpdesk_forum" model="ir.ui.view">
+        <field name="name">helpdesk.team.form.inherit.website.forum</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form"/>
+        <field name="model">helpdesk.team</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='use_website_helpdesk_forum']" position="after">
+                <div class="mt16" invisible="not use_website_helpdesk_forum">
+                    <label for="website_forum_ids"/>
+                    <field name="website_forum_ids" widget="many2many_tags"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

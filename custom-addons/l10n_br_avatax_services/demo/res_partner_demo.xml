@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_br_avatax.demo_partner_l10n_br_avatax" model="res.partner">
+        <field name="city_id" ref="l10n_br_avatax_services.br_city_rio_de_janeiro"/>
+    </record>
+
+    <record id="l10n_br_avatax.demo_partner_l10n_br_avatax_industry" model="res.partner">
+        <field name="city_id" ref="l10n_br_avatax_services.br_city_rio_de_janeiro"/>
+    </record>
+
+    <record id="l10n_br_avatax.demo_partner_l10n_br_avatax_retail" model="res.partner">
+        <field name="city_id" ref="l10n_br_avatax_services.br_city_rio_de_janeiro"/>
+    </record>
+
+    <record id="l10n_br_avatax.demo_partner_l10n_br_avatax_wholesale" model="res.partner">
+        <field name="city_id" ref="l10n_br_avatax_services.br_city_manaus"/>
+    </record>
+
+    <record id="l10n_br.partner_demo_company_br" model="res.partner">
+        <field name="city_id" ref="l10n_br_avatax_services.br_city_rio_de_janeiro"/>
+    </record>
+
+    <record id="demo_partner_l10n_br_avatax_estimated_profit" model="res.partner">
+        <field name="name">BR Company Customer Estimated Profit</field>
+        <field name="is_company" eval="True"/>
+        <field name="l10n_latam_identification_type_id" ref="l10n_br.cnpj"/>
+        <field name="street">Rua Barão de Jundiaí 523</field>
+        <field name="street2">Lapa</field>
+        <field name="city">São Paulo</field>
+        <field name="city_id" ref="br_city_sao_paulo"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="zip">05073-010</field>
+        <field name="vat">51494569013170</field>
+        <field name="l10n_br_tax_regime">estimatedProfit</field>
+        <field name="state_id" ref="base.state_br_sp"/>
+        <field name="l10n_br_taxpayer">icms</field>
+        <field name="l10n_br_activity_sector">service</field>
+        <field name="l10n_br_subject_cofins">T</field>
+        <field name="l10n_br_subject_pis">T</field>
+        <field name="l10n_br_is_subject_csll" eval="True"/>
+    </record>
+
+    <record id="demo_partner_l10n_br_avatax_simplified" model="res.partner">
+        <field name="name">BR Company Customer Simplified</field>
+        <field name="is_company" eval="True"/>
+        <field name="l10n_latam_identification_type_id" ref="l10n_br.cnpj"/>
+        <field name="street">Rua Barão de Jundiaí 523</field>
+        <field name="street2">Lapa</field>
+        <field name="city">São Paulo</field>
+        <field name="city_id" ref="br_city_sao_paulo"/>
+        <field name="country_id" ref="base.br"/>
+        <field name="zip">05073-010</field>
+        <field name="vat">51494569013170</field>
+        <field name="l10n_br_tax_regime">simplified</field>
+        <field name="state_id" ref="base.state_br_sp"/>
+        <field name="l10n_br_taxpayer">icms</field>
+        <field name="l10n_br_activity_sector">service</field>
+        <field name="l10n_br_subject_cofins">T</field>
+        <field name="l10n_br_subject_pis">T</field>
+        <field name="l10n_br_is_subject_csll" eval="True"/>
+        <field name="l10n_br_iss_simples_rate">5.00</field>
+    </record>
+</odoo>

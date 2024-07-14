@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_reporting_l10n_ch"
+        name="Switzerland"
+        sequence="31"
+        parent="hr_payroll.menu_hr_payroll_report"/>
+    
+        <menuitem
+            id="menu_l10n_ch_monthly_summary"
+            name="Monthly Summary"
+            parent="l10n_ch_hr_payroll.menu_reporting_l10n_ch"
+            action="l10n_ch_monthly_summary_action"
+            sequence="200"
+        />
+
+        <menuitem
+            id="menu_l10n_ch_individual_account"
+            name="Individual Accounts"
+            parent="l10n_ch_hr_payroll.menu_reporting_l10n_ch"
+            action="l10n_ch_individual_account_action"
+            sequence="201"/>
+
+    <menuitem
+        id="menu_configuration_l10n_ch"
+        name="Switzerland"
+        sequence="50"
+        parent="hr_work_entry_contract_enterprise.menu_hr_payroll_configuration"/>
+
+        <menuitem
+            id="menu_l10n_ch_social_insurance"
+            name="AVS/AC Insurances"
+            parent="l10n_ch_hr_payroll.menu_configuration_l10n_ch"
+            action="action_l10n_ch_social_insurance"
+            sequence="5"
+        />
+
+        <menuitem
+            id="menu_l10n_ch_compensation_fund"
+            name="Family Allowances"
+            parent="l10n_ch_hr_payroll.menu_configuration_l10n_ch"
+            action="action_l10n_ch_compensation_fund"
+            sequence="6"
+        />
+
+        <menuitem
+            id="menu_l10n_ch_accident_insurance"
+            name="AAP/AANP Insurances"
+            parent="l10n_ch_hr_payroll.menu_configuration_l10n_ch"
+            action="action_l10n_ch_accident_insurance"
+            sequence="7"
+        />
+
+        <menuitem
+            id="menu_l10n_ch_additional_accident_insurance"
+            name="LAAC Insurances"
+            parent="l10n_ch_hr_payroll.menu_configuration_l10n_ch"
+            action="action_l10n_ch_additional_accident_insurance"
+            sequence="8"
+        />
+
+        <menuitem
+            id="menu_l10n_ch_sickness_insurance"
+            name="IJM Insurances"
+            parent="l10n_ch_hr_payroll.menu_configuration_l10n_ch"
+            action="action_l10n_ch_sickness_insurance"
+            sequence="9"
+        />
+
+        <menuitem
+            id="menu_l10n_ch_lpp_insurance"
+            name="LPP Insurances"
+            parent="l10n_ch_hr_payroll.menu_configuration_l10n_ch"
+            action="action_l10n_ch_lpp_insurance"
+            sequence="10"
+        />
+
+        <menuitem
+            id="menu_l10n_ch_wage_types"
+            name="Wage Types"
+            parent="l10n_ch_hr_payroll.menu_configuration_l10n_ch"
+            action="action_hr_salary_rule_l10n_ch_wage_types"
+            sequence="20"
+        />
+
+        <menuitem
+            id="menu_l10n_ch_tax_rate_import_wizard"
+            name="Import Tax Rates"
+            parent="l10n_ch_hr_payroll.menu_configuration_l10n_ch"
+            action="l10n_ch_tax_rate_import_wizard_action"
+            sequence="22"
+        />
+
+        <menuitem
+            id="menu_l10n_ch_location_unit"
+            name="Work Locations"
+            parent="l10n_ch_hr_payroll.menu_configuration_l10n_ch"
+            action="action_l10n_ch_location_unit"
+            sequence="30"
+            groups="hr_payroll.group_hr_payroll_user"
+        />
+
+
+</odoo>
+

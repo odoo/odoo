@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="dte_subtemplate" inherit_id="l10n_cl_edi.dte_subtemplate">
+            <xpath expr="//IndServicio" position="after">
+                <IndServicio t-elif="move.l10n_cl_customs_service_indicator" t-out="move.l10n_cl_customs_service_indicator"/>
+            </xpath>
+            <xpath expr="//CmnaOrigen" position="after">
+                    <CiudadOrigen t-if="move.l10n_latam_document_type_id._is_doc_type_export()" t-out="format_length(move.company_id.partner_id.city or '', 20)"/>
+            </xpath>
+            <xpath expr="//CmnaRecep" position="after">
+                    <CiudadRecep t-if="move.l10n_latam_document_type_id._is_doc_type_export()" t-out="format_length(move.partner_id.city or move.commercial_partner_id.city or '', 20)"/>
+            </xpath>
+            <!--Aduana-->
+            <xpath expr="//CodModVenta" position="replace">
+<!-- Indentation is messy because this creates a well indented XML -->
+<CodModVenta t-if="move.l10n_cl_customs_sale_mode and move.l10n_latam_document_type_id._is_doc_type_export()" t-out="move.l10n_cl_customs_sale_mode"/>
+                        </xpath>
+            <xpath expr="//CodModVenta" position="after">
+                        <CodClauVenta t-if="move.invoice_incoterm_id and move.l10n_latam_document_type_id._is_doc_type_export()" t-out="move._l10n_cl_customs_incoterm(move.invoice_incoterm_id.code)"/>
+            </xpath>
+            <xpath expr="//TotClauVenta" position="after">
+                <t t-if="move.l10n_latam_document_type_id._is_doc_type_export()">
+                        <CodViaTransp t-out="move.l10n_cl_customs_transport_type"/>
+                        <CodPtoEmbarque t-if="move.l10n_cl_port_origin_id" t-out="move.l10n_cl_port_origin_id.code"/>
+                        <CodPtoDesemb t-if="move.l10n_cl_port_destination_id" t-out="move.l10n_cl_port_destination_id.code"/>
+                        <TotBultos t-out="move.l10n_cl_customs_quantity_of_packages"/>
+                        <CodPaisRecep t-out="move.partner_id.country_id.l10n_cl_customs_code or '999'"/>
+                        <CodPaisDestin t-if="move.partner_shipping_id not in (move.partner_id | move.commercial_partner_id)"
+                                       t-out="move.partner_shipping_id.country_id.l10n_cl_customs_code or '999'"/>
+                </t>
+            </xpath>
+            <!--End of Aduana-->
+        </template>
+    </data>
+</odoo>

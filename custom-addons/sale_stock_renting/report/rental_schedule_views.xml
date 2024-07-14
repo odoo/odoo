@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="rental_schedule_view_search_inherit_lots" model="ir.ui.view">
+        <field name="name">sale.rental.schedule.search.inherit.stock</field>
+        <field name="model">sale.rental.schedule</field>
+        <field name="inherit_id" ref="sale_renting.rental_schedule_view_search"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="lot_id" groups="stock.group_production_lot"/>
+            </field>
+            <filter name="Product" position="after">
+                <filter string="Serial Number" name="Lot" context="{'group_by': 'lot_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="rental_schedule_view_form_inherit_lots" model="ir.ui.view">
+        <field name="name">sale.rental.schedule.form</field>
+        <field name="model">sale.rental.schedule</field>
+        <field name="inherit_id" ref="sale_renting.rental_schedule_view_form"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="lot_id" invisible="not lot_id"/>
+            </field>
+            <field name="company_id" position="before">
+                <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="rental_schedule_view_gantt_inherit_stock" model="ir.ui.view">
+        <field name="name">sale.rental.schedule.gantt</field>
+        <field name="model">sale.rental.schedule</field>
+        <field name="inherit_id" ref="sale_renting.rental_schedule_view_gantt"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="is_available"/>
+            </field>
+            <xpath expr="//gantt" position="attributes">
+                <attribute name="decoration-danger">late or not is_available</attribute>
+            </xpath>
+            <xpath expr="//gantt/templates//div[@t-name='gantt-popover']" position="inside">
+                <div t-if="!is_available" class="text-danger mt-2 mb-0">
+                    Other rental(s) in conflict.
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_renting.action_rental_order_schedule" model="ir.actions.act_window">
+        <field name="context">{
+            'search_default_Rentals': 1,
+            'group_by_no_leaf': 1,
+            'sale_stock_renting_show_total_qty': 1,
+        }</field>
+    </record>
+
+</odoo>

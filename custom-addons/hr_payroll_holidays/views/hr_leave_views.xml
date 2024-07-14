@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_leave_view_search" model="ir.ui.view">
+        <field name="name">hr.leave.view.form.inherit.hr.payroll.holidays</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_search_manager"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='group_employee']" position="before">
+                <separator/>
+                <filter string="To Defer" name="to_defer" domain="[('payslip_state', '=', 'blocked')]" groups="hr_holidays.group_hr_holidays_user"/>
+                <separator/>
+            </xpath>
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="employee_id" string="Employee Code" filter_domain="[('employee_id.registration_number','ilike', self)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_action_open_to_defer" model="ir.actions.act_window">
+        <field name="name">Time Off to Defer</field>
+        <field name="res_model">hr.leave</field>
+        <field name="view_mode">tree,kanban,form,calendar,activity</field>
+        <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_manager"/>
+        <field name="domain">[('payslip_state', '=', 'blocked'), ('state', '=', 'validate'), ('employee_company_id', 'in', allowed_company_ids)]</field>
+    </record>
+
+    <record id="hr_leave_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.leave.view.form.inherit</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form_manager"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='holiday_status_id']" position="after">
+                <field name="payslip_state" widget="state_selection"
+                    options="{'hide_label': False}" class="ms-auto mb-2"/>
+            </xpath>
+            <button name="action_refuse" position="before">
+                <button
+                    string="Report to Next Month"
+                    name="action_report_to_next_month"
+                    type="object"
+                    class="oe_highlight"
+                    groups="hr_payroll.group_hr_payroll_user"
+                    invisible="payslip_state != 'blocked' or state != 'validate'"/>
+            </button>
+        </field>
+    </record>
+
+    <record id="hr_leave_view_tree_inherit_payroll" model="ir.ui.view">
+        <field name="name">hr.holidays.view.tree.inherit.work.entry</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="payslip_state" widget="state_selection" options="{'hide_label': False}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_work_entry_action" model="ir.actions.act_window">
+        <field name="name">Time Off</field>
+        <field name="res_model">hr.leave</field>
+        <field name="view_mode">tree,kanban,form,calendar,activity,gantt</field>
+        <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_manager"/>
+        <field name="view_id" ref="hr_payroll_holidays.hr_leave_view_tree_inherit_payroll"/>
+        <field name="context">{
+            'search_default_to_defer':1,
+            'hide_employee_name': 1
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Meet the time off dashboard.
+            </p><p>
+                A great way to keep track on employee’s PTOs, sick days, and approval status.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_work_entry_leave_to_approve"
+        name="Time Off to Report"
+        action="hr_leave_work_entry_action"
+        parent="hr_work_entry_contract_enterprise.menu_hr_payroll_work_entries_root"
+        sequence="75"
+        groups="hr_holidays.group_hr_holidays_user"/>
+
+</odoo>

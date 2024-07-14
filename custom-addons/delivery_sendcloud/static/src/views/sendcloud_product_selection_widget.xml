@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="delivery_sendcloud.SendcloudProductWidget">
+    <div class="d-flex flex-column gap-1">
+        <div class="row">
+            <Dropdown t-if="products" class="'btn-group col-12'" togglerClass="'btn btn-primary'" showCaret="true">
+                <t t-set-slot="toggler">
+                    <t t-out="activeProduct.name"/>
+                </t>
+                <t t-foreach="products" t-as="pr" t-key='pr.code'>
+                    <DropdownItem onSelected="() => this._onSelected(pr.code)"><t t-out="pr.name"/></DropdownItem>
+                </t>
+            </Dropdown>
+        </div>
+        <t t-if="!isReturn || state.code !== false">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="o_form_label">Carrier</label>
+                        </div>
+                        <div class="col-6">
+                            <t t-out="activeProduct.carrier"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="o_form_label">Weight range</label>
+                        </div>
+                        <div class="col-6">
+                            <t t-out="weightRange"/><span> g</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="o_form_label">Max length</label>
+                        </div>
+                        <div class="col-6">
+                            <t t-out="maxLength"/><span> cm</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="o_form_label">Max width</label>
+                        </div>
+                        <div class="col-6">
+                            <t t-out="maxWidth"/><span> cm</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="o_form_label">Max height</label>
+                        </div>
+                        <div class="col-6">
+                            <t t-out="maxHeight"/><span> cm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-lg-6">
+                <t t-set='upperMiddleIndex' t-value="Math.ceil(Object.keys(detailFunctionalities).length/2)"/>
+                <t t-foreach="detailFunctionalities" t-as="func" t-key="func">
+                    <t t-if="upperMiddleIndex > func_index">
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="o_form_label"><t t-out="func"/></label>
+                            </div>
+                            <div class="col-6">
+                                <span><t t-out="func_value"/></span>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+                </div>
+                <div class="col-lg-6">
+                <t t-foreach="detailFunctionalities" t-as="func" t-key="func">
+                    <t t-if="upperMiddleIndex &lt;= func_index">
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="o_form_label"><t t-out="func"/></label>
+                            </div>
+                            <div class="col-6">
+                                <span><t t-out="func_value"/></span>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+                </div>
+                <t t-if="boolFunctionalities">
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="o_form_label">Other Functionalities</label>
+                        </div>
+                        <div class="col-9">
+                            <t t-foreach="boolFunctionalities" t-as="func" t-key="func">
+                                <span class="badge rounded-pill text-bg-secondary mx-1"><t t-out="func"/></span>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </div>
+    </t>
+</templates>

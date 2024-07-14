@@ -1,0 +1,69 @@
+$o-pdis-card-min-width: 290px;
+$o-pdis-animation-duration: 0.5s;
+$border-size: 3px;
+$border-style: solid;
+
+$colors: (
+    0: #F6F7FA,
+    1: #e8a9a8,
+    2: #ffc9b1,
+    3: #caf2a3,
+    4: #a2e5bf,
+    5: #9fe6df,
+    6: #92bfe5,
+    7: #9eabf1,
+    8: #ee9fba,
+    9: #cebaf8
+);
+
+@mixin card-colors {
+    @each $index, $color in $colors {
+        .o_pdis_card_color_#{$index} {
+            background-color: $color;
+            border: $border-size $border-style $color;
+        }
+    }
+}
+
+@include card-colors();
+
+.o_pdis_no_products {
+    background-color: $o-gray-100;
+    color: $black;
+}
+
+.o_pdis_orders {
+    background-color: $o-gray-500;
+    grid-template-columns: repeat(auto-fill, minmax(#{$o-pdis-card-min-width}, 1fr));
+    grid-auto-rows: max-content;
+}
+
+.o_pdis_order_card {
+    min-width: $o-pdis-card-min-width;
+    color: $black;
+
+    &.o_pdis_stage--animation {
+        animation: change-stage-fade $o-pdis-animation-duration ease-out;
+    }
+
+    @keyframes change-stage-fade {
+        0% {
+            display: block;
+            opacity: 0.80;
+        }
+
+        1% {
+            display: block;
+            opacity: 0.7;
+        }
+
+        100% {
+            display: none;
+            opacity: 0;
+        }
+    }
+}
+
+.text-larger {
+    font-size: larger;
+}

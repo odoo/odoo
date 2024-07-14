@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.ModelConfigurator">
+    <div class="container o_web_studio_model_configurator" t-att-class="{ embed: props.embed }">
+        <div class="row" t-if="!props.embed">
+            <h1>Suggested features for your new model</h1>
+        </div>
+        <div class="row">
+            <div t-foreach="options" t-as="option" t-key="option" class="col-6">
+                <div class="form-check my-3 o_web_studio_model_configurator_option">
+                    <input type="checkbox" class="form-check-input" t-att-id="option" t-att-name="option" t-model="option_value.value"/>
+                    <label t-att-for="option" class="form-check-label">
+                        <strong t-esc="option_value.label"/>
+                        <div class="form-text text-muted" t-esc="option_value.help"/>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="o_web_studio_model_configurator_buttons">
+            <button type="button"
+                class="btn oi oi-chevron-left o_web_studio_model_configurator_previous"
+                t-att-class="{ disabled: state.saving }"
+                aria-label="Previous"
+                title="Previous"
+                t-on-click="props.onPrevious"
+            />
+            <button type="button"
+                class="btn o_web_studio_model_configurator_next btn-primary"
+                t-att-class="{ disabled: state.saving }"
+                aria-label="Next"
+                title="Next"
+                t-on-click="onConfirm"
+                t-att-disabled="state.saving"
+            >
+                <span t-esc="props.label"/>
+                <i
+                    class="fa oi"
+                    t-att-class="{'oi-chevron-right': !state.saving, 'fa-circle-o-notch': state.saving, 'fa-spin': state.saving}"
+                />
+            </button>
+        </div>
+    </div>
+</t>
+
+<t t-name="web_studio.ModelConfiguratorDialog" >
+    <Dialog title="title" footer="false" contentClass="'o_web_studio_model_configurator'">
+        <ModelConfigurator embed="true" onConfirmOptions.bind="onConfirm" label="props.confirmLabel" onPrevious.bind="onPrevious"/>
+    </Dialog>
+</t>
+
+</templates>

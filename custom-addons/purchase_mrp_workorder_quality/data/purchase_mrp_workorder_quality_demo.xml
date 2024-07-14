@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="purchase_order_1" model="purchase.order">
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="user_id" eval="False"/>
+        </record>
+
+        <record id="purchase_order_line_1" model="purchase.order.line">
+            <field name="name">[FURN_8522] Table Top</field>
+            <field name="product_id" ref="mrp.product_product_computer_desk_head"/>
+            <field name="date_planned" eval="(datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">240</field>
+            <field name="order_id" ref="purchase_mrp_workorder_quality.purchase_order_1"/>
+        </record>
+
+        <function model="purchase.order" name="button_confirm" eval="[ref('purchase_order_1')]"/>
+
+        <function model="stock.move.line" name="write">
+            <value model="stock.move" eval="obj().search([('purchase_line_id', '=', obj().env.ref('purchase_mrp_workorder_quality.purchase_order_line_1').id)]).move_line_ids.filtered(lambda line: not line.lot_name).id"/>
+            <value eval="{
+                'lot_name': '0000000000001',
+                'quantity': 1,
+                }"/>
+        </function>
+
+        <function model="stock.picking" name="button_validate">
+            <value model="stock.move" eval="obj().env.ref('purchase_mrp_workorder_quality.purchase_order_1').picking_ids.ids"/>
+        </function>
+
+        <record id="purchase_order_2" model="purchase.order">
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="user_id" eval="False"/>
+        </record>
+
+        <record id="purchase_order_line_2" model="purchase.order.line">
+            <field name="name">[FURN_2333] Table Leg</field>
+            <field name="product_id" ref="mrp.product_product_computer_desk_leg"/>
+            <field name="date_planned" eval="(datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="product_qty">4</field>
+            <field name="product_uom" ref="uom.product_uom_unit"/>
+            <field name="price_unit">10</field>
+            <field name="order_id" ref="purchase_mrp_workorder_quality.purchase_order_2"/>
+        </record>
+
+        <record id="purchase_mrp_workorder_activity_1" model="mail.activity">
+            <field name="res_id" ref="purchase_mrp_workorder_quality.purchase_order_2"/>
+            <field name="res_model_id" ref="purchase.model_purchase_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="summary">Send shipping details</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+
+        <function model="purchase.order" name="button_confirm" eval="[ref('purchase_order_2')]"/>
+
+        <function model="stock.move.line" name="write">
+            <value model="stock.move" eval="obj().search([('purchase_line_id', '=', obj().env.ref('purchase_mrp_workorder_quality.purchase_order_line_2').id)]).move_line_ids.filtered(lambda line: not line.lot_name).id"/>
+            <value eval="{
+                'lot_name': '0000000000002',
+                'quantity': 4,
+            }"/>
+        </function>
+
+        <function model="stock.picking" name="button_validate">
+            <value model="stock.move" eval="obj().env.ref('purchase_mrp_workorder_quality.purchase_order_2').picking_ids.ids"/>
+        </function>
+
+        <function model="mrp.routing.workcenter" name="write">
+            <value model="mrp.bom" eval="obj().env.ref('mrp.mrp_bom_desk').with_context(active_test=False).operation_ids.ids"/>
+            <value eval="{
+                'active': True
+            }"/>
+        </function>
+
+        <record id="mrp_production" model="mrp.production">
+            <field name="product_id" ref="mrp.product_product_computer_desk"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="product_qty">1</field>
+            <field name="bom_id" ref="mrp.mrp_bom_desk"/>
+        </record>
+
+        <function model="mrp.production" name="action_confirm" eval="[ref('purchase_mrp_workorder_quality.mrp_production')]"/>
+        <function model="mrp.production" name="action_assign" eval="[ref('purchase_mrp_workorder_quality.mrp_production')]"/>
+        <function model="mrp.production" name="button_plan" eval="[ref('purchase_mrp_workorder_quality.mrp_production')]"/>
+
+        <function model="mrp.workorder" name="button_start">
+            <value model="mrp.production" eval="obj().env.ref('purchase_mrp_workorder_quality.mrp_production').workorder_ids.ids"/>
+            <value eval="True"/>
+        </function>
+
+        <record id="stock_production_lot" model="stock.lot">
+            <field name="name">T0002</field>
+            <field name="product_id" ref="mrp.product_product_computer_desk"/>
+            <field name="product_qty">1</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <function model="quality.check" name="write">
+            <value model="mrp.production" eval="obj().env.ref('purchase_mrp_workorder_quality.mrp_production').workorder_ids.current_quality_check_id.id"/>
+            <value model="stock.lot" eval="{'lot_id': obj().search([('name', '=', 'T0002')], limit=1).id}"/>
+        </function>
+        <function model="quality.check" name="write">
+            <value model="mrp.production" eval="obj().env.ref('purchase_mrp_workorder_quality.mrp_production').workorder_ids.current_quality_check_id.id"/>
+            <value model="mrp.production" eval="{'qty_done': 1}"/>
+        </function>
+        <function model="quality.check" name="_next">
+            <value model="mrp.production" eval="obj().env.ref('purchase_mrp_workorder_quality.mrp_production').workorder_ids.current_quality_check_id.id"/>
+        </function>
+
+        <function model="quality.check" name="write">
+            <value model="mrp.production" eval="obj().env.ref('purchase_mrp_workorder_quality.mrp_production').workorder_ids.current_quality_check_id.id"/>
+            <value model="mrp.production" eval="{'picture': obj().env.ref('mrp.product_product_computer_desk').image_128}"/>
+        </function>
+
+        <function model="quality.check" name="_next">
+            <value model="mrp.production" eval="obj().env.ref('purchase_mrp_workorder_quality.mrp_production').workorder_ids.current_quality_check_id.id"/>
+        </function>
+
+        <function model="quality.check" name="write">
+            <value model="mrp.production" eval="obj().env.ref('purchase_mrp_workorder_quality.mrp_production').workorder_ids.current_quality_check_id.id"/>
+            <value model="stock.lot" eval="{'lot_id': obj().search([('name', '=', '0000000000001')], limit=1).id}"/>
+        </function>
+        <function model="quality.check" name="_next">
+            <value model="mrp.production" eval="obj().env.ref('purchase_mrp_workorder_quality.mrp_production').workorder_ids.current_quality_check_id.id"/>
+        </function>
+
+        <function model="quality.check" name="_next">
+            <value model="mrp.production" eval="obj().env.ref('purchase_mrp_workorder_quality.mrp_production').workorder_ids.current_quality_check_id.id"/>
+        </function>
+
+        <function model="quality.check" name="_next">
+            <value model="mrp.production" eval="obj().env.ref('purchase_mrp_workorder_quality.mrp_production').workorder_ids.current_quality_check_id.id"/>
+        </function>
+
+        <function model="quality.check" name="write">
+            <value model="mrp.production" eval="obj().env.ref('purchase_mrp_workorder_quality.mrp_production').workorder_ids.current_quality_check_id.id"/>
+            <value model="mrp.production" eval="{'measure': 90}"/>
+        </function>
+
+        <function model="quality.check" name="do_measure">
+            <value model="mrp.production" eval="obj().env.ref('purchase_mrp_workorder_quality.mrp_production').workorder_ids.current_quality_check_id.id"/>
+        </function>
+
+        <function model="quality.check" name="_next">
+            <value model="mrp.production" eval="obj().env.ref('purchase_mrp_workorder_quality.mrp_production').workorder_ids.current_quality_check_id.id"/>
+        </function>
+
+        <function model="quality.check" name="write">
+            <value model="mrp.production" eval="obj().env.ref('purchase_mrp_workorder_quality.mrp_production').workorder_ids.current_quality_check_id.id"/>
+            <value model="stock.lot" eval="{'lot_id': obj().search([('name', '=', '0000000000002')], limit=1).id, 'qty_done': 4}"/>
+        </function>
+
+        <function model="quality.check" name="_next">
+            <value model="mrp.production" eval="obj().env.ref('purchase_mrp_workorder_quality.mrp_production').workorder_ids.current_quality_check_id.id"/>
+        </function>
+
+        <function model="quality.check" name="_next">
+            <value model="mrp.production" eval="obj().env.ref('purchase_mrp_workorder_quality.mrp_production').workorder_ids.current_quality_check_id.id"/>
+        </function>
+
+        <function model="mrp.workorder" name="record_production">
+            <value model="mrp.production" eval="obj().env.ref('purchase_mrp_workorder_quality.mrp_production').workorder_ids.filtered(lambda workorder: workorder.state != 'done').ids"/>
+        </function>
+
+        <function model="mrp.production" name="button_mark_done" eval="[ref('purchase_mrp_workorder_quality.mrp_production')]"/>
+        <function model="product.template" name="write">
+            <value eval="[ref('mrp_workorder.product_template_stool_top'), ref('mrp_workorder.product_template_stool_foot')]"/>
+            <value eval="{'route_ids': [(4,ref('purchase_stock.route_warehouse0_buy'))]}"/>
+        </function>
+
+    </data>
+</odoo>

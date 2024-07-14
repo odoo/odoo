@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.inherit.delivery.ups</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='ups_provider_setting']" position="inside">
+                <div class="content-group">
+                    <div class="mt8" invisible="not module_delivery_ups">
+                        <button name="%(delivery.action_delivery_carrier_form)d" icon="oi-arrow-right" type="action" string="UPS Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'ups'}"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

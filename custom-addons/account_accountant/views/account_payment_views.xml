@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_form_inherit_account_accountant" model="ir.ui.view">
+        <field name="name">account.payment.form.inherit.account_accountant</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_open_journal_entry']" position="attributes">
+                <attribute name="groups">account.group_account_manager</attribute>
+            </xpath>
+
+            <!-- Stat button to open the manual reconciliation widget -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_manual_reconciliation_widget" type="object"
+                        string="Payment Matching" class="oe_stat_button" icon="fa-dollar"
+                        groups="account.group_account_user"
+                        invisible="is_reconciled or state != 'posted'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

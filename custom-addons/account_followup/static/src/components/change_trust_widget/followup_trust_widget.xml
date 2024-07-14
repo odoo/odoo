@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="account_followup.FollowupTrustWidget">
+        <t t-set="label" t-value="this.displayTrust()"/>
+        <t t-set="trust_value" t-value="this.props.record.data[this.props.name]"/>
+        <i t-attf-class="fa fa-circle oe-account_followup-trust-#{trust_value}"
+           role="img"
+           t-att-aria-label="label"
+           t-att-title="label"
+           t-on-click="(ev) => this.onTrustClick(ev)"/>
+    </t>
+
+    <t t-name="account_followup.FollowupTrustPopOver">
+        <div class="account_payment_popover">
+            <t t-foreach="this.props.record.fields.trust.selection" t-as="trust_level" t-key="trust_level_index">
+                <t t-set="trust_value" t-value="trust_level[0]"/>
+                <t t-set="trust_display_name" t-value="trust_level[1]"/>
+                <a role="menuitem" href="#" class="dropdown-item ps-4" t-on-click="() => this.props.widget.setTrust(trust_value)">
+                    <i t-attf-class="fa fa-circle oe-account_followup-trust-#{trust_value}"
+                       role="img"
+                       t-att-aria-label="trust_display_name"
+                       t-att-title="trust_display_name"/> <t t-out="trust_display_name"/>
+                </a>
+            </t>
+        </div>
+    </t>
+</templates>

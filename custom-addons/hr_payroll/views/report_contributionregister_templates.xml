@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="contribution_register">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <h2>PaySlip Lines by Contribution Register</h2>
+                    <div class="oe_structure"></div>
+                    <div class="row mt32 mb32 ps-3" style="white-space: nowrap; overflow: hidden;">
+                        <div>
+                            <strong>Register Name:</strong>
+                            <span t-field="o.name">2023 Payroll</span>
+                        </div>
+                    </div>
+                        <div class="oe_structure"></div>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>PaySlip Name</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Quantity/Rate</th>
+                                    <th>Amount</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="lines_data.get(o.id, [])" t-as="line">
+                                    <td><span t-out="line.slip_id.name">PaySlip Name</span></td>
+                                    <td><span t-out="line.code">Code</span></td>
+                                    <td><span t-out="line.name">Name</span></td>
+                                    <td><span t-out="line.quantity">1</span></td>
+                                    <td class="text-end">
+                                        <span t-out="line.amount" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>100</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-out="line.total" class="text-nowrap" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>100</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="oe_structure"></div>
+                        <div class="row justify-content-end">
+                            <div class="col-4">
+                                <table class="table table-sm">
+                                    <tr class="border-black">
+                                        <td><strong>Total</strong></td>
+                                        <td class="text-end">
+                                            <span t-out="lines_total.get(o.id)" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>100</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="oe_structure"></div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

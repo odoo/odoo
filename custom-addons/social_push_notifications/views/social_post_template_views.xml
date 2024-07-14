@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="social_post_template_view_form" model="ir.ui.view">
+        <field name="name">social.post.template.view.form.inherit.social.push.notifications</field>
+        <field name="model">social.post.template</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="social.social_post_template_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='social_post_global']" position="inside">
+                <div name="notification_request_parameters" colspan="2" class="o_horizontal_separator mt-5"
+                    invisible="not display_push_notification_attributes">
+                    Push Notification Options
+                </div>
+                <field name="display_push_notification_attributes"
+                    invisible="1"/>
+                <field name="push_notification_title"
+                    string="Notification Title"
+                    invisible="not display_push_notification_attributes"/>
+                <field name="push_notification_target_url"
+                    string="Target URL"
+                    invisible="not display_push_notification_attributes"/>
+                <field name="push_notification_image" widget="image" class="o_push_notification_image_field"
+                    string="Icon Image"
+                    invisible="not display_push_notification_attributes"/>
+                <field nolabel="1" colspan="2" name="visitor_domain" widget="domain" options="{'foldable': True, 'model': 'website.visitor'}"
+                    invisible="not display_push_notification_attributes"/>
+            </xpath>
+            <xpath expr="//group[@name='previews_placeholder']" position="inside">
+                <field name="display_push_notifications_preview" invisible="1" />
+                <field name="push_notifications_preview" nolabel="1" colspan="2" widget="social_post_preview" media_type="push_notifications"
+                    readonly="1"
+                    invisible="not display_push_notifications_preview" />
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>

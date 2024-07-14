@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sale_rental_report_salesman,rental.report,model_sale_rental_report,sales_team.group_sale_salesman,1,0,0,0
+access_sale_rental_report_manager,rental.report,model_sale_rental_report,sales_team.group_sale_manager,1,0,0,0
+access_sale_rental_schedule_salesman,rental.schedule,model_sale_rental_schedule,sales_team.group_sale_salesman,1,0,0,0
+access_sale_rental_schedule_manager,rental.schedule,model_sale_rental_schedule,sales_team.group_sale_manager,1,0,0,0
+access_rental_order_wizard,access.rental.order.wizard,model_rental_order_wizard,sales_team.group_sale_salesman,1,1,1,0
+access_rental_order_wizard_line,access.rental.order.wizard.line,model_rental_order_wizard_line,sales_team.group_sale_salesman,1,1,1,0
+access_product_pricing_user,product.pricing.internal.user,model_product_pricing,base.group_user,1,0,0,0
+access_product_pricing_sale_user,product.pricing.sale.user,model_product_pricing,sales_team.group_sale_salesman,1,0,0,0
+access_product_pricing_sale_manager,product.pricing.sale.manager,model_product_pricing,sales_team.group_sale_manager,1,1,1,1
+access_sale_temporal_recurrence_public,sale_temporal_recurrence.public,model_sale_temporal_recurrence,base.group_public,1,0,0,0
+access_sale_temporal_recurrence_portal,sale_temporal_recurrence.portal,model_sale_temporal_recurrence,base.group_portal,1,0,0,0
+access_sale_temporal_recurrence_user,sale_temporal_recurrence.internal.user,model_sale_temporal_recurrence,base.group_user,1,0,0,0
+access_sale_temporal_recurrence_sale_manager,sale_temporal_recurrence.sale.manager,model_sale_temporal_recurrence,sales_team.group_sale_manager,1,1,1,1

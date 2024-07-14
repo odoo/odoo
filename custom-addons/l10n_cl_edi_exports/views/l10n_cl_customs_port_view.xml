@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="customs_port_tree_view" model="ir.ui.view">
+            <field name="name">customs_port.tree</field>
+            <field name="model">l10n_cl.customs_port</field>
+            <field name="arch" type="xml">
+                <tree string="Customs Port Tree" editable="top" default_order="country_id">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="country_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="customs_port_search_view" model="ir.ui.view">
+            <field name="name">customs_port.search</field>
+            <field name="model">l10n_cl.customs_port</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="country_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="customs_port_list_action" model="ir.actions.act_window">
+            <field name="name">Customs Ports</field>
+            <field name="res_model">l10n_cl.customs_port</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem id="menu_l10n_cl_customs_port"
+                  action="customs_port_list_action"
+                  sequence="15"
+                  parent="l10n_cl_edi.menu_sii_chile"
+                  groups="account.group_account_manager"/>
+    </data>
+</openerp>

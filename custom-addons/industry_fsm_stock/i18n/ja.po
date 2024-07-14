@@ -1,0 +1,231 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* industry_fsm_stock
+# 
+# Translators:
+# Wil Odoo, 2023
+# Junko Augias, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: industry_fsm_stock
+#. odoo-python
+#: code:addons/industry_fsm_stock/models/product.py:0
+#, python-format
+msgid ""
+"Adding or updating this product is restricted due to its tracked status. "
+"Your current access rights do not allow you to perform these actions. Please"
+" contact your administrator to request the necessary permissions."
+msgstr ""
+"このプロダクトの追加または更新は、追跡されているステータスのため制限されています。現在のアクセス権限では、これらの操作を実行できません。管理者に連絡して、必要な権限をリクエストして下さい。"
+
+#. module: industry_fsm_stock
+#: model_terms:ir.ui.view,arch_db:industry_fsm_stock.fsm_stock_tracking_line_view_form
+msgid "Already Delivered"
+msgstr "既に配達済です"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__company_id
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__company_id
+msgid "Company"
+msgstr "会社"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__create_uid
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__create_date
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: industry_fsm_stock
+#: model_terms:ir.ui.view,arch_db:industry_fsm_stock.fsm_stock_tracking_line_view_form
+msgid "Discard"
+msgstr "破棄"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__display_name
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: industry_fsm_stock
+#. odoo-python
+#: code:addons/industry_fsm_stock/wizard/fsm_stock_tracking.py:0
+#, python-format
+msgid "Each line needs a Lot/Serial Number"
+msgstr "各明細にロット/シリアル番号が必要です"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,help:industry_fsm_stock.field_fsm_stock_tracking__tracking
+msgid "Ensure the traceability of a storable product in your warehouse."
+msgstr "倉庫の在庫可能品を追跡できるようにします。"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_sale_order_line__fsm_lot_id
+msgid "Fsm Lot"
+msgstr "FSMロット"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__id
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__write_uid
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__write_date
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: industry_fsm_stock
+#: model:ir.model,name:industry_fsm_stock.model_fsm_stock_tracking_line
+msgid "Lines for FSM Stock Tracking"
+msgstr "FMS在庫追跡用明細"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__lot_id
+msgid "Lot/Serial Number"
+msgstr "ロット/シリアル番号"
+
+#. module: industry_fsm_stock
+#. odoo-javascript
+#: code:addons/industry_fsm_stock/static/src/js/product_catalog/sale_order_line/sale_order_line.xml:0
+#, python-format
+msgid "Lot/Serial number"
+msgstr "ロット/シリアル番号"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__product_id
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__product_id
+msgid "Product"
+msgstr "プロダクト"
+
+#. module: industry_fsm_stock
+#: model:ir.model,name:industry_fsm_stock.model_product_product
+msgid "Product Variant"
+msgstr "プロダクトバリアント"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__quantity
+msgid "Quantity"
+msgstr "数量"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_product_product__quantity_decreasable
+msgid "Quantity Decreasable"
+msgstr "減少可能数量"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_product_product__quantity_decreasable_sum
+msgid "Quantity Decreasable Sum"
+msgstr "数量減可能数合計"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__sale_order_line_id
+msgid "Sale Order Line"
+msgstr "受注明細"
+
+#. module: industry_fsm_stock
+#: model:ir.model,name:industry_fsm_stock.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "販売オーダ明細"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__is_same_warehouse
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__is_same_warehouse
+msgid "Same warehouse"
+msgstr "同一の倉庫"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_product_product__serial_missing
+msgid "Serial Missing"
+msgstr "シリアル欠番"
+
+#. module: industry_fsm_stock
+#: model:ir.model,name:industry_fsm_stock.model_stock_move
+msgid "Stock Move"
+msgstr "在庫移動"
+
+#. module: industry_fsm_stock
+#: model:ir.model,name:industry_fsm_stock.model_project_task
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__task_id
+msgid "Task"
+msgstr "タスク"
+
+#. module: industry_fsm_stock
+#. odoo-python
+#: code:addons/industry_fsm_stock/models/product.py:0
+#, python-format
+msgid ""
+"The ordered quantity cannot be decreased below the amount already delivered."
+" Instead, create a return in your inventory."
+msgstr "オーダ済数量をすでに納入された数量より減らすことはできません。代わりに、在庫に返品を作成して下さい。"
+
+#. module: industry_fsm_stock
+#: model:ir.model,name:industry_fsm_stock.model_fsm_stock_tracking
+#: model_terms:ir.ui.view,arch_db:industry_fsm_stock.fsm_stock_tracking_line_line_view_form
+#: model_terms:ir.ui.view,arch_db:industry_fsm_stock.fsm_stock_tracking_line_view_form
+msgid "Track Stock"
+msgstr "在庫を追跡"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__tracking
+msgid "Tracking"
+msgstr "追跡"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__tracking_line_ids
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__wizard_tracking_line
+msgid "Tracking Line"
+msgstr "トラッキングライン"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking__tracking_validated_line_ids
+msgid "Tracking Validated Line"
+msgstr "検証済追跡明細"
+
+#. module: industry_fsm_stock
+#: model_terms:ir.ui.view,arch_db:industry_fsm_stock.fsm_stock_tracking_line_view_form
+msgid "Validate"
+msgstr "検証"
+
+#. module: industry_fsm_stock
+#. odoo-python
+#: code:addons/industry_fsm_stock/models/product.py:0
+#, python-format
+msgid "Validate Lot/Serial Number"
+msgstr "ロット/シリアル番号を検証"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__wizard_tracking_line_validated
+msgid "Validated Tracking Line"
+msgstr "検証済追跡明細"
+
+#. module: industry_fsm_stock
+#: model:ir.model.fields,field_description:industry_fsm_stock.field_fsm_stock_tracking_line__warehouse_id
+msgid "Warehouse"
+msgstr "倉庫"

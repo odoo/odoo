@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_double_holiday_13th_month">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="oe_structure"></div>
+                    <h2><span t-field="o.name">Marc Demo</span></h2>
+                    <t t-set="is_invalid" t-value="o._is_invalid()"/>
+                    <t t-if="is_invalid">
+                        <strong><span t-out="is_invalid">This payslip is not validated. This is not a legal document.</span></strong>
+                    </t>
+                    <t t-else="">
+                        <div class="oe_structure"></div>
+                    </t>
+                    <div class="oe_structure"></div>
+                    <table name="employee-infos" class="table table-sm table-bordered">
+                        <tr>
+                            <td class="w-25"><strong>Employee</strong></td>
+                            <td class="w-25"><strong>Marital Status</strong></td>
+                            <td class="w-25"><strong>Designation</strong></td>
+                            <td class="w-25"><strong>Pay Period</strong></td>
+                        </tr>
+                        <tr>
+                            <td><span t-field="o.employee_id">John Doe</span></td>
+                            <td><span t-field="o.employee_id.marital">Single</span></td>
+                            <td><span t-field="o.employee_id.job_id">Software Developer</span></td>
+                            <td><span t-field="o.date_from">2023-01-01</span> - <span t-field="o.date_to">2023-01-31</span></td>
+                        </tr>
+                        <tr>
+                            <td><span t-field="o.employee_id.private_street">Rue de la</span></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><span t-field="o.employee_id.private_city">Brussels</span> <span t-field="o.employee_id.private_zip">10001</span></td>
+                            <td><strong>Person in charge</strong></td>
+                            <td><strong>Identification</strong></td>
+                            <td><strong>Computed on </strong></td>
+                        </tr>
+                        <tr>
+                            <td><span t-field="o.employee_id.work_email">email@example.com</span></td>
+                            <td name="personne-in-charge"><span t-out="o.employee_id.children">3</span></td>
+                            <td><span t-field="o.employee_id.identification_id">ID12345</span></td>
+                            <td><span t-field="o.compute_date">2023-02-01</span></td>
+                        </tr>
+                    </table>
+
+                    <div class="oe_structure"></div>
+                    <table class="table table-sm">
+                        <tr>
+                            <td class="w-25"><strong>Basic Salary</strong></td>
+                            <td style="color:#875A7B" class="w-25">
+                                <span t-out="o.contract_id._get_contract_wage()"
+                                      t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>$1000.0</span>
+                            </td>
+                            <td class="w-25"></td>
+                            <td class="w-25"></td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Number of Hours</th>
+                                <th>Number of Days</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <span t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip)" t-as="line">
+                                <t t-set="line_style"/>
+                                <t t-set="line_class"/>
+                                <t t-if="line.code == 'NET'">
+                                    <t t-set="line_style" t-value="'color:#875A7B;'"/>
+                                    <t t-set="line_class" t-value="'o_total o_border_bottom'"/>
+                                </t>
+                                <t t-if="(line.code == 'BASIC') or (line.code == 'GROSS')">
+                                    <t t-set="line_style" t-value="'color:#00A09D;'"/>
+                                    <t t-set="line_class" t-value="'o_subtotal o_border_bottom'"/>
+                                </t>
+                                <tr t-att-class="line_class" t-att-style="line_style">
+                                    <td><span t-field="line.name">Monthly wages</span></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><span t-out="line.total"
+                                            t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'>$1000.0</span></td>
+                                </tr>
+                            </span>
+                        </tbody>
+                    </table>
+                    <div class="oe_structure"></div>
+                    <p>Total to pay on <span t-field="o.employee_id.bank_account_id">Bank123</span>, bank account of <span t-field="o.employee_id">John Doe</span>: <span t-field="o.net_wage">$4500</span></p>
+
+                    <table name="contract-infos" class="table table-sm table-bordered">
+                        <tr>
+                            <td class="w-25"><strong>Contract Start Date</strong></td>
+                            <td class="w-25"><strong>Contract Type </strong></td>
+                            <td class="w-25"><strong>Working Schedule</strong></td>
+                            <td class="w-25" name="company-car-title"></td>
+                        </tr>
+                        <tr>
+                            <td><span t-field="o.employee_id.first_contract_date">2023-01-01</span></td>
+                            <td><span t-field="o.employee_id.contract_id.contract_type_id">Full Time</span></td>
+                            <td><span t-field="o.employee_id.contract_id.hours_per_week">40</span></td>
+                            <td class="w-25" name="company-car-model"></td>
+                        </tr>
+                    </table>
+                    <div class="oe_structure"></div>
+                    <p class="text-center">Made by Odoo</p>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+
+<template id="report_belgium_payslip" inherit_id='hr_payroll.report_payslip'>
+    <xpath expr="//td[@name='personne-in-charge']" position="replace">
+        <td name="personne-in-charge">
+            <span t-out="o.employee_id.children + o.employee_id.other_senior_dependent + o.employee_id.other_juniors_dependent">5</span>
+        </td>
+    </xpath>
+    <xpath expr="//table[@name='employee-infos']" position="inside">
+        <t t-if="o._get_input_line_amount('ECOVOUCHERS')">
+            <tr>
+                <td class="w-25"><strong>Eco-Vouchers Amount</strong></td>
+            </tr>
+            <tr>
+                <t t-set="ecovouchers" t-value="o._get_input_line_amount('ECOVOUCHERS')"/>
+                <td>
+                    <span t-out="round(ecovouchers, 2)">0.00</span>€ (= <span t-out="int(ecovouchers // 10)">0</span>*10€ + 1*
+                    <span t-out="round(ecovouchers % 10, 2)">0.00</span>€)
+                </td>
+            </tr>
+        </t>
+    </xpath>
+</template>
+</odoo>

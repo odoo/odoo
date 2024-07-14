@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_sharing_project_task_inherit_view_kanban" model="ir.ui.view">
+        <field name="name">project.sharing.project.task.view.kanban.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_kanban"/>
+        <field name="priority">700</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="is_fsm"/>
+                <field name="planned_date_begin"/>
+                <field name="fsm_done" />
+            </xpath>
+            <xpath expr="//t[@t-if='record.partner_id.value']" position="inside">
+                <t t-if="record.is_fsm.raw_value and record.partner_city.value"> • <field name="partner_city" /></t>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="invisible">context.get('fsm_mode', False)</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_sharing_quick_create_task_form_inherit" model="ir.ui.view">
+        <field name="name">project.sharing.form.quick_create.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_quick_create_task_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_fsm" invisible="1"/>
+                <field name="company_id" invisible="1" />
+                <field name="partner_id" invisible="True" required="True" options="{'no_open': True, 'no_create': True, 'no_edit': True}" context="{'res_partner_search_mode': 'customer'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_sharing_inherit_project_task_view_form" model="ir.ui.view">
+        <field name="name">project.sharing.project.task.view.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="is_fsm" invisible="1"/>
+            </xpath>
+            <field name="partner_id" position="attributes">
+                <attribute name="required">is_fsm</attribute>
+            </field>
+            <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="after">
+                <field name="is_fsm" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="attributes">
+                <attribute name="required">is_fsm</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_sharing_project_task_view_search_inherit" model="ir.ui.view">
+        <field name="name">project.sharing.task.search.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="date_deadline" position="attributes">
+                <attribute name="invisible">context.get('fsm_mode', False)</attribute>
+            </filter>
+            <filter name="deadline" position="attributes">
+                <attribute name="invisible">context.get('fsm_mode', False)</attribute>
+            </filter>
+        </field>
+    </record>
+
+</odoo>

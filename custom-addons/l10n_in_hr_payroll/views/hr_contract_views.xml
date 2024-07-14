@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_form_in_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.form.in.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='salary_info']" position="inside">
+                <group string="Allowance" invisible="country_code != 'IN'">
+                    <field name="l10n_in_driver_salay"/>
+                    <field name="l10n_in_house_rent_allowance_metro_nonmetro"/>
+                    <field name="l10n_in_supplementary_allowance"/>
+                    <field name="l10n_in_gratuity"/>
+                </group>
+                <group string="Deduction" invisible="country_code != 'IN'">
+                    <field name="l10n_in_tds"/>
+                    <field name="l10n_in_voluntary_provident_fund"/>
+                    <field name="l10n_in_medical_insurance"/>
+                    <field name="l10n_in_leave_allowance"/>
+                    <field name="l10n_in_esic_amount"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

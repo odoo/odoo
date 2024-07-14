@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Non Financial Benefits -->
+    <record id="l10n_be_free_lunch" model="hr.contract.salary.benefit">
+        <field name="name">Free Lunch</field>
+        <field name="sequence">50</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_non_financial_benefits"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="display_type">always</field>
+        <field name="icon">fa fa-apple</field>
+        <field name="description">Amazing food, every day, cooked by a high ranking chef.</field>
+    </record>
+
+    <record id="l10n_be_fitness_room" model="hr.contract.salary.benefit">
+        <field name="name">Fitness Room</field>
+        <field name="sequence">55</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_non_financial_benefits"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="display_type">always</field>
+        <field name="icon">fa fa-bicycle</field>
+        <field name="description">Access to a fitness room for breaks as well as ping pong tables and kicker.</field>
+    </record>
+
+    <record id="l10n_be_afterworks" model="hr.contract.salary.benefit">
+        <field name="name">After-Works</field>
+        <field name="sequence">60</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_non_financial_benefits"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="display_type">always</field>
+        <field name="icon">fa fa-beer</field>
+        <field name="description">The bar is open every day, with free drinks. If you organize a sport activity after work, Odoo reimburses 12.5€ / employee.</field>
+    </record>
+
+    <record id="l10n_be_trainings" model="hr.contract.salary.benefit">
+        <field name="name">Trainings</field>
+        <field name="sequence">65</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_non_financial_benefits"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="display_type">always</field>
+        <field name="icon">fa fa-book</field>
+        <field name="description">12 days of internal &amp; external trainings per year.</field>
+    </record>
+
+    <record id="l10n_be_flexible_hours" model="hr.contract.salary.benefit">
+        <field name="name">Flexible Hours</field>
+        <field name="sequence">70</field>
+        <field name="benefit_type_id" ref="hr_contract_salary.l10n_be_non_financial_benefits"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee_cp200"/>
+        <field name="display_type">always</field>
+        <field name="icon">fa fa-clock-o</field>
+        <field name="description">2 days / week home working and flexible hours at the office.</field>
+    </record>
+</odoo>

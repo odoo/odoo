@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="social_account_view_form" model="ir.ui.view">
+        <field name="name">social.account.view.form.inherit.youtube</field>
+        <field name="model">social.account</field>
+        <field name="inherit_id" ref="social.social_account_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_youtube_revoke" type="object" string="Revoke"
+                    groups="social.group_social_manager"
+                    invisible="media_type != 'youtube'"/>
+            </xpath>
+            <xpath expr="//group[@name='social_account_global']" position="after">
+                <group name="youtube_disclaimer" class="o_social_disclaimer_group">
+                    <field name="media_type" invisible="1"/>
+                    <div colspan="2" class="alert alert-info oe_inline" role="alert"
+                        invisible="media_type != 'youtube'">
+                        Our YouTube Social application uses YouTube API Services.
+                        By using it, you implicitly agree to the:
+                        <ul>
+                            <li>
+                                <a href="https://www.youtube.com/t/terms" target="_blank">
+                                    YouTube Terms of Service (ToS)
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://www.google.com/policies/privacy" target="_blank">
+                                    Google Privacy Policy
+                                </a>
+                            </li>
+                        </ul>
+                        <span>Access to your account can be revoked at any time from
+                            <a href="https://security.google.com/settings/security/permissions" target="_blank">the Google Third-party app account access panel</a>.
+                        </span>
+                        <br/>
+                        <br/>
+                        <span>To provide our application services, note that we store the following data from your YouTube account:
+                            <ul>
+                                <li>Your videos metadata including title and view counts (but never the video itself)</li>
+                                <li>Your channel name and picture</li>
+                            </ul>
+                        </span>
+                        <span>These are stored up to 30 days and refreshed often to provide you an accurate depiction of reality. </span>
+                        <span>To delete these from Odoo, simply delete this account.</span>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_contract_sign" model="ir.ui.view">
+        <field name="name">hr_contract_sign</field>
+        <field name="model">hr.contract.sign.document.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Signature Request">
+                <div role="alert" class="alert alert-warning text-center" invisible="not template_warning"
+                    title="No template available">
+                    <span class="fa fa-exclamation-triangle"/>
+                    <field name="template_warning" nolabel="1" readonly="1"/>
+                </div>
+                <group class="o_label_nowrap">
+                    <field name="contract_id" invisible="1"/>
+                    <field name="has_both_template" invisible="1"/>
+                    <field name="sign_template_responsible_ids" invisible="1"/>
+                    <field name="possible_template_ids" invisible="1"/>
+                    <field name="sign_template_ids" options="{'no_create': True}" context="{'kanban_view_ref': 'sign.sign_template_view_kanban_mobile'}"
+                        widget="many2many_tags" force_save="1"/>
+                    <field name="employee_ids" widget="many2many_avatar_employee" required="1"/>
+                    <field name="mail_to" widget="radio" options="{'horizontal': True}"/>
+                    <field name="mail_displayed" invisible="not mail_displayed" string=""/>
+                </group>
+                <group invisible="not sign_template_ids" string="Sign Request Options">
+                    <field name="employee_role_id" options="{'no_create': True}"/>
+                    <field name="responsible_id" options="{'no_create_edit': True}"
+                        widget="many2one_avatar"
+                        invisible="not has_both_template"
+                        required="has_both_template"/>
+                    <field name="cc_partner_ids" widget="many2many_tags" placeholder="Write email or search contact..."/>
+                </group>
+                <group class="o_label_nowrap" string="Mail Options">
+                    <field name="subject" placeholder="Signature Request"/>
+                </group>
+                <field name="message" placeholder="Optional Message..." widget="html"/>
+                <field name="attachment_ids" widget="many2many_binary" string="Attach a file"/>
+                <footer>
+                    <button name="validate_signature" string="Send" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="sign_contract_wizard_action" model="ir.actions.act_window">
+        <field name="name">Document Signature</field>
+        <field name="res_model">hr.contract.sign.document.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

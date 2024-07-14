@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="fleet_vehicle_view_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="mode">extension</field>
+        <field name="priority" eval="30"/>
+        <field name="arch" type="xml">
+            <div name="disallowed_expense_rate_history" position="attributes">
+                <attribute name="invisible">country_code == 'BE'</attribute>
+            </div>
+            <div name="tax_deduction_div" position="inside">
+                <button string="History" class="btn btn-secondary" name="action_view_disallowed_expenses_rate" invisible="country_code != 'BE'" type="object"/>
+            </div>
+        </field>
+    </record>
+
+    <record id="l10n_be_disallowed_expenses_view_tree" model="ir.ui.view">
+        <field name="name">fleet.disallowed.expenses.rate.tree</field>
+        <field name="model">fleet.disallowed.expenses.rate</field>
+        <field name="arch" type="xml">
+            <tree create="false" edit="false">
+                <field name="date_from"/>
+                <field name="tax_deduction"/>
+                <field name="rate" string="D.E.A. %"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_view_disallowed_expenses_rate" model="ir.actions.act_window">
+        <field name="name">Disallowed Expenses Rate History</field>
+        <field name="res_model">fleet.disallowed.expenses.rate</field>
+        <field name="view_mode">tree</field>
+    </record>
+</odoo>

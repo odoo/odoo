@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.l10n_co_edi</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//block[@id='invoicing_settings']" position="after">
+                    <block title="Colombian Electronic Invoicing" id="l10n_mx_co_settings" invisible="country_code != 'CO'">
+                        <setting string="Carvajal Configuration" help="Configure your Carvajal credentials here" title="Configure your Carvajal credentials here.">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="l10n_co_edi_username" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_co_edi_username"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_co_edi_password" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_co_edi_password" password="True"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_co_edi_company" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_co_edi_company"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_co_edi_account" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_co_edi_account"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_co_edi_test_mode" class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_co_edi_test_mode"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_co_edi_template_code" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_co_edi_template_code"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting string="Report Configuration" help="Configure header information here" title="Configure electronic invoice headers here.">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="l10n_co_edi_header_gran_contribuyente" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_co_edi_header_gran_contribuyente"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_co_edi_header_tipo_de_regimen" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_co_edi_header_tipo_de_regimen"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_co_edi_header_retenedores_de_iva" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_co_edi_header_retenedores_de_iva"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_co_edi_header_autorretenedores" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_co_edi_header_autorretenedores"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_co_edi_header_resolucion_aplicable" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_co_edi_header_resolucion_aplicable"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_co_edi_header_actividad_economica" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_co_edi_header_actividad_economica"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_co_edi_header_bank_information" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_co_edi_header_bank_information"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

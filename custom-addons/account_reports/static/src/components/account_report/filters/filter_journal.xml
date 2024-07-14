@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportFilterJournal">
+        <Dropdown togglerClass="'btn btn-secondary'">
+            <t t-set-slot="toggler">
+                <i class="fa fa-book me-1"/>Journals: <t t-esc="controller.options.name_journal_group"/>
+            </t>
+
+            <t t-foreach="controller.options.journals" t-as="journal" t-key="journal_index">
+                <t t-if="journal.id === 'divider'">
+                    <div class="dropdown-header">
+                        <t t-out="journal.name"/>
+                    </div>
+                </t>
+                <t t-elif="['account.journal', 'account.journal.group'].includes(journal.model)">
+                    <DropdownItem
+                        class="{ 'selected': journal.selected, 'ps-4': true }"
+                        onSelected="() => this.filterJournal(journal)"
+                    >
+                        <t t-esc="journal.name"/>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

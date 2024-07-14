@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="customs_regime_tree_view" model="ir.ui.view">
+        <field name="name">l10n_mx_edi_stock.customs.regime.tree</field>
+        <field name="model">l10n_mx_edi.customs.regime</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="goods_direction"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_mx_edi_customs_regime_action" model="ir.actions.act_window">
+        <field name="name">Customs Regime</field>
+        <field name="res_model">l10n_mx_edi.customs.regime</field>
+        <field name="view_id" ref="customs_regime_tree_view"/>
+        <field name="help" type="html">
+            <p>
+              Add a new customs regime for MX delivery guide.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        action="l10n_mx_edi_customs_regime_action"
+        id="menu_stock_mx_customs_regime"
+        name="Customs Regime"
+        parent="l10n_mx_edi_stock.menu_stock_config_settings_mx"
+        groups="stock.group_stock_manager"
+    />
+
+</odoo>

@@ -1,0 +1,26 @@
+<odoo>
+    <record id="quality_check_action_mo" model="ir.actions.act_window">
+        <field name="name">Quality Checks</field>
+        <field name="res_model">quality.check</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('production_id', '=', active_id)]</field>
+        <field name="context">{
+            'search_default_production_id': [active_id],
+            'default_production_id': active_id,
+            'search_default_quality_checks': 1,
+         }
+        </field>
+    </record>
+
+    <record id="quality_check_view_form_inherit_mrp" model="ir.ui.view">
+        <field name="name">quality.check.view.form.inherit.mrp</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="quality_control.quality_check_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='picking_id']" position="after">
+                <field name="production_id" invisible="quality_state in ('pass', 'fail') and not production_id"/>
+            </xpath>
+        </field>    
+    </record>
+
+</odoo>

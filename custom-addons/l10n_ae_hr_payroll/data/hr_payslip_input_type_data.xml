@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="input_salary_arrears" model="hr.payslip.input.type">
+        <field name="name">Salary Arrears</field>
+        <field name="code">SALARY_ARREARS</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ae_hr_payroll.uae_employee_payroll_structure'))]"/>
+    </record>
+
+    <record id="input_other_earnings" model="hr.payslip.input.type">
+        <field name="name">Other Earnings</field>
+        <field name="code">OTHER_EARNINGS</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ae_hr_payroll.uae_employee_payroll_structure'))]"/>
+    </record>
+
+    <record id="input_salary_deduction" model="hr.payslip.input.type">
+        <field name="name">Salary Deductions</field>
+        <field name="code">SALARY_DEDUCTIONS</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ae_hr_payroll.uae_employee_payroll_structure'))]"/>
+    </record>
+
+    <record id="input_other_deduction" model="hr.payslip.input.type">
+        <field name="name">Other Deductions</field>
+        <field name="code">OTHER_DEDUCTIONS</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="struct_ids" eval="[(4, ref('l10n_ae_hr_payroll.uae_employee_payroll_structure'))]"/>
+    </record>
+</odoo>

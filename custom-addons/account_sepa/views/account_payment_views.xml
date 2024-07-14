@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_search_inherit_account_sepa_pain_09" model="ir.ui.view">
+        <field name="name">account.payment.search.inherit.account_sepa_pain_09</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="sepa_uetr"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_payment_form_inherit_account_sepa_pain_09" model="ir.ui.view">
+        <field name="name">account.payment.form.inherit.account_sepa_pain_09</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_bank_id" position="after">
+                <field name="sepa_pain_version" invisible="1"/>
+                <field name="sepa_uetr" invisible="sepa_pain_version != 'pain.001.001.09'"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_payment_tree_inherit_account_sepa_pain_09" model="ir.ui.view">
+        <field name="name">account.payment.tree.inherit.account_sepa_pain_09</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_tree" />
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="sepa_uetr" optional="hide"/>
+            </field>
+        </field>
+    </record>
+</odoo>

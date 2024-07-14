@@ -1,0 +1,292 @@
+/**
+ * This is CSS used inside the report iframe, which is included in another
+ * bundle (web_studio.report_assets).
+ */
+:root {
+    font-size: 14px;
+}
+
+div.page {
+    position: relative;
+}
+
+// TODO: to be removed when the crap done in web_editor.common.scss will be
+// removed ; these rules are here to reverse them
+#wrapwrap table.table.table-bordered {
+    td {
+        min-width: auto;
+    }
+}
+
+// ignore bootstrap media query in iframe since it is not applied when printing
+@media (min-width: 576px) {
+    .container {
+        max-width: none;
+    }
+}
+
+// OdooEditor and QWeb style
+
+*[contenteditable=true] {
+    outline: none;
+}
+[contenteditable] {
+    overflow-wrap: unset !important;
+}
+
+.oe-qweb-select {
+    position: absolute;
+    // Bootstrap sets .modal z-index at 1055.
+    // Ensure qweb-select is visible in modals.
+    z-index: 1056;
+    background-color: white;
+}
+
+.text-nowrap {
+    white-space: break-spaces !important;
+}
+
+.oe_structure:empty {
+    min-height: 1lh;
+}
+
+[t-field],
+[t-esc],
+[t-out],
+[t-raw] {
+    background-color: rgba(36, 154, 255, 0.16) !important;
+}
+
+[t-field] {
+    &:empty::before {
+        content: attr(oe-expression-readable);
+    }
+}
+
+[t-esc]:empty::before {
+    content: "Expr";
+}
+[t-raw]:empty::before {
+    content: "Expr";
+}
+[t-out]:empty::before {
+    content: attr(oe-expression-readable);
+}
+t[t-set] {
+  display: none !important;
+}
+
+t {
+    display: contents;
+}
+
+t[data-oe-t-inline]:not([data-oe-t-group-active]) {
+    display: unset;
+}
+[data-oe-t-group]:not([data-oe-t-group-active]) {
+    display: none !important;
+}
+[data-oe-t-group][data-oe-t-selectable] {
+    outline: 1px dashed rgba(0, 0, 102, 0.4) !important;
+}
+
+
+.table-sm {
+    > thead > tr > th {
+        border-bottom: none !important;
+    }
+    > tbody > tr {
+        page-break-inside: avoid !important;
+        border-top: none !important;
+    }
+}
+
+div#total {
+    page-break-inside: avoid;
+    [oe-origin-tag='table'] {
+        tr {
+            &.o_subtotal,
+            &.o_total {
+                [oe-origin-tag='td'] {
+                    border-top: 1px solid black !important;
+                }
+                &.o_border_bottom {
+                    [oe-origin-tag='td'] {
+                        border-bottom: 1px solid black !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+[oe-origin-tag='table'] {
+    [oe-origin-tag='thead'] {
+        &.o_black_border {
+            [oe-origin-tag='tr'] {
+                [oe-origin-tag='th'] {
+                    border-bottom: 2px solid black !important;
+                }
+            }
+        }
+    }
+}
+
+
+.table-borderless {
+    [oe-origin-tag='tbody'], [oe-origin-tag='thead'], [oe-origin-tag='tfoot'], [oe-origin-tag='tr'], [oe-origin-tag='td'], [oe-origin-tag='th'] {
+        border: 0 none;
+    }
+}
+
+.row > t > * {
+    padding-right: calc(var(--bs-gutter-x) * .5);
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    margin-top: var(--bs-gutter-y);
+}
+
+[oe-origin-tag='table'] {
+    display: flex;
+    flex-direction: column;
+}
+[oe-origin-tag='thead'] {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+}
+[oe-origin-tag='tbody'] {
+    display: flex;
+    flex-direction: column;
+}
+[oe-origin-tag='tfoot'] {
+    display: flex;
+    flex-direction: column;
+}
+[oe-origin-tag='th'] {
+    flex-shrink: 0;
+}
+[oe-origin-tag='tr'] {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+
+    &:has(> t:not(:empty)) {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        > t {
+            gap: 10px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+        }
+    }
+}
+
+[oe-origin-tag='td'] {
+    flex-shrink: 0;
+}
+
+
+// LAYOUTS
+.o_report_layout_standard {
+
+    [oe-origin-tag="table"] {
+        [oe-origin-tag="thead"] {
+            color: $o-default-report-secondary-color;
+        }
+    }
+}
+
+.o_report_layout_boxed {
+    [oe-origin-tag="table"] {
+        border: 1px solid map-get($grays, '700');
+        [oe-origin-tag="thead"] {
+            border-bottom: 2px solid map-get($grays, '700');
+            [oe-origin-tag="tr"] [oe-origin-tag="th"] {
+                text-transform: uppercase;
+                border: 1px solid map-get($grays, '700');
+                color: $o-default-report-secondary-color;
+            }
+        }
+        [oe-origin-tag="tbody"] {
+            color: map-get($grays, '700');
+            [oe-origin-tag="tr"] {
+                [oe-origin-tag="td"] {
+                    // remove border-top from standard layout
+                    border-top: none;
+                    border-right: 1px solid map-get($grays, '700');
+                }
+                &.o_line_section [oe-origin-tag="td"],
+                &.o_line_note [oe-origin-tag="td"],
+                &.is-subtotal [oe-origin-tag="td"] {
+                    border-top: 1px solid map-get($grays, '700');
+                    border-bottom: 1px solid map-get($grays, '700');
+                }
+                &.o_line_section [oe-origin-tag="td"] {
+                    background-color: rgba($o-default-report-primary-color, 0.7);
+                    color: #fff;
+                }
+                &.is-subtotal,
+                [oe-origin-tag="td"].o_price_total {
+                    background-color: rgba($o-default-report-secondary-color, 0.1);
+                }
+            }
+        }
+    }
+}
+
+
+.o_report_layout_bold {
+    [oe-origin-tag="table"] {
+        &.o_main_table {
+            margin-bottom: 0;
+        }
+
+        [oe-origin-tag="thead"] {
+            color: $o-default-report-secondary-color;
+            [oe-origin-tag="tr"] [oe-origin-tag="th"] {
+                border-top: 3px solid $o-default-report-secondary-color !important;
+                text-transform: uppercase;
+            }
+        }
+        [oe-origin-tag="tbody"] {
+            color: #000;
+            [oe-origin-tag="tr"]:first-child [oe-origin-tag="td"] {
+                border-top: none;
+            }
+            [oe-origin-tag="tr"]:last-child [oe-origin-tag="td"] {
+                border-bottom: 3px solid $o-default-report-secondary-color;
+            }
+            [oe-origin-tag="tr"] {
+                [oe-origin-tag="td"] {
+                    padding: 15px 5px;
+                }
+                [oe-origin-tag="td"]:last-child {
+                }
+            }
+        }
+    }
+}
+
+.o_report_layout_striped {
+    .table [oe-origin-tag="td"], .table [oe-origin-tag="th"] {
+        border-top: none;
+    }
+    [oe-origin-tag="thead"] [oe-origin-tag="tr"] [oe-origin-tag="th"] {
+        color: $o-default-report-secondary-color
+    }
+    [oe-origin-tag="tbody"] {
+        color: map-get($grays, '700');
+        [oe-origin-tag="tr"] {
+            &:nth-child(odd) {
+                background-color: rgba(220, 205, 216, 0.2);
+            }
+            &.o_line_section {
+                color: $o-brand-odoo;
+                background-color: rgba(73, 80, 87, 0.2) !important;
+            }
+        }
+    }
+}

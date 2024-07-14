@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.IconCreatorDialog">
+    <Dialog title="this.constructor.title" contentClass="'o_web_studio_edit_menu_icon_modal'" size="'md'">
+        <IconCreator editable="true" t-props="props.editedAppData" onIconChange.bind="onIconChanged"/>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-on-click="saveIcon">Confirm</button>
+            <button class="btn btn-secondary" t-on-click="props.close">Cancel</button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>

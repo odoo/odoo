@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="frontdesk_sms_template" model="sms.template">
+            <field name="name">Frontdesk SMS Template</field>
+            <field name="model_id" ref="frontdesk.model_frontdesk_visitor"/>
+            <field name="body">Hello, Your visitor {{ object.name }} {{ '(%s)' % object.phone if object.phone else '' }} {{ '(%s)' % object.company if object.company else '' }} wants to meet you at {{ object.station_id.name }}. Please let them know you'll be there shortly.</field>
+        </record>
+    </data>
+</odoo>

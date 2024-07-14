@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_de_pos_dsfinvk_export_view_form" model="ir.ui.view">
+        <field name="name">l10n_de_pos.dsfinvk_export.form.view</field>
+        <field name="model">l10n_de_pos.dsfinvk_export</field>
+        <field name="arch" type="xml">
+            <form string="DSFinV-K export form">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="state" invisible="1"/>
+                        <button name="l10n_de_action_refresh_state" string="Refresh state" class="oe_highlight" type="object"
+                                invisible="state not in ['pending', 'working']"/>
+                        <button name="l10n_de_action_download_export" string="Download export" class="oe_highlight" type="object"
+                                invisible="state != 'completed'" icon="fa-download"/>
+                        <span class="text-warning mb4 mt16" invisible="state in [False, 'completed', 'pending', 'working']">
+                            The export is not available, please create a new one sale.
+                        </span>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="start_datetime" readonly="state"/>
+                            <field name="end_datetime" readonly="state"/>
+                            <field name="config_id" readonly="state"/>
+                        </group>
+                        <group>
+                            <field name="l10n_de_fiskaly_export_uuid"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_de_pos_dsfinvk_export_view_search" model="ir.ui.view">
+        <field name="name">l10n_de_pos.dsfinvk_export.search.view</field>
+        <field name="model">l10n_de_pos.dsfinvk_export</field>
+        <field name="arch" type="xml">
+            <search string="DSFinV-K export">
+                <field name="config_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="l10n_de_pos_dsfinvk_export_view_list" model="ir.ui.view">
+        <field name="name">l10n_de_pos.dsfinvk_export.tree.view</field>
+        <field name="model">l10n_de_pos.dsfinvk_export</field>
+        <field name="arch" type="xml">
+            <tree string="DSFinV-K export">
+                <field name="state"/>
+                <field name="start_datetime"/>
+                <field name="end_datetime"/>
+                <field name="config_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_l10n_de_pos_dsfinvk_export" model="ir.actions.act_window">
+        <field name="name">DSFinV-K Exports</field>
+        <field name="res_model">l10n_de_pos.dsfinvk_export</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_l10n_de_pos_dsfinvk_export" parent="point_of_sale.menu_point_of_sale"
+              action="action_l10n_de_pos_dsfinvk_export" sequence="80"
+              groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"
+    />
+</odoo>

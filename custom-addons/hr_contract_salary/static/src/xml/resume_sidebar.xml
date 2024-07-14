@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template_sidebar" xml:space="preserve">
+    <div t-name="hr_contract_salary.salary_package_resume">
+        <t t-foreach="categories" t-as="category" t-key="category_index">
+            <h2><t t-esc="category"/></h2>
+            <t t-foreach="lines[category]" t-as="resume_code" t-key="resume_code_index">
+                <t t-set="line" t-value="lines[category][resume_code]"/>
+                <t t-set="is_net" t-value="resume_code === 'NET'"/>
+                <div class="py-1 px-0 border-top">
+                    <div class="row border-0">
+                        <t t-if="is_net">
+                            <label class="col-md-2 col-form-label text-primary" t-att-for="line[0]"><t t-esc="line[0]"/></label>
+                            <div class="col-md-3 mt8">
+                                <a role="button" data-bs-toggle="modal" data-bs-target="#hr_cs_modal" name="details" data-bs-backdrop="false" data-bs-dismiss="modal">Details</a>
+                                <a role="button" name="recompute" title="Recompute" aria-label="Recompute" class="d-none"><i class="fa fa-refresh fa-spin"/></a>
+                            </div>
+                        </t>
+                        <t t-if="!is_net">
+                            <label class="col-md-5 col-form-label text-primary"
+                             t-att-for="line[0]">
+                                <t t-out="line[0]"/>
+                                <t t-if="line[3]">
+                                    <i class="fa fa-question-circle text-info" t-att-title="line[3]"/>
+                                </t>
+                            </label>
+                        </t>
+                        <div class="col-md-7">
+                            <div class="input-group">
+                                <div t-if="line[4] == 'before' and line[5] == 'currency'"
+                                    class="w-10 input-group-text form-control o_left text-end d-block">
+                                    <t t-out="line[2]"/>
+                                </div>
+                                <input type="text"
+                                    t-att="{value: line[1], name: line[0]}"
+                                    disabled="disabled"
+                                    t-attf-class="form-control {{ line[4] == 'before' and line[5] == 'currency'? ' me-2  ': '' }}"/>
+                                <div class="input-group-text"
+                                    t-if="line[4] == 'after' or line[5] != 'currency'">
+                                    <t t-out="line[2]"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </div>
+</templates>

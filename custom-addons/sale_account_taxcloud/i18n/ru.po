@@ -1,0 +1,86 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_account_taxcloud
+# 
+# Translators:
+# Константин Коровин <korovin74@gmail.com>, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
+# Martin Trigaux, 2023
+# Collex100, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Collex100, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: sale_account_taxcloud
+#: model_terms:ir.ui.view,arch_db:sale_account_taxcloud.view_order_form_inherit
+msgid "Go to Settings."
+msgstr "Перейдите в раздел \"Настройки\"."
+
+#. module: sale_account_taxcloud
+#: model:ir.model.fields,field_description:sale_account_taxcloud.field_sale_order__is_taxcloud_configured
+msgid "Is Taxcloud Configured"
+msgstr "Настроен ли Taxcloud"
+
+#. module: sale_account_taxcloud
+#: model_terms:ir.ui.view,arch_db:sale_account_taxcloud.view_order_form_inherit
+msgid ""
+"Please enter your Taxcloud credentials to compute tax rates automatically."
+msgstr ""
+"Введите учетные данные Taxcloud для автоматического расчета налоговых "
+"ставок."
+
+#. module: sale_account_taxcloud
+#: model:ir.model,name:sale_account_taxcloud.model_sale_advance_payment_inv
+msgid "Sales Advance Payment Invoice"
+msgstr "Акт на авансовый платеж"
+
+#. module: sale_account_taxcloud
+#: model:ir.model,name:sale_account_taxcloud.model_sale_order
+msgid "Sales Order"
+msgstr "Заказ на продажу"
+
+#. module: sale_account_taxcloud
+#: model:ir.model,name:sale_account_taxcloud.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Позиция заказа на продажу"
+
+#. module: sale_account_taxcloud
+#: model_terms:ir.ui.view,arch_db:sale_account_taxcloud.view_order_form_inherit
+msgid "Tax"
+msgstr "Налог"
+
+#. module: sale_account_taxcloud
+#. odoo-python
+#: code:addons/sale_account_taxcloud/models/sale_order.py:0
+#, python-format
+msgid "Unable to retrieve taxes from TaxCloud: "
+msgstr "Невозможно получить налоги из TaxCloud: "
+
+#. module: sale_account_taxcloud
+#: model_terms:ir.ui.view,arch_db:sale_account_taxcloud.view_order_form_inherit
+msgid "Update taxes"
+msgstr "Обновить налоги"
+
+#. module: sale_account_taxcloud
+#: model:ir.model.fields,field_description:sale_account_taxcloud.field_sale_order__is_taxcloud
+msgid "Use TaxCloud API"
+msgstr "Использование TaxCloud API"
+
+#. module: sale_account_taxcloud
+#: model:ir.model.fields,help:sale_account_taxcloud.field_sale_order__is_taxcloud_configured
+msgid ""
+"Used to determine whether or not to warn the user to configure TaxCloud."
+msgstr ""
+"Используется для определения того, нужно ли предупреждать пользователя о "
+"необходимости настройки TaxCloud."

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_in_hr_payroll</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_payroll.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='hr_payroll_accountant']" position="after">
+                <h2>Indian Localization</h2>
+                <div class="row mt16 o_settings_container" id="l10n_in_hr_payroll">
+                    <div class="col-lg-6 col-12 o_setting_box" id="company_information">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Company Information</span>
+                            <div class="text-muted">
+                                Offical Company Information
+                            </div>
+                            <group class="mt16">
+                                <field name="l10n_in_dearness_allowance"/>
+                            </group>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Email template for reminder -->
+        <record id="mail_template_timesheet_reminder_user" model="mail.template">
+            <field name="name">Timesheets: Employee Reminder</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="subject">Reminder to log your timesheets</field>
+            <field name="email_from">{{ (object.user_id.company_id.partner_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ object.work_email }}</field>
+            <field name="description">Set reminders in settings to notify employees who didn't record their timesheet</field>
+            <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <span style="font-size: 10px;">Your Timesheets</span><br/>
+                    <span style="font-size: 20px; font-weight: bold;" t-out="object.name or ''">Abigail Peterson</span>
+                </td><td valign="middle" align="right" t-if="not object.company_id.uses_default_logo">
+                    <img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="object.company_id.name"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 13px;">
+                    <t t-set="timesheet_hours" t-value="ctx.get('timesheet_hours', 0)"/>
+                    <t t-set="working_hours" t-value="ctx.get('working_hours', 0)"/>
+                    <div>
+                        Hello <t t-out="object.name or ''">Abigail Peterson</t>,<br/><br/>
+                        This is a friendly reminder to log your hours for the following period: <t t-out="ctx.get('date_start') or ''">05/05/2021</t> <i class="fa fa-long-arrow-right"/> <t t-out="ctx.get('date_stop') or ''">05/06/2021</t>.
+                        For the time being, you <t t-if="timesheet_hours != 0">only</t> logged <t t-out="'%d' %int(timesheet_hours)">2</t><t t-if="timesheet_hours % 1 != 0" t-out="':%02d' % (round(timesheet_hours % 1 * 60))">:30</t> hours on the <t t-out="'%d' %int(working_hours)">8</t><t t-if="working_hours % 1 != 0" t-out="':%02d' % (round(working_hours % 1 * 60))">:30</t> requested.<br/>
+                        <div t-if="ctx.get('action_url')" style="margin: 16px 0px 16px 0px;">
+                            <a t-att-href="ctx.get('action_url')"
+                                style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;">Fill in your timesheet</a>
+                        </div>
+                        <br/>Thank you,<br/>
+                        <t t-if="user.signature">
+                            <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+                        </t>
+                    </div>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle" align="left">
+                    <t t-out="object.company_id.name or ''">YourCompany</t>
+                </td></tr>
+                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                    <t t-out="object.company_id.phone or ''">+1 650-123-4567</t>
+                    <t t-if="object.company_id.email">
+                        | <a t-attf-href="'mailto:%s' % {{ object.company_id.email }}" style="text-decoration:none; color: #454748;" t-out="object.company_id.email or ''">info@yourcompany.com</a>
+                    </t>
+                    <t t-if="object.company_id.website">
+                        | <a t-attf-href="'%s' % {{ object.company_id.website }}" style="text-decoration:none; color: #454748;" t-out="object.company_id.website or ''">http://www.example.com</a>
+                    </t>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+      <tr><td style="text-align: center; font-size: 13px;">
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=mail" style="color: #875A7B;">Odoo</a>
+      </td></tr>
+    </table>
+</td></tr>
+</table>
+            </field>
+            <field name="lang">{{ object.user_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="mail_template_timesheet_reminder" model="mail.template">
+            <field name="name">Timesheets: Approver Reminder</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="subject">Reminder to validate your team's timesheets</field>
+            <field name="email_from">{{ (object.user_id.company_id.partner_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ object.user_id.email_formatted }}</field>
+            <field name="description">Configure reminders in timesheet settings to remind approvers to validate timesheets</field>
+            <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <span style="font-size: 10px;">Your Timesheets</span><br/>
+                    <span style="font-size: 20px; font-weight: bold;" t-out="object.name or ''">Abigail Peterson</span>
+                </td><td valign="middle" align="right" t-if="not object.company_id.uses_default_logo">
+                    <img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="object.company_id.name"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 13px;">
+                    <div>
+                        Hello <t t-out="object.name or ''">Abigail Peterson</t>,<br/><br/>
+                        This is a friendly reminder to approve your team's timesheets for the following period: <t t-out="ctx.get('date_start') or ''">05/05/2021</t> - <t t-out="ctx.get('date_stop') or ''">06/05/2021</t>.<br/>
+                        <div t-if="ctx.get('action_url')" style="margin: 16px 0px 16px 0px;">
+                            <a t-att-href="ctx.get('action_url')"
+                                style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 13px;">Validate the Timesheets</a>
+                        </div>
+                        <br />Thank you,<br/>
+                        <t t-if="user.signature">
+                            <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+                        </t>
+                    </div>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle" align="left">
+                    <t t-out="object.company_id.name or ''">YourCompany</t>
+                </td></tr>
+                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                    <t t-out="object.company_id.phone or ''">+1 650-123-4567</t>
+                    <t t-if="object.company_id.email">
+                        | <a t-attf-href="'mailto:%s' % {{ object.company_id.email }}" style="text-decoration:none; color: #454748;" t-out="object.company_id.email or ''">info@yourcompany.com</a>
+                    </t>
+                    <t t-if="object.company_id.website">
+                        | <a t-attf-href="'%s' % {{ object.company_id.website }}" style="text-decoration:none; color: #454748;" t-out="object.company_id.website or ''">http://www.example.com</a>
+                    </t>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+      <tr><td style="text-align: center; font-size: 13px;">
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=mail" style="color: #875A7B;">Odoo</a>
+      </td></tr>
+    </table>
+</td></tr>
+</table>
+            </field>
+            <field name="lang">{{ object.user_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

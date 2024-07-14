@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_saft.company_data_warning">
+        Please define the following for
+        <a type="action" t-on-click="(ev) => controller.reportAction(ev, 'action_fill_company_details', warningParams)">
+            your company
+        </a>
+        :
+        <t t-out="warningParams.args"/>
+        .
+    </t>
+</templates>

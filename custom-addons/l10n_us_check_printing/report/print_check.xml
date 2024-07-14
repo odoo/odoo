@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<template id="ckus_check">
+    <div class="ckus_check">
+        <t t-if="page['state'] == 'cancelled'">
+            <div class="o-watermark">VOID</div>
+        </t>
+        <div class="sequence_number" t-if="page['sequence_number'] and page['manual_sequencing']" t-out="page['sequence_number']" />
+        <div class="ckus_date" t-out="page['date']"/>
+        <div class="ckus_payee_name" t-out="page['partner_name']"/>
+        <div class="ckus_amount">
+            <t t-out="page['amount'].replace(o.currency_id.symbol, '')"/>
+        </div>
+        <div class="ckus_amount_in_word" t-out="page['amount_in_word']"/>
+        <div class="ckus_payee_addr" t-out="page['partner_id']" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+        <div class="ckus_memo" t-out="page['memo']"/>
+    </div>
+</template>
+
+<template id="ckus_stub">
+    <div t-attf-class="ckus_stub ckus_stub_{{ stub_num }}">
+        <div class="row summary_line">
+            <div class="col-4 text-start">
+                <span t-out="page['partner_name']"/>
+            </div>
+            <div class="col-4 text-center">
+                <span t-out="page['date']"/>
+            </div>
+            <div class="col-4 text-end sequence_number">
+                <span t-if="page['sequence_number']" t-out="page['sequence_number']"/>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-sm stub_lines" t-if="page['stub_lines']">
+            <thead><tr>
+                <th class="text-start">Due Date</th>
+                <th class="text-start">Description</th>
+                <th class="text-end">Invoice Amount</th>
+                <th class="text-end">Balance Due</th>
+                <th class="text-end">Payment</th>
+            </tr></thead>
+            <tbody>
+                <t t-foreach="page['stub_lines']" t-as="stub_line">
+                    <t t-if="stub_line.get('header')">
+                        <tr><th colspan="6"><t t-out="stub_line['name']"/></th></tr>
+                    </t>
+                    <t t-if="not stub_line.get('header')"><tr>
+                        <td class="text-start"><t t-if="stub_line['due_date']" t-out="stub_line['due_date']"/></td>
+                        <td class="text-start text-truncate" style="max-width: 500px;"><t t-out="stub_line['number']"/></td>
+                        <td class="text-end"><t t-out="stub_line['amount_total']"/></td>
+                        <td class="text-end">
+                            <t t-out="stub_line['amount_residual']"/>
+                        </td>
+                        <td class="text-end"><t t-out="stub_line['amount_paid']"/></td>
+                    </tr></t>
+                </t>
+                <tr t-if="page['stub_cropped']"><td colspan="6" class="text-end">...</td></tr>
+            </tbody>
+        </table>
+        <div class="stub_total_amount">Check Amount:
+            <span class="text-nowrap"><t t-out="page['amount']"/></span>
+        </div>
+    </div>
+</template>
+
+</data>
+</odoo>

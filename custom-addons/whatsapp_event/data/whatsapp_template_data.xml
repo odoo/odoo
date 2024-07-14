@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<odoo noupdate="1">
+    <record id="whatsapp_template_event_ticket" model="whatsapp.template">
+        <field name="name">Event Ticket</field>
+        <field name="template_name">event_ticket</field>
+        <field name="lang_code">en</field>
+        <field name="template_type">utility</field>
+        <field name="header_type">document</field>
+        <field name="report_id" ref="event.action_report_event_registration_full_page_ticket"/>
+        <field name="footer_text">Write 'stop' to stop receiving messages</field>
+        <field name="phone_field">phone</field>
+        <field name="model_id" ref="event.model_event_registration"/>
+        <field name="body">Hello {{1}},
+
+We are happy to confirm your registration to *{{2}}* by *{{3}}*.
+Don’t forget to update your calendar: *{{4}}*.
+
+Feel free to contact *{{5}}* for any issue.
+*{{6}}*
+
+Thank you
+        </field>
+        <field name="variable_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {
+                'name': '{{1}}',
+                'demo_value': 'Azure Interior',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'name'
+            }),
+            (0, 0, {
+                'name': '{{2}}',
+                'demo_value': 'Hockey Tournament',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'event_id'
+            }),
+            (0, 0, {
+                'name': '{{3}}',
+                'demo_value': 'My Company',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'event_id.organizer_id.name'
+            }),
+            (0, 0, {
+                'name': '{{4}}',
+                'demo_value': 'in 5 days',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'date_range'
+            }),
+            (0, 0, {
+                'name': '{{5}}',
+                'demo_value': 'Mitchell Admin',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'event_id.user_id.name'
+            }),
+            (0, 0, {
+                'name': '{{6}}',
+                'demo_value': '+1(650)555-0111',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'event_id.user_id.mobile'
+            })
+        ]" />
+    </record>
+
+    <record id="whatsapp_template_event_reminder" model="whatsapp.template">
+        <field name="name">Event Reminder</field>
+        <field name="template_name">event_reminder</field>
+        <field name="lang_code">en</field>
+        <field name="template_type">utility</field>
+        <field name="header_type">location</field>
+        <field name="report_id" ref="event.action_report_event_registration_full_page_ticket"/>
+        <field name="footer_text">Write 'stop' to stop receiving messages</field>
+        <field name="phone_field">phone</field>
+        <field name="model_id" ref="event.model_event_registration"/>
+        <field name="body">Hi {{1}},
+
+As a reminder, *{{2}}* by *{{3}}* is approaching: *{{4}}* in *{{5}}*.
+
+For more info {{6}}
+
+See you there.
+        </field>
+        <field name="variable_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {
+                'name': '{{1}}',
+                'demo_value': 'Azure Interior',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'name'
+            }),
+            (0, 0, {
+                'name': '{{2}}',
+                'demo_value': 'Conference for Architects',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'event_id'
+            }),
+            (0, 0, {
+                'name': '{{3}}',
+                'demo_value': 'My Company',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'event_id.organizer_id.name'
+            }),
+            (0, 0, {
+                'name': '{{4}}',
+                'demo_value': 'in 5 days',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'date_range'
+            }),
+            (0, 0, {
+                'name': '{{5}}',
+                'demo_value': 'Los Angeles',
+                'line_type': 'body',
+                'field_type': 'field',
+                'field_name': 'event_id.address_id.city'
+            }),
+            (0, 0, {
+                'name': '{{6}}',
+                'demo_value': 'https://..',
+                'line_type': 'body',
+                'field_type': 'portal_url',
+            }),
+            (0, 0, {
+                'name': 'name',
+                'demo_value': 'Info City',
+                'line_type': 'location',
+                'field_type': 'field',
+                'field_name': 'event_id.address_id.name'
+            }),
+            (0, 0, {
+                'name': 'address',
+                'demo_value': 'Info City, Gandhinagar, Gujarat, India - 382481',
+                'line_type': 'location',
+                'field_type': 'field',
+                'field_name': 'event_id.address_id.contact_address_complete'
+            }),
+            (0, 0, {
+                'name': 'latitude',
+                'demo_value': '23.19397117332178',
+                'line_type': 'location',
+                'field_type': 'field',
+                'field_name': 'event_id.address_id.partner_latitude'
+            }),
+            (0, 0, {
+                'name': 'longitude',
+                'demo_value': '72.63621268889301',
+                'line_type': 'location',
+                'field_type': 'field',
+                'field_name': 'event_id.address_id.partner_longitude'
+            }),
+        ]" />
+    </record>
+</odoo>

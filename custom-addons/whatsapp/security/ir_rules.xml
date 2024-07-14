@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+
+    <record id="security_rule_whatsapp_account" model="ir.rule">
+        <field name="name">WA Account: Restrict to Allowed Companies</field>
+        <field name="model_id" ref="model_whatsapp_account"/>
+        <field name="domain_force">[('allowed_company_ids', 'in', company_ids)]</field>
+    </record>
+
+    <record id="security_rule_whatsapp_composer" model="ir.rule">
+        <field name="name">WA Composer: Restrict to Own</field>
+        <field name="model_id" ref="model_whatsapp_composer"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+    </record>
+
+    <record id="security_rule_whatsapp_message_user" model="ir.rule">
+        <field name="name">WA Message: Restrict to Own</field>
+        <field name="model_id" ref="model_whatsapp_message"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    <record id="security_rule_whatsapp_message_admin" model="ir.rule">
+        <field name="name">WA Message: Un-restrict for WA Admins</field>
+        <field name="model_id" ref="model_whatsapp_message"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('whatsapp.group_whatsapp_admin'))]"/>
+    </record>
+
+    <record id="security_rule_whatsapp_preview" model="ir.rule">
+        <field name="name">WA Preview: Restrict to Own</field>
+        <field name="model_id" ref="model_whatsapp_preview"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+    </record>
+
+    <record id="security_rule_whatsapp_template" model="ir.rule">
+        <field name="name">WA Template: Restrict to Allowed Companies</field>
+        <field name="model_id" ref="model_whatsapp_template"/>
+        <field name="domain_force">['|', ('wa_account_id', '=', False), ('wa_account_id.allowed_company_ids', 'in', company_ids)]</field>
+    </record>
+    <record id="security_rule_whatsapp_template_user" model="ir.rule">
+        <field name="name">WA Template: Restrict to Allowed Users</field>
+        <field name="model_id" ref="model_whatsapp_template"/>
+        <field name="domain_force">['|', ('allowed_user_ids', '=', False), ('allowed_user_ids', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    <record id="security_rule_whatsapp_template_admin" model="ir.rule">
+        <field name="name">WA Template: Un-restrict for WA Admins</field>
+        <field name="model_id" ref="model_whatsapp_template"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('whatsapp.group_whatsapp_admin'))]"/>
+    </record>
+
+    <record id="security_rule_whatsapp_template_button" model="ir.rule">
+        <field name="name">WA Template Button: Restrict to Allowed Companies</field>
+        <field name="model_id" ref="model_whatsapp_template_button"/>
+        <field name="domain_force">['|', ('wa_template_id.wa_account_id', '=', False), ('wa_template_id.wa_account_id.allowed_company_ids', 'in', company_ids)]</field>
+    </record>
+    <record id="security_rule_whatsapp_template_button_user" model="ir.rule">
+        <field name="name">WA Template Button: Restrict to Allowed Users</field>
+        <field name="model_id" ref="model_whatsapp_template_button"/>
+        <field name="domain_force">['|', ('wa_template_id.allowed_user_ids', '=', False), ('wa_template_id.allowed_user_ids', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    <record id="security_rule_whatsapp_template_button_admin" model="ir.rule">
+        <field name="name">WA Template Button: Un-restrict for WA Admins</field>
+        <field name="model_id" ref="model_whatsapp_template_button"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('whatsapp.group_whatsapp_admin'))]"/>
+    </record>
+
+    <record id="security_rule_whatsapp_template_variable" model="ir.rule">
+        <field name="name">WA Template Variable: Restrict to Allowed Companies</field>
+        <field name="model_id" ref="model_whatsapp_template_variable"/>
+        <field name="domain_force">['|', ('wa_template_id.wa_account_id', '=', False), ('wa_template_id.wa_account_id.allowed_company_ids', 'in', company_ids)]</field>
+    </record>
+    <record id="security_rule_whatsapp_template_variable_user" model="ir.rule">
+        <field name="name">WA Template Variable: Restrict to Allowed Users</field>
+        <field name="model_id" ref="model_whatsapp_template_variable"/>
+        <field name="domain_force">['|', ('wa_template_id.allowed_user_ids', '=', False), ('wa_template_id.allowed_user_ids', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    <record id="security_rule_whatsapp_template_variable_admin" model="ir.rule">
+        <field name="name">WA Template Variable: Un-restrict for WA Admins</field>
+        <field name="model_id" ref="model_whatsapp_template_variable"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('whatsapp.group_whatsapp_admin'))]"/>
+    </record>
+
+</odoo>

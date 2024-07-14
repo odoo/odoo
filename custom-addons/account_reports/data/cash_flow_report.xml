@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cash_flow_report" model="account.report">
+        <field name="name">Cash Flow Statement</field>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_period_comparison" eval="False"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="custom_handler_model_id" ref="model_account_cash_flow_report_handler"/>
+        <field name="column_ids">
+            <record id="cash_flow_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+    </record>
+</odoo>

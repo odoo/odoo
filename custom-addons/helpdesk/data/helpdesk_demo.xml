@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(3, ref('helpdesk.group_helpdesk_manager'))]"/>
+        </record>
+    </data>
+
+    <record id="tag_crm" model="helpdesk.tag">
+        <field name="name">CRM</field>
+    </record>
+    <record id="tag_website" model="helpdesk.tag">
+        <field name="name">Website</field>
+    </record>
+    <record id="tag_service" model="helpdesk.tag">
+        <field name="name">Service</field>
+    </record>
+    <record id="tag_repair" model="helpdesk.tag">
+        <field name="name">Repair</field>
+    </record>
+
+    <!-- Set target on user -->
+    <record id="base.user_admin" model="res.users">
+        <field name="helpdesk_target_closed">5</field>
+        <field name="helpdesk_target_rating">92</field>
+        <field name="helpdesk_target_success">87</field>
+    </record>
+
+    <!-- helpdesk stages -->
+    <record id="helpdesk.stage_solved" model="helpdesk.stage">
+        <field name="template_id" ref="helpdesk.rating_ticket_request_email_template"/>
+    </record>
+
+    <!-- helpdesk team -->
+    <record id="helpdesk_team3" model="helpdesk.team">
+        <field name="name">VIP Support</field>
+        <field name="stage_ids" eval="[(6, 0, [ref('helpdesk.stage_new'), ref('helpdesk.stage_in_progress'), ref('helpdesk.stage_solved'), ref('helpdesk.stage_cancelled')])]"/>
+        <field name="use_sla" eval="True"/>
+        <field name="use_rating" eval="True"/>
+        <field name="color">10</field>
+        <field name="assign_method">randomly</field>
+        <field name="member_ids" eval="[Command.link(ref('base.user_admin')), Command.link(ref('base.user_demo'))]"/>
+        <field name="privacy_visibility">invited_internal</field>
+        <field name="description" type="html">
+            <p>We provide 24/7 support, Monday through Friday. Ticket responses are usually provided within 2 working days.<br/>
+            Support is mainly provided in English. We can also assist in Spanish, French, and Dutch.</p>
+        </field>
+    </record>
+    <record id="helpdesk.helpdesk_team1" model="helpdesk.team">
+        <field name="use_rating" eval="True"/>
+        <field name="description" type="html">
+            <p>We provide 24/7 support, Monday through Friday. Ticket responses are usually provided within 2 working days.<br/>
+            Support is mainly provided in English. We can also assist in Spanish, French, and Dutch.</p>
+        </field>
+    </record>
+
+    <!-- SLA's -->
+    <record id="helpdesk_sla_1" model="helpdesk.sla">
+        <field name="name">2 days to start</field>
+        <field name="team_id" ref="helpdesk_team1"/>
+        <field name="stage_id" ref="stage_in_progress"/>
+        <field name="time">16</field>
+    </record>
+
+    <record id="helpdesk_sla_2" model="helpdesk.sla">
+        <field name="name">7 days to finish</field>
+        <field name="team_id" ref="helpdesk_team1"/>
+        <field name="stage_id" ref="stage_solved"/>
+        <field name="time">56</field>
+        <field name="exclude_stage_ids" eval="[Command.link(ref('helpdesk.stage_on_hold'))]"/>
+    </record>
+    <record id="helpdesk_sla_3" model="helpdesk.sla">
+        <field name="name">8 hours to finish</field>
+        <field name="team_id" ref="helpdesk_team3"/>
+        <field name="priority">3</field>
+        <field name="stage_id" ref="stage_solved"/>
+        <field name="time">8</field>
+        <field name="partner_ids" eval="[Command.link(ref('base.res_partner_10')), Command.link(ref('base.res_partner_2'))]"/>
+        <field name="ticket_type_ids" eval="[Command.link(ref('helpdesk.type_incident'))]"/>
+    </record>
+
+    <!-- Tickets -->
+    <record id="helpdesk_ticket_1" model="helpdesk.ticket">
+        <field name="name">Kitchen collapsing</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="priority">3</field>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="stage_id" ref="helpdesk.stage_in_progress"/>
+    </record>
+    <record id="helpdesk_ticket_2" model="helpdesk.ticket">
+        <field name="name">Where can I download a catalog?</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team1"/>
+        <field name="priority">0</field>
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="ticket_type_id" ref="helpdesk.type_question"/>
+    </record>
+    <record id="helpdesk_ticket_3" model="helpdesk.ticket">
+        <field name="name">Warranty</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team1"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="ticket_type_id" ref="helpdesk.type_question"/>
+        <field name="priority">2</field>
+        <field name="partner_id" ref="base.res_partner_main1" />
+        <field name="stage_id" ref="helpdesk.stage_new"/>
+        <field name="kanban_state">blocked</field>
+        <field name="description" type="html">
+        <field name="sla_reached_late" eval="True"/>
+<p>Hello,<br/><br/>
+I would like to know what kind of warranties you are offering for your products.<br/>
+Here is my contact number: 123456789<br/><br/>
+Thank you,<br/>
+Chester Reed</p>
+        </field>
+    </record>
+    <!-- fail the sla status -->
+    <function model="helpdesk.sla.status" name="write">
+        <value model="helpdesk.sla.status" search="[('ticket_id', '=', ref('helpdesk_ticket_3'))]"/>
+        <value eval="{'deadline': DateTime.now() - relativedelta(days=2)}"/>
+    </function>
+
+    <record id="helpdesk_ticket_4" model="helpdesk.ticket">
+        <field name="name">Wood Treatment</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team1"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="ticket_type_id" ref="helpdesk.type_question"/>
+        <field name="partner_id" ref="base.res_partner_4" />
+        <field name="stage_id" ref="helpdesk.stage_solved"/>
+        <field name="close_date" eval="DateTime.now()"/>
+        <field name="description" type="html">
+<p>Hello,<br/><br/>
+Is the wood from your furniture treated with a particular product? What would you recommend to maintain the quality of a dining table?<br/>
+Your assistance would be greatly appreciated.<br/><br/>
+Thanks in Advance,<br/>
+Azure Interior</p>
+        </field>
+    </record>
+    <record id="helpdesk_ticket_5" model="helpdesk.ticket">
+        <field name="name">Chair dimensions</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team1"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="ticket_type_id" ref="helpdesk.type_question"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="stage_id" ref="helpdesk.stage_solved"/>
+        <field name="create_date" eval="DateTime.now()- relativedelta(days=1)"/>
+        <field name="close_date" eval="DateTime.now()"/>
+        <field name="description" type="html">
+<p>Can you please tell me the dimensions of your “Office chair Black”? Also I am unable to find the information on your official site.<br/>
+I look forward to your kind response.<br/><br/>
+Thank you!</p>
+        </field>
+    </record>
+    <record id="helpdesk_ticket_6" model="helpdesk.ticket">
+        <field name="name">Lost key</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team1"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="ticket_type_id" ref="helpdesk.type_question"/>
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="stage_id" ref="helpdesk.stage_in_progress"/>
+        <field name="kanban_state">done</field>
+        <field name="description" type="html">
+<p>Hello,<br/><br/>
+I bought a locker a few years ago and I, unfortunately, lost the key. I cannot retrieve the documents I had left in there without damaging the furniture item. What solution do you offer?<br/><br/>
+Thanks in advance for your help.<br/>
+Kind regards,<br/>
+Gemini Furniture</p>
+        </field>
+    </record>
+    <record id="helpdesk_ticket_7" model="helpdesk.ticket">
+        <field name="name">Furniture delivery</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team1"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="ticket_type_id" ref="helpdesk.type_question"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="stage_id" ref="helpdesk.stage_in_progress"/>
+        <field name="create_date" eval="DateTime.now()- relativedelta(days=9)"/>
+        <field name="description" type="html">
+<p>Hi,<br/><br/>
+I was wondering if you were delivering the furniture or if we needed to pick it up at your warehouse?<br/>
+If you do take care of the delivery, are there any extra costs?<br/><br/>
+Regards,<br/>
+Deco Addict</p>
+        </field>
+    </record>
+    <!-- change the stage to cancelled and add close date to update success rate-->
+    <function model="helpdesk.ticket" name="write">
+        <value model="helpdesk.ticket" search="[('id', '=', ref('helpdesk_ticket_7'))]"/>
+        <value eval="{'stage_id': ref('helpdesk.stage_cancelled'), 'close_date': DateTime.now()}"/>
+    </function>
+
+    <record id="helpdesk_ticket_8" model="helpdesk.ticket">
+        <field name="name">Cabinets in kit</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="ticket_type_id" ref="helpdesk.type_question"/>
+        <field name="partner_id" ref="base.res_partner_10"/>
+        <field name="stage_id" ref="helpdesk.stage_new"/>
+        <field name="description" type="html">
+<p>Hello,<br/><br/>
+I would like to know if your cabinets come in a kit? They seem quite large and I am not sure they will fit through my front door.<br/><br/>
+Thank you for your help.<br/>
+Best regards,<br/>
+Jackson Group</p>
+        </field>
+    </record>
+    <record id="helpdesk_ticket_9" model="helpdesk.ticket">
+        <field name="name">Missing user manual</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="ticket_type_id" ref="helpdesk.type_question"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="stage_id" ref="helpdesk.stage_new"/>
+        <field name="kanban_state">blocked</field>
+        <field name="description" type="html">
+<p>Hello,<br/><br/>
+I recently purchased one of your wardrobes in a kit. Unfortunately, I didn’t receive the user manual, so I cannot assemble the item. Could you send me this document?<br/><br/>
+Thank you.<br/>
+Kind regards,</p>
+        </field>
+    </record>
+    <record id="helpdesk_ticket_10" model="helpdesk.ticket">
+        <field name="name">Ugly Chair</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="ticket_type_id" ref="helpdesk.type_incident"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="stage_id" ref="helpdesk.stage_solved"/>
+        <field name="kanban_state">done</field>
+        <field name="close_date" eval="DateTime.now()"/>
+        <field name="description" type="html">
+<p>Hello,<br/><br/>
+I purchased a chair from you last week. I now realize it doesn’t go well with the rest of my furniture, so I would like to return it and to get a refund.<br/><br/>
+Regards,<br/>
+Deco Addict</p>
+        </field>
+    </record>
+    <record id="helpdesk_ticket_11" model="helpdesk.ticket">
+        <field name="name">Couch</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="ticket_type_id" ref="helpdesk.type_incident"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="stage_id" ref="helpdesk.stage_in_progress"/>
+        <field name="description" type="html">
+<p>Hello,<br/><br/>
+The couch I ordered was scratched during the delivery. Would it be possible to have a gesture of goodwill?<br/>
+Thank you for considering my request.<br/><br/>
+Best regards,</p>
+        </field>
+    </record>
+    <record id="helpdesk_ticket_12" model="helpdesk.ticket">
+        <field name="name">Chair wheels aren’t working</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="ticket_type_id" ref="helpdesk.type_incident"/>
+        <field name="partner_id" ref="base.res_partner_main1"/>
+        <field name="stage_id" ref="helpdesk.stage_new"/>
+        <field name="priority">3</field>
+        <field name="tag_ids" eval="[(6,0,[ref('helpdesk.tag_repair'),ref('helpdesk.tag_service')])]"/>
+        <field name="create_date" eval="DateTime.now()- relativedelta(days=1)"/>
+        <field name="kanban_state">done</field>
+        <field name="description" type="html">
+<p>The chair I bought last year isn't turning correctly anymore. Are you selling spare parts for the wheels?<br/><br/>
+Thank you in advance for your help.<br/>
+Chester Reed</p>
+        </field>
+    </record>
+    <!-- Fail the sla on ticket -->
+    <function model="helpdesk.sla.status" name="write">
+        <value model="helpdesk.sla.status" search="[('ticket_id', '=', ref('helpdesk_ticket_12'))]"/>
+        <value eval="{'deadline': DateTime.now()}"/>
+    </function>
+
+    <record id="helpdesk_ticket_13" model="helpdesk.ticket">
+        <field name="name">Cabinet Colour and Lock aren't proper</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="ticket_type_id" ref="helpdesk.type_incident"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_10"/>
+        <field name="stage_id" ref="helpdesk.stage_new"/>
+        <field name="priority">3</field>
+        <field name="tag_ids" eval="[(6,0,[ref('helpdesk.tag_repair'),ref('helpdesk.tag_service')])]"/>
+        <field name="kanban_state">done</field>
+        <field name="description" type="html">
+<p>Hi,<br/><br/>
+I purchased a "Cabinet With Doors" from your store a few days ago. The lock is not working properly and the color is wrong. This is unacceptable! I am asking for a product that corresponds to my order and that matches the quality you are advertising.<br/><br/>
+Regards,<br/>
+The Jackson Group</p>
+        </field>
+    </record>
+    <record id="helpdesk_ticket_14" model="helpdesk.ticket">
+        <field name="name">Lamp Stand is bent</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="ticket_type_id" ref="helpdesk.type_incident"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="stage_id" ref="helpdesk.stage_new"/>
+        <field name="priority">2</field>
+        <field name="description" type="html">
+<p>Hello,<br/><br/>
+Yesterday I purchased a lamp stand from your site but the product I received is bent.<br/>
+Would it be possible to get a replacement?<br/><br/>
+Regards,<br/>
+Ready Mat</p>
+        </field>
+    </record>
+    <record id="helpdesk_ticket_15" model="helpdesk.ticket">
+        <field name="name">Table legs are unbalanced</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="ticket_type_id" ref="helpdesk.type_incident"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="stage_id" ref="helpdesk.stage_in_progress"/>
+        <field name="priority">3</field>
+        <field name="tag_ids" eval="[(6,0,[ref('helpdesk.tag_repair'),ref('helpdesk.tag_service')])]"/>
+        <field name="kanban_state">done</field>
+        <field name="description" type="html">
+<p>Hi,<br/><br/>
+A few days ago, I bought a Four Persons Desk. While assembling it in my office, I found that the legs of the table were not properly balanced. Could you please come and fix this?<br/>
+Kindly do this as early as possible.<br/><br/>
+Best,<br/>
+Azure Interior</p>
+        </field>
+    </record>
+    <record id="helpdesk_ticket_16" model="helpdesk.ticket">
+        <field name="name">Drawer’s slides and handle have a defect</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="ticket_type_id" ref="helpdesk.type_incident"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="priority">3</field>
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="stage_id" ref="helpdesk.stage_in_progress"/>
+        <field name="kanban_state">done</field>
+        <field name="description" type="html">
+<p>Hi,<br/><br/>
+I have purchased a "Drawer" from your store but the slides and the handle seem to have a defect.<br/>
+Would it be possible for you to fix it?<br/><br/>
+Regards,<br/>
+Deco</p>
+        </field>
+    </record>
+    <record id="helpdesk_ticket_17" model="helpdesk.ticket">
+        <field name="name">Want to change the place of the dining area</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="ticket_type_id" ref="helpdesk.type_question"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="stage_id" ref="helpdesk.stage_in_progress"/>
+        <field name="description" type="html">
+<p>Hello,<br/><br/>
+I want to change the location of the dining area and would like your advice.<br/>
+Hope to hear from you soon.<br/><br/>
+Best,<br/>
+Gemini Furniture</p>
+        </field>
+    </record>
+    <record id="helpdesk_ticket_18" model="helpdesk.ticket">
+        <field name="name">Received Product is damaged</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="ticket_type_id" ref="helpdesk.type_incident"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="stage_id" ref="helpdesk.stage_solved"/>
+        <field name="create_date" eval="DateTime.now()- relativedelta(days=10)"/>
+        <field name="close_date" eval="DateTime.now()- relativedelta(days=5)"/>
+        <field name="description" type="html">
+<p>Hi,<br/><br/>
+I ordered a "Table Kit" from your store but the delivered product is damaged. I demand a refund as soon as possible.<br/><br/>
+Regards,</p>
+        </field>
+    </record>
+    <record id="helpdesk_ticket_19" model="helpdesk.ticket">
+        <field name="name">Delivered wood panel is not what I ordered</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="ticket_type_id" ref="helpdesk.type_incident"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="priority">2</field>
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="stage_id" ref="helpdesk.stage_solved"/>
+        <field name="create_date" eval="DateTime.now()- relativedelta(days=4)"/>
+        <field name="close_date" eval="DateTime.now()- relativedelta(days=2)"/>
+        <field name="description" type="html">
+<p>Hello,<br/><br/>
+I ordered a wood panel from your online store, but the delivered product is not what I had ordered.<br/><br/>
+Could you please replace it with the right product?<br/>
+Waiting for your response.<br/><br/>
+Best,<br/>
+Wood Corner</p>
+        </field>
+    </record>
+    <record id="helpdesk_ticket_20" model="helpdesk.ticket">
+        <field name="name">Table not delivered on time</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team3"/>
+        <field name="ticket_type_id" ref="helpdesk.type_incident"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="stage_id" ref="helpdesk.stage_in_progress"/>
+        <field name="priority">3</field>
+        <field name="tag_ids" eval="[Command.link(ref('helpdesk.tag_service'))]"/>
+        <field name="active" eval="False"/>
+        <field name="description" type="html">
+<p>Hi,<br/><br/>
+A few days ago, I bought a Four Persons Desk. but it's still not delivered?<br/>
+Kindly do this as early as possible.<br/><br/>
+Best,<br/>
+Azure Interior</p>
+        </field>
+    </record>
+    <record id="helpdesk_ticket_21" model="helpdesk.ticket">
+        <field name="name">Where can I shop the same product?</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team1"/>
+        <field name="priority">0</field>
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="ticket_type_id" ref="helpdesk.type_question"/>
+        <field name="active" eval="False"/>
+    </record>
+    <record id="helpdesk_ticket_22" model="helpdesk.ticket">
+        <field name="name">What's the best kitchen cabinet varnish for your home?</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team1"/>
+        <field name="priority">1</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_main1"/>
+        <field name="ticket_type_id" ref="helpdesk.type_question"/>
+        <field name="description" type="html">
+<p>Hello,<br/><br/>
+I would like to know What's the best kitchen cabinet varnish for your home?<br/><br/>
+Thank you,<br/>
+Chester Reed</p>
+        </field>
+    </record>
+    <!-- fail the sla status -->
+    <function model="helpdesk.sla.status" name="write">
+        <value model="helpdesk.sla.status" search="[('ticket_id', '=', ref('helpdesk_ticket_22'))]"/>
+        <value eval="{'deadline': DateTime.now() - relativedelta(days=1)}"/>
+    </function>
+    <record id="helpdesk_ticket_23" model="helpdesk.ticket">
+        <field name="name">What customization features are available for cabinet?</field>
+        <field name="team_id" ref="helpdesk.helpdesk_team1"/>
+        <field name="priority">1</field>
+        <field name="stage_id" ref="stage_in_progress"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_main1"/>
+        <field name="description" type="html">
+<p>Hello,<br/><br/>
+I would like to know What customization features are available for cabinet?<br/><br/>
+Thank you,<br/>
+Chester Reed</p>
+        </field>
+    </record>
+    <!-- fail the sla status -->
+    <function model="helpdesk.sla.status" name="write">
+        <value model="helpdesk.sla.status" search="[('ticket_id', '=', ref('helpdesk_ticket_23')), ('status', '=', 'ongoing')]"/>
+        <value eval="{'deadline': DateTime.now() - relativedelta(days=4)}"/>
+    </function>
+
+    <record id="rating_ticket_1" model="rating.rating">
+        <field name="access_token">HELPDESK_1</field>
+        <field name="res_model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="rated_partner_id" ref="base.partner_demo"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="res_id" ref="helpdesk.helpdesk_ticket_18"/>
+    </record>
+    <record id="rating_ticket_2" model="rating.rating">
+        <field name="access_token">HELPDESK_2</field>
+        <field name="res_model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="rated_partner_id" ref="base.partner_admin"/>
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="res_id" ref="helpdesk.helpdesk_ticket_19"/>
+    </record>
+    <record id="rating_ticket_3" model="rating.rating">
+        <field name="access_token">HELPDESK_3</field>
+        <field name="res_model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="rated_partner_id" ref="base.partner_admin"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+        <field name="res_id" ref="helpdesk.helpdesk_ticket_5"/>
+    </record>
+    <record id="rating_ticket_4" model="rating.rating">
+        <field name="access_token">HELPDESK_4</field>
+        <field name="res_model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="rated_partner_id" ref="base.partner_admin"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="res_id" ref="helpdesk.helpdesk_ticket_10"/>
+    </record>
+    <record id="rating_ticket_5" model="rating.rating">
+        <field name="access_token">HELPDESK_5</field>
+        <field name="res_model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="rated_partner_id" ref="base.partner_demo"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="res_id" ref="helpdesk.helpdesk_ticket_4"/>
+    </record>
+
+    <function model="helpdesk.ticket" name="rating_apply"
+        eval="([ref('helpdesk_ticket_18')], 3, 'HELPDESK_1', None, 'Good Service')"/>
+    <function model="helpdesk.ticket" name="rating_apply"
+        eval="([ref('helpdesk_ticket_19')], 5, 'HELPDESK_2', None, 'Awesome Service.\nLove to use your product')"/>
+    <function model="helpdesk.ticket" name="rating_apply"
+        eval="([ref('helpdesk_ticket_5')], 5, 'HELPDESK_3', None, 'Quick response with detailed information.')"/>
+    <function model="helpdesk.ticket" name="rating_apply"
+        eval="([ref('helpdesk_ticket_10')], 3, 'HELPDESK_4', None, 'Quick replacement. \n Love that you did the quick replacement and refund.')"/>
+    <function model="helpdesk.ticket" name="rating_apply"
+        eval="([ref('helpdesk_ticket_4')], 1, 'HELPDESK_5', None, 'Too late. \n dissatisfied answer.')"/>
+
+    <!-- Activities -->
+    <record id="helpdesk_activity_1" model="mail.activity">
+        <field name="res_id" ref="helpdesk.helpdesk_ticket_3"/>
+        <field name="res_model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="activity_type_id" ref="helpdesk.mail_act_helpdesk_handle"/>
+        <field name="date_deadline" eval="DateTime.today()"/>
+        <field name="summary">Provide warranty details</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="helpdesk_activity_2" model="mail.activity">
+        <field name="res_id" ref="helpdesk.helpdesk_ticket_12"/>
+        <field name="res_model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="activity_type_id" ref="helpdesk.mail_act_helpdesk_handle"/>
+        <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=2))"/>
+        <field name="summary">Provide the details about the spare part of chair</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="helpdesk_activity_3" model="mail.activity">
+        <field name="res_id" ref="helpdesk.helpdesk_ticket_11"/>
+        <field name="res_model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+        <field name="date_deadline" eval="(DateTime.today() - relativedelta(days=2))" />
+        <field name="summary">Give gesture of goodwill</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <!-- Mail template Auto delete false for demo data -->
+    <record id="helpdesk.rating_ticket_request_email_template" model="mail.template">
+        <field name="auto_delete" eval="False"/>
+    </record>
+
+</odoo>

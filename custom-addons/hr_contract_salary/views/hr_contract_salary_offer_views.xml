@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_salary_offer_action" model="ir.actions.act_window">
+        <field name="name">Offers</field>
+        <field name="res_model">hr.contract.salary.offer</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{
+            'search_default_group_by_state': True,
+            'search_default_employees': True
+        }</field>
+    </record>
+
+    <record id="hr_contract_salary_offer_view_tree" model="ir.ui.view">
+        <field name="name">hr.contract.salary.offer.view.tree</field>
+        <field name="model">hr.contract.salary.offer</field>
+        <field name="arch" type="xml">
+            <tree string="Salary Package Offers" create="0" default_order="id desc">
+                <field name="display_name" optional="show"/>
+                <field name="state" optional="show"/>
+                <field name="employee_id" invisible="not employee_contract_id" optional="hide"/>
+                <field name="applicant_id" invisible="not applicant_id" optional="hide" context="{'show_partner_name': True}"/>
+                <field name="employee_job_id" optional="hide"/>
+                <field name="department_id" optional="hide"/>
+                 <field name="offer_end_date" optional="show"/>
+                <field name="contract_start_date" optional="hide"/>
+                <field name="final_yearly_costs" optional="show"/>
+                <field name="contract_template_id" optional="hide"/>
+                <field name="employee_contract_id" column_invisible="True"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="create_date" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_contract_salary_offer_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.salary.offer.view.form</field>
+        <field name="model">hr.contract.salary.offer</field>
+        <field name="arch" type="xml">
+            <form string="Salary Package Offer" create="0">
+                <header>
+                    <button
+                        name="action_send_by_email"
+                        type="object"
+                        data-hotkey="shift+e"
+                        string="Send By Email"
+                        class="oe_highlight"
+                        invisible="not id"/>
+                    <button
+                        name="action_jump_to_offer"
+                        type="object"
+                        data-hotkey="shift+g"
+                        string="Salary Configurator"
+                        class="btn btn-secondary"
+                        invisible="not id"/>
+                    <field name="state" widget="statusbar" statusbar_visible="open,half_signed,full_signed,expired" readonly="1"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Refused" bg_color="text-bg-danger" invisible="state != 'refused'"/>
+                    <div class="oe_title pe-0">
+                        <label for="display_name"/>
+                        <h1>
+                            <field name="display_name" options="{'line_breaks': False}"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Offer" name="group_offer">
+                            <field name="contract_template_id" readonly="1"/>
+                            <field name="final_yearly_costs"/>
+                            <field name="job_title"/>
+                            <field name="employee_job_id" readonly="1"/>
+                            <field name="department_id" readonly="1"/>
+                            <field name="contract_start_date"/>
+                            <field name="offer_end_date"/>
+                            <field name="url" widget="CopyClipboardURL" invisible="not id"/>
+                        </group>
+                        <group string="To" name="group_offer_to">
+                            <field name="employee_id" invisible="applicant_id"/>
+                            <field name="employee_contract_id" invisible="applicant_id"/>
+                            <field name="applicant_id" invisible="employee_contract_id" readonly="1" context="{'show_partner_name': True}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_id" invisible="1" groups="!base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Token" name="group_token" groups="base.group_no_one">
+                            <field name="access_token"/>
+                            <field name="create_date"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_contract_salary_offer_view_search" model="ir.ui.view">
+        <field name="name">hr.contract.salary.offer.view.search</field>
+        <field name="model">hr.contract.salary.offer</field>
+        <field name="arch" type="xml">
+            <search string="Search Offers">
+                <field string="Applicant" name="applicant_name"/>
+                <field name="employee_id"/>
+                <field name="display_name"/>
+                <filter name="employees" domain="[('employee_id', '!=', False)]" string="Employees"/>
+                <filter name="applicants" domain="[('applicant_id', '!=', False)]" string="Applicants"/>
+                <separator/>
+                <filter name="expired" domain="[('offer_end_date', '&lt;', context_today().strftime('%%Y-%%m-%%d'))]" string="Expired"/>
+                <separator/>
+                <filter name="refused" domain="[('state', '=', 'refused')]" string="Refused"/>
+                <group expand="0" string="Group By">
+                    <filter string="State" name="group_by_state" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Job Position" name="group_by_employee_job_id" domain="[]" context="{'group_by': 'employee_job_id'}"/>
+                    <filter string="Department" name="group_by_department_id" domain="[]" context="{'group_by': 'department_id'}"/>
+                    <filter string="Contract Template" name="group_by_contract_template_id" domain="[]" context="{'group_by': 'contract_template_id'}"/>
+                    <filter string="Employee" name="group_by_employee_id" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Applicant" name="group_by_applicant_id" domain="[]" context="{'group_by': 'applicant_id'}"/>
+                    <filter string="Company" name="group_by_company_id" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_refuse_salary_offer">
+            <field name="name">Refuse</field>
+            <field name="model_id" ref="model_hr_contract_salary_offer"/>
+            <field name="binding_model_id" ref="model_hr_contract_salary_offer" />
+            <field name="state">code</field>
+            <field name="code">
+                action = records.action_refuse_offer()
+            </field>
+    </record>
+
+     <record id="hr_contract_salary_offer_recruitment_action" model="ir.actions.act_window">
+        <field name="name">Offers</field>
+        <field name="res_model">hr.contract.salary.offer</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('employee_id', '=', False)]</field>
+        <field name="context">{'search_default_group_by_state': True}</field>
+    </record>
+
+    <menuitem
+        id="menu_salary_package_offer"
+        action="hr_contract_salary_offer_action"
+        parent="hr_contract_salary.salary_package_menu"
+        sequence="10"/>
+
+    <menuitem id="menu_hr_contract_salary_job_offer"
+          parent="hr_recruitment.menu_crm_case_categ0_act_job"
+          action="hr_contract_salary_offer_recruitment_action"
+          sequence="3"/>
+</odoo>

@@ -1,0 +1,108 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* maintenance_worksheet
+# 
+# Translators:
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: maintenance_worksheet
+#: model:ir.actions.report,print_report_name:maintenance_worksheet.maintenance_request_report
+msgid ""
+"'Maintenance Request Worksheet - %s - %s' % (object.name, "
+"object.user_id.name)"
+msgstr "'维护申请工作表 - %s - %s' %（对象名称、对象用户 ID 名称）"
+
+#. module: maintenance_worksheet
+#: model_terms:ir.ui.view,arch_db:maintenance_worksheet.maintenance_request_view_form_inherit_worksheet
+msgid "<span class=\"o_stat_text\">Worksheet</span>"
+msgstr "<span class=\"o_stat_text\">工作表</span>"
+
+#. module: maintenance_worksheet
+#: model_terms:ir.ui.view,arch_db:maintenance_worksheet.maintenance_request_view_form_inherit_worksheet
+msgid ""
+"<span class=\"o_stat_text\">Worksheet</span>\n"
+"                            <span class=\"o_stat_text\">Complete</span>"
+msgstr ""
+"<span class=\"o_stat_text\">工作表</span>\n"
+"                            <span class=\"o_stat_text\">完成</span>"
+
+#. module: maintenance_worksheet
+#: model:ir.model.fields,help:maintenance_worksheet.field_maintenance_request__worksheet_template_id
+msgid ""
+"Create templates for each type of request you have and customize their "
+"content with your own custom fields."
+msgstr "为每种类型的请求创建模板，并使用自定义字段定制模板内容。"
+
+#. module: maintenance_worksheet
+#: model_terms:ir.actions.act_window,help:maintenance_worksheet.maintenance_worksheet_action_settings
+msgid "Customize worksheet templates for each type of request.<br>"
+msgstr "为每类申请定制工作表模板。<br>"
+
+#. module: maintenance_worksheet
+#: model:ir.model,name:maintenance_worksheet.model_maintenance_request
+msgid "Maintenance Request"
+msgstr "维护请求"
+
+#. module: maintenance_worksheet
+#: model:ir.model,name:maintenance_worksheet.model_report_maintenance_worksheet_maintenance_worksheet
+msgid "Maintenance Request Worksheet Custom Report"
+msgstr "维护申请工作表自定义报告"
+
+#. module: maintenance_worksheet
+#: model_terms:ir.ui.view,arch_db:maintenance_worksheet.worksheet_page
+msgid "Maintenance Request:"
+msgstr "维修请求："
+
+#. module: maintenance_worksheet
+#: model_terms:ir.actions.act_window,help:maintenance_worksheet.maintenance_worksheet_action_settings
+msgid "No worksheet templates found. Let's create one!"
+msgstr "未找到工作表模板。让我们创建一个！"
+
+#. module: maintenance_worksheet
+#. odoo-python
+#: code:addons/maintenance_worksheet/models/maintenance_request.py:0
+#, python-format
+msgid "Please select a Worksheet Template."
+msgstr "请选择工作表模板。"
+
+#. module: maintenance_worksheet
+#: model_terms:ir.ui.view,arch_db:maintenance_worksheet.worksheet_page
+msgid "Worksheet"
+msgstr "工单记录表"
+
+#. module: maintenance_worksheet
+#: model:ir.model.fields,field_description:maintenance_worksheet.field_maintenance_request__worksheet_count
+msgid "Worksheet Count"
+msgstr "工作表数量"
+
+#. module: maintenance_worksheet
+#: model:ir.actions.report,name:maintenance_worksheet.maintenance_request_report
+msgid "Worksheet Report"
+msgstr "工作表报告"
+
+#. module: maintenance_worksheet
+#: model:ir.model,name:maintenance_worksheet.model_worksheet_template
+#: model:ir.model.fields,field_description:maintenance_worksheet.field_maintenance_request__worksheet_template_id
+msgid "Worksheet Template"
+msgstr "工作表模板"
+
+#. module: maintenance_worksheet
+#: model:ir.actions.act_window,name:maintenance_worksheet.action_maintenance_worksheets
+#: model:ir.actions.act_window,name:maintenance_worksheet.maintenance_worksheet_action_settings
+#: model:ir.ui.menu,name:maintenance_worksheet.menu_maintenance_configuration_worksheet_templates
+msgid "Worksheet Templates"
+msgstr "工作表模板"

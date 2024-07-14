@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.04">
+    <BkToCstmrStmt>
+        <GrpHdr>
+            <MsgId>2514988305.2019-02-13</MsgId>
+            <CreDtTm>2019-02-13T15:27:15.66+02:00</CreDtTm>
+        </GrpHdr>
+        <Stmt>
+            <Id>2514988305.2019-02-13</Id>
+            <CreDtTm>2019-02-13T15:27:15.66+02:00</CreDtTm>
+            <Acct>
+                <Id>
+                    <IBAN></IBAN>
+                    <Othr>
+                        <Id>112233</Id>
+                    </Othr>
+                </Id>
+            </Acct>
+            <Bal>
+                <Tp>
+                    <CdOrPrtry>
+                        <Cd>OPBD</Cd>
+                    </CdOrPrtry>
+                </Tp>
+                <Amt Ccy="USD">1000.00</Amt>
+                <CdtDbtInd>CRDT</CdtDbtInd>
+                <Dt>
+                    <Dt>2019-02-12</Dt>
+                </Dt>
+            </Bal>
+            <Bal>
+                <Tp>
+                    <CdOrPrtry>
+                        <Cd>CLBD</Cd>
+                    </CdOrPrtry>
+                </Tp>
+                <Amt Ccy="USD">1500.00</Amt>
+                <CdtDbtInd>CRDT</CdtDbtInd>
+                <Dt>
+                    <Dt>2019-02-13</Dt>
+                </Dt>
+            </Bal>
+            <Ntry>
+                <Amt Ccy="USD">500.00</Amt>
+                <CdtDbtInd>CRDT</CdtDbtInd>
+                <Sts>BOOK</Sts>
+                <BkTxCd>
+                    <Domn>
+                        <Cd>PMNT</Cd>
+                        <Fmly>
+                            <Cd>RCDT</Cd>
+                            <SubFmlyCd>ESCT</SubFmlyCd>
+                        </Fmly>
+                    </Domn>
+                </BkTxCd>
+                <AmtDtls>
+                    <TxAmt>
+                        <Amt Ccy="EUR">250.00</Amt>
+                    </TxAmt>
+                    <CntrValAmt>
+                        <Amt Ccy="USD">500.00000</Amt>
+                    </CntrValAmt>
+                </AmtDtls>
+                <NtryDtls>
+                    <TxDtls>
+                        <Amt Ccy="EUR">250.00000</Amt>
+                        <CdtDbtInd>CRDT</CdtDbtInd>
+                    </TxDtls>
+                </NtryDtls>
+            </Ntry>
+        </Stmt>
+    </BkToCstmrStmt>
+</Document>

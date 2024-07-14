@@ -1,0 +1,75 @@
+// App creator - layout
+.o_web_studio_model_configurator {
+  min-height: 350px;
+  margin: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: white;
+  h1 {
+    font-size: 1.5rem;
+    margin: 0 -16px 16px -16px;
+    padding: 0 16px 8px 16px;
+    border-bottom: 1px solid $modal-content-border-color;
+    width: calc(100% + 64px);
+  }
+  h2 {
+    padding: 0.25rem 16px;
+    background-color: #e9ecef;
+    font-size: 15px;
+    font-weight: bold;
+    width: calc(100% + 64px);
+    margin: 16px -16px;
+  }
+  .form-check > .form-check-label {
+    padding-left: 0.6rem;
+    border-left: 1px solid $o-web-studio-text-inactive;
+  }
+  /* embedded in Dialog with in the EditMenu
+    leave the Dialog handle width and padding */
+  &:not(.embed) {
+    width: map-get($container-max-widths, lg);
+    padding: 16px 32px;
+    box-shadow: 0 16px 13px -8px rgba($o-web-studio-bg-dark, 0.5);
+  }
+  .o_web_studio_model_configurator_buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+
+    // common to both buttons
+    .o_web_studio_model_configurator_next,
+    .o_web_studio_model_configurator_previous {
+      border-radius: 2px;
+      padding: 7px 15px;
+    }
+
+    .o_web_studio_model_configurator_previous {
+      background-color: white;
+      border: 1px solid $o-web-studio-text-inactive;
+      color: $o-web-studio-text-inactive;
+    }
+
+    .o_web_studio_model_configurator_next {
+      background-color: $o-brand-primary;
+      border-color: darken($o-brand-primary, 3%);
+      color: white;
+      > span {
+        padding-right: 15px;
+      }
+      &:hover,
+      &:focus {
+        background-color: lighten($o-brand-primary, 2%);
+        border-color: $o-brand-primary;
+        color: white;
+      }
+    }
+  }
+}
+
+.o_web_studio_new_model_modal {
+  label.o_studio_error {
+    color: $o-web-studio-color-danger;
+  }
+}

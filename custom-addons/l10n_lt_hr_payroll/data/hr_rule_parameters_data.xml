@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_parameter_tax_exempt_low" model="hr.rule.parameter">
+        <field name="name">Lithuania: Tax Exempt Low</field>
+        <field name="code">l10n_lt_tax_exempt_low</field>
+        <field name="country_id" ref="base.lt"/>
+    </record>
+    <record id="rule_parameter_tax_exempt_low_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">642</field>
+        <field name="rule_parameter_id" ref="rule_parameter_tax_exempt_low"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_tax_exempt_high" model="hr.rule.parameter">
+        <field name="name">Lithuania: Tax Exempt High</field>
+        <field name="code">l10n_lt_tax_exempt_high</field>
+        <field name="country_id" ref="base.lt"/>
+    </record>
+    <record id="rule_parameter_tax_exempt_high_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">2864.22</field>
+        <field name="rule_parameter_id" ref="rule_parameter_tax_exempt_high"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_tax_exempt_basic_amount" model="hr.rule.parameter">
+        <field name="name">Lithuania: Tax Exempt Basic Amount</field>
+        <field name="code">l10n_lt_tax_exempt_basic</field>
+        <field name="country_id" ref="base.lt"/>
+    </record>
+    <record id="rule_parameter_tax_exempt_basic_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">400</field>
+        <field name="rule_parameter_id" ref="rule_parameter_tax_exempt_basic_amount"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_tax_exempt_rate" model="hr.rule.parameter">
+        <field name="name">Lithuania: Tax Exempt Rate</field>
+        <field name="code">l10n_lt_tax_exempt_rate</field>
+        <field name="country_id" ref="base.lt"/>
+    </record>
+    <record id="rule_parameter_tax_exempt_rate_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.18</field>
+        <field name="rule_parameter_id" ref="rule_parameter_tax_exempt_rate"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_tax_exempt_0_25" model="hr.rule.parameter">
+        <field name="name">Lithuania: Tax Exempt 0-25% Working Capacity</field>
+        <field name="code">l10n_lt_tax_exempt_0_25</field>
+        <field name="country_id" ref="base.lt"/>
+    </record>
+    <record id="rule_parameter_tax_exempt_0_25_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">645</field>
+        <field name="rule_parameter_id" ref="rule_parameter_tax_exempt_0_25"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_tax_exempt_30_55" model="hr.rule.parameter">
+        <field name="name">Lithuania: Tax Exempt 30-55% Working Capacity</field>
+        <field name="code">l10n_lt_tax_exempt_30_55</field>
+        <field name="country_id" ref="base.lt"/>
+    </record>
+    <record id="rule_parameter_tax_exempt_30_55_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">600</field>
+        <field name="rule_parameter_id" ref="rule_parameter_tax_exempt_30_55"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_pit_rate_low" model="hr.rule.parameter">
+        <field name="name">Lithuania: PIT Rate Low</field>
+        <field name="code">l10n_lt_pit_rate_low</field>
+        <field name="country_id" ref="base.lt"/>
+    </record>
+    <record id="rule_parameter_pit_rate_low_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">20</field>
+        <field name="rule_parameter_id" ref="rule_parameter_pit_rate_low"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_pit_rate_sick" model="hr.rule.parameter">
+        <field name="name">Lithuania: PIT Rate Sick</field>
+        <field name="code">l10n_lt_pit_rate_sick</field>
+        <field name="country_id" ref="base.lt"/>
+    </record>
+    <record id="rule_parameter_pit_rate_sick_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">15</field>
+        <field name="rule_parameter_id" ref="rule_parameter_pit_rate_sick"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_pit_rate_high" model="hr.rule.parameter">
+        <field name="name">Lithuania: PIT Rate High</field>
+        <field name="code">l10n_lt_pit_rate_high</field>
+        <field name="country_id" ref="base.lt"/>
+    </record>
+    <record id="rule_parameter_pit_rate_high_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">32</field>
+        <field name="rule_parameter_id" ref="rule_parameter_pit_rate_high"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_pit_threshold" model="hr.rule.parameter">
+        <field name="name">Lithuania: PIT Threshold</field>
+        <field name="code">l10n_lt_pit_threshold</field>
+        <field name="country_id" ref="base.lt"/>
+    </record>
+    <record id="rule_parameter_pit_threshold_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">90246</field>
+        <field name="rule_parameter_id" ref="rule_parameter_pit_threshold"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_sscemp_rate" model="hr.rule.parameter">
+        <field name="name">Lithuania: SSCEMP rate</field>
+        <field name="code">l10n_lt_sscemp_rate</field>
+        <field name="country_id" ref="base.lt"/>
+    </record>
+    <record id="rule_parameter_sscemp_rate_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">1.77</field>
+        <field name="rule_parameter_id" ref="rule_parameter_sscemp_rate"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_sscemp_rate_high" model="hr.rule.parameter">
+        <field name="name">Lithuania: SSCEMP rate high</field>
+        <field name="code">l10n_lt_sscemp_rate_high</field>
+        <field name="country_id" ref="base.lt"/>
+    </record>
+    <record id="rule_parameter_sscemp_rate_high_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">2.49</field>
+        <field name="rule_parameter_id" ref="rule_parameter_sscemp_rate_high"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_pension_rate" model="hr.rule.parameter">
+        <field name="name">Lithuania: Pension rate</field>
+        <field name="code">l10n_lt_pension_rate</field>
+        <field name="country_id" ref="base.lt"/>
+    </record>
+    <record id="rule_parameter_pension_rate_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">2.7</field>
+        <field name="rule_parameter_id" ref="rule_parameter_pension_rate"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_pension_rate_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">3.0</field>
+        <field name="rule_parameter_id" ref="rule_parameter_pension_rate"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ssc_rate" model="hr.rule.parameter">
+        <field name="name">Lithuania: SSC rate</field>
+        <field name="code">l10n_lt_ssc_rate</field>
+        <field name="country_id" ref="base.lt"/>
+    </record>
+    <record id="rule_parameter_ssc_rate_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">19.5</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ssc_rate"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ssc_rate_high" model="hr.rule.parameter">
+        <field name="name">Lithuania: SSC rate high</field>
+        <field name="code">l10n_lt_ssc_rate_high</field>
+        <field name="country_id" ref="base.lt"/>
+    </record>
+    <record id="rule_parameter_ssc_rate_high_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">22.5</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ssc_rate_high"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+</odoo>

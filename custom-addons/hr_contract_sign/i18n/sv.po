@@ -1,0 +1,379 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_contract_sign
+# 
+# Translators:
+# Patrik Lermon <patrik.lermon@gmail.com>, 2023
+# Robin Calvin, 2023
+# Simon S, 2023
+# Martin Trigaux, 2023
+# Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/wizard/hr_contract_sign_document_wizard.py:0
+#, python-format
+msgid "%(user_name)s requested a new signature on the following documents:"
+msgstr ""
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/wizard/hr_contract_sign_document_wizard.py:0
+#, python-format
+msgid "%s and %s are the signatories."
+msgstr ""
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/wizard/hr_contract_sign_document_wizard.py:0
+#, python-format
+msgid "%s does not have a private email set."
+msgstr ""
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/wizard/hr_contract_sign_document_wizard.py:0
+#, python-format
+msgid "%s does not have a work email set."
+msgstr ""
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.hr_contract_sign_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.hr_employee_sign_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.res_users_request_sign_view_form
+msgid "<span class=\"o_stat_text\">Signature Requests</span>"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model,name:hr_contract_sign.model_mail_activity_plan_template
+msgid "Activity plan template"
+msgstr "Mall för verksamhetsplan"
+
+#. module: hr_contract_sign
+#: model:ir.model,name:hr_contract_sign.model_mail_activity_schedule
+msgid "Activity schedule plan Wizard"
+msgstr "Guiden Aktivitetsschema plan"
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+msgid "Attach a file"
+msgstr "Bifoga en fil"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__attachment_ids
+msgid "Attachment"
+msgstr "Bilaga"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__contract_id
+msgid "Contract"
+msgstr "Avtal"
+
+#. module: hr_contract_sign
+#: model:ir.model,name:hr_contract_sign.model_hr_contract_history
+msgid "Contract history"
+msgstr "Avtalshistorik"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__cc_partner_ids
+msgid "Copy to"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__create_uid
+msgid "Created by"
+msgstr "Skapad av"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__create_date
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+msgid "Discard"
+msgstr "Förkasta"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: hr_contract_sign
+#: model:ir.actions.act_window,name:hr_contract_sign.sign_contract_wizard_action
+msgid "Document Signature"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_mail_activity_plan_template__sign_template_id
+msgid "Document to sign"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__sign_template_ids
+msgid "Documents to sign"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,help:hr_contract_sign.field_hr_contract_sign_document_wizard__sign_template_ids
+msgid ""
+"Documents to sign. Only documents with 1 or 2 different responsible are selectable.\n"
+"        Documents with 1 responsible will only have to be signed by the employee while documents with 2 different responsible will have to be signed by both the employee and the responsible.\n"
+"        "
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__mail_to
+msgid "Email"
+msgstr "E-post"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,help:hr_contract_sign.field_hr_contract_sign_document_wizard__mail_to
+msgid ""
+"Email used to send the signature request.\n"
+"                - Work takes the email defined in \"work email\"\n"
+"                - Private takes the email defined in Private Information\n"
+"                - If the selected email is not defined, the available one will be used."
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model,name:hr_contract_sign.model_hr_employee
+msgid "Employee"
+msgstr "Anställd"
+
+#. module: hr_contract_sign
+#: model:ir.model,name:hr_contract_sign.model_hr_contract
+msgid "Employee Contract"
+msgstr "Anställningskontrakt"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__employee_role_id
+#: model:ir.model.fields,field_description:hr_contract_sign.field_mail_activity_plan_template__employee_role_id
+msgid "Employee Role"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,help:hr_contract_sign.field_hr_contract_sign_document_wizard__employee_role_id
+#: model:ir.model.fields,help:hr_contract_sign.field_mail_activity_plan_template__employee_role_id
+msgid ""
+"Employee's role on the templates to sign. The same role must be present in "
+"all the templates"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__employee_ids
+msgid "Employees"
+msgstr "Anställda"
+
+#. module: hr_contract_sign
+#: model:sign.item.role,name:hr_contract_sign.sign_item_role_job_responsible
+msgid "HR Responsible"
+msgstr "HR-ansvarig"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__has_both_template
+msgid "Has Both Template"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_mail_activity_plan_template__is_signature_request
+msgid "Is Signature Request"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Senast uppdaterad av"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__write_date
+msgid "Last Updated on"
+msgstr "Senast uppdaterad den"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__mail_displayed
+msgid "Mail Displayed"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+msgid "Mail Options"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__message
+msgid "Message"
+msgstr "Meddelande"
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/wizard/hr_contract_sign_document_wizard.py:0
+#, python-format
+msgid ""
+"No appropriate template could be found, please make sure you configured them"
+" properly."
+msgstr ""
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+msgid "No template available"
+msgstr ""
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/wizard/hr_contract_sign_document_wizard.py:0
+#, python-format
+msgid "Only %s has to sign."
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:sign.template,redirect_url_text:hr_contract_sign.template_sign_termination
+msgid "Open Link"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+msgid "Optional Message..."
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__possible_template_ids
+msgid "Possible Template"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model.fields.selection,name:hr_contract_sign.selection__hr_contract_sign_document_wizard__mail_to__private
+msgid "Private"
+msgstr "Privat"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract__sign_request_ids
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_employee__sign_request_ids
+msgid "Requested Signatures"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__responsible_id
+msgid "Responsible"
+msgstr "Ansvarig"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_mail_activity_plan_template__responsible_count
+msgid "Responsible Count"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+msgid "Send"
+msgstr "Skicka"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract__sign_request_count
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_employee__sign_request_count
+#: model:ir.model.fields,field_description:hr_contract_sign.field_res_users__sign_request_count
+msgid "Sign Request Count"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+msgid "Sign Request Options"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__sign_template_responsible_ids
+#: model:ir.model.fields,field_description:hr_contract_sign.field_mail_activity_plan_template__sign_template_responsible_ids
+msgid "Sign Template Responsible"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model,name:hr_contract_sign.model_hr_contract_sign_document_wizard
+msgid "Sign document in contract"
+msgstr ""
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/wizard/mail_activity_schedule.py:0
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.hr_contract_history_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.hr_employee_sign_view_form
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+#, python-format
+msgid "Signature Request"
+msgstr "Signaturbegäran"
+
+#. module: hr_contract_sign
+#: model:ir.actions.server,name:hr_contract_sign.action_signature_request_wizard
+msgid "Signature request"
+msgstr "Signaturbegäran"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__subject
+msgid "Subject"
+msgstr "Ämne"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields,field_description:hr_contract_sign.field_hr_contract_sign_document_wizard__template_warning
+msgid "Template Warning"
+msgstr ""
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/models/hr_contract.py:0
+#, python-format
+msgid ""
+"This sign request has been canceled due to the cancellation of the related "
+"contract."
+msgstr ""
+
+#. module: hr_contract_sign
+#: model:ir.model,name:hr_contract_sign.model_res_users
+msgid "User"
+msgstr "Användare"
+
+#. module: hr_contract_sign
+#: model:ir.model.fields.selection,name:hr_contract_sign.selection__hr_contract_sign_document_wizard__mail_to__work
+msgid "Work"
+msgstr ""
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.view_hr_contract_sign
+msgid "Write email or search contact..."
+msgstr ""
+
+#. module: hr_contract_sign
+#. odoo-python
+#: code:addons/hr_contract_sign/models/hr_contract.py:0
+#, python-format
+msgid ""
+"You can't delete a contract linked to a signed document, archive it instead."
+msgstr ""
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.hr_contract_history_view_form
+msgid "document"
+msgstr "dokument"
+
+#. module: hr_contract_sign
+#: model_terms:ir.ui.view,arch_db:hr_contract_sign.hr_contract_history_view_form
+msgid "documents"
+msgstr "dokument"

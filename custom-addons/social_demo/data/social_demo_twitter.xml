@@ -1,0 +1,213 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+<data noupdate="1">
+    <record id="social_twitter_account_1" model="social.twitter.account">
+        <field name="name">My Company</field>
+        <field name="twitter_id">123456789</field>
+        <field name="twitter_searched_by_id" ref="social_account_twitter"/>
+    </record>
+
+    <record id="social_stream_twitter_account" model="social.stream">
+        <field name="name">Tweets of: My Company</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="stream_type_id" ref="social_twitter.stream_type_twitter_follow" />
+        <field name="media_id" ref="social_twitter.social_media_twitter" />
+        <field name="account_id" ref="social_account_twitter" />
+        <field name="twitter_followed_account_id" ref="social_twitter_account_1"/>
+    </record>
+
+    <record id="social_stream_twitter_search" model="social.stream">
+        <field name="name">Keyword: #mycompany</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="stream_type_id" ref="social_twitter.stream_type_twitter_keyword" />
+        <field name="media_id" ref="social_twitter.social_media_twitter" />
+        <field name="account_id" ref="social_account_twitter" />
+    </record>
+
+    <record id="social_stream_twitter_search_competitor" model="social.stream">
+        <field name="name">Keyword: #mycompetitor</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="stream_type_id" ref="social_twitter.stream_type_twitter_keyword" />
+        <field name="media_id" ref="social_twitter.social_media_twitter" />
+        <field name="account_id" ref="social_account_twitter" />
+    </record>
+
+    <record id="social_post_twitter" model="social.post">
+        <field name="message">Our company wishes a happy new year to everyone on Twitter!</field>
+        <field name="create_uid" ref="base.user_admin"/>
+        <field name="published_date" eval="time.strftime('%Y-01-01 00:01:00')"/>
+        <field name="state">posted</field>
+        <field name="account_ids" eval="[(6, 0, [ref('social_demo.social_account_twitter')])]" />
+        <field name="post_method">scheduled</field>
+        <field name="scheduled_date" eval="time.strftime('%Y-01-01 00:01:00')"/>
+    </record>
+
+    <record id="social_live_post_twitter_1" model="social.live.post">
+        <field name="state">posted</field>
+        <field name="twitter_tweet_id">1</field>
+        <field name="post_id" ref="social_post_global" />
+        <field name="account_id" ref="social_account_twitter" />
+        <field name="engagement">5257</field>
+    </record>
+
+    <record id="social_live_post_twitter_2" model="social.live.post">
+        <field name="state">posted</field>
+        <field name="twitter_tweet_id">2</field>
+        <field name="post_id" ref="social_post_twitter" />
+        <field name="account_id" ref="social_account_twitter" />
+        <field name="engagement">1567</field>
+    </record>
+
+    <record id="social_live_post_twitter_3" model="social.live.post">
+        <field name="state">posted</field>
+        <field name="twitter_tweet_id">3</field>
+        <field name="post_id" ref="social_post_global_2" />
+        <field name="account_id" ref="social_account_twitter" />
+        <field name="engagement">8622</field>
+    </record>
+
+    <record id="social_live_post_twitter_4" model="social.live.post">
+        <field name="state">posted</field>
+        <field name="twitter_tweet_id">4</field>
+        <field name="post_id" ref="social_post_global_3" />
+        <field name="account_id" ref="social_account_twitter" />
+        <field name="engagement">7511</field>
+    </record>
+
+    <record id="social_stream_post_twitter_1" model="social.stream.post">
+        <field name="stream_id" ref="social_stream_twitter_account" />
+        <field name="twitter_tweet_id">1</field>
+        <field name="twitter_retweet_count">469</field>
+        <field name="twitter_likes_count">5538</field>
+        <field name="author_name">My Company Account</field>
+        <field name="twitter_screen_name">mycompanyaccount</field>
+        <field name="twitter_profile_image_url" eval="'/web/image/res.partner/%s/image_128' % ref('social_demo.res_partner_1')" />
+        <field name="message">Our new product has been released 🎉 Check it out!</field>
+        <field name="published_date" eval="time.strftime('%Y-01-05 08:00:00')"/>
+    </record>
+
+    <record id="social_stream_post_twitter_2" model="social.stream.post">
+        <field name="stream_id" ref="social_stream_twitter_account" />
+        <field name="twitter_tweet_id">2</field>
+        <field name="twitter_retweet_count">3</field>
+        <field name="twitter_likes_count">1476</field>
+        <field name="author_name">My Company Account</field>
+        <field name="twitter_screen_name">mycompanyaccount</field>
+        <field name="twitter_profile_image_url" eval="'/web/image/res.partner/%s/image_128' % ref('social_demo.res_partner_1')" />
+        <field name="message">Our company wishes a happy new year to everyone on Twitter!</field>
+        <field name="published_date" eval="time.strftime('%Y-01-01 00:01:00')"/>
+    </record>
+
+    <record id="social_stream_post_twitter_3" model="social.stream.post">
+        <field name="stream_id" ref="social_stream_twitter_account" />
+        <field name="twitter_tweet_id">3</field>
+        <field name="twitter_retweet_count">834</field>
+        <field name="twitter_likes_count">9476</field>
+        <field name="author_name">My Company Account</field>
+        <field name="twitter_screen_name">mycompanyaccount</field>
+        <field name="twitter_profile_image_url" eval="'/web/image/res.partner/%s/image_128' % ref('social_demo.res_partner_1')" />
+        <field name="message">Get 20% out of your purchases on https://mycompany.com/shop
+Better run to our website while it lasts 🏃</field>
+        <field name="published_date" eval="time.strftime('%Y-01-07 09:00:00')"/>
+    </record>
+
+    <record id="social_stream_post_twitter_4" model="social.stream.post">
+        <field name="stream_id" ref="social_stream_twitter_account" />
+        <field name="twitter_tweet_id">4</field>
+        <field name="twitter_retweet_count">725</field>
+        <field name="twitter_likes_count">8008</field>
+        <field name="author_name">My Company Account</field>
+        <field name="twitter_screen_name">mycompanyaccount</field>
+        <field name="twitter_profile_image_url" eval="'/web/image/res.users/%s/image_128' % ref('base.user_admin')" />
+        <field name="message">To celebrate the new year, we have a gift for you: Learn how to build your own chair!
+
+https://www.youtube.com/watch?v=kmt-oVAB6hU</field>
+        <field name="published_date" eval="time.strftime('%Y-01-10 09:00:00')"/>
+    </record>
+
+    <record id="social_stream_post_twitter_image_1" model="social.stream.post.image">
+        <field name="image_url" eval="'/web/image/product.product/%s/image_512' % ref('social_demo.product_product_4')"></field>
+        <field name="stream_post_id" ref="social_stream_post_twitter_3" />
+    </record>
+
+    <record id="social_stream_post_twitter_image_2" model="social.stream.post.image">
+        <field name="image_url" eval="'/web/image/product.product/%s/image_512' % ref('social_demo.product_product_4b')"></field>
+        <field name="stream_post_id" ref="social_stream_post_twitter_3" />
+    </record>
+
+    <record id="social_stream_post_twitter_image_3" model="social.stream.post.image">
+        <field name="image_url" eval="'/web/image/product.product/%s/image_512' % ref('social_demo.product_product_4c')"></field>
+        <field name="stream_post_id" ref="social_stream_post_twitter_3" />
+    </record>
+
+    <record id="social_stream_post_twitter_image_4" model="social.stream.post.image">
+        <field name="image_url" eval="'/web/image/product.product/%s/image_512' % ref('social_demo.product_product_4d')"></field>
+        <field name="stream_post_id" ref="social_stream_post_twitter_3" />
+    </record>
+
+    <record id="social_stream_post_twitter_search_1" model="social.stream.post">
+        <field name="stream_id" ref="social_stream_twitter_search" />
+        <field name="twitter_tweet_id">5</field>
+        <field name="twitter_retweet_count">53</field>
+        <field name="twitter_likes_count">246</field>
+        <field name="author_name">The Jackson Group</field>
+        <field name="twitter_screen_name">thejacksongroup</field>
+        <field name="twitter_profile_image_url" eval="'/web/image/res.partner/%s/image_128' % ref('social_demo.res_partner_10')" />
+        <field name="message">What a great piece of software! In my opinion everyone should use #mycompany products!</field>
+        <field name="published_date" eval="time.strftime('%Y-01-08 08:00:00')"/>
+    </record>
+
+    <record id="social_stream_post_twitter_search_2" model="social.stream.post">
+        <field name="stream_id" ref="social_stream_twitter_search" />
+        <field name="twitter_tweet_id">6</field>
+        <field name="twitter_retweet_count">45</field>
+        <field name="twitter_likes_count">159</field>
+        <field name="author_name">Ready Mat</field>
+        <field name="twitter_screen_name">readymat</field>
+        <field name="twitter_profile_image_url" eval="'/web/image/res.partner/%s/image_128' % ref('social_demo.res_partner_4')" />
+        <field name="message">Just downloaded the last version of #mycompany software. It's amazing 😱</field>
+        <field name="published_date" eval="time.strftime('%Y-02-08 09:34:00')"/>
+    </record>
+
+    <record id="social_stream_post_twitter_search_3" model="social.stream.post">
+        <field name="stream_id" ref="social_stream_twitter_search" />
+        <field name="twitter_tweet_id">7</field>
+        <field name="twitter_retweet_count">27</field>
+        <field name="twitter_likes_count">294</field>
+        <field name="author_name">Gemini Furniture</field>
+        <field name="twitter_screen_name">geminifurniture</field>
+        <field name="twitter_profile_image_url" eval="'/web/image/res.partner/%s/image_128' % ref('social_demo.res_partner_3')" />
+        <field name="message">Just found a small bug in #mycompany software. Happy to give feedback if you guys are interested.</field>
+        <field name="published_date" eval="time.strftime('%Y-04-08 10:24:00')"/>
+    </record>
+
+    <record id="social_stream_post_twitter_search_4" model="social.stream.post">
+        <field name="stream_id" ref="social_stream_twitter_search" />
+        <field name="twitter_tweet_id">8</field>
+        <field name="twitter_retweet_count">35</field>
+        <field name="twitter_likes_count">188</field>
+        <field name="author_name">Deco Addict</field>
+        <field name="twitter_screen_name">decoaddict</field>
+        <field name="twitter_profile_image_url" eval="'/web/image/res.partner/%s/image_128' % ref('social_demo.res_partner_2')" />
+        <field name="twitter_quoted_tweet_id_str">4</field>
+        <field name="twitter_quoted_tweet_message">We are glad to announce a new product for this year! 🍾</field>
+        <field name="twitter_quoted_tweet_author_name">My Company Account</field>
+        <field name="twitter_quoted_tweet_profile_image_url" eval="'/web/image/res.users/%s/image_128' % ref('base.user_admin')" />
+        <field name="message">Hello @MyCompany! Started using your software a few days ago. It's been a great experience so far 👍 Can't wait to see what comes up next! #mycompany</field>
+        <field name="published_date" eval="time.strftime('%Y-05-08 11:39:00')"/>
+    </record>
+
+    <record id="social_stream_post_twitter_search_competitor_1" model="social.stream.post">
+        <field name="stream_id" ref="social_stream_twitter_search_competitor" />
+        <field name="twitter_tweet_id">9</field>
+        <field name="twitter_retweet_count">1</field>
+        <field name="twitter_likes_count">43</field>
+        <field name="twitter_user_likes" eval="True" />
+        <field name="author_name">Wood Corner</field>
+        <field name="twitter_screen_name">woodcorner</field>
+        <field name="twitter_profile_image_url" eval="'/web/image/res.partner/%s/image_128' % ref('social_demo.res_partner_1')" />
+        <field name="message">The last version of #mycompetitor software is really disappointing... 😕</field>
+        <field name="published_date" eval="time.strftime('%Y-01-08 08:00:00')"/>
+    </record>
+</data>
+</odoo>

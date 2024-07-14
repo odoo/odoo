@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_account_journal_form_inherited" model="ir.ui.view">
+        <field name="name">account.journal.form.inherited</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form" />
+        <field name="arch" type="xml">
+            <group name="bank_account_number" position="inside">
+                <field name="coda_split_transactions" invisible="bank_statements_source != 'file_import'"/>
+            </group>
+        </field>
+    </record>
+
+</odoo>

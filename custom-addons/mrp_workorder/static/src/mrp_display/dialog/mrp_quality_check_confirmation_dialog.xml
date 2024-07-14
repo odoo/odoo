@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp_workorder.MrpQualityCheckConfirmationDialog">
+    <div class="o_tablet_popups" t-att-class="props.worksheetData ? 'o_worksheet_modal' : ''">
+        <Dialog size="'fs'" title="props.title" modalRef="modalRef" footer="true">
+            <t t-set-slot="header">
+                <h4 class="modal-title text-break" t-esc="props.title"/>
+                <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="_cancel"/>
+            </t>
+            <div class="o_quality_check_body d-flex w-100">
+                <div class="o_instruction w-75">
+                    <div t-out="props.body"/>
+                </div>
+                <div t-if="recordData.additional_note" t-out="recordData.additional_note"/>
+            </div>
+            <t t-if="['register_consumed_materials', 'register_byproducts', 'register_production'].includes(recordData.test_type)" name="registerQualityCheck">
+                <div name="component_id" class="o_workorder_bar_content" t-esc="recordData.component_id[1]"/>
+                <div class="o_workorder_bar_content">
+                    <div class="o_quantity row">
+                        <span class="col-2">Quantity</span>
+                        <span name="qty_done" class="o_field_widget text-end col-2 pe-2">
+                            <FloatField t-props="qtyDoneInfo"/>
+                        </span>
+                        <span class="col-4 ps-0">
+                            <t t-if="recordData.component_remaining_qty">
+                                /<span name="component_remaining_qty" class="mx-2"
+                                    t-esc="formatFloat(recordData.component_remaining_qty)"/>
+                            </t>
+                            <span t-esc="recordData.component_uom_id[1]"/>
+                        </span>
+                    </div>
+                    <div t-if="displayLot" class="o_workorder_lot row">
+                        <span class="text-capitalize col-2" t-esc="trackingNumberLabel"/>
+                        <div name="lot_id" class="o_field_widget col-4">
+                            <Many2OneField t-props="lotInfo"/>
+                        </div>
+                        <button t-if="!recordData.lot_id and recordData.test_type === 'register_production'"
+                            class="btn btn-info fa fa-plus col-1" t-on-click="actionGenerateSerial"/>
+                    </div>
+                </div>
+            </t>
+            <div t-elif="recordData.test_type === 'measure'" class="o_workorder_bar_left o_workorder_bar_content">
+                <label for="measure">Measure:</label>
+                <span name="measure" class="o_field_widget text-end pe-2">
+                    <FloatField t-props="measureInfo"/>
+                </span>
+                <span t-esc="recordData.norm_unit" class="text-lowercase"/>
+            </div>
+            <div t-elif="recordData.test_type === 'picture'" class="workorder_picture">
+                <TabletImageField t-props="picInfo"/>
+            </div>
+            <t t-if="props.worksheetData">
+                <DocumentViewer t-props="props.worksheetData"/>
+            </t>
+            <div t-if="props.checkInstruction" class="o_tablet_instruction_note"
+                 t-out="props.checkInstruction"/>
+            <t t-set-slot="footer">
+                <div class="d-flex justify-content-between w-100">
+                    <div>
+                        <t t-if="recordData.test_type === 'passfail'">
+                            <button class="btn btn-danger me-2" barcode_trigger="fail" t-on-click="fail">
+                                Fail
+                            </button>
+                            <button class="btn btn-success me-2" barcode_trigger="pass" t-on-click="pass">
+                                Pass
+                            </button>
+                        </t>
+                        <button t-if="recordData.test_type === 'worksheet'" class="btn btn-primary me-2"
+                                t-on-click="openWorksheet">
+                            <i class="fa fa-pencil me-2"/>Fill in worksheet
+                        </button>
+                        <button t-if="recordData.test_type !== 'passfail' || recordData.quality_state !== 'none'"
+                                class="btn btn-primary me-2" t-on-click="validate" t-esc="confirmLabel"
+                                t-att-barcode_trigger="recordData.test_type == 'print_label' ? 'Print' : 'Next'"/>
+                        <button t-if="['register_consumed_materials', 'register_byproducts'].includes(recordData.test_type)"
+                                class="btn btn-secondary me-2" t-on-click="continueProduction"
+                                barcode_trigger="continue">Continue consumption</button>
+                    </div>
+                    <div>
+                        <button t-if="props.record.data.previous_check_id" t-on-click="back" class="btn btn-secondary me-2">&lt; Back</button>
+                        <button t-if="props.record.data.next_check_id" t-on-click="skip" class="btn btn-secondary">Skip &gt;</button>
+                    </div>
+                </div>
+            </t>
+        </Dialog>
+        </div>
+    </t>
+</templates>

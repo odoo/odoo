@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<!-- Line's sub-elements -->
+    <t t-name="stock_barcode.LineTitle">
+        <t t-if="props.line.product_id.default_code or props.line.product_id.code">
+            <div class="o_barcode_line_title">
+                <i class="fa fa-fw fa-tags"/>
+                <span t-if="props.line.product_id.default_code"
+                    class="o_barcode_product_ref h5 fw-bold"
+                    t-esc="props.line.product_id.default_code"/>
+                <span t-if="props.line.product_id.code != props.line.product_id.default_code"
+                    class="o_barcode_partner_code ms-1 h5 text-muted"
+                    t-esc="props.line.product_id.code"/>
+            </div>
+            <div>
+                <i class="fa fa-fw"/>
+                <span class="product-label" t-esc="props.line.product_id.display_name"/>
+            </div>
+        </t>
+        <div t-else="" class="o_barcode_line_title pb-1">
+            <i class="fa fa-fw fa-tags"/>
+            <span class="product-label" t-esc="props.line.product_id.display_name"/>
+        </div>
+    </t>
+
+    <t t-name="stock_barcode.LineQuantity">
+        <div name="quantity">
+            <i class="fa fa-fw fa-cube" t-attf-class="{{nextExpected === 'quantity' ? 'o_next_expected' : ''}}"/>
+            <span t-attf-class="o_barcode_scanner_qty font-monospace badge #{' '}">
+                <span class="qty-done d-inline-block text-start"
+                        t-attf-class="
+                        {{nextExpected === 'quantity' &amp;&amp; qtyDone ? 'o_flash' : ''}}
+                        {{isSelected &amp;&amp; qtyDemand &amp;&amp; qtyDone &amp;&amp; qtyDone &lt; qtyDemand ? 'fw-bolder' : ''}}"
+                        t-esc="env.model.IsNotSet(line) ? '?' : qtyDone"/>
+                <span t-if="qtyDemand" t-esc="'/ ' + qtyDemand"/>
+            </span>
+            <span t-if="props.displayUOM" class="o_line_uom" t-esc="props.line.product_uom_id.name"/>
+        </div>
+    </t>
+
+    <t t-name="stock_barcode.LineOwner">
+        <div t-if="line.owner_id">
+            <i class="fa fa-fw fa-user-o"/>
+            <span class="o_line_owner" t-esc="line.owner_id.display_name"/>
+        </div>
+    </t>
+
+    <t t-name="stock_barcode.LineLot">
+        <div t-if="isTracked" name="lot">
+            <i class="fa fa-fw fa-barcode" t-attf-class="{{nextExpected === 'lot' ? 'o_next_expected' : ''}}"/>
+            <span class="o_line_lot_name" t-esc="lotName"/>
+        </div>
+    </t>
+
+    <t t-name="stock_barcode.LineSourceLocation">
+        <div name="source_location" t-if="displaySourceLocation" title="Source Location"
+             t-attf-class="{{line.location_id.usage != 'internal' ? 'text-danger' : ''}} {{highlightLocation ? 'o_highlight' : ''}}">
+            <i class="fa fa-fw fa-sign-out"/>
+            <span class="o_line_source_location fst-italic text-muted">
+                <t t-esc="sourceLocationPath"/>
+                <span t-esc="line.location_id.name"
+                      t-attf-class="
+                        {{highlightLocation ? 'fw-bold' : ''}}
+                        {{line.location_id.usage != 'internal' ? 'text-danger' : 'text-black'}}"/>
+            </span>
+        </div>
+    </t>
+
+    <t t-name="stock_barcode.LineDestinationLocation">
+        <div name="destination_location" t-if="displayDestinationLocation" title="Destination Location"
+                t-att-class="line.location_dest_id.usage != 'internal' ? 'text-danger' : ''">
+            <i class="fa fa-fw fa-sign-in"/>
+            <span class="o_line_destination_location fst-italic text-muted">
+                <t t-esc="destinationLocationPath"/>
+                <span t-esc="line.location_dest_id.name"
+                      t-attf-class="
+                        {{env.model.lastScanned.destLocation &amp;&amp; env.model.lastScanned.destLocation.id == line.location_dest_id.id ? 'fw-bold' : ''}}
+                        {{line.location_dest_id.usage != 'internal' ? 'text-danger' : 'text-black'}}"/>
+            </span>
+        </div>
+    </t>
+
+<!-- Line's template -->
+    <t t-name="stock_barcode.LineComponent">
+        <div t-on-click="select"
+            class="o_barcode_line list-group-item d-flex flex-row flex-nowrap"
+            t-att-data-virtual-id="line.virtual_id" t-attf-class="{{componentClasses}}"
+            t-att-data-barcode="line.product_id.barcode">
+            <div class="o_barcode_line_details flex-grow-1 flex-column flex-nowrap">
+                <t t-call="stock_barcode.LineSourceLocation"/>
+                <!-- Hides product's name if it's a subline, as it is already on the parent line. -->
+                <t t-if="!props.subline" t-call="stock_barcode.LineTitle"/>
+                <t t-call="stock_barcode.LineLot"/>
+                <t t-call="stock_barcode.LineQuantity"/>
+                <div t-if="line.package_id || line.result_package_id" name="package">
+                    <i class="fa fa-fw fa-archive"/>
+                    <span t-if="line.package_id" class="package" t-esc="line.package_id.name"/>
+                    <i t-if="displayResultPackage" class="fa fa-long-arrow-right mx-1"/>
+                    <span t-if="line.result_package_id" class="result-package" t-esc="line.result_package_id.name"/>
+                    <span t-if="line.result_package_id &amp;&amp; line.result_package_id.package_type_id"
+                        class="fst-italic text-muted">
+                        (<t t-esc="line.result_package_id.package_type_id.name"/>)
+                    </span>
+                </div>
+                <t t-call="stock_barcode.LineOwner"/>
+                <t t-call="stock_barcode.LineDestinationLocation"/>
+            </div>
+            <div class="o_line_buttons py-1 m-auto text-end">
+                <span class="d-inline-block my-1">
+                    <button t-on-click="() => this.props.editLine(this.line)" class="o_line_button o_edit btn"
+                        t-att-class="this.env.model.lineCanBeEdited(line) ? 'btn-secondary' : ''"
+                        t-att-disabled="!this.env.model.lineCanBeEdited(line)">
+                        <i class="fa fa-2x fa-pencil"/>
+                    </button>
+                    <button t-if="env.model.displaySetButton" t-on-click="setOnHandQuantity"
+                        class="o_line_button o_set btn ms-2"
+                        t-attf-class="{{quantityIsSet &amp;&amp; qtyDone != qtyDemand ? 'o_difference' : ''}}">
+                        <i t-if="quantityIsSet" class="fa fa-2x"
+                            t-attf-class="{{qtyDone == qtyDemand ? 'fa-check' : 'fa-times'}}"/>
+                    </button>
+                </span>
+                <span t-if="env.model.getDisplayIncrementBtn(line)" class="d-inline-block my-1">
+                    <button t-if="env.model.getDisplayDecrementBtn(line)" name="decrementButton" t-on-click="(ev) => this.addQuantity(-1, ev)"
+                        class="o_line_button o_remove_unit d-inline-block btn btn-primary ms-2"
+                        t-attf-disabled="{{qtyDone &lt;= 0 || qtyDone == '?'}}">-1</button>
+                    <button name="incrementButton"
+                        t-on-click="(ev) => this.addQuantity(incrementQty, ev)" t-esc="'+' + incrementQty"
+                        t-att-disabled="!this.env.model.lineCanBeEdited(line)"
+                        class="o_line_button o_add_quantity d-inline-block btn btn-primary ms-2"/>
+                </span>
+                <button t-if="isSelected and env.model.getDisplayIncrementPackagingBtn(line)" name="incrementPackagingButton"
+                    t-on-click="(ev) => this.addQuantity(line.product_packaging_uom_qty, ev)"
+                    class="o_line_button w-100 btn btn-primary my-3 d-block">
+                    <div class="text-capitalize">
+                        + <t t-esc="line.product_packaging_id.name"/>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>

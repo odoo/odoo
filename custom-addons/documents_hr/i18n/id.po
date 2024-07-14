@@ -1,0 +1,243 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* documents_hr
+# 
+# Translators:
+# Wil Odoo, 2023
+# Abe Manyo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Abe Manyo, 2023\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: documents_hr
+#: model_terms:ir.ui.view,arch_db:documents_hr.res_config_settings_view_form
+msgid ""
+"<span name=\"documents_hr_tags\" class=\"o_form_label\" invisible=\"1\">\n"
+"                                Default tags\n"
+"                            </span>"
+msgstr ""
+"<span name=\"documents_hr_tags\" class=\"o_form_label\" invisible=\"1\">\n"
+"                                Tag-Tag default\n"
+"                            </span>"
+
+#. module: documents_hr
+#: model:mail.template,body_html:documents_hr.mail_template_document_folder_link
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
+"        <tr><td valign=\"top\" style=\"text-align: left; font-size: 14px;\">\n"
+"            Dear <t t-esc=\"object.name\"></t>, your personal documents access link is available for you.<br><br>\n"
+"            You'll find all your personal HR documents in this folder.<br><br>\n"
+"            Please keep this link secure.<br><br>\n"
+"            <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                <a t-attf-href=\"{{ object.documents_share_id.full_url }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                    Your Documents\n"
+"                </a>\n"
+"            </div>\n"
+"            Have a nice day,<br>\n"
+"            The HR Team\n"
+"        </td></tr>\n"
+"    </tbody></table>\n"
+"                "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
+"        <tr><td valign=\"top\" style=\"text-align: left; font-size: 14px;\">\n"
+"            Yth <t t-esc=\"object.name\"></t>, link untuk mengakses dokumen pribadi Anda sudah tersedia untuk digunakan.<br><br>\n"
+"            Anda akan menemukan semua dokumen HR Anda di folder ini.<br><br>\n"
+"            Mohon jaga keamanan link ini.<br><br>\n"
+"            <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                <a t-attf-href=\"{{ object.documents_share_id.full_url }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                    Dokumen Anda\n"
+"                </a>\n"
+"            </div>\n"
+"            Have a nice day,<br>\n"
+"            Tim HR\n"
+"        </td></tr>\n"
+"    </tbody></table>\n"
+"                "
+
+#. module: documents_hr
+#: model:documents.tag,name:documents_hr.documents_hr_documents_absences
+msgid "Absences"
+msgstr "Absen"
+
+#. module: documents_hr
+#: model_terms:ir.ui.view,arch_db:documents_hr.res_config_settings_view_form
+msgid "Centralize your employees' documents (contracts, payslips, etc.)"
+msgstr "Pusatkan dokumen karyawan Anda (kontrak, slip gaji, dsb.)"
+
+#. module: documents_hr
+#: model:documents.tag,name:documents_hr.documents_hr_documents_Cerification
+msgid "Certifications"
+msgstr "Sertifikat-Sertifikat"
+
+#. module: documents_hr
+#: model:ir.model,name:documents_hr.model_res_company
+msgid "Companies"
+msgstr "Perusahaan"
+
+#. module: documents_hr
+#: model:ir.model,name:documents_hr.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfigurasi"
+
+#. module: documents_hr
+#: model:ir.model,name:documents_hr.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr "Departure Wizard"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_res_users__document_ids
+msgid "Document"
+msgstr "Dokumen"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_hr_employee__document_count
+msgid "Document Count"
+msgstr "Jumlah Dokumen"
+
+#. module: documents_hr
+#. odoo-python
+#: code:addons/documents_hr/models/res_users.py:0
+#: model:documents.facet,name:documents_hr.documents_hr_documents
+#: model:ir.model.fields,field_description:documents_hr.field_res_users__document_count
+#: model_terms:ir.ui.view,arch_db:documents_hr.hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:documents_hr.res_users_view_form
+#, python-format
+msgid "Documents"
+msgstr "Dokumen"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_res_company__documents_hr_settings
+msgid "Documents Hr Settings"
+msgstr "Pengaturan Dokumen HR"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_hr_employee__documents_share_id
+msgid "Documents Share"
+msgstr "Documents Share"
+
+#. module: documents_hr
+#: model:ir.model,name:documents_hr.model_hr_employee
+msgid "Employee"
+msgstr "Karyawan"
+
+#. module: documents_hr
+#. odoo-python
+#: code:addons/documents_hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"Employee's related user and private email must be set to use \"Send Access Link\" function:\n"
+"%s"
+msgstr ""
+"Email user dan pribadi karyawan yang terkait harus ditetapkan untuk menggunakan fungsi \"Kirim Link Akses\":\n"
+"%s"
+
+#. module: documents_hr
+#: model:documents.tag,name:documents_hr.documents_hr_documents_employees
+msgid "Employees Documents"
+msgstr "Dokumen Karyawan"
+
+#. module: documents_hr
+#: model:documents.folder,name:documents_hr.documents_hr_folder
+msgid "HR"
+msgstr "HR"
+
+#. module: documents_hr
+#. odoo-python
+#: code:addons/documents_hr/models/hr_employee.py:0
+#, python-format
+msgid "HR Documents: %s"
+msgstr "Dokumen HR: %s"
+
+#. module: documents_hr
+#: model:mail.template,name:documents_hr.mail_template_document_folder_link
+msgid "HR: Document Access Link"
+msgstr "HR: Link Akses Dokumen"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_res_config_settings__documents_hr_settings
+msgid "Human Resources"
+msgstr "Personalia"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_hr_departure_wizard__private_email
+msgid "Private Email"
+msgstr "Email Pribadi"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_hr_departure_wizard__send_hr_documents_access_link
+msgid "Send Access Link"
+msgstr "Kirim Link Akses"
+
+#. module: documents_hr
+#: model:ir.actions.server,name:documents_hr.ir_actions_server_send_access_link
+msgid "Send HR Documents Access Link"
+msgstr "Kirim Link Akses Dokumen HR"
+
+#. module: documents_hr
+#: model:ir.model.fields,help:documents_hr.field_hr_departure_wizard__send_hr_documents_access_link
+msgid ""
+"Send a share link to the private email of the employee with all the HR files"
+" he owns in Documents app"
+msgstr ""
+"Kirim link sharing ke email pribadi karyawan dengan semua file HR yang dia "
+"miliki di aplikasi Dokumen"
+
+#. module: documents_hr
+#: model:mail.template,description:documents_hr.mail_template_document_folder_link
+msgid "Sent manually when recording an employee departure"
+msgstr "Kirim manual saat merekam keberangkatan karyawan"
+
+#. module: documents_hr
+#. odoo-python
+#: code:addons/documents_hr/models/hr_employee.py:0
+#, python-format
+msgid "The access link has been sent to the employee."
+msgstr "Link akses telah dikirim ke karyawan."
+
+#. module: documents_hr
+#: model:ir.model,name:documents_hr.model_res_users
+msgid "User"
+msgstr "Pengguna"
+
+#. module: documents_hr
+#: model_terms:ir.ui.view,arch_db:documents_hr.res_config_settings_view_form
+msgid "Workspace"
+msgstr "Ruang Kerja"
+
+#. module: documents_hr
+#. odoo-python
+#: code:addons/documents_hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"You must set a work contact address on the Employee in order to use "
+"Document's features."
+msgstr ""
+"Anda harus menetapkan alamat kontak kerja pada Karyawan untuk bisa "
+"menggunakan fitur Dokumen."
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_res_company__documents_hr_folder
+msgid "hr Workspace"
+msgstr "Ruang Kerja hr"
+
+#. module: documents_hr
+#: model:ir.model.fields,field_description:documents_hr.field_res_config_settings__documents_hr_folder
+msgid "hr default workspace"
+msgstr "ruang kerja default hr"
+
+#. module: documents_hr
+#: model:mail.template,subject:documents_hr.mail_template_document_folder_link
+msgid "{{ object.name }}, your personal documents access link is available"
+msgstr "{{ object.name }}, link akses dokumen pribadi Anda masih tersedia"

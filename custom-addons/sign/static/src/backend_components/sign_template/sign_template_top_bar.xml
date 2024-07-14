@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sign.SignTemplateTopBar">
+        <div class="o_sign_template_header_wrapper px-4 py-2 align-items-center d-md-flex">
+            <div class="o_sign_template_header_document_name align-items-center d-flex me-auto">
+                <span t-if="!props.hasSignRequests" t-on-click="editDisplayName" class="fa fa-pencil me-2" title="Edit template name" role="img" aria-label="Edit template name"/>
+                <input type="text" t-ref="display-name" class="o_sign_template_name_input o_input"
+                    t-att-value="props.signTemplate.display_name"
+                    t-att-disabled="props.hasSignRequests"
+                    t-att-size="displayNameSize"
+                    t-on-change="this.props.onTemplateNameChange"
+                    t-on-input="changeInputSize"
+                    t-on-keydown="onKeyDown"
+                />
+            </div>
+            <Record t-props="recordProps" t-slot-scope="data">
+                <t t-set="record" t-value="data.record"/>
+
+                <div t-if="props.manageTemplateAccess" class="o_sign_template_authorized_ids_and_save align-items-center d-flex gap-2">
+                    <span>Authorized Users:</span>
+                    <div class="o_field_widget o_field_many2many_tags">
+                        <Many2ManyTagsField t-props="getMany2ManyProps(record, 'authorized_ids')"/>
+                    </div>
+                </div>
+
+                <div t-if="props.manageTemplateAccess" class="o_sign_template_group_id_and_save align-items-center d-flex gap-2">
+                    <span>Authorized Groups:</span>
+                    <div class="o_field_widget o_field_many2many_tags">
+                        <Many2ManyTagsField t-props="getMany2ManyProps(record, 'group_ids')"/>
+                    </div>
+                </div>
+
+                <div class="o_sign_template_tags_and_save align-items-center d-flex me-5 gap-2">
+                    <span>Tags:</span>
+                    <div class="o_field_widget o_field_many2many_tags">
+                        <Many2ManyTagsFieldColorEditable t-props="getMany2ManyProps(record, 'tag_ids')" colorField="'color'"/>
+                    </div>
+                </div>
+            </Record>
+
+            <button class="btn btn-secondary float-end o_sign_template_edit_form" t-on-click="onTemplatePropertiesClick">Template Properties</button>
+        </div>
+    </t>
+</templates>

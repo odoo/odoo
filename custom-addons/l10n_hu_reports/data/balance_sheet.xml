@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_hu_balance_sheet" model="account.report">
+        <field name="name">Balance sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="country_id" ref="base.hu"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_hu_balance_sheet_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_hu_balance_sheet_assets" model="account.report.line">
+                <field name="name">Assets</field>
+                <field name="code">hu_assets</field>
+                <field name="aggregation_formula">hu_assets_a.balance + hu_assets_b.balance + hu_assets_c.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_hu_balance_sheet_A" model="account.report.line">
+                        <field name="name">A. Fixed assets</field>
+                        <field name="code">hu_assets_a</field>
+                        <field name="aggregation_formula">hu_assets_a_I.balance + hu_assets_a_II.balance + hu_assets_a_III.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_hu_balance_sheet_A_I" model="account.report.line">
+                                <field name="name">I. Intangible assets</field>
+                                <field name="code">hu_assets_a_I</field>
+                                <field name="aggregation_formula">hu_assets_a_I_1.balance + hu_assets_a_I_2.balance + hu_assets_a_I_3.balance + hu_assets_a_I_4.balance + hu_assets_a_I_5.balance + hu_assets_a_I_6.balance + hu_assets_a_I_7.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_hu_balance_sheet_A_I_1" model="account.report.line">
+                                        <field name="name">1. Activation value of foundation reorganization</field>
+                                        <field name="code">hu_assets_a_I_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">111</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_I_2" model="account.report.line">
+                                        <field name="name">2. Activated value of experimental development</field>
+                                        <field name="code">hu_assets_a_I_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">112</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_I_3" model="account.report.line">
+                                        <field name="name">3. Property rights</field>
+                                        <field name="code">hu_assets_a_I_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">113</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_I_4" model="account.report.line">
+                                        <field name="name">4. Intellectual Property</field>
+                                        <field name="code">hu_assets_a_I_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">114</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_I_5" model="account.report.line">
+                                        <field name="name">5. Business or goodwill</field>
+                                        <field name="code">hu_assets_a_I_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">115</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_I_6" model="account.report.line">
+                                        <field name="name">6. Advances on intangible assets</field>
+                                        <field name="code">hu_assets_a_I_6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">351</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_I_7" model="account.report.line">
+                                        <field name="name">7. Value adjustments in respect of intangible assets</field>
+                                        <field name="code">hu_assets_a_I_7</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">119 + 117 + 118</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_hu_balance_sheet_A_II" model="account.report.line">
+                                <field name="name">II. Fixed assets</field>
+                                <field name="code">hu_assets_a_II</field>
+                                <field name="aggregation_formula">hu_assets_a_II_1.balance + hu_assets_a_II_2.balance + hu_assets_a_II_3.balance + hu_assets_a_II_4.balance + hu_assets_a_II_5.balance + hu_assets_a_II_6.balance + hu_assets_a_II_7.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_hu_balance_sheet_A_II_1" model="account.report.line">
+                                        <field name="name">1. Real estate and related property rights</field>
+                                        <field name="code">hu_assets_a_II_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">12\(127,128,129)</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_II_2" model="account.report.line">
+                                        <field name="name">2. Technical equipment, machines, vehicles</field>
+                                        <field name="code">hu_assets_a_II_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">13\(137,138,139)</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_II_3" model="account.report.line">
+                                        <field name="name">3. Other equipment, facilities, vehicles</field>
+                                        <field name="code">hu_assets_a_II_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">14\(147,148,149)</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_II_4" model="account.report.line">
+                                        <field name="name">4. Breeding animals</field>
+                                        <field name="code">hu_assets_a_II_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">15\(157,158,159)</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_II_5" model="account.report.line">
+                                        <field name="name">5. Investments, renovations</field>
+                                        <field name="code">hu_assets_a_II_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">16\(168)</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_II_6" model="account.report.line">
+                                        <field name="name">6. Advances on investments</field>
+                                        <field name="code">hu_assets_a_II_6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">352</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_II_7" model="account.report.line">
+                                        <field name="name">7. Value adjustments in respect of property, plant and equipment</field>
+                                        <field name="code">hu_assets_a_II_7</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">168 + 157 + 159 + 128 + 158 + 147 + 138 + 129 + 149 + 148 + 139 + 127 + 137</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_hu_balance_sheet_A_III" model="account.report.line">
+                                <field name="name">III. Fixed financial assets</field>
+                                <field name="code">hu_assets_a_III</field>
+                                <field name="aggregation_formula">hu_assets_a_III_1.balance + hu_assets_a_III_2.balance + hu_assets_a_III_3.balance + hu_assets_a_III_4.balance + hu_assets_a_III_5.balance + hu_assets_a_III_6.balance + hu_assets_a_III_7.balance + hu_assets_a_III_8.balance + hu_assets_a_III_9.balance + hu_assets_a_III_10.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_hu_balance_sheet_A_III_1" model="account.report.line">
+                                        <field name="name">1. Permanent interest in an associate</field>
+                                        <field name="code">hu_assets_a_III_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">171</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_III_2" model="account.report.line">
+                                        <field name="name">2. Long-term loan in an affiliated company</field>
+                                        <field name="code">hu_assets_a_III_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">191 + 194</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_III_3" model="account.report.line">
+                                        <field name="name">3. Permanent significant ownership interest</field>
+                                        <field name="code">hu_assets_a_III_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">172</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_III_4" model="account.report.line">
+                                        <field name="name">4. A long-term loan granted to an undertaking with a significant shareholding</field>
+                                        <field name="code">hu_assets_a_III_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">195 + 192</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_III_5" model="account.report.line">
+                                        <field name="name">5. Other long-term loans</field>
+                                        <field name="code">hu_assets_a_III_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">173</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_III_6" model="account.report.line">
+                                        <field name="name">6. Long-term loan in another shareholding company</field>
+                                        <field name="code">hu_assets_a_III_6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">197</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_III_7" model="account.report.line">
+                                        <field name="name">7. Other long-term loans</field>
+                                        <field name="code">hu_assets_a_III_7</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">196 + 193</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_III_8" model="account.report.line">
+                                        <field name="name">8. Long-term debt security</field>
+                                        <field name="code">hu_assets_a_III_8</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">18\(188,189)</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_III_9" model="account.report.line">
+                                        <field name="name">9. Value adjustments in respect of financial assets</field>
+                                        <field name="code">hu_assets_a_III_9</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">177</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_A_III_10" model="account.report.line">
+                                        <field name="name">10. Valuation differences on financial assets</field>
+                                        <field name="code">hu_assets_a_III_10</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">189 + 188 + 179 + 178 + 199</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_hu_balance_sheet_B" model="account.report.line">
+                        <field name="name">B. Current assets</field>
+                        <field name="code">hu_assets_b</field>
+                        <field name="aggregation_formula">hu_assets_b_I.balance + hu_assets_b_II.balance + hu_assets_b_III.balance + hu_assets_b_IV.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_hu_balance_sheet_B_I" model="account.report.line">
+                                <field name="name">I. Inventories</field>
+                                <field name="code">hu_assets_b_I</field>
+                                <field name="aggregation_formula">hu_assets_b_I_1.balance + hu_assets_b_I_2.balance + hu_assets_b_I_3.balance + hu_assets_b_I_4.balance + hu_assets_b_I_5.balance + hu_assets_b_I_6.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_hu_balance_sheet_B_I_1" model="account.report.line">
+                                        <field name="name">1. Materials</field>
+                                        <field name="code">hu_assets_b_I_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">22 + 21</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_B_I_2" model="account.report.line">
+                                        <field name="name">2. Work in progress and semi-finished products</field>
+                                        <field name="code">hu_assets_b_I_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">23</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_B_I_3" model="account.report.line">
+                                        <field name="name">3. Adult, fattening and other animals</field>
+                                        <field name="code">hu_assets_b_I_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">24</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_B_I_4" model="account.report.line">
+                                        <field name="name">4. Finished products</field>
+                                        <field name="code">hu_assets_b_I_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">25</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_B_I_5" model="account.report.line">
+                                        <field name="name">5. Goods</field>
+                                        <field name="code">hu_assets_b_I_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">27 + 26 + 28</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_B_I_6" model="account.report.line">
+                                        <field name="name">6. Advances on stocks</field>
+                                        <field name="code">hu_assets_b_I_6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">353</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_hu_balance_sheet_B_II" model="account.report.line">
+                                <field name="name">II. Demands</field>
+                                <field name="code">hu_assets_b_II</field>
+                                <field name="aggregation_formula">hu_assets_b_II_1.balance + hu_assets_b_II_2.balance + hu_assets_b_II_3.balance + hu_assets_b_II_4.balance + hu_assets_b_II_5.balance + hu_assets_b_II_6.balance + hu_assets_b_II_7.balance + hu_assets_b_II_8.balance + hu_assets_b_II_9.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_hu_balance_sheet_B_II_1" model="account.report.line">
+                                        <field name="name">1. Receivables from goods and services (customers)</field>
+                                        <field name="code">hu_assets_b_II_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">31\(318)</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_B_II_2" model="account.report.line">
+                                        <field name="name">2. Receivables from an associate</field>
+                                        <field name="code">hu_assets_b_II_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">321 + 325</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_B_II_3" model="account.report.line">
+                                        <field name="name">3. Receivables from a company with a significant ownership interest</field>
+                                        <field name="code">hu_assets_b_II_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">322 + 326</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_B_II_4" model="account.report.line">
+                                        <field name="name">4. Receivables from other participating interests</field>
+                                        <field name="code">hu_assets_b_II_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">33\(332,333)</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_B_II_5" model="account.report.line">
+                                        <field name="name">5. Promissory notes</field>
+                                        <field name="code">hu_assets_b_II_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">34</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_B_II_6" model="account.report.line">
+                                        <field name="name">6. Other receivables</field>
+                                        <field name="code">hu_assets_b_II_6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">36\(368)</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_B_II_7" model="account.report.line">
+                                        <field name="name">7. Valuation difference of receivables</field>
+                                        <field name="code">hu_assets_b_II_7</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">318</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_B_II_8" model="account.report.line">
+                                        <field name="name">8. Positive valuation difference on derivative transactions</field>
+                                        <field name="code">hu_assets_b_II_8</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">368</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_B_II_9" model="account.report.line">
+                                        <field name="name">9. Advances on services</field>
+                                        <field name="code">hu_assets_b_II_9</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">355 + 354 + 359</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_hu_balance_sheet_B_III" model="account.report.line">
+                                <field name="name">III. Securities</field>
+                                <field name="code">hu_assets_b_III</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">37</field>
+                            </record>
+                            <record id="l10n_hu_balance_sheet_B_IV" model="account.report.line">
+                                <field name="name">IV. Funds</field>
+                                <field name="code">hu_assets_b_IV</field>
+                                <field name="aggregation_formula">hu_assets_b_IV_1.balance + hu_assets_b_IV_2.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_hu_balance_sheet_B_IV_1" model="account.report.line">
+                                        <field name="name">1. Cashier's checks, checks</field>
+                                        <field name="code">hu_assets_b_IV_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">382 + 381 + 383</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_B_IV_2" model="account.report.line">
+                                        <field name="name">2. Bank deposits</field>
+                                        <field name="code">hu_assets_b_IV_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">385 + 389 + 384 + 386</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_hu_balance_sheet_C" model="account.report.line">
+                        <field name="name">C. Definitive accounts</field>
+                        <field name="code">hu_assets_c</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">39</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_hu_balance_sheet_liabilities" model="account.report.line">
+                <field name="name">Liabilities</field>
+                <field name="code">hu_liabilities</field>
+                <field name="aggregation_formula">hu_liabilities_d.balance + hu_liabilities_e.balance + hu_liabilities_f.balance + hu_liabilities_g.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_hu_balance_sheet_D" model="account.report.line">
+                        <field name="name">D. Equity</field>
+                        <field name="code">hu_liabilities_d</field>
+                        <field name="aggregation_formula">hu_liabilities_d_I.balance + hu_liabilities_d_II.balance + hu_liabilities_d_III.balance + hu_liabilities_d_IV.balance + hu_liabilities_d_V.balance + hu_liabilities_d_VI.balance + hu_liabilities_d_VII.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_hu_balance_sheet_D_I" model="account.report.line">
+                                <field name="name">I. Subscribed capital</field>
+                                <field name="code">hu_liabilities_d_I</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-411</field>
+                            </record>
+                            <record id="l10n_hu_balance_sheet_D_II" model="account.report.line">
+                                <field name="name">II. Subscribed but not yet paid-in capital (-)</field>
+                                <field name="code">hu_liabilities_d_II</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-332 - 324 - 323 - 333</field>
+                            </record>
+                            <record id="l10n_hu_balance_sheet_D_III" model="account.report.line">
+                                <field name="name">III. Capital reserve</field>
+                                <field name="code">hu_liabilities_d_III</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-412</field>
+                            </record>
+                            <record id="l10n_hu_balance_sheet_D_IV" model="account.report.line">
+                                <field name="name">IV. Profit reserve</field>
+                                <field name="code">hu_liabilities_d_IV</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-413</field>
+                            </record>
+                            <record id="l10n_hu_balance_sheet_D_V" model="account.report.line">
+                                <field name="name">V. Reserved reserve</field>
+                                <field name="code">hu_liabilities_d_V</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-414</field>
+                            </record>
+                            <record id="l10n_hu_balance_sheet_D_VI" model="account.report.line">
+                                <field name="name">VI. Valuation reserve</field>
+                                <field name="code">hu_liabilities_d_VI</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-417</field>
+                            </record>
+                            <record id="l10n_hu_balance_sheet_D_VII" model="account.report.line">
+                                <field name="name">VII. Profit after tax</field>
+                                <field name="code">hu_liabilities_d_VII</field>
+                                <field name="aggregation_formula">hu_liabilities_d_VII_1.balance + hu_liabilities_d_VII_2.balance + hu_liabilities_d_VII_3.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_hu_balance_sheet_D_VII_1" model="account.report.line">
+                                        <field name="name">Current profit (loss)</field>
+                                        <field name="code">hu_liabilities_d_VII_1</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_hu_balance_sheet_D_VII_1_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">hu_pl_d.balance</field>
+                                                <field name="subformula">cross_report</field>
+                                                <field name="date_scope">from_fiscalyear</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_D_VII_2" model="account.report.line">
+                                        <field name="name">Current Year Allocated Earnings</field>
+                                        <field name="code">hu_liabilities_d_VII_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-999999</field>
+                                    </record>
+                                    <record id="l10n_hu_balance_sheet_D_VII_3" model="account.report.line">
+                                        <field name="name">Unallocated earnings</field>
+                                        <field name="code">hu_liabilities_d_VII_3</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_hu_balance_sheet_D_VII_3_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">domain</field>
+                                                <field name="formula" eval="[
+                                                    '|', ('account_id.account_type', '=', 'income'),
+                                                    '|', ('account_id.account_type', '=', 'income_other'),
+                                                    '|', ('account_id.account_type', '=', 'expense'),
+                                                    '|', ('account_id.account_type', '=', 'expense_depreciation'),
+                                                         ('account_id.account_type', '=', 'expense_direct_cost')
+                                                ]"/>
+                                                <field name="subformula">-sum</field>
+                                                <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_hu_balance_sheet_E" model="account.report.line">
+                        <field name="name">E. Provisions</field>
+                        <field name="code">hu_liabilities_e</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-42</field>
+                    </record>
+                    <record id="l10n_hu_balance_sheet_F" model="account.report.line">
+                        <field name="name">F. Obligations</field>
+                        <field name="code">hu_liabilities_f</field>
+                        <field name="aggregation_formula">hu_liabilities_f_I.balance + hu_liabilities_f_II.balance + hu_liabilities_f_III.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_hu_balance_sheet_F_I" model="account.report.line">
+                                <field name="name">I. Subordinated liabilities</field>
+                                <field name="code">hu_liabilities_f_I</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-43</field>
+                            </record>
+                            <record id="l10n_hu_balance_sheet_F_II" model="account.report.line">
+                                <field name="name">II. Long-term liabilities</field>
+                                <field name="code">hu_liabilities_f_II</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-44</field>
+                            </record>
+                            <record id="l10n_hu_balance_sheet_F_III" model="account.report.line">
+                                <field name="name">III. Short-term liabilities</field>
+                                <field name="code">hu_liabilities_f_III</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-45 - 46 - 47</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_hu_balance_sheet_G" model="account.report.line">
+                        <field name="name">G. Liabilities</field>
+                        <field name="code">hu_liabilities_g</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-48</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

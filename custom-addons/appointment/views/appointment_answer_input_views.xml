@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<odoo>    
+    <record id="appointment_answer_input_view_search" model="ir.ui.view">
+        <field name="name">appointment.answer.input.view.search</field>
+        <field name="model">appointment.answer.input</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="value_text_box"/>
+                <field name="value_answer_id"/>
+                <field name="question_id"/>
+                <filter string="Text Questions"
+                    domain="[('question_id.question_type', 'in', ['char', 'text'])]"
+                    name="filter_question_type_text"/>
+                <filter string="Selection Questions"
+                    domain="[('question_id.question_type', 'in', ['checkbox', 'select', 'radio'])]"
+                    name="filter_question_type_selection"/>
+                <group expand="0" string="Group By">
+                    <filter string="Question" name="group_by_question" context="{'group_by': 'question_id'}"/>
+                    <filter string="Customer" name="group_by_customer" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Appointment Type"
+                        name="group_by_appointment_type"
+                        context="{'group_by': 'appointment_type_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="appointment_answer_input_view_form" model="ir.ui.view">
+        <field name="name">appointment.answer.input.view.form</field>
+        <field name="model">appointment.answer.input</field>
+        <field name="arch" type="xml">
+            <form string="Answer Input" name="answer_input_form">
+                <field name="question_type" invisible="1"/>
+                <sheet>
+                    <group>
+                        <group name="answer_input_form_left">
+                            <field name="question_id"/>
+                            <field name="appointment_type_id"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group name="answer_input_form_right">
+                            <field name="value_answer_id"
+                                invisible="question_type in ['char', 'text']"/>
+                            <field name="value_text_box"
+                                invisible="question_type in ['select', 'radio', 'checkbox']"/>
+                            <field name="calendar_event_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="appointment_answer_input_view_tree" model="ir.ui.view">
+        <field name="name">appointment.answer.input.view.tree</field>
+        <field name="model">appointment.answer.input</field>
+        <field name="arch" type="xml">
+            <tree create="false" string="Answer Breakdown">
+                <field name="create_date" optional="hide"/>
+                <field name="question_id" optional="show" />
+                <field name="value_text_box"/>
+                <field name="value_answer_id"/>
+                <field name="partner_id" optional="hide"/>
+                <field name="appointment_type_id" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="appointment_answer_input_view_graph" model="ir.ui.view">
+        <field name="name">appointment.answer.input.view.graph</field>
+        <field name="model">appointment.answer.input</field>
+        <field name="arch" type="xml">
+            <graph string="Answer Breakdown" sample="1">
+                <field name="value_answer_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="appointment_answer_input_view_pivot" model="ir.ui.view">
+        <field name="name">appointment.answer.input.view.pivot</field>
+        <field name="model">appointment.answer.input</field>
+        <field name="arch" type="xml">
+            <pivot string="Answer Breakdown" sample="1">
+                <field name="question_id" type="row"/>
+                <field name="value_answer_id" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="appointment_answer_input_action_from_question" model="ir.actions.act_window">
+        <field name="name">Answer Breakdown</field>
+        <field name="res_model">appointment.answer.input</field>
+        <field name="view_mode">search,tree,graph,pivot,form</field>
+        <field name="context">{'create': False, 'search_default_question_id': active_id}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Answers yet!
+            </p>
+        </field>
+    </record>
+</odoo>

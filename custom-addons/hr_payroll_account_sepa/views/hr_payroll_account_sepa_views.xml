@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add Payment button on the payslip run form. -->
+    <record id="hr_payslip_run_view_form" model="ir.ui.view">
+        <field name="name">hr.payslip.run.inherit.form</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+        <field name="arch" type="xml">
+            <button name="action_paid" position="before">
+                <button name="action_open_sepa_wizard" type="object" string="Create Payment Report" class="oe_highlight" invisible="state not in ['close', 'paid'] or sepa_export"/>
+            </button>
+            <button name="action_paid" position="after">
+                <button name="action_open_sepa_wizard" type="object" string="Create Payment Report" invisible="state not in ['close', 'paid'] or not sepa_export"/>
+            </button>
+            <xpath expr="//div[hasclass('o_row')]" position="after">
+                <field name="sepa_export_filename" invisible="1"/>
+                <field name="sepa_export" filename="sepa_export_filename" readonly="1" invisible="not sepa_export"/>
+                <field name="sepa_export_date" readonly="1" invisible="not sepa_export"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add Payment button on the payslip form if the payslip hasn't got a payslip run. -->
+    <record id="hr_payslip_view_form" model="ir.ui.view">
+        <field name="name">hr.payslip.inherit.form</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <button name="refund_sheet" position="before">
+                <button name="action_open_sepa_wizard" type="object" string="Create Payment Report" class="oe_highlight"
+                    invisible="payslip_run_id or state != 'done' or not batch_payroll_move_lines"/>
+            </button>
+            <notebook position="inside">
+                <page string="Exported File" name="exported_file" invisible="not sepa_export">
+                    <group>
+                        <field name="sepa_export_filename" invisible="1"/>
+                        <field name="sepa_export" filename="sepa_export_filename" readonly="1"/>
+                        <field name="sepa_export_date" readonly="1"/>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

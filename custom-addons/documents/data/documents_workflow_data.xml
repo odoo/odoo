@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data noupdate="1">
+
+        <!-- Workflow -->
+
+        <!-- Internal -->
+
+        <!-- internal deprecate -->
+
+        <record id="documents_rule_internal_deprecate" model="documents.workflow.rule" forcecreate="0">
+            <field name="name">Deprecate</field>
+            <field name="sequence">7</field>
+            <field name="remove_activities">True</field>
+            <field name="domain" eval="['|', ('tag_ids', '=', False), ('tag_ids', 'in', [
+                ref('documents.documents_internal_status_validated'),
+                ref('documents.documents_internal_status_tc')])]"/>
+            <field name="domain_folder_id" ref="documents_internal_folder"/>
+        </record>
+
+        <record id="documents_workflow_action_deprecate" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_rule_internal_deprecate"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="documents.documents_internal_status"/>
+            <field name="tag_id" ref="documents.documents_internal_status_deprecated"/>
+        </record>
+
+        <!-- internal mark as draft -->
+
+        <record id="documents_rule_internal_mad" model="documents.workflow.rule" forcecreate="0">
+            <field name="name">Mark As Draft</field>
+            <field name="sequence">5</field>
+            <field name="condition_type">domain</field>
+            <field name="domain" eval="['|', ('tag_ids', '=', False), ('tag_ids', 'in', [
+                ref('documents.documents_internal_status_deprecated'),
+                ref('documents.documents_internal_status_tc')])]"/>
+            <field name="remove_activities">True</field>
+            <field name="domain_folder_id" ref="documents_internal_folder"/>
+        </record>
+
+        <record id="documents_workflow_action_mad" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_rule_internal_mad"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="documents.documents_internal_status"/>
+            <field name="tag_id" ref="documents.documents_internal_status_inbox"/>
+        </record>
+
+        <!-- internal ask for validation -->
+
+        <record id="documents_rule_internal_legal" model="documents.workflow.rule" forcecreate="0">
+            <field name="name">Send to Legal</field>
+            <field name="sequence">2</field>
+            <field name="condition_type">domain</field>
+            <field name="domain" eval="[('tag_ids', 'in', [
+                ref('documents.documents_internal_status_inbox'),
+                ref('documents.documents_internal_status_validated')])]"/>
+            <field name="domain_folder_id" ref="documents.documents_internal_folder"/>
+            <field name="activity_option">True</field>
+            <field name="activity_type_id" ref="documents.mail_documents_activity_data_tv"/>
+        </record>
+
+        <record id="documents_workflow_action_afv" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_rule_internal_legal"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="documents.documents_internal_status"/>
+            <field name="tag_id" ref="documents.documents_internal_status_tc"/>
+        </record>
+
+        <record id="documents_workflow_action_afv_legal" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_rule_internal_legal"/>
+            <field name="action">add</field>
+            <field name="facet_id" ref="documents.documents_internal_knowledge"/>
+            <field name="tag_id" ref="documents.documents_internal_knowledge_legal"/>
+        </record>
+
+        <!-- internal mark as bill -->
+
+        <record id="documents_rule_internal_mark" model="documents.workflow.rule" forcecreate="0">
+            <field name="sequence">5</field>
+            <field name="name">Mark As Bill</field>
+            <field name="condition_type">domain</field>
+            <field name="domain" eval="[('tag_ids', 'in', [
+                ref('documents.documents_internal_status_tc'),
+                ref('documents.documents_internal_status_inbox')])]"/>
+            <field name="remove_activities">True</field>
+            <field name="domain_folder_id" ref="documents.documents_internal_folder"/>
+            <field name="folder_id" ref="documents.documents_finance_folder"/>
+        </record>
+
+        <record id="documents_workflow_action_mark_inbox" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_rule_internal_mark"/>
+            <field name="action">add</field>
+            <field name="facet_id" ref="documents.documents_finance_status"/>
+            <field name="tag_id" ref="documents.documents_finance_status_inbox"/>
+        </record>
+
+        <record id="documents_workflow_action_mark_bill" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_rule_internal_mark"/>
+            <field name="action">add</field>
+            <field name="facet_id" ref="documents.documents_finance_documents"/>
+            <field name="tag_id" ref="documents.documents_finance_documents_bill"/>
+        </record>
+
+        <!-- Finance -->
+
+        <!-- finance validate -->
+
+        <record id="documents_rule_finance_validate" model="documents.workflow.rule" forcecreate="0">
+            <field name="sequence">6</field>
+            <field name="name">Validate</field>
+            <field name="condition_type">domain</field>
+            <field name="domain" eval="[('tag_ids', 'in', [
+                ref('documents.documents_finance_status_tc'),
+                ref('documents.documents_finance_status_inbox')])]"/>
+            <field name="remove_activities">True</field>
+            <field name="domain_folder_id" ref="documents.documents_finance_folder"/>
+        </record>
+
+        <record id="documents_workflow_action_finance_validate" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_rule_finance_validate"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="documents.documents_finance_status"/>
+            <field name="tag_id" ref="documents.documents_finance_status_validated"/>
+        </record>
+
+        <!-- finance ask for validation -->
+
+        <record id="documents_rule_finance_afv" model="documents.workflow.rule" forcecreate="0">
+            <field name="sequence">7</field>
+            <field name="name">Ask for Validation</field>
+            <field name="condition_type">domain</field>
+            <field name="domain" eval="[('tag_ids', 'in', [
+                ref('documents.documents_finance_status_inbox'),
+                ref('documents.documents_finance_status_validated')])]"/>
+            <field name="domain_folder_id" ref="documents_finance_folder"/>
+            <field name="activity_option">True</field>
+            <field name="activity_type_id" ref="documents.mail_documents_activity_data_tv"/>
+            <field name="domain_folder_id" ref="documents.documents_finance_folder"/>
+        </record>
+
+        <record id="documents_workflow_action_finance_afv" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_rule_finance_afv"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="documents.documents_finance_status"/>
+            <field name="tag_id" ref="documents.documents_finance_status_tc"/>
+        </record>
+
+        <!-- finance move to inbox -->
+
+        <record id="documents_rule_finance_mti" model="documents.workflow.rule" forcecreate="0">
+            <field name="sequence">7</field>
+            <field name="name">Move To Inbox</field>
+            <field name="condition_type">domain</field>
+            <field name="domain" eval="['|', ('tag_ids', '=', False), ('tag_ids', 'in', [
+                ref('documents.documents_finance_status_validated')])]"/>
+            <field name="domain_folder_id" ref="documents_finance_folder"/>
+            <field name="activity_option">True</field>
+            <field name="activity_type_id" ref="documents.mail_documents_activity_data_tv"/>
+            <field name="domain_folder_id" ref="documents.documents_finance_folder"/>
+        </record>
+
+        <record id="documents_workflow_action_finance_mti" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_rule_finance_mti"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="documents.documents_finance_status"/>
+            <field name="tag_id" ref="documents.documents_finance_status_inbox"/>
+        </record>
+
+        <!-- finance set as 2018 contract-->
+
+        <record id="documents_rule_finance_2018contracts" model="documents.workflow.rule" forcecreate="0">
+            <field name="sequence">8</field>
+            <field name="name" eval="'Set As ' + str(datetime.now().year) + ' Contracts'"/>
+            <field name="domain_folder_id" ref="documents_finance_folder"/>
+            <field name="required_tag_ids" eval="[(4, ref('documents.documents_finance_status_inbox'))]"/>
+            <field name="activity_option">True</field>
+            <field name="activity_type_id" ref="documents.mail_documents_activity_data_tv"/>
+            <field name="domain_folder_id" ref="documents.documents_finance_folder"/>
+        </record>
+
+        <record id="documents_workflow_action_finance_status_validated" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_rule_finance_2018contracts"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="documents.documents_finance_status"/>
+            <field name="tag_id" ref="documents.documents_finance_status_validated"/>
+        </record>
+
+        <record id="documents_workflow_action_finance_2018contracts" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_rule_finance_2018contracts"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="documents.documents_finance_fiscal_year"/>
+            <field name="tag_id" ref="documents.documents_finance_fiscal_year_2018"/>
+        </record>
+
+        <record id="documents_workflow_action_finance_DocumentContract" model="documents.workflow.action" forcecreate="0">
+            <field name="workflow_rule_id" ref="documents_rule_finance_2018contracts"/>
+            <field name="action">replace</field>
+            <field name="facet_id" ref="documents.documents_finance_documents"/>
+            <field name="tag_id" ref="documents.documents_finance_documents_Contracts"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="social_post_view_form" model="ir.ui.view">
+            <field name="name">social.post.view.form.inherit.push_notifications</field>
+            <field name="model">social.post</field>
+            <field name="inherit_id" ref="social.social_post_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='push_notification_image']" position="after">
+                    <field name="use_visitor_timezone"
+                        string="Local Time"
+                        invisible="not display_push_notification_attributes or post_method == 'now'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

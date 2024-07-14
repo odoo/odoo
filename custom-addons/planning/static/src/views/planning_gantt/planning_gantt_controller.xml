@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="planning.PlanningGanttView.Buttons" t-inherit="web_gantt.GanttView.Buttons">
+        <xpath expr="//div" position="inside">
+            <div class="d-flex gap-1">
+                <button t-if="model.metaData.canEdit"
+                    class="o_gantt_button_send_all btn btn-primary"
+                    title="Send schedule"
+                    data-hotkey="w"
+                    t-on-click="() => this.planningControllerActions.publish()"
+                >
+                    Publish
+                </button>
+                <button t-if="model.metaData.canCreate and model.metaData.scale.id === 'week'"
+                    class="o_gantt_button_copy_previous_week btn btn-secondary"
+                    title="Copy previous week"
+                    data-hotkey="c"
+                    t-on-click="() => this.planningControllerActions.copyPrevious()"
+                >
+                    Copy previous week
+                </button>
+                <button t-if="model.metaData.canCreate"
+                    class="o_gantt_button_auto_plan btn btn-secondary"
+                    title="Automatically plan open shifts and sales orders"
+                    data-hotkey="n"
+                    t-on-click="() => this.planningControllerActions.autoPlan()"
+                >
+                    Auto Plan
+                </button>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

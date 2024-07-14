@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="l10n_ph_reports.SlspReportFilterExtraOptions" t-inherit="account_reports.AccountReportFilterExtraOptions" owl="1">
+        <xpath expr="//t[@t-set-slot='toggler']" position="inside">
+            <t t-if="controller.options.include_no_tin">
+                , With Partners Without TIN
+            </t>
+            <t t-if="controller.options.include_imports">
+                , With Importations
+            </t>
+        </xpath>
+
+        <xpath expr="//DropdownItem[contains(@class, 'filter_show_draft_hook')]" position="after">
+            <DropdownItem
+                class="{ 'selected': controller.options.include_no_tin }"
+                onSelected="() => this.toggleFilter('include_no_tin')"
+            >
+                Including Partners Without TIN
+            </DropdownItem>
+            <DropdownItem
+                class="{ 'selected': controller.options.include_imports }"
+                onSelected="() => this.toggleFilter('include_imports')"
+            >
+                Including Importations
+            </DropdownItem>
+        </xpath>
+    </t>
+</templates>

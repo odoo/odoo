@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- This group is meant to manage PLM stages -->
+    <record model="ir.module.category" id="module_category_manufacturing_product_lifecycle_management_(plm)">
+        <field name="name">PLM</field>
+        <field name="description">Helps you manage your product's lifecycles.</field>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="mrp_plm.group_plm_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="base.module_category_manufacturing_product_lifecycle_management_(plm)"/>
+        <field name="implied_ids" eval="[(4, ref('mrp.group_mrp_user'))]"/>
+        <field name="comment">The PLM user uses products lifecycle management</field>
+    </record>
+
+    <record id="mrp_plm.group_plm_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="base.module_category_manufacturing_product_lifecycle_management_(plm)"/>
+        <field name="implied_ids" eval="[(4, ref('mrp_plm.group_plm_user'))]"/>
+        <field name="comment">The PLM manager manages products lifecycle management</field>
+    </record>
+
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4, ref('mrp_plm.group_plm_manager'))]"/>
+    </record>
+
+    <record model="res.users" id="base.user_root">
+       <field eval="[(4,ref('mrp_plm.group_plm_manager'))]" name="groups_id"/>
+    </record>
+
+    <record model="res.users" id="base.user_admin">
+       <field eval="[(4,ref('mrp_plm.group_plm_manager'))]" name="groups_id"/>
+   	</record>
+
+    <data noupdate="1">
+
+        <record model="ir.rule" id="mrp_eco_comp_rule">
+            <field name="name">Manufacturing ECO company rule</field>
+            <field name="model_id" ref="model_mrp_eco"/>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
+
+    </data>
+</odoo>

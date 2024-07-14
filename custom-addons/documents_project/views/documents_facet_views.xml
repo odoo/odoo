@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="facet_view_form_with_folder_inherit" model="ir.ui.view">
+        <field name="name">facet.view.form.with.folder.inherit</field>
+        <field name="model">documents.facet</field>
+        <field name="inherit_id" ref="documents.facet_view_form_with_folder"/>
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <field name="folder_id" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

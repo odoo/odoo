@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_do_bs" model="account.report">
+        <field name="name">Balance sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="country_id" ref="base.do"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_do_bs_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_do_bs_assets" model="account.report.line">
+                <field name="name">Assets</field>
+                <field name="code">l10n_do_bs_assets</field>
+                <field name="aggregation_formula">l10n_do_bs_assets_a.balance + l10n_do_bs_assets_b.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_do_bs_assets_a" model="account.report.line">
+                        <field name="name">Current Assets</field>
+                        <field name="code">l10n_do_bs_assets_a</field>
+                        <field name="aggregation_formula">l10n_do_bs_assets_a_1.balance + l10n_do_bs_assets_a_2.balance + l10n_do_bs_assets_a_3.balance + l10n_do_bs_assets_a_4.balance + l10n_do_bs_assets_a_5.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_do_bs_assets_a_1" model="account.report.line">
+                                <field name="name">Cash and Cash Equivalents</field>
+                                <field name="code">l10n_do_bs_assets_a_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1101</field>
+                            </record>
+                            <record id="l10n_do_bs_assets_a_2" model="account.report.line">
+                                <field name="name">Temporary Investments</field>
+                                <field name="code">l10n_do_bs_assets_a_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1102 + 1109</field>
+                            </record>
+                            <record id="l10n_do_bs_assets_a_3" model="account.report.line">
+                                <field name="name">Accounts Receivable</field>
+                                <field name="code">l10n_do_bs_assets_a_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1103</field>
+                            </record>
+                            <record id="l10n_do_bs_assets_a_4" model="account.report.line">
+                                <field name="name">Inventories</field>
+                                <field name="code">l10n_do_bs_assets_a_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1105</field>
+                            </record>
+                            <record id="l10n_do_bs_assets_a_5" model="account.report.line">
+                                <field name="name">Other Current Assets</field>
+                                <field name="code">l10n_do_bs_assets_a_5</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1104 + 1106 + 1107 + 1108 + 1110</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_do_bs_assets_b" model="account.report.line">
+                        <field name="name">Non-Current Assets</field>
+                        <field name="code">l10n_do_bs_assets_b</field>
+                        <field name="aggregation_formula">l10n_do_bs_assets_b_1.balance + l10n_do_bs_assets_b_2.balance + l10n_do_bs_assets_b_3.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_do_bs_assets_b_1" model="account.report.line">
+                                <field name="name">Property, Plant and Equipment</field>
+                                <field name="code">l10n_do_bs_assets_b_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1201</field>
+                            </record>
+                            <record id="l10n_do_bs_assets_b_2" model="account.report.line">
+                                <field name="name">Other Non-Current Assets</field>
+                                <field name="code">l10n_do_bs_assets_b_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1202 + 1203 + 1204 + 1205 + 1206 + 1207 + 1209 + 13</field>
+                            </record>
+                            <record id="l10n_do_bs_assets_b_3" model="account.report.line">
+                                <field name="name">Permanent Investments</field>
+                                <field name="code">l10n_do_bs_assets_b_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">1208</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_do_bs_liabilities" model="account.report.line">
+                <field name="name">Liabilities</field>
+                <field name="code">l10n_do_bs_liabilities</field>
+                <field name="aggregation_formula">l10n_do_bs_liabilities_a.balance + l10n_do_bs_liabilities_b.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_do_bs_liabilities_a" model="account.report.line">
+                        <field name="name">Current Liabilities</field>
+                        <field name="code">l10n_do_bs_liabilities_a</field>
+                        <field name="aggregation_formula">l10n_do_bs_liabilities_a_1.balance + l10n_do_bs_liabilities_a_2.balance + l10n_do_bs_liabilities_a_3.balance + l10n_do_bs_liabilities_a_4.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_do_bs_liabilities_a_1" model="account.report.line">
+                                <field name="name">Short-term accounts and notes payable</field>
+                                <field name="code">l10n_do_bs_liabilities_a_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2101</field>
+                            </record>
+                            <record id="l10n_do_bs_liabilities_a_2" model="account.report.line">
+                                <field name="name">Taxes and Withholdings</field>
+                                <field name="code">l10n_do_bs_liabilities_a_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2103</field>
+                            </record>
+                            <record id="l10n_do_bs_liabilities_a_3" model="account.report.line">
+                                <field name="name">Short-Term Provisions</field>
+                                <field name="code">l10n_do_bs_liabilities_a_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2104</field>
+                            </record>
+                            <record id="l10n_do_bs_liabilities_a_4" model="account.report.line">
+                                <field name="name">Other Current Liabilities</field>
+                                <field name="code">l10n_do_bs_liabilities_a_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2102 - 2105</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_do_bs_liabilities_b" model="account.report.line">
+                        <field name="name">Non-Current Liabilities</field>
+                        <field name="code">l10n_do_bs_liabilities_b</field>
+                        <field name="aggregation_formula">l10n_do_bs_liabilities_b_1.balance + l10n_do_bs_liabilities_b_2.balance + l10n_do_bs_liabilities_b_3.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_do_bs_liabilities_b_1" model="account.report.line">
+                                <field name="name">Long-term accounts and notes payable</field>
+                                <field name="code">l10n_do_bs_liabilities_b_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2201</field>
+                            </record>
+                            <record id="l10n_do_bs_liabilities_b_2" model="account.report.line">
+                                <field name="name">Long-Term Provisions</field>
+                                <field name="code">l10n_do_bs_liabilities_b_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2204</field>
+                            </record>
+                            <record id="l10n_do_bs_liabilities_b_3" model="account.report.line">
+                                <field name="name">Other Non-Current Liabilities</field>
+                                <field name="code">l10n_do_bs_liabilities_b_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2202 - 2203</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_do_bs_equity" model="account.report.line">
+                <field name="name">Patrimony</field>
+                <field name="code">l10n_do_bs_equity</field>
+                <field name="aggregation_formula">l10n_do_bs_equity_1.balance + l10n_do_bs_equity_2.balance + l10n_do_bs_equity_3.balance + l10n_do_bs_equity_4.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_do_bs_equity_1" model="account.report.line">
+                        <field name="name">Capital</field>
+                        <field name="code">l10n_do_bs_equity_1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-31</field>
+                    </record>
+                    <record id="l10n_do_bs_equity_2" model="account.report.line">
+                        <field name="name">Reserves</field>
+                        <field name="code">l10n_do_bs_equity_2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-32</field>
+                    </record>
+                    <record id="l10n_do_bs_equity_3" model="account.report.line">
+                        <field name="name">Accumulated Results</field>
+                        <field name="code">l10n_do_bs_equity_3</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_do_bs_equity_3_balance_account_codes" model="account.report.expression">
+                                <field name="label">balance_account_codes</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-33</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                            <record id="l10n_do_bs_equity_3_balance_aggregate" model="account.report.expression">
+                                <field name="label">balance_aggregate</field>
+                                <field name="engine">domain</field>
+                                <field name="formula" eval="[('account_id.account_type', 'in', ['income', 'income_other', 'expense_direct_cost', 'expense', 'expense_depreciation'])]"/>
+                                <field name="subformula">-sum</field>
+                                <field name="date_scope">to_beginning_of_fiscalyear</field>
+                            </record>
+                            <record id="l10n_do_bs_equity_3_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_do_bs_equity_3.balance_account_codes + l10n_do_bs_equity_3.balance_aggregate</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_do_bs_equity_4" model="account.report.line">
+                        <field name="name">Management Results</field>
+                        <field name="action_id" ref="action_account_report_do_pl"/>
+                        <field name="code">l10n_do_bs_equity_4</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_do_bs_equity_4_balance_account_codes" model="account.report.expression">
+                                <field name="label">balance_account_codes</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-7101</field>
+                                 <field name="date_scope">normal</field>
+                            </record>
+                            <record id="l10n_do_bs_equity_4_balance_aggregate" model="account.report.expression">
+                                <field name="label">balance_aggregate</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_do_pl_net_profit.balance</field>
+                                <field name="subformula">cross_report</field>
+                                <field name="date_scope">from_fiscalyear</field>
+                            </record>
+                            <record id="l10n_do_bs_equity_4_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_do_bs_equity_4.balance_account_codes + l10n_do_bs_equity_4.balance_aggregate</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_do_bs_liabilities_plus_equity" model="account.report.line">
+                <field name="name">Total Liabilities and Shareholders' Equity</field>
+                <field name="code">l10n_do_bs_liabilities_plus_equity</field>
+                <field name="aggregation_formula">l10n_do_bs_liabilities.balance + l10n_do_bs_equity.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+        </field>
+    </record>
+</odoo>

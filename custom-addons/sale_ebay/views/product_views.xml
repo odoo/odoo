@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_sale_ebay_form_view" model="ir.ui.view">
+      <field name="name">product.sale.ebay.form</field>
+      <field name="model">product.template</field>
+      <field name="inherit_id" ref="stock.product_template_form_view_procurement_button"/>
+      <field name="arch" type="xml">
+        <data>
+        <xpath expr="//header" position="inside">
+              <button name="push_product_ebay" type="object" string="List Item on eBay" invisible="not ebay_use or ebay_listing_status in ['Active', 'Out Of Stock', 'Error']"/>
+              <button name="relist_product_ebay" type="object" string="Relist Item" invisible="not ebay_use or ebay_listing_status not in ['Ended', 'Completed', 'Out Of Stock']"/>
+              <button name="revise_product_ebay" type="object" string="Revise Item" invisible="not ebay_use or not ebay_url or ebay_listing_status not in ['Active', 'Out Of Stock', 'Error']"/>
+              <button name="end_listing_product_ebay" type="object" string="End Item's Listing" invisible="not ebay_use or not ebay_url or ebay_listing_status not in ['Active', 'Error'] or ebay_listing_status == 'Out Of Stock'"/>
+              <button name="%(action_ebay_link_listing)d" type='action' string='Link With Existing eBay Listing' invisible="not ebay_use or ebay_listing_status != 'Unlisted'"/>
+        </xpath>
+        <xpath expr="//notebook[last()]" position="inside">
+          <page string="eBay" name="ebay_sale">
+            <group>
+              <field name="ebay_use" string="Sell on eBay"/>
+              <field name="ebay_url" readonly="True" invisible="not ebay_url" widget="url"/>
+              <field name="ebay_listing_status" invisible="not ebay_use"/>
+              <field name="ebay_quantity_sold" invisible="product_variant_count &gt; 1 or ebay_listing_status == 'Unlisted'"/>
+              <field name="ebay_start_date" invisible="ebay_listing_status == 'Unlisted'"/>
+            </group>
+
+            <group colspan="2" invisible="not ebay_use">
+              <group>
+                <field name="ebay_title"/>
+                <field name="ebay_subtitle"/>
+                <field name="ebay_item_condition_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="ebay_category_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="ebay_category_2_id" invisible="not ebay_category_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="ebay_store_category_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="ebay_store_category_2_id" invisible="not ebay_store_category_id" options="{'no_create': True, 'no_open': True}"/>
+              </group>
+              <group>
+                <field name="ebay_listing_type"/>
+                <field name="ebay_price" invisible="ebay_listing_type == 'FixedPriceItem'" widget="monetary"/>
+                <field name="ebay_buy_it_now_price" invisible="ebay_listing_type == 'FixedPriceItem'" widget="monetary"/>
+                <field name="ebay_fixed_price" string="Fixed Price" invisible="ebay_listing_type == 'Chinese' or product_variant_count &gt; 1" widget="monetary"/>
+                <field name="ebay_sync_stock" invisible="ebay_listing_type == 'Chinese'"/>
+                <field name="ebay_quantity" invisible="ebay_sync_stock or product_variant_count &gt; 1 or ebay_listing_type == 'Chinese'"/>
+                <field name="ebay_listing_duration"/>
+                <field name="ebay_best_offer" invisible="product_variant_count &gt; 1 and ebay_listing_type == 'FixedPriceItem'"/>
+                <field name="ebay_private_listing"/>
+
+              </group>
+              <group name="ebay_policies">
+                <field name="ebay_seller_payment_policy_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="ebay_seller_return_policy_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="ebay_seller_shipping_policy_id" options="{'no_create': True, 'no_open': True}"/>
+              </group>
+            </group>
+            <div groups="product.group_product_variant" invisible="not ebay_use">
+              <label for="product_variant_ids"
+                invisible="ebay_listing_type == 'Chinese' or product_variant_count == 1"/>
+              <field name="product_variant_ids" widget="one2many"
+                invisible="ebay_listing_type == 'Chinese' or product_variant_count == 1"
+                required="False">
+                <tree string="Variants" editable="bottom" create="false" delete="false">
+                  <field name="currency_id" column_invisible="True"/>
+                  <field name="product_template_attribute_value_ids" widget="many2many_tags" readonly="1"/>
+                  <field name="ebay_use"/>
+                  <field name="ebay_fixed_price" string="Fixed Price" widget="monetary"/>
+                  <field name="ebay_quantity"/>
+                  <field name="uom_id" column_invisible="True"/>
+                  <field name="virtual_available"/>
+                  <field name="ebay_quantity_sold"/>
+                </tree>
+              </field>
+            </div>
+            <group invisible="not ebay_use" string="eBay Description">
+                <group>
+                <field name="ebay_template_id"
+                  domain="[('model','=','product.template')]"
+                  context="{
+                      'form_view_ref':'product_email_template.email_template_form_simplified',
+                      'default_model': 'product.template',
+                      'default_subject': name,
+                      'default_name': name,
+                  }"
+                />
+            </group>
+              <field name="ebay_description" nolabel="1" placeholder="Describe the product characteristics..."/>
+            </group>
+          </page>
+        </xpath>
+        </data>
+      </field>
+    </record>
+
+    <record id="product_template_ebay_tree_view" model="ir.ui.view">
+      <field name="name">product.template.ebay.tree</field>
+      <field name="model">product.template</field>
+      <field name="inherit_id" ref="product.product_template_tree_view"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='activity_exception_decoration']" position="before">
+          <field name="ebay_listing_status" optional="hide"/>
+        </xpath>
+      </field>
+    </record>
+
+    <!-- server actions to add option in the menu "More" -->
+    <record id="action_list_items" model="ir.actions.server">
+      <field name="name">eBay: List products</field>
+      <field name="model_id" ref="sale.model_product_template"/>
+      <field name="binding_model_id" ref="product.model_product_template"/>
+      <field name="state">code</field>
+      <field name="code">
+if records:
+  records.push_product_ebay()
+      </field>
+    </record>
+
+    <record id="action_revise_items" model="ir.actions.server">
+      <field name="name">eBay: Revise products</field>
+      <field name="model_id" ref="sale.model_product_template"/>
+      <field name="binding_model_id" ref="product.model_product_template"/>
+      <field name="state">code</field>
+      <field name="code">
+if records:
+  records.revise_product_ebay()
+      </field>
+    </record>
+
+    <record id="action_relist_items" model="ir.actions.server">
+      <field name="name">eBay: Relist products</field>
+      <field name="model_id" ref="sale.model_product_template"/>
+      <field name="binding_model_id" ref="product.model_product_template"/>
+      <field name="state">code</field>
+      <field name="code">
+if records:
+  records.relist_product_ebay()
+      </field>
+    </record>
+
+    <record id="action_end_items_listings" model="ir.actions.server">
+      <field name="name">eBay: End product listings</field>
+      <field name="model_id" ref="sale.model_product_template"/>
+      <field name="binding_model_id" ref="product.model_product_template"/>
+      <field name="state">code</field>
+      <field name="code">
+if records:
+  records.end_listing_product_ebay()
+      </field>
+    </record>
+
+    <record id="action_unlink_items_listings" model="ir.actions.server">
+      <field name="name">eBay: Unlink product listings</field>
+      <field name="model_id" ref="sale.model_product_template"/>
+      <field name="binding_model_id" ref="product.model_product_template"/>
+      <field name="state">code</field>
+      <field name="code">
+if records:
+  records.unlink_listing_product_ebay()
+      </field>
+    </record>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_delivery_carrier_form_with_provider_fedex" model="ir.ui.view">
+        <field name="name">delivery.carrier.fedex.locations</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery_fedex.view_delivery_carrier_form_with_provider_fedex"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='fedex_duty_payment']" position="after">
+                <field name="fedex_use_locations"/>
+                <label for="fedex_locations_radius_value" invisible="not fedex_use_locations"/>
+                <span invisible="not fedex_use_locations">
+                    <field name="fedex_locations_radius_value" style="padding-right: 5px"/>
+                    <field name="fedex_locations_radius_unit"/>
+                </span>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

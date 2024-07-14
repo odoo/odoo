@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="0">
+    <template id="tickets_followup_timesheet" name="Helpdesk tickets timesheet" inherit_id="helpdesk.tickets_followup" priority="50">
+        <xpath expr="//li[@id='nav-header']" position="after">
+            <li t-if="timesheets" class="nav-item">
+                <a class="nav-link p-0" href="#details">
+                    Timesheets
+                </a>
+            </li>
+        </xpath>
+        <xpath expr="//div[@name='description']" position="after">
+            <section id="details" style="page-break-inside: auto;" class="mt32" t-if="timesheets">
+                <h3 id="details">Timesheets</h3>
+
+                <table class="table table-sm" id="timesheet_table">
+                    <t t-set="display_sol" t-value="False"/>
+                    <t t-foreach="timesheets" t-as="timesheet">
+                        <t t-if="timesheet.so_line != ticket.sale_line_id">
+                            <t t-set="display_sol" t-value="True"/>
+                        </t>
+                    </t>
+                    <thead class="bg-100">
+                        <tr>
+                            <th class="text-start">Date</th>
+                            <th class="text-start">Employee</th>
+                            <th class="text-start">Description</th>
+                            <th t-if="display_sol" class="text-start">Sales Order Item</th>
+                            <th t-if="is_uom_day" class="text-end">Days Spent</th>
+                            <th t-else="" class="text-end">Hours Spent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="timesheets" t-as="line">
+                            <tr>
+                                <td><span t-field="line.date"/></td>
+                                <td><span t-field="line.employee_id"/></td>
+                                <td><span t-field="line.name"/></td>
+                                <td t-if="display_sol">
+                                    <t t-if="line.so_line"><a t-att-href="'/my/orders/%s' % line.so_line.order_id.id"><span t-field="line.so_line"/></a></t>
+                                    <t t-else=""><t t-out="line.so_line.display_name"/></t>
+                                </td>
+                                <td class="text-end">
+                                    <span t-if="is_uom_day" t-esc="convert_hours_to_days(line.unit_amount)" t-options='{"widget": "timesheet_uom"}'/>
+                                    <span t-else="" t-field="line.unit_amount" t-options='{"widget": "float_time"}'/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3"></th>
+                            <th class="text-end">
+                                <div>
+                                    Total
+                                    <t t-set="total_timesheet_amount" t-value="sum(timesheets.mapped('unit_amount'))"/>
+                                    <t t-if="is_uom_day"> Days:
+                                        <span t-esc="convert_hours_to_days(total_timesheet_amount)" />
+                                    </t>
+                                    <t t-else=""> Hours:
+                                        <span t-esc="round(total_timesheet_amount, 2)" t-options='{"widget": "float_time"}'/>
+                                    </t>
+                                </div>
+                                <div t-if="ticket.remaining_hours_available">
+                                    <div t-if="is_uom_day">Remaining Days on SO: <span t-esc="convert_hours_to_days(ticket.remaining_hours_so)" t-options='{"widget": "timesheet_uom"}'/></div>
+                                    <div t-else="">Remaining Hours on SO: <span t-esc="ticket.remaining_hours_so" t-options='{"widget": "float_time"}'/></div>
+                                </div>
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </section>
+        </xpath>
+    </template>
+
+    <template id="portal_helpdesk_ticket_timesheet" name="Helpdesk Ticket timesheet" inherit_id="helpdesk.portal_helpdesk_ticket">
+        <xpath expr="//th[@id='ticket_user_header']" position="after">
+            <t t-set="show_spent_hours" t-value="[ticket.mapped('use_helpdesk_sale_timesheet') for ticket in grouped_tickets][0]"/>
+            <th class="text-end" t-if="any(show_spent_hours)">
+                <t t-esc="display_tickets"/>
+                <t t-if="is_uom_day">Days</t>
+                <t t-else="">Hours</t> Spent
+            </th>
+        </xpath>
+        <xpath expr="//td[@id='ticket_user_body']" position="after">
+            <td class="text-end" t-if="any(show_spent_hours)">
+                <t t-if="ticket.use_helpdesk_sale_timesheet">
+                    <t t-set='timesheet_lines' t-value='ticket.sudo().timesheet_ids._get_portal_helpdesk_timesheet()'/>
+                    <t t-if="timesheet_lines">
+                        <t t-set="total_timesheet_amount" t-value="sum(timesheet_lines.mapped('unit_amount'))"/>
+                        <t t-if="is_uom_day">
+                            <span t-esc="convert_hours_to_days(total_timesheet_amount)" />
+                        </t>
+                        <t t-else="">
+                            <span t-esc="round(total_timesheet_amount, 2)" t-options='{"widget": "float_time"}'/>
+                        </t>
+                    </t>
+                </t>
+            </td>
+        </xpath>
+    </template>
+
+</data>
+</odoo>

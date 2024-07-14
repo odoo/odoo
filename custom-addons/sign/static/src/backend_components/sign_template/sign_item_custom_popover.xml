@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sign.SignItemCustomPopover">
+        <div class="d-flex flex-column" style="max-width: 25rem;">
+            <div class="d-flex bg-opacity-25 bg-secondary justify-content-between align-items-center">
+                <span class="fs-3 fw-bold ps-2" t-esc="props.placeholder"/>
+                <button type="button" title="Close" class="btn btn-default oi oi-close" t-on-click="props.onClose"/>
+            </div>
+            <div class="d-flex p-2 flex-column">
+                <div class="mb-1 clearfix o_popover_placeholder" t-if="props.debug">
+                    <label for="o_sign_name" class="form-label fw-bold">Placeholder</label>
+                    <input type="text" class="form-control o_input" id="o_sign_name" t-att-value="state.placeholder" t-on-change="(e) => this.onChange('placeholder', e.target.value)"/>
+                </div>
+
+                <Record t-props="recordProps" t-slot-scope="data">
+                    <t t-set="record" t-value="data.record"/>
+                    <div t-if="props.type === 'selection'">
+                        <label for="o_sign_select_options_input" class="fw-bold">Options</label>
+                        <div class="o_field_widget d-block" id="o_sign_select_options_input">
+                            <Many2ManyTagsField t-props="getOptionsProps(record, 'option_ids')"/>
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="o_sign_responsible_select_input" class="fw-bold">Filled by</label>
+                        <div class="o_field_widget d-block" id="o_sign_responsible_select_input">
+                            <Many2OneField t-props="getMany2XProps(record, 'responsible_id')" update="(value) => record.update(value)" canOpen="false"/>
+                        </div>
+                    </div>
+                </Record>
+                <div t-if="showAlignment" class="o_sign_field_align_group">
+                    <label class="w-100 fw-bold">Alignment</label>
+                    <div class="btn-group mb-2" role="group">
+                        <button t-foreach="alignmentOptions" t-as="alignment" t-key="alignment.key" type="button" t-att-title="alignment.title" t-on-click="(e) => this.onChange('alignment', alignment.key)"
+                            t-attf-class="fa-align-{{alignment.key}} {{alignment.key === state.alignment ? 'active': ''}} btn btn-secondary fa"
+                        />
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <div class="checkbox">
+                        <label for="o_sign_required_field">
+                            <input type="checkbox" id="o_sign_required_field" t-att-checked="state.required" t-on-change="(e) => this.onChange('required', e.target.checked)"/> Mandatory field
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-1 d-flex align-items-center justify-content-between">
+                        <button class="btn o_sign_validate_field_button btn-primary" t-on-click="onValidate">Validate</button>
+                        <button class="btn btn-secondary fa fa-trash" t-on-click="props.onDelete"/>
+                    </div>
+                </div>
+        </div>
+    </t>
+</templates>

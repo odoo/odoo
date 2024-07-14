@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="frontdesk.DrinkPage">
+        <div class="d-flex flex-column flex-grow-1 h-100">
+            <h1 class="mb-0 text-center">How can we delight you?</h1>
+            <div class="o_drink_container row row-cols-2 row-cols-sm-3 row-cols-md-4 g-3 my-4 overflow-auto" t-att-class="{'row-cols-lg-6': props.drinkInfo.length > 4}">
+                <div class="col" t-foreach="props.drinkInfo" t-as="drink" t-key="drink.id">
+                    <div class="card justify-content-between h-100 cursor-pointer" t-att-class="props.theme === 'light' ? '' : 'bg-800'" t-on-click="() => this._onDrinkSelect(drink.id)">
+                        <img class="card-img-top" t-attf-src="/frontdesk/{{drink.id}}/get_frontdesk_drinks" alt="Drink image"/>
+                        <div class="flex-grow-0 p-3">
+                            <div class="text-center fs-5" t-out="drink.name"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 d-grid mx-lg-auto mt-auto">
+                <button class="btn btn-secondary" t-on-click="() => props.showScreen('EndPage')">Nothing, thanks.</button>
+            </div>
+        </div>
+    </t>
+</templates>

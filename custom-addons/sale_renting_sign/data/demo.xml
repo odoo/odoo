@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="attachment_rental_sign" model="ir.attachment">
+        <field name="name">Rental Agreement</field>
+        <field name="datas" type="base64" file="sale_renting_sign/static/demo/rental.pdf"/>
+        <field name="mimetype">application/pdf</field>
+    </record>
+
+    <record id="template_rental_sign" model="sign.template">
+        <field name="attachment_id" ref="attachment_rental_sign"/>
+        <field name="active">True</field>
+        <field name="group_ids" eval="[(4,ref('sign.group_sign_user'))]"/>
+    </record>
+
+    <record id="attachment_rental_sign" model="ir.attachment">
+        <field name="res_model">sign.template</field>
+        <field name="res_id" ref="template_rental_sign"/>
+    </record>
+
+    <record model="sign.item" id="sign_item_1">
+        <field name="template_id" ref="template_rental_sign"/>
+        <field name="type_id" ref="sign.sign_item_type_name"/>
+        <field name="responsible_id" ref="sign.sign_item_role_customer"/>
+        <field name="page" type="int">1</field>
+        <field name="posX" type="float">0.050</field>
+        <field name="posY" type="float">0.580</field>
+        <field name="width" type="float">0.200</field>
+        <field name="height" type="float">0.015</field>
+    </record>
+
+    <record model="sign.item" id="sign_item_2">
+        <field name="template_id" ref="template_rental_sign"/>
+        <field name="type_id" ref="sign.sign_item_type_signature"/>
+        <field name="responsible_id" ref="sign.sign_item_role_customer"/>
+        <field name="page" type="int">1</field>
+        <field name="posX" type="float">0.050</field>
+        <field name="posY" type="float">0.600</field>
+        <field name="width" type="float">0.200</field>
+        <field name="height" type="float">0.050</field>
+    </record>
+
+    <record model="res.company" id="base.main_company">
+        <field name="rental_sign_tmpl_id" ref="template_rental_sign" />
+    </record>
+</odoo>

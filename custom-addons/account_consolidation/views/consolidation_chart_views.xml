@@ -1,0 +1,138 @@
+<odoo>
+    <data>
+        <record id="consolidation_chart_tree" model="ir.ui.view">
+            <field name="name">consolidation.chart.tree</field>
+            <field name="model">consolidation.chart</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree string="Charts">
+                    <field name="name"/>
+                    <field name="currency_id"/>
+                    <field name="period_ids"/>
+                    <field name="account_ids"/>
+                    <field name="invert_sign" widget="boolean_toggle" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="consolidation_chart_form" model="ir.ui.view">
+            <field name="name">consolidation.chart.form</field>
+            <field name="model">consolidation.chart</field>
+            <field name="arch" type="xml">
+                <form string="Consolidation">
+                    <header>
+                        <button name="%(consolidation_account_action)d" class="btn-primary"
+                                context="{'search_default_chart_id': id, 'default_chart_id': id}"
+                                type="action" string="Review Chart Of Accounts"
+                                invisible="not id"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box" invisible="not id">
+                            <button class="oe_stat_button" type="action" name="%(consolidation_group_action)d"
+                                    icon="fa-sitemap"
+                                    context="{'search_default_chart_id':id, 'default_chart_id': id}">
+                                <field string="Groups" name="group_ids_count" widget="statinfo"/>
+                            </button>
+                            <button class="oe_stat_button" type="action" name="%(consolidation_account_action)d" icon="fa-bars"
+                                    context="{'search_default_chart_id':id, 'default_chart_id': id}">
+                                <field string="Accounts" name="account_ids_count" widget="statinfo"/>
+                            </button>
+                            <button class="oe_stat_button" type="action" name="%(analysis_period_config_action)d"
+                                    icon="fa-calendar-check-o"
+                                    context="{'search_default_chart_id':id, 'default_chart_id': id}">
+                                <field string="Periods" name="period_ids_count" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" class="oe_inline"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="currency_id"/>
+                                <field name="sign" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="invert_sign"/>
+                            </group>
+                        </group>
+                        <!-- COMPANIES -->
+                        <group string="Consolidated Companies">
+                            <field name="company_ids" options="{'no_create':True}" nolabel="1" colspan="2"
+                                   context="{'chart_id': id, 'consolidation_currency_id': currency_id}">
+                                <tree>
+                                    <field name="name" string="Company Name"/>
+                                    <field name="currency_id"/>
+                                    <field name="account_consolidation_currency_is_different" column_invisible="True"/>
+                                    <button type="object" name="action_open_mapping"
+                                            string="Map Accounts" class="oe_highlight btn-sm"/>
+                                    <button type="object" name="action_open_rate_ranges"
+                                            invisible="not account_consolidation_currency_is_different"
+                                            string="Historical Rates" class="oe_highlight btn-sm"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <!-- SUB-CONSOLIDATIONS -->
+                        <group groups="base.group_no_one" string="Advanced Consolidation">
+                            <p class="text-muted oe_edit_only" colspan="4">You can here define complex consolidations based on other sub-consolidations, as part of a whole scheme</p>
+                            <field name="children_ids" options="{'no_create':True}" nolabel="1" colspan="2"
+                                   context="{'chart_id': id}" domain="[('id', '!=', id)]">
+                                <tree>
+                                    <field name="name" string="Sub-consolidated Chart"/>
+                                    <field name="currency_id"/>
+                                    <button type="object" name="action_open_mapping"
+                                            string="Map Accounts" class="oe_highlight btn-sm"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="consolidation_chart_form_onboarding" model="ir.ui.view">
+            <field name="name">consolidation.chart.form.onboarding</field>
+            <field name="model">consolidation.chart</field>
+            <field name="inherit_id" ref="consolidation_chart_form"/>
+            <field name="mode">primary</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_open_mapping']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_open_rate_ranges']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//header" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <form position="inside">
+                    <footer position="replace">
+                        <button name="action_save_onboarding_consolidation_step" class="btn btn-primary" type="object"
+                                string="Apply" data-hotkey="q"/>
+                        <button special="cancel" data-hotkey="x" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="consolidation_chart_action" model="ir.actions.act_window">
+            <field name="name">Consolidation</field>
+            <field name="res_model">consolidation.chart</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="consolidation_chart_action_onboarding" model="ir.actions.act_window">
+            <field name="name">Consolidation</field>
+            <field name="res_model">consolidation.chart</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="consolidation_chart_form_onboarding"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

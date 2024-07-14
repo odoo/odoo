@@ -1,0 +1,3558 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* documents
+# 
+# Translators:
+# Ofir Blum <ofir.blum@gmail.com>, 2023
+# Amit Spilman <amit@laylinetech.com>, 2023
+# MichaelHadar, 2023
+# שהאב חוסיין <shhab89@gmail.com>, 2023
+# Leandro Noijovich <eliel.sorcerer@gmail.com>, 2023
+# Fishfur A Banter <fishfurbanter@gmail.com>, 2023
+# hed shefer <hed@laylinetech.com>, 2023
+# Lilach Gilliam <lilach@apprcase.com>, 2023
+# david danilov, 2023
+# Mor Kir <morki@013.net.il>, 2023
+# ExcaliberX <excaliberx@gmail.com>, 2023
+# NoaFarkash, 2023
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2023
+# Ha Ketem <haketem@gmail.com>, 2023
+# דודי מלכה <Dudimalka6@gmail.com>, 2023
+# Roy Sayag, 2023
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Netta Waizer, 2023
+# Yihya Hugirat <hugirat@gmail.com>, 2023
+# yael terner, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: yael terner, 2024\n"
+"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: he\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.js:0
+#, python-format
+msgid " + Add a tag"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "%s (remaining pages)"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#, python-format
+msgid "%s Documents"
+msgstr "%s מסמכים"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#, python-format
+msgid "%s Documents (%s locked)"
+msgstr "%s מסמכים(%s נעולים)"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_panel.js:0
+#, python-format
+msgid "%s file(s) not moved because they are locked by another user"
+msgstr "%s הקבצים לא הועברו מכיוון שהם נעולים על ידי משתמש אחר"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "%s new document(s) created"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "%s page(s) deleted"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "(Remaining pages"
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.public_page_layout
+msgid ", expired on"
+msgstr ", יפוג ב"
+
+#. module: documents
+#: model_terms:digest.tip,tip_description:documents.digest_tip_documents_0
+msgid ""
+". Scanned files will appear automatically in your workspace. Then, process "
+"your documents in bulk with the split tool: launch user defined actions, "
+"request a signature, convert to vendor bills with AI, etc."
+msgstr ""
+"קבצים סרוקים יופיעו אוטומטית בסביבת העבודה. ולאחר מכן אפשר לעבד מסמכים "
+"גדולים עם כלי הפיצול: הפעלת פעולות שהוגדרו על-ידי המשתמש, לבקש חתימה, להמיר "
+"לחשבוניות ספקים עם בינה מלאכותית ועוד."
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_fiscal_year_2017
+msgid "2023"
+msgstr ""
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_fiscal_year_2018
+msgid "2024"
+msgstr ""
+
+#. module: documents
+#: model_terms:digest.tip,tip_description:documents.digest_tip_documents_0
+msgid "<b class=\"tip_title\">Tip: Become a paperless company</b>"
+msgstr "<b class=\"tip_title\">טיפ: הפכו לארגון נטול נייר</b>"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid "<b>Deselect this page</b> as we plan to process all bills first."
+msgstr "<b>הסרת דף זה</b> כי בכוונתנו קודם לעבד את כל החשבוניות."
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_files_page
+msgid ""
+"<br/>\n"
+"                    is sharing content with you"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid "<b>Select</b> this page to continue."
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.public_page_layout
+msgid "<br/>Powered by"
+msgstr "<br/>מופעל ע\"י"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "<i class=\"fa fa fa-folder text-primary me-2\" title=\"Workspace\"/>"
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+msgid "<i class=\"fa fa-download fa-fw\"/>  Download All"
+msgstr "<i class=\"fa fa-download fa-fw\"/>  הורד הכל"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+msgid "<i class=\"fa fa-lock oe_inline\" title=\"Locked\" invisible=\"not lock_uid\"/>"
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid ""
+"<i class=\"fa fa-tag o_documents_tag_color ms-2\" invisible=\"not tag_ids\" "
+"title=\"Tags\"/>"
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+msgid "<i class=\"fa fa-upload\"/>  Upload"
+msgstr "<i class=\"fa fa-upload\"/> העלה"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+msgid "<span class=\"o_stat_text\">Actions</span>"
+msgstr "<span class=\"o_stat_text\">פעולות</span>"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.documents_document_res_partner_view
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+msgid "<span class=\"o_stat_text\">Documents</span>"
+msgstr "<span class=\"o_stat_text\">מסמכים</span>"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+msgid "<span class=\"o_stat_text\">Related <br/> Record</span>"
+msgstr "<span class=\"o_stat_text\">רשומה <br/> קשורה</span>"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+msgid "<span title=\"Requested Document\">Requested Document</span>"
+msgstr "<span title=\"Requested Document\">מסמך מבוקש</span>"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.public_page_layout
+msgid "<span>&amp;nbsp;Documents.</span>"
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_kanban
+msgid "<span><b> Request</b></span>"
+msgstr "<span><b>בקשה</b></span>"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_kanban
+msgid "<span><b>Requested Document</b></span>"
+msgstr "<span><b>מסמך מבוקש</b></span>"
+
+#. module: documents
+#: model:mail.template,body_html:documents.mail_template_document_request_reminder
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"                    <tbody>\n"
+"                        <!-- HEADER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\">\n"
+"                                        <span style=\"font-size: 10px;\">\n"
+"                                            Document Request: <br>\n"
+"                                            <t t-if=\"object.create_share_id.name\">\n"
+"                                                <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.create_share_id.name or ''\">Inbox Financial</span>\n"
+"                                            </t>\n"
+"                                        </span><br>\n"
+"                                    </td><td valign=\"middle\" align=\"right\">\n"
+"                                        <img t-attf-src=\"/logo.png?company={{ object.create_uid.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.create_uid.company_id.name\">\n"
+"                                    </td></tr>\n"
+"                                    <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- CONTENT -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                                        <div>\n"
+"                                            Hello <t t-out=\"object.create_share_id.owner_id.name or ''\">OdooBot</t>,\n"
+"                                            <br><br>\n"
+"                                            This is a friendly reminder to upload your requested document:\n"
+"                                            <br><br>\n"
+"                                            <center>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.create_share_id.name\">\n"
+"                                                        <b t-out=\"object.create_share_id.name or ''\">Inbox Financial</b>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.create_share_id.activity_note\">\n"
+"                                                        <i t-out=\"object.create_share_id.activity_note or ''\">Example of a note.</i>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <br>\n"
+"                                                <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                                    <a t-att-href=\"object.create_share_id.full_url\" style=\"background-color: #875A7B; padding: 20px 30px 20px 30px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                                        Upload the requested document\n"
+"                                                    </a>\n"
+"                                                </div>\n"
+"                                            </center><br>\n"
+"                                            Please provide us with the missing document before the link expires (planned on <t t-out=\"object.create_share_id.date_deadline or ''\">2021-05-17</t>).\n"
+"                                            <br><br>\n"
+"                                            Thank you,\n"
+"                                            <t t-if=\"user and user.signature\">\n"
+"                                                <br>\n"
+"                                                <t t-out=\"user.signature\">--<br>Mitchell Admin</t>\n"
+"                                                <br>\n"
+"                                            </t>\n"
+"                                        </div>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- FOOTER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\" align=\"left\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.name or ''\">YourCompany</t>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.email\">\n"
+"                                            | <a t-attf-href=\"'mailto:%s' % {{ object.create_uid.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.email\">info@yourcompany.com</a>\n"
+"                                        </t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.website\">\n"
+"                                            | <a t-att-href=\"object.create_uid.company_id.website\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.website\">http://www.example.com</a>\n"
+"                                        </t>\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                    </table>\n"
+"                    </td></tr>\n"
+"                    <!-- POWERED BY -->\n"
+"                    <tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                          <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"                            <t t-if=\"object.create_share_id.date_deadline\">\n"
+"                                This link expires on <b t-out=\"object.create_share_id.date_deadline\">2021-05-17</b>.<br>\n"
+"                            </t>\n"
+"                            Powered by <a target=\"_blank\" href=\"https://www.odoo.com/app/documents\" style=\"color: #875A7B;\">Odoo Documents</a>\n"
+"                          </td></tr>\n"
+"                        </table>\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"            "
+msgstr ""
+
+#. module: documents
+#: model:mail.template,body_html:documents.mail_template_document_request
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"                    <tbody>\n"
+"                        <!-- HEADER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\">\n"
+"                                        <span style=\"font-size: 10px;\">\n"
+"                                            Document Request: <br>\n"
+"                                            <t t-if=\"object.name\">\n"
+"                                                <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Inbox Financial</span>\n"
+"                                            </t>\n"
+"                                        </span><br>\n"
+"                                    </td><td valign=\"middle\" align=\"right\" t-if=\"not object.create_uid.company_id.uses_default_logo\">\n"
+"                                        <img t-attf-src=\"/logo.png?company={{ object.create_uid.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.create_uid.company_id.name\">\n"
+"                                    </td></tr>\n"
+"                                    <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- CONTENT -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                                        <div>\n"
+"                                            Hello <t t-out=\"object.owner_id.name or ''\">OdooBot</t>,\n"
+"                                            <br><br>\n"
+"                                            <t t-out=\"object.create_uid.name or ''\">OdooBot</t> (<t t-out=\"object.create_uid.email or ''\">odoobot@example.com</t>) asks you to provide the following document:\n"
+"                                            <br><br>\n"
+"                                            <center>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.name\">\n"
+"                                                        <b t-out=\"object.name or ''\">Inbox Financial</b>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <div>\n"
+"                                                    <t t-if=\"object.activity_note\">\n"
+"                                                        <i t-out=\"object.activity_note or ''\">Example of a note.</i>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <br>\n"
+"                                                <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                                                    <a t-att-href=\"object.full_url\" style=\"background-color: #875A7B; padding: 20px 30px 20px 30px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                                        Upload the requested document\n"
+"                                                    </a>\n"
+"                                                </div>\n"
+"                                            </center><br>\n"
+"                                            Please provide us with the missing document<t t-if=\"object.date_deadline\"> before the link expires (planned on <t t-out=\"object.date_deadline\">2021-05-17</t>)</t>.\n"
+"                                            <t t-if=\"user and user.signature\">\n"
+"                                                <br>\n"
+"                                                <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                                                <br>\n"
+"                                            </t>\n"
+"                                        </div>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td style=\"text-align:center;\">\n"
+"                                      <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                        <!-- FOOTER -->\n"
+"                        <tr>\n"
+"                            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                                    <tr><td valign=\"middle\" align=\"left\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.name or ''\">YourCompany</t>\n"
+"                                    </td></tr>\n"
+"                                    <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                                        <t t-out=\"object.create_uid.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.email\">\n"
+"                                            | <a t-attf-href=\"'mailto:%s' % {{ object.create_uid.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                                        </t>\n"
+"                                        <t t-if=\"object.create_uid.company_id.website\">\n"
+"                                            | <a t-attf-href=\"'%s' % {{ object.create_uid.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.create_uid.company_id.website or ''\">http://www.example.com</a>\n"
+"                                        </t>\n"
+"                                    </td></tr>\n"
+"                                </table>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </tbody>\n"
+"                    </table>\n"
+"                    </td></tr>\n"
+"                    <!-- POWERED BY -->\n"
+"                    <tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                          <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"                            <t t-if=\"object.date_deadline\">\n"
+"                                This link expires on <b t-out=\"object.date_deadline or ''\">2021-05-17</b>.<br>\n"
+"                            </t>\n"
+"                            Powered by <a target=\"_blank\" href=\"https://www.odoo.com/app/documents\" style=\"color: #875A7B;\">Odoo Documents</a>\n"
+"                          </td></tr>\n"
+"                        </table>\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"            "
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_defaults
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"מילון פייתון שיוערך כדי לספק ערכי ברירת מחדל בעת יצירת רשומות חדשות לכינוי "
+"זה."
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_workflow_rule
+msgid ""
+"A set of condition and actions which will be available to all attachments "
+"matching the conditions"
+msgstr "תנאים ופעולות שיהיו זמינות לכל הקבצים המצורפים התואמים את התנאים"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_folder.py:0
+#, python-format
+msgid ""
+"A workspace cannot have one of his child defined as Parent Workspace in "
+"order to avoid a recursion issue."
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_folder__parent_folder_id
+msgid "A workspace will inherit the tags of its parent workspace"
+msgstr "סביבת עבודה תקבל את התגיות של סביבת העבודה האם שלה"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+msgid "Access"
+msgstr "גישה"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_panel.js:0
+#, python-format
+msgid "Access Error"
+msgstr "שגיאת גישה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__group_ids
+msgid "Access Groups"
+msgstr "קבוצות גישה"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+msgid "Access Rights"
+msgstr "הרשאות"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__access_token
+msgid "Access Token"
+msgstr "אסימון גישה"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__action
+#, python-format
+msgid "Action"
+msgstr "פעולה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__name
+msgid "Action Button Name"
+msgstr "שם כפתור הפעולה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__action_count
+msgid "Action Count"
+msgstr "כמות פעילויות"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Action Name"
+msgstr "שם פעולה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_needaction
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_needaction
+msgid "Action Needed"
+msgstr "נדרשת פעולה"
+
+#. module: documents
+#. odoo-javascript
+#. odoo-python
+#: code:addons/documents/models/documents_folder.py:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: model:ir.ui.menu,name:documents.workflow_rules_menu
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+#, python-format
+msgid "Actions"
+msgstr "פעולות"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__active
+#: model:ir.model.fields,field_description:documents.field_documents_folder__active
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_tree
+msgid "Active"
+msgstr "פעיל"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_ids
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Activities"
+msgstr "פעילויות"
+
+#. module: documents
+#: model:ir.model,name:documents.model_mail_activity
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "Activity"
+msgstr "פעילות"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "סימון פעילות חריגה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__activity_note
+msgid "Activity Note"
+msgstr "הערת פעילות"
+
+#. module: documents
+#: model:ir.ui.menu,name:documents.mail_activity_plan_menu
+msgid "Activity Plans"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_state
+msgid "Activity State"
+msgstr "מצב פעילות"
+
+#. module: documents
+#: model:ir.model,name:documents.model_mail_activity_type
+msgid "Activity Type"
+msgstr "סוג פעילות"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "סוג פעילות"
+
+#. module: documents
+#: model:ir.actions.act_window,name:documents.mail_activity_type_action_document
+#: model:ir.ui.menu,name:documents.mail_activity_type_menu
+msgid "Activity Types"
+msgstr "סוגי פעילויות"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__activity_type_id
+#: model:ir.model.fields,field_description:documents.field_documents_share__activity_type_id
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__activity_type_id
+msgid "Activity type"
+msgstr "סוג פעילות"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_action__action__add
+#: model_terms:ir.ui.view,arch_db:documents.documents_upload_url_view
+msgid "Add"
+msgstr "הוסף"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Add File"
+msgstr "הוספת קובץ"
+
+#. module: documents
+#: model:ir.actions.act_window,name:documents.action_url_form
+msgid "Add Url"
+msgstr "הוסף כתובת אתר אינטרנט"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_controller_mixin.xml:0
+#, python-format
+msgid "Add a Link"
+msgstr "הוסף קישור "
+
+#. module: documents
+#: model_terms:ir.actions.act_window,help:documents.mail_activity_plan_action_document
+msgid "Add a new plan"
+msgstr "הוסף תכנית חדשה"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Add new file"
+msgstr "הוספת קובץ חדש"
+
+#. module: documents
+#: model:res.groups,name:documents.group_documents_manager
+msgid "Administrator"
+msgstr "מנהל מערכת"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_marketing_assets_ads
+msgid "Ads"
+msgstr "מודעות"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_id
+msgid "Alias"
+msgstr "כינוי"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_contact
+msgid "Alias Contact Security"
+msgstr "כינוי אבטחה של איש קשר"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_domain_id
+msgid "Alias Domain"
+msgstr "שם-מתחם (דומיין)"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_domain
+msgid "Alias Domain Name"
+msgstr "כינוי שם (דומיין)"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_full_name
+msgid "Alias Email"
+msgstr "קידומת מייל"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_name
+msgid "Alias Name"
+msgstr "שם כינוי"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_status
+msgid "Alias Status"
+msgstr "סטטוס"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_status
+msgid "Alias status assessed on the last message received."
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_model_id
+msgid "Aliased Model"
+msgstr "מודל בעל כינוי"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/controllers/documents.py:0
+#, python-format
+msgid "All files uploaded"
+msgstr "כל הקבצים הועלו"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__action
+msgid "Allows to"
+msgstr "אפשר"
+
+#. module: documents
+#: model:ir.module.category,description:documents.module_category_documents_management
+msgid "Allows you to manage your documents."
+msgstr "מאפשר לך לנהל את המסמכים שלך."
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_workflow_rule.py:0
+#, python-format
+msgid "Already linked Documents"
+msgstr "קבצים כבר מקושרים"
+
+#. module: documents
+#: model_terms:digest.tip,tip_description:documents.digest_tip_documents_0
+msgid ""
+"An easy way to process incoming mails is to configure your scanner to send "
+"PDFs to"
+msgstr "דרך פשוטה לטפל במיילים נכנסים זה להגדיר לסורק שלך לשלוח PDFים ל-"
+
+#. module: documents
+#: model_terms:digest.tip,tip_description:documents.digest_tip_documents_0
+msgid ""
+"An easy way to process incoming mails is to configure your scanner to send "
+"PDFs to your workspace email. Scanned files will appear automatically in "
+"your workspace. Then, process your documents in bulk with the split tool: "
+"launch user defined actions, request a signature, convert to vendor bills "
+"with AI, etc."
+msgstr ""
+"דרך נוחה לעבד דואר נכנס זה להגדיר את הסורק ככה שישלח PDFים למייל של סביבת "
+"העבודה שלך. ואז, לעבד את המסמכים שלך בבת אחת עם הכלי לפיצול מסמכים: להוסיף "
+"פעולות מוגדרות על-ידי מהשתמש, לבקש חתימה, להמיר לחשבונית ספק עם בינה "
+"מלאכותית ועוד."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/hooks.js:0
+#, python-format
+msgid "An error occured while uploading."
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+msgid "Archive"
+msgstr "ארכיון"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Archive original file(s)"
+msgstr "שליחת קובץ/קבצים מקוריים לארכיון"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+msgid "Archived"
+msgstr "בארכיון"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_search
+msgid "Moved to trash"
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_search
+msgid "Archived Workspace"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Are you sure that you want to delete the focused page ?"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Are you sure that you want to delete the selected page(s)"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Are you sure that you want to delete this page ?"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#, python-format
+msgid "Are you sure you want to permanently erase the document?"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#, python-format
+msgid "Are you sure you want to permanently erase the documents?"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid ""
+"As this PDF contains multiple documents, let's split and process in bulk."
+msgstr "בגלל שה-PDF מכין מספר מסמכים, בואו נחלק ואז נטפל בהם בבת-אחת."
+
+#. module: documents
+#: model:documents.workflow.rule,name:documents.documents_rule_finance_afv
+msgid "Ask for Validation"
+msgstr "לבקש אימות"
+
+#. module: documents
+#: model:documents.facet,name:documents.documents_marketing_assets
+msgid "Assets"
+msgstr "נכסים"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Attached To"
+msgstr "מצורף "
+
+#. module: documents
+#: model:ir.model,name:documents.model_ir_attachment
+#: model:ir.model.fields,field_description:documents.field_documents_document__attachment_id
+msgid "Attachment"
+msgstr "קובץ מצורף"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_attachment_count
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_attachment_count
+msgid "Attachment Count"
+msgstr "כמות קבצים מצורפים"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__description
+msgid "Attachment Description"
+msgstr "תיאור קובץ מצורף"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__attachment_name
+msgid "Attachment Name"
+msgstr "שם קובץ המצורף"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__attachment_type
+msgid "Attachment Type"
+msgstr "סוג קובץ מצורף"
+
+#. module: documents
+#: model_terms:documents.folder,description:documents.documents_finance_folder
+msgid ""
+"Automate your inbox using scanned documents or emails sent to <span "
+"class=\"o_folder_description_alias\"><strong>inbox-financial</strong> email "
+"alias</span>."
+msgstr ""
+"הכניסו אוטומציה לתיבת הדואר הנכנס על-ידי שליחת מסמכים סרוקים ל<span "
+"class=\"o_folder_description_alias\">כתובת המייל<strong>inbox-"
+"financial</strong></span>."
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__available_rule_ids
+msgid "Available Rules"
+msgstr "כללים זמינים"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_documents_bill
+msgid "Bill"
+msgstr "חשבונית"
+
+#. module: documents
+#: model:documents.folder,name:documents.documents_marketing_brand1_folder
+msgid "Brand 1"
+msgstr "מותג 1"
+
+#. module: documents
+#: model:documents.folder,name:documents.documents_marketing_brand2_folder
+msgid "Brand 2"
+msgstr "מותג 2"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_marketing_assets_brochures
+msgid "Brochures"
+msgstr "עלונים"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_mail_activity_type__folder_id
+msgid "By defining a folder, the upload activities will generate a document"
+msgstr "על ידי הגדרת תיקיה, פעילויות ההעלאה ייצרו מסמך"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.format_file_size
+msgid "Bytes"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__can_upload
+msgid "Can Upload"
+msgstr "יכול להעלות"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/hooks.js:0
+#, python-format
+msgid "Can't share documents of different workspaces."
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.documents_link_to_record_form_view
+msgid "Cancel"
+msgstr "בטל"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_folder.py:0
+#, python-format
+msgid ""
+"Cannot move folder under the given parent as this would create a recursive "
+"hierarchy"
+msgstr ""
+
+#. module: documents
+#: model_terms:documents.folder,description:documents.documents_internal_folder
+msgid "Categorize, share and keep track of all your internal documents."
+msgstr "סווג, שתף ועקוב אחר כל המסמכים הפנימיים שלך."
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_facet
+#: model:ir.model.fields,field_description:documents.field_documents_tag__facet_id
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__facet_id
+#: model_terms:ir.ui.view,arch_db:documents.facet_view_tree
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+#: model_terms:ir.ui.view,arch_db:documents.tag_view_form
+msgid "Category"
+msgstr "קטגוריה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__checksum
+msgid "Checksum/SHA1"
+msgstr "Checksum/SHA1"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_workflow_rule.py:0
+#, python-format
+msgid "Choose a record to link"
+msgstr "בחרו רשומה לקישור"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "Choose or Configure Email Servers"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid "Click on a card to <b>select the document</b>."
+msgstr "לחצו על כרטיס כדי<b>לבחור את המסמך</b>."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid "Click on a thumbnail to <b>preview the document</b>."
+msgstr "לחיצה על תמונה ממוזערת כדי <b>לצפות בתצוגה מקדימה של המסמך</b>."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid ""
+"Click on the <b>page separator</b>: we don't want to split these two pages "
+"as they belong to the same document."
+msgstr ""
+"לחצו על  <b>מפריד הדפים</b>: איננו רוצים לפצל את שני הדפים האלה כי הם שייכים"
+" לאותו מסמך."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Close"
+msgstr "סגור"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Close split tools"
+msgstr ""
+
+#. module: documents
+#. openerp-web
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid "Click the cross to <b>exit preview</b>."
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__company_id
+#: model:ir.model.fields,field_description:documents.field_documents_folder__company_id
+msgid "Company"
+msgstr "חברה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__condition_type
+msgid "Condition type"
+msgstr "סוג תנאי"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Conditions"
+msgstr "תנאים"
+
+#. module: documents
+#: model:ir.model,name:documents.model_res_config_settings
+msgid "Config Settings"
+msgstr "הגדר הגדרות"
+
+#. module: documents
+#: model:ir.ui.menu,name:documents.Config
+msgid "Configuration"
+msgstr "תצורה"
+
+#. module: documents
+#: model:ir.model,name:documents.model_res_partner
+#: model:ir.model.fields,field_description:documents.field_documents_document__partner_id
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__partner_id
+#: model:ir.model.fields,field_description:documents.field_documents_share__partner_id
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__criteria_partner_id
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Contact"
+msgstr "איש קשר"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Contains"
+msgstr "מכיל"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_documents_Contracts
+#: model:documents.tag,name:documents.documents_internal_template_contracts
+msgid "Contracts"
+msgstr "חוזים"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_controller_mixin.xml:0
+#, python-format
+msgid "Control panel buttons"
+msgstr "סרגל הכלים של לוח הבקרה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__create_model
+msgid "Create"
+msgstr "צור"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__create_share_id
+msgid "Create Share"
+msgstr "צור שיתוף"
+
+#. module: documents
+#: model:documents.workflow.rule,name:documents.documents_rule_internal_mark
+msgid "Create Vendor Bill"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__activity_option
+msgid "Create a new activity"
+msgstr "צור פעילות חדשה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__create_uid
+#: model:ir.model.fields,field_description:documents.field_documents_facet__create_uid
+#: model:ir.model.fields,field_description:documents.field_documents_folder__create_uid
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__create_uid
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__create_uid
+#: model:ir.model.fields,field_description:documents.field_documents_share__create_uid
+#: model:ir.model.fields,field_description:documents.field_documents_tag__create_uid
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__create_uid
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__create_uid
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Created by"
+msgstr "נוצר על-ידי"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__create_date
+#: model:ir.model.fields,field_description:documents.field_documents_facet__create_date
+#: model:ir.model.fields,field_description:documents.field_documents_folder__create_date
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__create_date
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__create_date
+#: model:ir.model.fields,field_description:documents.field_documents_share__create_date
+#: model:ir.model.fields,field_description:documents.field_documents_tag__create_date
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__create_date
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__create_date
+msgid "Created on"
+msgstr "נוצר ב-"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Creation Date"
+msgstr "תאריך יצירה"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_rule__condition_type__criteria
+msgid "Criteria"
+msgstr "קריטריונים"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_bounced_content
+msgid "Custom Bounced Message"
+msgstr "הודעה מותאמת אישית להודעות שגויות"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_request_wizard__activity_date_deadline_range_type__days
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__activity_date_deadline_range_type__days
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_rule__activity_date_deadline_range_type__days
+msgid "Days"
+msgstr "ימים"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_defaults
+msgid "Default Values"
+msgstr "ערכי ברירת מחדל"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "Default values for uploaded documents"
+msgstr "ערכי ברירת מחדל למסמכים שהועלו"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_folder__deletion_delay
+#: model:ir.model.fields,help:documents.field_res_config_settings__deletion_delay
+msgid "Delay after permanent deletion of the document in the trash (days)"
+msgstr "עיכוב לאחר מחיקה לצמיתות של המסמך באשפה (ימים)"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#: code:addons/documents/static/src/views/form/folder_form_controller.js:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: code:addons/documents/static/src/views/list/documents_list_controller.js:0
+#: code:addons/documents/static/src/views/list/folder_list_controller.js:0
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_tree
+#, python-format
+msgid "Delete"
+msgstr "מחק"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Delete focused or selected pages"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#, python-format
+msgid "Delete permanently"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_res_config_settings__deletion_delay
+msgid "Deletion Delay"
+msgstr "השהיית מחיקה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__deletion_delay
+msgid "Deletion delay"
+msgstr "השהיית מחיקה"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.res_config_settings_view_form
+msgid "Deletion delay (days)"
+msgstr "השהיית מחיקה (ימים)"
+
+#. module: documents
+#: model:documents.workflow.rule,name:documents.documents_rule_internal_deprecate
+msgid "Deprecate"
+msgstr "הוצא משימוש"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_internal_status_deprecated
+msgid "Deprecated"
+msgstr "יצא משימוש"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__description
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+msgid "Description"
+msgstr "תיאור"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#: model_terms:ir.ui.view,arch_db:documents.documents_request_form_view
+#: model_terms:ir.ui.view,arch_db:documents.documents_upload_url_view
+#: model_terms:ir.ui.view,arch_db:documents.folder_deletion_form
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+#: model_terms:ir.ui.view,arch_db:documents.tag_view_form
+#, python-format
+msgid "Discard"
+msgstr "בטל"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__display_name
+#: model:ir.model.fields,field_description:documents.field_documents_facet__display_name
+#: model:ir.model.fields,field_description:documents.field_documents_folder__display_name
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__display_name
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__display_name
+#: model:ir.model.fields,field_description:documents.field_documents_share__display_name
+#: model:ir.model.fields,field_description:documents.field_documents_tag__display_name
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__display_name
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__display_name
+msgid "Display Name"
+msgstr "שם לתצוגה"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.js:0
+#, python-format
+msgid "Do you really want to unlink this record?"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#, python-format
+msgid "Do you want to exit without saving or gather pages into one document ?"
+msgstr ""
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_document
+#: model_terms:ir.ui.view,arch_db:documents.document_view_kanban
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+#: model_terms:ir.ui.view,arch_db:documents.documents_view_list
+msgid "Document"
+msgstr "מסמך"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__document_count
+#: model:ir.model.fields,field_description:documents.field_res_partner__document_count
+msgid "Document Count"
+msgstr "כמות מסמכים"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+#: model_terms:ir.ui.view,arch_db:documents.documents_request_form_view
+msgid "Document Name"
+msgstr "שם מסמך"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__owner_id
+msgid "Document Owner"
+msgstr "בעלים של מסמך"
+
+#. module: documents
+#: model:ir.actions.act_window,name:documents.mail_activity_plan_action_document
+msgid "Document Plans"
+msgstr "תוכניות מסמכים"
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_request_wizard
+msgid "Document Request"
+msgstr "בקשת מסמך"
+
+#. module: documents
+#: model:mail.template,subject:documents.mail_template_document_request
+msgid ""
+"Document Request {{ object.name != False and ': '+ object.name or '' }}"
+msgstr "בקשת מסמך {{ object.name != False and ': '+ object.name or '' }}"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_document.py:0
+#: code:addons/documents/models/documents_document.py:0
+#: code:addons/documents/models/mail_activity.py:0
+#, python-format
+msgid "Document Request: %s Uploaded by: %s"
+msgstr "בקשת מסמך: %s הועלה על ידי: %s"
+
+#. module: documents
+#: model:mail.template,name:documents.mail_template_document_request_reminder
+msgid "Document Request: Reminder"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__has_write_access
+msgid "Document User Upload Rights"
+msgstr "זכויות העלאת מסמכים של משתמש"
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_workflow_action
+msgid "Document Workflow Tag Action"
+msgstr "פעולות תהליך עבודה"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__type__ids
+msgid "Document list"
+msgstr "רשימת מסמכים"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_kanban
+msgid "Document preview"
+msgstr ""
+
+#. module: documents
+#: model:mail.template,name:documents.mail_template_document_request
+msgid "Document: Document Request"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#. odoo-python
+#: code:addons/documents/models/documents_folder.py:0
+#: code:addons/documents/models/res_partner.py:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: model:documents.facet,name:documents.documents_finance_documents
+#: model:ir.actions.act_window,name:documents.document_action
+#: model:ir.model.fields,field_description:documents.field_documents_folder__document_ids
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__document_ids
+#: model:ir.model.fields,field_description:documents.field_res_users__document_count
+#: model:ir.module.category,name:documents.module_category_documents_management
+#: model:ir.ui.menu,name:documents.dashboard
+#: model:ir.ui.menu,name:documents.menu_root
+#: model_terms:ir.ui.view,arch_db:documents.action_view_search
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+#: model_terms:ir.ui.view,arch_db:documents.documents_view_activity
+#: model_terms:ir.ui.view,arch_db:documents.res_config_settings_view_form
+#, python-format
+msgid "Documents"
+msgstr "מסמכים"
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_link_to_record_wizard
+msgid "Documents Link to Record"
+msgstr "מסמכים מקושרים לרשומה"
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_share
+msgid "Documents Share"
+msgstr "שיתוף מסמכים"
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_folder
+msgid "Documents Workspace"
+msgstr "סביבת עבודה של מסמכים"
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_mixin
+msgid "Documents creation mixin"
+msgstr "שילוב יצירת מסמכים"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Does not contain"
+msgstr "לא מכיל"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__domain
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__domain
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__type__domain
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_rule__condition_type__domain
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Domain"
+msgstr "דומיין"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__action__download
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_files_page
+#, python-format
+msgid "Download"
+msgstr "הורד"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+msgid "Download #{document.name}"
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_files_page
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+msgid "Download all files"
+msgstr "הורדת כל הקבצים"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__action__downloadupload
+msgid "Download and Upload"
+msgstr "להוריד ולהעלות"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_files_page
+msgid "Download file"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/helper/documents_drop_zone.xml:0
+#, python-format
+msgid "Drop files here to upload"
+msgstr "העבר קבצים לכאן כדי להעלות"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__activity_date_deadline_range
+#: model:ir.model.fields,field_description:documents.field_documents_share__activity_date_deadline_range
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__activity_date_deadline_range
+msgid "Due Date In"
+msgstr "תאריך יעד "
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__activity_date_deadline_range_type
+#: model:ir.model.fields,field_description:documents.field_documents_share__activity_date_deadline_range_type
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__activity_date_deadline_range_type
+msgid "Due type"
+msgstr "סוג יעד"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/form/folder_form_controller.js:0
+#, python-format
+msgid "Duplicate"
+msgstr "שכפל"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_panel.js:0
+#: code:addons/documents/static/src/views/search/documents_search_panel.xml:0
+#, python-format
+msgid "Edit"
+msgstr "ערוך"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.js:0
+#, python-format
+msgid "Edit the linked record"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_email
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "Email Alias"
+msgstr "קידומת מייל"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__email_cc
+msgid "Email cc"
+msgstr "עותק דוא\"ל"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#: code:addons/documents/static/src/views/hooks.js:0
+#: model:ir.model.fields.selection,name:documents.selection__documents_document__thumbnail_status__error
+#, python-format
+msgid "Error"
+msgstr "שגיאה"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Escape Preview/Deselect/Exit"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__excluded_tag_ids
+msgid "Excluded Tags"
+msgstr "תגיות שלא נכללות"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.js:0
+#, python-format
+msgid "Exit Split Tools"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#, python-format
+msgid "Exit without saving"
+msgstr ""
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_documents_expense
+msgid "Expense"
+msgstr "מאשר הוצאות"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__state__expired
+msgid "Expired"
+msgstr "פג תוקף"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/list/documents_list_controller.js:0
+#: code:addons/documents/static/src/views/list/folder_list_controller.js:0
+#, python-format
+msgid "Export"
+msgstr "ייצוא"
+
+#. module: documents
+#: model:ir.model.constraint,message:documents.constraint_documents_facet_name_unique
+msgid "Facet already exists in this folder"
+msgstr "ההיבט כבר קיים כבר בתיקיה זו"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__favorited_ids
+msgid "Favorite of"
+msgstr "מועדף של"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_document__type__binary
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+msgid "File"
+msgstr "קובץ"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__datas
+msgid "File Content (base64)"
+msgstr "תוכן קובץ (base64)"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__raw
+msgid "File Content (raw)"
+msgstr "תוכן קובץ (גלם)"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__file_extension
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "File Extension"
+msgstr "סיומת קובץ"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__file_size
+msgid "File Size"
+msgstr "גודל קובץ"
+
+#. module: documents
+#: model:ir.model,name:documents.model_ir_binary
+msgid "File streaming helper model for controllers"
+msgstr ""
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/controllers/documents.py:0
+#, python-format
+msgid "File uploaded by:"
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.res_config_settings_view_form
+msgid "Files Centralization"
+msgstr "ריכוז קבצים"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_deletion_form
+msgid "Files will be sent to trash and deleted forever after"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/form/folder_form_controller.js:0
+#: code:addons/documents/static/src/views/list/folder_list_controller.js:0
+#, python-format
+msgid "Files will be sent to trash and deleted forever after %s days."
+msgstr ""
+
+#. module: documents
+#: model:documents.folder,name:documents.documents_finance_folder
+msgid "Finance"
+msgstr "כספים"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_documents_financial
+msgid "Financial"
+msgstr "פיננסי"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_documents_fiscal
+msgid "Fiscal"
+msgstr "כספי"
+
+#. module: documents
+#: model:documents.facet,name:documents.documents_finance_fiscal_year
+msgid "Fiscal years"
+msgstr "שנות כספים"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Focus first page of next group"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Focus first page of previous group"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Focus next page"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Focus previous page"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_mail_activity_type__folder_id
+msgid "Folder"
+msgstr "תיקייה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_follower_ids
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_follower_ids
+msgid "Followers"
+msgstr "עוקבים"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_partner_ids
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "עוקבים (לקוחות/ספקים)"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "פונט מדהים למשל עבור משימות fa-tasks"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Future Activities"
+msgstr "פעילויות עתידיות"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#, python-format
+msgid "Gather in one document"
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.format_file_size
+msgid "Gb"
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+#: model_terms:ir.ui.view,arch_db:documents.facet_view_search
+msgid "Group By"
+msgstr "קבץ לפי"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_folder__read_group_ids
+msgid ""
+"Groups able to see the workspace and read its documents without create/edit "
+"rights."
+msgstr ""
+"קבוצות יכולות לראות את סביבת העבודה ולקרוא את המסמכים שלהן ללא הרשאות יצירה "
+"/ עריכה."
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_folder__group_ids
+msgid "Groups able to see the workspace and read/create/edit its documents."
+msgstr ""
+"קבוצות יכולות לראות את סביבת העבודה ולקרוא / ליצור / לערוך את המסמכים שלהן."
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_internal_knowledge_hr
+msgid "HR"
+msgstr "משאבי אנוש"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__has_message
+#: model:ir.model.fields,field_description:documents.field_documents_share__has_message
+msgid "Has Message"
+msgstr "יש הודעה"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: model:ir.model.fields,field_description:documents.field_documents_document__previous_attachment_ids
+#, python-format
+msgid "History"
+msgstr "היסטוריה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__id
+#: model:ir.model.fields,field_description:documents.field_documents_facet__id
+#: model:ir.model.fields,field_description:documents.field_documents_folder__id
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__id
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__id
+#: model:ir.model.fields,field_description:documents.field_documents_share__id
+#: model:ir.model.fields,field_description:documents.field_documents_tag__id
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__id
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__id
+msgid "ID"
+msgstr "מזהה"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_parent_thread_id
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
+msgstr ""
+"מזהה של רשומת האב המחזיקה בכינוי (דוגמה: פרויקט המחזיק בכינוי ליצירת "
+"המשימות)"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_exception_icon
+msgid "Icon"
+msgstr "סמל"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "סמל לציון פעילות חריגה."
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__message_needaction
+#: model:ir.model.fields,help:documents.field_documents_share__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "אם מסומן, הודעות חדשות דורשות את תשומת לבך."
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__message_has_error
+#: model:ir.model.fields,help:documents.field_documents_document__message_has_sms_error
+#: model:ir.model.fields,help:documents.field_documents_share__message_has_error
+#: model:ir.model.fields,help:documents.field_documents_share__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "אם מסומן, בחלק מההודעות קיימת שגיאת משלוח."
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_bounced_content
+msgid ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
+msgstr ""
+"אם מוגדר, תוכן זה יישלח אוטומטית למשתמשים לא מורשים במקום להודעת ברירת "
+"המחדל."
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Image/Video"
+msgstr "תמונה/סרטון"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_marketing_assets_images
+msgid "Images"
+msgstr "תמונות"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_status_inbox
+#: model:documents.tag,name:documents.documents_internal_status_inbox
+#: model:mail.activity.type,name:documents.mail_documents_activity_data_Inbox
+msgid "Inbox"
+msgstr "דואר נכנס"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__include_sub_folders
+msgid "Include Sub Folders"
+msgstr "כלול תיקיות משנה"
+
+#. module: documents
+#: model_terms:documents.folder,description:documents.documents_internal_folder
+msgid ""
+"Incoming letters sent to <span class=\"o_folder_description_alias\">inbox "
+"email alias</span> will be added to your inbox automatically."
+msgstr ""
+"מסמכים שישלחו ל<span class=\"o_folder_description_alias\">תואר נכנס בתיבת "
+"המייל</span> יתווספו אוטומטית לתיבת דואר נכנס."
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__index_content
+msgid "Indexed Content"
+msgstr "תוכן מאונקדס"
+
+#. module: documents
+#: model:documents.folder,name:documents.documents_internal_folder
+msgid "Internal"
+msgstr "פנימי"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__is_editable_attachment
+msgid "Is Editable Attachment"
+msgstr "צרופה שניתן לערוך"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__is_favorited
+msgid "Is Favorited"
+msgstr "מועדף"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_is_follower
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_is_follower
+msgid "Is Follower"
+msgstr "עוקב"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__is_shared
+msgid "Is Shared"
+msgstr "משותף"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__is_multipage
+msgid "Is considered multipage"
+msgstr "נחשב מרובה עמודים"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_model.js:0
+#, python-format
+msgid "Items in trash will be deleted forever after %s days."
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#, python-format
+msgid "Items moved to the trash will be deleted forever after %s days."
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.format_file_size
+msgid "Kb"
+msgstr ""
+
+#. module: documents
+#: model:documents.facet,name:documents.documents_internal_knowledge
+msgid "Knowledge"
+msgstr "ידע"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__write_uid
+#: model:ir.model.fields,field_description:documents.field_documents_facet__write_uid
+#: model:ir.model.fields,field_description:documents.field_documents_folder__write_uid
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__write_uid
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__write_uid
+#: model:ir.model.fields,field_description:documents.field_documents_share__write_uid
+#: model:ir.model.fields,field_description:documents.field_documents_tag__write_uid
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__write_uid
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__write_uid
+msgid "Last Updated by"
+msgstr "עודכן לאחרונה על-ידי"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__write_date
+#: model:ir.model.fields,field_description:documents.field_documents_facet__write_date
+#: model:ir.model.fields,field_description:documents.field_documents_folder__write_date
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__write_date
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__write_date
+#: model:ir.model.fields,field_description:documents.field_documents_share__write_date
+#: model:ir.model.fields,field_description:documents.field_documents_tag__write_date
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__write_date
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__write_date
+msgid "Last Updated on"
+msgstr "עדכון אחרון ב"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Late Activities"
+msgstr "פעילויות באיחור"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_internal_knowledge_legal
+msgid "Legal"
+msgstr "משפטי"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid ""
+"Let's process documents in your Inbox.<br/><i>Tip: Use Tags to filter "
+"documents and structure your process.</i>"
+msgstr ""
+"בואו נעבד מסמכים מתיבת הדואר הנכנס. <br/><i>טיפ: השתמשו בתגיות לסנן מסמכים "
+"ולגבש את תהליך העבודה שלך."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid "Let's process these bills: send to Finance workspace."
+msgstr "בואו נעבד את החשבוניות האלה: שליחה לסביבת העבודה של כספים."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid "Let's process this document, coming from our scanner."
+msgstr "בואו נעבד את המסמך הזה, שבא מהסורק שלנו."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid ""
+"Let's tag this mail as legal<br/> <i>Tips: actions can be tailored to your "
+"process, according to the workspace.</i>"
+msgstr ""
+"בואו נתייג את המייל הזה כמשפטי.<br/><i> טיפ: אפשר להתאים לפי סביבת העבודה את"
+" הפעולות הרלוונטיות לתהליך שלך.</i>"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_folder__user_specific
+msgid "Limit Read Groups to the documents of which they are owner."
+msgstr "הגבל את הקבוצות לקריאה רק למסמכים שבבעלותן."
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_folder__user_specific_write
+msgid "Limit Write Groups to the documents of which they are owner."
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.documents_link_to_record_form_view
+msgid "Link"
+msgstr "קישור"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/controllers/documents.py:0
+#, python-format
+msgid "Link created by:"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_rule__create_model__link_to_record
+msgid "Link to record"
+msgstr "קישור לרשומה"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "Links cannot be shared and therefore will be excluded."
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__state__live
+msgid "Live"
+msgstr "חי"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr "זיהוי נכנסות מבוסס חלק מקומי"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+#, python-format
+msgid "Lock"
+msgstr "נעל"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__is_locked
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Locked"
+msgstr "נעולה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__lock_uid
+msgid "Locked by"
+msgstr "נעול על ידי"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Log a note..."
+msgstr "כתוב הערה..."
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.public_page_layout
+msgid "Login"
+msgstr "התחבר"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.public_page_layout
+msgid "Logout"
+msgstr "התנתק"
+
+#. module: documents
+#: model:documents.workflow.rule,name:documents.documents_rule_internal_mad
+msgid "Mark As Draft"
+msgstr "סמן כטיוטה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__remove_activities
+msgid "Mark all as Done"
+msgstr "סמן הכל כבוצע"
+
+#. module: documents
+#: model:documents.folder,name:documents.documents_marketing_folder
+msgid "Marketing"
+msgstr "שיווק"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.format_file_size
+msgid "Mb"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__activity_note
+msgid "Message"
+msgstr "הודעה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_has_error
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_has_error
+msgid "Message Delivery error"
+msgstr "הודעת שגיאת שליחה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_ids
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_ids
+msgid "Messages"
+msgstr "הודעות"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__mimetype
+msgid "Mime Type"
+msgstr "סוג MIME"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Miscellaneous"
+msgstr "שונות"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__model_id
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Model"
+msgstr "מודל"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__accessible_model_ids
+msgid "Models"
+msgstr "מודלים"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_request_wizard__activity_date_deadline_range_type__months
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__activity_date_deadline_range_type__months
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_rule__activity_date_deadline_range_type__months
+msgid "Months"
+msgstr "חודשים"
+
+#. module: documents
+#: model:documents.workflow.rule,name:documents.documents_rule_finance_mti
+msgid "Move To Inbox"
+msgstr "העבר לתיבת הדואר הנכנס"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Move this page to trash"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__folder_id
+msgid "Move to Workspace"
+msgstr "העבר לסביבת עבודה"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#: code:addons/documents/static/src/views/form/folder_form_controller.js:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: code:addons/documents/static/src/views/list/folder_list_controller.js:0
+#: model_terms:ir.ui.view,arch_db:documents.folder_deletion_form
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+#, python-format
+msgid "Move to trash"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#. odoo-python
+#: code:addons/documents/models/documents_folder.py:0
+#: code:addons/documents/static/src/views/form/folder_form_controller.js:0
+#: code:addons/documents/static/src/views/list/folder_list_controller.js:0
+#, python-format
+msgid "Move to trash?"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector_field.js:0
+#, python-format
+msgid "Multiple values"
+msgstr "ערכים מרובים"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "My Activities"
+msgstr "הפעילויות שלי"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "מועד אחרון לפעילות שלי"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "My Documents"
+msgstr "המסמכים שלי"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "My Favorites"
+msgstr "המועדפים שלי"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__name
+#: model:ir.model.fields,field_description:documents.field_documents_facet__name
+#: model:ir.model.fields,field_description:documents.field_documents_folder__name
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__name
+#: model:ir.model.fields,field_description:documents.field_documents_share__name
+#: model:ir.model.fields,field_description:documents.field_documents_tag__name
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+msgid "Name"
+msgstr "שם"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "Name of the share link"
+msgstr "שם קישור השיתוף"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_panel.xml:0
+#, python-format
+msgid "New"
+msgstr "חדש"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "New File"
+msgstr "קובץ חדש"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "New Group"
+msgstr "קבוצה חדשה"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_panel.js:0
+#, python-format
+msgid "New Tag"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_panel.js:0
+#, python-format
+msgid "New Workspace"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "הפעילות הבאה ביומן"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "מועד אחרון לפעילות הבאה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_summary
+msgid "Next Activity Summary"
+msgstr "תיאור הפעילות הבאה "
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_type_id
+msgid "Next Activity Type"
+msgstr "סוג הפעילות הבאה"
+
+#. module: documents
+#: model_terms:ir.actions.act_window,help:documents.mail_activity_type_action_document
+msgid "No activity types found. Let's create one!"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/helper/documents_action_helper.xml:0
+#, python-format
+msgid "No alias configured"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "No document has been selected"
+msgstr "לא נבחר מסמך"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "No limit"
+msgstr "לא מוגבל"
+
+#. module: documents
+#: model_terms:ir.actions.act_window,help:documents.share_action
+msgid "No shared links"
+msgstr "אין קישורים לשתף"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_document.py:0
+#, python-format
+msgid "Not a file"
+msgstr "לא קובץ"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_document.py:0
+#, python-format
+msgid "Not attached"
+msgstr "לא מצורף"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__activity_note
+msgid "Note"
+msgstr "הערה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_needaction_counter
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_needaction_counter
+msgid "Number of Actions"
+msgstr "מספר פעולות"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__links_count
+msgid "Number of Links"
+msgstr "מספר קישורים"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_has_error_counter
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_has_error_counter
+msgid "Number of errors"
+msgstr "מספר השגיאות"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__message_needaction_counter
+#: model:ir.model.fields,help:documents.field_documents_share__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__message_has_error_counter
+#: model:ir.model.fields,help:documents.field_documents_share__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "מספר הודעות עם שגיאת משלוח"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.public_page_layout
+msgid "Odoo Logo"
+msgstr "לוגו של Odoo"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.public_page_layout
+msgid "Odoo Website"
+msgstr "אתר אינטרנט של Odoo"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__limited_to_single_record
+msgid "One record limit"
+msgstr "הגבלת רשומה אחת"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "Open chatter"
+msgstr "פתח פטפטת"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_force_thread_id
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr ""
+"מזהה אפשרי של שרשור (רשומה) שאליו יצורפו כל ההודעות הנכנסות, גם אם לא השיבו "
+"אליו. אם מוגדר, הדבר יבטל את יצירת הרשומות החדשות לחלוטין."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/helper/documents_action_helper.xml:0
+#, python-format
+msgid "Or send emails to"
+msgstr "או לשלוח מייל ל-"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_internal_knowledge_other
+msgid "Other"
+msgstr "אחר"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__user_specific
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+msgid "Own Documents Only"
+msgstr "מסמכים בבעלות בלבד"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__user_specific_write
+msgid "Own Documents Only (Write)"
+msgstr "רק המסמכים שלך (עריכה)"
+
+#. module: documents
+#: model:ir.model.constraint,message:documents.constraint_documents_folder_check_user_specific
+msgid ""
+"Own Documents Only may not be enabled for write groups if it is not enabled "
+"for read groups."
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__owner_id
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__requestee_id
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__criteria_owner_id
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Owner"
+msgstr "אחראי"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+msgid "Owner: #{document.owner_id.name}"
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "PDF/Document"
+msgstr "PDF/מסמך"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_parent_model_id
+msgid "Parent Model"
+msgstr "מודל אב"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__parent_path
+msgid "Parent Path"
+msgstr "נתיב אב"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_parent_thread_id
+msgid "Parent Record Thread ID"
+msgstr "מזהה רשומת שרשור אב "
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__parent_folder_id
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_search
+msgid "Parent Workspace"
+msgstr "סביבת עבודה אם"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_parent_model_id
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"מודל אב המחזיק בכינוי. המודל המחזיק במזהה לכינוי אינו בהכרח המודל שניתן על "
+"ידי alias_model_id (דוגמה: project (parent_model) ומשימה (model))"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_panel.js:0
+#, python-format
+msgid "Partial transfer"
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.not_available
+msgid "Please contact the person that shared this link for more information."
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
+"מדיניות שליחת הודעה במסמך באמצעות שער הדואר.\n"
+"- כולם: כולם יכולים לשלוח\n"
+"- לקוחות/ספקים: רק לקוחות/ספקים מאומתים\n"
+"- עוקבים: רק עוקבים של המסמך הקשור או חברים בערוצים הבאים\n"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_document__thumbnail_status__present
+msgid "Present"
+msgstr "נוכח"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_internal_template_presentations
+msgid "Presentations"
+msgstr "מצגות"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_internal_template_project
+msgid "Project"
+msgstr "פרויקט"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__rating_ids
+#: model:ir.model.fields,field_description:documents.field_documents_share__rating_ids
+msgid "Ratings"
+msgstr "דירוגים"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+msgid "Read Access"
+msgstr "גישה לקריאה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__read_group_ids
+msgid "Read Groups"
+msgstr "קבוצות קריאה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__resource_ref
+msgid "Record"
+msgstr "רשומה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "מזהה רשומת שרשור"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__domain_folder_id
+msgid "Related Workspace"
+msgstr "סביבת עבודה קשורה"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Remaining Pages"
+msgstr "עמודים שנותרו"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/activity/documents_activity_controller.js:0
+#, python-format
+msgid "Reminder emails have been sent."
+msgstr ""
+
+#. module: documents
+#: model:mail.template,subject:documents.mail_template_document_request_reminder
+msgid ""
+"Reminder to upload your document{{ object.name and ' : ' + object.name or ''"
+" }}"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_action__action__remove
+msgid "Remove"
+msgstr "הסר"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "Replace"
+msgstr "החלף"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_action__action__replace
+msgid "Replace by"
+msgstr "החלף ב"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_controller_mixin.xml:0
+#: model:ir.model.fields.selection,name:documents.selection__documents_document__type__empty
+#: model_terms:ir.ui.view,arch_db:documents.documents_request_form_view
+#, python-format
+msgid "Request"
+msgstr "בקשה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__request_activity_id
+msgid "Request Activity"
+msgstr "פעילות דרושה"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.documents_request_form_view
+msgid "Request To"
+msgstr "בקשה ל"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/web/activity/activity_menu_patch.xml:0
+#, python-format
+msgid "Request a Document"
+msgstr "בקש מסמך"
+
+#. module: documents
+#: model:ir.actions.act_window,name:documents.action_request_form
+msgid "Request a file"
+msgstr "בקש קובץ"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Requested"
+msgstr "מבוקש"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_request_page
+msgid ""
+"Requested\n"
+"                                ∙"
+msgstr ""
+
+#. module: documents
+#: model:mail.activity.type,name:documents.mail_documents_activity_data_md
+msgid "Requested Document"
+msgstr "מסמך מבוקש"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__required_tag_ids
+msgid "Required Tags"
+msgstr "תגיות דרושות"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__res_model_name
+msgid "Res Model Name"
+msgstr "שם מודל Res"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__res_id
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__res_id
+msgid "Resource ID"
+msgstr "מזהה משאב"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__res_model
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__res_model
+msgid "Resource Model"
+msgstr "מודל המשאב"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__res_name
+msgid "Resource Name"
+msgstr "שם המשאב"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__activity_user_id
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__activity_user_id
+msgid "Responsible"
+msgstr "אחראי"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__activity_user_id
+msgid "Responsible User"
+msgstr "משתמש אחראי"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/form/folder_form_controller.js:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: code:addons/documents/static/src/views/list/folder_list_controller.js:0
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+#, python-format
+msgid "Restore"
+msgstr "שחזר"
+
+#. module: documents
+#: code:addons/documents/models/folder.py:0
+#, python-format
+msgid "Restricted Folder"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__message_has_sms_error
+#: model:ir.model.fields,field_description:documents.field_documents_share__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "שגיאה בשליחת SMS"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_internal_knowledge_sales
+msgid "Sales"
+msgstr "מכירות"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+#: model_terms:ir.ui.view,arch_db:documents.tag_view_form
+msgid "Save"
+msgstr "שמור"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__activity_option
+msgid "Schedule Activity"
+msgstr "תזמן פעילות"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/kanban/documents_kanban_renderer.js:0
+#: code:addons/documents/static/src/views/list/documents_list_renderer.js:0
+#, python-format
+msgid "Select all"
+msgstr "בחירת הכל"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select focused page"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select next page"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select next pages of the group"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select previous page"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select previous pages of the group"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "Select/Deselect all pages"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid "Send this letter to the legal department, by assigning the right tags."
+msgstr "שליחת המכתב הזה למחלקה המשפטית, באמצעות הגדרת התווית הנכונה."
+
+#. module: documents
+#: model:documents.workflow.rule,name:documents.documents_rule_internal_legal
+msgid "Send to Legal"
+msgstr "שליחה למשפטי"
+
+#. module: documents
+#: model:mail.template,description:documents.mail_template_document_request
+msgid "Sent to partner when requesting a document from them"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_facet__sequence
+#: model:ir.model.fields,field_description:documents.field_documents_folder__sequence
+#: model:ir.model.fields,field_description:documents.field_documents_tag__sequence
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__sequence
+msgid "Sequence"
+msgstr "רצף"
+
+#. module: documents
+#: model:documents.workflow.rule,name:documents.documents_rule_finance_2018contracts
+msgid "Set As 2024 Contracts"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__partner_id
+msgid "Set Contact"
+msgstr "הגדר איש קשר"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__user_id
+msgid "Set Owner"
+msgstr "הגדר בעלים"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__tag_action_ids
+msgid "Set Tags"
+msgstr "הגדר תגיות"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.res_config_settings_view_form
+msgid "Set deletion delay for documents in the Trash"
+msgstr "הגדר עיכוב מחיקה עבור מסמכים באשפה"
+
+#. module: documents
+#: model:mail.template,description:documents.mail_template_document_request_reminder
+msgid ""
+"Set reminders in activities to notify users who didn't upload their "
+"requested document"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__has_owner_activity
+msgid "Set the activity on the document owner"
+msgstr "הגדרת הפעילות על הבעלים של המסמך"
+
+#. module: documents
+#: model:ir.actions.act_window,name:documents.configuration_action
+#: model:ir.actions.act_window,name:documents.settings_action
+#: model:ir.ui.menu,name:documents.settings_menu
+msgid "Settings"
+msgstr "הגדרות"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_controller_mixin.xml:0
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+#, python-format
+msgid "Share"
+msgstr "שתף"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__share_link_ids
+msgid "Share Links"
+msgstr "שתף קישורים"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/controllers/documents.py:0
+#, python-format
+msgid "Share link"
+msgstr "שתף קישור"
+
+#. module: documents
+#: model:ir.actions.act_window,name:documents.share_action
+msgid "Share links"
+msgstr "שתף קישורים"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_share.py:0
+#, python-format
+msgid "Share selected files"
+msgstr ""
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_share.py:0
+#, python-format
+msgid "Share selected workspace"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_controller_mixin.xml:0
+#, python-format
+msgid "Share this domain"
+msgstr "שתף דומיין זה"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "Share this selection"
+msgstr "שתף בחירה זו"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__type
+msgid "Share type"
+msgstr "סוג שיתוף"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__create_share_id
+msgid "Share used to create this document"
+msgstr "שיתוף היה בשימוש ליצירת מסמך זה"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "Shared"
+msgstr "משותף"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__document_ids
+msgid "Shared Documents"
+msgstr "מסמכים משותפים"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__tag_ids
+msgid "Shared Tags"
+msgstr "תגיות משותפות"
+
+#. module: documents
+#: model:ir.ui.menu,name:documents.share_menu
+msgid "Shares & Emails"
+msgstr "שתף קישורים"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Show all records which has next action date is before today"
+msgstr "הצג את כל הרשומות שתאריך הפעולה הבא שלהן הוא עד היום"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "Size"
+msgstr "גודל"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_files_page
+msgid "Size:"
+msgstr "גודל:"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/hooks.js:0
+#, python-format
+msgid "Some files could not be uploaded (max size: %s)."
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.not_available
+msgid "Sorry, this link is no longer valid."
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__link_model
+msgid "Specific Model Linked"
+msgstr "מודל מסויים שמקושר"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "Split"
+msgstr "פצל"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/attachments/document_file_viewer.xml:0
+#: code:addons/documents/static/src/attachments/document_file_viewer.xml:0
+#, python-format
+msgid "Split PDF"
+msgstr "פיצול PDF"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.xml:0
+#, python-format
+msgid "Split selected pages"
+msgstr ""
+
+#. module: documents
+#: model:documents.facet,name:documents.documents_finance_status
+#: model:documents.facet,name:documents.documents_internal_status
+#: model:ir.model.fields,field_description:documents.field_documents_share__state
+msgid "Status"
+msgstr "סטטוס"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"סטטוס על בסיס פעילויות\n"
+"איחור: תאריך היעד כבר חלף\n"
+"היום: תאריך הפעילות הוא היום\n"
+"מתוכנן: פעילויות עתידיות."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#, python-format
+msgid "Stay here"
+msgstr "השאר בדף זה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__children_folder_ids
+msgid "Sub workspaces"
+msgstr "תתי סביבות עבודה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__activity_summary
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__activity_summary
+msgid "Summary"
+msgstr "תקציר"
+
+#. module: documents
+#: model:ir.model,name:documents.model_documents_tag
+#: model:ir.model.fields,field_description:documents.field_documents_facet__tag_ids
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__tag_id
+#: model:ir.model.fields,field_description:documents.field_mail_activity_type__tag_ids
+#: model_terms:ir.ui.view,arch_db:documents.tag_view_search
+msgid "Tag"
+msgstr "תגית"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__facet_ids
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_tree
+msgid "Tag Categories"
+msgstr "קטגוריות תגיות"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.facet_view_form
+msgid "Tag Category"
+msgstr "קטגוריית תגית"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.tag_view_form
+msgid "Tag Name"
+msgstr "שם תגית"
+
+#. module: documents
+#: model:ir.model.constraint,message:documents.constraint_documents_tag_facet_name_unique
+msgid "Tag already exists for this facet"
+msgstr "תגית כבר קיימת"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_folder__facet_ids
+msgid "Tag categories defined for this workspace"
+msgstr "קטגוריות תגיות שהוגדרו עבור סביבת עבודה זו"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: model:ir.actions.act_window,name:documents.facet_action
+#: model:ir.model.fields,field_description:documents.field_documents_document__tag_ids
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__tag_ids
+#: model:ir.ui.menu,name:documents.category_menu
+#: model_terms:ir.ui.view,arch_db:documents.facet_view_form
+#: model_terms:ir.ui.view,arch_db:documents.facet_view_tree
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+#, python-format
+msgid "Tags"
+msgstr "תגיות"
+
+#. module: documents
+#: model:documents.facet,name:documents.documents_internal_template
+msgid "Templates"
+msgstr "תבניות"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_internal_template_text
+msgid "Text"
+msgstr "טקסט"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_facet__tooltip
+msgid "Text shown when hovering on this tag category or its tags"
+msgstr "טקסט שמוצג בעת סימון קטגוריית תגיות זו או תגיות שלה"
+
+#. module: documents
+#: model:ir.model.constraint,message:documents.constraint_res_config_settings_check_deletion_delay
+msgid "The deletion delay should be positive."
+msgstr "עיכוב המחיקה צריך להיות חיובי."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/hooks.js:0
+#, python-format
+msgid "The links and requested documents are not shareable."
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_model_id
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
+msgstr ""
+"המודל (סוג מסמך Odoo) שאליו הכינוי הזה תואם. כל דוא\"ל נכנס שלא יענה לרשומה "
+"קיימת יביא ליצירת רשומה חדשה של מודל זה (למשל משימת פרויקט)"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_share__alias_name
+msgid ""
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
+msgstr ""
+"שם כינוי הדוא\"ל, למשל 'עבודות' אם ברצונך לקבל הודעות דוא\"ל ל "
+"<jobs@example.odoo.com>"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/hooks.js:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.js:0
+#, python-format
+msgid "The share url has been copied to your clipboard."
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.js:0
+#, python-format
+msgid "The share url has been copied to your clipboard. Links were excluded."
+msgstr ""
+
+#. module: documents
+#: model:ir.model.constraint,message:documents.constraint_documents_share_share_unique
+msgid "This access token already exists"
+msgstr "אסימון גישה זה כבר קיים"
+
+#. module: documents
+#: model:ir.model.constraint,message:documents.constraint_documents_document_attachment_unique
+msgid "This attachment is already a document"
+msgstr "קובץ מצורף זה הוא כבר מסמך"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__group_ids
+msgid "This attachment will only be available for the selected user groups"
+msgstr "קובץ מצורף זה יהיה זמין רק עבור קבוצות המשתמשים שנבחרו"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_request_page
+msgid ""
+"This document has been requested.\n"
+"                <b onclick=\"document.querySelector('.o_request_upload').click()\" style=\"cursor:pointer;\">Upload it</b>."
+msgstr ""
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_document.py:0
+#, python-format
+msgid "This file has been restored"
+msgstr ""
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_document.py:0
+#, python-format
+msgid ""
+"This file has been sent to the trash and will be deleted forever on the %s"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__company_id
+#: model:ir.model.fields,help:documents.field_documents_folder__company_id
+msgid "This workspace will only be available to the selected company"
+msgstr "סביבת עבודה זו תהיה זמינה רק לחברה שנבחרה"
+
+#. module: documents
+#: model_terms:ir.actions.act_window,help:documents.mail_activity_type_action_document
+msgid ""
+"Those represent the different categories of things you have to do (e.g. "
+"\"Call\" or \"Send email\")."
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__thumbnail
+msgid "Thumbnail"
+msgstr "תמונה ממוזערת"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__thumbnail_status
+msgid "Thumbnail Status"
+msgstr "סטטוס תמונה ממוזערת"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/helper/documents_action_helper.xml:0
+#, python-format
+msgid "Tip: configure your scanner to send all documents to this address."
+msgstr "טיפ: הגדר את הסורק שלך לשלוח את כל המסמכים לכתובת זו."
+
+#. module: documents
+#: model:digest.tip,name:documents.digest_tip_documents_0
+msgid "Tip: Become a paperless company"
+msgstr "טיפ: הפכו לחברה נטולת-נייר."
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_status_tc
+#: model:documents.tag,name:documents.documents_internal_status_tc
+msgid "To Validate"
+msgstr "לאישור"
+
+#. module: documents
+#: model:mail.activity.type,name:documents.mail_documents_activity_data_tv
+msgid "To validate"
+msgstr "לאישור"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Today Activities"
+msgstr "פעילויות היום"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_controller_mixin.xml:0
+#, python-format
+msgid "Toggle Dropdown"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/kanban/documents_kanban_renderer.js:0
+#, python-format
+msgid "Toggle favorite"
+msgstr "החלף מועדפים"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_facet__tooltip
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_rule__note
+#: model_terms:ir.ui.view,arch_db:documents.facet_view_form
+msgid "Tooltip"
+msgstr "הסבר"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_model.js:0
+#, python-format
+msgid "Trash"
+msgstr "אשפה"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__is_editable_attachment
+msgid "True if we can edit the link attachment."
+msgstr "נכון אם אפשר לערוך את הקישור לצרופה."
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__type
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+msgid "Type"
+msgstr "סוג"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "סוג הפעילות החריגה ברשומה."
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__url
+#: model:ir.model.fields,field_description:documents.field_documents_share__full_url
+#: model:ir.model.fields.selection,name:documents.selection__documents_document__type__url
+#: model_terms:ir.ui.view,arch_db:documents.document_view_search
+#: model_terms:ir.ui.view,arch_db:documents.documents_upload_url_view
+msgid "URL"
+msgstr "URL"
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_document.py:0
+#, python-format
+msgid ""
+"URL %s does not seem complete, as it does not begin with http(s):// or "
+"ftp://"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__url_preview_image
+msgid "URL Preview Image"
+msgstr "תמונה מקדימה של כתובת URL"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.document_view_form
+msgid "Unlock"
+msgstr "שחרר נעילה"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_model_mixin.js:0
+#, python-format
+msgid "Unnamed"
+msgstr "ללא שם"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_controller_mixin.xml:0
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+#, python-format
+msgid "Upload"
+msgstr "העלה"
+
+#. module: documents
+#: model_terms:ir.actions.act_window,help:documents.document_action
+msgid ""
+"Upload <span class=\"fw-normal\">a file or</span> drag <span class=\"fw-"
+"normal\">it here.</span>"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "Upload Document"
+msgstr "העלאת מסמך"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__email_drop
+msgid "Upload by Email"
+msgstr "העלה ע\"י דוא\"ל"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "Upload by email"
+msgstr ""
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/mail_activity.py:0
+#, python-format
+msgid "Upload file request"
+msgstr "בקשה להעלאת קובץ"
+
+#. module: documents
+#: model:ir.model,name:documents.model_res_users
+#: model:res.groups,name:documents.group_documents_user
+msgid "User"
+msgstr "משתמש"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_documents_vat
+msgid "VAT"
+msgstr "ח.פ / ע.מ"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_share__date_deadline
+msgid "Valid Until"
+msgstr "בתוקף עד"
+
+#. module: documents
+#: model:documents.workflow.rule,name:documents.documents_rule_finance_validate
+msgid "Validate"
+msgstr "אשר"
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_finance_status_validated
+#: model:documents.tag,name:documents.documents_internal_status_validated
+msgid "Validated"
+msgstr "אושרה"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_files_page
+msgid "Validity date:"
+msgstr ""
+
+#. module: documents
+#: model:documents.tag,name:documents.documents_marketing_assets_Videos
+msgid "Videos"
+msgstr "סרטונים"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid ""
+"Want to become a <b>paperless company</b>? Let's discover Odoo Documents."
+msgstr "רוצה להפוך לארגון <b>נטול ניירת</b>? בואו לגלות את Odoo מסמכים."
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__website_message_ids
+#: model:ir.model.fields,field_description:documents.field_documents_share__website_message_ids
+msgid "Website Messages"
+msgstr "הודעות מאתר האינטרנט"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__website_message_ids
+#: model:ir.model.fields,help:documents.field_documents_share__website_message_ids
+msgid "Website communication history"
+msgstr "היסטורית התקשרויות מאתר האינטרנט"
+
+#. module: documents
+#: model:ir.model.fields.selection,name:documents.selection__documents_request_wizard__activity_date_deadline_range_type__weeks
+#: model:ir.model.fields.selection,name:documents.selection__documents_share__activity_date_deadline_range_type__weeks
+#: model:ir.model.fields.selection,name:documents.selection__documents_workflow_rule__activity_date_deadline_range_type__weeks
+msgid "Weeks"
+msgstr "שבועות"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_exit_dialog/pdf_exit_dialog.xml:0
+#, python-format
+msgid "What do you want to do with the remaining pages ?"
+msgstr ""
+
+#. module: documents
+#: model:ir.actions.act_window,name:documents.workflow_rule_action
+msgid "Workflow Actions"
+msgstr "פעולות תהליך עבודה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_workflow_action__workflow_rule_id
+msgid "Workflow Rule"
+msgstr "כלל תהליך עבודה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_document__folder_id
+#: model:ir.model.fields,field_description:documents.field_documents_facet__folder_id
+#: model:ir.model.fields,field_description:documents.field_documents_request_wizard__folder_id
+#: model:ir.model.fields,field_description:documents.field_documents_share__folder_id
+#: model:ir.model.fields,field_description:documents.field_documents_tag__folder_id
+#: model_terms:ir.ui.view,arch_db:documents.facet_view_search
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_tree
+msgid "Workspace"
+msgstr "סביבת עבודה"
+
+#. module: documents
+#: model:ir.actions.act_window,name:documents.folder_action
+#: model:ir.ui.menu,name:documents.folder_menu
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_tree
+msgid "Workspaces"
+msgstr "סביבות עבודה"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/js/tours/documents.js:0
+#, python-format
+msgid ""
+"Wow... 6 documents processed in a few seconds, You're good.<br/>The tour is "
+"complete. Try uploading your own documents now."
+msgstr ""
+"וואו... עיבדת 6 מסמכים בכמה שניות, כל הכבוד. <br/>המדריך הסתיים. כדאי לנסות "
+"להעלות בעצמך מסמך עכשיו."
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+msgid "Write Access"
+msgstr "גישה לכתיבה"
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_folder__group_ids
+msgid "Write Groups"
+msgstr "קבוצות כתיבה"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "Write a tooltip for the action here"
+msgstr "כתוב כאן הסבר לפעולה"
+
+#. module: documents
+#: model:ir.model.fields,help:documents.field_documents_document__attachment_type
+msgid ""
+"You can either upload a file from your computer or copy/paste an internet "
+"link to your file."
+msgstr "ניתן להעלות קובץ מהמחשב או להעתיק / להדביק קישור מהאינטרנט לקובץ שלך."
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/documents_controller_mixin.xml:0
+#, python-format
+msgid "You cannot upload content in this workspace"
+msgstr ""
+
+#. module: documents
+#. odoo-python
+#: code:addons/documents/models/documents_document.py:0
+#, python-format
+msgid "You don't have the right to move documents to that workspace."
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/search/documents_search_panel.js:0
+#, python-format
+msgid "You don't have the rights to move documents to that workspace"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/helper/documents_drop_zone.xml:0
+#, python-format
+msgid "You must be in a specific workspace to upload files"
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "Youtube Video"
+msgstr "סרטון יוטיוב"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_deletion_form
+msgid "days."
+msgstr ""
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "delete"
+msgstr "מחק"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "document"
+msgstr "מסמך"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+#, python-format
+msgid "documents"
+msgstr "מסמכים"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "documents selected"
+msgstr "מסמכים שנבחרו"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "download"
+msgstr "הורדה"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "e.g. Discuss proposal"
+msgstr "למשל: לדון בהצעה"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.folder_view_form
+msgid "e.g. Finance"
+msgstr "לדוג' כספים"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.documents_request_form_view
+msgid "e.g. Missing Expense"
+msgstr "לדוג' הוצאה חסרה"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.facet_view_form
+msgid "e.g. Status"
+msgstr "לדוג' סטטוס"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.tag_view_form
+msgid "e.g. To Validate"
+msgstr "לדוג' לאישור"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.workflow_rule_form_view
+msgid "e.g. Validate document"
+msgstr "לדוג' אישור מסמך"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form
+#: model_terms:ir.ui.view,arch_db:documents.share_view_form_popup
+msgid "e.g. domain.com"
+msgstr ""
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.documents_upload_url_view
+msgid "e.g. https://www.youtube.com/watch?v=CP96yVnXNrY"
+msgstr "לדוג' https://www.youtube.com/watch?v=CP96yVnXNrY"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "file_extension"
+msgstr "סיומת קובץ"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.share_files_page
+msgid "files"
+msgstr ""
+
+#. module: documents
+#: model:ir.model.fields,field_description:documents.field_documents_link_to_record_wizard__is_readonly_model
+msgid "is_readonly_model"
+msgstr "is_readonly_model"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "restore"
+msgstr "שחזור"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_page/pdf_page.xml:0
+#: code:addons/documents/static/src/owl/components/pdf_page/pdf_page.xml:0
+#, python-format
+msgid "select"
+msgstr "בחירה"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/inspector/documents_inspector.xml:0
+#, python-format
+msgid "selected"
+msgstr "נבחר"
+
+#. module: documents
+#: model_terms:ir.ui.view,arch_db:documents.public_page_layout
+#: model_terms:ir.ui.view,arch_db:documents.share_workspace_page
+msgid "shared by"
+msgstr "שותף על ידי"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/views/hooks.js:0
+#, python-format
+msgid "status code: %s, message: %s"
+msgstr "קוד סטטוס: %s, הודעה: %s"
+
+#. module: documents
+#. odoo-javascript
+#: code:addons/documents/static/src/owl/components/pdf_manager/pdf_manager.js:0
+#, python-format
+msgid "unnamed"
+msgstr "ללא שם"

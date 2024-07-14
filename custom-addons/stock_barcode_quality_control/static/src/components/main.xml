@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="stock_barcode.MainComponent" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('o_validate_page')]" position="after">
+            <button t-if="hasQualityChecksTodo" t-on-click="checkQuality"
+                class="btn btn-success text-uppercase o_check_quality"
+                t-esc="'Quality Checks'"/>
+        </xpath>
+    </t>
+
+</templates>

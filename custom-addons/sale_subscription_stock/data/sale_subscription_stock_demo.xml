@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Recurring storable products -->
+
+        <record id="mug_order_pricing_1" model="sale.subscription.pricing">
+            <field name="plan_id" ref="sale_subscription.subscription_plan_month"/>
+            <field name="price" eval="10"/>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <record id="mug_order_pricing_2" model="sale.subscription.pricing">
+            <field name="plan_id" ref="sale_subscription.subscription_plan_6_month"/>
+            <field name="price" eval="10"/>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <record id="mug_order_pricing_3" model="sale.subscription.pricing">
+            <field name="plan_id" ref="sale_subscription.subscription_plan_year"/>
+            <field name="price" eval="10"/>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <record id="product_recurring_mug" model="product.product">
+            <field name="name">Plastic Mug (SUB)</field>
+            <field name="recurring_invoice">True</field>
+            <field name="categ_id" ref="product.product_category_1"/>
+            <field name="type">product</field>
+            <field name="list_price">0.0</field>
+            <field name="invoice_policy">order</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="product_subscription_pricing_ids"
+                   eval="[(6,0,[ref('mug_order_pricing_1'), ref('mug_order_pricing_2'), ref('mug_order_pricing_3')])]"/>
+        </record>
+
+        <record id="stock_inventory_mug" model="stock.quant" forcecreate="0">
+            <field name="product_id" ref="product_recurring_mug"/>
+            <field name="inventory_quantity">25.0</field>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+
+        <function model="stock.quant" name="action_apply_inventory">
+            <function eval="[[('id', '=', ref('stock_inventory_mug'))]]" model="stock.quant" name="search"/>
+        </function>
+
+    </data>
+</odoo>

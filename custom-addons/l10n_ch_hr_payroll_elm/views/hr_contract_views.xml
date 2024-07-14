@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit.l10n.ch.hr.payroll</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <div name="hourly_wage" position="after">
+                <label for="l10n_ch_lesson_wage" invisible="wage_type != 'hourly' or country_code != 'CH'"/>
+                <div class="o_row mw-50" name="l10n_ch_lesson_wage" invisible="wage_type != 'hourly' or country_code != 'CH'">
+                    <field name="l10n_ch_lesson_wage" nolabel="1"/>
+                    <span>CFH / lesson</span>
+                </div>
+            </div>
+            <field name="l10n_ch_thirteen_month" position="after">
+                <label for="l10n_ch_contractual_13th_month_rate" invisible="wage_type != 'hourly' or country_code != 'CH'"/>
+                <div class="o_row mw-50" name="l10n_ch_contractual_13th_month_rate" invisible="wage_type != 'hourly' or country_code != 'CH'">
+                    <field name="l10n_ch_contractual_13th_month_rate" nolabel="1"/>
+                    <span>%</span>
+                </div>
+                <field name="l10n_ch_yearly_holidays"/>
+                <field name="l10n_ch_yearly_paid_public_holidays"/>
+                <field name="l10n_ch_lpp_not_insured"/>
+                <field name="l10n_ch_has_withholding_tax" invisible="1"/>
+            </field>
+            <field name="l10n_ch_social_insurance_id" position="before">
+                <field name="l10n_ch_location_unit_id"/>
+                <field name="l10n_ch_avs_status"/>
+            </field>
+            <group name="ch_salary_insurances" position="after">
+                <group name="is_additional_info" string="IS Additional Info" invisible="country_code != 'CH' or not l10n_ch_has_withholding_tax">
+                    <field name="l10n_ch_monthly_effective_days"/>
+                    <field name="l10n_ch_is_model"/>
+                    <field name="l10n_ch_other_employers"/>
+                    <field name="l10n_ch_other_employers_occupation_rate"/>
+                    <field name="l10n_ch_total_occupation_rate"/>
+                    <field name="l10n_ch_is_predefined_category"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,1645 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_pe_edi
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-01-22 13:28+0000\n"
+"PO-Revision-Date: 2021-01-22 13:28+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_res_config_settings__l10n_pe_edi_provider
+msgid ""
+"\n"
+"        Selector for the service we are going to use to report the invoices:\n"
+"\n"
+"        - IAP: This is an odoo service that will send the unsigned documents to a PSE and process their response.\n"
+"\n"
+"        - DIGIFLOW: With the certified that digiflow provide you, user and password you will report the invoices to them.\n"
+"\n"
+"        - SUNAT: You will report the invoices directly to them using your own certified, user and password.\n"
+"\n"
+"        "
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.pe_ubl_2_1_common
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.pe_ubl_2_1_void_documents
+msgid "#SignVX"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.actions.server,name:l10n_pe_edi.ir_cron_load_sii_xsd_files_ir_actions_server
+#: model:ir.cron,cron_name:l10n_pe_edi.ir_cron_load_sii_xsd_files
+#: model:ir.cron,name:l10n_pe_edi.ir_cron_load_sii_xsd_files
+msgid "0. Cron Job - Load XSD Files (Peruvian)"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.pe_ubl_2_1_void_documents
+msgid "1.0"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.pe_ubl_2_1_common
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.pe_ubl_2_1_void_documents
+msgid "2.0"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.pe_ubl_2_1_common
+msgid "2.1"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.report_invoice_document
+msgid "<b>SON:</b>"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.res_config_settings_form_inherit_l10n_pe_edi
+msgid ""
+"<br/>\n"
+"                                How do you get it?:"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.res_config_settings_form_inherit_l10n_pe_edi
+msgid "<span class=\"o_form_label mt16\">SOL Credentials</span>"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__015
+msgid "Abonos, cueros y pieles de origen animal"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model,name:l10n_pe_edi.model_account_move_reversal
+msgid "Account Move Reversal"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__016
+msgid "Aceite de pescado"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model,name:l10n_pe_edi.model_account_debit_note
+msgid "Add Debit Note wizard"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_res_company__l10n_pe_edi_address_type_code
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.res_company_form_inherit_l10n_pe_edi
+msgid "Address Type Code"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_refund_reason__11
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_reversal__l10n_pe_edi_refund_reason__11
+msgid "Adjust in the exportation operation"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_refund_reason__12
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_reversal__l10n_pe_edi_refund_reason__12
+msgid "Adjust of IVAP"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_debit_note__l10n_pe_edi_charge_reason__12
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_charge_reason__12
+msgid "Adjustments affecting the IVAP"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_debit_note__l10n_pe_edi_charge_reason__11
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_charge_reason__11
+msgid "Adjustments of export operations"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_legend__2004
+msgid "Agencia de Viaje - Paquete turístico"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__003
+msgid "Alcohol etílico"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__006
+msgid "Algodón"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__029
+msgid "Algodón en rama sin desmontar"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "All invoices sharing the same CDR number (%s) must be processed at once"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move_line__l10n_pe_edi_allowance_charge_reason_code
+msgid "Allowance or Charge reason"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__013
+msgid "Animales vivos"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__009
+msgid "Arena y piedra"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__019
+msgid "Arrendamiento de bienes muebles"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:product.product,name:l10n_pe_edi.product_product_IVAP_1
+#: model:product.template,name:l10n_pe_edi.product_product_IVAP_1_product_template
+msgid "Arroz descascarillado (arroz cargo o arroz pardo)"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:product.product,name:l10n_pe_edi.product_product_IVAP_2
+#: model:product.template,name:l10n_pe_edi.product_product_IVAP_2_product_template
+msgid "Arroz semiblanqueado o blanqueado , incluso pulido o glaseado"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model,name:l10n_pe_edi.model_ir_attachment
+msgid "Attachment"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__001
+msgid "Azúcar"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_legend__2001
+msgid "BIENES TRANSFERIDOS EN LA AMAZONÍA REGIÓN SELVAPARA SER CONSUMIDOS EN LA MISMA"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__040
+msgid "Bien inmueble gravado con IGV"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__011
+msgid "Bienes del inciso A) del Apéndice I de la Ley del IGV"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__035
+msgid "Bienes exonerados del IGV"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_reversal__l10n_pe_edi_refund_reason__08
+msgid "Bonification"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_refund_reason__08
+msgid "Bonus"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_legend__2000
+msgid "COMPROBANTE DE PERCEPCIÓN"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_legend__2003
+msgid "CONTRATOS DE CONSTRUCCIÓN EJECUTADOS EN LA AMAZONÍA REGIÓN SELVA"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.invoice_cancel_wizard_view
+msgid "Cancel"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.actions.act_window,name:l10n_pe_edi.action_l10n_pe_edi_cancel
+msgid "Cancel Invoice"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_bank_statement_line__l10n_pe_edi_cancel_reason
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move__l10n_pe_edi_cancel_reason
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_payment__l10n_pe_edi_cancel_reason
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_cancel__l10n_pe_edi_cancel_reason
+msgid "Cancel Reason"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.invoice_cancel_wizard_view
+msgid "Cancel invoice"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_refund_reason__02
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_reversal__l10n_pe_edi_refund_reason__02
+msgid "Cancellation by error in the RUC"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "Cancellation is in progress in the government side (CDR number: %s)."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_refund_reason__01
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_reversal__l10n_pe_edi_refund_reason__01
+msgid "Cancellation of the operation"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__014
+msgid "Carnes y despojos comestibles"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_move_line__l10n_pe_edi_allowance_charge_reason_code
+msgid "Catalog 53 of possible reasons of discounts"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_product_product__l10n_pe_withhold_code
+#: model:ir.model.fields,help:l10n_pe_edi.field_product_template__l10n_pe_withhold_code
+msgid "Catalog No. 54 SUNAT, used functionally to document in the printed document on invoices that need to have the proper SPOT text"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__007
+msgid "Caña de azúcar"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "CDR status:"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_certificate__content
+msgid "Certificate"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_res_company__l10n_pe_edi_certificate_id
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_res_config_settings__l10n_pe_edi_certificate_id
+msgid "Certificate (PE)"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.ui.menu,name:l10n_pe_edi.menu_l10n_pe_edi_certificates
+msgid "Certificates"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.actions.act_window,name:l10n_pe_edi.l10n_pe_edi_certificate_action
+msgid "Certificates for EDI invoices on Peru"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "Check that the VAT set in the company is correct, this error generally happen when you did not set a proper VAT in the company, go to company form and set it properly.."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "Check your firewall parameters, it is not being possible to connect with server to sign invoices."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "Check your tax configuration, go to Configuration -> Taxes and set the field 'Affectation reason' to set it by default or set the proper value in the field Affect. Reason in the line"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_res_company__l10n_pe_edi_address_type_code
+msgid "Code of the establishment that SUNAT has registered."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__024
+msgid "Comisión mercantil"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model,name:l10n_pe_edi.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_certificate__company_id
+msgid "Company"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model,name:l10n_pe_edi.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__030
+msgid "Contratos de construcción"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_refund_reason__03
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_reversal__l10n_pe_edi_refund_reason__03
+msgid "Correction by error in the description"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.actions.act_window,help:l10n_pe_edi.l10n_pe_edi_certificate_action
+msgid "Create the first certificate"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_cancel__create_uid
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_certificate__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_cancel__create_date
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_certificate__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_bank_statement_line__l10n_pe_edi_refund_reason
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move__l10n_pe_edi_refund_reason
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move_reversal__l10n_pe_edi_refund_reason
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_payment__l10n_pe_edi_refund_reason
+msgid "Credit Reason"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_certificate__date_end
+msgid "Date End"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_certificate__date_start
+msgid "Date Start"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_bank_statement_line__l10n_pe_edi_charge_reason
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_debit_note__l10n_pe_edi_charge_reason
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move__l10n_pe_edi_charge_reason
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_payment__l10n_pe_edi_charge_reason
+msgid "Debit Reason"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_refund_reason__09
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_reversal__l10n_pe_edi_refund_reason__09
+msgid "Decrease in value"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_debit_note__l10n_pe_edi_charge_reason__01
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_charge_reason__01
+msgid "Default interest"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_bank_statement_line__l10n_pe_edi_operation_type
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_move__l10n_pe_edi_operation_type
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_payment__l10n_pe_edi_operation_type
+msgid "Defines the operation type, all the options can be used for all the document types, except '[0113] Internal Sale-NRUS' that is for document type 'Boleta' and '[0112] Internal Sale - Sustains Natural Person Deductible Expenses' exclusive for document type 'Factura'It can't be changed after validation. This is an optional feature added to avoid a warning. Catalog No. 51"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__037
+msgid "Demás servicios gravados con el IGV"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__res_company__l10n_pe_edi_provider__digiflow
+msgid "Digiflow"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.view_move_form
+msgid "Disc. Code"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_refund_reason__05
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_reversal__l10n_pe_edi_refund_reason__05
+msgid "Discount per item"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_debit_note__display_name
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_edi_format__display_name
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_journal__display_name
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move_reversal__display_name
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_tax__display_name
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_tax_group__display_name
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_cancel__display_name
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_certificate__display_name
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_product_template__display_name
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_uom_uom__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move_line__l10n_pe_edi_affectation_reason
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_tax__l10n_pe_edi_affectation_reason
+msgid "EDI Affect. Reason"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_tax_group__l10n_pe_edi_code
+msgid "EDI Code"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_tax__l10n_pe_edi_international_code
+msgid "EDI International Code"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model,name:l10n_pe_edi.model_account_edi_format
+msgid "EDI format"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_legend__2011
+msgid "EXPORTACION DE SERVICIOS - DECRETO LEGISLATIVO Nº 919"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_res_company__l10n_pe_edi_provider
+msgid "Electronic Service Provider (ESP)"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__018
+msgid "Embarcaciones pesqueras"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_res_company__l10n_pe_edi_test_env
+#: model:ir.model.fields,help:l10n_pe_edi.field_res_config_settings__l10n_pe_edi_test_env
+msgid "Enable the use of test credentials"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:product.product,description:l10n_pe_edi.product_product_IVAP_1
+#: model:product.product,description:l10n_pe_edi.product_product_IVAP_2
+#: model:product.product,description:l10n_pe_edi.product_product_IVAP_3
+#: model:product.template,description:l10n_pe_edi.product_product_IVAP_1_product_template
+#: model:product.template,description:l10n_pe_edi.product_product_IVAP_2_product_template
+#: model:product.template,description:l10n_pe_edi.product_product_IVAP_3_product_template
+msgid "Es el Impuesto que deben pagar todas las personas que realizan la primera venta de arroz pilado en el país. También grava la importación definitiva de arroz pilado y de las siguientes variedades: arroz descascarillado (arroz cargo o arroz pardo), arroz semiblanqueado o blanqueado, incluso pulido o glaseado, arroz partido, salvados, moyuelos y demás residuos del cernido, de la molienda, incluido \"pellets\" de arroz. https://orientacion.sunat.gob.pe/index.php/empresas-menu/otros-tributos/ivap/3410-01-concepto-y-operaciones-gravadas-ivap"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "Error requesting CDR status:"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__033
+msgid "Espárragos"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__21
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__21
+msgid "Exonerated- Free Transfer"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__20
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__20
+msgid "Exonerated- Onerous Operation"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__40
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__40
+msgid "Exportation"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__025
+msgid "Fabricación de bienes por encargo"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "For invoices, the customer's identity document must be RUC. Check that the client has a valid RUC and the type of document is RUC."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_refund_reason__04
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_reversal__l10n_pe_edi_refund_reason__04
+msgid "Global discount"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__017
+msgid "Harina, polvo y “pellets” de pescado, crustáceos, moluscos y demás invertebrados acuáticos"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__res_company__l10n_pe_edi_provider__iap
+msgid "IAP"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:account.tax.group,name:l10n_pe_edi.tax_group_icbper
+msgid "ICBPER"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_debit_note__id
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_edi_format__id
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_journal__id
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move_line__id
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move_reversal__id
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_tax__id
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_tax_group__id
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_ir_attachment__id
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_cancel__id
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_certificate__id
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_product_template__id
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_res_config_settings__id
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_uom_uom__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.pe_ubl_2_1_common
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.pe_ubl_2_1_void_documents
+msgid "IDSignKG"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.res_config_settings_form_inherit_l10n_pe_edi
+msgid ""
+"In order to avoid sign invoices on your test environment set as true when you do not\n"
+"                                need the invoices to be really signed (it is blocked after several attempts to avoid\n"
+"                                abuse, please ensure just use it for testing purposes)."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_debit_note__l10n_pe_edi_charge_reason__02
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_charge_reason__02
+msgid "Increase in value"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__012
+msgid "Intermediación laboral y tercerización"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_move.py:0
+#, python-format
+msgid "Invoices with this document type always need to be cancelled through a credit note. There is no possibility to cancel."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_res_company__l10n_pe_edi_test_env
+msgid "Is test OSE environment"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_bank_statement_line__l10n_pe_edi_is_required
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move__l10n_pe_edi_is_required
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_payment__l10n_pe_edi_is_required
+msgid "Is the Peruvian EDI needed"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_bank_statement_line__l10n_pe_edi_refund_reason
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_move__l10n_pe_edi_refund_reason
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_move_reversal__l10n_pe_edi_refund_reason
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_payment__l10n_pe_edi_refund_reason
+msgid "It contains all possible values for the refund reason according to Catalog No. 09"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_bank_statement_line__l10n_pe_edi_charge_reason
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_debit_note__l10n_pe_edi_charge_reason
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_move__l10n_pe_edi_charge_reason
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_payment__l10n_pe_edi_charge_reason
+msgid "It contains all possible values for the charge reason according to Catalog No. 10"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model,name:l10n_pe_edi.model_account_journal
+msgid "Journal"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model,name:l10n_pe_edi.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model,name:l10n_pe_edi.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_bank_statement_line__l10n_pe_edi_cancel_cdr_number
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move__l10n_pe_edi_cancel_cdr_number
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_payment__l10n_pe_edi_cancel_cdr_number
+msgid "L10N Pe Edi Cancel Cdr Number"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_debit_note____last_update
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_edi_format____last_update
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_journal____last_update
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move____last_update
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move_line____last_update
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move_reversal____last_update
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_tax____last_update
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_tax_group____last_update
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_ir_attachment____last_update
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_cancel____last_update
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_certificate____last_update
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_product_template____last_update
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_res_company____last_update
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_uom_uom____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_cancel__write_uid
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_certificate__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_cancel__write_date
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_certificate__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__023
+msgid "Leche"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_bank_statement_line__l10n_pe_edi_legend_value
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move__l10n_pe_edi_legend_value
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_payment__l10n_pe_edi_legend_value
+msgid "Legend"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_bank_statement_line__l10n_pe_edi_legend
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move__l10n_pe_edi_legend
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_payment__l10n_pe_edi_legend
+msgid "Legend Code"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__008
+msgid "Madera"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__020
+msgid "Mantenimiento y reparación de bienes muebles"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__005
+msgid "Maíz amarillo duro"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_uom_uom__l10n_pe_edi_measure_unit_code
+msgid "Measure unit code"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__034
+msgid "Minerales metálicos no auríferos"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__039
+msgid "Minerales no metálicos"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "Missing LATAM document code."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_legend__1000
+msgid "Monto en letras"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__021
+msgid "Movimiento de carga"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "No valid certificate found for %s company."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "One or more lines of this document do not have taxes assigned, to solve this you must return the document to the Draft state and place taxes on the lines that do not have them."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "One or more products do not have the UNSPSC code configured, to avoid this warning you must configure a code for this product. This warning does not invalidate the document."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_legend__2006
+msgid "Operación sujeta a detracción"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_legend__2007
+msgid "Operación sujeta al IVAP"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_bank_statement_line__l10n_pe_edi_operation_type
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_move__l10n_pe_edi_operation_type
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_account_payment__l10n_pe_edi_operation_type
+msgid "Operation Type"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.res_config_settings_form_inherit_l10n_pe_edi
+msgid ""
+"Operator that will sign your invoices (by default IAP, Odoo take care of this\n"
+"                                process and give you for free the first 1000 declarations per month) as part of\n"
+"                                the enterprise licence.<br/>"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "Original message:"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__031
+msgid "Oro gravado con el IGV"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__036
+msgid "Oro y demás minerales metálicos exonerados del IGV"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_allowance_charge_reason_code__50
+msgid "Other Charges"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_allowance_charge_reason_code__54
+msgid "Other Charges Related to the Service"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_allowance_charge_reason_code__55
+msgid "Other Charges no Related to the Service"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_allowance_charge_reason_code__00
+msgid "Other Discounts"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_refund_reason__10
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_reversal__l10n_pe_edi_refund_reason__10
+msgid "Other concepts"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__022
+msgid "Otros servicios empresariales"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_l10n_pe_edi_certificate__content
+msgid "PFX Certificate"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_legend__2009
+msgid "PRIMERA VENTA DE MERCANCÍA IDENTIFICABLE ENTRE USUARIOS DE LA ZONA COMERCIAL"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_l10n_pe_edi_certificate__password
+msgid "Passphrase for the PFX certificate"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_certificate__password
+msgid "Password"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_debit_note__l10n_pe_edi_charge_reason__03
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_charge_reason__03
+msgid "Penalties / other concepts"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_product_product__l10n_pe_withhold_percentage
+#: model:ir.model.fields,help:l10n_pe_edi.field_product_template__l10n_pe_withhold_percentage
+msgid "Percentages of detraction informed in the Annexed I Resolution 183-2004/SUNAT, it depends on the Withhold code but you need to read the resolution"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_allowance_charge_reason_code__53
+msgid "Perception done to the Agent of Perception with Special Rate"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_allowance_charge_reason_code__52
+msgid "Perception to the Acquisition of Fuel"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_allowance_charge_reason_code__51
+msgid "Perceptions of Internal Sales"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.ui.menu,name:l10n_pe_edi.menu_l10n_pe_edi_root
+msgid "Peru"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.view_move_form
+msgid "Peruvian EDI"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_tax_group__l10n_pe_edi_code
+msgid "Peruvian EDI code to complement catalog 05"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.res_config_settings_form_inherit_l10n_pe_edi
+msgid "Peruvian Electronic Invoicing"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "Please proceed to buy more credits <a href=\"%s\">here.</a>"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "Please put a cancel reason"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model,name:l10n_pe_edi.model_product_template
+msgid "Product Template"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model,name:l10n_pe_edi.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__032
+msgid "Páprika y otros frutos de los géneros capsicum o pimienta"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_bank_statement_line__l10n_pe_edi_cancel_reason
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_move__l10n_pe_edi_cancel_reason
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_payment__l10n_pe_edi_cancel_reason
+msgid "Reason given by the user to cancel this move, structure of voided summary: sac:VoidReasonDescription"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_l10n_pe_edi_cancel__l10n_pe_edi_cancel_reason
+msgid "Reason to cancel this invoice."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__004
+msgid "Recursos hidrobiológicos"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_bank_statement_line__l10n_pe_edi_cancel_cdr_number
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_move__l10n_pe_edi_cancel_cdr_number
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_payment__l10n_pe_edi_cancel_cdr_number
+msgid "Reference from webservice to consult afterwards."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_refund_reason__07
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_reversal__l10n_pe_edi_refund_reason__07
+msgid "Refund per item"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__010
+msgid "Residuos, subproductos, desechos, recortes y desperdicios"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_legend__2010
+msgid "Restitucion Simplificado de Derechos Arancelarios"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_legend__2002
+msgid "SERVICIOS PRESTADOS EN LA AMAZONÍA REGIÓN SELVA PARA SER CONSUMIDOS EN LA MISMA"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_res_company__l10n_pe_edi_provider_password
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_res_config_settings__l10n_pe_edi_provider_password
+msgid "SOL Password"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_res_company__l10n_pe_edi_provider_username
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_res_config_settings__l10n_pe_edi_provider_username
+msgid "SOL User"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__res_company__l10n_pe_edi_provider__sunat
+msgid "SUNAT"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_res_config_settings__l10n_pe_edi_provider_password
+#: model:ir.model.fields,help:l10n_pe_edi.field_res_config_settings__l10n_pe_edi_provider_username
+msgid "SUNAT Operaciones en Línea"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:product.product,name:l10n_pe_edi.product_product_IVAP_3
+#: model:product.template,name:l10n_pe_edi.product_product_IVAP_3_product_template
+msgid "Salvados, moyuelos y demás residuos del cernido, de la molienda o de otros tratamientos de los cereales o de las leguminosas, incluso en \"pellets\" de arroz"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_res_company__l10n_pe_edi_provider
+msgid "Selector for the service we are going to use to report the invoices:DIGIFLOW: With the certified that digiflow provide you, user and password you will report the invoices to them.SUNAT: You will report the invoices directly to them using your own certified, user and password.IAP: This is an odoo service that will send the unsigned documents to a PSE and process their response."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_l10n_pe_edi_certificate__serial_number
+msgid "Serial Number"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__product_template__l10n_pe_withhold_code__026
+msgid "Servicio de transporte de personas"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_res_config_settings__l10n_pe_edi_provider
+msgid "Signature Provider"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model,name:l10n_pe_edi.model_l10n_pe_edi_certificate
+msgid "Sunat Digital Certificate"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_legend__1002
+msgid "TRANSFERENCIA GRATUITA DE UN BIEN Y/O SERVICIO PRESTADO GRATUITAMENTE"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model,name:l10n_pe_edi.model_account_tax
+msgid "Tax"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model,name:l10n_pe_edi.model_account_tax_group
+msgid "Tax Group"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__15
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__15
+msgid "Taxed- Bonus"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__17
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__17
+msgid "Taxed- IVAP"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__10
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__10
+msgid "Taxed- Onerous Operation"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__13
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__13
+msgid "Taxed- Withdrawal"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__14
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__14
+msgid "Taxed- Withdrawal by Advertising"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__12
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__12
+msgid "Taxed- Withdrawal by Donation"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__11
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__11
+msgid "Taxed- Withdrawal by Prize"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__16
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__16
+msgid "Taxed- Withdrawal by delivery to workers"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "Taxes need to be assigned on all invoice lines"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_res_config_settings__l10n_pe_edi_test_env
+msgid "Testing Environment"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_bank_statement_line__l10n_pe_edi_legend_value
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_move__l10n_pe_edi_legend_value
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_payment__l10n_pe_edi_legend_value
+msgid "Text to indicate the legend or the amount in letters."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The EDI document failed to be cancelled because the cancellation CDR number is missing."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The EDI document failed to be cancelled for unknown reason."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The EDI document was successfully cancelled by the government (CDR number: %s)."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The EDI document was successfully created and signed by the government."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The URL provided for the IAP server is wrong, please go to  Settings --> System Parameters and add the right URL to parameter l10n_pe_edi.endpoint."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The URL provided to connect to the OSE is wrong, please check your implementation."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The VAT you use for the customer is a DNI type, to be a valid DNI it must be the exact length of 8 digits."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The XML generated is not valid."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The XML inside of the zip file is corrupted or has been altered, please review the XML inside of the XML we are reading."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The cancellation reason field should not be empty when canceling the invoice, you must return this invoice to Draft, edit the document and enter a cancellation reason."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/l10n_pe_edi_certificate.py:0
+#, python-format
+msgid "The certificate is expired since %s"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_l10n_pe_edi_certificate__date_end
+msgid "The date on which the certificate expires"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_l10n_pe_edi_certificate__date_start
+msgid "The date on which the certificate starts to be valid"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The document type of the invoice related is not the same of this document. Check the document type of the invoice related and set this document with that document type. In case of this document being posted and having a number already, reset to draft and cancel it, this document will be cancelled locally and not reported."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The invoice already exists on SUNAT. CDR successfully retrieved."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The invoice related to this Credit Note has been canceled, set this document to draft and cancel it."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The invoice related to this Credit Note has not been reported, go to the invoice related and sign it in order to generate this Credit Note."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The invoice related to this Debit Note has been canceled, set this document to draft and cancel it."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The invoice related to this Debit Note has not been reported, go to the invoice related and sign it in order to generate this Debit Note"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The name of the Partner must contain at least 2 characters and must not contain special characters."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The name of the file depends on the sequence in the journal, please go to the journal and configure the shortcode as LLL- (three (3) letters plus a dash and the 3 letters must be UPPERCASE.)"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_res_company__l10n_pe_edi_provider_password
+msgid "The password used to login to SUNAT SOL"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_l10n_pe_edi_certificate__serial_number
+msgid "The serial number to add to electronic documents"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The type of identity document used for the client is not valid. Review the type of document used in the client and change it according to the case of the document to be created. For invoices it's only valid to use RUC as identity document."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The type of operation is not valid for the type of document you are trying to create. The document must return to Draft state and change the type of operation."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_res_company__l10n_pe_edi_provider_username
+msgid "The username used to login to SUNAT SOL"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The zip file is corrupted, check again if the file trying to access is not damaged."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "The zip file is corrupted, please check that the zip we are reading is the one you need."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "There are problems with the connection to the IAP server. Please try again in a few minutes."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/l10n_pe_edi_certificate.py:0
+#, python-format
+msgid ""
+"There has been a problem with the certificate, some usual problems can be:\n"
+"- The password given or the certificate are not valid.\n"
+"- The certificate content is invalid."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "There was an error while establishing the connection to the server, try again and if it fails check the URL in the parameter l10n_pe_edi.endpoint."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "This document already exists on the OSE side.  Check if you gave a proper unique name to your document. "
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "This document number is now registered by SUNAT as invalid."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "This invoice has been validated by the OSE and we can not allow set it to draft, please try to revert it with a credit not or cancel it and create a new one instead."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.res_config_settings_form_inherit_l10n_pe_edi
+msgid ""
+"This login and password is given by the SUNAT it means by its spanish acronym\n"
+"                                <b>\"SUNAT Operaciones en Línea - SOL\"</b><br/>\n"
+"                                Official definition is:"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_refund_reason__06
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_reversal__l10n_pe_edi_refund_reason__06
+msgid "Total refund"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "Trying to send the invoice to the OSE the webservice returned a controlled error, please try again later, the error is on their side not here."
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_move_line__l10n_pe_edi_affectation_reason
+#: model:ir.model.fields,help:l10n_pe_edi.field_account_tax__l10n_pe_edi_affectation_reason
+msgid "Type of Affectation to the IGV, Catalog No. 07"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__37
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__37
+msgid "Unaffected- Free Transfer"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__30
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__30
+msgid "Unaffected- Onerous Operation"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__32
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__32
+msgid "Unaffected- Withdrawal"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__36
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__36
+msgid "Unaffected- Withdrawal by Advertising"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__31
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__31
+msgid "Unaffected- Withdrawal by Bonus"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__34
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__34
+msgid "Unaffected- Withdrawal by Collective Agreement"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__33
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__33
+msgid "Unaffected- Withdrawal by Medical Samples"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move_line__l10n_pe_edi_affectation_reason__35
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_tax__l10n_pe_edi_affectation_reason__35
+msgid "Unaffected- Withdrawal by Prize"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,help:l10n_pe_edi.field_uom_uom__l10n_pe_edi_measure_unit_code
+msgid "Unit code that relates to a product in order to identify what measure unit it uses, the possible values that you can use here can be found in this URL"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:product.product,uom_name:l10n_pe_edi.product_product_IVAP_1
+#: model:product.product,uom_name:l10n_pe_edi.product_product_IVAP_2
+#: model:product.product,uom_name:l10n_pe_edi.product_product_IVAP_3
+#: model:product.template,uom_name:l10n_pe_edi.product_product_IVAP_1_product_template
+#: model:product.template,uom_name:l10n_pe_edi.product_product_IVAP_2_product_template
+#: model:product.template,uom_name:l10n_pe_edi.product_product_IVAP_3_product_template
+msgid "Units"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "VAT number is missing on company %s"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_legend__2008
+msgid "VENTA EXONERADA DEL IGV-ISC-IPM. PROHIBIDA LA VENTA FUERA DE LA ZONA COMERCIAL DE TACNA"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.l10n_pe_edi_certificate_form
+msgid "Validity"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_legend__2005
+msgid "Venta realizada por emisor itinerante"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "We got an error response from the OSE. "
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_product_product__l10n_pe_withhold_percentage
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_product_template__l10n_pe_withhold_percentage
+msgid "Withhold Percentage"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_product_product__l10n_pe_withhold_code
+#: model:ir.model.fields,field_description:l10n_pe_edi.field_product_template__l10n_pe_withhold_code
+msgid "Withhold code"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model,name:l10n_pe_edi.model_l10n_pe_edi_cancel
+msgid "Wizard to allow the cancellation of Peruvian documents"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.invoice_cancel_wizard_view
+msgid "Wizard to cancel Invoice"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "XSD validation failed: "
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "You can't have more than one IGV tax per line to generate a legal invoice in Peru"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid "You have insufficient credits to sign or verify this document!"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.res_config_settings_form_inherit_l10n_pe_edi
+msgid ""
+"You will need to buy a normal electronic certificate following, you can find a list\n"
+"                                of official peruvian companies that can provide to you this service"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: code:addons/l10n_pe_edi/models/account_edi_format.py:0
+#, python-format
+msgid ""
+"Your RUC is not linked to Digiflow as OSE, please make sure you have follow this process in the SUNAT portal:\n"
+"1. Linked Digiflow as OSE.\n"
+"2. Authorize Digiflow as PSE.\n"
+"Reference: \n"
+"https://www.odoo.com/documentation/user/14.0/accounting/fiscal_localizations/localizations/peru.html#what-do-you-need-to-do"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__0101
+msgid "[0101] Internal sale"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__0112
+msgid "[0112] Internal Sale - Sustains Natural Person Deductible Expenses"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__0113
+msgid "[0113] Internal Sale-NRUS"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__0200
+msgid "[0200] Export of Goods"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__0201
+msgid "[0201] Exportation of Services - Provision of services performed entirely in the country"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__0202
+msgid "[0202] Exportation of Services - Provision of non-domiciled lodging services"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__0203
+msgid "[0203] Exports of Services - Transport of shipping companies"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__0204
+msgid "[0204] Exportation of Services - Services to foreign-flagged ships and aircraft"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__0205
+msgid "[0205] Exportation of Services - Services that make up a Tourist Package"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__0206
+msgid "[0206] Exports of Services - Complementary services to freight transport"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__0207
+msgid "[0207] Exportation of Services - Supply of electric power in favor of subjects domiciled in ZED"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__0208
+msgid "[0208] Exportation of Services - Provision of services partially carried out abroad"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__0301
+msgid "[0301] Operations with air waybill (issued in the national scope)"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__0302
+msgid "[0302] Passenger rail transport operations"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__0303
+msgid "[0303] Oil royalty Pay Operations"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__0401
+msgid "[0401] Non-domiciled sales that do not qualify as an export"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__1001
+msgid "[1001] Operation Subject to Detraction"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__1002
+msgid "[1002] Operation Subject to Detraction - Hydrobiological Resources"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__1003
+msgid "[1003] Operation Subject to Drawdown - Passenger Transport Services"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__1004
+msgid "[1004] Operation Subject to Drawdown - Cargo Transportation Services"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model:ir.model.fields.selection,name:l10n_pe_edi.selection__account_move__l10n_pe_edi_operation_type__2001
+msgid "[2001] Operation Subject to Perception"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.res_config_settings_form_inherit_l10n_pe_edi
+msgid "here"
+msgstr ""
+
+#. module: l10n_pe_edi
+#: model_terms:ir.ui.view,arch_db:l10n_pe_edi.res_config_settings_form_inherit_l10n_pe_edi
+msgid "here."
+msgstr ""

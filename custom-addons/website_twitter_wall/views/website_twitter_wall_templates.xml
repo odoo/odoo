@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Assets frontend for twitter wall -->
+    <!-- Display walls -->
+    <template id="twitter_walls" name="Twitter Walls">
+        <t t-call="website.layout">
+            <div class="oe_structure" id="oe_structure_website_twitter_wall_walls_1"/>
+            <div class="container o-tw-walls">
+                <div class="row">
+
+                    <t t-if="not walls" groups="base.group_user">
+                        <div class="col-md-12 text-center">
+                            <h1><b>Hey! No wall found</b></h1>
+                            <a href="/web#action=website_twitter_wall.website_twitter_wall_action" class="btn btn-primary o-tw-wall-create"><i class="fa fa-plus-circle" /> Create Now</a>
+                        </div>
+                    </t>
+                    <div class="col-sm-6 col-md-4 mt16" t-foreach="walls" t-as="wall">
+                        <div class="well well-sm o-tw-wall">
+                            <a t-attf-href="/twitter_wall/view/#{wall.id}">
+                                <img t-att-title="wall.name" t-att-src="website.image_url(wall, 'image')" class="img-responsive img-thumbnail o-tw-image" />
+                            </a>
+                            <div class="o-tw-padding">
+                                <h4 class="mt4 mb8 o-tw-ellipsis">
+                                    <a t-att-title="wall.name" t-attf-href="/twitter_wall/view/#{wall.id}" t-field="wall.name" />
+                                </h4>
+                                <!-- Remove h5 in master -->
+                                <h5 t-if="False" t-att-title="wall.description" t-field="wall.description" class="o-tw-ellipsis" />
+                                <div t-if="not is_html_empty(wall.description)" t-field="wall.description" class="o-tw-ellipsis h5" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="oe_structure" id="oe_structure_website_twitter_wall_walls_2"/>
+        </t>
+    </template>
+
+    <!-- Storify and Live view -->
+    <template id="twitter_wall_view" name="Twitter Wall View">
+        <t t-set="head">
+            <script src="//platform.twitter.com/widgets.js" charset="utf-8" />
+        </t>
+        <t t-call="website.layout">
+            <div class="o-tw-container">
+            <div class="o-tw-toggle o-tw-storify-cover o-tw-cover" t-attf-style="background-image: url(#{website.image_url(wall, 'image')});">
+                <div class="o-tw-shadow" >
+                    <div class="container">
+                        <div class="mt16">
+                            <t t-call="website.publish_management">
+                                <t t-set="object" t-value="wall" />
+                                <t t-set="publish_edit" t-value="True" />
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <div class="o-tw-info">
+                    <h1><strong t-field="wall.name" /></h1>
+                    <h2 t-field="wall.description" />
+                </div>
+                <div class="o-tw-nav">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-10" title="Total Tweets" ><i class="fa fa-twitter"/> <t t-esc="str(wall.total_tweets) + ' Tweets'" /></div>
+                            <div class="col-2 text-center"><button t-if="wall.is_live" class="btn btn-default o-tw-btn-invert o-tw-live-btn" title="Live mode"><i class="fa fa-arrows-alt" /></button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav class="navbar navbar-fixed-top o-tw-live-nav o-tw-toggle">
+                <div class="container-fluid">
+                    <div class="row mt8 mb8 container-fluid">
+                        <div class="col-4 o-tw-hashtag">
+                            <div class="mb4" t-if="not is_html_empty(wall.description)">
+                                <h4><i class="fa fa-twitter" /> <strong> Join the wall</strong></h4>
+                                <label class="label" t-esc="wall.description" />
+                            </div>
+                        </div>
+                        <div class="o-tw-options col-4 mt16">
+                            <div>
+                                <div class="btn-group">
+                                    <button class="btn btn-default o-tw-option" data-operation="list" title="List view"><i class="fa fa-reorder" /></button>
+                                    <button class="btn btn-default o-tw-option" data-operation="double" title="Two columns view"><i class="fa fa-th-large" /></button>
+                                    <button class="btn btn-default o-tw-option active" data-operation="triple" title="Three columns view"><i class="fa fa-th" /></button>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-default o-tw-option" data-operation="single" title="Single view"><i class="fa fa-stop" /></button>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-default o-tw-zoom" data-operation="plus" title="Increase zoom level"><i class="fa fa-plus" /></button>
+                                    <button class="btn btn-default o-tw-zoom" data-operation="minus" title="Decrease zoom level"><i class="fa fa-minus" /></button>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-default o-tw-option" data-operation="repeat" title="Repeat"><i class="fa fa-repeat" /></button>
+                                    <button class="btn btn-default o-tw-option" data-operation="shuffle" title="Shuffle"><i class="fa fa-random" /></button>
+                                </div>
+                                <button class="btn btn-default o-tw-live-btn" title="Exit full screen"><i class="fa fa-compress" /></button>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <b><img src="/website_twitter_wall/static/src/img/odoo.png" class="o-tw-powered mt16 float-end" /></b>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <div class="container">
+                <div class="row text-center o-tw-toggle">
+                    <t t-call="website.pager" />
+                </div>
+                <div class="row o-tw-walls" t-att-data-wall-id="wall.id">
+                    <div t-if="not tweets" class="col-12">
+                        <span class="text-center o-tw-toggle">
+                            <h1>Hey! No tweet found</h1>
+                        </span>
+                    </div>
+                    <t t-foreach="range(3)" t-as="i">
+                        <div class="o-tw-walls-col col-4">
+                            <t t-if="tweets" t-foreach="filter(lambda t: t.id % 3 == i, tweets)" t-as="tw">
+                                <center class="o-tw-tweet" t-att-data-tweet-id="tw.id">
+                                    <div>
+                                        <button class="btn o-tw-tweet-delete hidden-xs" groups="base.group_user" title="Delete this tweet"><i class="fa fa-trash text-primary" /></button>
+                                        <span t-out="tw.tweet_html" />
+                                    </div>
+                                </center>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+                <div class="row text-center o-tw-toggle">
+                    <t t-call="website.pager" />
+                </div>
+            </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Share storify view on social networks -->
+    <template id='twitter_wall_share' name="Share Wall">
+        <h4 class="mb-3">
+            <a target="_Blank" t-attf-title="Share #{wall.name} on facebook" t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{wall.website_url}">
+                <i class="fa fa-facebook-square fa-2x" />
+            </a>
+            <a target="_Blank" t-attf-title="Share #{wall.name} on twitter" t-attf-href="https://twitter.com/intent/tweet?text=#{wall.name}&amp;url=#{wall.website_url}">
+                <i class="fa fa-twitter-square fa-2x" />
+            </a>
+            <a target="_Blank" t-attf-title="Share #{wall.name} on linkedin" t-attf-href="http://www.linkedin.com/sharing/share-offsite/?url=#{wall.website_url}">
+                <i class="fa fa-linkedin-square fa-2x" />
+            </a>
+            <a target="_Blank" t-attf-title="Share #{wall.name} on google+" t-attf-href="https://plus.google.com/share?url=#{wall.website_url}">
+                <i class="fa fa-google-plus-square fa-2x" />
+            </a>
+        </h4>
+    </template>
+
+    <!-- Social networks sharing option -->
+    <template id="opt_twitter_wall_share" inherit_id="website_twitter_wall.twitter_wall_view" name="Share Option">
+        <xpath expr="//h2" position="after">
+            <t t-call="website_twitter_wall.twitter_wall_share" class="mt32">
+                <t t-set="wall" t-value="wall" />
+            </t>
+        </xpath>
+    </template>
+</odoo>

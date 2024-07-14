@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <data>
+      <template id="eu_oss_generic_export_xml_be">
+         <t t-set="id_number" t-value="IOSSNumber or VoesNumber or VATNumber"/>
+         <ns0:OSSConsignment
+            xmlns:ns0="http://www.minfin.fgov.be/OSSDeclaration"
+            xmlns:ns1="http://www.minfin.fgov.be/InputCommon"
+            xmlns:ns2="urn:minfin.fgov.be:oss:common"
+            OSSDeclarationNbr="1">
+            <ns0:OSSDeclaration SequenceNumber="1">
+               <ns0:Trader_ID>
+                  <ns2:IOSSNumbers t-if="IOSSNumber"> <!--only for imports -->
+                     <ns2:IOSSNumber t-att-issuedBy="IOSSNumber[:2]" t-out="IOSSNumber[2:]"/>
+                     <ns2:IntNumber t-att-issuedBy="IntNumber[:2]" t-if="IntNumber" t-out="IntNumber[2:]"/>
+                  </ns2:IOSSNumbers>
+                  <ns2:VoesNumber t-elif="VoesNumber" t-att-issuedBy="VoesNumber[:2]" t-out="VoesNumber[2:]"/>
+                  <ns2:VATNumber t-elif="VATNumber" t-att-issuedBy="VATNumber[:2]" t-out="VATNumber[2:]"/>
+               </ns0:Trader_ID>
+               <ns0:Period>
+                  <ns2:Year><t t-out="Year"/></ns2:Year>
+                  <ns2:Quarter t-if="Quarter" t-out="Quarter"/>
+                  <ns2:Month t-if="Month" t-out="Month"/>
+               </ns0:Period>
+               <ns0:IsNihil t-if="not country_taxes">1</ns0:IsNihil>
+               <t t-foreach="country_taxes" t-as="country">
+                  <ns0:OSSDeclarationInfo t-att-SequenceNumber="country_index + 1">
+                     <ns2:MemberStateOfConsumption t-if="country.code == 'GR'" t-out="'EL'"/>
+                     <ns2:MemberStateOfConsumption t-else="" t-out="country.code"/>
+                     <t t-foreach="country_value" t-as="line" t-if="line['tax_amt']">
+                        <ns2:OSSDeclarationRows t-att-SequenceNumber="line_index + 1">
+                           <ns2:SupplyType t-out="line['supply_type']"/>
+                           <ns2:FixedEstablishment t-if="id_number">
+                              <ns2:VATIdentificationNumber t-att-issuedBy="id_number[:2]" t-out="id_number[2:]"/>
+                           </ns2:FixedEstablishment>
+                           <ns2:VatRateType t-att-type="line['rate_type']" t-out="'{:.2f}'.format(line['tax'].amount)"/>
+                           <ns2:VatAmount t-att-currency="line['currency'].name" t-out="line['tax_amt']"/>
+                           <ns2:TaxableAmount t-att-currency="line['currency'].name" t-out="line['net_amt']"/>
+                        </ns2:OSSDeclarationRows>
+                     </t>
+                     <ns2:CorrectionsInfo t-if="line['corr_amt']">
+                        <ns2:Period>
+                           <ns2:Year t-esc="line['corr_year']"/>
+                           <ns2:Quarter t-if="line['corr_quarter']" t-esc="line['corr_quarter']"/>
+                           <ns2:Month t-if="line['corr_month']" t-esc="line['corr_month']"/>
+                        </ns2:Period>
+                        <ns2:TotalVATAmountCorrection t-att-currency="line['currency'].name" t-esc="line['corr_amt']"/>
+                     </ns2:CorrectionsInfo>
+                  </ns0:OSSDeclarationInfo>
+               </t>
+            </ns0:OSSDeclaration>
+         </ns0:OSSConsignment>
+      </template>
+
+      <template id="eu_oss_generic_export_xml_lu">
+         <t t-set="id_number" t-value="IntNumber or IOSSNumber or VoesNumber or VATNumber"/>
+         <NETPVATReturn xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:lu:etat:aed:oss:v1">
+            <VATReturnHeader>
+               <CreationTimestamp t-out="creation_timestamp.isoformat()"/>
+            </VATReturnHeader>
+            <VATReturnBody>
+               <TaxablePeriod>
+                  <Year t-out="Year"/>
+                  <Quarter t-if="Quarter" t-out="Quarter"/>
+                  <Month t-if="Month" t-out="Month"/>
+               </TaxablePeriod>
+               <VatReturns>
+                  <VatReturn>
+                     <VATIdentificationNumber t-att-issuedBy="id_number[:2]" t-out="id_number"/>
+                     <NETPSupplies>
+                        <MSIDSupplies>
+                           <t t-foreach="country_taxes" t-as="country">
+                              <t t-foreach="country_value" t-as="line">
+                                 <VATReturnDetail>
+                                    <MSCONCountryCode t-out="country.code"/>
+                                    <SupplyType t-out="line['supply_type']"/>
+                                    <VATRate t-out="line['tax'].amount"/>
+                                    <VATRateType t-out="line['rate_type']"/>
+                                    <TaxableAmount t-att-currency="line['currency'].name" t-out="line['net_amt']"/>
+                                    <VATAmount t-att-currency="line['currency'].name" t-out="line['tax_amt']"/>
+                                 </VATReturnDetail>
+                              </t>
+                           </t>
+                        </MSIDSupplies>
+                        <MSESTSupplies/>
+                     </NETPSupplies>
+                  </VatReturn>
+               </VatReturns>
+            </VATReturnBody>
+         </NETPVATReturn>
+      </template>
+
+   </data>
+</odoo>

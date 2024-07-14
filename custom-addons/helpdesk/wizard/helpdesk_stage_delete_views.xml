@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_helpdesk_stage_delete_wizard" model="ir.ui.view">
+        <field name="name">helpdesk.stage.delete.wizard.form</field>
+        <field name="model">helpdesk.stage.delete.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Delete Stage">
+                <field name="ticket_count" invisible="1"/>
+                <field name="stages_active" invisible="1"/>
+                <div invisible="ticket_count &gt; 0">
+                    <p>Are you sure you want to delete these stages?</p>
+                </div>
+                <div invisible="not stages_active or ticket_count == 0">
+                    <p>You cannot delete stages containing tickets. You can either archive them or first delete all of their tickets.</p>
+                </div>
+                <div invisible="stages_active or ticket_count == 0">
+                    <p>You cannot delete stages containing tickets. You should first delete all of their tickets.</p>
+                </div>
+                <footer>
+                    <button string="Archive Stages" type="object" name="action_archive" class="btn btn-primary" invisible="not stages_active or ticket_count == 0" />
+                    <button string="Delete" type="object" name="action_unlink" class="btn btn-primary" invisible="ticket_count &gt; 0" />
+                    <button string="Discard" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_helpdesk_stage_delete_confirmation_wizard" model="ir.ui.view">
+        <field name="name">helpdesk.stage.delete.wizard.form</field>
+        <field name="model">helpdesk.stage.delete.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Delete Stage">
+                <div>
+                    <p>This will archive the stages and all of the tickets they contain from the following teams:</p>
+                    <field name="team_ids" readonly="1">
+                        <tree>
+                            <field name="name"/>
+                        </tree>
+                    </field>
+                    <p>Are you sure you want to continue?</p>
+                </div>
+                <footer>
+                    <button string="Confirm" type="object" name="action_confirm" class="btn btn-primary"/>
+                    <button string="Discard" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_helpdesk_stage_unarchive_wizard" model="ir.ui.view">
+        <field name="name">helpdesk.stage.delete.wizard.form</field>
+        <field name="model">helpdesk.stage.delete.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Delete Stage">
+                <div>
+                    <p>Would you like to unarchive all of the tickets contained in these stages as well?</p>
+                </div>
+                <footer>
+                    <button string="Confirm" type="object" name="action_unarchive_ticket" class="btn btn-primary"/>
+                    <button string="Discard" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

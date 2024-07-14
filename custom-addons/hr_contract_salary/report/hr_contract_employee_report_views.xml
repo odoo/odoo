@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="contract_employee_report_view_pivot_inherit" model="ir.ui.view">
+        <field name="name">contract.employee.report.view.inherit.pivot</field>
+        <field name="model">hr.contract.employee.report</field>
+        <field name="inherit_id" ref="hr_contract_reports.contract_employee_report_view_pivot"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='wage']" position="after">
+                <field name="final_yearly_costs" type="measure"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

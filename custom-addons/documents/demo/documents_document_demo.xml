@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(3, ref('documents.group_documents_manager'))]"/>
+        </record>
+
+        <!-- internal -->
+        <record id="documents_image_city_document" model="documents.document" forcecreate="0">
+            <field name="name">city.jpg</field>
+            <field name="datas" type="base64" file="documents/demo/files/city.jpg"/>
+            <field name="folder_id" ref="documents.documents_internal_folder"/>
+        </record>
+
+        <record id="documents_image_people_document" model="documents.document" forcecreate="0">
+            <field name="name">people.jpg</field>
+            <field name="datas" type="base64" file="documents/demo/files/people.jpg"/>
+            <field name="folder_id" ref="documents.documents_internal_folder"/>
+        </record>
+
+
+        <record id="documents_data_design_brief" model="documents.document" forcecreate="0">
+            <field name="name">Interior Design Brief.pdf</field>
+            <field name="datas" type="base64" file="documents/demo/files/Interior_Design_Brief.pdf"/>
+            <field name="folder_id" ref="documents.documents_internal_folder"/>
+            <field name="tag_ids" eval="[(6,0,[ref('documents.documents_internal_status_tc'),
+                                               ref('documents.documents_internal_template_project')])]"/>
+        </record>
+
+        <!-- finance -->
+
+        <record id="documents_vendor_bill_inv_007" model="documents.document" forcecreate="0">
+            <field name="name">Invoice-INV_2018_0007.pdf</field>
+            <field name="datas" type="base64" file="documents/demo/files/Invoice2018_0007.pdf"/>
+            <field name="folder_id" ref="documents.documents_finance_folder"/>
+            <field name="tag_ids" eval="[(6,0,[ref('documents.documents_finance_status_validated')])]"/>
+        </record>
+
+        <record id="documents_vendor_bill_extract_azure_interior_document" model="documents.document" forcecreate="0">
+            <field name="name">invoice Azure Interior.pdf</field>
+            <field name="datas" type="base64" file="documents/demo/files/invoice_azure_interior.pdf"/>
+            <field name="folder_id" ref="documents.documents_finance_folder"/>
+            <field name="tag_ids" eval="[(6,0,[ref('documents.documents_finance_status_tc')])]"/>
+        </record>
+
+        <record id="documents_vendor_bill_extract_open_value_document" model="documents.document" forcecreate="0">
+            <field name="name">invoice OpenValue.pdf</field>
+            <field name="datas" type="base64" file="documents/demo/files/invoice_openvalue.pdf"/>
+            <field name="folder_id" ref="documents.documents_finance_folder"/>
+            <field name="tag_ids" eval="[(6,0,[ref('documents.documents_finance_status_inbox')])]"/>
+        </record>
+
+        <record id="documents_data_comercial_tenancy_agreement" model="documents.document" forcecreate="0">
+            <field name="name">Commercial-Tenancy-Agreement.pdf</field>
+            <field name="datas" type="base64" file="documents/demo/files/Commercial-Tenancy-Agreement.pdf"/>
+            <field name="folder_id" ref="documents.documents_finance_folder"/>
+            <field name="tag_ids" eval="[(6,0,[ref('documents.documents_finance_status_inbox')])]"/>
+        </record>
+
+        <!-- marketing -->
+
+        <record id="documents_image_La_landscape_document" model="documents.document" forcecreate="0">
+            <field name="name">LA landscape.jpg</field>
+            <field name="datas" type="base64" file="documents/demo/files/la.jpg"/>
+            <field name="folder_id" ref="documents.documents_marketing_folder"/>
+            <field name="tag_ids" eval="[(6,0,[ref('documents.documents_marketing_assets_images')])]"/>
+        </record>
+
+        <record id="documents_attachment_sorry_netsuite_document" model="documents.document" forcecreate="0">
+            <field name="name">Sorry Netsuite.jpg</field>
+            <field name="datas" type="base64" file="documents/demo/files/sorry_netsuite.jpg"/>
+            <field name="folder_id" ref="documents.documents_marketing_folder"/>
+            <field name="tag_ids" eval="[(6,0,[ref('documents.documents_marketing_assets_ads')])]"/>
+        </record>
+
+    </data>
+</odoo>

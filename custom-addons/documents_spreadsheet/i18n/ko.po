@@ -1,0 +1,568 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* documents_spreadsheet
+# 
+# Translators:
+# Wil Odoo, 2023
+# Sarah Park, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Sarah Park, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/wizard/save_spreadsheet_template.py:0
+#, python-format
+msgid "\"%s\" saved as template"
+msgstr "\"%s\" 저장된 양식"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.share_page
+msgid "#{'Download '}#{document.name}"
+msgstr "#{'Download '}#{document.name}"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/spreadsheet_template.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (사본)"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/bundle/actions/spreadsheet_action.js:0
+#, python-format
+msgid "%s - Template"
+msgstr "%s - 서식"
+
+#. module: documents_spreadsheet
+#: model:ir.model.constraint,message:documents_spreadsheet.constraint_spreadsheet_contributor_spreadsheet_user_unique
+msgid "A combination of the spreadsheet and the user already exist"
+msgstr "스프레드 시트와 사용자의 조합이 이미 존재합니다"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.save_spreadsheet_template_view_form
+msgid ""
+"Any user will be able to create a new spreadsheet based on this template."
+msgstr "모든 사용자는 이 템플릿을 기반으로 신규 스프레드 시트를 만들 수 있습니다."
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid ""
+"Ask an admin to configure the workspace to be accessible to the users you "
+"want."
+msgstr "원하는 사용자에게 접근 권한을 부여할 수 있도록 관리자에게 저장공간을 설정하도록 요청하세요."
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#, python-format
+msgid "Blank spreadsheet"
+msgstr "빈 스프레드시트"
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid ""
+"By default, the spreadsheets in this workspace will only be seen and updated"
+" by their <strong>creator</strong>."
+msgstr ""
+"기본적으로, 이 작업공간의 스프레드시트는 해당 스프레드시트를 만든 <strong>작성자</strong>만이 확인하고 업데이트 할 수 "
+"있습니다."
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.save_spreadsheet_template_view_form
+msgid "Cancel"
+msgstr "취소"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.res_config_settings_view_form_inherit_documents_spreadsheet
+msgid "Centralize your spreadsheets"
+msgstr "스프레드시트 중앙 집중화"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_res_company
+msgid "Companies"
+msgstr "회사"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_res_config_settings
+msgid "Config Settings"
+msgstr "환경설정"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.save_spreadsheet_template_view_form
+msgid "Confirm"
+msgstr "승인"
+
+#. module: documents_spreadsheet
+#: model:ir.actions.act_window,name:documents_spreadsheet.spreadsheet_contributor_action
+#: model:ir.ui.menu,name:documents_spreadsheet.menu_technical_spreadsheet_contributor
+msgid "Contributors"
+msgstr "도움을 주신 분들"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_documents_shared_spreadsheet
+msgid "Copy of a shared spreadsheet"
+msgstr "공유 스프레드시트 복사본"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#, python-format
+msgid "Create"
+msgstr "작성"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/spreadsheet_template_dialog.js:0
+#, python-format
+msgid "Create a Spreadsheet or select a Template"
+msgstr "스프레드시트를 만들거나 서식을 선택하세요"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__create_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__create_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__create_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__create_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__create_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__create_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#, python-format
+msgid "Discard"
+msgstr "취소"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__display_name
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__display_name
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__display_name
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_documents_document
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__document_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__document_id
+msgid "Document"
+msgstr "문서"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_documents_share
+msgid "Documents Share"
+msgstr "문서 공유"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_res_company__documents_spreadsheet_folder_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_res_config_settings__documents_spreadsheet_folder_id
+msgid "Documents Spreadsheet Folder"
+msgstr "문서 스프레드시트 폴더"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_template_view_tree
+msgid "Edit"
+msgstr "편집"
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid "Enjoy collaborative work on your spreadsheets."
+msgstr "스프레드시트에서 공동 작업을 즐겨보세요."
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__excel_export
+msgid "Excel Export"
+msgstr "엑셀 내보내기"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Format issue"
+msgstr "형식 문제"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_share__freezed_spreadsheet_ids
+msgid "Freezed Spreadsheet"
+msgstr "고정된 스프레드시트"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__handler
+msgid "Handler"
+msgstr "핸들러"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__id
+msgid "ID"
+msgstr "ID"
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid "If you want to work together on those spreadsheets :"
+msgstr "스프레드시트에서 함께 작업하려면 :"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__write_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__write_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__write_uid
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__write_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__write_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__write_date
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__last_update_date
+msgid "Last update date"
+msgstr "최근 업데이트 날짜"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_template_view_tree
+msgid "Make a copy"
+msgstr "복사본 만들기"
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid ""
+"Manage and work with all the <strong>spreadsheets</strong> created in other "
+"applications."
+msgstr "다른 앱에서 생성한 모든 <strong>스프레드시트</strong> 관리하고 작업할 수 있습니다."
+
+#. module: documents_spreadsheet
+#: model_terms:documents.folder,description:documents_spreadsheet.documents_spreadsheet_folder
+msgid "Move them to another workspace"
+msgstr "다른 작업공간으로 옮기기"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_template_view_search
+msgid "My Templates"
+msgstr "나의 서식"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__name
+msgid "Name"
+msgstr "이름"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.xml:0
+#, python-format
+msgid "New Spreadsheet"
+msgstr "새 스프레드시트"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/spreadsheet_template_dialog.js:0
+#, python-format
+msgid "New sheet saved in Documents"
+msgstr "문서에 새 시트 저장"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_template_view_tree
+msgid "New spreadsheet"
+msgstr "새 스프레드시트"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#: code:addons/documents_spreadsheet/static/src/bundle/actions/spreadsheet_action.js:0
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_selector_dialog/document_selector_panel.js:0
+#, python-format
+msgid "New spreadsheet created in Documents"
+msgstr "문서에 새 스프레드시트 저장"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/spreadsheet_template.py:0
+#: code:addons/documents_spreadsheet/static/src/bundle/actions/spreadsheet_template/spreadsheet_template_action.js:0
+#, python-format
+msgid "New spreadsheet template created"
+msgstr "새 스프레드시트 서식 생성"
+
+#. module: documents_spreadsheet
+#: model:ir.model.constraint,message:documents_spreadsheet.constraint_documents_shared_spreadsheet__unique
+msgid "Only one freezed spreadsheet per document share"
+msgstr "공유 문서당 하나의 고정 스프레드시트만 사용 가능"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Open with Odoo Spreadsheet"
+msgstr "Odoo 스프레드시트로 열기"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Restore"
+msgstr "복원"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid "Restore file?"
+msgstr "파일을 복원하시겠습니까?"
+
+#. module: documents_spreadsheet
+#: model:ir.actions.act_window,name:documents_spreadsheet.save_spreadsheet_template_action
+msgid "Save as template"
+msgstr "서식으로 저장"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_clone_xlsx_dialog/spreadsheet_clone_xlsx_dialog.xml:0
+#, python-format
+msgid "Send source file to trash"
+msgstr "소스 파일을 휴지통으로 보내기"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__sequence
+msgid "Sequence"
+msgstr "순서"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__server_revision_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__server_revision_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__server_revision_id
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__server_revision_id
+msgid "Server Revision"
+msgstr "서버 버전 변경"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__share_id
+msgid "Share"
+msgstr "공유"
+
+#. module: documents_spreadsheet
+#: model:documents.folder,name:documents_spreadsheet.documents_spreadsheet_folder
+#: model:ir.model.fields.selection,name:documents_spreadsheet.selection__documents_document__handler__spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.document_view_search_spreadsheet
+msgid "Spreadsheet"
+msgstr "스프레드시트"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_spreadsheet_contributor
+msgid "Spreadsheet Contributor"
+msgstr "스프레드시트 기여자"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__spreadsheet_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__spreadsheet_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__spreadsheet_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__spreadsheet_data
+msgid "Spreadsheet Data"
+msgstr "스프레드시트 데이터"
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.spreadsheet_document_view_kanban
+msgid "Spreadsheet Preview"
+msgstr "스프레드시트 미리보기"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__spreadsheet_revision_ids
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__spreadsheet_revision_ids
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__spreadsheet_revision_ids
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__spreadsheet_revision_ids
+msgid "Spreadsheet Revision"
+msgstr "스프레드시트 수정"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__spreadsheet_snapshot
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__spreadsheet_snapshot
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__spreadsheet_snapshot
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__spreadsheet_snapshot
+msgid "Spreadsheet Snapshot"
+msgstr "스프레드시트 스냅샷"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_spreadsheet_template
+msgid "Spreadsheet Template"
+msgstr "스프레드시트 서식"
+
+#. module: documents_spreadsheet
+#: model:ir.model,name:documents_spreadsheet.model_save_spreadsheet_template
+msgid "Spreadsheet Template Save Wizard"
+msgstr "스프레드시트 서식 저장 마법사"
+
+#. module: documents_spreadsheet
+#: model:ir.actions.act_window,name:documents_spreadsheet.spreadsheet_template_action
+#: model:ir.ui.menu,name:documents_spreadsheet.menu_technical_spreadsheet_template
+msgid "Spreadsheet Templates"
+msgstr "스프레드시트 서식"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__spreadsheet_binary_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__spreadsheet_binary_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__spreadsheet_binary_data
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__spreadsheet_binary_data
+msgid "Spreadsheet file"
+msgstr "스프레드시트 파일"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/documents_spreadsheet_controller_mixin.js:0
+#, python-format
+msgid ""
+"Spreadsheet files cannot be handled from the Trash. Would you like to "
+"restore this document?"
+msgstr "스프레드시트 파일은 휴지통에서 처리할 수 없습니다. 이 문서를 복원하시겠습니까?"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_clone_xlsx_dialog/spreadsheet_clone_xlsx_dialog.xml:0
+#, python-format
+msgid ""
+"Spreadsheet files cannot be previewed or edited in Odoo. Opening your file "
+"with Odoo Spreadsheet will allow you to do so."
+msgstr "스프레드시트 파일은 Odoo에서 미리보기 하거나 편집할 수 없습니다. Odoo 스프레드시트로 파일을 열어 시도하세요."
+
+#. module: documents_spreadsheet
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.res_config_settings_view_form_inherit_documents_spreadsheet
+msgid "Spreadsheets"
+msgstr "스프레드시트"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/documents_view/inspector/documents_inspector.js:0
+#, python-format
+msgid ""
+"Spreadsheets mass download not yet supported.\n"
+" Download spreadsheets individually instead."
+msgstr ""
+"스프레드시트를 한번에 다운받는 기능은 아직 지원되지 않습니다.\n"
+"스프레드시트를 개별적으로 다운로드하실 수 있습니다."
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__template_name
+msgid "Template Name"
+msgstr "서식명"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "The file is not a xlsx file"
+msgstr "xlsx 형식의 파일이 아닙니다"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "The spreadsheet you are trying to access does not exist."
+msgstr "접근하려는 스프레드시트가 존재하지 않습니다."
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "The xlsx file is corrupted"
+msgstr "xlsx 파일이 손상되었습니다"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "The xlsx file is too big"
+msgstr "xlsx 파일이 너무 큽니다"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_document__thumbnail
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_documents_shared_spreadsheet__thumbnail
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_save_spreadsheet_template__thumbnail
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_template__thumbnail
+msgid "Thumbnail"
+msgstr "미리보기 이미지"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/bundle/components/control_panel/spreadsheet_breadcrumbs.xml:0
+#: code:addons/documents_spreadsheet/static/src/bundle/components/control_panel/spreadsheet_breadcrumbs.xml:0
+#, python-format
+msgid "Toggle favorite"
+msgstr "즐겨찾기 토글"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "Untitled spreadsheet"
+msgstr "제목없는 스프레드시트"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/bundle/actions/spreadsheet_template/spreadsheet_template_action.js:0
+#, python-format
+msgid "Untitled spreadsheet template"
+msgstr "제목 없는 스프레드시트 서식"
+
+#. module: documents_spreadsheet
+#: model:ir.model.fields,field_description:documents_spreadsheet.field_spreadsheet_contributor__user_id
+msgid "User"
+msgstr "사용자"
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_template/template_dialog.xml:0
+#: model_terms:ir.ui.view,arch_db:documents_spreadsheet.res_config_settings_view_form_inherit_documents_spreadsheet
+#, python-format
+msgid "Workspace"
+msgstr "저장공간"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/controllers/documents.py:0
+#, python-format
+msgid "You cannot upload spreadsheets in a shared folder"
+msgstr "공유 폴더에는 스프레드시트를 업로드할 수 없습니다"
+
+#. module: documents_spreadsheet
+#. odoo-python
+#: code:addons/documents_spreadsheet/controllers/share.py:0
+#: code:addons/documents_spreadsheet/controllers/share.py:0
+#: code:addons/documents_spreadsheet/controllers/share.py:0
+#: code:addons/documents_spreadsheet/models/documents_document.py:0
+#, python-format
+msgid "You don't have access to this document"
+msgstr "이 문서에 대한 액세스 권한이 없습니다."
+
+#. module: documents_spreadsheet
+#. odoo-javascript
+#: code:addons/documents_spreadsheet/static/src/spreadsheet_selector_dialog/document_selector_panel.xml:0
+#, python-format
+msgid "getPageTitle('SPREADSHEET')"
+msgstr "getPageTitle('SPREADSHEET')"

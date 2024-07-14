@@ -1,0 +1,210 @@
+// General variable
+$o-tw-color-white: #FFF;
+$o-tw-color-black: #000;
+$o-tw-color-transparent: rgba(0, 0, 0, 0);
+$o-tw-color-well-bg: #f5f5f5;
+$o-tw-color-white-transparent: rgba(255, 255, 255, 0.8);
+$o-tw-color-black-transparent: rgba(0, 0, 0, 0.2);
+
+.o-tw-wall {
+    min-height: 307px;
+    .o-tw-image {
+        height: 200px;
+        width: 100%;
+        overflow: hidden;
+    }
+    .o-tw-toggle-btn {
+        border: 0px;
+        border-radius: 0px;
+        float: right;
+        margin-top: 5px;
+        background: $o-tw-color-well-bg;
+    }
+    .o-tw-padding {
+        height: 125px;
+        padding: 5px;
+        .o-tw-ellipsis {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}
+
+.o-tw-storify-cover {
+    height: 600px;
+    @media (max-width: 768px) {
+        height: 235px;
+    }
+    color: $o-tw-color-white;
+    position: relative;
+    background-blend-mode: multiply;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    -o-background-size: cover;
+    .o-tw-shadow {
+        height: 100%;
+        $gradient-default-start: rgba(0,0,0,0);
+        $gradient-default-end: rgba(0,0,0,0.7);
+    }
+    .o-tw-info {
+        left: 0;
+        right: 0;
+        top: 25%;
+        text-align: center;
+        position: absolute;
+        text-shadow: 1px 1px 6px $o-tw-color-black;
+        label {
+            background-color: $o-tw-color-transparent;
+            border: 2px solid $o-tw-color-white-transparent;
+            padding: 0.15em 0.6em;
+        }
+        a {
+            color: $o-tw-color-white;
+            &:hover {
+                opacity: 0.8;
+                text-decoration: none;
+            }
+        }
+        @media (max-width: 768px) {
+            top: 10%;
+            h1 {
+                font-size: 26px;
+            }
+            h2 {
+                font-size: 20px;
+            }
+        }
+    }
+    .o-tw-nav {
+        position: absolute;
+        width: 100%;
+        bottom: 0px;
+        .o-tw-btn-invert {
+            background: $o-tw-color-transparent;
+            color: $o-tw-color-white;
+            transition: 0.3s;
+            &:hover {
+                background: $o-tw-color-white-transparent;
+                color: #333;
+            }
+        }
+    }
+}
+
+.o-tw-tweet {
+    .o-tw-tweet-delete {
+        position: absolute;
+        cursor: pointer;
+        transition: 0.3s;
+        opacity: 0;
+        @media (min-width: 768px) {
+            margin-left: 35%;
+        }
+        @media (min-width: 992px) {
+            margin-left: 27%;
+        }
+        @media (min-width: 1200px) {
+            margin-left: 22%;
+        }
+    }
+    &:hover .o-tw-tweet-delete {
+        opacity: 1;
+    }
+}
+
+.o-tw-live-nav {
+    background-color: $o-tw-color-black-transparent !important;
+    .o-tw-hashtag {
+        div {
+            color: $o-tw-color-white;
+            label {
+                @include font-size(26px);
+                background-color: $o-tw-color-transparent;
+                padding: 0;
+            }
+        }
+    }
+    &:hover .o-tw-options {
+        visibility: visible;
+    }
+    .o-tw-options {
+        visibility: hidden;
+        transition: 1s;
+        .o-tw-color {
+            height: 28px;
+            width: 28px;
+            display: inline-block;
+            cursor: pointer;
+            margin: 0px 3px;
+            border-radius: 50%;
+        }
+        .o-tw-bg-img-thumb img {
+            height: 47px;
+            width: 78px;
+        }
+    }
+    .o-tw-powered {
+        max-height: 40px;
+    }
+}
+
+.o-tw-view-live {
+    .o-tw-tweet-single {
+        .o-tw-tweet:not(:first-child) {
+            display: none;
+        }
+    }
+    .o-tw-tweet {
+        width : 100%;
+        blockquote {
+            display: none;
+        }
+        iframe {
+            border-width: 0px !important;
+            box-shadow: none !important;
+            -moz-animation-name: dropHeader;
+            -moz-animation-iteration-count: 1;
+            -moz-animation-timing-function: ease-in;
+            -moz-animation-duration: 1.2s;
+            -webkit-animation-name: dropHeader;
+            -webkit-animation-iteration-count: 1;
+            -webkit-animation-timing-function: ease-out;
+            -webkit-animation-duration: 1.2s;
+            animation-name: dropHeader;
+            animation-iteration-count: 1;
+            animation-timing-function: ease-in;
+            animation-duration: 1.2s;
+        }
+        @-moz-keyframes dropHeader {
+            0% {
+                -moz-transform: translateY(-200px);
+            }
+            100% {
+                -moz-transform: translateY(0);
+            }
+        }
+        @-webkit-keyframes dropHeader {
+            0% {
+                opacity: 0;
+                -webkit-transform: translateY(-300px);
+            }
+            75% {
+                opacity: 0;
+            }
+            100% {
+                -webkit-transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        @keyframes dropHeader {
+            0% {
+                transform: translateY(-200px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+    }
+}

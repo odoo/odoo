@@ -1,0 +1,91 @@
+<templates>
+
+    <t t-name="web_studio.ViewEditor.CalendarEditorSidebar">
+        <InteractiveEditorSidebar>
+            <t t-set-slot="view">
+                <Property
+                    name="'quick_create'"
+                    type="'boolean'"
+                    value="archInfo.hasQuickCreate"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Quick Create
+                </Property>
+
+                <Property
+                    t-if="env.debug and archInfo.hasQuickCreate"
+                    name="'create_name_field'"
+                    type="'selection'"
+                    value="archInfo.fieldMapping.create_name_field"
+                    childProps="{ choices: this.quickCreateFields }"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Quick Create Field
+                </Property>
+
+                <Property
+                    name="'date_start'"
+                    type="'selection'"
+                    value="archInfo.fieldMapping.date_start"
+                    childProps="{ choices: startDateFields }"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Start Date Field
+                </Property>
+
+                <Property
+                    name="'date_stop'"
+                    type="'selection'"
+                    value="archInfo.fieldMapping.date_stop"
+                    childProps="{ choices: startDateFields, required: false }"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Stop Date Field
+                </Property>
+
+                <Property
+                    name="'date_delay'"
+                    type="'selection'"
+                    value="archInfo.fieldMapping.date_delay"
+                    childProps="{ choices: delayFields, required: false }"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Delay Field
+                </Property>
+
+                <Property
+                    name="'color'"
+                    type="'selection'"
+                    value="archInfo.fieldMapping.color"
+                    childProps="{ choices: colorFields, required: false }"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Color
+                </Property>
+
+                <Property
+                    name="'all_day'"
+                    type="'selection'"
+                    value="archInfo.fieldMapping.all_day"
+                    childProps="{ choices: allDayFields, required: false }"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    All Day
+                </Property>
+
+                <Property
+                    name="'mode'"
+                    type="'selection'"
+                    value="archInfo.scale"
+                    childProps="{ choices: modeChoices }"
+                    onChange.bind="onViewAttributeChanged"
+                >
+                    Default Display Mode
+                </Property>
+
+                <SidebarViewToolbox onMore="props.openViewInForm" canEditXml="!viewEditorModel.isEditingSubview" openDefaultValues="props.openDefaultValues" />
+            </t>
+        </InteractiveEditorSidebar>
+    </t>
+
+</templates>

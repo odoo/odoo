@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="intrastat_report_export_xml_items">
+            <t t-foreach="items" t-as="item">
+                <Item>
+                    <Dim prop="EXTRF"
+                         t-out="item['system']"/>
+                    <Dim prop="EXCNT"
+                         t-out="item['country_code']"/>
+                    <Dim prop="EXTTA"
+                         t-out="item['transaction_code']"/>
+                    <Dim prop="EXREG"
+                         t-out="item['region_code']"/>
+                    <Dim prop="EXTGO"
+                         t-out="item['commodity_code']"/>
+                    <Dim prop="EXTXVAL"
+                         t-out="'%.2f' % item['value']"/>
+                    <Dim prop="EXWEIGHT"
+                         t-out="'%.2f' % item['weight']"/>
+                    <Dim prop="EXUNITS"
+                         t-out="item['supplementary_units']"/>
+                    <Dim prop="EXCNTORI"
+                         t-if="expedition"
+                         t-out="item['intrastat_product_origin_country_code']"/>
+                    <Dim prop="PARTNERID"
+                         t-if="expedition"
+                         t-out="item['partner_vat']"/>
+                    <Dim prop="EXTPC"
+                         t-if="extended"
+                         t-out="item['transport_code'] or ''"/>
+                    <Dim prop="EXDELTRM"
+                         t-if="extended"
+                         t-out="item['incoterm_code'] or ''"/>
+                </Item>
+            </t>
+        </template>
+
+        <template id="intrastat_report_export_xml">
+            <DeclarationReport xmlns="http://www.onegate.eu/2010-01-01">
+                <Administration>
+                    <From declarerType="KBO" t-out="company.company_registry"/>
+                    <To>NBB</To>
+                    <Domain>SXX</Domain>
+                </Administration>
+                <Report
+                    t-att-action="'nihil' if len(in_vals) == 0 else 'replace'"
+                    t-att-code="_get_reception_code(extended)"
+                    t-att-date="date"
+                    t-if="incl_arrivals"
+                >
+                    <Data close="true" t-att-form="_get_reception_form(extended)">
+                        <t t-call="l10n_be_intrastat.intrastat_report_export_xml_items">
+                            <t t-set="reception" t-value="true"/>
+                            <t t-set="items" t-value="in_vals"/>
+                        </t>
+                    </Data>
+                </Report>
+                <Report
+                    t-att-action="'nihil' if len(out_vals) == 0 else 'replace'"
+                    t-att-code="_get_expedition_code(extended)"
+                    t-att-date="date"
+                    t-if="incl_dispatches"
+                >
+                    <Data close="true" t-att-form="_get_expedition_form(extended)">
+                        <t t-call="l10n_be_intrastat.intrastat_report_export_xml_items">
+                            <t t-set="expedition" t-value="true"/>
+                            <t t-set="items" t-value="out_vals"/>
+                        </t>
+                    </Data>
+                </Report>
+            </DeclarationReport>
+        </template>
+    </data>
+</odoo>

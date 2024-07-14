@@ -1,0 +1,221 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* currency_rate_live
+# 
+# Translators:
+# Wil Odoo, 2023
+# Thi Huong Nguyen, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-26 16:11+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bnm
+msgid "Bank Negara Malaysia"
+msgstr "Bank Negara Malaysia"
+
+#. module: currency_rate_live
+#: model_terms:ir.ui.view,arch_db:currency_rate_live.res_config_settings_view_form
+msgid ""
+"<i title=\"Update now\" role=\"img\" aria-label=\"Update now\" class=\"fa "
+"fa-fw fa-refresh\"/>"
+msgstr ""
+"<i title=\"Cập nhật ngay\" role=\"img\" aria-label=\"Update now\" class=\"fa"
+" fa-fw fa-refresh\"/>"
+
+#. module: currency_rate_live
+#: model:ir.model,name:currency_rate_live.model_res_company
+msgid "Companies"
+msgstr "Công ty"
+
+#. module: currency_rate_live
+#: model:ir.model,name:currency_rate_live.model_res_config_settings
+msgid "Config Settings"
+msgstr "Cài đặt cấu hình"
+
+#. module: currency_rate_live
+#: model:ir.actions.server,name:currency_rate_live.ir_cron_currency_update_ir_actions_server
+msgid "Currency: rate update"
+msgstr "Tiền tệ: cập nhật tỷ giá"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_interval_unit__daily
+msgid "Daily"
+msgstr "Hàng ngày"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__ecb
+msgid "European Central Bank"
+msgstr "Ngân hàng trung ương châu Âu"
+
+#. module: currency_rate_live
+#: model_terms:ir.ui.view,arch_db:currency_rate_live.res_config_settings_view_form
+msgid "Interval"
+msgstr "Khoảng thời gian"
+
+#. module: currency_rate_live
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_company__currency_interval_unit
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_config_settings__currency_interval_unit
+msgid "Interval Unit"
+msgstr "Interval Unit"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_interval_unit__manually
+msgid "Manually"
+msgstr "Thủ công"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_interval_unit__monthly
+msgid "Monthly"
+msgstr "Hàng tháng"
+
+#. module: currency_rate_live
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_company__currency_next_execution_date
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_config_settings__currency_next_execution_date
+msgid "Next Execution Date"
+msgstr "Ngày thực hiện tiếp theo"
+
+#. module: currency_rate_live
+#: model_terms:ir.ui.view,arch_db:currency_rate_live.res_config_settings_view_form
+msgid "Next Run"
+msgstr "Lần chạy tiếp theo"
+
+#. module: currency_rate_live
+#: model_terms:ir.ui.view,arch_db:currency_rate_live.res_config_settings_view_form
+msgid "Service"
+msgstr "Dịch vụ"
+
+#. module: currency_rate_live
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_company__currency_provider
+#: model:ir.model.fields,field_description:currency_rate_live.field_res_config_settings__currency_provider
+msgid "Service Provider"
+msgstr "Nhà cung cấp dịch vụ"
+
+#. module: currency_rate_live
+#. odoo-python
+#: code:addons/currency_rate_live/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"The selected exchange rate provider requires the GTQ and USD currencies to "
+"be active."
+msgstr ""
+"Nhà cung cấp tỷ giá hối đoái đã chọn yêu cầu loại tiền GTQ và USD phải hoạt "
+"động."
+
+#. module: currency_rate_live
+#. odoo-python
+#: code:addons/currency_rate_live/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Unable to connect to the online exchange rate platform %s. The web service "
+"may be temporarily down. Please try again in a moment."
+msgstr ""
+"Không thể kết nối với nền tảng tỷ giá hối đoái online %s. Dịch vụ web có thể"
+" đang tạm ngừng hoạt động. Vui lòng thử lại sau giây lát."
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_interval_unit__weekly
+msgid "Weekly"
+msgstr "Hàng tuần"
+
+#. module: currency_rate_live
+#. odoo-python
+#: code:addons/currency_rate_live/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"Your main currency (%s) is not supported by this exchange rate provider. "
+"Please choose another one."
+msgstr ""
+"Tiền tệ chính của bạn (%s) không được nhà cung cấp tỷ giá hối đoái này hỗ "
+"trợ. Vui lòng chọn tiền tệ khác."
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__cbuae
+msgid "[AE] Central Bank of the UAE"
+msgstr "[AE] Ngân hàng Trung ương UAE"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bnb
+msgid "[BG] Bulgaria National Bank"
+msgstr "[BG] Ngân hàng Quốc gia Bulgaria"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bbr
+msgid "[BR] Central Bank of Brazil"
+msgstr "[BR] Ngân hàng Trung ương Brazil"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__boc
+msgid "[CA] Bank of Canada"
+msgstr "[CA] Ngân hàng Canada"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__fta
+msgid "[CH] Federal Tax Administration of Switzerland"
+msgstr "[CH] Cơ quan Quản lý Thuế Liên bang Thụy Sĩ"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__mindicador
+msgid "[CL] Central Bank of Chile via mindicador.cl"
+msgstr "[CL] Ngân hàng Trung ương Chile thông qua mindicador.cl"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__cnb
+msgid "[CZ] Czech National Bank"
+msgstr "[CZ] Ngân hàng Quốc gia Séc"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__cbegy
+msgid "[EG] Central Bank of Egypt"
+msgstr "[EG] Ngân hàng Trung ương Ai Cập"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__banguat
+msgid "[GT] Bank of Guatemala"
+msgstr "[GT] Ngân hàng Guatemala"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__banxico
+msgid "[MX] Bank of Mexico"
+msgstr "[MX] Ngân hàng Mexico"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bcrp
+msgid "[PE] SUNAT (replaces Bank of Peru)"
+msgstr "[PE] SUNAT (thay thế Ngân hàng Peru)"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__nbp
+msgid "[PL] National Bank of Poland"
+msgstr "[PL] Ngân hàng Quốc gia Ba Lan"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__bnr
+msgid "[RO] National Bank of Romania"
+msgstr "[RO] Ngân hàng Quốc gia Romania"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__tcmb
+msgid "[TR] Central Bank of the Republic of Turkey"
+msgstr "[TR] Ngân hàng Trung ương Cộng hòa Thổ Nhĩ Kỳ"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__hmrc
+msgid "[UK] HM Revenue & Customs"
+msgstr "[UK] HM Revenue & Customs"
+
+#. module: currency_rate_live
+#: model:ir.model.fields.selection,name:currency_rate_live.selection__res_company__currency_provider__xe_com
+msgid "xe.com"
+msgstr "xe.com"

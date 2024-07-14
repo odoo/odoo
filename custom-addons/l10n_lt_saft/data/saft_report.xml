@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- INHERITED GENERIC TEMPLATES -->
+
+    <template id="saft_template_inherit_l10n_lt_saft" inherit_id="account_saft.saft_template" primary="True">
+        <xpath expr="//Header" position="inside">
+            <FiscalYearFrom t-out="date_from"/>
+            <FiscalYearTo t-out="date_to"/>
+            <Entity t-out="entity"/>
+            <DataType>GL</DataType>
+            <NumberOfParts t-out="nb_of_parts"/>
+            <PartNumber t-out="part_nb"/>
+        </xpath>
+
+        <xpath expr="//Header/Company" position="replace">
+            <Company>
+                <t t-call="l10n_lt_saft.l10n_lt_saft_company_header"/>
+            </Company>
+        </xpath>
+
+        <xpath expr="//Header/SelectionCriteria/SelectionEndDate" position="after">
+            <PeriodStart t-out="date_from"/>
+            <PeriodEnd t-out="date_to"/>
+        </xpath>
+
+        <xpath expr="//Account/StandardAccountID" position="replace">
+            <AccountTableID t-out="account.code"/>
+            <AccountTableDescription t-out="account.name[:256]"/>
+        </xpath>
+
+        <xpath expr="//Owners/Owner" position="replace">
+            <Owner>
+                <OwnerID t-out="company.company_registry"/>
+                <OwnerName t-out="company.name"/>
+                <t t-if="owner_accounts">
+                    <AccountID t-out="owner_accounts"/>
+                </t>
+                <t t-else="">
+                    <AccountID>N/A</AccountID>
+                </t>
+                <Address>
+                    <t t-set="partner_address" t-value="company.partner_id"/>
+                    <t t-call="l10n_lt_saft.address_inherit_l10n_lt_saft"/>
+                </Address>
+            </Owner>
+        </xpath>
+
+        <xpath expr="//GeneralLedgerEntries/Journal" position="replace">
+            <Journals>
+                <Journal t-foreach="journal_vals_list" t-as="journal_vals">
+                    <t t-call="l10n_lt_saft.l10n_lt_journal"/>
+                </Journal>
+            </Journals>
+        </xpath>
+
+        <xpath expr="//Customers/Customer" position="replace">
+            <Customer t-foreach="customer_vals_list" t-as="partner_vals">
+                <t t-call="l10n_lt_saft.addresses_contacts_inherit_l10n_lt_saft">
+                    <t t-set="partner_id" t-value="partner_vals['partner'].id"/>
+                </t>
+                <CustomerID t-out="partner_vals['partner'].id"/>
+                <!-- The letter 'V' is used when a VAT invoice / account is issued by the consignee itself -->
+                <SelfBillingIndicator><t t-if="partner_vals['partner'].id == company['partner_id'].id">V</t></SelfBillingIndicator>
+                <Accounts t-foreach="partner_vals['accounts']" t-as="partner_account">
+                    <t t-call="l10n_lt_saft.l10n_lt_account_template"/>
+                </Accounts>
+            </Customer>
+        </xpath>
+
+        <xpath expr="//Suppliers/Supplier" position="replace">
+            <Supplier t-foreach="supplier_vals_list" t-as="partner_vals">
+                <t t-call="l10n_lt_saft.addresses_contacts_inherit_l10n_lt_saft">
+                    <t t-set="partner_id" t-value="partner_vals['partner'].id"/>
+                </t>
+                <SupplierID t-out="partner_vals['partner'].id"/>
+                <!-- The letter 'V' is used when a VAT invoice / account is issued by the consignee itself -->
+                <SelfBillingIndicator><t t-if="partner_vals['partner'].id == company['partner_id'].id">V</t></SelfBillingIndicator>
+                <Accounts t-foreach="partner_vals['accounts']" t-as="partner_account">
+                    <t t-call="l10n_lt_saft.l10n_lt_account_template"/>
+                </Accounts>
+            </Supplier>
+        </xpath>
+
+        <xpath expr="//TaxCodeDetails" position="before">
+            <TaxType t-out="tax_vals['type']"/>
+            <Description t-out="tax_vals['name'][:256]"/>
+        </xpath>
+
+        <xpath expr="//TaxCodeDetails" position="replace">
+            <TaxCodeDetails>
+                <TaxCodeDetail>
+                    <TaxCode t-out="tax_vals['id']"/>
+                    <Description t-out="tax_vals['name'][:256]"/>
+                    <t t-if="tax_vals['amount_type'] == 'percent'">
+                        <TaxPercentage t-out="tax_vals['amount']"/>
+                    </t>
+                    <t t-else="">
+                        <FlatTaxRate>
+                            <Amount t-out="tax_vals['amount']"/>
+                        </FlatTaxRate>
+                    </t>
+                    <Country t-out="company.account_fiscal_country_id.code"/>
+                </TaxCodeDetail>
+            </TaxCodeDetails>
+        </xpath>
+    </template>
+
+    <template id="addresses_contacts_inherit_l10n_lt_saft" inherit_id="account_saft.addresses_contacts" primary="True">
+        <xpath expr="//Address" position="replace">
+            <Address t-foreach="partner_info['addresses']" t-as="partner_address">
+                <t t-call="l10n_lt_saft.address_inherit_l10n_lt_saft"/>
+            </Address>
+        </xpath>
+
+        <xpath expr="//Contact/Website" position="replace"/>
+
+        <xpath expr="//TaxRegistration/TaxRegistrationNumber" position="after">
+            <TaxType>PVM</TaxType>
+        </xpath>
+    </template>
+
+    <template id="address_inherit_l10n_lt_saft" inherit_id="account_saft.address" primary="True">
+        <xpath expr="//AdditionalAddressDetail" position="replace"/>
+
+        <xpath expr="//Country" position="after">
+            <AddressType>BA</AddressType>
+            <t t-if="partner_address.street">
+                <t t-if="partner_address.street2">
+                    <FullAddress t-out="partner_address.street[:128] + ' ' + partner_address.street2[:128]"/>
+                </t>
+                <t t-else="">
+                    <FullAddress t-out="partner_address.street[:128]"/>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Generic template to fill details about the company.
+    To be called with 'company' set as a res.company record.
+    -->
+    <template id="l10n_lt_saft_company_header">
+        <RegistrationNumber t-if="company.company_registry" t-out="company.company_registry"/>
+        <t t-call="l10n_lt_saft.addresses_contacts_inherit_l10n_lt_saft">
+            <t t-set="partner_id" t-value="company.partner_id.id"/>
+        </t>
+        <BankAccount t-foreach="company.bank_ids" t-as="partner_bank">
+            <t t-if="partner_bank.acc_type == 'iban'">
+                <IBANNumber t-out="partner_bank.acc_number"/>
+            </t>
+            <t t-else="">
+                <BankAccountNumber t-out="partner_bank.acc_number"/>
+                <BankAccountName t-if="partner_bank.bank_name" t-out="partner_bank.bank_name[:70]"/>
+                <SortCode t-if="partner_bank.bank_bic" t-out="partner_bank.bank_bic[:18]"/>
+            </t>
+        </BankAccount>
+    </template>
+
+    <!-- SPECIFIC TEMPLATES -->
+
+    <template id="l10n_lt_journal">
+        <JournalID t-out="journal_vals['id']"/>
+        <Description t-out="journal_vals['name'][:256]"/>
+        <Type t-out="journal_vals['type'][:9]"/>
+        <Transactions>
+            <Transaction t-foreach="journal_vals['move_vals_list']" t-as="move_vals">
+                <t t-call="l10n_lt_saft.l10n_lt_transaction"/>
+            </Transaction>
+        </Transactions>
+    </template>
+
+    <template id="l10n_lt_transaction">
+        <TransactionID t-out="move_vals['id']"/>
+        <Period t-out="format_date(move_vals['date'], '%m')"/>
+        <PeriodYear t-out="format_date(move_vals['date'], '%Y')"/>
+        <TransactionDate t-out="move_vals['date']"/>
+        <Description t-out="move_vals['name'][:256]"/>
+        <SystemEntryDate t-out="move_vals['create_date'].strftime('%Y-%m-%dT%H:%M:%S')"/>
+        <GLPostingDate t-out="move_vals['date']"/>
+        <t t-if="move_vals['partner_id']">
+            <t t-set="partner_vals" t-value="partner_detail_map[move_vals['partner_id']]"/>
+            <CustomerID t-if="partner_vals['type'] == 'customer'" t-out="move_vals['partner_id']"/>
+            <SupplierID t-if="partner_vals['type'] == 'supplier'" t-out="move_vals['partner_id']"/>
+        </t>
+        <t t-else="">
+            <CustomerID>N/A</CustomerID>
+        </t>
+        <Lines>
+            <Line t-foreach="move_vals['line_vals_list']" t-as="line_vals">
+                <t t-call="l10n_lt_saft.l10n_lt_line"/>
+            </Line>
+        </Lines>
+    </template>
+
+    <template id="l10n_lt_line">
+        <RecordID t-out="line_vals['id']"/>
+        <AccountID t-out="line_vals['account_id']"/>
+        <SourceDocumentID t-out="move_vals['id']"/>
+        <t t-if="line_vals['partner_id']">
+            <t t-set="partner_vals" t-value="partner_detail_map[line_vals['partner_id']]"/>
+            <CustomerID t-if="partner_vals['type'] == 'customer'" t-out="line_vals['partner_id']"/>
+            <SupplierID t-if="partner_vals['type'] == 'supplier'" t-out="line_vals['partner_id']"/>
+        </t>
+        <t t-else="">
+            <CustomerID>N/A</CustomerID>
+        </t>
+        <Description t-out="(line_vals['name'] or move_vals['name'])[:256]"/>
+        <t t-call="account_saft.line_debit_credit_amount"/>
+        <TaxInformations t-foreach="line_vals.get('tax_detail_vals_list', [])" t-as="tax_vals">
+            <t t-set="sign" t-value="-1 if line_vals['credit'] else 1"/>
+            <TaxInformation>
+                <t t-call="account_saft.tax_information"/>
+            </TaxInformation>
+        </TaxInformations>
+    </template>
+
+    <template id="l10n_lt_account_template">
+        <AccountID t-out="partner_account['code']"/>
+        <t t-set="opening_balance" t-value="partner_account['opening_balance']"/>
+        <t t-set="closing_balance" t-value="partner_account['closing_balance']"/>
+        <t t-if="opening_balance &lt; 0.0">
+            <OpeningCreditBalance t-out="format_float(-opening_balance)"/>
+        </t>
+        <t t-else="">
+            <OpeningDebitBalance t-out="format_float(opening_balance)"/>
+        </t>
+        <t t-if="closing_balance &lt; 0.0">
+            <ClosingCreditBalance t-out="format_float(-closing_balance)"/>
+        </t>
+        <t t-else="">
+            <ClosingDebitBalance t-out="format_float(closing_balance)"/>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_sharing_project_task_view_form_inherited" model="ir.ui.view">
+        <field name="name">project.task.form.timesheet.inherited</field>
+        <field name="model">project.task</field>
+        <field name="priority">400</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/field[@name='date_deadline']" position="attributes">
+                <attribute name="nolabel">1</attribute>
+                <attribute name="widget">daterange</attribute>
+                <attribute name="options">{'start_date_field': 'planned_date_begin'}</attribute>
+            </xpath>
+            <xpath expr="//group/field[@name='date_deadline']" position="after">
+                <field name="planned_date_begin" invisible="1"/>
+            </xpath>
+            <xpath expr="//group/field[@name='date_deadline']" position="before">
+                <label for="date_deadline" invisible="planned_date_begin"/>
+            </xpath>
+            <xpath expr="//group/label[@for='date_deadline']" position="after">
+                <label for="date_deadline" string="Planned Date" invisible="not planned_date_begin"/>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/tree//field[@name='date_deadline']" position="attributes">
+                <attribute name="widget">daterange</attribute>
+                <attribute name="options">{'start_date_field': 'planned_date_begin'}</attribute>
+                <attribute name="decoration-danger">date_deadline &lt; current_date and state not in ['1_done', '1_canceled']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/tree//field[@name='date_deadline']" position="after">
+                <field name="planned_date_begin" column_invisible="true"/>
+            </xpath>
+        </field>
+     </record>
+
+     <record id="project_sharing_project_task_view_kanban_inherited" model="ir.ui.view">
+        <field name="name">project.sharing.project.task.view.kanban.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_kanban"/>
+        <field name="arch" type="xml">
+            <div name="date_deadline" position="attributes">
+                <attribute name="invisible">planned_date_begin or not date_deadline or state in ['1_done', '1_canceled']</attribute>
+            </div>
+            <div name="date_deadline" position="after">
+                <div invisible="not planned_date_begin" t-att-class="(luxon.DateTime.fromISO(record.date_deadline.raw_value) &lt; luxon.DateTime.local() and !['1_done', '1_canceled'].includes(record.state.raw_value)) ? 'text-danger' : ''">
+                    <field name="planned_date_begin"/>
+                    <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow" invisible="not planned_date_begin"/>
+                    <field name="date_deadline"/>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="project_sharing_project_task_view_tree_inherited" model="ir.ui.view">
+        <field name="name">project_enterprise.project.task.view.tree.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_deadline']" position="attributes">
+                <attribute name="widget">daterange</attribute>
+                <attribute name="options">{'start_date_field': 'planned_date_begin'}</attribute>
+                <attribute name="decoration-danger">date_deadline &lt; current_date and state not in ['1_done', '1_canceled']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_deadline']" position="after">
+                <field name="planned_date_begin" column_invisible="True"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

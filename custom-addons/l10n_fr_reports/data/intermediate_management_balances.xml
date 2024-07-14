@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_fr_pl_imb_account_financial_report" model="account.report">
+        <field name="name">IMB - Intermediate management balances</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="country_id" ref="base.fr"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_fr_pl_imb_column_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_fr_pl_imb_IV" model="account.report.line">
+                <field name="name">Value Added IV (I+II-III)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">l10n_fr_imb_IV</field>
+                <field name="expression_ids">
+                    <record id="l10n_fr_pl_imb_IV_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_fr_imb_I.balance + l10n_fr_imb_II.balance - l10n_fr_imb_III.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_fr_pl_imb_I" model="account.report.line">
+                        <field name="name">Trade margin (I)</field>
+                        <field name="code">l10n_fr_imb_I</field>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_I_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_fr_imb_1.balance - l10n_fr_imb_2.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_fr_pl_imb_1" model="account.report.line">
+                                <field name="name">Sale of goods</field>
+                                <field name="code">l10n_fr_imb_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_fr_pl_imb_1_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-7097 - 707</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_fr_pl_imb_2" model="account.report.line">
+                                <field name="name">Purchase cost of goods sold</field>
+                                <field name="code">l10n_fr_imb_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_fr_pl_imb_2_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">607 + 608 + 6097 + 6037</field>
+                                        <field name="date_scope">normal</field>
+                                        <field name="green_on_positive" eval="False"/>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_fr_pl_imb_II" model="account.report.line">
+                        <field name="name">Production for the year (II)</field>
+                        <field name="code">l10n_fr_imb_II</field>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_II_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_fr_imb_3.balance + l10n_fr_imb_4.balance + l10n_fr_imb_5.balance</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_fr_pl_imb_3" model="account.report.line">
+                                <field name="name">Production sold</field>
+                                <field name="code">l10n_fr_imb_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_fr_pl_imb_3_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-70\(700,707,709) - 7091 - 7092 - 7094 - 7095 - 7096 - 7098 - 73</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_fr_pl_imb_4" model="account.report.line">
+                                <field name="name">Stocked production</field>
+                                <field name="code">l10n_fr_imb_4</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_fr_pl_imb_4_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-713</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_fr_pl_imb_5" model="account.report.line">
+                                <field name="name">Capitalized production</field>
+                                <field name="code">l10n_fr_imb_5</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_fr_pl_imb_5_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-72</field>
+                                        <field name="date_scope">normal</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_fr_pl_imb_III" model="account.report.line">
+                        <field name="name">Consumption during the year from third parties (III)</field>
+                        <field name="code">l10n_fr_imb_III</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_III_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">60\(600,603,607,608,6097) + 6031 + 6032 + 61 + 62</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_fr_pl_imb_V" model="account.report.line">
+                <field name="name">Gross operating surplus V (IV+a-b-c)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">l10n_fr_imb_V</field>
+                <field name="expression_ids">
+                    <record id="l10n_fr_pl_imb_V_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_fr_imb_IV.balance + l10n_fr_imb_a.balance - l10n_fr_imb_b.balance - l10n_fr_imb_c.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_fr_pl_imb_a" model="account.report.line">
+                        <field name="name">Operating subsidies (a)</field>
+                        <field name="code">l10n_fr_imb_a</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_a_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-74</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_fr_pl_imb_b" model="account.report.line">
+                        <field name="name">Taxes and similar payments (b)</field>
+                        <field name="code">l10n_fr_imb_b</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_b_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">63</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_fr_pl_imb_c" model="account.report.line">
+                        <field name="name">Personnel costs (c)</field>
+                        <field name="code">l10n_fr_imb_c</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_c_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">64</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_fr_pl_imb_VI" model="account.report.line">
+                <field name="name">Operating result VI (V+d+e+f-g-h)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">l10n_fr_imb_VI</field>
+                <field name="expression_ids">
+                    <record id="l10n_fr_pl_imb_VI_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_fr_imb_V.balance + l10n_fr_imb_d.balance + l10n_fr_imb_e.balance + l10n_fr_imb_f.balance - l10n_fr_imb_g.balance - l10n_fr_imb_h.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_fr_pl_imb_d" model="account.report.line">
+                        <field name="name">Other operating income (d)</field>
+                        <field name="code">l10n_fr_imb_d</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_d_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-75\(755)</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_fr_pl_imb_e" model="account.report.line">
+                        <field name="name">Reversals of depreciations and operating provisions (e)</field>
+                        <field name="code">l10n_fr_imb_e</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_e_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-781</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_fr_pl_imb_f" model="account.report.line">
+                        <field name="name">Operating expense transfers (f)</field>
+                        <field name="code">l10n_fr_imb_f</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_f_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-791</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_fr_pl_imb_g" model="account.report.line">
+                        <field name="name">Amortization, depreciation and operating provisions (g)</field>
+                        <field name="code">l10n_fr_imb_g</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_g_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">681</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_fr_pl_imb_h" model="account.report.line">
+                        <field name="name">Other expenses (h)</field>
+                        <field name="code">l10n_fr_imb_h</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_h_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">65\(655)</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_fr_pl_imb_VII" model="account.report.line">
+                <field name="name">Current result before tax VII (VI+i+j-k-l)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">l10n_fr_imb_VII</field>
+                <field name="expression_ids">
+                    <record id="l10n_fr_pl_imb_VII_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_fr_imb_VI.balance + l10n_fr_imb_i.balance + l10n_fr_imb_j.balance - l10n_fr_imb_k.balance - l10n_fr_imb_l.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_fr_pl_imb_i" model="account.report.line">
+                        <field name="name">Share of profit on joint operations (i)</field>
+                        <field name="code">l10n_fr_imb_i</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_i_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-755</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_fr_pl_imb_j" model="account.report.line">
+                        <field name="name">Financial income (j)</field>
+                        <field name="code">l10n_fr_imb_j</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_j_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-76 -786 - 796</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_fr_pl_imb_k" model="account.report.line">
+                        <field name="name">Share of profit from joint operations (k)</field>
+                        <field name="code">l10n_fr_imb_k</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_k_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">655</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_fr_pl_imb_l" model="account.report.line">
+                        <field name="name">Financial charges (l)</field>
+                        <field name="code">l10n_fr_imb_l</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_l_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">66 + 686</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_fr_pl_imb_VIII" model="account.report.line">
+                <field name="name">Extraordinary result VIII (m-n)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">l10n_fr_imb_VIII</field>
+                <field name="expression_ids">
+                    <record id="l10n_fr_pl_imb_VIII_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_fr_imb_m.balance - l10n_fr_imb_n.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_fr_pl_imb_m" model="account.report.line">
+                        <field name="name">Extraordinary income (m)</field>
+                        <field name="code">l10n_fr_imb_m</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_m_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-77 - 787 - 797</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_fr_pl_imb_n" model="account.report.line">
+                        <field name="name">Exceptional expenses (n)</field>
+                        <field name="code">l10n_fr_imb_n</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_n_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">67 + 687</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_fr_pl_imb_IX" model="account.report.line">
+                <field name="name">Result for the year IX (VII+VIII-o-p)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">l10n_fr_imb_IX</field>
+                <field name="expression_ids">
+                    <record id="l10n_fr_pl_imb_IX_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_fr_imb_VII.balance + l10n_fr_imb_VIII.balance - l10n_fr_imb_o.balance - l10n_fr_imb_p.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_fr_pl_imb_o" model="account.report.line">
+                        <field name="name">Employee participation (o)</field>
+                        <field name="code">l10n_fr_imb_o</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_o_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">691</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_fr_pl_imb_p" model="account.report.line">
+                        <field name="name">Income tax (p)</field>
+                        <field name="code">l10n_fr_imb_p</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="expression_ids">
+                            <record id="l10n_fr_pl_imb_p_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">695 + 696 + 697 + 698 + 699</field>
+                                <field name="date_scope">normal</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

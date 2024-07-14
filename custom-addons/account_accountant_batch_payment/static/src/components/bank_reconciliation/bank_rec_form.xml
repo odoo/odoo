@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Notebook - batch_payments_tab -->
+    <t t-name="account_accountant_batch_payment.BankRecRecordNotebookBatchPayments">
+        <div class="bank_rec_widget_form_batch_payments_list_anchor" t-if="this.state.bankRecEmbeddedViewsData">
+            <BankRecViewEmbedder viewProps="this.notebookBatchPaymentsListViewProps()" t-key="data.st_line_id[0]"/>
+        </div>
+    </t>
+
+    <t t-name="account_accountant_batch_payment.BankRecRecordForm"
+       t-inherit="account_accountant.BankRecRecordForm"
+       t-inherit-mode="extension"
+      >
+        <xpath expr="//t[@t-set='amls_tab_title']" position="after">
+            <t t-set="batch_payments_tab_title">Batch Payments</t>
+        </xpath>
+        <xpath expr="//t[@t-set-slot='amls_tab']" position="after">
+            <t t-set-slot="batch_payments_tab"
+               name="'batch_payments_tab'"
+               title="batch_payments_tab_title"
+               isVisible="['valid', 'invalid'].includes(data.state)">
+                <t t-call="account_accountant_batch_payment.BankRecRecordNotebookBatchPayments"/>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="rule_parameter_max_mortgage_interest" model="hr.rule.parameter">
+        <field name="name">Kenya: Max Mortgage Interest</field>
+        <field name="code">l10n_ke_max_mortgage_interest</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_max_mortgage_interest_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">25000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_max_mortgage_interest"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_max_pension_contribution" model="hr.rule.parameter">
+        <field name="name">Kenya: Max Pension Contribution</field>
+        <field name="code">l10n_ke_max_pension_contribution</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_max_pension_contribution_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">20000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_max_pension_contribution"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_max_insurance_relief" model="hr.rule.parameter">
+        <field name="name">Kenya: Max Insurance Relief</field>
+        <field name="code">l10n_ke_max_insurance_relief</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_max_insurance_relief_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">5000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_max_insurance_relief"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_paye_lower_bound" model="hr.rule.parameter">
+        <field name="name">Kenya: Paye Lower Bound</field>
+        <field name="code">l10n_ke_paye_lower_bound</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_paye_lower_bound_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">24000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_paye_lower_bound"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_paye_higher_bound" model="hr.rule.parameter">
+        <field name="name">Kenya: Paye Higher Bound</field>
+        <field name="code">l10n_ke_paye_higher_bound</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_paye_higher_bound_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">32333</field>
+        <field name="rule_parameter_id" ref="rule_parameter_paye_higher_bound"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_paye_lower_fixed_amount" model="hr.rule.parameter">
+        <field name="name">Kenya: Paye Lower Fixed Amount</field>
+        <field name="code">l10n_ke_paye_lower_fixed_amount</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_paye_lower_fixed_amount_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">2400</field>
+        <field name="rule_parameter_id" ref="rule_parameter_paye_lower_fixed_amount"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_paye_higher_fixed_amount" model="hr.rule.parameter">
+        <field name="name">Kenya: Paye Higher Fixed Amount</field>
+        <field name="code">l10n_ke_paye_higher_fixed_amount</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_paye_higher_fixed_amount_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">2083.25</field>
+        <field name="rule_parameter_id" ref="rule_parameter_paye_higher_fixed_amount"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_personal_relief" model="hr.rule.parameter">
+        <field name="name">Kenya: Personal Relief</field>
+        <field name="code">l10n_ke_personal_relief</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_personal_relief_amount_2017" model="hr.rule.parameter.value">
+        <field name="parameter_value">2400</field>
+        <field name="rule_parameter_id" ref="rule_parameter_personal_relief"/>
+        <field name="date_from" eval="datetime(2017, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_nhif" model="hr.rule.parameter">
+        <field name="name">Kenya: NHIF</field>
+        <field name="code">l10n_ke_nhif</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_nhif_amounts_2021" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+                (  6000.00,  150),
+                (  8000.00,  300),
+                ( 12000.00,  400),
+                ( 15000.00,  500),
+                ( 20000.00,  600),
+                ( 25000.00,  750),
+                ( 30000.00,  850),
+                ( 35000.00,  900),
+                ( 40000.00,  950),
+                ( 45000.00,  1000),
+                ( 50000.00,  1100),
+                ( 60000.00,  1200),
+                ( 70000.00,  1300),
+                ( 80000.00,  1400),
+                ( 90000.00,  1500),
+                (100000.00,  1600),
+                (    'inf',  1700),
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_nhif"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_nssf_lower_earning_limit" model="hr.rule.parameter">
+        <field name="name">Kenya: NSSF Lower Earning Limit</field>
+        <field name="code">l10n_ke_nssf_lower_limit</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_nssf_lower_earning_limit_amount_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">6000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_nssf_lower_earning_limit"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_nssf_lower_earning_limit_amount_february_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">7000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_nssf_lower_earning_limit"/>
+        <field name="date_from" eval="datetime(2024, 2, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_nssf_upper_earning_limit" model="hr.rule.parameter">
+        <field name="name">Kenya: NSSF Upper Earning Limit</field>
+        <field name="code">l10n_ke_nssf_upper_limit</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_nssf_upper_earning_limit_amount_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">18000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_nssf_upper_earning_limit"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_nssf_upper_earning_limit_amount_february_2024" model="hr.rule.parameter.value">
+        <field name="parameter_value">36000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_nssf_upper_earning_limit"/>
+        <field name="date_from" eval="datetime(2024, 2, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_insurance_relief_max" model="hr.rule.parameter">
+        <field name="name">Kenya: Maximum Insurance Relief</field>
+        <field name="code">l10n_ke_insurance_relief_max</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_insurance_relief_max_amount_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">5000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_insurance_relief_max"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_food_alw_max" model="hr.rule.parameter">
+        <field name="name">Kenya: Maximum Food Allowance</field>
+        <field name="code">l10n_ke_food_alw_max</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_food_alw_max_amount_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">5000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_food_alw_max"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_food_alw_max_amount_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">4000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_food_alw_max"/>
+        <field name="date_from" eval="datetime(2022, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_airtime_alw_max" model="hr.rule.parameter">
+        <field name="name">Kenya: Maximum Airtime Allowance</field>
+        <field name="code">l10n_ke_airtime_alw_max</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_airtime_alw_max_amount_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">3000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_airtime_alw_max"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_pension_alw_max" model="hr.rule.parameter">
+        <field name="name">Kenya: Maximum Pension Allowance</field>
+        <field name="code">l10n_ke_pension_alw_max</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_pension_alw_max_amount_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">20000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_pension_alw_max"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_income_tax_breakdown" model="hr.rule.parameter">
+        <field name="name">Kenya: Income Tax Breakdown</field>
+        <field name="code">l10n_ke_income_tax_breakdown</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_income_tax_breakdown_values_2021" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+                (24000, 0.1 ),
+                ( 8333, 0.25),
+                ('inf', 0.3 ),
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_income_tax_breakdown"/>
+        <field name="date_from" eval="datetime(2021, 1, 1).date()"/>
+    </record>
+    <record id="rule_parameter_income_tax_breakdown_values_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">[
+                ( 24000, 0.1  ),
+                (  8333, 0.25 ),
+                (467667, 0.3  ),
+                (300000, 0.325),
+                ( 'inf', 0.35 ),
+        ]</field>
+        <field name="rule_parameter_id" ref="rule_parameter_income_tax_breakdown"/>
+        <field name="date_from" eval="datetime(2023, 7, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_helb_min" model="hr.rule.parameter">
+        <field name="name">Kenya: Minimum HELB</field>
+        <field name="code">l10n_ke_helb_min</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_helb_amount_2020" model="hr.rule.parameter.value">
+        <field name="parameter_value">1500</field>
+        <field name="rule_parameter_id" ref="rule_parameter_helb_min"/>
+        <field name="date_from" eval="datetime(2020, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_nita" model="hr.rule.parameter">
+        <field name="name">Kenya: NITA</field>
+        <field name="code">l10n_ke_nita</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_nita_amount_2022" model="hr.rule.parameter.value">
+        <field name="parameter_value">50</field>
+        <field name="rule_parameter_id" ref="rule_parameter_nita"/>
+        <field name="date_from" eval="datetime(2022, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ahl_employee" model="hr.rule.parameter">
+        <field name="name">Kenya: AHL Employee</field>
+        <field name="code">l10n_ke_ahl_employee</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_ahl_employee_amount_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.015</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ahl_employee"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_ahl_relief_rate" model="hr.rule.parameter">
+        <field name="name">Kenya: AHL Relief</field>
+        <field name="code">l10n_ke_ahl_relief_rate</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_ahl_relief_rate_amount_2024_03_19" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.15</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ahl_relief_rate"/>
+        <field name="date_from" eval="datetime(2024, 3, 19).date()"/>
+    </record>
+
+    <record id="rule_parameter_ahl_relief_cap" model="hr.rule.parameter">
+        <field name="name">Kenya: AHL Relief</field>
+        <field name="code">l10n_ke_ahl_relief_cap</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_ahl_relief_cap_amount_2024_03_19" model="hr.rule.parameter.value">
+        <field name="parameter_value">9000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ahl_relief_cap"/>
+        <field name="date_from" eval="datetime(2024, 3, 19).date()"/>
+    </record>
+
+    <record id="rule_parameter_ahl_employer" model="hr.rule.parameter">
+        <field name="name">Kenya: AHL Employer</field>
+        <field name="code">l10n_ke_ahl_employer</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_ahl_employer_amount_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">0.015</field>
+        <field name="rule_parameter_id" ref="rule_parameter_ahl_employer"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+    </record>
+
+    <record id="rule_parameter_disability_threshold" model="hr.rule.parameter">
+        <field name="name">Kenya: Disability Threshold</field>
+        <field name="code">l10n_ke_disability_threshold</field>
+        <field name="country_id" ref="base.ke"/>
+    </record>
+    <record id="rule_parameter_disability_threshold_amount_2023" model="hr.rule.parameter.value">
+        <field name="parameter_value">150000</field>
+        <field name="rule_parameter_id" ref="rule_parameter_disability_threshold"/>
+        <field name="date_from" eval="datetime(2023, 1, 1).date()"/>
+    </record>
+</odoo>

@@ -1,0 +1,84 @@
+<odoo>
+    <data>
+
+        <!-- Gantt view -->
+        <record id="hr_leave_gantt_view" model="ir.ui.view">
+            <field name="name">hr.leave.gantt</field>
+            <field name="model">hr.leave</field>
+            <field name="arch" type="xml">
+                <gantt
+                       js_class="hr_gantt"
+                       date_start="date_from"
+                       date_stop="date_to"
+                       string="Days"
+                       color="color"
+                       default_group_by='employee_id'
+                       decoration-warning="state == 'refuse'"
+                       decoration-info="state in ['confirm', 'validate1']"
+                       precision="{'week': 'day:half', 'month': 'day:half'}"
+                       plan="0"
+                       total_row="True"
+                       display_unavailability="1"
+                >
+                    <field name="state" invisible="1"/>
+                </gantt>
+            </field>
+        </record>
+
+        <record id="hr_leave_allocation_gantt_view" model="ir.ui.view">
+            <field name="name">hr.leave.allocation.gantt</field>
+            <field name="model">hr.leave.allocation</field>
+            <field name="arch" type="xml">
+                <gantt
+                    js_class="hr_gantt"
+                    date_start="date_from"
+                    date_stop="date_to"
+                    string="Days"
+                    default_group_by="employee_id"
+                    decoration-warning="state == 'refuse'"
+                    decoration-info="state in ['confirm']"
+                    plan="0"
+                >
+                    <field name="state" invisible="1"/>
+                </gantt>
+            </field>
+        </record>
+
+        <record id="hr_leave_report_calendar_view_gantt" model="ir.ui.view">
+            <field name="name">hr.leave.report.calendar.view.gantt</field>
+            <field name="model">hr.leave.report.calendar</field>
+            <field name="arch" type="xml">
+                <gantt
+                    js_class="hr_gantt"
+                    string="Time Off"
+                    date_start="start_datetime"
+                    date_stop="stop_datetime"
+                    default_group_by="employee_id"
+                    decoration-info="state in ['confirm', 'validate1']"
+                    color="employee_id"
+                    total_row="True"
+                    display_unavailability="True"
+                    sample="1">
+                    <field name="name"/>
+                    <field name="state" invisible="1"/>
+                <templates>
+                    <div t-name="gantt-popover">
+                        <t t-esc="start_datetime.toFormat('f ')"/>
+                        <i class="fa fa-long-arrow-right" title="Arrow"/>
+                        <t t-esc="stop_datetime.toFormat(' f')"/>
+                    </div>
+                </templates>
+                </gantt>
+            </field>
+        </record>
+
+        <!-- Add gantt view mode to the hr.holidays dashboard -->
+        <record id="hr_holidays.action_hr_holidays_dashboard" model="ir.actions.act_window">
+            <field name="view_mode">gantt,calendar</field>
+        </record>
+
+        <record id="hr_holidays.hr_leave_action_action_approve_department" model="ir.actions.act_window">
+            <field name="view_mode">tree,kanban,gantt,form,calendar,activity</field>
+        </record>
+    </data>
+</odoo>

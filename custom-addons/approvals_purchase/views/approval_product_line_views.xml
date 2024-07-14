@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="approval_purchase_product_line_view_tree_inherit" model="ir.ui.view">
+        <field name="name">approval.purchase.product.line.view.tree.inherit</field>
+        <field name="model">approval.product.line</field>
+        <field name="inherit_id" ref="approvals.approval_product_line_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <attribute name="required">parent.approval_type != 'purchase' and parent.has_product == 'required'</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

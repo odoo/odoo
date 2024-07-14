@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- display ec sales list report menu item -->
+        <record model="ir.ui.menu" id="account_reports.menu_action_account_report_sales">
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+
+    <!-- Add the report variant -->
+    <record id="swedish_ec_sales_report" model="account.report">
+        <field name="name">EC sales Report</field>
+        <field name="country_id" ref="base.se"/>
+        <field name="root_report_id" ref="account_reports.generic_ec_sales_report"/>
+        <field name="load_more_limit" eval="80"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="search_bar" eval="True"/>
+        <field name="custom_handler_model_id" ref="model_l10n_se_ec_sales_report_handler"/>
+        <field name="column_ids">
+            <record id="account_financial_report_ec_sales_vat" model="account.report.column">
+                <field name="name">VAT Number</field>
+                <field name="expression_label">vat_number</field>
+                <field name="figure_type">string</field>
+                <field name="sortable" eval="True"/>
+            </record>
+            <record id="account_financial_report_ec_sales_goods" model="account.report.column">
+                <field name="name">Amount of goods</field>
+                <field name="expression_label">goods</field>
+                <field name="sortable" eval="True"/>
+            </record>
+            <record id="account_financial_report_ec_sales_tri" model="account.report.column">
+                <field name="name">Amount of third party sales</field>
+                <field name="expression_label">triangular</field>
+                <field name="sortable" eval="True"/>
+            </record>
+            <record id="account_financial_report_ec_sales_service" model="account.report.column">
+                <field name="name">Amount of services</field>
+                <field name="expression_label">services</field>
+                <field name="sortable" eval="True"/>
+            </record>
+        </field>
+    </record>
+</odoo>

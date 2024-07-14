@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_intrastat.IntrastatReportFilterOptions">
+        <Dropdown togglerClass="'btn btn-secondary'">
+            <t t-set-slot="toggler">
+                <span class="fa fa-filter me-1"/> Options: <t t-esc="(controller.options.intrastat_extended) ? 'Extended' : 'Standard'"/>
+            </t>
+
+            <DropdownItem
+                class="{ 'selected': controller.options.intrastat_extended }"
+                onSelected="() => this.toggleFilter('intrastat_extended')"
+            >
+                Extended Mode
+            </DropdownItem>
+
+            <DropdownItem
+                class="{ 'selected': controller.options.intrastat_grouped }"
+                onSelected="() => this.toggleFilter('intrastat_grouped')"
+            >
+                Grouped
+            </DropdownItem>
+        </Dropdown>
+    </t>
+</templates>

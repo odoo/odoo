@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="spreadsheet.DocumentsInspector.previews" t-inherit="documents.DocumentsInspector.previews" t-inherit-mode="extension">
+        <xpath expr="(//div[@name='document_preview']/div)[last()]" position="before">
+            <t t-elif="additionalRecordData.isSheet">
+                <t t-set="size" t-value="nbPreviews === 1 ? '268x130' : nbPreviews === 2 ? '120x130' : '120x75'"/>
+                <img class="o_document_spreadsheet o_documents_image_background o_spreadsheet_resize"
+                    draggable="false"
+                    t-attf-src="/documents/image/{{record.resId}}/{{size}}?field=thumbnail&amp;unique="
+                    t-att-title="record.data.name"
+                    t-on-click.stop.prevent="() => this.openPreview(record)"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

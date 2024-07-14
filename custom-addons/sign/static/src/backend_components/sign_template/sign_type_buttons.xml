@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sign.signItemTypesSidebar">
+        <div t-attf-class="o_sign_field_type_toolbar d-flex flex-column bg-white {{ sidebarHidden ? 'd-none' : ''}}">
+            <div class="o_sign_field_type_toolbar_title d-flex justify-content-center align-items-center pt-2">Fields</div>
+            <div class="o_sign_field_type_toolbar_items d-flex flex-column p-2">
+                <t t-foreach="signItemTypes" t-as="itemType" t-key="itemType.id">
+                    <button type="button" class="o_sign_field_type_button btn btn-secondary mb-1 flex-shrink-0" t-att-data-item-type-id="itemType.id" title="Drag &amp; Drop a field in the PDF"><t t-esc="itemType.name"/></button>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

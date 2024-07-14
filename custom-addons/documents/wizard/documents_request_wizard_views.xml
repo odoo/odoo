@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="documents_request_form_view" model="ir.ui.view">
+        <field name="name">Request File</field>
+        <field name="priority" eval="6"/>
+        <field name="model">documents.request_wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Document Name"/>
+                        <h1><field name="name" required="1" placeholder="e.g. Missing Expense"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="requestee_id" string="Request To" required="1" widget="many2one_avatar"/>
+                            <field name="partner_id" groups="base.group_no_one"/>
+                            <label for="activity_date_deadline_range"/>
+                            <div class="o_row">
+                                <field name="activity_date_deadline_range"/>
+                                <field name="activity_date_deadline_range_type" required="1"/>
+                            </div>
+                            <field name="activity_type_id" groups="base.group_no_one"/>
+                            <field name="res_model" readonly="1" groups="base.group_no_one"/>
+                            <field name="res_id" readonly="1" groups="base.group_no_one"/>
+                        </group>
+                        <group>
+                            <field name="folder_id" required="1" options="{'no_create_edit': True, 'no_create': True, 'no_open': True}"/>
+                            <field name="tag_ids" widget="many2many_tags" domain="[('folder_id','=', folder_id)]"/>
+                        </group>
+                    </group>
+                    <label for="activity_note"/>
+                    <field name="activity_note" widget="html"/>
+                    <footer>
+                        <button name="request_document" type="object" string="Request" class="btn btn-primary" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_request_form">
+        <field name="name">Request a file</field>
+        <field name="res_model">documents.request_wizard</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'form_view_ref': 'documents.documents_request_form_view'}</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

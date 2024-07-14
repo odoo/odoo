@@ -1,0 +1,517 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_preparation_display
+# 
+# Translators:
+# Martin Trigaux, 2023
+# Wil Odoo, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 13:45+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "<span>Average time</span>"
+msgstr "<span>Gemiddelde tijd</span>"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "<span>In progress</span>"
+msgstr "<span>In behandeling</span>"
+
+#. module: pos_preparation_display
+#. odoo-python
+#: code:addons/pos_preparation_display/models/preparation_display.py:0
+#, python-format
+msgid "A preparation display must have a minimum of one step."
+msgstr "Een keukenscherm moet minimaal één stap hebben."
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__access_token
+msgid "Access Token"
+msgstr "Toegangstoken"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__alert_timer
+msgid "Alert timer (min)"
+msgstr "Waarschuwingstimer (min)"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/stages/stages.xml:0
+#, python-format
+msgid "All"
+msgstr "Alle"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+msgid "All PoS"
+msgstr "Alle kassa's"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+msgid "All categories"
+msgstr "Alle categorieën"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_order__order_stage_ids
+msgid "All the stage ids in which the order is placed"
+msgstr "De IDs van alle stappen waarin de bestelling staat"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_reset_wizard
+msgid ""
+"Archive all preparation display's orders for a fresh start. This will not "
+"affect the PoS order history."
+msgstr ""
+"Archiveer alle bestellingen van het keukenscherm om opnieuw te beginnen. Dit"
+" zal de bestelgeschiedenis van het kassasysteem niet beïnvloeden."
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_display__average_time
+msgid "Average time of all order that not in a done stage."
+msgstr "Gemiddelde tijd van alle bestellingen die niet gereed zijn."
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_reset_wizard
+msgid "Check products"
+msgstr "Bekijk producten"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Clear All Filters"
+msgstr "Alle filters wissen"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Close"
+msgstr "Afsluiten"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__color
+msgid "Color"
+msgstr "Kleur"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__company_id
+msgid "Company"
+msgstr "Bedrijf"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "Configure"
+msgstr "Configureren"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__create_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__create_uid
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__create_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__create_date
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/order/order.xml:0
+#, python-format
+msgid "Delete"
+msgstr "Verwijderen"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Delete All"
+msgstr "Alles verwijderen"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_order__displayed
+msgid ""
+"Determines whether the order should be displayed on the preparation screen"
+msgstr ""
+"Bepaalt of de bestelling moet op het keukenscherm moet worden getoond of "
+"niet"
+
+#. module: pos_preparation_display
+#: model_terms:ir.actions.act_window,help:pos_preparation_display.action_preparation_display
+msgid ""
+"Different products and categories are sent to different tablets and screens."
+msgstr ""
+"Verschillende producten en categorieën worden naar verschillende tablets en "
+"schermen gestuurd."
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_reset_wizard
+msgid "Discard"
+msgstr "Negeren"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__display_name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__display_name
+msgid "Display Name"
+msgstr "Schermnaam"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Explore demo data"
+msgstr "Verken demodata"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/override/point_of_sale/pos_store.js:0
+#, python-format
+msgid "Failed in sending the changes to preparation display"
+msgstr "Het verzenden van wijzigingen naar het keukenscherm is mislukt"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Filters"
+msgstr "Filters"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__id
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_order__pos_order_id
+msgid "ID of the original PoS order"
+msgstr "ID van de originele kassa-bestelling"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__internal_note
+msgid "Internal Note"
+msgstr "Interne notitie"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_orderline__internal_note
+msgid "Internal notes written at the time of the order"
+msgstr "Interne notities geschreven bij de bestelling"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__contains_bar_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_search
+msgid "Is a Bar/Restaurant"
+msgstr "Is een bar/restaurant"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__done
+msgid "Is the order done"
+msgstr "Is de bestelling gereed"
+
+#. module: pos_preparation_display
+#: model:ir.actions.server,name:pos_preparation_display.action_pos_preparation_display_kitchen_display
+#: model:ir.ui.menu,name:pos_preparation_display.menu_point_kitchen_display_root
+msgid "Kitchen Display"
+msgstr "Keukenscherm"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__write_uid
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_reset_wizard__write_date
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Loading..."
+msgstr "Laden..."
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__name
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__name
+msgid "Name"
+msgstr "Naam"
+
+#. module: pos_preparation_display
+#: model_terms:ir.actions.act_window,help:pos_preparation_display.action_preparation_display
+msgid "Need a touchscreen interface to manage order ?"
+msgstr "Een touchscreen interface nodig om bestellingen te beheren?"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "No data available."
+msgstr "Geen gegevens beschikbaar."
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+msgid "Offer"
+msgstr "Aanbod"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "Open Preparation Display"
+msgstr "Open keukenscherm"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__order_id
+msgid "Order"
+msgstr "Bestelling"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__preparation_display_order_line_ids
+msgid "Order Lines"
+msgstr "Bestellingsregels"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__order_stage_ids
+msgid "Order Stage"
+msgstr "Bestellingsfase"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__average_time
+msgid "Order average time"
+msgstr "Gemiddelde tijd bestelling"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__order_count
+msgid "Order count"
+msgstr "Aantal bestellingen"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__displayed
+msgid "Order is displayed"
+msgstr "De bestelling is weergegeven"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__pos_config_ids
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__pos_config_id
+msgid "Point of Sale"
+msgstr "Kassa"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Kassaorders"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Kassa sessie"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_orderline
+msgid "Point of Sale preparation order line"
+msgstr "Kassa voorbereidingsregel"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_stage
+msgid "Point of Sale preparation stage"
+msgstr "Kassa voorbereidingsfase"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order__pos_order_id
+msgid "Pos Order"
+msgstr "Kassa bestelling"
+
+#. module: pos_preparation_display
+#: model:ir.actions.act_url,name:pos_preparation_display.action_pos_preparation_display_bar_restaurant_filter_link
+#: model:ir.actions.act_window,name:pos_preparation_display.action_preparation_display
+#: model:ir.actions.act_window,name:pos_preparation_display.action_preparation_display_bar_restaurant_filter
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__preparation_display_id
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_search
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_tree
+msgid "Preparation Display"
+msgstr "Keukenscherm"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__preparation_display_order_id
+msgid "Preparation Display Order"
+msgstr "Keukenscherm bestelling"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__preparation_display_id
+msgid "Preparation display"
+msgstr "Keukenscherm"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_order
+msgid "Preparation orders"
+msgstr "Voorbereiding bestellingen"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__product_id
+msgid "Product ID"
+msgstr "Product ID"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__category_ids
+msgid "Product categories"
+msgstr "Productcategorieën"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_display__category_ids
+msgid "Product categories that will be displayed on this screen."
+msgstr "Productcategorieën die op dit scherm worden getoond"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__product_cancelled
+msgid "Quantity of cancelled product"
+msgstr "Hoeveelheid geannuleerde producten"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__product_quantity
+msgid "Quantity of ordered product"
+msgstr "Hoeveelheid bestelde producten"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "Recall"
+msgstr "Terugroepen"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/order/order.xml:0
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_reset_wizard
+#, python-format
+msgid "Reset"
+msgstr "Resetten"
+
+#. module: pos_preparation_display
+#. odoo-python
+#: code:addons/pos_preparation_display/models/preparation_display.py:0
+#, python-format
+msgid "Reset Preparation Display"
+msgstr "Keukenscherm resetten"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_reset_wizard
+msgid "Reset all current order in a preparation display"
+msgstr "Alle huidige bestellingen op een keukenscherm resetten"
+
+#. module: pos_preparation_display
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_kanban
+msgid "Reset all orders"
+msgstr "Alle bestellingen resetten"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__attribute_value_ids
+msgid "Selected Attributes"
+msgstr "Geselecteerde kenmerken"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/override/point_of_sale/pos_store.js:0
+#, python-format
+msgid "Send failed"
+msgstr "Verzenden mislukt"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_stage__sequence
+msgid "Sequence"
+msgstr "Reeks"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_order_stage__stage_id
+msgid "Stage"
+msgstr "Fase"
+
+#. module: pos_preparation_display
+#: model:ir.model,name:pos_preparation_display.model_pos_preparation_display_order_stage
+msgid "Stage of orders by preparation display"
+msgstr "Bestellingsfases per keukenscherm"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_display__stage_ids
+#: model_terms:ir.ui.view,arch_db:pos_preparation_display.preparation_display_view_form
+msgid "Stages"
+msgstr "Fases"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,field_description:pos_preparation_display.field_pos_preparation_display_orderline__todo
+msgid "Status of the orderline"
+msgstr "Status van de bestellingsregel"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_orderline__todo
+msgid "The status of a command line, todo or not"
+msgstr "De status van een commandoregel, te doen of niet"
+
+#. module: pos_preparation_display
+#: model:ir.model.fields,help:pos_preparation_display.field_pos_preparation_display_stage__alert_timer
+msgid "Timer after which the order will be highlighted"
+msgstr "Time waarna de bestelling zal worden gemarkeerd"
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/preparation_display/preparation_display.xml:0
+#, python-format
+msgid "or simply wait for orders to be sent for preparation."
+msgstr ""
+"of wacht gewoon tot de bestellingen voor voorbereiding worden verzonden."
+
+#. module: pos_preparation_display
+#. odoo-javascript
+#: code:addons/pos_preparation_display/static/src/app/components/order/order.xml:0
+#, python-format
+msgid "products"
+msgstr "producten"

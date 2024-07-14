@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- This group is meant to manage quality stages -->
+    <record model="ir.module.category" id="base.module_category_manufacturing_quality">
+        <field name="name">Quality</field>
+        <field name="description">Helps you manage your quality alerts and quality checks.</field>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="quality.group_quality_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="base.module_category_manufacturing_quality"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">The quality user uses the quality process</field>
+    </record>
+
+    <record id="quality.group_quality_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="base.module_category_manufacturing_quality"/>
+        <field name="implied_ids" eval="[(4, ref('quality.group_quality_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="comment">The quality manager manages the quality process</field>
+    </record>
+
+    <record id="stock.group_stock_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('quality.group_quality_user'))]"/>
+    </record>
+
+    <data noupdate="1">
+
+   	<record model="ir.rule" id="quality_alert_comp_rule">
+        <field name="name">Quality alert company rule</field>
+        <field name="model_id" ref="model_quality_alert"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+   	<record model="ir.rule" id="quality_check_comp_rule">
+        <field name="name">Quality check company rule</field>
+        <field name="model_id" ref="model_quality_check"/>
+        <field name="domain_force">['|', ('company_id', 'in', company_ids), ('point_id.company_id', 'in', company_ids)]</field>
+    </record>
+
+   	<record model="ir.rule" id="control_point_comp_rule">
+        <field name="name">Control point company rule</field>
+        <field name="model_id" ref="model_quality_point"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record model="ir.rule" id="quality_team_comp_rule">
+        <field name="name">Quality Team multi-company</field>
+        <field name="model_id" ref="model_quality_alert_team"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+    </data>
+
+</odoo>

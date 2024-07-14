@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_pl_micro_pl" model="account.report">
+        <field name="name">Profit and loss - Micro</field>
+        <field name="root_report_id" ref="account_reports.profit_and_loss"/>
+        <field name="country_id" ref="base.pl"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="default_opening_date_filter">this_year</field>
+        <field name="column_ids">
+            <record id="l10n_pl_micro_pl_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_pl_micro_pl_a" model="account.report.line">
+                <field name="name">A. Income from basic operating activities and associated, including variation in products</field>
+                <field name="code">pl_micro_pl_a</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-70.00 - 73.00 - 74.00</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="l10n_pl_micro_pl_b" model="account.report.line">
+                <field name="name">B. Main operating expenses</field>
+                <field name="code">pl_micro_pl_b</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_pl_micro_pl_b_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">pl_micro_pl_b_1.balance + pl_micro_pl_b_2.balance + pl_micro_pl_b_3.balance + pl_micro_pl_b_4.balance</field>
+                        <field name="date_scope">normal</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_pl_micro_pl_b_1" model="account.report.line">
+                        <field name="name">I. Depreciation</field>
+                        <field name="code">pl_micro_pl_b_1</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_micro_pl_b_1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">40.00</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pl_micro_pl_b_2" model="account.report.line">
+                        <field name="name">II. Consumption of materials and energy</field>
+                        <field name="code">pl_micro_pl_b_2</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_micro_pl_b_2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">40.01</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pl_micro_pl_b_3" model="account.report.line">
+                        <field name="name">III. Wages, social security and other benefits</field>
+                        <field name="code">pl_micro_pl_b_3</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_micro_pl_b_3_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">40.04 + 40.05</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pl_micro_pl_b_4" model="account.report.line">
+                        <field name="name">IV. Other costs</field>
+                        <field name="code">pl_micro_pl_b_4</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_micro_pl_b_4_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">40.02 + 40.03 + 40.09 + 49 + 5 + 70.01 + 73.01 + 74.01</field>
+                                <field name="green_on_positive" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pl_micro_pl_c" model="account.report.line">
+                <field name="name">C. Other income and gains, including revaluation of assets</field>
+                <field name="code">pl_micro_pl_c</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula">-75.00 - 76.00 - 999997</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="l10n_pl_micro_pl_d" model="account.report.line">
+                <field name="name">D. Other costs and losses, including revaluation of assets</field>
+                <field name="code">pl_micro_pl_d</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_pl_micro_pl_d_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">75.01 + 76.01 + 79 + 999998</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pl_micro_pl_e" model="account.report.line">
+                <field name="name">E. Income tax</field>
+                <field name="code">pl_micro_pl_e</field>
+                <field name="groupby">account_id</field>
+                <field name="foldable" eval="True"/>
+                <field name="account_codes_formula" eval="False"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_pl_micro_pl_e_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">account_codes</field>
+                        <field name="formula">87</field>
+                        <field name="green_on_positive" eval="False"/>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pl_micro_pl_f" model="account.report.line">
+                <field name="name">F. Net profit/loss (A-B+C-D-E) (for micro-entities referred to in Article 3(1a)(1), (3) and (4) and (1b) of the Act)</field>
+                <field name="code">pl_micro_pl_f</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_pl_micro_pl_f_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">pl_micro_pl_a.balance - pl_micro_pl_b.balance + pl_micro_pl_c.balance - pl_micro_pl_d.balance - pl_micro_pl_e.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pl_micro_pl_g" model="account.report.line">
+                <field name="name">G. Total net financial result (A-B+C-D-E), including: (for micro entities referred to in Article 3, paragraph 1a, item 2 of the Act).</field>
+                <field name="code">pl_micro_pl_g</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_pl_micro_pl_g_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">pl_micro_pl_g_1.balance - pl_micro_pl_g_2.balance</field>
+                        <field name="date_scope">normal</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_pl_micro_pl_g_1" model="account.report.line">
+                        <field name="name">I. Excess of revenue over costs (positive value)</field>
+                        <field name="code">pl_micro_pl_g_1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_micro_pl_g_1_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">pl_micro_pl_a.balance - pl_micro_pl_b.balance + pl_micro_pl_c.balance - pl_micro_pl_d.balance - pl_micro_pl_e.balance</field>
+                                <field name="subformula">if_above(PLN(0))</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pl_micro_pl_g_2" model="account.report.line">
+                        <field name="name">II. Excess of costs over revenue (negative value)</field>
+                        <field name="code">pl_micro_pl_g_2</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pl_micro_pl_g_2_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">-(pl_micro_pl_a.balance - pl_micro_pl_b.balance + pl_micro_pl_c.balance - pl_micro_pl_d.balance - pl_micro_pl_e.balance)</field>
+                                <field name="subformula">if_above(PLN(0))</field>
+                                <field name="date_scope">normal</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

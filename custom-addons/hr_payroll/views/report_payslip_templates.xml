@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_payslip">
+    <t t-call="web.external_layout">
+        <div class="page">
+            <h2 id="payslip_name"><span t-field="o.name">August 2023 Payslip</span></h2>
+            <t t-set="is_invalid" t-value="o._is_invalid()"/>
+            <div t-if="is_invalid">
+                <strong id="invalid_warning"><span t-out="is_invalid">This payslip is not validated. This is not a legal document.</span></strong>
+            </div>
+            <div t-else="">
+                <div class="oe_structure"></div>
+            </div>
+            <table name="employee-infos" id="employee_info_table_1" class="table table-sm table-bordered">
+                <tr id="employee_info_line_1">
+                    <td class="w-25"><strong>Employee</strong></td>
+                    <td class="w-25"><strong>Marital Status</strong></td>
+                    <td class="w-25"><strong>Designation</strong></td>
+                    <td class="w-25"><strong>Pay Period</strong></td>
+                </tr>
+                <tr id="employee_info_line_2">
+                    <td><span t-field="o.employee_id"/></td>
+                    <td><span t-field="o.employee_id.marital"/></td>
+                    <td><span t-field="o.employee_id.job_title"/></td>
+                    <td>
+                        <span t-if="o.date_from &lt; o.contract_id.date_start" t-field="o.contract_id.date_start">Start Date</span>
+                        <span t-else="" t-field="o.date_from">From</span>
+                        <span t-if="o.contract_id.date_end and o.date_to &gt; o.contract_id.date_end" t-field="o.contract_id.date_end">End Date</span>
+                        <span t-else="" t-field="o.date_to">To</span>
+                    </td>
+                </tr>
+                <tr id="employee_info_line_3">
+                    <td><span t-field="o.employee_id.private_street"/></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="employee_info_line_4">
+                    <td><span t-field="o.employee_id.private_city"/> <span t-field="o.employee_id.private_zip"/></td>
+                    <td><strong>Person in charge</strong></td>
+                    <td><strong>Identification</strong></td>
+                    <td><strong>Computed on </strong></td>
+                </tr>
+                <tr id="employee_info_line_5">
+                    <td><span t-field="o.employee_id.work_email"/></td>
+                    <td name="personne-in-charge"><span t-out="o.employee_id.children"/></td>
+                    <td name="identification-id"><span t-field="o.employee_id.identification_id"/></td>
+                    <td><span t-field="o.compute_date"/></td>
+                </tr>
+                <tr id="employee_info_line_6">
+                    <td class="w-25"><strong>Contract Start Date</strong></td>
+                    <td class="w-25"><strong>Contract Type</strong></td>
+                    <td class="w-25"><strong>Working Schedule</strong></td>
+                    <td class="w-25" name="company-car-title"></td>
+                </tr>
+                <tr id="employee_info_line_7">
+                    <td><span t-field="o.employee_id.first_contract_date"/></td>
+                    <td><span t-field="o.employee_id.contract_id.contract_type_id"/></td>
+                    <td><span t-field="o.employee_id.contract_id.hours_per_week"/></td>
+                    <td class="w-25" name="company-car-model"></td>
+                </tr>
+            </table>
+
+            <table class="table table-sm" t-if="not o.struct_id.hide_basic_on_pdf">
+                <tr>
+                    <td class="w-25"><strong>Basic Salary (<span class="text-capitalize" t-out="o.contract_id.wage_type"/>)</strong></td>
+                    <td style="color:#875A7B" class="w-25">
+                        <span t-out="o.contract_id._get_contract_wage()" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                    </td>
+                    <td class="w-25"></td>
+                    <td class="w-25"></td>
+                </tr>
+            </table>
+            <div id="total">
+                <table class="table table-sm">
+                    <thead class="o_black_border">
+                        <tr>
+                            <th id="line_header_name">Name</th>
+                            <th id="line_header_hours">Number of Hours</th>
+                            <th id="line_header_days">Number of Days</th>
+                            <th id="line_header_amount" class="text-end">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t id="worked_days_lines">
+                            <span t-foreach="o.worked_days_line_ids.filtered(lambda worked_days: worked_days.code != 'OUT')" t-as="worked_days">
+                                <tr style="color:none">
+                                    <td id="worked_days_name">
+                                        <span t-field="worked_days.name"/>
+                                    </td>
+                                    <td id="worked_days_hours"><span t-field="worked_days.number_of_hours"/></td>
+                                    <td id="worked_days_days"><span t-field="worked_days.number_of_days"/></td>
+                                    <td id="worked_days_amount" class="text-end"><span t-out="worked_days.amount" digits="[42, 2]"
+                                            t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                </tr>
+                            </span>
+                        </t>
+                        <t id="payslip_lines">
+                            <span t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip)" t-as="line">
+                                <t t-set="line_styling" t-value="line.get_payslip_styling_dict()"/>
+                                <t t-set="line_style"/>
+                                <t t-set="line_class"/>
+                                <t t-if="line.code in line_styling">
+                                    <t t-set="line_style" t-value="line_styling[line.code]['line_style']"/>
+                                    <t t-set="line_class" t-value="line_styling[line.code]['line_class']"/>
+                                </t>
+                                <tr t-att-class="line_class" t-att-style="line_style" id="line_display">
+                                    <td id="payslip_line_name"><span t-field="line.name"/></td>
+                                    <td id="payslip_line_rate"></td>
+                                    <td id="payslip_line_quantity"><span t-if="line.quantity > 1" t-esc="line.quantity"/></td>
+                                    <td id="payslip_line_total" class="text-end"><span t-esc="line.total"
+                                            t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'
+                                            t-att-style="'color:#875A7B;' if line.total &lt; 0 else ''"/></td>
+                                </tr>
+                            </span>
+                        </t>
+                    </tbody>
+                </table>
+                <div class="oe_structure"></div>
+            </div>
+            <div id="to_pay">
+                <p t-if="o.net_wage &gt;= 0">To pay on <b><span t-field="o.employee_id.bank_account_id">xxxxxxxxxxxx</span></b> of <i><span t-field="o.employee_id"/></i>: <span t-field="o.net_wage"/></p>
+                <p t-if="o.net_wage &lt; 0">The net amount will be recovered from the first positive remuneration established after this.</p>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="report_payslip_lang">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-set="o" t-value="o.with_context(lang=o.employee_id.lang or o.env.lang)"/>
+            <t t-call="hr_payroll.report_payslip" t-lang="o.env.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

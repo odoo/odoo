@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="payment_method_bacs_dc" model="account.payment.method">
+            <field name="name">BACS Direct Credit</field>
+            <field name="code">bacs_dc</field>
+            <field name="payment_type">outbound</field>
+        </record>
+
+        <record id="payment_method_bacs_dd" model="account.payment.method">
+            <field name="name">Bacs Direct Debit</field>
+            <field name="code">bacs_dd</field>
+            <field name="payment_type">inbound</field>
+        </record>
+
+    </data>
+</odoo>

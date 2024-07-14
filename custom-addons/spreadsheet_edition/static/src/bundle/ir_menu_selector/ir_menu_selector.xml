@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+  <t t-name="spreadsheet_edition.IrMenuSelector">
+      <div class="o-ir-menu-selector" t-ref="menuSelectorRef">
+        <Many2XAutocomplete t-props="many2XAutocompleteProps"/>
+      </div>
+  </t>
+
+    <t t-name="spreadsheet_edition.IrMenuSelectorDialog">
+      <Dialog title="this.constructor.title" size="'sm'">
+        <IrMenuSelector
+          menuId="selectedMenu.id"
+          onValueChanged.bind="_onValueChanged"
+          autoFocus="true"
+        />
+        <t t-set-slot="footer">
+          <button class="btn btn-primary o-confirm" t-on-click.stop="_onConfirm" t-att-disabled="!selectedMenu.id">
+            Confirm
+          </button>
+          <button class="btn btn-secondary o-cancel" t-on-click.stop="props.close">Cancel</button>
+        </t>
+      </Dialog>
+    </t>
+</templates>

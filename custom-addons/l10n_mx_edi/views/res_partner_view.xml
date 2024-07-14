@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="l10n_mx_edi_inh_res_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit.l10n_mx_edi</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='fiscal_information']" position="inside">
+                    <field name="l10n_mx_edi_addenda_is_readonly" invisible="1"/>
+                    <field name="l10n_mx_edi_addenda" invisible="l10n_mx_edi_addenda_is_readonly or 'MX' not in fiscal_country_codes"/>
+                    <field name="l10n_mx_edi_addenda_name" string="Addenda" invisible="not l10n_mx_edi_addenda_is_readonly or 'MX' not in fiscal_country_codes"/>
+                    <field name="l10n_mx_edi_addenda_doc" invisible="not l10n_mx_edi_addenda and 'MX' not in fiscal_country_codes"/>
+                    <field name="l10n_mx_edi_fiscal_regime" invisible="'MX' not in fiscal_country_codes"/>
+                    <field name="l10n_mx_edi_no_tax_breakdown" invisible="'MX' not in fiscal_country_codes"/>
+                    <field name="l10n_mx_edi_usage" invisible="'MX' not in fiscal_country_codes"/>
+                    <field name="l10n_mx_edi_payment_method_id" invisible="'MX' not in fiscal_country_codes"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

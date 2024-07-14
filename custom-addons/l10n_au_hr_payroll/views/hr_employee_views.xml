@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.l10n_au_hr_payroll</field>
+        <field name="model">hr.employee</field>
+        <field name="priority" eval="110"/>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='hr_settings']//group" position="inside">
+                <group name="l10n_au_personal" string="Personal Information" invisible="company_country_code != 'AU'">
+                    <field name="is_non_resident"/>
+                    <field name="l10n_au_training_loan"/>
+                </group>
+                <group name="l10n_au_tfn_abn" string="TFN / ABN" invisible="company_country_code != 'AU'">
+                    <field name="l10n_au_tfn_declaration"/>
+                    <field name="l10n_au_tfn"
+                        readonly="l10n_au_tfn_declaration != 'provided'"
+                        required="l10n_au_tfn_declaration == 'provided'"
+                        placeholder="141592653"/>
+                    <field name="l10n_au_abn"/>
+                    <field name="l10n_au_extra_pay"/>
+                </group>
+                <group name="l10n_au_info" string="Tax and Contributions" invisible="company_country_code != 'AU'">
+                    <field name="l10n_au_tax_free_threshold" invisible="is_non_resident"/>
+                    <field name="l10n_au_nat_3093_amount"/>
+                    <field name="l10n_au_medicare_exemption"/>
+                    <field name="l10n_au_medicare_surcharge" invisible="1"/> <!-- Hidden to be computed for 17.1-->
+                    <field name="l10n_au_medicare_reduction"/>
+                    <field name="l10n_au_scale"/>
+                </group>
+                <group name="l10n_au_child" string="Child Support" invisible="company_country_code != 'AU'">
+                    <field name="l10n_au_child_support_deduction"/>
+                    <field name="l10n_au_child_support_garnishee"/>
+                    <field name="l10n_au_child_support_garnishee_amount" widget="percentage"
+                        invisible="l10n_au_child_support_garnishee in ['fixed', False]"/>
+                    <field name="l10n_au_child_support_garnishee_amount"
+                        invisible="l10n_au_child_support_garnishee in ['percentage', False]"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='registration_number']" position="replace">
+                <field name="l10n_au_previous_id_bms" invisible="company_country_code != 'AU'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

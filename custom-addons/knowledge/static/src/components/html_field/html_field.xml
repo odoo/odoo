@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web_editor.HtmlField" t-inherit-mode="extension">
+        <xpath expr="//t[@t-name='web_editor.HtmlField']" position="inside">
+            <div class="d-none o_knowledge_behavior_handler" t-ref="behaviorHandler"/>
+        </xpath>
+    </t>
+</templates>

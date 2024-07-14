@@ -1,0 +1,12 @@
+// Custom SCSS for enterprise version of notebook tabs
+
+.o_notebook {
+    --notebook-link-border-color: #{$border-color};
+    --notebook-link-border-color-hover: #{$border-color};
+    --notebook-link-border-color-active-accent: #{$o-brand-odoo};
+
+    .modal & {
+        --notebook-padding-x: #{$modal-inner-padding};
+        --notebook-margin-x: -#{$modal-inner-padding};
+    }
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment_provider_ups_cod" model="payment.provider">
+        <field name="name">Cash on Delivery</field>
+        <field name="image_128" type="base64" file="website_sale_ups/static/img/cod.png"/>
+        <field name="module_id" ref="base.module_website_sale_ups"/>
+        <field name="code">custom</field>
+        <field name="custom_mode">cash_on_delivery</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('website_sale_ups.payment_method_cash_on_delivery'),
+                     ])]"
+        />
+        <field name="redirect_form_view_id" ref="payment_custom.redirect_form"/>
+        <field name="state">enabled</field>
+        <field name="pending_msg"><![CDATA[
+<p><i>Pending</i>, Thanks for choosing COD(Collect on Delivery/Cash on Delivery) option. Delivery boy will collect the payment on delivery.</p>]]></field>
+    </record>
+</odoo>

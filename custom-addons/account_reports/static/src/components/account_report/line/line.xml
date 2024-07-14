@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportLine">
+        <t t-call="{{ env.template('AccountReportLine') }}"/>
+    </t>
+
+    <t t-name="account_reports.AccountReportLineCustomizable">
+        <!-- Adds an empty row above line with level 0 to add some spacing (it is the easiest and cleanest way) -->
+        <t t-if="props.lineIndex != 0 and props.line.level === 0">
+            <tr class="empty">
+                <td/>
+                <t t-foreach="props.line.columns" t-as="cell" t-key="cell_index">
+                    <td/>
+                </t>
+                <t t-if="controller.hasGrowthComparisonColumn">
+                    <td/>
+                </t>
+                <t t-if="controller.hasDebugColumn">
+                    <td/>
+                </t>
+            </tr>
+        </t>
+
+        <tr
+            data-id="line"
+            t-att-class="lineClasses"
+        >
+            <!-- Name column -->
+            <t t-component="env.component('AccountReportLineName')" t-props="{ lineIndex: props.lineIndex, line: props.line }"/>
+
+            <!-- Value columns -->
+            <t t-foreach="props.line.columns" t-as="cell" t-key="cell_index">
+                <t t-component="env.component('AccountReportLineCell')" t-props="{ line: props.line, cell: cell }"/>
+            </t>
+
+            <!-- Growth comparison column -->
+            <t t-if="controller.hasGrowthComparisonColumn">
+                <t t-if="controller.lineHasGrowthComparisonData(props.lineIndex)">
+                    <td t-att-class="growthComparisonClasses">
+                        <t t-out="props.line.growth_comparison_data.name"/>
+                    </td>
+                </t>
+                <t t-else="">
+                    <td/>
+                </t>
+            </t>
+
+            <!-- Debug column -->
+            <t t-if="controller.hasDebugColumn">
+                <td class="text-center">
+                    <t t-if="props.line.code">
+                        <t t-out="props.line.code"/>
+                    </t>
+
+                    <t t-if="controller.lineHasDebugData(props.lineIndex)">
+                        <button class="btn btn_debug" t-on-click="(ev) => this.showDebugPopover(ev)">
+                            <i class="fa fa-info-circle"/>
+                        </button>
+                    </t>
+                </td>
+            </t>
+        </tr>
+    </t>
+</templates>

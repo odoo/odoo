@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Cron to synchronize CodaBox Soda transactions -->
+        <record id="codabox_sync_soda_cron" model="ir.cron">
+            <field name="name">Account: Sync Soda Files from CodaBox</field>
+            <field name="model_id" ref="account.model_account_journal"/>
+            <field name="state">code</field>
+            <field name="code">model._l10n_be_codabox_cron_fetch_soda_transactions()</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+    </data>
+</odoo>

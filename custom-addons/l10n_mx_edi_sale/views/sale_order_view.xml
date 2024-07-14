@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sale_order_form_inherit_l10n_mx_edi_website_sale" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit.l10n_mx_edi_website_sale</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='validity_date']" position="after">
+                    <field name="l10n_mx_edi_cfdi_to_public" invisible="country_code != 'MX'"/>
+                    <field name="l10n_mx_edi_payment_method_id" invisible="country_code != 'MX'"/>
+                    <field name="l10n_mx_edi_usage" invisible="country_code != 'MX'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

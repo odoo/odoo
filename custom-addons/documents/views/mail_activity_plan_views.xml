@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mail_activity_plan_action_document" model="ir.actions.act_window">
+            <field name="name">Document Plans</field>
+            <field name="res_model">mail.activity.plan</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="mail.mail_activity_plan_view_search"/>
+            <field name="context">{'default_res_model': 'documents.document'}</field>
+            <field name="domain">[('res_model', '=', 'documents.document')]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new plan
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

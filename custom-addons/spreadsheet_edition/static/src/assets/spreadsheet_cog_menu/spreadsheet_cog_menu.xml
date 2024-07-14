@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="spreadsheet_edition.SpreadsheetCogMenu">
+        <Dropdown togglerClass="'opacity-trigger-hover'">
+            <t t-set-slot="toggler">
+                <i class="fa fa-fw fa-table me-1"/>Spreadsheet
+            </t>
+            <InsertViewSpreadsheet />
+            <InsertListSpreadsheetMenu t-if="env.config.viewType === 'list'" />
+        </Dropdown>
+    </t>
+
+</templates>

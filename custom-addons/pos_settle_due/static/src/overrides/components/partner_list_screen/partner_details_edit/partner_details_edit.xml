@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_settle_due.PartnerDetailsEdit" t-inherit="point_of_sale.PartnerDetailsEdit" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('partner-details-box')]" position="inside">
+            <div class="partner-detail col">
+                <label class="label form-label credit-gestion">Due balance</label>
+                <input type="text" class="form-control" t-att-placeholder="env.utils.formatCurrency(this.partnerInfos.totalDue)" disabled="disabled"/> 
+            </div>
+            <t t-if="this.partnerInfos.useLimit">
+                <div class="partner-detail col">
+                    <label class="label form-label credit-gestion">Credit limit</label>
+                    <input type="text" class="form-control" t-att-placeholder="env.utils.formatCurrency(this.partnerInfos.creditLimit)" disabled="disabled" />
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

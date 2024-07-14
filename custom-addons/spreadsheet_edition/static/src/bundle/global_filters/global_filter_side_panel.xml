@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="spreadsheet_edition.FilterComponent"
+        class="o_filter_component">
+        <div t-attf-class="o_topbar_filter_icon h-100 d-flex align-items-center {{activeFilter ? 'btn-link': ''}}"
+            title="Filters"
+            t-on-click="toggleDropdown">
+            <t t-call="o-spreadsheet-Icon.GLOBAL_FILTERS"/>
+        </div>
+    </t>
+
+    <div t-name="spreadsheet_edition.GlobalFiltersSidePanel" class="o_spreadsheet_global_filters_side_panel h-100">
+        <div class="h-100 overflow-auto" t-ref="filtersList">
+            <div class="o_side_panel_section pivot_filter_section bg-white"
+                t-foreach="filters"
+                t-as="filter"
+                t-key="'filter_' + filter_index"
+                t-att-class="{ 'o-filter-dragging': dnd.draggedItemId === filter.id }"
+                t-att-style="getFilterItemStyle(filter)"
+                >
+                <div class="pivot_filter position-relative">
+                    <div class="o-filter-drag-handle h-100 position-absolute d-flex align-items-center text-muted"
+                        t-on-mousedown="(ev) => this.startDragAndDrop(filter, ev)">
+                        <t t-call="o-spreadsheet-Icon.THIN_DRAG_HANDLE" />
+                    </div>
+                    <div class="o_side_panel_title">
+                        <span class="o_side_panel_filter_label" t-esc="_t(filter.label)"/>
+                    </div>
+                    <div class="pivot_filter_input">
+                        <FilterValue filter="filter" model="env.model"/>
+                        <i t-if="!isReadonly"
+                            class="fa fa-cog btn btn-link text-muted o_side_panel_filter_icon"
+                            title="Edit"
+                            t-on-click="() => this.onEdit(filter.id)"/>
+                    </div>
+                </div>
+            </div>
+            <div t-if="!isReadonly" class="o_side_panel_section">
+                <div class="o_add_filter">Add a new filter...</div>
+                <div class="o-sidePanelButtons">
+                    <button t-on-click="newDate" class="o-button o_global_filter_new_time">
+                        <span>Date</span>
+                    </button>
+                    <button t-if="hasDataSources()" t-on-click="newRelation" class="o-button o_global_filter_new_relation">
+                        <span>Relation</span>
+                    </button>
+                    <button t-on-click="newText" class="o-button o_global_filter_new_text">
+                        <span>Text</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</templates>

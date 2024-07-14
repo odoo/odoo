@@ -1,0 +1,130 @@
+/**************************************
+    This file contains all the css for the pdf export of the reports
+
+    NB: We only use bootstrap for the grid system to avoid having problems in the future if bootstrap is updated
+    and don't work wih wkhtmltopdf anymore
+***************************************/
+
+.o_content {
+    /*****************
+        HEADER OF THE REPORT
+    *****************/
+    header {
+        padding: 10px;
+        background-color: #d8dce2;
+        margin-bottom: 10px;
+
+        .o_header_font { font-size: 13px }
+    }
+    /*****************
+        TABLE
+    *****************/
+    .o_table {
+        width: 100%;
+        font-family: 'Verdana', sans-serif;
+        font-size: 0.8rem;
+        margin: 0 auto 24px;
+        padding: 24px;
+
+        // Define direction attribute here so when rtlcss preprocessor run, it converts it to rtl
+        direction: ltr;
+
+        > :not(caption) > * > * { padding: 0.25rem 0.75rem } //!\\ Override of bootstrap, keep selector
+
+        // Override bootstrap in the account reports
+        thead, tbody, tfoot, tr, td, th { border-style: none }
+
+        /*****************
+            Header of the main table
+        *****************/
+        > thead {
+            white-space: nowrap;
+            tr > th:first-child { width:100% }
+
+            > tr:not(:last-child) th:not(:first-child) {
+                border: 1px solid $o-gray-300;
+                text-align: center;
+            }
+        }
+        /*****************
+            Body of the main table
+        *****************/
+        > tbody {
+            white-space: nowrap; // Will be override by o_overflow if the line is too big
+
+            tr {
+                height: 20px; // So that empty tr have a height, min height don't seem to work
+                padding: 2px;
+                vertical-align: center;
+            }
+
+            td {
+                word-wrap: break-word;
+                max-width: 350px;
+            }
+
+            .o_growth_comparison {
+                text-align: right;
+            }
+
+            .o_line_level_0 {
+                background-color: #e7e9ed;
+                color: $o-gray-700;
+                font-weight: bold;
+
+                .o_line_name_level { padding-left: 8px }
+            }
+
+            @for $i from 1 through 3 {
+                .o_line_level_#{$i} {
+                    border-bottom: 0.5px solid $o-gray-300;
+                    .o_line_name_level { padding-left: (($i + 1) * 8px) }
+                }
+            }
+
+            @for $i from 4 through 16 {
+                .o_line_level_#{$i} {
+                    border-bottom: 0.5px solid $o-gray-200;
+                    .o_line_name_level { padding-left: (($i + 1) * 8px) }
+                }
+            }
+
+            .o_cell_td > .o_line_cell_value_number {
+                display: block;
+                text-align: right;
+            }
+        }
+    }
+}
+
+/****************
+    UTILS
+*****************/
+.o_d_none { display: none }
+.o_fw_bold { font-weight: bold }
+.o_text_end { text-align: end }
+.o_text_muted { color: #777 }
+.o_muted { color: $o-gray-300 }
+
+.o_title {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.o_overflow_value {
+    display: inline-block;
+    width: 350px;
+    white-space: normal !important;
+    overflow-wrap: break-word;
+}
+
+.o_overflow_name {
+    white-space: normal !important;
+    overflow-wrap: break-word;
+}
+
+.o_footer_font_size { font-size: 0.7rem }
+
+.o_footnote { list-style: none }

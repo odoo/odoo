@@ -1,0 +1,149 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sign_itsme
+# 
+# Translators:
+# Wil Odoo, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sign_itsme
+#: model_terms:ir.ui.view,arch_db:sign_itsme.sign_request_logs_user
+msgid ""
+"<small>Name: The signatory has provided this identity through itsme®</small>"
+msgstr "<small>名前: 署名者はitsme®を通して身元を確認済です。</small>"
+
+#. module: sign_itsme
+#: model:sign.item.role,name:sign_itsme.sign_item_role_itsme_customer
+msgid "Customer (identified with itsme®)"
+msgstr "顧客 (itsme®で身元確認済)"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/components/document_signable.js:0
+#, python-format
+msgid "Error"
+msgstr "エラー"
+
+#. module: sign_itsme
+#: model:ir.model.fields,field_description:sign_itsme.field_sign_item_role__auth_method
+msgid "Extra Authentication Step"
+msgstr "追加認証ステップ"
+
+#. module: sign_itsme
+#: model:ir.model.fields,help:sign_itsme.field_sign_item_role__auth_method
+msgid "Force the signatory to identify using a second authentication method"
+msgstr "署名者に第二の認証方式による識別を強制する。"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/dialogs/itsme_dialog.xml:0
+#, python-format
+msgid "Go Back"
+msgstr "戻る"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/components/document_signable.js:0
+#, python-format
+msgid "Identification refused"
+msgstr "身元確認が拒否されました"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/dialogs/itsme_dialog.xml:0
+#, python-format
+msgid "Identify with itsme"
+msgstr "itsmeで認証"
+
+#. module: sign_itsme
+#: model_terms:ir.ui.view,arch_db:sign_itsme.sign_request_logs_user
+msgid "Name"
+msgstr "名称"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/dialogs/itsme_dialog.xml:0
+#, python-format
+msgid "Please confirm your identity to finalize your signature."
+msgstr "ご本人確認の上、ご署名をお願いします。"
+
+#. module: sign_itsme
+#. odoo-python
+#: code:addons/sign_itsme/models/sign_request_item.py:0
+#, python-format
+msgid "Sign request item is not validated yet."
+msgstr "署名依頼項目はまだ検証されていません。"
+
+#. module: sign_itsme
+#: model:ir.model,name:sign_itsme.model_sign_item_role
+msgid "Signature Item Party"
+msgstr "署名項目主体"
+
+#. module: sign_itsme
+#: model:ir.model,name:sign_itsme.model_sign_request
+msgid "Signature Request"
+msgstr "署名依頼"
+
+#. module: sign_itsme
+#: model:ir.model,name:sign_itsme.model_sign_request_item
+msgid "Signature Request Item"
+msgstr "署名依頼項目"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/components/document_signable.js:0
+#, python-format
+msgid ""
+"The itsme® identification data could not be forwarded to Odoo, the signature"
+" could not be saved."
+msgstr "itsme® 身元確認データがOdooに転送できませんでした。署名を保存できませんでした。"
+
+#. module: sign_itsme
+#: model:ir.model.fields.selection,name:sign_itsme.selection__sign_item_role__auth_method__itsme
+msgid "Via itsme®"
+msgstr "itsme®経由"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/components/document_signable.js:0
+#, python-format
+msgid ""
+"You have rejected the identification request or took too long to process it."
+" You can try again to finalize your signature."
+msgstr "身元確認申請を拒否したか、処理に時間がかかりすぎました。署名を確定するためにもう一度やり直して下さい。"
+
+#. module: sign_itsme
+#. odoo-python
+#: code:addons/sign_itsme/controllers/main.py:0
+#, python-format
+msgid "itsme® IAP service could not be found."
+msgstr "itsme® IAPサービスが見つかりませんでした。"
+
+#. module: sign_itsme
+#: model:ir.model.fields,field_description:sign_itsme.field_sign_request_item__itsme_signer_birthdate
+msgid "itsme® Signer's Birthdate"
+msgstr "itsme® 署名者生年月日"
+
+#. module: sign_itsme
+#: model:ir.model.fields,field_description:sign_itsme.field_sign_request_item__itsme_signer_name
+msgid "itsme® Signer's Name"
+msgstr "itsme® 署名者名"
+
+#. module: sign_itsme
+#: model:ir.model.fields,field_description:sign_itsme.field_sign_request_item__itsme_validation_hash
+msgid "itsme® Validation Token"
+msgstr "itsme® 検証トークン"

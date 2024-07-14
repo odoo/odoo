@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="vehicle_list_action" model="ir.actions.act_window">
+        <field name="name">vehicles</field>
+        <field name="res_model">l10n_pe_edi.vehicle</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create the first vehicle</p>
+        </field>
+    </record>
+
+    <record id="vehicle_form_view" model="ir.ui.view">
+        <field name="name">vehicle.form</field>
+        <field name="model">l10n_pe_edi.vehicle</field>
+        <field name="arch" type="xml">
+            <form string="Vehicle (PE)">
+                <sheet>
+                    <group>
+                        <field name="company_id" invisible="1"/>
+                        <field name="name"/>
+                        <field name="license_plate"/>
+                        <field name="is_m1l"/>
+                        <field name="authorization_issuing_entity"
+                            invisible="is_m1l"/>
+                        <field name="authorization_issuing_entity_number"
+                            invisible="is_m1l or not authorization_issuing_entity"/>
+                        <field name="operator_id" invisible="is_m1l"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="vehicle_search_view" model="ir.ui.view">
+        <field name="name">vehicle.search</field>
+        <field name="model">l10n_pe_edi.vehicle</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="license_plate"/>
+                <field name="operator_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="vehicle_tree_view">
+        <field name="name">vehicle.tree</field>
+        <field name="model">l10n_pe_edi.vehicle</field>
+        <field name="arch" type="xml">
+            <tree string="Vehicles (PE)">
+                <field name="name"/>
+                <field name="license_plate"/>
+                <field name="operator_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_pe_edi_vehicle_actions" model="ir.actions.act_window">
+        <field name="name">Vehicles (PE)</field>
+        <field name="res_model">l10n_pe_edi.vehicle</field>
+        <field name="view_id" ref="vehicle_tree_view"/>
+        <field name="search_view_id" ref="vehicle_search_view"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Add a new vehicle for PE delivery guide
+          </p><p>
+            For delivery guides that use private transport, you must indicate the vehicle licence.
+            In addition, you can define a default operator of the vehicle.
+          </p>
+        </field>
+    </record>
+    <menuitem id="menu_stock_config_settings_pe" name="Peru" parent="stock.menu_stock_config_settings"
+        sequence="100" groups="stock.group_stock_manager"/>
+    <menuitem action="l10n_pe_edi_vehicle_actions" id="menu_stock_pe_vehicles" name="Vehicles" parent="menu_stock_config_settings_pe"
+        groups="stock.group_stock_manager"/>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="product_template_form_inherit_l10n_mx_edi_stock_extended_30" model="ir.ui.view">
+            <field name="name">product.template.form.inherit.l10n_mx_edi_stock_extended_30</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <field name="l10n_mx_edi_hazard_package_type" position="after">
+                    <field name="l10n_mx_edi_material_type"
+                           invisible="'MX' not in fiscal_country_codes"/>
+                    <field name="l10n_mx_edi_material_description"
+                           invisible="'MX' not in fiscal_country_codes or l10n_mx_edi_material_type != '05'"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

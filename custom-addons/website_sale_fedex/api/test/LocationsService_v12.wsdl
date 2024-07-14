@@ -1,0 +1,1096 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:ns="http://fedex.com/ws/locs/v12" xmlns:s1="http://schemas.xmlsoap.org/wsdl/soap/" name="LocationsServiceDefinitions" targetNamespace="http://fedex.com/ws/locs/v12" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://fedex.com/ws/locs/v12" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="SearchLocationsReply" type="ns:SearchLocationsReply" />
+      <xs:element name="SearchLocationsRequest" type="ns:SearchLocationsRequest" />
+      <xs:complexType name="Address">
+        <xs:annotation>
+          <xs:documentation>Descriptive data for a physical location. May be used as an actual physical address (place to which one could go), or as a container of "address parts" which should be handled as a unit (such as a city-state-ZIP combination within the US).</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="StreetLines" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Combination of number, street name, etc. At least one line is required for a valid physical address; empty lines should not be included.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="City" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Name of city, town, etc.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="StateOrProvinceCode" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Identifying abbreviation for US state, Canada province, etc. Format and presence of this field will vary, depending on country.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="PostalCode" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Identification of a region (usually small) for mail/package delivery. Format and presence of this field will vary, depending on country.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="UrbanizationCode" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Relevant only to addresses in Puerto Rico.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="CountryCode" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The two-letter code used to identify a country.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="CountryName" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The fully spelt out name of a country.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Residential" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>Indicates whether this address residential (as opposed to commercial).</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="GeographicCoordinates" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The geographic coordinates cooresponding to this address.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="AddressAncillaryDetail">
+        <xs:annotation>
+          <xs:documentation>Additional information about a physical location, such as suite number, cross street, floor number in a building. These details are not typically a part of a standard address definition; however, these details might help locate the address.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="LocationInCity" type="xs:string" />
+          <xs:element minOccurs="0" name="LocationInProperty" type="xs:string" />
+          <xs:element minOccurs="0" name="Accessibility" type="ns:LocationAccessibilityType">
+            <xs:annotation>
+              <xs:documentation>Indicates whether how this location can be accessed.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Building" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Specifies building number or name.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Department" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Specifies a department in the company or retail store.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="RoomFloor" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Specifies the floor number.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Suite" type="xs:string" />
+          <xs:element minOccurs="0" name="Apartment" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Specifies apartment number.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Room" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Specifies the room number, if one is specified.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="CrossStreet" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="AdditionalDescriptions" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>This is used to specify additional details about the address such as landmark. For e.g. This field is used to capture details such as an address being inside a facility such as, Chilli's Care Center, St. Jude - Inside.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="AddressToLocationRelationshipDetail">
+        <xs:annotation>
+          <xs:documentation>Specifies the relationship between the address specificed and the address of the FedEx Location in terms of distance.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="MatchedAddress" type="ns:Address">
+            <xs:annotation>
+              <xs:documentation>Address as provided in the request.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="MatchedAddressGeographicCoordinates" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Specify the geographic co-ordinates for the matched address.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="DistanceAndLocationDetails" type="ns:DistanceAndLocationDetail">
+            <xs:annotation>
+              <xs:documentation>Specifies the distance between the matched address and the addresses of matched FedEx locations. Also specifies the details of the FedEx locations.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="CarrierCodeType">
+        <xs:annotation>
+          <xs:documentation>Identification of a FedEx operating company (transportation).</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="FDXC" />
+          <xs:enumeration value="FDXE" />
+          <xs:enumeration value="FDXG" />
+          <xs:enumeration value="FDXO" />
+          <xs:enumeration value="FXCC" />
+          <xs:enumeration value="FXFR" />
+          <xs:enumeration value="FXSP" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="CarrierDetail">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Carrier" type="ns:CarrierCodeType" />
+          <xs:element minOccurs="0" name="ServiceCategory" type="ns:ServiceCategoryType" />
+          <xs:element minOccurs="0" name="ServiceType" type="xs:string" />
+          <xs:element minOccurs="0" name="CountryRelationship" type="ns:CountryRelationshipType">
+            <xs:annotation>
+              <xs:documentation>This field describe a subset of the carrier's products or services which may have unique characteristics: i.e. latest drop-off times at a particular location vary depending on the destination type.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="NormalLatestDropOffDetails" type="ns:LatestDropOffDetail">
+            <xs:annotation>
+              <xs:documentation>Specifies the details about the latest times a drop off can be made at a location most days. These are the normal drop off times.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ExceptionalLatestDropOffDetails" type="ns:LatestDropOffDetail">
+            <xs:annotation>
+              <xs:documentation>Specifies the details about the exceptional latest times a drop off can be made at a location. These are drop off times that are a variation from the normal drop off times.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="EffectiveLatestDropOffDetails" type="ns:LatestDropOffDetail">
+            <xs:annotation>
+              <xs:documentation>Specifies the details about the effective latest times drop off can be made at a location on the date requested. These are drop off times that are derived from the normal and exceptional drop off times, depending upon the date requested.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ShippingHolidays" type="ns:ShippingHoliday" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ClearanceCountryDetail">
+        <xs:annotation>
+          <xs:documentation>Specifies the special services supported at the clearance location for an individual destination country.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ClearanceCountry" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Identifies the country whose special services are specified below.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ServicesSupported" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SpecialServicesSupported" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ClearanceLocationDetail">
+        <xs:annotation>
+          <xs:documentation>Specifies the details about the countries supported by this location.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ServicesSupported" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Services supported for clearance.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="ConsolidationType" type="ns:ConsolidationType">
+            <xs:annotation>
+              <xs:documentation>Identifies the type of consolidation for which these clearance location attributes were extracted.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="ClearanceLocationType" type="ns:DistributionClearanceType">
+            <xs:annotation>
+              <xs:documentation>Identifies the type of clearance performed at this location.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SpecialServicesSupported" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ClearanceCountries" type="ns:ClearanceCountryDetail" />
+          <xs:element minOccurs="0" name="ClearanceRoutingCode" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ClientDetail">
+        <xs:annotation>
+          <xs:documentation>Descriptive data for the client submitting a transaction.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="1" name="AccountNumber" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The FedEx account number associated with this transaction.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="1" name="MeterNumber" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>This number is assigned by FedEx and identifies the unique device from which the request is originating</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="MeterInstance" type="xs:string" />
+          <xs:element minOccurs="0" name="IntegratorId" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Only used in transactions which require identification of the FedEx Office integrator.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Region" type="ns:ExpressRegionCode">
+            <xs:annotation>
+              <xs:documentation>Indicates the region from which the transaction is submitted.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Localization" type="ns:Localization">
+            <xs:annotation>
+              <xs:documentation>The language to be used for human-readable Notification.localizedMessages in responses to the request containing this ClientDetail object. Different requests from the same client may contain different Localization data. (Contrast with TransactionDetail.localization, which governs data payload language/translation.)</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="ConsolidationType">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="INTERNATIONAL_DISTRIBUTION_FREIGHT" />
+          <xs:enumeration value="INTERNATIONAL_ECONOMY_DISTRIBUTION" />
+          <xs:enumeration value="INTERNATIONAL_GROUND_DISTRIBUTION" />
+          <xs:enumeration value="INTERNATIONAL_PRIORITY_DISTRIBUTION" />
+          <xs:enumeration value="TRANSBORDER_DISTRIBUTION" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="Contact">
+        <xs:annotation>
+          <xs:documentation>The descriptive data for a point-of-contact person.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ContactId" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Client provided identifier corresponding to this contact information.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="PersonName" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Identifies the contact person's name.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Title" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Identifies the contact person's title.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="CompanyName" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Identifies the company this contact is associated with.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="PhoneNumber" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Identifies the phone number associated with this contact.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="PhoneExtension" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Identifies the phone extension associated with this contact.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="TollFreePhoneNumber" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Identifies a toll free number, if any, associated with this contact.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="PagerNumber" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Identifies the pager number associated with this contact.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="FaxNumber" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Identifies the fax number associated with this contact.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="EMailAddress" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Identifies the email address associated with this contact.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="CountryRelationshipType">
+        <xs:annotation>
+          <xs:documentation>Describes relationship between origin and destination countries.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="DOMESTIC" />
+          <xs:enumeration value="INTERNATIONAL" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="DayOfWeekType">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="FRI" />
+          <xs:enumeration value="MON" />
+          <xs:enumeration value="SAT" />
+          <xs:enumeration value="SUN" />
+          <xs:enumeration value="THU" />
+          <xs:enumeration value="TUE" />
+          <xs:enumeration value="WED" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="Dimensions">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Length" type="xs:nonNegativeInteger" />
+          <xs:element minOccurs="0" name="Width" type="xs:nonNegativeInteger" />
+          <xs:element minOccurs="0" name="Height" type="xs:nonNegativeInteger" />
+          <xs:element minOccurs="0" name="Units" type="ns:LinearUnits" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Distance">
+        <xs:annotation>
+          <xs:documentation>Driving or other transportation distances, distinct from dimension measurements.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Value" type="xs:decimal">
+            <xs:annotation>
+              <xs:documentation>Identifies the distance quantity.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Units" type="ns:DistanceUnits">
+            <xs:annotation>
+              <xs:documentation>Identifies the unit of measure for the distance value.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DistanceAndLocationDetail">
+        <xs:annotation>
+          <xs:documentation>Specifies the location details and other information relevant to the location that is derived from the inputs provided in the request.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Distance" type="ns:Distance">
+            <xs:annotation>
+              <xs:documentation>Distance between an address of a geographic location and an address of a FedEx location.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="ReservationAvailabilityDetail" type="ns:ReservationAvailabilityDetail" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SupportedRedirectToHoldServices" type="ns:SupportedRedirectToHoldServiceType">
+            <xs:annotation>
+              <xs:documentation>DEPRECATED as of July 2017; See locationCapabilities.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="LocationDetail" type="ns:LocationDetail">
+            <xs:annotation>
+              <xs:documentation>Details about a FedEx location such as services offered, working hours and pick and drop off times.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="DistanceUnits">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="KM" />
+          <xs:enumeration value="MI" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="DistributionClearanceType">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="DESTINATION_COUNTRY_CLEARANCE" />
+          <xs:enumeration value="SINGLE_POINT_OF_CLEARANCE" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="ExpressRegionCode">
+        <xs:annotation>
+          <xs:documentation>Indicates a FedEx Express operating region.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="APAC" />
+          <xs:enumeration value="CA" />
+          <xs:enumeration value="EMEA" />
+          <xs:enumeration value="LAC" />
+          <xs:enumeration value="US" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="FedExLocationType">
+        <xs:annotation>
+          <xs:documentation>Identifies a kind of FedEx facility.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="FEDEX_AUTHORIZED_SHIP_CENTER" />
+          <xs:enumeration value="FEDEX_EXPRESS_STATION" />
+          <xs:enumeration value="FEDEX_FACILITY" />
+          <xs:enumeration value="FEDEX_FREIGHT_SERVICE_CENTER" />
+          <xs:enumeration value="FEDEX_GROUND_TERMINAL" />
+          <xs:enumeration value="FEDEX_HOME_DELIVERY_STATION" />
+          <xs:enumeration value="FEDEX_OFFICE" />
+          <xs:enumeration value="FEDEX_ONSITE" />
+          <xs:enumeration value="FEDEX_SELF_SERVICE_LOCATION" />
+          <xs:enumeration value="FEDEX_SHIPSITE" />
+          <xs:enumeration value="FEDEX_SHIP_AND_GET" />
+          <xs:enumeration value="FEDEX_SMART_POST_HUB" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="Holiday">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Name" type="xs:string" />
+          <xs:element minOccurs="0" name="Date" type="xs:date" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="LatestDropOffDetail">
+        <xs:annotation>
+          <xs:documentation>Specifies the latest time by which a package can be dropped off at a FedEx location.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="DayOfWeek" type="ns:DayOfWeekType" />
+          <xs:element minOccurs="0" name="Time" type="xs:time" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Overlays" type="ns:LatestDropoffOverlayDetail">
+            <xs:annotation>
+              <xs:documentation>Specifies the details about the overlay to the last drop off time for a carrier at a FedEx location.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="LatestDropOffOverlayType">
+        <xs:annotation>
+          <xs:documentation>Specifies the reason for the overlay of the daily last drop off time for a carrier.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="US_WEST_COAST" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="LatestDropoffOverlayDetail">
+        <xs:annotation>
+          <xs:documentation>Specifies the time and reason to overlay the last drop off time for a carrier at a FedEx location.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Type" type="ns:LatestDropOffOverlayType" />
+          <xs:element minOccurs="0" name="Time" type="xs:time" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="LinearUnits">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="CM" />
+          <xs:enumeration value="IN" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="Localization">
+        <xs:annotation>
+          <xs:documentation>Identifies the representation of human-readable text.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="1" name="LanguageCode" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Two-letter code for language (e.g. EN, FR, etc.)</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="LocaleCode" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Two-letter code for the region (e.g. us, ca, etc..).</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="LocationAccessibilityType">
+        <xs:annotation>
+          <xs:documentation>Indicates how this can be accessed.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="INSIDE" />
+          <xs:enumeration value="OUTSIDE" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="LocationAttributesForInternalFedexUseType">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="FAMIS_LOCATION" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="LocationAttributesType">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="ACCEPTS_CASH" />
+          <xs:enumeration value="ALREADY_OPEN" />
+          <xs:enumeration value="CLEARANCE_SERVICES" />
+          <xs:enumeration value="COPY_AND_PRINT_SERVICES" />
+          <xs:enumeration value="DANGEROUS_GOODS_SERVICES" />
+          <xs:enumeration value="DIRECT_MAIL_SERVICES" />
+          <xs:enumeration value="DOMESTIC_SHIPPING_SERVICES" />
+          <xs:enumeration value="DROP_BOX" />
+          <xs:enumeration value="INTERNATIONAL_SHIPPING_SERVICES" />
+          <xs:enumeration value="LOCATION_IS_IN_AIRPORT" />
+          <xs:enumeration value="NOTARY_SERVICES" />
+          <xs:enumeration value="OBSERVES_DAY_LIGHT_SAVING_TIMES" />
+          <xs:enumeration value="OPEN_TWENTY_FOUR_HOURS" />
+          <xs:enumeration value="PACKAGING_SUPPLIES" />
+          <xs:enumeration value="PACK_AND_SHIP" />
+          <xs:enumeration value="PASSPORT_PHOTO_SERVICES" />
+          <xs:enumeration value="RETURNS_SERVICES" />
+          <xs:enumeration value="SIGNS_AND_BANNERS_SERVICE" />
+          <xs:enumeration value="SONY_PICTURE_STATION" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="LocationCapabilityDetail">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CarrierCode" type="ns:CarrierCodeType">
+            <xs:annotation>
+              <xs:documentation>The carrier code for which this capability applies.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="ServiceType" type="xs:string" />
+          <xs:element minOccurs="0" name="ServiceCategory" type="ns:ServiceCategoryType">
+            <xs:annotation>
+              <xs:documentation>The service category for which this capability applies.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="TransferOfPossessionType" type="ns:LocationTransferOfPossessionType">
+            <xs:annotation>
+              <xs:documentation>The method by which a package is transferred to the possession of a FedEx location.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="DaysOfWeek" type="ns:DayOfWeekType">
+            <xs:annotation>
+              <xs:documentation>The days of the week for which this capability applies.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="LocationContactAndAddress">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Contact" type="ns:Contact" />
+          <xs:element minOccurs="0" name="Address" type="ns:Address" />
+          <xs:element minOccurs="0" name="AddressAncillaryDetail" type="ns:AddressAncillaryDetail" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="LocationContentOptionType">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="HOLIDAYS" />
+          <xs:enumeration value="LOCATION_DROPOFF_TIMES" />
+          <xs:enumeration value="MAP_URL" />
+          <xs:enumeration value="TIMEZONE_OFFSET" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="LocationDetail">
+        <xs:annotation>
+          <xs:documentation>Describes an individual location providing a set of customer service features.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="LocationId" type="xs:string" />
+          <xs:element minOccurs="0" name="StoreNumber" type="xs:string" />
+          <xs:element minOccurs="0" name="LocationContactAndAddress" type="ns:LocationContactAndAddress" />
+          <xs:element minOccurs="0" name="SpecialInstructions" type="xs:string" />
+          <xs:element minOccurs="0" name="TimeZoneOffset" type="xs:string" />
+          <xs:element minOccurs="0" name="LocationType" type="ns:FedExLocationType" />
+          <xs:element minOccurs="0" name="LocationTypeForDisplay" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Branded text associated with this location type.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="InternalFieldsDetail" type="ns:LocationFieldsForInternalFedexUseDetail" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Attributes" type="ns:LocationAttributesType" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="LocationCapabilities" type="ns:LocationCapabilityDetail" />
+          <xs:element minOccurs="0" name="PackageMaximumLimits" type="ns:LocationPackageLimitsDetail">
+            <xs:annotation>
+              <xs:documentation>The maximum values for various package attributes that are supported at the location.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="ClearanceLocationDetail" type="ns:ClearanceLocationDetail">
+            <xs:annotation>
+              <xs:documentation>Details about the clearance location.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ServicingLocationDetails" type="ns:LocationIdentificationDetail">
+            <xs:annotation>
+              <xs:documentation>Details about the FedEx administrative locations that may provide services to this location.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="AcceptedCurrency" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="LocationHolidays" type="ns:Holiday" />
+          <xs:element minOccurs="0" name="MapUrl" type="xs:string" />
+          <xs:element minOccurs="0" name="EntityId" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="NormalHours" type="ns:LocationHours">
+            <xs:annotation>
+              <xs:documentation>Normal operating hours for the location.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ExceptionalHours" type="ns:LocationHours">
+            <xs:annotation>
+              <xs:documentation>Operating hours for the location that are exception from the normal hours of operation.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="HoursForEffectiveDate" type="ns:LocationHours" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="CarrierDetails" type="ns:CarrierDetail" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="LocationFieldsForInternalFedexUseDetail">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="NonRevenueAccountNumber" type="xs:string" />
+          <xs:element minOccurs="0" name="CityCenterAccountNumber" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The city center account number of the location.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="CustomsLocationId" type="xs:string" />
+          <xs:element minOccurs="0" name="CostCenterCode" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Attributes" type="ns:LocationAttributesForInternalFedexUseType" />
+          <xs:element minOccurs="0" name="OperationalContact" type="ns:Contact">
+            <xs:annotation>
+              <xs:documentation>Specifies the details of a FedEx facility that the operational personnel can contact for clearance purposes.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="LocalAirportId" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>This contains the local airport identifier-formerly known as the airport code.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="RegionalAirportId" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>This contains the regional airport identifier-formerly known as the market location code.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="LocationHours">
+        <xs:annotation>
+          <xs:documentation>Specifies the location hours for a location.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="DayofWeek" type="ns:DayOfWeekType" />
+          <xs:element minOccurs="0" name="OperationalHours" type="ns:OperationalHoursType" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Hours" type="ns:TimeRange" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="LocationIdentificationDetail">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Type" type="ns:FedExLocationType" />
+          <xs:element minOccurs="0" name="Id" type="xs:string" />
+          <xs:element minOccurs="0" name="Number" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="LocationPackageLimitsDetail">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Weight" type="ns:Weight" />
+          <xs:element minOccurs="0" name="Dimensions" type="ns:Dimensions" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="LocationSearchFilterType">
+        <xs:annotation>
+          <xs:documentation>Specifies the crieteria used to filter the location search results.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="EXCLUDE_LOCATIONS_OUTSIDE_COUNTRY" />
+          <xs:enumeration value="EXCLUDE_LOCATIONS_OUTSIDE_STATE_OR_PROVINCE" />
+          <xs:enumeration value="EXCLUDE_UNAVAILABLE_LOCATIONS" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="LocationSortCriteriaType">
+        <xs:annotation>
+          <xs:documentation>Specifies the criterion to be used to sort the location details.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="DISTANCE" />
+          <xs:enumeration value="LATEST_EXPRESS_DROPOFF_TIME" />
+          <xs:enumeration value="LATEST_GROUND_DROPOFF_TIME" />
+          <xs:enumeration value="LOCATION_TYPE" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="LocationSortDetail">
+        <xs:annotation>
+          <xs:documentation>Specifies the criterion and order to be used to sort the location details.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Criterion" type="ns:LocationSortCriteriaType">
+            <xs:annotation>
+              <xs:documentation>Specifies the criterion to be used to sort the location details.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Order" type="ns:LocationSortOrderType">
+            <xs:annotation>
+              <xs:documentation>Specifies sort order of the location details.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="LocationSortOrderType">
+        <xs:annotation>
+          <xs:documentation>Specifies sort order of the location details.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="HIGHEST_TO_LOWEST" />
+          <xs:enumeration value="LOWEST_TO_HIGHEST" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="LocationSupportedPackageDetail">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Weight" type="ns:Weight" />
+          <xs:element minOccurs="0" name="Dimensions" type="ns:Dimensions" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ServiceOptions" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="LocationSupportedShipmentDetail">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="PackageDetails" type="ns:LocationSupportedPackageDetail" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="LocationTransferOfPossessionType">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="DROPOFF" />
+          <xs:enumeration value="HOLD_AT_LOCATION" />
+          <xs:enumeration value="REDIRECT_TO_HOLD_AT_LOCATION" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="LocationsSearchCriteriaType">
+        <xs:annotation>
+          <xs:documentation>Specifies the criteria types that may be used to search for FedEx locations.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="ADDRESS" />
+          <xs:enumeration value="GEOGRAPHIC_COORDINATES" />
+          <xs:enumeration value="PHONE_NUMBER" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="MultipleMatchesActionType">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="RETURN_ALL" />
+          <xs:enumeration value="RETURN_ERROR" />
+          <xs:enumeration value="RETURN_FIRST" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="Notification">
+        <xs:annotation>
+          <xs:documentation>The descriptive data regarding the result of the submitted transaction.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Severity" type="ns:NotificationSeverityType">
+            <xs:annotation>
+              <xs:documentation>The severity of this notification. This can indicate success or failure or some other information about the request. The values that can be returned are SUCCESS - Your transaction succeeded with no other applicable information. NOTE - Additional information that may be of interest to you about your transaction. WARNING - Additional information that you need to know about your transaction that you may need to take action on. ERROR - Information about an error that occurred while processing your transaction. FAILURE - FedEx was unable to process your transaction at this time due to a system failure. Please try again later</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Source" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Indicates the source of this notification. Combined with the Code it uniquely identifies this notification</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Code" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>A code that represents this notification. Combined with the Source it uniquely identifies this notification.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Message" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Human-readable text that explains this notification.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="LocalizedMessage" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The translated message. The language and locale specified in the ClientDetail. Localization are used to determine the representation. Currently only supported in a TrackReply.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="MessageParameters" type="ns:NotificationParameter">
+            <xs:annotation>
+              <xs:documentation>A collection of name/value pairs that provide specific data to help the client determine the nature of an error (or warning, etc.) without having to parse the message string.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="NotificationParameter">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Id" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Identifies the type of data contained in Value (e.g. SERVICE_TYPE, PACKAGE_SEQUENCE, etc..).</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Value" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The value of the parameter (e.g. PRIORITY_OVERNIGHT, 2, etc..).</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="NotificationSeverityType">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="ERROR" />
+          <xs:enumeration value="FAILURE" />
+          <xs:enumeration value="NOTE" />
+          <xs:enumeration value="SUCCESS" />
+          <xs:enumeration value="WARNING" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="OperationalHoursType">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="CLOSED_ALL_DAY" />
+          <xs:enumeration value="OPEN_ALL_DAY" />
+          <xs:enumeration value="OPEN_BY_HOURS" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="ReservationAttributesType">
+        <xs:annotation>
+          <xs:documentation>Attributes about a reservation at a FedEx location.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="RESERVATION_AVAILABLE" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="ReservationAvailabilityDetail">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Attributes" type="ns:ReservationAttributesType" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SearchLocationConstraints">
+        <xs:annotation>
+          <xs:documentation>Specifies additional constraints on the attributes of the locations being searched.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="RadiusDistance" type="ns:Distance">
+            <xs:annotation>
+              <xs:documentation>Specifies value and units of the radius around the address to search for FedEx locations.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="DropOffTimeNeeded" type="xs:time" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ResultsFilters" type="ns:LocationSearchFilterType">
+            <xs:annotation>
+              <xs:documentation>Specifies the criteria used to filter the results of locations search.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SupportedRedirectToHoldServices" type="ns:SupportedRedirectToHoldServiceType">
+            <xs:annotation>
+              <xs:documentation>DEPRECATED as of July 2017; See requiredLocationCapabilities.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="RequiredLocationAttributes" type="ns:LocationAttributesType" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="RequiredLocationCapabilities" type="ns:LocationCapabilityDetail" />
+          <xs:element minOccurs="0" name="ShipmentDetail" type="ns:LocationSupportedShipmentDetail" />
+          <xs:element minOccurs="0" name="ResultsToSkip" type="xs:nonNegativeInteger" />
+          <xs:element minOccurs="0" name="ResultsRequested" type="xs:nonNegativeInteger" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="LocationContentOptions" type="ns:LocationContentOptionType" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="LocationTypesToInclude" type="ns:FedExLocationType" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SearchLocationsReply">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="HighestSeverity" type="ns:NotificationSeverityType" />
+          <xs:element minOccurs="1" maxOccurs="unbounded" name="Notifications" type="ns:Notification" />
+          <xs:element minOccurs="0" name="TransactionDetail" type="ns:TransactionDetail" />
+          <xs:element minOccurs="1" name="Version" type="ns:VersionId" />
+          <xs:element minOccurs="0" name="TotalResultsAvailable" type="xs:nonNegativeInteger">
+            <xs:annotation>
+              <xs:documentation>Specifies total number of location results that are available.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="ResultsReturned" type="xs:nonNegativeInteger">
+            <xs:annotation>
+              <xs:documentation>Specifies the number of location results returned in this reply.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="FormattedAddress" type="ns:Address">
+            <xs:annotation>
+              <xs:documentation>Specifies the address formatted to have correct postal code per USPS standards.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="AddressToLocationRelationships" type="ns:AddressToLocationRelationshipDetail">
+            <xs:annotation>
+              <xs:documentation>The details about the relationship between the address requested and the locations returned.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SearchLocationsRequest">
+        <xs:sequence>
+          <xs:element minOccurs="1" name="WebAuthenticationDetail" type="ns:WebAuthenticationDetail">
+            <xs:annotation>
+              <xs:documentation>Descriptive data to be used in authentication of the sender's identity (and right to use FedEx web services).</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="1" name="ClientDetail" type="ns:ClientDetail" />
+          <xs:element minOccurs="0" name="TransactionDetail" type="ns:TransactionDetail" />
+          <xs:element minOccurs="1" name="Version" type="ns:VersionId" />
+          <xs:element minOccurs="0" name="EffectiveDate" type="xs:date" />
+          <xs:element minOccurs="0" name="LocationsSearchCriterion" type="ns:LocationsSearchCriteriaType">
+            <xs:annotation>
+              <xs:documentation>Specifies the criterion that may be used to search for FedEx locations.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="ShipperAccountNumber" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The account number of the shipper. This is the account number for which restrictions and privileges will be applied.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="UniqueTrackingNumber" type="ns:UniqueTrackingNumber">
+            <xs:annotation>
+              <xs:documentation>Tracking number to be used when searching for locations. This tracking number, along with other location search constraints, help to narrow the search for locations.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Address" type="ns:Address" />
+          <xs:element minOccurs="0" name="PhoneNumber" type="xs:string" />
+          <xs:element minOccurs="0" name="GeographicCoordinates" type="xs:string" />
+          <xs:element minOccurs="0" name="MultipleMatchesAction" type="ns:MultipleMatchesActionType">
+            <xs:annotation>
+              <xs:documentation>Specifies the criterion to be used to return location results when there are mutiple matches.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="SortDetail" type="ns:LocationSortDetail">
+            <xs:annotation>
+              <xs:documentation>Specifies the details on how the location search results be sorted in the reply.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Constraints" type="ns:SearchLocationConstraints">
+            <xs:annotation>
+              <xs:documentation>Contraints to be applied to location attributes.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="ServiceCategoryType">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="EXPRESS_FREIGHT" />
+          <xs:enumeration value="EXPRESS_PARCEL" />
+          <xs:enumeration value="GROUND_HOME_DELIVERY" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="ShippingActionType">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="DELIVERIES" />
+          <xs:enumeration value="PICKUPS" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="ShippingHoliday">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Holiday" type="ns:Holiday" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="UnavailableActions" type="ns:ShippingActionType" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="SupportedRedirectToHoldServiceType">
+        <xs:annotation>
+          <xs:documentation>DEPRECATED as of July 2017.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="FEDEX_EXPRESS" />
+          <xs:enumeration value="FEDEX_GROUND" />
+          <xs:enumeration value="FEDEX_GROUND_HOME_DELIVERY" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="TimeRange">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Begins" type="xs:time" />
+          <xs:element minOccurs="0" name="Ends" type="xs:time" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TransactionDetail">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CustomerTransactionId" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Free form text to be echoed back in the reply. Used to match requests and replies.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Localization" type="ns:Localization">
+            <xs:annotation>
+              <xs:documentation>Governs data payload language/translations (contrasted with ClientDetail.localization, which governs Notification.localizedMessage language selection).</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="UniqueTrackingNumber">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="TrackingNumber" type="xs:string" />
+          <xs:element minOccurs="0" name="TrackingNumberUniqueIdentifier" type="xs:string" />
+          <xs:element minOccurs="0" name="ShipDate" type="xs:date" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Weight">
+        <xs:annotation>
+          <xs:documentation>The descriptive data for the heaviness of an object.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Units" type="ns:WeightUnits">
+            <xs:annotation>
+              <xs:documentation>Identifies the unit of measure associated with a weight value.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="Value" type="xs:decimal">
+            <xs:annotation>
+              <xs:documentation>Identifies the weight value of a package/shipment.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="WeightUnits">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="KG" />
+          <xs:enumeration value="LB" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="WebAuthenticationDetail">
+        <xs:annotation>
+          <xs:documentation>Used in authentication of the sender's identity.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ParentCredential" type="ns:WebAuthenticationCredential">
+            <xs:annotation>
+              <xs:documentation>This was renamed from cspCredential.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="1" name="UserCredential" type="ns:WebAuthenticationCredential">
+            <xs:annotation>
+              <xs:documentation>Credential used to authenticate a specific software application. This value is provided by FedEx after registration.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="WebAuthenticationCredential">
+        <xs:annotation>
+          <xs:documentation>Two part authentication string used for the sender's identity</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="1" name="Key" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Identifying part of authentication credential. This value is provided by FedEx after registration</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="1" name="Password" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Secret part of authentication key. This value is provided by FedEx after registration.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="VersionId">
+        <xs:annotation>
+          <xs:documentation>Identifies the version/level of a service operation expected by a caller (in each request) and performed by the callee (in each reply).</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="1" fixed="locs" name="ServiceId" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Identifies a system or sub-system which performs an operation.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="1" fixed="12" name="Major" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>Identifies the service business level.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="1" fixed="0" name="Intermediate" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>Identifies the service interface level.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="1" fixed="0" name="Minor" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>Identifies the service code level.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </types>
+  <message name="SearchLocationsRequest">
+    <part name="SearchLocationsRequest" element="ns:SearchLocationsRequest" />
+  </message>
+  <message name="SearchLocationsReply">
+    <part name="SearchLocationsReply" element="ns:SearchLocationsReply" />
+  </message>
+  <portType name="LocationsPortType">
+    <operation name="searchLocations" parameterOrder="SearchLocationsRequest">
+      <input message="ns:SearchLocationsRequest" />
+      <output message="ns:SearchLocationsReply" />
+    </operation>
+  </portType>
+  <binding name="LocationsServiceSoapBinding" type="ns:LocationsPortType">
+    <s1:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="searchLocations">
+      <s1:operation soapAction="http://fedex.com/ws/locs/v12/searchLocations" style="document" />
+      <input>
+        <s1:body use="literal" />
+      </input>
+      <output>
+        <s1:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="LocationsService">
+    <port name="LocationsServicePort" binding="ns:LocationsServiceSoapBinding">
+      <s1:address location="https://wsbeta.fedex.com:443/web-services/locs" />
+    </port>
+  </service>
+</definitions>

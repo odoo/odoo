@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_rule_view_tree_l10n_ch_wage_types" model="ir.ui.view">
+        <field name="name">hr.salary.rule.view.tree.l10n.ch.wage.types</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="inherit_id" ref="l10n_ch_hr_payroll.hr_salary_rule_view_tree_l10n_ch_wage_types"/>
+        <field name="arch" type="xml">
+            <field name="l10n_ch_ac_included" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="l10n_ch_comp_ac_included" position="replace"/>
+            <field name="l10n_ch_aanp_included" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="l10n_ch_ijm_included" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="l10n_ch_ijm_included" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="l10n_ch_source_tax_included" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="l10n_ch_ac_included" position="before">
+                <field name="l10n_ch_gross_included" optional="show"/>
+            </field>
+            <field name="l10n_ch_aanp_included" position="after">
+                <field name="l10n_ch_laac_included" optional="show"/>
+            </field>
+            <field name="l10n_ch_ijm_included" position="after">
+                <field name="l10n_ch_lpp_forecast" optional="show"/>
+                <field name="l10n_ch_lpp_factor" optional="show"/>
+                <field name="l10n_ch_lpp_retroactive" optional="show"/>
+            </field>
+            <field name="l10n_ch_source_tax_included" position="after">
+                <field name="l10n_ch_salary_certificate" optional="hidden"/>
+                <field name="l10n_ch_caf_statement" optional="hidden"/>
+            </field>
+            <field name="l10n_ch_october_statement" position="replace"/>
+            <field name="l10n_ch_13th_month_included" position="attributes">
+                <attribute name="optional">hidden</attribute>
+            </field>
+            <field name="l10n_ch_13th_month_included" position="after">
+                <field name="l10n_ch_5_cents_rounding" optional="hidden"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_ch_hr_payroll.action_hr_salary_rule_l10n_ch_wage_types" model="ir.actions.act_window">
+        <field name="context">{}</field>
+    </record>
+</odoo>

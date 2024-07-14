@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ACCOUNT.ACCOUNTS-->
+        <record id="main_specific_payable_account" model="account.account">
+            <field name="company_id" ref="base.main_company"/>
+            <field name="code">111110</field>
+            <field name="name">Account payable IC BE Company</field>
+            <field name="reconcile" eval="True"/>
+            <field name="account_type">liability_payable</field>
+        </record>
+        <record id="main_specific_expense_account" model="account.account">
+            <field name="account_type">expense</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="code">220010</field>
+            <field name="name">Expenses IC</field>
+            <field name="reconcile" eval="False"/>
+        </record>
+        <record id="be_specific_receivable_account" model="account.account">
+            <field name="account_type">asset_receivable</field>
+            <field name="company_id" ref="l10n_be.demo_company_be"/>
+            <field name="code">400010</field>
+            <field name="name">Clients IC YourCompany</field>
+            <field name="reconcile" eval="True"/>
+        </record>
+        <record id="be_specific_income_account" model="account.account">
+            <field name="account_type">income</field>
+            <field name="company_id" ref="l10n_be.demo_company_be"/>
+            <field name="code">705210</field>
+            <field name="name">Prestations de services IC</field>
+            <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]"/>
+            <field name="reconcile" eval="False"/>
+        </record>
+
+        <!-- consolidation.accountS-->
+        <record id="specific_payable_liaison_account" model="consolidation.account">
+            <field name="name">Liaison account</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="liabilities_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, [ref('main_specific_payable_account')])]"/>
+        </record>
+        <record id="specific_expense_liaison_account" model="consolidation.account">
+            <field name="name">Liaison account</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="expense_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, [ref('main_specific_expense_account')])]"/>
+        </record>
+        <record id="specific_income_liaison_account" model="consolidation.account">
+            <field name="name">Liaison account</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="income_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, [ref('be_specific_income_account')])]"/>
+        </record>
+        <record id="specific_receivable_liaison_account" model="consolidation.account">
+            <field name="name">Liaison account</field>
+            <field name="chart_id" ref="test_chart"/>
+            <field name="group_id" ref="assets_section"/>
+            <field name="account_ids" model="account.account"
+                   eval="[(6,0, [ref('be_specific_receivable_account')])]"/>
+        </record>
+
+        <!-- SET LIAISON ACCOUNTS AS DEFAULT FOR COMPANIES -->
+        <record id="base.main_partner" model="res.partner">
+            <field name="property_account_payable_id" ref="main_specific_payable_account"/>
+        </record>
+        <record id="l10n_be.partner_demo_company_be" model="res.partner" context="{'allowed_company_ids': [ref('l10n_be.demo_company_be')]}">
+            <field name="property_account_receivable_id" ref="be_specific_receivable_account"/>
+        </record>
+    </data>
+</odoo>

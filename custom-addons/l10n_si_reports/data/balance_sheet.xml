@@ -1,0 +1,712 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_si_balance_sheet" model="account.report">
+        <field name="name">Balance sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="country_id" ref="base.si"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_si_balance_sheet_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_si_balance_sheet_resources" model="account.report.line">
+                <field name="name">Resources</field>
+                <field name="code">si_resources</field>
+                <field name="aggregation_formula">si_resources_a.balance + si_resources_b.balance + si_resources_c.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_si_balance_sheet_resources_a" model="account.report.line">
+                        <field name="name">A. Long-term assets</field>
+                        <field name="code">si_resources_a</field>
+                        <field name="aggregation_formula">si_resources_a_I.balance + si_resources_a_II.balance + si_resources_a_III.balance + si_resources_a_IV.balance + si_resources_a_V.balance + si_resources_a_VI.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_si_balance_sheet_resources_a_I" model="account.report.line">
+                                <field name="name">I. Intangible assets and long-term accrued costs and deferred revenue</field>
+                                <field name="code">si_resources_a_I</field>
+                                <field name="aggregation_formula">si_resources_a_I_1.balance + si_resources_a_I_2.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_si_balance_sheet_resources_a_I_1" model="account.report.line">
+                                        <field name="name">1. Intangible assets</field>
+                                        <field name="code">si_resources_a_I_1</field>
+                                        <field name="aggregation_formula">si_resources_a_I_1_a.balance + si_resources_a_I_1_b.balance + si_resources_a_I_1_c.balance + si_resources_a_I_1_ch.balance</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_si_balance_sheet_resources_a_I_1_a" model="account.report.line">
+                                                <field name="name">a) Long-term property rights</field>
+                                                <field name="code">si_resources_a_I_1_a</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">003</field>
+                                            </record>
+                                            <record id="l10n_si_balance_sheet_resources_a_I_1_b" model="account.report.line">
+                                                <field name="name">b) Good name</field>
+                                                <field name="code">si_resources_a_I_1_b</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">000</field>
+                                            </record>
+                                            <record id="l10n_si_balance_sheet_resources_a_I_1_c" model="account.report.line">
+                                                <field name="name">c) Long-term deferred development costs</field>
+                                                <field name="code">si_resources_a_I_1_c</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">002</field>
+                                            </record>
+                                            <record id="l10n_si_balance_sheet_resources_a_I_1_ch" model="account.report.line">
+                                                <field name="name">č) Other intangible assets</field>
+                                                <field name="code">si_resources_a_I_1_ch</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">009 + 005 + 131 + 001 + 008</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_resources_a_I_2" model="account.report.line">
+                                        <field name="name">2. Long-term accrued costs and deferred revenue</field>
+                                        <field name="code">si_resources_a_I_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">007</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_resources_a_II" model="account.report.line">
+                                <field name="name">II. Tangible fixed assets</field>
+                                <field name="code">si_resources_a_II</field>
+                                <field name="aggregation_formula">si_resources_a_II_1.balance + si_resources_a_II_2.balance + si_resources_a_II_3.balance + si_resources_a_II_4.balance + si_resources_a_II_5.balance + si_resources_a_II_6.balance + si_resources_a_II_7.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_si_balance_sheet_resources_a_II_1" model="account.report.line">
+                                        <field name="name">1. Land</field>
+                                        <field name="code">si_resources_a_II_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">031 + 020 + 022 + 032</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_resources_a_II_2" model="account.report.line">
+                                        <field name="name">2. Buildings</field>
+                                        <field name="code">si_resources_a_II_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">039 + 036 + 026 + 023 + 021 + 035</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_resources_a_II_3" model="account.report.line">
+                                        <field name="name">3. Production facilities and machines</field>
+                                        <field name="code">si_resources_a_II_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">050 + 040 + 042 + 052</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_resources_a_II_4" model="account.report.line">
+                                        <field name="name">4. Other plant and equipment, small inventory and other tangible fixed assets</field>
+                                        <field name="code">si_resources_a_II_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">048 + 041 + 046 + 056 + 045 + 051 + 055 + 059</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_resources_a_II_5" model="account.report.line">
+                                        <field name="name">5. Biological agents</field>
+                                        <field name="code">si_resources_a_II_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">053 + 058 + 054 + 044 + 043</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_resources_a_II_6" model="account.report.line">
+                                        <field name="name">6. Tangible fixed assets under construction and manufacture</field>
+                                        <field name="code">si_resources_a_II_6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">047 + 027</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_resources_a_II_7" model="account.report.line">
+                                        <field name="name">7. Advances for the acquisition of property, plant and equipment</field>
+                                        <field name="code">si_resources_a_II_7</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">130</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_resources_a_III" model="account.report.line">
+                                <field name="name">III. Investment property</field>
+                                <field name="code">si_resources_a_III</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">01</field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_resources_a_IV" model="account.report.line">
+                                <field name="name">IV. Long-term financial investments</field>
+                                <field name="code">si_resources_a_IV</field>
+                                <field name="aggregation_formula">si_resources_a_IV_1.balance + si_resources_a_IV_2.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_si_balance_sheet_resources_a_IV_1" model="account.report.line">
+                                        <field name="name">1. Long-term investments other than loans</field>
+                                        <field name="code">si_resources_a_IV_1</field>
+                                        <field name="aggregation_formula">si_resources_a_IV_1_a.balance + si_resources_a_IV_1_b.balance + si_resources_a_IV_1_c.balance</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_si_balance_sheet_resources_a_IV_1_a" model="account.report.line">
+                                                <field name="name">a) Shares and stakes in group companies</field>
+                                                <field name="code">si_resources_a_IV_1_a</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">061 + 060 + 062</field>
+                                            </record>
+                                            <record id="l10n_si_balance_sheet_resources_a_IV_1_b" model="account.report.line">
+                                                <field name="name">b) Other shares and stakes</field>
+                                                <field name="code">si_resources_a_IV_1_b</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">064 + 063 + 065</field>
+                                            </record>
+                                            <record id="l10n_si_balance_sheet_resources_a_IV_1_c" model="account.report.line">
+                                                <field name="name">c) Other long-term financial investments</field>
+                                                <field name="code">si_resources_a_IV_1_c</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">069 + 066 + 067 + 068</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_resources_a_IV_2" model="account.report.line">
+                                        <field name="name">2. Long-term loans</field>
+                                        <field name="code">si_resources_a_IV_2</field>
+                                        <field name="aggregation_formula">si_resources_a_IV_2_a.balance + si_resources_a_IV_2_b.balance</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_si_balance_sheet_resources_a_IV_2_a" model="account.report.line">
+                                                <field name="name">a) Long-term loans to group companies</field>
+                                                <field name="code">si_resources_a_IV_2_a</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">073 + 070</field>
+                                            </record>
+                                            <record id="l10n_si_balance_sheet_resources_a_IV_2_b" model="account.report.line">
+                                                <field name="name">b) Other long-term loans</field>
+                                                <field name="code">si_resources_a_IV_2_b</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">077 + 072 + 078 + 071 + 075 + 079 + 074 + 076</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_resources_a_V" model="account.report.line">
+                                <field name="name">V. Long-term operating receivables</field>
+                                <field name="code">si_resources_a_V</field>
+                                <field name="aggregation_formula">si_resources_a_V_1.balance + si_resources_a_V_2.balance + si_resources_a_V_3.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_si_balance_sheet_resources_a_V_1" model="account.report.line">
+                                        <field name="name">1. Long-term operating receivables from group companies</field>
+                                        <field name="code">si_resources_a_V_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">087</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_resources_a_V_2" model="account.report.line">
+                                        <field name="name">2. Long-term trade receivables</field>
+                                        <field name="code">si_resources_a_V_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">084 + 081 + 082 + 080 + 083</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_resources_a_V_3" model="account.report.line">
+                                        <field name="name">3. Long-term operating receivables from others</field>
+                                        <field name="code">si_resources_a_V_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">085 + 086 + 089</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_resources_a_VI" model="account.report.line">
+                                <field name="name">VI. Deferred tax assets</field>
+                                <field name="code">si_resources_a_VI</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">09</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_si_balance_sheet_resources_b" model="account.report.line">
+                        <field name="name">B. Current assets</field>
+                        <field name="code">si_resources_b</field>
+                        <field name="aggregation_formula">si_resources_b_I.balance + si_resources_b_II.balance + si_resources_b_III.balance + si_resources_b_IV.balance + si_resources_b_V.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_si_balance_sheet_resources_b_I" model="account.report.line">
+                                <field name="name">I. Assets (disposal groups) held for sale</field>
+                                <field name="code">si_resources_b_I</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">67</field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_resources_b_II" model="account.report.line">
+                                <field name="name">II. Stocks</field>
+                                <field name="code">si_resources_b_II</field>
+                                <field name="aggregation_formula">si_resources_b_II_1.balance + si_resources_b_II_2.balance + si_resources_b_II_3.balance + si_resources_b_II_4.balance + si_resources_b_II_5.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_si_balance_sheet_resources_b_II_1" model="account.report.line">
+                                        <field name="name">1. Material</field>
+                                        <field name="code">si_resources_b_II_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">31 + 32 + 30</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_resources_b_II_2" model="account.report.line">
+                                        <field name="name">2. Work in progress</field>
+                                        <field name="code">si_resources_b_II_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">60</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_resources_b_II_3" model="account.report.line">
+                                        <field name="name">3. Products</field>
+                                        <field name="code">si_resources_b_II_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">61 + 63</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_resources_b_II_4" model="account.report.line">
+                                        <field name="name">4. Merchandise</field>
+                                        <field name="code">si_resources_b_II_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">65 + 66</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_resources_b_II_5" model="account.report.line">
+                                        <field name="name">5. Advances for inventories</field>
+                                        <field name="code">si_resources_b_II_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">132</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_resources_b_III" model="account.report.line">
+                                <field name="name">III. Short-term investments</field>
+                                <field name="code">si_resources_b_III</field>
+                                <field name="aggregation_formula">si_resources_b_III_1.balance + si_resources_b_III_2.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_si_balance_sheet_resources_b_III_1" model="account.report.line">
+                                        <field name="name">1. Short-term investments other than loans</field>
+                                        <field name="code">si_resources_b_III_1</field>
+                                        <field name="aggregation_formula">si_resources_b_III_1_a.balance + si_resources_b_III_1_b.balance + si_resources_b_III_1_c.balance</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_si_balance_sheet_resources_b_III_1_a" model="account.report.line">
+                                                <field name="name">a) Shares and stakes in group companies</field>
+                                                <field name="code">si_resources_b_III_1_a</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">170 + 172 + 171</field>
+                                            </record>
+                                            <record id="l10n_si_balance_sheet_resources_b_III_1_b" model="account.report.line">
+                                                <field name="name">b) Other shares and stakes</field>
+                                                <field name="code">si_resources_b_III_1_b</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">173</field>
+                                            </record>
+                                            <record id="l10n_si_balance_sheet_resources_b_III_1_c" model="account.report.line">
+                                                <field name="name">c) Other short-term financial investments</field>
+                                                <field name="code">si_resources_b_III_1_c</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">179 + 178 + 176 + 177</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_resources_b_III_2" model="account.report.line">
+                                        <field name="name">2. Short-term loans</field>
+                                        <field name="code">si_resources_b_III_2</field>
+                                        <field name="aggregation_formula">si_resources_b_III_2_a.balance + si_resources_b_III_2_b.balance</field>
+                                        <field name="children_ids">
+                                            <record id="l10n_si_balance_sheet_resources_b_III_2_a" model="account.report.line">
+                                                <field name="name">a) Short-term loans to group companies</field>
+                                                <field name="code">si_resources_b_III_2_a</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">180</field>
+                                            </record>
+                                            <record id="l10n_si_balance_sheet_resources_b_III_2_b" model="account.report.line">
+                                                <field name="name">b) Other short-term loans</field>
+                                                <field name="code">si_resources_b_III_2_b</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">187 + 185 + 184 + 181 + 189 + 186 + 182 + 183</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_resources_b_IV" model="account.report.line">
+                                <field name="name">IV. Short-term receivables</field>
+                                <field name="code">si_resources_b_IV</field>
+                                <field name="aggregation_formula">si_resources_b_IV_1.balance + si_resources_b_IV_2.balance + si_resources_b_IV_3.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_si_balance_sheet_resources_b_IV_1" model="account.report.line">
+                                        <field name="name">1. Short-term operating receivables from group companies</field>
+                                        <field name="code">si_resources_b_IV_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">127</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_resources_b_IV_2" model="account.report.line">
+                                        <field name="name">2. Short-term trade receivables</field>
+                                        <field name="code">si_resources_b_IV_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">133 + 121 + 129 + 126 + 122 + 124 + 123 + 120 + 139 + 134 + 125</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_resources_b_IV_3" model="account.report.line">
+                                        <field name="name">3. Short-term operating receivables from others</field>
+                                        <field name="code">si_resources_b_IV_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">16 + 14 + 15</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_resources_b_V" model="account.report.line">
+                                <field name="name">V. Cash</field>
+                                <field name="code">si_resources_b_V</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">10 + 11</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_si_balance_sheet_resources_c" model="account.report.line">
+                        <field name="name">C. Short-term accrued and deferred income</field>
+                        <field name="code">si_resources_c</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">19</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_si_balance_sheet_liabilities" model="account.report.line">
+                <field name="name">Liabilities</field>
+                <field name="code">si_liabilities</field>
+                <field name="aggregation_formula">si_liabilities_a.balance + si_liabilities_b.balance + si_liabilities_c.balance + si_liabilities_ch.balance + si_liabilities_d.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_si_balance_sheet_liabilities_a" model="account.report.line">
+                        <field name="name">A. Capital</field>
+                        <field name="code">si_liabilities_a</field>
+                        <field name="aggregation_formula">si_liabilities_a_I.balance + si_liabilities_a_II.balance + si_liabilities_a_III.balance + si_liabilities_a_IV.balance + si_liabilities_a_V.balance + si_liabilities_a_VI.balance + si_liabilities_a_VII.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_si_balance_sheet_liabilities_a_I" model="account.report.line">
+                                <field name="name">I. Called-up capital</field>
+                                <field name="code">si_liabilities_a_I</field>
+                                <field name="aggregation_formula">si_liabilities_a_I_1.balance - si_liabilities_a_I_2.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_si_balance_sheet_liabilities_a_I_1" model="account.report.line">
+                                        <field name="name">1. Share capital</field>
+                                        <field name="code">si_liabilities_a_I_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-907 - 900 - 903 - 906 - 901 - 905 - 902</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_liabilities_a_I_2" model="account.report.line">
+                                        <field name="name">2. Uncalled capital (as a deductible item)</field>
+                                        <field name="code">si_liabilities_a_I_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">909</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_liabilities_a_II" model="account.report.line">
+                                <field name="name">II. Capital reserves</field>
+                                <field name="code">si_liabilities_a_II</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-91</field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_liabilities_a_III" model="account.report.line">
+                                <field name="name">III. Profit reserves</field>
+                                <field name="code">si_liabilities_a_III</field>
+                                <field name="aggregation_formula">si_liabilities_a_III_1.balance + si_liabilities_a_III_2.balance - si_liabilities_a_III_3.balance + si_liabilities_a_III_4.balance + si_liabilities_a_III_5.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_si_balance_sheet_liabilities_a_III_1" model="account.report.line">
+                                        <field name="name">1. Legal reserves</field>
+                                        <field name="code">si_liabilities_a_III_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-920</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_liabilities_a_III_2" model="account.report.line">
+                                        <field name="name">2. Reserves for treasury shares and treasury shares</field>
+                                        <field name="code">si_liabilities_a_III_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-921</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_liabilities_a_III_3" model="account.report.line">
+                                        <field name="name">3. Own shares and own business shares (as a deductible item)</field>
+                                        <field name="code">si_liabilities_a_III_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">929</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_liabilities_a_III_4" model="account.report.line">
+                                        <field name="name">4. Statutory reserves</field>
+                                        <field name="code">si_liabilities_a_III_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-922</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_liabilities_a_III_5" model="account.report.line">
+                                        <field name="name">5. Other reserves from profit</field>
+                                        <field name="code">si_liabilities_a_III_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-924 - 925 - 923 - 926</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_liabilities_a_IV" model="account.report.line">
+                                <field name="name">IV. Revaluation reserves</field>
+                                <field name="code">si_liabilities_a_IV</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-94</field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_liabilities_a_V" model="account.report.line">
+                                <field name="name">V. Reserves arising from fair value measurement</field>
+                                <field name="code">si_liabilities_a_V</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-95</field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_liabilities_a_VI" model="account.report.line">
+                                <field name="name">VI. Transferred net profit or loss</field>
+                                <field name="code">si_liabilities_a_VI</field>
+                                <field name="groupby" eval="False"/>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula">si_liabilities_a_VI_1.balance + si_liabilities_a_VI_2.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_si_balance_sheet_liabilities_a_VI_1" model="account.report.line">
+                                        <field name="name">1. Retained Earnings / net loss carried forward</field>
+                                        <field name="code">si_liabilities_a_VI_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-930 - 931 - 934</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_liabilities_a_VI_2" model="account.report.line">
+                                        <field name="name">2. Unallocated earnings from previous years</field>
+                                        <field name="code">si_liabilities_a_VI_2</field>
+                                        <field name="expression_ids">
+                                            <record id="l10n_si_balance_sheet_liabilities_a_VI_accounts" model="account.report.expression">
+                                                <field name="label">accounts</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-815 - 933 - 935 - 937</field>
+                                            </record>
+                                            <record id="l10n_si_balance_sheet_liabilities_a_VI_cross_report" model="account.report.expression">
+                                                <field name="label">cross_report</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">si_pl_19.balance - si_pl_20.balance</field>
+                                                <field name="subformula">cross_report</field>
+                                                <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                            </record>
+                                            <record id="l10n_si_balance_sheet_liabilities_a_VI_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">si_liabilities_a_VI_2.accounts + si_liabilities_a_VI_2.cross_report</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_liabilities_a_VII" model="account.report.line">
+                                <field name="name">VII. Net profit or loss for the financial year</field>
+                                <field name="code">si_liabilities_a_VII</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="aggregation_formula" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_si_balance_sheet_liabilities_a_VII_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">si_pl_19.balance - si_pl_20.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_si_balance_sheet_liabilities_b" model="account.report.line">
+                        <field name="name">B. Provisions and long-term accrued costs and deferred income</field>
+                        <field name="code">si_liabilities_b</field>
+                        <field name="aggregation_formula">si_liabilities_b_1.balance + si_liabilities_b_2.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_si_balance_sheet_liabilities_b_1" model="account.report.line">
+                                <field name="name">1. Reservations</field>
+                                <field name="code">si_liabilities_b_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-963 - 967 - 964 - 961 - 965 - 960 - 966 - 962</field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_liabilities_b_2" model="account.report.line">
+                                <field name="name">2. Long-term accrued costs and deferred revenue</field>
+                                <field name="code">si_liabilities_b_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-968</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_si_balance_sheet_liabilities_c" model="account.report.line">
+                        <field name="name">C. Long-term liabilities</field>
+                        <field name="code">si_liabilities_c</field>
+                        <field name="aggregation_formula">si_liabilities_c_I.balance + si_liabilities_c_II.balance + si_liabilities_c_III.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_si_balance_sheet_liabilities_c_I" model="account.report.line">
+                                <field name="name">I. Long-term financial liabilities</field>
+                                <field name="code">si_liabilities_c_I</field>
+                                <field name="aggregation_formula">si_liabilities_c_I_1.balance + si_liabilities_c_I_2.balance + si_liabilities_c_I_3.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_si_balance_sheet_liabilities_c_I_1" model="account.report.line">
+                                        <field name="name">1. Long-term financial liabilities to group companies</field>
+                                        <field name="code">si_liabilities_c_I_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-970 - 971</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_liabilities_c_I_2" model="account.report.line">
+                                        <field name="name">2. Long-term financial liabilities to banks</field>
+                                        <field name="code">si_liabilities_c_I_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-973 - 972</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_liabilities_c_I_3" model="account.report.line">
+                                        <field name="name">3. Other long-term financial liabilities</field>
+                                        <field name="code">si_liabilities_c_I_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-974 - 979 - 975 - 976</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_liabilities_c_II" model="account.report.line">
+                                <field name="name">II. Long-term operating liabilities</field>
+                                <field name="code">si_liabilities_c_II</field>
+                                <field name="aggregation_formula">si_liabilities_c_II_1.balance + si_liabilities_c_II_2.balance + si_liabilities_c_II_3.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_si_balance_sheet_liabilities_c_II_1" model="account.report.line">
+                                        <field name="name">1. Long-term operating liabilities to group companies</field>
+                                        <field name="code">si_liabilities_c_II_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-980 - 981</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_liabilities_c_II_2" model="account.report.line">
+                                        <field name="name">2. Long-term operating liabilities to suppliers</field>
+                                        <field name="code">si_liabilities_c_II_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-983 - 982</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_liabilities_c_II_3" model="account.report.line">
+                                        <field name="name">3. Other long-term operating liabilities</field>
+                                        <field name="code">si_liabilities_c_II_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-989 - 986 - 984 - 985</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_liabilities_c_III" model="account.report.line">
+                                <field name="name">III. Deferred tax liabilities</field>
+                                <field name="code">si_liabilities_c_III</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-988</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_si_balance_sheet_liabilities_ch" model="account.report.line">
+                        <field name="name">C. Short term obligations</field>
+                        <field name="code">si_liabilities_ch</field>
+                        <field name="aggregation_formula">si_liabilities_ch_I.balance + si_liabilities_ch_II.balance + si_liabilities_ch_III.balance</field>
+                        <field name="children_ids">
+                            <record id="l10n_si_balance_sheet_liabilities_ch_I" model="account.report.line">
+                                <field name="name">I. Liabilities included in disposal groups</field>
+                                <field name="code">si_liabilities_ch_I</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-21</field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_liabilities_ch_II" model="account.report.line">
+                                <field name="name">II. Short-term financial liabilities</field>
+                                <field name="code">si_liabilities_ch_II</field>
+                                <field name="aggregation_formula">si_liabilities_ch_II_1.balance + si_liabilities_ch_II_2.balance + si_liabilities_ch_II_3.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_si_balance_sheet_liabilities_ch_II_1" model="account.report.line">
+                                        <field name="name">1. Short-term financial liabilities to group companies</field>
+                                        <field name="code">si_liabilities_ch_II_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-270</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_liabilities_ch_II_2" model="account.report.line">
+                                        <field name="name">2. Short-term financial liabilities to banks</field>
+                                        <field name="code">si_liabilities_ch_II_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-272 - 273</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_liabilities_ch_II_3" model="account.report.line">
+                                        <field name="name">3. Other short-term financial liabilities</field>
+                                        <field name="code">si_liabilities_ch_II_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-278 - 277 - 279 - 274 - 271 - 275 - 276</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_si_balance_sheet_liabilities_ch_III" model="account.report.line">
+                                <field name="name">III. Short-term operating liabilities</field>
+                                <field name="code">si_liabilities_ch_III</field>
+                                <field name="aggregation_formula">si_liabilities_ch_III_1.balance + si_liabilities_ch_III_2.balance + si_liabilities_ch_III_3.balance</field>
+                                <field name="children_ids">
+                                    <record id="l10n_si_balance_sheet_liabilities_ch_III_1" model="account.report.line">
+                                        <field name="name">1. Short-term operating liabilities to group companies</field>
+                                        <field name="code">si_liabilities_ch_III_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-227</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_liabilities_ch_III_2" model="account.report.line">
+                                        <field name="name">2. Short-term trade payables</field>
+                                        <field name="code">si_liabilities_ch_III_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-224 - 220 - 222 - 23 - 221 - 223</field>
+                                    </record>
+                                    <record id="l10n_si_balance_sheet_liabilities_ch_III_3" model="account.report.line">
+                                        <field name="name">3. Other short-term operating liabilities</field>
+                                        <field name="code">si_liabilities_ch_III_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-24 - 25 - 26 - 28</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_si_balance_sheet_liabilities_d" model="account.report.line">
+                        <field name="name">D. Short-term accrued and deferred income</field>
+                        <field name="code">si_liabilities_d</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-29</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,53 @@
+// ------- Cohort renderer -------
+.o_cohort_view {
+    .table {
+        th,
+        td {
+            border-color: $o-cohort-border-color;
+        }
+
+        thead,
+        tfoot {
+            background-color: $o-cohort-heading-bg-color;
+        }
+
+        tbody > tr.o_cohort_row_clickable:hover {
+            background-color: $o-cohort-hover-color;
+
+            .o_cohort_value {
+                cursor: pointer;
+            }
+
+            @include media-breakpoint-up(lg) {
+                td:first-child {
+                    position: relative;
+
+                    &::before {
+                        content: "";
+                        @include o-position-absolute($top: 0, $bottom: 0, $left: 0);
+                        width: 3px;
+                        background-color: $o-brand-primary;
+                    }
+                }
+            }
+        }
+    }
+
+    .o_cohort_no_data {
+        font-size: 18px;
+        background-color: $o-cohort-heading-bg-color;
+    }
+
+    .o_view_sample_data {
+        .o_data_table {
+            @include o-sample-data-disabled;
+        }
+    }
+}
+
+// ------- Sample mode -------
+.o_cohort_view .o_view_sample_data {
+    .o_cohort_renderer {
+        @include o-sample-data-disabled;
+    }
+}

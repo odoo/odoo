@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_nl_reports_sbr_icp_icp_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_nl_reports_sbr_icp.icp.wizard.view.form</field>
+        <field name="model">l10n_nl_reports_sbr_icp.icp.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create EC Sales (ICP) XBRL for SBR">
+                <sheet>
+                    <group string="New SBR File">
+                        <field name="contact_initials"/>
+                        <field name="contact_surname"/>
+                        <field name="contact_prefix"/>
+                        <field name="contact_phone"/>
+                        <field name="tax_consultant_number"/>
+                        <field name='password' password="True"/>
+                        <field name="is_test" groups="base.group_no_one"/>
+                        <field name="date_from" invisible="1"/>
+                        <field name="date_to" invisible="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="send_xbrl" string="Send" type="object" class="btn-primary" data-hotkey="q" invisible="not can_report_be_sent"/>
+                    <button name="action_download_xbrl_file" string="Download" type="object" class="btn-secondary" data-hotkey="l"/>
+                    <button string="Close" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    <field name="can_report_be_sent" invisible="1"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

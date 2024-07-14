@@ -1,0 +1,8 @@
+.database_expiration_panel .oe_instance_register_form {
+    max-height: 0;
+    transition: max-height 0.4s;
+
+    &.o-vertical-slide-enter-active {
+        max-height: 10rem; // fixed value is required to properly trigger transition
+    }
+}

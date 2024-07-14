@@ -1,0 +1,198 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_br_edi_services
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-04-12 21:11+0000\n"
+"PO-Revision-Date: 2024-04-15 11:51-0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+#. module: l10n_br_edi_services
+#: model:ir.actions.server,name:l10n_br_edi_services.ir_cron_l10n_br_edi_check_status_ir_actions_server
+msgid "BR EDI: Update status of all pending invoices"
+msgstr "EDI BR: Atualizar status de todas as faturas pendentes"
+
+#. module: l10n_br_edi_services
+#: model:ir.model.fields,field_description:l10n_br_edi_services.field_account_bank_statement_line__l10n_br_last_edi_status
+#: model:ir.model.fields,field_description:l10n_br_edi_services.field_account_move__l10n_br_last_edi_status
+#: model:ir.model.fields,field_description:l10n_br_edi_services.field_account_payment__l10n_br_last_edi_status
+msgid "Brazil E-Invoice Status"
+msgstr "Brasil: Status de faturas eletrõnicas"
+
+#. module: l10n_br_edi_services
+#: model:ir.model.fields,help:l10n_br_edi_services.field_account_bank_statement_line__l10n_br_nfse_verification
+#: model:ir.model.fields,help:l10n_br_edi_services.field_account_move__l10n_br_nfse_verification
+#: model:ir.model.fields,help:l10n_br_edi_services.field_account_payment__l10n_br_nfse_verification
+msgid ""
+"Brazil: After an NFS-e invoice is issued and confirmed by the municipality, "
+"a unique code is provided for online verification of its authenticity."
+msgstr ""
+"Brasil: Após a emissão e confirmação da NFS-e pelo município, é fornecido "
+"um código de verificação exclusivo para autenticação on-line."
+
+#. module: l10n_br_edi_services
+#: model:ir.model.fields,help:l10n_br_edi_services.field_account_bank_statement_line__l10n_br_nfse_number
+#: model:ir.model.fields,help:l10n_br_edi_services.field_account_move__l10n_br_nfse_number
+#: model:ir.model.fields,help:l10n_br_edi_services.field_account_payment__l10n_br_nfse_number
+msgid ""
+"Brazil: After an NFS-e invoice is issued and confirmed by the municipality, "
+"an NFS-e number is provided."
+msgstr ""
+"Brasil: Após a emissão e confirmação da NFS-e pelo município, é fornecido o "
+"número da NFS-e."
+
+#. module: l10n_br_edi_services
+#: model:ir.model.fields,help:l10n_br_edi_services.field_account_bank_statement_line__l10n_br_last_edi_status
+#: model:ir.model.fields,help:l10n_br_edi_services.field_account_move__l10n_br_last_edi_status
+#: model:ir.model.fields,help:l10n_br_edi_services.field_account_payment__l10n_br_last_edi_status
+msgid "Brazil: the state of the most recent e-invoicing attempt."
+msgstr ""
+"Brasil: estado da tentativa mais recente de emissão de fatura eletrônica."
+
+#. module: l10n_br_edi_services
+#: model_terms:ir.ui.view,arch_db:l10n_br_edi_services.view_move_form
+msgid "Check NFS-e Status"
+msgstr "Verificar status da NFS-e\t"
+
+#. module: l10n_br_edi_services
+#. odoo-python
+#: code:addons/l10n_br_edi_services/models/account_move.py:0
+#, python-format
+msgid "E-invoice accepted:"
+msgstr "Fatura eletrônica aceita:"
+
+#. module: l10n_br_edi_services
+#. odoo-python
+#: code:addons/l10n_br_edi_services/wizard/l10n_br_edi_invoice_update.py:0
+#, python-format
+msgid ""
+"E-invoice cancelled in Odoo, make sure to also cancel it in your city's "
+"portal."
+msgstr ""
+"Fatura eletrônica cancelada no Odoo. Certifique-se de também cancelá-la no "
+"portal do município."
+
+#. module: l10n_br_edi_services
+#. odoo-python
+#: code:addons/l10n_br_edi_services/models/account_move.py:0
+#, python-format
+msgid "E-invoice is pending: %s"
+msgstr "Fatura eletrônica pendente: %s"
+
+#. module: l10n_br_edi_services
+#. odoo-python
+#: code:addons/l10n_br_edi_services/models/account_move.py:0
+#, python-format
+msgid ""
+"E-invoice was not accepted:\n"
+"%s"
+msgstr ""
+"Fatura eletrônica não aceita:\n"
+"%s"
+
+#. module: l10n_br_edi_services
+#: model:ir.model,name:l10n_br_edi_services.model_l10n_br_edi_invoice_update
+msgid "Implements both correcting and cancelling an invoice."
+msgstr "Implementa a correção e o cancelamento de faturas."
+
+#. module: l10n_br_edi_services
+#. odoo-python
+#: code:addons/l10n_br_edi_services/models/account_move.py:0
+#, python-format
+msgid "Informative taxes:"
+msgstr "Impostos informativos:"
+
+#. module: l10n_br_edi_services
+#: model:ir.model.fields,field_description:l10n_br_edi_services.field_l10n_br_edi_invoice_update__is_service_invoice
+msgid "Is Service Invoice"
+msgstr "É fatura de serviços"
+
+#. module: l10n_br_edi_services
+#: model:ir.model,name:l10n_br_edi_services.model_account_move
+msgid "Journal Entry"
+msgstr "Lançamento no diário"
+
+#. module: l10n_br_edi_services
+#. odoo-python
+#: code:addons/l10n_br_edi_services/models/account_move.py:0
+#, python-format
+msgid "N/A"
+msgstr "N/A"
+
+#. module: l10n_br_edi_services
+#: model:ir.model.fields,field_description:l10n_br_edi_services.field_account_bank_statement_line__l10n_br_nfse_number
+#: model:ir.model.fields,field_description:l10n_br_edi_services.field_account_move__l10n_br_nfse_number
+#: model:ir.model.fields,field_description:l10n_br_edi_services.field_account_payment__l10n_br_nfse_number
+msgid "NFS-e Number"
+msgstr "Número da NFS-e"
+
+#. module: l10n_br_edi_services
+#: model:ir.model.fields,field_description:l10n_br_edi_services.field_account_bank_statement_line__l10n_br_nfse_verification
+#: model:ir.model.fields,field_description:l10n_br_edi_services.field_account_move__l10n_br_nfse_verification
+#: model:ir.model.fields,field_description:l10n_br_edi_services.field_account_payment__l10n_br_nfse_verification
+msgid "NFS-e Verification Code"
+msgstr "Código de verificação da NFS-e"
+
+#. module: l10n_br_edi_services
+#. odoo-python
+#: code:addons/l10n_br_edi_services/models/account_move.py:0
+#, python-format
+msgid "NFS-e number: %s"
+msgstr "Número da NFS-e: %s"
+
+#. module: l10n_br_edi_services
+#. odoo-python
+#: code:addons/l10n_br_edi_services/models/account_move.py:0
+#, python-format
+msgid "NFS-e verify code: %s"
+msgstr "Código de verificação da NFS-e: %s"
+
+#. module: l10n_br_edi_services
+#: model:ir.model.fields.selection,name:l10n_br_edi_services.selection__account_move__l10n_br_last_edi_status__pending
+msgid "Pending"
+msgstr "Pendente"
+
+#. module: l10n_br_edi_services
+#. odoo-python
+#: code:addons/l10n_br_edi_services/wizard/l10n_br_edi_invoice_update.py:0
+#, python-format
+msgid "Service invoices can only be cancelled."
+msgstr "Faturas de serviços só podem ser canceladas."
+
+#. module: l10n_br_edi_services
+#. odoo-python
+#: code:addons/l10n_br_edi_services/models/account_move.py:0
+#, python-format
+msgid "Status: %s"
+msgstr "Status: %s"
+
+#. module: l10n_br_edi_services
+#: model:ir.model.fields,help:l10n_br_edi_services.field_l10n_br_edi_invoice_update__is_service_invoice
+msgid "Technical field used to hide the \"reason\" field."
+msgstr "Campo técnico utilizado para ocultar o campo \"Motivo\"."
+
+#. module: l10n_br_edi_services
+#: model_terms:ir.ui.view,arch_db:l10n_br_edi_services.l10n_br_edi_invoice_update_form
+msgid ""
+"This invoice will only be cancelled in Odoo. Make sure to cancel it through "
+"your city portal as well."
+msgstr ""
+"Esta fatura será cancelada somente no Odoo. Certifique-se de cancelá-la "
+"também pelo portal do seu município."
+
+#. module: l10n_br_edi_services
+#. odoo-python
+#: code:addons/l10n_br_edi_services/models/account_move.py:0
+#, python-format
+msgid "Unknown E-invoice status code %s: %s"
+msgstr "Código %s de status de fatura eletrônica desconhecido: %s"

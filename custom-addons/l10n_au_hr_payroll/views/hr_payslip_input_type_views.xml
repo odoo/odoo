@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payslip_input_type_view_form" model="ir.ui.view">
+        <field name="name">hr.payslip.input.type.form.inherit.l10n_au_hr_payroll</field>
+        <field name="model">hr.payslip.input.type</field>
+        <field name="inherit_id" ref="hr_payroll.hr_payslip_input_type_view_form"/>
+        <field name="arch" type="xml">
+            <field name="struct_ids" position="after">
+                <field name="country_code" invisible="1"/>
+                <group name="l10n_au" string="Australia" invisible="country_code != 'AU'">
+                    <field name="l10n_au_default_amount" />
+                    <field name="l10n_au_is_allowance"/>
+                    <field name="l10n_au_is_etp"/>
+                    <field name="l10n_au_etp_type" invisible="not l10n_au_is_etp"/>
+                    <field name="l10n_au_etp_cap" invisible="not l10n_au_is_etp"/>
+                </group>
+            </field>
+        </field>
+    </record>
+</odoo>

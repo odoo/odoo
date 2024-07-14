@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sources
+        https://www.ato.gov.au/
+        https://oac.chris21.com/OAC_ichrisp/Help/ichrisUG/646250.htm
+    -->
+    <!-- the 3 following rules take advantage of the fact that any variable declared in the compute function
+    is added to the global dictionnary. Because we need to separate taxable and non-taxable components of the
+    ETP payment, the variables are calculated once but used in different rules.-->
+    <record id="l10n_au_termination_etp_gross" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_etp_gross"/>
+        <field name="name">Gross ETP</field>
+        <field name="code">ETP.GROSS</field>
+        <field name="sequence">50</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+etp_withholding, tax_free_component = payslip._l10n_au_compute_termination_withhold(employee, ytd_total)
+result = sum(payslip.input_line_ids.filtered(lambda l: l.input_type_id.l10n_au_is_etp).mapped('amount'))
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_termination"/>
+    </record>
+
+    <record id="l10n_au_termination_etp_tax_free" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_tax_free_component"/>
+        <field name="name">Tax-Free ETP</field>
+        <field name="code">TAX.FREE</field>
+        <field name="sequence">51</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = tax_free_component
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_termination"/>
+    </record>
+
+    <record id="l10n_au_termination_etp" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_etp_base"/>
+        <field name="name">Base ETP</field>
+        <field name="code">ETP.BASE</field>
+        <field name="sequence">52</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['ETP.GROSS'] - tax_free_component
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_termination"/>
+    </record>
+
+    <record id="l10n_au_termination_etp_withholding" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_etp_withhold"/>
+        <field name="name">ETP Withholding</field>
+        <field name="code">ETP.WITHHOLD</field>
+        <field name="sequence">53</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = -etp_withholding
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_termination"/>
+    </record>
+
+<!-- Unused Leaves -->
+    <record id="l10n_au_termination_leave" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_leave_base"/>
+        <field name="name">Unused Leaves</field>
+        <field name="code">LEAVE</field>
+        <field name="sequence">54</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+leave_amount, _, _ = payslip._l10n_au_compute_unused_leaves_withhold(year_slips)
+result = leave_amount
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_termination"/>
+    </record>
+
+    <record id="l10n_au_termination_leave_withholding" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_leave_withhold"/>
+        <field name="name">Unused Leaves Withholding</field>
+        <field name="code">LEAVE.WITHHOLD</field>
+        <field name="sequence">55</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+_, leave_withholding, _ = payslip._l10n_au_compute_unused_leaves_withhold(year_slips)
+result = -leave_withholding
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_termination"/>
+    </record>
+
+    <!-- because structure is created without the default rules set ( we don't want salary in this structure ) -->
+    <record id="l10n_au_termination_gross_benefits" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+        <field name="name">Gross Termination benefits</field>
+        <field name="sequence">195</field>
+        <field name="code">TERM.GROSS</field>
+        <field name="appears_on_employee_cost_dashboard">True</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['ETP.GROSS'] + categories['LEAVE.BASE']
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_termination"/>
+    </record>
+
+    <record id="l10n_au_termination_base_benefits" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.BASIC"/>
+        <field name="name">Base Termination Benefits</field>
+        <field name="code">TERM.BASE</field>
+        <field name="sequence">197</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['ETP.BASE'] + categories['LEAVE.BASE']
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_termination"/>
+    </record>
+
+    <record id="l10n_au_termination_withholding" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_net_withholding"/>
+        <field name="name">Termination Withholding</field>
+        <field name="code">TERM.WITHHOLD</field>
+        <field name="sequence">198</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['ETP.WITHHOLD'] + categories['LEAVE.WITHHOLD']
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_termination"/>
+    </record>
+
+    <record id="l10n_au_termination_child_support" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_au_hr_payroll.rule_category_child_support"/>
+        <field name="name">Child Support</field>
+        <field name="code">CHILD.SUPPORT</field>
+        <field name="sequence">199</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = employee.l10n_au_child_support_deduction or employee.l10n_au_child_support_garnishee</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+net_salary = categories['GROSS'] + categories['ALW'] + categories['DED']
+result = -payslip._l10n_au_compute_child_support(net_salary)
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_termination"/>
+    </record>
+
+    <record id="l10n_au_termination_net_salary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="name">Net Salary</field>
+        <field name="sequence">200</field>
+        <field name="code">NET</field>
+        <field name="appears_on_employee_cost_dashboard">True</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = categories['GROSS'] + categories['ALW'] + categories['DED']
+        </field>
+        <field name="struct_id" ref="l10n_au_hr_payroll.hr_payroll_structure_au_termination"/>
+    </record>
+</odoo>

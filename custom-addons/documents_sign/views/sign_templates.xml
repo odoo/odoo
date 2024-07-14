@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<record id="documents_sign_template_form_inherit" model="ir.ui.view">
+
+        <field name="name">Template form view</field>
+        <field name="model">sign.template</field>
+        <field name="inherit_id" ref="sign.sign_template_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="folder_id"/>
+                <field name="documents_tag_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('folder_id','=', folder_id)]"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

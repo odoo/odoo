@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="certificate_form_view" model="ir.ui.view">
+            <field name="name">certificate.form</field>
+            <field name="model">l10n_cl.certificate</field>
+            <field name="arch" type="xml">
+                <form string="Certificate Form">
+                    <sheet>
+                        <field name="l10n_cl_is_there_shared_certificate" invisible="1"/>
+                        <div class="alert alert-warning text-start" invisible="l10n_cl_is_there_shared_certificate" role="alert">
+                            <strong>Warning:</strong> there is no shared digital signature for this company. You need to define at least one certificate without a user.
+                            Otherwise, you will need to send electronic invoices to the SII manually, and Odoo won't be able to send automatic receipt acknowledgements for vendor bills.
+                        </div>
+                        <group>
+                            <field name="signature_key_file" required="True" filename="signature_filename"/>
+                            <field name="signature_filename" invisible="True"/>
+                            <field name="signature_pass_phrase" password="True" required="True"/>
+                            <field name="cert_expiration"/>
+                            <field name="subject_serial_number"/>
+                            <field name="user_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="certificate_search_view" model="ir.ui.view">
+            <field name="name">certificate.search</field>
+            <field name="model">l10n_cl.certificate</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="subject_serial_number"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="certificate_tree_view">
+            <field name="name">certificate.tree</field>
+            <field name="model">l10n_cl.certificate</field>
+            <field name="arch" type="xml">
+                <tree string="Certificate Tree">
+                    <field name="signature_filename"/>
+                    <field name="subject_serial_number"/>
+                    <field name="user_id"/>
+                    <field name="cert_expiration"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="certificate_list_action" model="ir.actions.act_window">
+            <field name="name">Certificates</field>
+            <field name="res_model">l10n_cl.certificate</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context" eval="{'search_default_my_certificates': 1}"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Create the first certificate</p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

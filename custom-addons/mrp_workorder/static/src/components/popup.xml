@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="mrp_workorder.SelectionPopup">
+        <t t-set="select_employee">Select Employee</t>
+        <Dialog size="'md'" title="select_employee" modalRef="modalRef" withBodyPadding="false">
+            <div class="popup popup-selection">
+                <div class="selection scrollable-y fs-3 w-auto">
+                    <t t-foreach="list" t-as="item" t-key="item.id">
+                        <div class="selection-item" t-if="!item.isSelected" t-att-class="{ 'selected': item.isSelected }" t-on-click="() => this.selectItem(item.id)">
+                            <t t-esc="item.label" />
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <div class="btn btn-secondary" t-on-click="cancel">Cancel</div>
+            </t>
+        </Dialog>
+    </t>
+</templates>

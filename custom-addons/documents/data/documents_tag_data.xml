@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <!-- tags internal -->
+    <record id="documents_internal_status_inbox" model="documents.tag" forcecreate="0">
+        <field name="name">Inbox</field>
+        <field name="facet_id" ref="documents_internal_status"/>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="documents_internal_status_tc" model="documents.tag" forcecreate="0">
+        <field name="name">To Validate</field>
+        <field name="facet_id" ref="documents_internal_status"/>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="documents_internal_status_validated" model="documents.tag" forcecreate="0">
+        <field name="name">Validated</field>
+        <field name="facet_id" ref="documents_internal_status"/>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="documents_internal_status_deprecated" model="documents.tag" forcecreate="0">
+        <field name="name">Deprecated</field>
+        <field name="facet_id" ref="documents_internal_status"/>
+        <field name="sequence">6</field>
+    </record>
+
+    <record id="documents_internal_knowledge_hr" model="documents.tag" forcecreate="0">
+        <field name="name">HR</field>
+        <field name="facet_id" ref="documents_internal_knowledge"/>
+        <field name="sequence">9</field>
+    </record>
+
+    <record id="documents_internal_knowledge_sales" model="documents.tag" forcecreate="0">
+        <field name="name">Sales</field>
+        <field name="facet_id" ref="documents_internal_knowledge"/>
+        <field name="sequence">9</field>
+    </record>
+
+    <record id="documents_internal_knowledge_legal" model="documents.tag" forcecreate="0">
+        <field name="name">Legal</field>
+        <field name="facet_id" ref="documents_internal_knowledge"/>
+        <field name="sequence">9</field>
+    </record>
+
+    <record id="documents_internal_knowledge_other" model="documents.tag" forcecreate="0">
+        <field name="name">Other</field>
+        <field name="facet_id" ref="documents_internal_knowledge"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="documents_internal_template_presentations" model="documents.tag" forcecreate="0">
+        <field name="name">Presentations</field>
+        <field name="facet_id" ref="documents_internal_template"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="documents_internal_template_contracts" model="documents.tag" forcecreate="0">
+        <field name="name">Contracts</field>
+        <field name="facet_id" ref="documents_internal_template"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="documents_internal_template_project" model="documents.tag" forcecreate="0">
+        <field name="name">Project</field>
+        <field name="facet_id" ref="documents_internal_template"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="documents_internal_template_text" model="documents.tag" forcecreate="0">
+        <field name="name">Text</field>
+        <field name="facet_id" ref="documents_internal_template"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- tags finance -->
+
+    <record id="documents_finance_status_inbox" model="documents.tag" forcecreate="0">
+        <field name="name">Inbox</field>
+        <field name="facet_id" ref="documents_finance_status"/>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="documents_finance_status_tc" model="documents.tag" forcecreate="0">
+        <field name="name">To Validate</field>
+        <field name="facet_id" ref="documents_finance_status"/>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="documents_finance_status_validated" model="documents.tag" forcecreate="0">
+        <field name="name">Validated</field>
+        <field name="facet_id" ref="documents_finance_status"/>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="documents_finance_documents_bill" model="documents.tag" forcecreate="0">
+        <field name="name">Bill</field>
+        <field name="facet_id" ref="documents_finance_documents"/>
+        <field name="sequence">4</field>
+    </record>
+
+    <record id="documents_finance_documents_expense" model="documents.tag" forcecreate="0">
+        <field name="name">Expense</field>
+        <field name="facet_id" ref="documents_finance_documents"/>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="documents_finance_documents_vat" model="documents.tag" forcecreate="0">
+        <field name="name">VAT</field>
+        <field name="facet_id" ref="documents_finance_documents"/>
+        <field name="sequence">6</field>
+    </record>
+
+    <record id="documents_finance_documents_fiscal" model="documents.tag" forcecreate="0">
+        <field name="name">Fiscal</field>
+        <field name="facet_id" ref="documents_finance_documents"/>
+        <field name="sequence">7</field>
+    </record>
+
+    <record id="documents_finance_documents_financial" model="documents.tag" forcecreate="0">
+        <field name="name">Financial</field>
+        <field name="facet_id" ref="documents_finance_documents"/>
+        <field name="sequence">8</field>
+    </record>
+
+    <record id="documents_finance_documents_Contracts" model="documents.tag" forcecreate="0">
+        <field name="name">Contracts</field>
+        <field name="facet_id" ref="documents_finance_documents"/>
+        <field name="sequence">9</field>
+    </record>
+
+    <record id="documents_finance_fiscal_year_2018" model="documents.tag" forcecreate="0">
+        <field name="name" eval="str(datetime.now().year)"/>
+        <field name="facet_id" ref="documents_finance_fiscal_year"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="documents_finance_fiscal_year_2017" model="documents.tag" forcecreate="0">
+        <field name="name" eval="str(datetime.now().year-1)"/>
+        <field name="facet_id" ref="documents_finance_fiscal_year"/>
+        <field name="sequence">11</field>
+    </record>
+
+    <!-- tags marketing -->
+
+    <record id="documents_marketing_assets_ads" model="documents.tag" forcecreate="0">
+        <field name="name">Ads</field>
+        <field name="facet_id" ref="documents_marketing_assets"/>
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="documents_marketing_assets_brochures" model="documents.tag" forcecreate="0">
+        <field name="name">Brochures</field>
+        <field name="facet_id" ref="documents_marketing_assets"/>
+        <field name="sequence">13</field>
+    </record>
+
+    <record id="documents_marketing_assets_images" model="documents.tag" forcecreate="0">
+        <field name="name">Images</field>
+        <field name="facet_id" ref="documents_marketing_assets"/>
+        <field name="sequence">14</field>
+    </record>
+
+    <record id="documents_marketing_assets_Videos" model="documents.tag" forcecreate="0">
+        <field name="name">Videos</field>
+        <field name="facet_id" ref="documents_marketing_assets"/>
+        <field name="sequence">15</field>
+    </record>
+</data></odoo>

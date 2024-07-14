@@ -1,0 +1,14 @@
+///
+/// This file is a copy of the bootstrap _functions.scss file where all the
+/// left-untouched function definition have been removed.
+///
+
+// Tint a color: mix a color with black
+@function tint-color($color, $weight) {
+    @return mix(#000, $color, $weight);
+}
+
+// Shade a color: mix a color with white
+@function shade-color($color, $weight) {
+    @return mix(#FFF, $color, $weight);
+}

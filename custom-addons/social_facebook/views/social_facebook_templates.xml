@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <template id="facebook_preview" t-name="Facebook Preview">
+        <div class="o_social_preview o_social_facebook_preview bg-white px-3 border rounded overflow-hidden">
+            <div class="o_social_preview_header d-flex my-3">
+                <span class="o_social_preview_icon_wrapper d-inline-block rounded-circle overflow-hidden me-2">
+                    <i class="fa fa-facebook text-white fa-2x"/>
+                </span>
+
+                <div class="o_social_preview_author">
+                    <b class="d-block mb-2">Facebook Page</b>
+                    <div class="text-muted o_social_preview_description">
+                        Published by Facebook Page •
+                        <a t-if="live_post_link" t-attf-href="#{live_post_link}" target="blank"><time t-esc="published_date"/></a>
+                        <t t-else=""><time t-esc="published_date"/></t> • <i class="fa fa-globe"/>
+                    </div>
+                </div>
+            </div>
+            <div class="o_social_preview_message pb-3">
+                <t t-esc="message" />
+            </div>
+            <div class="o_social_stream_post_image d-flex mx-n3 overflow-hidden">
+                <t t-foreach="image_urls" t-as="image_url">
+                    <a t-if="image_url_index == 1 and len(image_urls) > 2" class="o_social_stream_post_image_more position-relative d-flex ms-1">
+                        <img t-att-src="image_url" alt="Post Image" />
+                        <div class="o_social_stream_post_image_more_overlay d-flex align-items-center h-100 w-100 text-white justify-content-center position-absolute h1 m-0" style="user-select: none;">
+                            +<t t-esc="len(image_urls) - 2"/>
+                        </div>
+                    </a>
+                    <img t-elif="image_url_index &lt; 2" t-att-src="image_url" alt="Post Image"  />
+                </t>
+            </div>
+        </div>
+    </template>
+</data>
+</odoo>

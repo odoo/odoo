@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <template id="instagram_preview" t-name="Instagram Preview">
+        <div class="o_social_preview o_social_instagram_preview bg-white px-3 border rounded overflow-hidden">
+            <div class="o_social_preview_header d-flex my-3">
+                <span class="o_social_preview_icon_wrapper d-inline-block overflow-hidden me-2">
+                    <i class="fa fa-instagram fa-2x"/>
+                </span>
+
+                <div class="o_social_preview_author o_social_instagram_font_size">
+                    <span class="mt-1 fw-bold">My Instagram Page</span>
+                </div>
+            </div>
+            <div t-if="image_multiple" class="alert alert-info w-100 mb-3">
+                Only the first attached image will be posted on Instagram.
+            </div>
+            <div t-if="error_code == 'missing'" class="alert alert-warning w-100">
+                An image is required when posting on Instagram.
+            </div>
+
+            <div t-if="error_code == 'corrupted'" class="alert alert-warning w-100">
+                Your image appears to be corrupted, please try loading it again.
+            </div>
+            <div t-if="error_code == 'wrong_extension'" class="alert alert-warning w-100">
+                Only .jpg/.jpeg images can be posted on Instagram.
+            </div>
+            <div t-if="error_code == 'incorrect_ratio'" class="alert alert-warning w-100">
+                <span>Your image has to be within the 4:5 and the 1.91:1 aspect ratio as required by Instagram.</span><br/>
+                <span>We don't automatically resize your image to avoid undesired result.</span><br/>
+                <span>More information on:</span>
+                <a href="https://www.facebook.com/help/instagram/1631821640426723" target="_blank">
+                    https://www.facebook.com/help/instagram/1631821640426723
+                </a>
+            </div>
+            <div t-if="image_url" class="o_social_stream_post_image d-flex mx-n3 overflow-hidden">
+                <img t-att-src="image_url" alt="Post Image" />
+            </div>
+            <div t-if="message" class="pt-2 o_social_instagram_font_size">
+                <span class="fw-bold pe-1">My_instagram_page</span>
+                <span class="o_social_preview_message" t-esc="message" />
+            </div>
+            <div class="text-muted o_social_instagram_font_size small pt-1 pb-3">
+                <a t-if="live_post_link" t-attf-href="#{live_post_link}" target="blank">34 SECONDS AGO</a>
+                <t t-else="">34 SECONDS AGO</t>
+            </div>
+        </div>
+    </template>
+</data>
+</odoo>

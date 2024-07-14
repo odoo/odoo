@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="website_generator_screen" model="ir.actions.client">
+            <field name="name">Website Generator</field>
+            <field name="tag">website_generator</field>
+            <field name="target">fullscreen</field>
+        </record>
+
+        <record id="action_convert_scraping_request_ICP" model="ir.actions.server">
+            <field name="name">Website Generator After Install</field>
+            <field name="model_id" ref="model_website_generator_request"/>
+            <field name="state">code</field>
+            <field name="code">
+action = model.convert_scraping_request_ICP()
+            </field>
+        </record>
+
+        <record id="website_generator_wait" model="ir.actions.todo">
+            <field name="name">Website Generator After Install</field>
+            <field name="action_id" ref="action_convert_scraping_request_ICP"/>
+        </record>
+    </data>
+</odoo>

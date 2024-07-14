@@ -1,0 +1,129 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <record id="l10n_cl_edi_email_template_invoice" model="mail.template">
+            <field name="name">DTE - Send by Email</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="email_from">{{ (object.company_id.l10n_cl_dte_email or object.company_id.email) }}</field>
+            <field name="email_to">{{ (object.partner_id.l10n_cl_dte_email or object.commercial_partner_id.l10n_cl_dte_email) }}</field>
+            <field name="subject">{{ object.company_id.name }} DTE (Ref {{ (object.name or 'n/a') }})</field>
+            <field name="auto_delete" eval="False"/>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear
+        <t t-if="object.commercial_partner_id">
+            <t t-out="object.partner_id.name or ''">Deco Addict</t> (<t t-out="object.commercial_partner_id.name or ''">Deco Addict</t>),
+        </t>
+         <t t-else="">
+            <t t-out="object.partner_id.name or ''">Deco Addict</t>,
+        </t>
+        <br /><br />
+        Here is your
+        <t t-if="object.name">
+            invoice <strong t-out="object.name or ''">INV/2021/05/0004</strong>
+        </t>
+        <t t-else="">
+            invoice
+        </t>
+        <t t-if="object.invoice_origin">
+            (with reference: <t t-out="object.invoice_origin or ''">S00056</t>)
+        </t>
+        with a total amount of <strong t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 377,825</strong>
+        from <t t-out="object.company_id.name or ''">YourCompany</t>.
+        <t t-if="object.payment_state in ('paid', 'in_payment')">
+            This invoice is already paid.
+        </t>
+        <t t-else="">
+            Please remit payment at your earliest convenience.
+        </t>
+        <br /><br />
+        Do not hesitate to contact us if you have any questions.
+    </p>
+</div>
+            </field>
+        </record>
+
+        <record id="email_template_receipt_ack" model="mail.template">
+            <field name="name">DTE Receipt Acknowledgment</field>
+            <field name="subject">Acknowledgment of Receipt - {{ object.name }}</field>
+            <field name="email_from">{{ object.company_id.l10n_cl_dte_email }}</field>
+            <field name="email_to">{{ (object.partner_id.l10n_cl_dte_email or object.commercial_partner_id.l10n_cl_dte_email) }}</field>
+            <field name="model_id" ref="l10n_cl_edi.model_account_move"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html">
+            <![CDATA[
+                <header>
+                <strong>Electronic Invoice - Receipt Acknowledge of DTE Sending
+                <t t-out="object.name or ''"></t></strong>
+                </header>
+                <p>In the attached File you will find the result of the revision an validation process of a sent Tax Document made by you.</p>
+                <br />
+                <p>This is an automatic application, thus you should not answer this email or make comments to the origin email address..</p>
+                <br /><br /><br /><br />
+                <p>Sent Using Odoo</p>
+            ]]>
+            </field>
+        </record>
+        <record id="email_template_receipt_commercial_accept" model="mail.template">
+            <field name="name">DTE Receipt Commercial Accepted</field>
+            <field name="subject">Commercial Acceptance Response - {{ object.name }}</field>
+            <field name="email_from">{{ object.company_id.l10n_cl_dte_email }}</field>
+            <field name="email_to">{{ (object.partner_id.l10n_cl_dte_email or object.commercial_partner_id.l10n_cl_dte_email) }}</field>
+            <field name="model_id" ref="account.model_account_move" />
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html">
+            <![CDATA[
+                <header>
+                <strong>Electronic Invoicing - Commercial Acceptance Response - <t t-out="object.display_name or ''"></t></strong>
+                </header>
+                <p>In the attached file you will find the commercial acceptance of your Electronic Tax Document(s).</p>
+                <br /><br /><br /><br />
+                <p>Sent Using Odoo</p>
+            ]]>
+            </field>
+        </record>
+        <record id="email_template_claimed_ack" model="mail.template">
+            <field name="name">DTE Commercial Reject</field>
+            <field name="subject">Commercial Rejection response - {{ object.name }}</field>
+            <field name="email_from">{{ object.company_id.l10n_cl_dte_email }}</field>
+            <field name="email_to">{{ (object.partner_id.l10n_cl_dte_email or object.commercial_partner_id.l10n_cl_dte_email) }}</field>
+            <field name="model_id" ref="l10n_cl_edi.model_account_move"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html">
+            <![CDATA[
+                <header>
+                <strong>Electronic Invoicing - Commercial Rejection response <t t-out="object.name or ''"></t></strong>
+                </header>
+                <p>In the attached file you will find the response for a commercial rejection of Electronic Tax Documents sent by you.</p>
+                <br />
+                <p>This is an automatic application, thus you should not answer this email or make comments to the origin email address..</p>
+                <br /><br /><br /><br />
+                <p>Sent Using Odoo</p>
+            ]]>
+            </field>
+        </record>
+        <record id="email_template_receipt_goods" model="mail.template">
+            <field name="name">DTE Reception of Services Or Goods</field>
+            <field name="subject">DTE Reception of Services Or Goods - {{ object.name }}</field>
+            <field name="email_from">{{ object.company_id.l10n_cl_dte_email }}</field>
+            <field name="email_to">{{ object.partner_id.l10n_cl_dte_email or object.commercial_partner_id.l10n_cl_dte_email }}</field>
+            <field name="model_id" ref="account.model_account_move" />
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html">
+            <![CDATA[
+                <header>
+                <strong>Electronic Invoicing - Reception of Services or Goods RG 19.983 - <t t-out="object.display_name or ''"></t></strong>
+                </header>
+                <p>In the attached file you will find the reception of goods RG 19.983 for Electronic Tax Document(s).</p>
+                <p>El acuse de recibo que se declara en este acto, de acuerdo a lo dispuesto en la letra b)
+                del Art. 4, y la letra c) del Art. 5 de la Ley 19.983, acredita que la entrega de
+                mercaderias o servicio(s) prestado(s) ha(n) sido recibido(s).</p>
+                <br /><br /><br /><br />
+                <p>Sent Using Odoo</p>
+            ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

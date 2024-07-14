@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_documents_sign" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.documents.sign</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="documents.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='documents']" position="inside">
+                <block>
+                    <setting string="Sign" help="Each document template can be configured to centralize signed documents into a specific workspace.">
+                        <button name="%(sign.sign_template_action)d" icon="oi-arrow-right" type="action" string="Go to Sign Document Templates" class="btn-link"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

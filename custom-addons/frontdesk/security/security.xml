@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="frontdesk_group_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="base.module_category_human_resources_frontdesk"/>
+    </record>
+
+    <record id="frontdesk_group_administrator" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="base.module_category_human_resources_frontdesk"/>
+        <field name="implied_ids" eval="[(4, ref('frontdesk.frontdesk_group_user'))]"/>
+    </record>
+
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4, ref('frontdesk.frontdesk_group_administrator'))]"/>
+    </record>
+
+    <record id="frontdesk_frontdesk_company_rule" model="ir.rule">
+        <field name="name">Access stations of own companies only</field>
+        <field name="model_id" ref="model_frontdesk_frontdesk"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="frontdesk_visitor_company_rule" model="ir.rule">
+        <field name="name">Access visitors of own companies only</field>
+        <field name="model_id" ref="model_frontdesk_visitor"/>
+        <field name="domain_force">[('station_id.company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="frontdesk_frontdesk_user_rule" model="ir.rule">
+        <field name="name">User Group Frontdesk Frontdesk Model</field>
+        <field name="model_id" ref="model_frontdesk_frontdesk"/>
+        <field name="groups" eval="[(4, ref('frontdesk.frontdesk_group_user'))]"/>
+        <field name="domain_force">[('responsible_ids', 'in', user.id)]</field>
+    </record>
+
+    <record id="frontdesk_visitor_user_rule" model="ir.rule">
+        <field name="name">User Group Frontdesk Visitor Model</field>
+        <field name="model_id" ref="model_frontdesk_visitor"/>
+        <field name="groups" eval="[(4, ref('frontdesk.frontdesk_group_user'))]"/>
+        <field name="domain_force">[('station_id.responsible_ids', 'in', user.id)]</field>
+    </record>
+
+    <record id="frontdesk_frontdesk_administrator_rule" model="ir.rule">
+        <field name="name">Allow to create or edit all stations</field>
+        <field name="model_id" ref="model_frontdesk_frontdesk"/>
+        <field name="groups" eval="[(4, ref('frontdesk.frontdesk_group_administrator'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="frontdesk_visitor_administrator_rule" model="ir.rule">
+        <field name="name">Allow to create or edit all visitors</field>
+        <field name="model_id" ref="model_frontdesk_visitor"/>
+        <field name="groups" eval="[(4, ref('frontdesk.frontdesk_group_administrator'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+</odoo>

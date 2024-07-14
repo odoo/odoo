@@ -1,0 +1,140 @@
+////// ========== Search Panel ==============
+////// ======================================
+.o_search_panel > .o_search_panel_section {
+    .o_drag_over_selector {
+        &.o_search_panel_filter_value, > header {
+            background-color: $component-active-bg;
+            font-weight: $font-weight-bold;
+            color: $gray-900;
+
+            .o_search_panel_label_title {
+                padding-left: map-get($spacers, 2);
+            }
+
+            /* Firefox firing dragleave when dragging over text
+            https://bugzilla.mozilla.org/show_bug.cgi?id=1478562 */
+            .o_search_panel_label {
+                pointer-events: none;
+            }
+        }
+
+    }
+}
+
+////// =========== Drag & Drop ==============
+////// ======================================
+
+.o_documents_drop_over_zone {
+
+    &:after {
+        content: "";
+        @include o-position-absolute(4px, 6px, 8px, 6px);
+        border: 2px dashed white;
+    }
+
+    .o_documents_upload_text {
+        @include o-position-absolute($top: 50%, $left: 50%);
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+
+        span {
+            font-size: 20px;
+        }
+    }
+}
+
+.o_documents_drop_over_unauthorized_zone {
+    @extend .o_documents_drop_over_zone;
+    &:after {
+        border: 2px dashed map-get($o-theme-text-colors, 'danger');
+    }
+}
+
+.o_documents_drop_over {
+    align-items: flex-start;
+    overflow: auto;
+    transition: background 0.3s;
+    height: 100%;
+    background: $gray-700;
+
+    table {
+        opacity: 0.2;
+        filter: blur(1px);
+    }
+
+    .o_view_nocontent {
+        display: none;
+    }
+}
+
+.o_documents_drop_over_unauthorized {
+    @extend .o_documents_drop_over;
+    background: $red-100;
+}
+
+////// ========== Progress Bars =============
+////// ======================================
+
+
+.o_documents_list_view .o_documents_content .o_documents_view.o_list_renderer {
+    height: 100%;
+
+    .o_documents_locked {
+        margin-left: 5px;
+    }
+}
+
+.o_documents_content {
+
+    .o_search_panel {
+        position: relative;
+
+        .o_resize {
+            bottom: 0;
+            cursor: col-resize;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 10px;
+            height: 100%;
+            z-index: 1;
+        }
+    }
+
+    .o_kanban_record:not(.o_kanban_ghost), .o_inspector_tag_remove, .o_inspector_model, .o_inspector_open_chatter {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .o_documents_model_color {
+        color: $o-dms-color-model;
+    }
+
+    .o_documents_tag_color {
+        color: $o-dms-color-tag;
+    }
+
+    .o_documents_action_color {
+        color: $o-dms-color-action;
+    }
+
+    .o_documents_history_color {
+        color: $o-dms-color-history;
+    }
+
+    .o_documents_view {
+        .o_file_upload_progress_bar {
+            .o_upload_cross {
+                padding: $o-dms-p-tiny;
+            }
+        }
+    }
+
+    .o_field_widget.o_required_modifier{
+        font-weight: bold;
+    }
+}
+
+.o_form_view .o_conf_mail {
+    color: $link-color;
+}

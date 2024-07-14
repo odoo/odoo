@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Workflow Rules -->
+        <record id="documents_fleet_rule" model="documents.workflow.rule" forcecreate="0">
+            <field name="sequence">9</field>
+            <field name="name">Link to a vehicle</field>
+            <field name="create_model">link.to.record</field>
+            <field name="link_model" ref="documents_fleet.model_fleet_vehicle"/>
+            <field name="domain_folder_id" ref="documents_fleet.documents_fleet_folder"/>
+        </record>
+
+    </data>
+</odoo>

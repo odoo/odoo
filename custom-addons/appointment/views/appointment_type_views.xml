@@ -1,0 +1,438 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="appointment_type_view_search" model="ir.ui.view">
+        <field name="name">appointment.type.search</field>
+        <field name="model">appointment.type</field>
+        <field name="arch" type="xml">
+            <search string="Appointment Types">
+                <field name="name"/>
+                <field name="location_id"/>
+                <field name="staff_user_ids"/>
+                <field name="resource_ids"/>
+                <field name="category"/>
+                <filter string="My Appointments" name="my_appointments" domain="[('staff_user_ids', 'in', [uid])]"/>
+                <separator/>
+                <filter string="Recurring" name="filter_category_recurring" domain="[('category', '=', 'recurring')]"/>
+                <filter string="Punctual" name="filter_category_punctual" domain="[('category', '=', 'punctual')]"/>
+                <filter string="Any Time" name="filter_category_anytime" domain="[('category', '=', 'anytime')]"/>
+                <separator/>
+                <filter name="filter_active" string="Archived" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Timezone" name="group_by_timezone" context="{'group_by': 'appointment_tz'}"/>
+                    <filter string="Type" name="group_by_category" context="{'group_by': 'category'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="appointment_type_view_kanban" model="ir.ui.view">
+        <field name="name">appointment.type.kanban</field>
+        <field name="model">appointment.type</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard o_appointment_kanban" banner_route="/onboarding/appointment"
+            js_class="appointment_type_kanban" type="object" action="action_calendar_meetings">
+                <field name="appointment_tz"/>
+                <field name="schedule_based_on"/>
+                <field name="resource_ids"/>
+                <field name="sequence" widget="handle" groups="appointment.group_appointment_manager"/>
+                <field name="staff_user_ids"/>
+                <templates>
+                    <t t-name="kanban-menu">
+                        <a role="menuitem" type="edit" class="dropdown-item">
+                            <span class="fa fa-pencil"/> Edit
+                        </a>
+                        <a role="menuitem" type="object" name="action_customer_preview" class="dropdown-item">
+                            <span class="fa fa-globe"/> Preview
+                        </a>
+                        <a role="menuitem" type="object" name="action_share_invite" class="dropdown-item">
+                            <span class="fa fa-share-alt"/> Share
+                        </a>
+                        <a role="menuitem" type="delete" class="dropdown-item">
+                            <span class="fa fa-trash"/> Delete
+                        </a>
+                    </t>
+                    <div t-name="kanban-box" class="oe_kanban_global_click oe_kanban_card o_appointment_kanban_card">
+                        <div class="o_appointment_kanban_card_ungrouped row">
+                            <div class="ribbon ribbon-top-right" invisible="active">
+                                <span class="text-bg-danger">Archived</span>
+                            </div>
+                            <div class="col-lg-2 col-sm-5 col-11 py-0 my-auto text-large text-truncate">
+                                <span class="fw-bold o_appointment_kanban_ungrouped_name"
+                                    t-att-title="record.name.value">
+                                    <field name="name"/>
+                                </span><br/>
+                                <field name="category"/>
+                            </div>
+                            <div class="col-lg-5 col-sm-7 col-12 py-0 mt-3 mb-2 my-lg-auto d-flex">
+                                <div class="align-self-center me-sm-0 me-3 text-large w-50 w-lg-25">
+                                    <span class="fw-normal">
+                                        <field name="appointment_duration_formatted"/>
+                                    </span><br/>
+                                    <span>Duration</span>
+                                </div>
+                                <div class="my-sm-auto w-50 w-lg-75">
+                                    <field name="staff_user_ids" widget="many2many_avatar_user" readonly="True" invisible="schedule_based_on != 'users'"/>
+                                    <field name="resource_ids" widget="many2many_tags_avatar" readonly="True" invisible="schedule_based_on == 'users'"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-sm-5 col-6 py-0 my-2 my-lg-auto text-large">
+                                <span class="fw-normal">
+                                    <field name="appointment_count"/>
+                                    <t t-if="record.schedule_based_on.raw_value == 'users'"> Meetings</t>
+                                    <t t-else=""> Bookings</t>
+                                </span><br/>
+                                <span>Scheduled</span>
+                            </div>
+                            <div class="col-lg-3 col-sm-7 col-6 py-0 ps-2 ps-sm-3 my-2 my-lg-auto text-large">
+                                <span class="fw-normal">
+                                    <field name="appointment_count_report"/> Total
+                                    <t t-if="record.schedule_based_on.raw_value == 'users'"> Meetings</t>
+                                    <t t-else=""> Bookings</t>
+                                </span><br/>
+                                <span>(Last 30 Days)</span>
+                            </div>
+                            <field name="active" invisible="1"/>
+                        </div>
+                        <div class="o_appointment_kanban_card_grouped oe_kanban_global_click">
+                            <div class="o_kanban_card_header">
+                                <div class="ribbon ribbon-top-right" invisible="active">
+                                    <span class="text-bg-danger">Archived</span>
+                                </div>
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary col-12 p-0 w-75 text-truncate" t-att-title="record.name.value">
+                                        <field name="name"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content mt-3">
+                                <div class="row">
+                                    <div class="col-5">
+                                        <button class="btn btn-primary me-2" name="action_calendar_meetings" type="object">
+                                            <field name="appointment_count"/> SCHEDULED
+                                        </button>
+                                    </div>
+                                    <div class="col-7">
+                                        <span t-if="record.appointment_tz.value" title="Timezone">
+                                            <i class="fa fa-clock-o small me-2"/><span t-esc="record.appointment_tz.value" class="align-middle"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row d-flex o_appointment_kanban_boxes">
+                                    <div class="o_appointment_kanban_box o_kanban_primary_bottom bottom_block d-flex position-relative justify-content-center px-0">
+                                        <div class="col-6"/>
+                                        <div class="col-6">
+                                            <button class="btn btn-link btn-sm py-0 fa fa-lg fa-link" name="action_share_invite" type="object" title="Share"
+                                                    invisible="not active"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="appointment_type_view_tree" model="ir.ui.view">
+        <field name="name">appointment.type.tree</field>
+        <field name="model">appointment.type</field>
+        <field name="arch" type="xml">
+            <tree string="Appointment Type" class="o_appointment_type_view_list" multi_edit="1" banner_route="/onboarding/appointment">
+                <header>
+                    <button name="action_share_invite" type="object" string="Share"/>
+                </header>
+                <field name="sequence" widget="handle" groups="appointment.group_appointment_manager"/>
+                <field name="name" readonly="1"/>
+                <field name="location_id"/>
+                <field name="appointment_tz"/>
+                <field name="schedule_based_on" column_invisible="True"/>
+                <field name="staff_user_ids" widget="many2many_avatar_user" optional="hide"/>
+                <field name="resource_ids" string="Resources" widget="many2many_tags_avatar" optional="hide"/>
+                <field name="country_ids" widget="many2many_tags" groups="base.group_no_one" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="appointment_type_view_tree_invitation" model="ir.ui.view">
+        <field name="name">appointment.type.tree.invitation</field>
+        <field name="model">appointment.type</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <tree string="Appointment Invitations" multi_edit="1" sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name" readonly="1"/>
+                <field name="appointment_tz"/>
+                <field name="schedule_based_on" column_invisible="True"/>
+                <field name="staff_user_ids" widget="many2many_tags" optional="hide"
+                    invisible="schedule_based_on != 'users'"/>
+                <field name="resource_ids" string="Resources" widget="many2many_tags" optional="hide"
+                    invisible="schedule_based_on == 'users'"/>
+                <field name="category" groups="base.group_no_one"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="appointment_type_view_form" model="ir.ui.view">
+        <field name="name">appointment.type.form</field>
+        <field name="model">appointment.type</field>
+        <field name="arch" type="xml">
+            <form string="Appointment Type">
+                <field name="active" invisible="1"/>
+                <field name="is_published" invisible="1"/>
+                <header>
+                    <button name="action_customer_preview" string="Preview" type="object" class="btn btn-primary"
+                        invisible="not active"/>
+                    <button name="action_share_invite" string="Share" type="object" class="btn btn-secondary"
+                        invisible="not active"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
+                        invisible="active"/>
+                    <div class="oe_button_box" name="button_box" groups="base.group_user">
+                        <button class="oe_stat_button" type="object"
+                            name="action_appointment_shared_links"
+                            icon="fa-link"
+                            invisible="appointment_invite_count == 0">
+                            <field string="Shared Links" name="appointment_invite_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object"
+                            name="action_appointment_resources"
+                            icon="fa-cubes"
+                            invisible="schedule_based_on == 'users'">
+                            <field string="Resources" name="resource_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object"
+                            name="action_calendar_meetings"
+                            icon="fa-calendar">
+                            <field string="Appointments" name="appointment_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder='e.g. "Technical Demo"'/></h1>
+                    </div>
+                    <group>
+                        <group name="left_details">
+                            <label for="appointment_duration" invisible="category == 'custom'"/>
+                            <div invisible="category == 'custom'">
+                                <field name="appointment_duration" class="oe_inline me-1 o_input_5ch" widget="float_time"/><span> hours</span>
+                            </div>
+                            <label for="min_schedule_hours" string="Scheduling"/>
+                            <div class="o_appointment_scheduling">
+                                <span>Min <field name="min_schedule_hours" class="oe_inline ms-2 me-1 o_input_5ch" widget="float_time"/> hours before</span><br/>
+                                <span class="d-flex flex-nowrap" invisible="category == 'custom'">
+                                    <span class="text-nowrap" invisible="start_datetime">
+                                        Max in <field name="max_schedule_days" class="oe_inline ms-1 o_input_5ch"/> days
+                                    </span>
+                                    <span class="px-2" invisible="start_datetime or category == 'anytime'">or</span>
+                                    <span class="text-nowrap pe-4" invisible="category == 'anytime'">
+                                        from <field name="start_datetime" placeholder="Date" class="oe_inline ps-1" widget="daterange"
+                                            options="{'end_date_field': 'end_datetime'}" required="start_datetime or end_datetime"/>
+                                        <field name="end_datetime" invisible="1"/>
+                                    </span>
+                                </span>
+                            </div>
+                            <label for="min_cancellation_hours" string="Allow Cancelling"/>
+                            <div>
+                                <span>Until <field name="min_cancellation_hours" class="oe_inline ms-2 me-1 o_input_5ch" widget="float_time"/> hours before</span>
+                            </div>
+                        </group>
+                        <group name="right_details">
+                            <field name="staff_user_count" invisible="1"/>
+                            <field name="resource_count" invisible="1"/>
+                            <field name="schedule_based_on" widget="radio" options="{'horizontal': true}"
+                                required="1"
+                                readonly="category == 'anytime'"/>
+                            <!-- Users Details -->
+                            <field name="staff_user_ids" widget="many2many_avatar_user"
+                                invisible="schedule_based_on == 'resources'"
+                                readonly="category == 'anytime'"
+                                options="{'no_open': False}"/>
+                            <!-- Resources Details-->
+                            <field name="resource_ids" string="Resources" widget="many2many_tags_avatar"
+                                options="{'no_quick_create': True}"
+                                invisible="schedule_based_on == 'users'"/>
+                            <label for="resource_manage_capacity" invisible="schedule_based_on == 'users'"/>
+                            <div invisible="schedule_based_on == 'users'">
+                                <field name="resource_manage_capacity" class="oe_inline"/>
+                                <span invisible="not resource_manage_capacity">
+                                    (Total: <field name="resource_total_capacity" class="oe_inline o_input_5ch"/> persons)
+                                </span>
+                            </div>
+                            <field name="avatars_display" widget="radio" options="{'horizontal': true}" required="1"/>
+                            <field name="assign_method" widget="radio"
+                                invisible="schedule_based_on == 'users'" required="schedule_based_on == 'resources'"/>
+                            <field name="user_assign_method" widget="radio"
+                                invisible="schedule_based_on == 'resources'" required="schedule_based_on == 'users'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Schedule" name="slots">
+                            <field name="category" invisible="1"/>
+                            <field name="slot_ids">
+                                <tree editable="bottom" class="o_appointment_slots_list">
+                                    <field name="weekday" string="Every"
+                                        column_invisible="parent.category == 'custom'"/>
+                                    <field name="start_hour" string="From" widget="float_time"
+                                        column_invisible="parent.category == 'custom'"/>
+                                    <button name="durationArrow" class="fa fa-long-arrow-right text-center" title="Until (max)"
+                                        column_invisible="parent.category == 'custom'"/>
+                                    <field name="end_hour" string="To" widget="float_time"
+                                        column_invisible="parent.category == 'custom'"/>
+                                    <field name="start_datetime" column_invisible="parent.category != 'custom'"/>
+                                    <field name="end_datetime" column_invisible="parent.category != 'custom'"/>
+                                    <field name="restrict_to_user_ids" widget="many2many_avatar_user" domain="[('id', 'in', parent.staff_user_ids)]"
+                                        column_invisible="parent.schedule_based_on != 'users' or parent.category in ['custom', 'anytime']"
+                                        options="{'no_create': True}" optional="hide"/>
+                                    <field name="restrict_to_resource_ids" widget="many2many_tags_avatar" domain="[('id', 'in', parent.resource_ids)]"
+                                        column_invisible="parent.schedule_based_on == 'users' or parent.category in ['custom', 'anytime']"
+                                        options="{'no_create': True}" optional="hide"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Options" name="options">
+                            <group>
+                                <group name="options_left_details">
+                                    <field name="appointment_tz"/>
+                                    <field name="location_id" context="{'show_address': 1}"
+                                           placeholder="If empty, the meeting is considered as taking place online"/>
+                                    <field name="event_videocall_source"/>
+                                    <label for="resource_manual_confirmation" invisible="schedule_based_on == 'users'"/>
+                                    <div class="d-flex" invisible="schedule_based_on == 'users'">
+                                        <field name="resource_manual_confirmation" class="oe_inline"/>
+                                        <div invisible="not resource_manual_confirmation">
+                                            <span>
+                                                when over
+                                                <field name="resource_manual_confirmation_percentage" class="oe_inline o_input_5ch mx-1" widget="percentage"/>
+                                                total capacity
+                                            </span>
+                                        </div>
+                                    </div>
+                                </group>
+                                <group name="options_right_details">
+                                    <field name="reminder_ids" widget="many2many_tags"/>
+                                    <field name="booked_mail_template_id"
+                                        placeholder="If empty, Odoo will not send emails"
+                                        context="{'default_model': 'calendar.attendee', 'default_subject': name}"/>
+                                    <field name="canceled_mail_template_id"
+                                        placeholder="If empty, Odoo will not send emails"
+                                        context="{'default_model': 'calendar.event', 'default_subject': name}"/>
+                                    <field name="message_partner_ids" widget="many2many_tags_email"/>
+                                    <field name="country_ids" widget="many2many_tags" groups="base.group_no_one"/>
+                                    <field name="allow_guests"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Questions" name="questions">
+                            <field name="question_ids">
+                                <tree>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="question_type"/>
+                                    <field name="answer_ids" widget="many2many_tags"/>
+                                    <field name="question_required"/>
+                                    <button name="action_view_question_answer_inputs" type="object" class="fa fa-bar-chart p-0" title="Answer Breakdown" />
+                                </tree>
+                                <form string="Questions" name="question_form">
+                                    <sheet>
+                                        <group>
+                                            <group name="question_form_left">
+                                                <field name="name" placeholder='e.g. "What are your symptoms?"'/>
+                                                <field name="question_type" widget="radio"/>
+                                            </group>
+                                            <group name="question_form_right">
+                                                <field name="placeholder" placeholder='e.g. "I feel nauseous..."'
+                                                    invisible="question_type in ('select', 'radio', 'checkbox')"/>
+                                                <field name="question_required"/>
+                                            </group>
+                                        </group>
+                                        <notebook invisible="question_type in ('char', 'text')">
+                                            <page string="Answers" name="answers">
+                                                <field name="answer_ids">
+                                                    <tree editable="bottom">
+                                                        <!-- 'display_name' is necessary for the many2many_tags to work on the appointment view -->
+                                                        <field name="display_name" column_invisible="True"/>
+                                                        <field name="sequence" widget="handle"/>
+                                                        <field name="name"/>
+                                                    </tree>
+                                                </field>
+                                            </page>
+                                        </notebook>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Messages" name="messages">
+                            <label for="message_intro" string="Introduction Message"/>
+                            <field name="message_intro" class="oe-bordered-editor"
+                                   placeholder="e.g. &quot;During this meeting, we will...&quot;"/>
+                            <label for="message_confirmation" string="Extra Message on Confirmation"/>
+                            <field name="message_confirmation" class="oe-bordered-editor"
+                                   placeholder="e.g. &quot;Thank you for your trust, we look forward to meeting you!&quot;"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="appointment_type_view_form_add_simplified" model="ir.ui.view">
+        <field name="name">appointment.type.view.form.add.simplified</field>
+        <field name="model">appointment.type</field>
+        <field name="mode">primary</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="appointment.appointment_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="replace"/>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="replace"/>
+            <xpath expr="//field[@name='message_partner_ids']" position="replace"/>
+        </field>
+    </record>
+
+    <record id="appointment_type_view_form_appointment_onboarding" model="ir.ui.view">
+        <field name="name">appointment.type.form.appointment.onboarding</field>
+        <field name="model">appointment.type</field>
+        <field name="inherit_id" ref="appointment_type_view_form_add_simplified"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">appointment_onboarding_create_appointment_type_form</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="appointment_type_action" model="ir.actions.act_window">
+        <field name="name">Appointments</field>
+        <field name="res_model">appointment.type</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('category', '!=', 'custom')]</field>
+        <field name="context">{'search_default_filter_category_recurring': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_no_content_appointment_type">
+                No Appointment Configured
+            </p><p>
+                Share calendar link allowing people to book meetings with you, your team or a resource.
+            </p>
+        </field>
+    </record>
+
+    <record id="appointment_type_action_custom" model="ir.actions.act_window">
+        <field name="name">Invitations</field>
+        <field name="res_model">appointment.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="appointment_type_view_tree_invitation"/>
+        <field name="domain">[('category', '=', 'custom')]</field>
+        <field name="context">{
+            'default_category': 'custom',
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Custom Availabilities Shared!
+            </p><p>
+                Create invites on the fly from your calendar and share them with anyone by using the Share Availabilities button.
+            </p>
+        </field>
+    </record>
+</odoo>

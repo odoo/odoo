@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form_codabox_bridge" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.l10n_be_codabox_bridge</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="l10n_be_codabox.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//block[@id='l10n_be_codabox']/setting[1]" position="replace">
+                    <setting
+                            string="CodaBox Connection"
+                            documentation="/applications/finance/fiscal_localizations/belgium.html#codabox"
+                            title="The Access Token should be left empty for the first connection. It can be used later to generate new tokens for new connections">
+                        <field name="l10n_be_codabox_show_iap_token" invisible="1"/>
+                        <field name="l10n_be_codabox_is_connected" invisible="1"/>
+                        <div class="group-content" id="codabox_connection_status">
+                            <field name="l10n_be_codabox_is_connected" invisible="1"/>
+                            <label string="Status" for="l10n_be_codabox_is_connected" class="col-lg-3 o_light_label"/>
+
+                            <i class="fa fa-check text-success" invisible="not l10n_be_codabox_is_connected"/>
+                            <span class="text-success" invisible="not l10n_be_codabox_is_connected">Connected</span>
+
+                            <i class="fa fa-exclamation-triangle text-warning" invisible="l10n_be_codabox_is_connected"/>
+                            <span class="text-warning" invisible="l10n_be_codabox_is_connected">Not connected</span>
+
+                            <button name="l10n_be_codabox_refresh_connection_status" type="object" class="btn-link btn-primary"
+                                    groups="l10n_be_codabox_bridge.group_access_connection_settings" close="1" noSaveDialog="true">
+                                <i title="Update status" role="img" aria-label="Update status" class="fa fa-fw fa-refresh"/>
+                            </button>
+                        </div>
+                        <div class="group-content" groups="l10n_be_codabox_bridge.group_access_connection_settings">
+                            <div invisible="not l10n_be_codabox_show_iap_token">
+                                <label string="Access token" for="l10n_be_codabox_iap_token" class="col-lg-3 o_light_label"/>
+                                <field name="l10n_be_codabox_iap_token" readonly="l10n_be_codabox_is_connected" widget="CopyClipboardChar"/>
+                            </div>
+                        </div>
+                        <widget name="l10n_be_codabox_settings_buttons" groups="l10n_be_codabox_bridge.group_access_connection_settings"/>
+                    </setting>
+                </xpath>
+                <xpath expr="//block[@id='l10n_be_codabox']/setting[2]//field[@name='l10n_be_codabox_soda_journal']" position="after">
+                    <button name="l10n_be_codabox_open_soda_mapping" type="object" class="btn btn-primary" string="Open SODA Mapping"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_open_accounting_settings" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context" eval="{'module': 'account', 'bin_size': False}"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Allow read certificates of my company or orphan ones -->
+    <record id="l10n_ec_digital_certificate" model="ir.rule">
+        <field name="name">Ecuadorian Digital Certificate</field>
+        <field name="model_id" ref="l10n_ec_edi.model_l10n_ec_edi_certificate"/>
+        <field name="active">True</field>
+        <field name="perm_read">True</field>
+        <field name="perm_write">False</field>
+        <field name="perm_create">False</field>
+        <field name="perm_unlink">False</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

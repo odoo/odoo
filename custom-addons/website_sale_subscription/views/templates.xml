@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="price_dynamic_filter_template_product_product_subscription"
+                inherit_id="website_sale.price_dynamic_filter_template_product_product">
+        <xpath expr="//del" position="after">
+            <span t-if="record.recurring_invoice and data.get('is_subscription', False) and data.get('is_plan_possible', False)" class="fw-bold">
+                <span t-esc="data.get('temporal_unit_display')"/>
+            </span>
+        </xpath>
+    </template>
+
+    <template id="subscription_search_result_price">
+        <t t-esc="price"
+           t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+        <small>per</small>
+        <small t-if="duration > 1" t-esc="duration"/>
+        <small t-esc="unit"/>
+    </template>
+
+    <template id="products_item" inherit_id="website_sale.products_item">
+        <xpath expr="//span[@itemprop='priceCurrency']" position="after">
+            <span t-if="template_price_vals.get('is_subscription') and template_price_vals['is_plan_possible']" class="h6">
+                <span class="o_subscription_unit" t-esc="template_price_vals['temporal_unit_display']"/>
+            </span>
+        </xpath>
+    </template>
+
+    <template id="subscription_product_price" inherit_id="website_sale.product_price" name="Subscription Product Price">
+        <xpath expr="//h3[hasclass('css_editable_mode_hidden')]/del" position="after">
+            <t t-if="combination_info.get('is_subscription') and combination_info['is_plan_possible']">
+                <span class="mb-3 align-bottom input-group-lg o_website_sale_subscription_pricing_id variant_attribute">
+                    <span class="o_subscription_unit" t-esc="combination_info['temporal_unit_display']"/>
+                </span>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="cart_summary_inherit_website_sale_subscription" inherit_id="website_sale.checkout_layout">
+        <xpath expr="//table[@id='cart_products']//td[@name='website_sale_cart_summary_line_price']" position="inside">
+            <div t-if="line.recurring_invoice">
+                <span t-esc="line.order_id.plan_id.billing_period_display_sentence"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="cart_lines_subscription" inherit_id="website_sale.cart_lines">
+        <xpath expr="//div[@name='website_sale_cart_line_price']/small" position="before">
+            <div t-if="line.recurring_invoice and line.order_id.plan_id">
+                <span t-esc="line.order_id.plan_id.billing_period_display_sentence"/>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- This is needed since the product page of subscriptions won't update when we remove subscriptions from the cart, so we need to take this into account.-->
+    <template id="product_subscriptions" inherit_id="website_sale.product">
+        <xpath expr="//t[@t-cache='pricelist,product,fiscal_position']" position="attributes">
+            <attribute name="t-cache" add="bool(product.recurring_invoice and product._is_add_to_cart_possible())" separator=","/>
+        </xpath>
+    </template>
+
+    <template id="product_template_message" inherit_id="website_sale.product">
+        <xpath expr="//form[@t-if='product._is_add_to_cart_possible()']" position="after">
+            <p t-elif="product.recurring_invoice" class="alert alert-warning">
+                This product pricing is not compatible with the product(s) in your cart.
+            </p>
+        </xpath>
+    </template>
+</odoo>

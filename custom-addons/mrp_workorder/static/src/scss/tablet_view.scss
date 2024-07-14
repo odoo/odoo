@@ -1,0 +1,40 @@
+.o_web_client {
+    $o-wo-tablet-padding: $o-horizontal-padding;
+    $o-wo-tablet-btn-margin: 2px;
+    $o-wo-tablet-bg: #404040; // emulate the pdf reader
+    $o-wo-tablet-text: color-contrast($o-wo-tablet-bg, $body-color, #FFF);
+
+    // PDF Viewer block
+    .workorder_pdf {
+        display: flex;
+        flex: 1 0 auto;
+
+        div.o_field_pdfviewer, div.o_field_pdf_viewer, span.o_embed_url_viewer {
+            margin: 0;
+            @include media-breakpoint-up(md) {
+                height: auto;
+            }
+            position: relative;
+            display: flex;
+            flex: 1 0 auto;
+
+            iframe {
+                display: block;
+                margin: 0;
+                width: 100%;
+                height: 100%;
+                @include o-position-absolute(0,0,0,0);
+            }
+        }
+    }
+
+    // Work order Modal
+    .workorder_menu {
+        .btn {
+            margin-bottom: $o-wo-tablet-padding;
+            padding: 1em;
+            font-size: 2em;
+            text-transform: uppercase;
+        }
+    }
+}

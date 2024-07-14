@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_payslip_filter" model="ir.ui.view">
+        <field name="name">hr.payslip.view.search.inherit</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_filter"/>
+        <field name="arch" type="xml">
+            <filter name="group_by_company_id" position="after">
+                <filter name="period_filter" string="Pay Period" context="{'group_by': 'l10n_au_schedule_pay'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_hr_payslip_form" model="ir.ui.view">
+        <field name="name">hr.payslip.form.inherit.l10n_au_hr_payroll</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <field name="struct_id" position="after">
+                <field name="structure_code" invisible="1"/>
+                <field name="l10n_au_termination_type"
+                    invisible="structure_code != 'AUTERM'"/>
+            </field>
+            <field name="input_line_ids" position="after">
+                <group invisible="country_code != 'AU'">
+                    <field name="l10n_au_allowance_withholding"/>
+                </group>
+            </field>
+            <xpath expr="//page[@name='account_info']/group" position="after">
+                <group name="l10n_au" string="Australia" invisible="country_code != 'AU'">
+                    <field name="l10n_au_income_stream_type" invisible="1"/>
+                    <field name="l10n_au_foreign_tax_withheld"
+                        invisible="l10n_au_income_stream_type not in ['FEI', 'IAA', 'WHM']"/>
+                    <field name="l10n_au_exempt_foreign_income"
+                        invisible="l10n_au_income_stream_type not in ['FEI', 'IAA', 'WHM']"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_payslip_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.view.list.inherit</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree"/>
+        <field name="arch" type="xml">
+            <tree position="inside">
+                <field name="l10n_au_schedule_pay" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

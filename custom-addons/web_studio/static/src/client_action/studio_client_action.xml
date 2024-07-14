@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.StudioClientAction">
+    <div class="o_studio">
+        <StudioNavbar />
+
+        <StudioHomeMenu t-if="studio.mode === studio.MODES.HOME_MENU" apps="homeMenuProps.apps" />
+        <AppCreator t-elif="studio.mode === studio.MODES.APP_CREATOR" onNewAppCreated.bind="onNewAppCreated"/>
+        <Editor t-elif="studio.mode === studio.MODES.EDITOR" />
+    </div>
+</t>
+
+</templates>

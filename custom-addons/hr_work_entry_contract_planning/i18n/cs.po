@@ -1,0 +1,86 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_work_entry_contract_planning
+# 
+# Translators:
+# Jakub Smolka, 2023
+# Wil Odoo, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:20+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model.fields,help:hr_work_entry_contract_planning.field_hr_contract__work_entry_source
+msgid ""
+"\n"
+"        Defines the source for work entries generation\n"
+"\n"
+"        Working Schedule: Work entries will be generated from the working hours below.\n"
+"        Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)\n"
+"        Planning: Work entries will be generated from the employee's planning. (requires Planning app)\n"
+"    "
+msgstr ""
+"\n"
+"        Definuje zdroj pro generování pracovních záznamů\n"
+"\n"
+"        Pracovní plán: Pracovní záznamy budou generovány z pracovní doby níže.\n"
+"        Docházka: Pracovní záznamy budou generovány z  docházky zaměstnance. (vyžaduje aplikaci Docházka)\n"
+"        Plánování: Pracovní záznamy budou generovány z plánování zaměstnance. (vyžaduje aplikaci Plánování)\n"
+"    "
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model,name:hr_work_entry_contract_planning.model_hr_contract
+msgid "Employee Contract"
+msgstr "Zaměstnanecká smlouva"
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model,name:hr_work_entry_contract_planning.model_hr_work_entry
+msgid "HR Work Entry"
+msgstr "HR pracovní záznam"
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model.fields.selection,name:hr_work_entry_contract_planning.selection__hr_contract__work_entry_source__planning
+msgid "Planning"
+msgstr "Plánování"
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model,name:hr_work_entry_contract_planning.model_planning_slot
+msgid "Planning Shift"
+msgstr "Plánovací směna"
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model.fields,field_description:hr_work_entry_contract_planning.field_hr_work_entry__planning_slot_id
+msgid "Planning Slot"
+msgstr "Plánovací slot"
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model,name:hr_work_entry_contract_planning.model_hr_work_entry_regeneration_wizard
+msgid "Regenerate Employee Work Entries"
+msgstr "Regenerace pracovních záznamů zaměstnanců"
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model,name:hr_work_entry_contract_planning.model_resource_resource
+msgid "Resources"
+msgstr "Zdroje"
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model.fields,field_description:hr_work_entry_contract_planning.field_hr_contract__work_entry_source
+msgid "Work Entry Source"
+msgstr "Zdroj pracovní položky"
+
+#. module: hr_work_entry_contract_planning
+#: model:ir.model.fields,field_description:hr_work_entry_contract_planning.field_resource_resource__calendar_id
+msgid "Working Time"
+msgstr "Pracovní čas"

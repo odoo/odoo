@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.l10n.ch.hr.payroll</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
+        <field name="arch" type="xml">
+            <field name="address_id" position="after">
+                <field name="l10n_ch_canton" invisible="company_country_code != 'CH'"/>
+            </field>
+            <group name="payroll_group" position="after">
+                <group name="l10n_ch_withholding" string="Withholding Taxes">
+                    <field name="l10n_ch_tax_scale" invisible="company_country_code != 'CH'"/>
+                    <field name="l10n_ch_municipality" invisible="company_country_code != 'CH'"/>
+                </group>
+            </group>
+            <field name="marital" position="after">
+                <field name="l10n_ch_marital_from" invisible="company_country_code != 'CH'"/>
+                <field name="l10n_ch_church_tax" invisible="company_country_code != 'CH'"/>
+                <field name="l10n_ch_religious_denomination" invisible="company_country_code != 'CH'" required="company_country_code == 'CH'"/>
+            </field>
+            <field name="identification_id" position="after">
+                <field name="l10n_ch_sv_as_number" invisible="company_country_code != 'CH'" required="company_country_code == 'CH'"/>
+                <field name="l10n_ch_has_withholding_tax" invisible="company_country_code != 'CH'"/>
+                <field name="l10n_ch_residence_category" invisible="not l10n_ch_has_withholding_tax or company_country_code != 'CH'"/>
+            </field>
+            <field name="spouse_birthdate" position="after">
+                <field name="l10n_ch_spouse_sv_as_number" invisible="company_country_code != 'CH'"/>
+                <field name="l10n_ch_spouse_work_start_date" invisible="company_country_code != 'CH'"/>
+                <field name="l10n_ch_spouse_work_canton" invisible="company_country_code != 'CH'"/>
+            </field>
+            <field name="children" position="after">
+                <label string="Eligible children for deduction" for="l10n_ch_children"/>
+                <div colspan="2">
+                    <field name="l10n_ch_children" nolabel="1" invisible="company_country_code != 'CH' or not children"/>
+                </div>
+            </field>
+
+            <field name="gender" position="attributes">
+                <attribute name="required">company_country_code == 'CH'</attribute>
+            </field>
+            <field name="birthday" position="attributes">
+                <attribute name="required">company_country_code == 'CH'</attribute>
+            </field>
+            <field name="lang" position="attributes">
+                <attribute name="required">company_country_code == 'CH'</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

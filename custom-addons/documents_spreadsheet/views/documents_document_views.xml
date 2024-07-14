@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="spreadsheet_document_view_kanban" model="ir.ui.view">
+        <field name="name">spreadsheet.documents.document.kanban</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.document_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="handler"/>
+            </xpath>
+            <xpath expr="//div[@name='document_preview']" position="before">
+                <t t-set="isSpreadsheet" t-value="record.handler.raw_value === 'spreadsheet'"/>
+                <t t-set="isXlsx"
+                   t-value="record.mimetype.raw_value === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"/>
+            </xpath>
+            <xpath expr="//div[@name='document_preview']" position="attributes">
+                <attribute name="t-attf-class" separator=" " add="#{(isSpreadsheet) ? 'o_document_spreadsheet' : ''}"/>
+                <attribute name="t-attf-class" separator=" " add="#{(isXlsx) ? 'o_document_xlsx' : ''}"/>
+            </xpath>
+            <xpath expr="(//div[@name='document_preview']/div)[last()]" position="before">
+                <div t-elif="isSpreadsheet" class="o_attachment_image o_documents_image">
+                    <img t-attf-src="/documents/image/#{record.id.raw_value}?field=thumbnail&amp;unique=#{unique}" alt="Spreadsheet Preview"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="documents_document_view_list" model="ir.ui.view">
+        <field name="name">documents.document.view.list</field>
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.documents_view_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="handler" column_invisible="True"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="document_view_search_spreadsheet" model="ir.ui.view">
+        <field name="model">documents.document</field>
+        <field name="inherit_id" ref="documents.document_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='pdf_doc']" position='after'>
+                <filter string="Spreadsheet" name="spreadsheet" domain="[('handler', '=', 'spreadsheet')]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

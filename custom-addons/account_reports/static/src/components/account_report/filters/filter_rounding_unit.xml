@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account_reports.AccountReportFilterRoundingUnit">
+        <Dropdown togglerClass="'btn btn-secondary'">
+            <t t-set-slot="toggler">
+                <t t-out="roundingUnitName(this.controller.options['rounding_unit'])"/>
+            </t>
+
+            <t t-foreach="controller.options.rounding_unit_names" t-as="roundingUnitValue" t-key="roundingUnitValue_index">
+                <DropdownItem
+                    class="{ 'selected': (controller.options.rounding_unit == roundingUnitValue) }"
+                    onSelected="() => this.filterRoundingUnit(roundingUnitValue)"
+                >
+                    <t t-out="roundingUnitName(roundingUnitValue)"/>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

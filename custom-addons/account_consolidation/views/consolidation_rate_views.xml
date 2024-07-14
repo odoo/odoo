@@ -1,0 +1,39 @@
+<odoo>
+    <data>
+        <!-- consolidation.rate views -->
+
+        <record id="consolidation_rate_tree" model="ir.ui.view">
+            <field name="name">consolidation.rate.tree</field>
+            <field name="model">consolidation.rate</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="chart_id" column_invisible="context.get('default_chart_id', False)"/>
+                    <field name="company_id" column_invisible="context.get('default_company_id', False)"/>
+                    <field name="rate"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="consolidation_rate_search" model="ir.ui.view">
+            <field name="name">consolidation.rate.search</field>
+            <field name="model">consolidation.rate</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="chart_id"/>
+                    <field name="company_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="consolidation_rate_action" model="ir.actions.act_window">
+            <field name="name">Rate Ranges</field>
+            <field name="res_model">consolidation.rate</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="consolidation_rate_tree"/>
+            <field name="search_view_id" ref="consolidation_rate_search"/>
+        </record>
+    </data>
+</odoo>

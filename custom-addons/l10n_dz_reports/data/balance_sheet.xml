@@ -1,0 +1,879 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_dz_bs" model="account.report">
+        <field name="name">Balance sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_journals" eval="True"/>
+        <field name="country_id" ref="base.dz"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="l10n_dz_bs_column00" model="account.report.column">
+                <field name="name">Gross</field>
+                <field name="expression_label">gross</field>
+            </record>
+            <record id="l10n_dz_bs_column01" model="account.report.column">
+                <field name="name">Depreciation &amp; impairment</field>
+                <field name="expression_label">depr</field>
+            </record>
+            <record id="l10n_dz_bs_column02" model="account.report.column">
+                <field name="name">Net</field>
+                <field name="expression_label">net</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_dz_bs_assets_liabilities_total" model="account.report.line">
+                <field name="name">ASSETS - LIABILITIES</field>
+                <field name="code">l10n_dz_assets_liabilities_total</field>
+                <field name="hide_if_zero" eval="1"/>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_dz_bs_assets_liabilities_total_net" model="account.report.expression">
+                        <field name="label">net</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_dz_assets.net - l10n_dz_liabilities.net</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_dz_bs_assets" model="account.report.line">
+                <field name="name">ASSETS</field>
+                <field name="code">l10n_dz_assets</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="report_dz_bs_assets_gross" model="account.report.expression">
+                        <field name="label">gross</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_dz_fixed_assets.gross + l10n_dz_current_assets.gross</field>
+                    </record>
+                    <record id="report_dz_bs_assets_depr" model="account.report.expression">
+                        <field name="label">depr</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_dz_fixed_assets.depr + l10n_dz_current_assets.depr</field>
+                    </record>
+                    <record id="report_dz_bs_assets_net" model="account.report.expression">
+                        <field name="label">net</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_dz_assets.gross - l10n_dz_assets.depr</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_dz_bs_fixed_assets" model="account.report.line">
+                        <field name="name">FIXED ASSETS (NON-CURRENT)</field>
+                        <field name="code">l10n_dz_fixed_assets</field>
+                        <field name="expression_ids">
+                            <record id="l10n_dz_bs_fixed_assets_gross" model="account.report.expression">
+                                <field name="label">gross</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_dz_goodwill.gross + l10n_dz_intangible_assets.gross + l10n_dz_property_plants_equipments.gross + l10n_dz_assets_in_progress.gross + l10n_dz_financial_assets.gross + l10n_dz_deferred_taxes_assets.gross</field>
+                            </record>
+                            <record id="l10n_dz_bs_fixed_assets_depr" model="account.report.expression">
+                                <field name="label">depr</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_dz_goodwill.depr + l10n_dz_intangible_assets.depr + l10n_dz_property_plants_equipments.depr + l10n_dz_assets_in_progress.depr + l10n_dz_financial_assets.depr</field>
+                            </record>
+                            <record id="l10n_dz_bs_fixed_assets_net" model="account.report.expression">
+                                <field name="label">net</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_dz_fixed_assets.gross - l10n_dz_fixed_assets.depr</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_dz_bs_goodwill" model="account.report.line">
+                                <field name="name">Goodwill</field>
+                                <field name="code">l10n_dz_goodwill</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_goodwill_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">207</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_goodwill_depr" model="account.report.expression">
+                                        <field name="label">depr</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-2807 - 2907</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_goodwill_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">207 + 2807 + 2907</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_intangible_assets" model="account.report.line">
+                                <field name="name">Intangible assets</field>
+                                <field name="code">l10n_dz_intangible_assets</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_intangible_assets_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">20\(207)</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_intangible_assets_depr" model="account.report.expression">
+                                        <field name="label">depr</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-280\(2807) - 290\(2907)</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_intangible_assets_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">20\(207) + 280\(2807) + 290\(2907)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_property_plants_equipments" model="account.report.line">
+                                <field name="name">Property, plant and equipment</field>
+                                <field name="code">l10n_dz_property_plants_equipments</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_property_plants_equipments_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_dz_property.gross + l10n_dz_plants.gross + l10n_dz_other_tangible_assets.gross + l10n_dz_assets_under_concession.gross</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_property_plants_equipments_depr" model="account.report.expression">
+                                        <field name="label">depr</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_dz_property.depr + l10n_dz_plants.depr + l10n_dz_other_tangible_assets.depr + l10n_dz_assets_under_concession.depr</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_property_plants_equipments_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_dz_property_plants_equipments.gross - l10n_dz_property_plants_equipments.depr</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_dz_bs_property" model="account.report.line">
+                                        <field name="name">Property</field>
+                                        <field name="code">l10n_dz_property</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_dz_bs_property_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">211 + 212</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_property_depr" model="account.report.expression">
+                                                <field name="label">depr</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2811 - 2812 - 2911 - 2912</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_property_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">211 + 212 + 2811 + 2812 + 2911 + 2912</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_dz_bs_plants" model="account.report.line">
+                                        <field name="name">Plants</field>
+                                        <field name="code">l10n_dz_plants</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_dz_bs_plants_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">213</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_plants_depr" model="account.report.expression">
+                                                <field name="label">depr</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2813 - 2913 - 2914</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_plants_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">213 + 2813 + 2913 + 2914</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_dz_bs_other_tangible_assets" model="account.report.line">
+                                        <field name="name">Other tangible assets</field>
+                                        <field name="code">l10n_dz_other_tangible_assets</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_dz_bs_other_tangible_assets_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">215 + 218</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_other_tangible_assets_depr" model="account.report.expression">
+                                                <field name="label">depr</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-2810 - 2910 -2815 - 2818 - 2915 - 2916 - 2918</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_other_tangible_assets_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">215 + 218 + 2810 + 2910 + 2815 + 2818 + 2915 + 2916 + 2918</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_dz_bs_assets_under_concession" model="account.report.line">
+                                        <field name="name">Assets under concession</field>
+                                        <field name="code">l10n_dz_assets_under_concession</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_dz_bs_assets_under_concession_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">22\(229)</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_assets_under_concession_depr" model="account.report.expression">
+                                                <field name="label">depr</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-282 - 292</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_assets_under_concession_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">22\(229) + 282 + 292</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_assets_in_progress" model="account.report.line">
+                                <field name="name">Assets in progress</field>
+                                <field name="code">l10n_dz_assets_in_progress</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_assets_in_progress_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">23</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_assets_in_progress_depr" model="account.report.expression">
+                                        <field name="label">depr</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-293</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_assets_in_progress_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">23 + 293</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_financial_assets" model="account.report.line">
+                                <field name="name">Financial assets</field>
+                                <field name="code">l10n_dz_financial_assets</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_financial_assets_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_dz_investments_in_associates.gross + l10n_dz_other_investments_and_related_receivables.gross + l10n_dz_other_fixed_assets.gross + l10n_dz_Loans_and_other_non_current_financial_assets.gross</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_financial_assets_depr" model="account.report.expression">
+                                        <field name="label">depr</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_dz_other_investments_and_related_receivables.depr + l10n_dz_other_fixed_assets.depr + l10n_dz_Loans_and_other_non_current_financial_assets.depr</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_financial_assets_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_dz_financial_assets.gross - l10n_dz_financial_assets.depr</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_dz_bs_investments_in_associates" model="account.report.line">
+                                        <field name="name">Investments in associates</field>
+                                        <field name="code">l10n_dz_investments_in_associates</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_dz_bs_investments_in_associates_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">265</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_investments_in_associates_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">265</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_dz_bs_other_investments_and_related_receivables" model="account.report.line">
+                                        <field name="name">Other investments and related receivables</field>
+                                        <field name="code">l10n_dz_other_investments_and_related_receivables</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_dz_bs_other_investments_and_related_receivables_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">26\(265,269)</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_other_investments_and_related_receivables_depr" model="account.report.expression">
+                                                <field name="label">depr</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-296</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_other_investments_and_related_receivables_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">26\(265,269) + 296</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="al10n_dz_bs_other_fixed_assets" model="account.report.line">
+                                        <field name="name">Other fixed assets</field>
+                                        <field name="code">l10n_dz_other_fixed_assets</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_dz_bs_other_fixed_assets_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">271 + 272 + 273</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_other_fixed_assets_depr" model="account.report.expression">
+                                                <field name="label">depr</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-297 -298</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_other_fixed_assets_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">271 + 272 + 273 + 297 + 298</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_dz_bs_Loans_and_other_non_current_financial_assets" model="account.report.line">
+                                        <field name="name">Loans and other non-current financial assets</field>
+                                        <field name="code">l10n_dz_Loans_and_other_non_current_financial_assets</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_dz_bs_Loans_and_other_non_current_financial_assets_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">274 + 275 + 276</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_Loans_and_other_non_current_financial_assets_depr" model="account.report.expression">
+                                                <field name="label">depr</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-294</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_Loans_and_other_non_current_financial_assets_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">274 + 275 + 276 + 294</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_deferred_taxes_assets" model="account.report.line">
+                                <field name="name">Deferred taxes - Assets</field>
+                                <field name="code">l10n_dz_deferred_taxes_assets</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_deferred_taxes_assets_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">133</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_deferred_taxes_assets_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">133</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_dz_bs_current_assets" model="account.report.line">
+                        <field name="name">CURRENT ASSETS</field>
+                        <field name="code">l10n_dz_current_assets</field>
+                        <field name="expression_ids">
+                            <record id="l10n_dz_bs_current_assets_gross" model="account.report.expression">
+                                <field name="label">gross</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_dz_inventories.gross + l10n_dz_receivables.gross + l10n_dz_cash_and_cash_equivalents.gross</field>
+                            </record>
+                            <record id="l10n_dz_bs_current_assets_depr" model="account.report.expression">
+                                <field name="label">depr</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_dz_inventories.depr + l10n_dz_receivables.depr + l10n_dz_cash_and_cash_equivalents.depr</field>
+                            </record>
+                            <record id="l10n_dz_bs_current_assets_net" model="account.report.expression">
+                                <field name="label">net</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_dz_current_assets.gross - l10n_dz_current_assets.depr</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_dz_bs_inventories" model="account.report.line">
+                                <field name="name">Inventories</field>
+                                <field name="code">l10n_dz_inventories</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_inventories_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">3\(39)</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_inventories_depr" model="account.report.expression">
+                                        <field name="label">depr</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-39</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_inventories_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">3</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_receivables" model="account.report.line">
+                                <field name="name">Receivable and similar uses</field>
+                                <field name="code">l10n_dz_receivables</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_receivables_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_dz_clients.gross + l10n_dz_other_debtors.gross + l10n_dz_taxes_assets.gross + l10n_dz_other_current_assets.gross</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_receivables_depr" model="account.report.expression">
+                                        <field name="label">depr</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_dz_clients.depr + l10n_dz_other_debtors.depr</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_receivables_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_dz_receivables.gross - l10n_dz_receivables.depr</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_dz_bs_clients" model="account.report.line">
+                                        <field name="name">Clients</field>
+                                        <field name="code">l10n_dz_clients</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_dz_bs_clients_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">41\(419)</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_clients_depr" model="account.report.expression">
+                                                <field name="label">depr</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-491</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_clients_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">41\(419) + 491</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_dz_bs_other_debtors" model="account.report.line">
+                                        <field name="name">Other debtors</field>
+                                        <field name="code">l10n_dz_other_debtors</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_dz_bs_other_debtors_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">409 + 42D + 43D + 44\(444,445,446,447,448)D + 45D + 46D + 47D + 486D + 489D</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_other_debtors_depr" model="account.report.expression">
+                                                <field name="label">depr</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-495 - 496 - 498</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_other_debtors_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">409 + 42D + 43D + 44\(444,445,446,447,448)D + 45D + 46D + 47D + 486D + 489D + 495 + 496 + 498</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_dz_bs_taxes_assets" model="account.report.line">
+                                        <field name="name">Taxes (assets)</field>
+                                        <field name="code">l10n_dz_taxes_assets</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_dz_bs_taxes_assets_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">444D + 445D + 447D + 448D</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_taxes_assets_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">+444D + 445D + 447D + 448D</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_dz_bs_other_current_assets" model="account.report.line">
+                                        <field name="name">Other current assets</field>
+                                        <field name="code">l10n_dz_other_current_assets</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_dz_bs_other_current_assets_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">48\(486,489)D + 446</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_other_current_assets_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">48\(486,489)D + 446</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_cash_and_cash_equivalents" model="account.report.line">
+                                <field name="name">Cash and cash equivalents</field>
+                                <field name="code">l10n_dz_cash_and_cash_equivalents</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_cash_and_cash_equivalents_gross" model="account.report.expression">
+                                        <field name="label">gross</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_dz_investments_and_other_current_financial_assets.gross + l10n_dz_treasury.gross</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_cash_and_cash_equivalents_depr" model="account.report.expression">
+                                        <field name="label">depr</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_dz_treasury.depr</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_cash_and_cash_equivalents_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_dz_cash_and_cash_equivalents.gross - l10n_dz_cash_and_cash_equivalents.depr</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="l10n_dz_bs_investments_and_other_current_financial_assets" model="account.report.line">
+                                        <field name="name">Investments and other current financial assets</field>
+                                        <field name="code">l10n_dz_investments_and_other_current_financial_assets</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_dz_bs_investments_and_other_current_financial_assets_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">50\(509)</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_investments_and_other_current_financial_assets_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">50\(509)</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="l10n_dz_bs_treasury" model="account.report.line">
+                                        <field name="name">Treasury</field>
+                                        <field name="code">l10n_dz_treasury</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="expression_ids">
+                                            <record id="l10n_dz_bs_treasury_gross" model="account.report.expression">
+                                                <field name="label">gross</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">51D + 52D + 53D + 54D +58D</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_treasury_depr" model="account.report.expression">
+                                                <field name="label">depr</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-59</field>
+                                            </record>
+                                            <record id="l10n_dz_bs_treasury_net" model="account.report.expression">
+                                                <field name="label">net</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">51D + 52D + 53D + 54D + 58D + 59</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_dz_bs_liabilities" model="account.report.line">
+                <field name="name">LIABILITIES</field>
+                <field name="code">l10n_dz_liabilities</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="report_dz_bs_liabilities_net" model="account.report.expression">
+                        <field name="label">net</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_dz_equity.net + l10n_dz_non_current_liabilities.net + l10n_dz_current_liabilities.net</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_dz_bs_equity" model="account.report.line">
+                        <field name="name">EQUITY</field>
+                        <field name="code">l10n_dz_equity</field>
+                        <field name="expression_ids">
+                            <record id="l10n_dz_bs_equity_net" model="account.report.expression">
+                                <field name="label">net</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_dz_issued_capital.net + l10n_dz_uncalled_capital.net + l10n_dz_premiums_and_reserves.net + l10n_dz_revaluation_surplus.net + l10n_dz_equivalence_difference.net + l10n_dz_net_income.net + l10n_dz_other_equity.net</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_dz_bs_issued_capital" model="account.report.line">
+                                <field name="name">Issued capital</field>
+                                <field name="code">l10n_dz_issued_capital</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_issued_capital_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-101 - 108</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_uncalled_capital" model="account.report.line">
+                                <field name="name">Uncalled capital</field>
+                                <field name="code">l10n_dz_uncalled_capital</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_uncalled_capital_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-109</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_premiums_and_reserves" model="account.report.line">
+                                <field name="name">Premiums and reserves</field>
+                                <field name="code">l10n_dz_premiums_and_reserves</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_premiums_and_reserves_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-103 -104 - 106</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_revaluation_surplus" model="account.report.line">
+                                <field name="name">Revaluation surplus</field>
+                                <field name="code">l10n_dz_revaluation_surplus</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_revaluation_surplus_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-105</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_equivalence_difference" model="account.report.line">
+                                <field name="name">Equivalence difference</field>
+                                <field name="code">l10n_dz_equivalence_difference</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_equivalence_difference_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">- 107</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_net_income" model="account.report.line">
+                                <field name="name">Net income</field>
+                                <field name="code">l10n_dz_net_income</field>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_net_income_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_dz_X.balance</field>
+                                        <field name="subformula">cross_report</field>
+                                        <field name="date_scope">from_fiscalyear</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_other_equity" model="account.report.line">
+                                <field name="name">Other equity - Retained earnings</field>
+                                <field name="code">l10n_dz_other_equity</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_other_equity_net_account_codes" model="account.report.expression">
+                                        <field name="label">net_account_codes</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-11 - 12 - 6 - 7</field>
+                                        <field name="date_scope">from_beginning</field>
+                                    </record>
+                                    <record id="l10n_dz_bs_other_equity_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_dz_other_equity.net_account_codes - l10n_dz_net_income.net</field>
+                                        <field name="date_scope">from_beginning</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_dz_bs_non_current_liabilities" model="account.report.line">
+                        <field name="name">NON-CURRENT LIABILITIES</field>
+                        <field name="code">l10n_dz_non_current_liabilities</field>
+                        <field name="expression_ids">
+                            <record id="l10n_dz_bs_non_current_liabilities_net" model="account.report.expression">
+                                <field name="label">net</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_dz_borrowings_and_financial_liabilities.net + l10n_dz_taxes_deferred_and_provisioned.net + l10n_dz_other_non_current_liabilities.net + l10n_dz_provisions_and_deferred_income.net</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_dz_bs_borrowings_and_financial_liabilities" model="account.report.line">
+                                <field name="name">Borrowings and financial liabilities</field>
+                                <field name="code">l10n_dz_borrowings_and_financial_liabilities</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_borrowings_and_financial_liabilities_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-16 - 17</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_taxes_deferred_and_provisioned" model="account.report.line">
+                                <field name="name">Taxes (deferred and provisioned)</field>
+                                <field name="code">l10n_dz_taxes_deferred_and_provisioned</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_taxes_deferred_and_provisioned_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-134 - 155</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_other_non_current_liabilities" model="account.report.line">
+                                <field name="name">Other non-current liabilities</field>
+                                <field name="code">l10n_dz_other_non_current_liabilities</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_other_non_current_liabilities_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-229 - 138 - 18 - 269 - 279</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_provisions_and_deferred_income" model="account.report.line">
+                                <field name="name">Provisions and deferred income</field>
+                                <field name="code">l10n_dz_provisions_and_deferred_income</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_provisions_and_deferred_income_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-15\(155) - 131 - 132</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_dz_bs_current_liabilities" model="account.report.line">
+                        <field name="name">CURRENT LIABILITIES</field>
+                        <field name="code">l10n_dz_current_liabilities</field>
+                        <field name="expression_ids">
+                            <record id="l10n_dz_bs_current_liabilities_net" model="account.report.expression">
+                                <field name="label">net</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_dz_payables.net + l10n_dz_taxes_liabilities.net + l10n_dz_other_liabilities.net + l10n_dz_treasury_liabilities.net</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="l10n_dz_bs_payables" model="account.report.line">
+                                <field name="name">Accounts payable and related accounts</field>
+                                <field name="code">l10n_dz_payables</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_payables_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-40\(409)</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_taxes_liabilities" model="account.report.line">
+                                <field name="name">Taxes (liabilities)</field>
+                                <field name="code">l10n_dz_taxes_liabilities</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_taxes_liabilities_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-444C - 445C - 447C</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_other_liabilities" model="account.report.line">
+                                <field name="name">Other liabilities</field>
+                                <field name="code">l10n_dz_other_liabilities</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_other_liabilities_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">-419 - 509 - 42C - 43C - 44\(444,445,446,447)C - 45C - 46C -47C - 48C</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_dz_bs_treasury_liabilities" model="account.report.line">
+                                <field name="name">Treasury Liabilities</field>
+                                <field name="code">l10n_dz_treasury_liabilities</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_dz_bs_treasury_liabilities_net" model="account.report.expression">
+                                        <field name="label">net</field>
+                                        <field name="engine">account_codes</field>
+                                        <field name="formula">- 51C - 52C - 53C - 54C - 58C</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_dz_bs_off_sheet" model="account.report.line">
+                <field name="name">OFF-BALANCE SHEET ACCOUNTS</field>
+                <field name="code">l10n_dz_off_sheet</field>
+                <field name="groupby">account_id</field>
+                <field name="hide_if_zero" eval="1"/>
+                <field name="foldable" eval="True"/>
+                <field name="domain_formula">-sum([('account_id.account_type', '=', 'off_balance')])</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+        </field>
+    </record>
+</odoo>

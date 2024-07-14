@@ -1,0 +1,53 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* industry_fsm_sms
+# 
+# Translators:
+# Wil Odoo, 2023
+# Daye Jeong, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Daye Jeong, 2023\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: industry_fsm_sms
+#: model:sms.template,name:industry_fsm_sms.sms_template_data_fsm_intervention
+msgid "Field Service: Intervention Planned"
+msgstr "현장 서비스: 중재 계획"
+
+#. module: industry_fsm_sms
+#: model:sms.template,name:industry_fsm_sms.sms_template_data_fsm_onway
+msgid "Field Service: Our team is on its way to your location."
+msgstr "현장 서비스: 저희 팀이 고객님의 위치로 이동 중입니다."
+
+#. module: industry_fsm_sms
+#: model:sms.template,body:industry_fsm_sms.sms_template_data_fsm_onway
+msgid "{{ object.company_id.name }}: We are on our way to your intervention."
+msgstr "{{ object.company_id.name }}: 지금 바로 연락드리겠습니다."
+
+#. module: industry_fsm_sms
+#: model:sms.template,body:industry_fsm_sms.sms_template_data_fsm_intervention
+msgid ""
+"{{ object.company_id.name }}: Your intervention is scheduled {{ 'from the ' "
+"+ format_datetime(object.planned_date_begin, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) + ' to the ' + "
+"format_datetime(object.date_deadline, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) if object.planned_date_begin and "
+"object.date_deadline else '' }}"
+msgstr ""
+"{{ object.company_id.name }}: 작업이 예약되었습니다. {{ 'from the ' + "
+"format_datetime(object.planned_date_begin, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) + ' to the ' + "
+"format_datetime(object.date_deadline, tz=object.partner_id.tz, "
+"lang_code=object.partner_id.lang) if object.planned_date_begin and "
+"object.date_deadline else '' }}"

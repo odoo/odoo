@@ -1,0 +1,22 @@
+.o_barcode_client_action .o_barcode_lines {
+    .o_barcode_picking, .o_barcode_picking_type {
+        color: $gray-700;
+
+        &:hover {
+            color: black;
+        }
+    }
+
+    .o_barcode_line .o_picking_label {
+        font-style: italic;
+    }
+
+    & > .o_barcode_line.o_colored_markup {
+        border-left-width: 24px;
+        border-left-style: solid;
+    }
+
+    .o_sublines .o_barcode_line.o_colored_markup {
+        border-left-width: 0;
+    }
+}

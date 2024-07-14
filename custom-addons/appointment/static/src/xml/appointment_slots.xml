@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    <t t-name="appointment.slots_list">
+        <span>Select a time</span>
+        <div class="o_slots_list row px-0">
+            <t t-foreach="slots" t-as="slot" t-key="slot_index">
+                <div t-attf-class="col-6 mt-2 #{slot_index % 2 == 0 ? 'pe-1' : 'ps-1'}">
+                    <button class="o_slot_hours d-flex btn btn-outline-primary align-items-center justify-content-center w-100 border"
+                        t-att-data-available_resources="getAvailableResources(slot)"
+                        t-attf-data-url-parameters="#{slot['url_parameters']}&amp;#{commonUrlParams}"
+                        t-out="slot['hours']"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</template>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="event.action_registration" model="ir.actions.act_window">
+        <field name="view_mode">graph,pivot,kanban,tree,form,cohort</field>
+    </record>
+
+    <record id="event.act_event_registration_from_event" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form,calendar,graph,cohort</field>
+    </record>
+
+    <record id="event_registration_view_cohort" model="ir.ui.view">
+        <field name="name">event.registration.view.cohort</field>
+        <field name="model">event.registration</field>
+        <field name="arch" type="xml">
+            <cohort string="Attendees" date_start="event_begin_date" date_stop="create_date" interval="day" mode="churn" timeline="backward" sample="1"/>
+        </field>
+    </record>
+
+</odoo>

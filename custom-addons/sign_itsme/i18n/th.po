@@ -1,0 +1,153 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sign_itsme
+# 
+# Translators:
+# Wil Odoo, 2023
+# Rasareeyar Lappiam, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sign_itsme
+#: model_terms:ir.ui.view,arch_db:sign_itsme.sign_request_logs_user
+msgid ""
+"<small>Name: The signatory has provided this identity through itsme®</small>"
+msgstr "<small>ชื่อ: ผู้ลงนามได้ระบุตัวตนนี้ผ่านทาง itsme®</small>"
+
+#. module: sign_itsme
+#: model:sign.item.role,name:sign_itsme.sign_item_role_itsme_customer
+msgid "Customer (identified with itsme®)"
+msgstr "ลูกค้า (ยืนยันตัวตนด้วย itsme®)"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/components/document_signable.js:0
+#, python-format
+msgid "Error"
+msgstr "ผิดพลาด"
+
+#. module: sign_itsme
+#: model:ir.model.fields,field_description:sign_itsme.field_sign_item_role__auth_method
+msgid "Extra Authentication Step"
+msgstr "ขั้นตอนการรับรองความถูกต้องเพิ่มเติม"
+
+#. module: sign_itsme
+#: model:ir.model.fields,help:sign_itsme.field_sign_item_role__auth_method
+msgid "Force the signatory to identify using a second authentication method"
+msgstr "บังคับให้ผู้ลงนามระบุตัวตนโดยใช้วิธีการรับรองความถูกต้องครั้งที่สอง"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/dialogs/itsme_dialog.xml:0
+#, python-format
+msgid "Go Back"
+msgstr "กลับไป"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/components/document_signable.js:0
+#, python-format
+msgid "Identification refused"
+msgstr "ข้อมูลระบุตัวตนถูกปฏิเสธ"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/dialogs/itsme_dialog.xml:0
+#, python-format
+msgid "Identify with itsme"
+msgstr "ระบุตัวตนด้วย itsme"
+
+#. module: sign_itsme
+#: model_terms:ir.ui.view,arch_db:sign_itsme.sign_request_logs_user
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/dialogs/itsme_dialog.xml:0
+#, python-format
+msgid "Please confirm your identity to finalize your signature."
+msgstr "โปรดยืนยันตัวตนของคุณเพื่อสรุปลายเซ็นของคุณ"
+
+#. module: sign_itsme
+#. odoo-python
+#: code:addons/sign_itsme/models/sign_request_item.py:0
+#, python-format
+msgid "Sign request item is not validated yet."
+msgstr "รายการคำขอลงนามยังไม่ได้รับการตรวจสอบ"
+
+#. module: sign_itsme
+#: model:ir.model,name:sign_itsme.model_sign_item_role
+msgid "Signature Item Party"
+msgstr "รายการลายเซ็นของบุคคล"
+
+#. module: sign_itsme
+#: model:ir.model,name:sign_itsme.model_sign_request
+msgid "Signature Request"
+msgstr "คำร้องขอรายเซ็น"
+
+#. module: sign_itsme
+#: model:ir.model,name:sign_itsme.model_sign_request_item
+msgid "Signature Request Item"
+msgstr "รายการคำขอลายเซ็น"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/components/document_signable.js:0
+#, python-format
+msgid ""
+"The itsme® identification data could not be forwarded to Odoo, the signature"
+" could not be saved."
+msgstr ""
+"ข้อมูลระบุตัวตนของ itsme® ไม่สามารถส่งต่อไปยัง Odoo ได้ "
+"และไม่สามารถบันทึกลายเซ็นได้"
+
+#. module: sign_itsme
+#: model:ir.model.fields.selection,name:sign_itsme.selection__sign_item_role__auth_method__itsme
+msgid "Via itsme®"
+msgstr "ผ่าน itsme®"
+
+#. module: sign_itsme
+#. odoo-javascript
+#: code:addons/sign_itsme/static/src/components/document_signable.js:0
+#, python-format
+msgid ""
+"You have rejected the identification request or took too long to process it."
+" You can try again to finalize your signature."
+msgstr ""
+"คุณปฏิเสธคำขอระบุตัวตนหรือใช้เวลาดำเนินการนานเกินไป "
+"คุณสามารถลองอีกครั้งเพื่อสรุปลายเซ็นของคุณ"
+
+#. module: sign_itsme
+#. odoo-python
+#: code:addons/sign_itsme/controllers/main.py:0
+#, python-format
+msgid "itsme® IAP service could not be found."
+msgstr "ไม่พบบริการ IAP ของ itsme®"
+
+#. module: sign_itsme
+#: model:ir.model.fields,field_description:sign_itsme.field_sign_request_item__itsme_signer_birthdate
+msgid "itsme® Signer's Birthdate"
+msgstr "วันเกิดของผู้ลงนามของ itsme®"
+
+#. module: sign_itsme
+#: model:ir.model.fields,field_description:sign_itsme.field_sign_request_item__itsme_signer_name
+msgid "itsme® Signer's Name"
+msgstr "ชื่อผู้ลงนามของ itsme®"
+
+#. module: sign_itsme
+#: model:ir.model.fields,field_description:sign_itsme.field_sign_request_item__itsme_validation_hash
+msgid "itsme® Validation Token"
+msgstr "โทเค็นการตรวจสอบความถูกต้องของ itsme®"

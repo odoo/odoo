@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_report_tax_report" model="account.report">
+        <field name="name">Corporate Revenue Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.mn"/>
+        <field name="filter_multi_company">tax_units</field>
+        <field name="column_ids">
+            <record id="account_report_tax_report_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_lineA" model="account.report.line">
+                <field name="name">A. Calculation of tax at common rate</field>
+                <field name="code">LINEA</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line1" model="account.report.line">
+                        <field name="name">1. Amount of total income (1=2+...+5)</field>
+                        <field name="code">LINE1</field>
+                        <field name="aggregation_formula">LINE2.balance + LINE3.balance + LINE4.balance + LINE5_new.balance</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line2" model="account.report.line">
+                                <field name="name">1.1. Amount of tax-exempt income (2)</field>
+                                <field name="code">LINE2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-510102</field>
+                            </record>
+                            <record id="tax_report_line3" model="account.report.line">
+                                <field name="name">1.2. Amount of income subject to tax at a special rate (3)</field>
+                                <field name="code">LINE3</field>
+                                <field name="aggregation_formula">LINE32.balance + LINE34_new.balance + LINE39.balance + LINE41.balance + LINE43.balance</field>
+                            </record>
+                            <record id="tax_report_line4" model="account.report.line">
+                                <field name="name">1.3 Amount of other income (unrealized income from foreign exchange rate difference, etc.) (4)</field>
+                                <field name="code">LINE4</field>
+                                <field name="account_codes_formula">-520109 -5301 -5302</field>
+                            </record>
+                            <record id="tax_report_line5_new" model="account.report.line">
+                                <field name="name">1.4 Taxable income at the common rate (5=6+...+16)</field>
+                                <field name="code">LINE5_new</field>
+                                <field name="aggregation_formula">LINE6.balance + LINE7.balance + LINE8.balance + LINE9.balance + LINE10.balance + LINE11.balance + LINE12.balance + LINE13.balance + LINE14.balance + LINE15.balance + LINE16.balance</field>
+                                <field name="children_ids">
+                                    <record id="tax_report_line6" model="account.report.line">
+                                        <field name="name">1.4.1 Income from sales of goods, works and services (6)</field>
+                                        <field name="code">LINE6</field>
+                                        <field name="account_codes_formula">-510101 - 60</field>
+                                    </record>
+                                    <record id="tax_report_line7" model="account.report.line">
+                                        <field name="name">1.4.2 Income from technical, management, consulting and other services (7)</field>
+                                        <field name="code">LINE7</field>
+                                        <field name="account_codes_formula">-5106</field>
+                                    </record>
+                                    <record id="tax_report_line8" model="account.report.line">
+                                        <field name="name">1.4.3 Income from the use and rental of real estate (8)</field>
+                                        <field name="code">LINE8</field>
+                                        <field name="account_codes_formula">-510201</field>
+                                    </record>
+                                    <record id="tax_report_line9" model="account.report.line">
+                                        <field name="name">1.4.4 Income from use and rental of movable property (9)</field>
+                                        <field name="code">LINE9</field>
+                                        <field name="account_codes_formula">-510202</field>
+                                    </record>
+                                    <record id="tax_report_line10" model="account.report.line">
+                                        <field name="name">1.4.5 Income from goods, work and services received from others without payment (10)</field>
+                                        <field name="code">LINE10</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-5202</field>
+                                    </record>
+                                    <record id="tax_report_line11" model="account.report.line">
+                                        <field name="name">1.4.6 Income from interest, interest /fines, penalties/, compensation for damages received from the person who failed to fulfill his obligations under the contract (11)</field>
+                                        <field name="code">LINE11</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-520601</field>
+                                    </record>
+                                    <record id="tax_report_line12" model="account.report.line">
+                                        <field name="name">1.4.7 Income from paid puzzles, gambling games, cash lotteries (12)</field>
+                                        <field name="code">LINE12</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-520602</field>
+                                    </record>
+                                    <record id="tax_report_line13" model="account.report.line">
+                                        <field name="name">1.4.8 Income from the sale of shares, securities and other financial instruments (13)</field>
+                                        <field name="code">LINE13</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-520603</field>
+                                    </record>
+                                    <record id="tax_report_line14" model="account.report.line">
+                                        <field name="name">1.4.9 Income from the sale or transfer of other intangible assets and movable property /except for the income specified in clauses 10.1.2 and 10.1.3 of the law/ (14)</field>
+                                        <field name="code">LINE14</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-5501 -5502 -540101 -540202</field>
+                                    </record>
+                                    <record id="tax_report_line15" model="account.report.line">
+                                        <field name="name">1.4.10 Actual income from foreign exchange rate difference (15)</field>
+                                        <field name="code">LINE15</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-5301 -5302</field>
+                                    </record>
+                                    <record id="tax_report_line16" model="account.report.line">
+                                        <field name="name">1.4.11 Other taxable income (16)</field>
+                                        <field name="code">LINE16</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-520109</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line17_new" model="account.report.line">
+                        <field name="name">2. Amount of total expenses (17=18+19+20)</field>
+                        <field name="code">LINE17_new</field>
+                        <field name="aggregation_formula">LINE18.balance - LINE19.balance - LINE20.balance</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line18" model="account.report.line">
+                                <field name="name">2.1 Cost of goods sold (18)</field>
+                                <field name="code">LINE18</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">6101 + 6102</field>
+                            </record>
+                            <record id="tax_report_line19" model="account.report.line">
+                                <field name="name">2.2 Administrative and selling expenses (19)</field>
+                                <field name="code">LINE19</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">70 + 71</field>
+                            </record>
+                            <record id="tax_report_line20" model="account.report.line">
+                                <field name="name">2.3 Non-core operating expenses (20)</field>
+                                <field name="code">LINE20</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">72 + 73 + 74</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line21" model="account.report.line">
+                        <field name="name">3. Profit before tax +, loss - (21=1-17)</field>
+                        <field name="code">LINE21</field>
+                        <field name="aggregation_formula">LINE1.balance - LINE17_new.balance</field>
+                    </record>
+                    <record id="tax_report_line22_new" model="account.report.line">
+                        <field name="name">4. Amount to increase profit and loss before paying tax (22)</field>
+                        <field name="code">LINE22_new</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line22_external" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line23_new" model="account.report.line">
+                        <field name="name">5. Amount to reduce profit and loss before paying taxes (23)</field>
+                        <field name="code">LINE23_new</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line23_external" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line24" model="account.report.line">
+                        <field name="name">6. Taxable income (24=21+22-23)</field>
+                        <field name="code">LINE24</field>
+                        <field name="groupby" eval="False"/>
+                        <field name="aggregation_formula">LINE21.balance + (LINE22_new.balance - LINE23_new.balance)</field>
+                    </record>
+                    <record id="tax_report_line25" model="account.report.line">
+                        <field name="name">7. Excess of voluntary insurance premiums (25)</field>
+                        <field name="code">LINE25</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">120502</field>
+                    </record>
+                    <record id="tax_report_line26" model="account.report.line">
+                        <field name="name">8. Adjusted taxable income amount (26=24+25)</field>
+                        <field name="code">LINE26</field>
+                        <field name="aggregation_formula">LINE24.balance + LINE25.balance</field>
+                    </record>
+                    <record id="tax_report_line27_new" model="account.report.line">
+                        <field name="name">9. The amount transferred during the reporting period from the losses confirmed by the tax authorities in the tax returns of previous years (27)</field>
+                        <field name="code">LINE27_new</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line27_external" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line28" model="account.report.line">
+                        <field name="name">10. Amount of income to be taxed at the common rate (28=26-27)</field>
+                        <field name="code">LINE28</field>
+                        <field name="aggregation_formula">LINE26.balance - LINE27_new.balance</field>
+                    </record>
+                    <record id="tax_report_line29" model="account.report.line">
+                        <field name="name">11. Taxes that have been imposed (28 * percentage specified in 20.1 and 20.2.7 of the law) (29=28*10%)</field>
+                        <field name="code">LINE29</field>
+                        <field name="aggregation_formula">LINE28.balance * 0.10</field>
+                    </record>
+                    <record id="tax_report_line30" model="account.report.line">
+                        <field name="name">12. Deductible tax according to Article 22.5 of the Law (30)</field>
+                        <field name="code">LINE30</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-910302</field>
+                    </record>
+                    <record id="tax_report_line31" model="account.report.line">
+                        <field name="name">13. OFFICIAL TAX TO BE PAYABLE AS A TOTAL PERCENTAGE (31=29-30)</field>
+                        <field name="code">LINE31</field>
+                        <field name="aggregation_formula">LINE29.balance - LINE30.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_lineB" model="account.report.line">
+                <field name="name">B. Calculation of special rate tax</field>
+                <field name="code">LINEB</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line32" model="account.report.line">
+                        <field name="name">14. Income subject to tax at a special rate (32=33+38+39+40+41+42+44+45+47+49)</field>
+                        <field name="code">LINE32</field>
+                        <field name="aggregation_formula">LINE33_new.balance + LINE38.balance + LINE39.balance + LINE40.balance + LINE41.balance + LINE42.balance + LINE44.balance + LINE45.balance + LINE47.balance + LINE49.balance</field>
+                    </record>
+                    <record id="tax_report_line33_new" model="account.report.line">
+                        <field name="name">15. Income from the sale and transfer of rights granted by the state organization (33)</field>
+                        <field name="code">LINE33_new</field>
+                        <field name="account_codes_formula">-520604</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line34_new" model="account.report.line">
+                                <field name="name">In the event that a right is granted by a state organization, payments and fees that can be proven by documents paid to a state organization in connection with obtaining a right (34)</field>
+                                <field name="code">LINE34_new</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line34_external" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line35_new" model="account.report.line">
+                                <field name="name">In case of purchase or transfer from others, the payment paid for the sale or transfer according to the agreement and evidenced by the transfer document (35)</field>
+                                <field name="code">LINE35_new</field>
+                                <field name="expression_ids">
+                                    <record id="tax_report_line35_external" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="tax_report_line36" model="account.report.line">
+                                <field name="name">Taxable income (36=33-34-35)</field>
+                                <field name="code">LINE36</field>
+                                <field name="groupby" eval="False"/>
+                                <field name="foldable" eval="False"/>
+                                <field name="aggregation_formula">LINE33_new.balance - LINE34_new.balance - LINE35_new.balance</field>
+                            </record>
+                            <record id="tax_report_line37" model="account.report.line">
+                                <field name="name">Tax on proceeds from the sale and transfer of rights ((36 * 10%) + Additional tax on assessment) (37)</field>
+                                <field name="code">LINE37</field>
+                                <field name="aggregation_formula">LINE36.balance * 0.1 + LINE37bis.balance</field>
+                                <field name="children_ids">
+                                    <record id="tax_report_line37bis" model="account.report.line">
+                                        <field name="name">Tax assessed in addition to assessment</field>
+                                        <field name="code">LINE37bis</field>
+                                        <field name="expression_ids">
+                                            <record id="tax_report_line37bis_external" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">external</field>
+                                                <field name="formula">sum</field>
+                                                <field name="subformula">editable;rounding=2</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line38" model="account.report.line">
+                        <field name="name">16. Income from rights fees (38)</field>
+                        <field name="code">LINE38</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-5105</field>
+                    </record>
+                    <record id="tax_report_line38" model="account.report.line">
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="tax_report_line39" model="account.report.line">
+                        <field name="name">17. Dividend income (39)</field>
+                        <field name="code">LINE39</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-5104</field>
+                    </record>
+                    <record id="tax_report_line40" model="account.report.line">
+                        <field name="name">18. Funds returned in accordance with Article 9.11 of the Law on Environmental Impact Assessment and Article 11.1.4, 12.5 of the Law on Petroleum (40)</field>
+                        <field name="code">LINE40</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-520505</field>
+                    </record>
+                    <record id="tax_report_line40" model="account.report.line">
+                        <field name="groupby">account_id</field>
+                    </record>
+                    <record id="tax_report_line41" model="account.report.line">
+                        <field name="name">19. Income from insurance compensation (41)</field>
+                        <field name="code">LINE41</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-520506</field>
+                    </record>
+                    <record id="tax_report_line42" model="account.report.line">
+                        <field name="name">20. Interest income (42)</field>
+                        <field name="code">LINE42</field>
+                        <field name="account_codes_formula">-5103</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line43" model="account.report.line">
+                                <field name="name">Tax imposed (43=(38+39+40+41+42)*10%)</field>
+                                <field name="code">LINE43</field>
+                                <field name="aggregation_formula">(LINE38.balance + LINE39.balance + LINE40.balance + LINE41.balance + LINE42.balance) * 0.10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line44" model="account.report.line">
+                        <field name="name">21. Interest income from loans and debt instruments drawn from foreign and domestic sources of commercial banks of Mongolia (44)</field>
+                        <field name="code">LINE44</field>
+                        <field name="account_codes_formula">-5204</field>
+                    </record>
+                    <record id="tax_report_line45" model="account.report.line">
+                        <field name="name">22. Does not hold a special license for the exploration or exploitation of minerals, radioactive minerals, or oil /This includes the persons specified in Articles 4.1.12 and 30.1 of this law./ Primary and secondary markets for foreign and domestic securities of taxpayers located in Mongolia Interest income of taxpayers who have purchased publicly traded debt instruments and unit rights (45)</field>
+                        <field name="code">LINE45</field>
+                        <field name="account_codes_formula">-5203</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line46" model="account.report.line">
+                                <field name="name">Tax imposed (46=(44+45)*5%)</field>
+                                <field name="code">LINE46</field>
+                                <field name="aggregation_formula">(LINE44.balance + LINE45.balance) * 0.05</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line47" model="account.report.line">
+                        <field name="name">23. Income from the sale and transfer of immovable property (47)</field>
+                        <field name="code">LINE47</field>
+                        <field name="account_codes_formula">-540201</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line48" model="account.report.line">
+                                <field name="name">Tax imposed (48=47*2%)</field>
+                                <field name="code">LINE48</field>
+                                <field name="aggregation_formula">LINE47.balance * 0.02</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line49" model="account.report.line">
+                        <field name="name">24. Earnings from paid puzzles, gambling games, cash lotteries (49)</field>
+                        <field name="code">LINE49</field>
+                        <field name="account_codes_formula">-520605</field>
+                        <field name="children_ids">
+                            <record id="tax_report_line50" model="account.report.line">
+                                <field name="name">Tax imposed (50=49*40%)</field>
+                                <field name="code">LINE50</field>
+                                <field name="aggregation_formula">LINE49.balance * 0.40</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line51" model="account.report.line">
+                        <field name="name">25. OFFICIAL TAX IMPOSED AT A SPECIAL RATE (51=37+43+46+48+50)</field>
+                        <field name="code">LINE51</field>
+                        <field name="aggregation_formula">LINE37.balance + LINE43.balance + LINE46.balance + LINE48.balance + LINE50.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_lineC" model="account.report.line">
+                <field name="name">C. Computation of taxes withheld by others according to law</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">LINEC</field>
+                <field name="children_ids">
+                    <record id="tax_report_line52_new" model="account.report.line">
+                        <field name="name">26. Tax withheld from others according to the law (52)</field>
+                        <field name="code">LINE52_new</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line52_external" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line53_new" model="account.report.line">
+                        <field name="name">27. Taxes paid in foreign countries to be deducted from the applicable tax (53)</field>
+                        <field name="code">LINE53_new</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line53_external" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line54" model="account.report.line">
+                        <field name="name">28. AMOUNT OF PAYABLE TAX (54=31+51-52-53)</field>
+                        <field name="code">LINE54</field>
+                        <field name="aggregation_formula">LINE31.balance + LINE51.balance - LINE52_new.balance - LINE53_new.balance</field>
+                    </record>
+                    <record id="tax_report_line55" model="account.report.line">
+                        <field name="code">LINE55</field>
+                        <field name="name">29. The amount calculated for tax refund according to Article 22.1 of the Law (55)</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-520504</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_lineD" model="account.report.line">
+                <field name="name">D. Calculation of tax deductions and exemptions from corporate income tax according to the Law on deductions and exemptions from corporate income tax (56)</field>
+                <field name="code">LINED</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line57" model="account.report.line">
+                        <field name="code">LINE57</field>
+                        <field name="name">30. Exemption from income tax for enterprises with reduced rent payments (News HM(10) column 27 total amount) (57)</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="groupby">account_id</field>
+                        <field name="account_codes_formula">-520503</field>
+                    </record>
+                    <record id="tax_report_line58" model="account.report.line">
+                        <field name="code">LINE58</field>
+                        <field name="name">31. Information on exemption from corporate income tax / Amount of column 5, line 31 of XM-02(12)/ (58)</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="groupby">account_id</field>
+                        <field name="account_codes_formula">-520502</field>
+                    </record>
+                    <record id="tax_report_line59" model="account.report.line">
+                        <field name="code">LINE59</field>
+                        <field name="name">32. Total tax amount to be paid (59=31-(57+58)+51-52-53)</field>
+                        <field name="aggregation_formula">LINE31.balance - (LINE57.balance + LINE58.balance) + LINE51.balance - LINE52_new.balance - LINE53_new.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_au_super_account_view_form" model="ir.ui.view">
+        <field name="name">l10n_au.super.account.view.form</field>
+        <field name="model">l10n_au.super.account</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" placeholder="Employee"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="employee_tfn"/>
+                        </group>
+                        <group>
+                            <field name="fund_id"/>
+                            <field name="fund_abn"/>
+                            <field name="fund_type" invisible="1"/>
+                            <field name="member_nbr"
+                                invisible="fund_type != 'APRA'"
+                                required="fund_type =='APRA'"/>
+                            <field name="date_from" string="Member Since"/>
+                            <field name="trustee"
+                                invisible="fund_type != 'SMSF'"
+                                required="fund_type == 'SMSF'"/>
+                            <field name="trustee_name_id" invisible="fund_type != 'SMSF' or trustee != 'other'"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="l10n_au_super_account_view_tree" model="ir.ui.view">
+        <field name="name">l10n_au.super.account.view.tree</field>
+        <field name="model">l10n_au.super.account</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="employee_id" widget="many2one_avatar_employee"/>
+                <field name="fund_id"/>
+                <field name="trustee"/>
+                <field name="trustee_name_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="l10n_au_super_account_action" model="ir.actions.act_window">
+        <field name="name">Super Accounts</field>
+        <field name="res_model">l10n_au.super.account</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

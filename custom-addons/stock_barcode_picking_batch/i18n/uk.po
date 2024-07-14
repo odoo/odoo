@@ -1,0 +1,245 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_barcode_picking_batch
+# 
+# Translators:
+# Wil Odoo, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 22:21+0000\n"
+"PO-Revision-Date: 2023-10-26 23:10+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: uk\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.stock_move_line_product_selector_inherit
+msgid "<i class=\"fa fa-fw fa-lg fa-truck me-3\" title=\"Transfer\"/>"
+msgstr "<i class=\"fa fa-fw fa-lg fa-truck me-3\" title=\"Transfer\"/>"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.picking_view_kanban_inherit_barcode_picking_batch
+msgid "<span class=\"fa fa-external-link-square ms-1\" title=\"Open Batch Picking\"/>"
+msgstr ""
+"<span class=\"fa fa-external-link-square ms-1\" title=\"Open Batch "
+"Picking\"/>"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.stock_barcode_batch_picking_view_info
+msgid "Allocation"
+msgstr "Бронювання"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.actions.client,name:stock_barcode_picking_batch.stock_barcode_picking_batch_client_action
+msgid "Barcode Batch Picking Client Action"
+msgstr "Дія клієнта штрих-коду групового надходження"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model,name:stock_barcode_picking_batch.model_stock_picking_batch
+#: model:ir.model.fields,field_description:stock_barcode_picking_batch.field_stock_barcode_cancel_operation__batch_id
+msgid "Batch Transfer"
+msgstr "Групове переміщення"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model.fields,field_description:stock_barcode_picking_batch.field_stock_barcode_cancel_operation__batch_name
+msgid "Batch Transfer Name"
+msgstr "Назва групового переміщення"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/main_menu.xml:0
+#: model:ir.actions.act_window,name:stock_barcode_picking_batch.stock_barcode_batch_picking_action_kanban
+#, python-format
+msgid "Batch Transfers"
+msgstr "Групові переміщення"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+#, python-format
+msgid "Cancel Batch Transfer"
+msgstr "Скасувати групове переміщення"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model,name:stock_barcode_picking_batch.model_stock_barcode_cancel_operation
+msgid "Cancel Operation"
+msgstr "Скасувати операцію"
+
+#. module: stock_barcode_picking_batch
+#. odoo-python
+#: code:addons/stock_barcode_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid "Cancel this batch transfer?"
+msgstr "Скасувати це групове переміщення?"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.stock_barcode_batch_picking_view_info
+msgid "Confirm"
+msgstr "Підтвердити"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.stock_barcode_batch_picking_view_info
+msgid "Description"
+msgstr "Опис"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.stock_barcode_batch_picking_view_info
+msgid "Discard"
+msgstr "Відмінити"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model.fields,field_description:stock_barcode_picking_batch.field_stock_picking__display_batch_button
+msgid "Display Batch Button"
+msgstr "Відобразити групову кнопку"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.stock_barcode_batch_picking_view_kanban
+msgid "Lines"
+msgstr "Рядки"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_barcode_picking_batch.stock_barcode_batch_picking_action_kanban
+msgid "No batch transfer found"
+msgstr "Групове переміщення не знайдено"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+#, python-format
+msgid "No ready transfers found"
+msgstr "Не знайдено готових переміщень"
+
+#. module: stock_barcode_picking_batch
+#. odoo-python
+#: code:addons/stock_barcode_picking_batch/models/stock_picking_batch.py:0
+#, python-format
+msgid "Open picking batch form"
+msgstr "Відкрити форму групового комплектування"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+#, python-format
+msgid "Print Batch Transfer"
+msgstr "Друкувати групове переміщення"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model,name:stock_barcode_picking_batch.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Переміщення товару (Рядок складського переміщення)"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+#, python-format
+msgid "Scan the package %s"
+msgstr "Відскануйте упаковку %s"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+#, python-format
+msgid "Select an operation type for batch transfer"
+msgstr "Оберіть тип операції для групового переміщення"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+#, python-format
+msgid "Select transfers for batch transfer"
+msgstr "Оберіть переміщення для групового переміщення"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+#, python-format
+msgid "The Batch Transfer has been validated"
+msgstr "Групове переміщення підтверджене"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+#, python-format
+msgid "The batch picking has been cancelled"
+msgstr "Групове комплектування скасоване"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.actions.act_window,help:stock_barcode_picking_batch.stock_barcode_batch_picking_action_kanban
+msgid ""
+"The goal of the batch transfer is to group operations that may\n"
+"            (needs to) be done together in order to increase their efficiency.\n"
+"            It may also be useful to assign jobs (one person = one batch) or\n"
+"            help the timing management of operations (tasks to be done at 1pm)."
+msgstr ""
+"Ціль групового переміщення - згрупувати операції, які можуть\n"
+"            (повинні) бути виконані разом з метою підвищення їх ефективності.\n"
+"           Також може бути корисним призначити завдання (одна особа = одна група) або\n"
+"           допомога в управлінні термінами операцій (завдання має бути виконане в 13:00)."
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model.fields,help:stock_barcode_picking_batch.field_stock_move_line__picking_id
+msgid "The stock operation where the packing has been made"
+msgstr "Складська операція, де було зроблене комплектування"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+#, python-format
+msgid "This batch transfer is already done"
+msgstr "Це групове переміщення вже виконане"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+#, python-format
+msgid "This batch transfer is cancelled"
+msgstr "Це групове переміщення скасоване"
+
+#. module: stock_barcode_picking_batch
+#. odoo-javascript
+#: code:addons/stock_barcode_picking_batch/static/src/models/barcode_picking_batch_model.js:0
+#, python-format
+msgid ""
+"This batch transfer is still draft, it must be confirmed before being "
+"processed"
+msgstr ""
+"Це групове переміщення усе ще в чернетці, перед обробкою його слід "
+"підтвердити"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model,name:stock_barcode_picking_batch.model_stock_picking
+#: model:ir.model.fields,field_description:stock_barcode_picking_batch.field_stock_move_line__picking_id
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.stock_move_line_product_selector_inherit
+msgid "Transfer"
+msgstr "Переміщення"
+
+#. module: stock_barcode_picking_batch
+#: model:ir.model.fields,field_description:stock_barcode_picking_batch.field_stock_picking_batch__picking_type_code
+msgid "Type of Operation"
+msgstr "Тип операції"
+
+#. module: stock_barcode_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_barcode_picking_batch.stock_barcode_batch_picking_view_info
+msgid "Unbatch Transfer"
+msgstr "Негрупове переміщення"
+
+#. module: stock_barcode_picking_batch
+#. odoo-python
+#: code:addons/stock_barcode_picking_batch/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot validate a transfer if no quantities are reserved nor done. You "
+"can use the info button on the top right corner of your screen to remove the"
+" transfer in question from the batch."
+msgstr ""
+"Ви не можете підтвердити переміщення, якщо немає зарезервованих чи виконаних"
+" кількостей. Ви можете скористатися інформаційною кнопкою у верхньому "
+"правому куті екрана, щоб видалити відповідну переміщення з групового."

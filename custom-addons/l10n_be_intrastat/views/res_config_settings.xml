@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account.intrastat</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='intrastat_statistics']" position="inside">
+                <div class="content-group" invisible="country_code != 'BE'">
+                    <div class="mt16">
+                        <field name="company_country_id" invisible="1"/>
+                        <label for="intrastat_region_id"/>
+                        <field name="intrastat_region_id" context="{'search_view_ref': 'account_intrastat.view_intrastat_code_restricted_type_search',
+                           'form_view_ref': 'account_intrastat.view_intrastat_code_restricted_type_form',
+                           'default_type': 'region', 'default_country_id': company_country_id}"/>
+                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific."/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

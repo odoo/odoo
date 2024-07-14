@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="mail_template_data_task_report" model="mail.template">
+        <field name="name">Field Service: Field Service Report</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="subject">Field Service Report - {{ object.name }}</field>
+        <field name="partner_to">{{ object.partner_id.id }}</field>
+        <field name="description">Email sent when clicking on "send report" in a task</field>
+        <field name="body_html" type="html">
+            <p>
+                Dear <t t-out="object.partner_id.name or 'Customer'">Customer</t>,<br/><br/>
+                Please find attached the field service report for our onsite operation. <br/><br/>
+                Feel free to contact us if you have any questions.<br/><br/>
+                Best regards,<br/><br/>
+            </p>
+        </field>
+        <field name="report_template_ids" eval="[(4, ref('industry_fsm_report.task_custom_report'))]"/>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+    </record>
+
+</odoo>

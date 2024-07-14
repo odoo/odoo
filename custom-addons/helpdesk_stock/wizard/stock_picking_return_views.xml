@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_stock_return_picking_form_inherit_helpdesk_stock" model="ir.ui.view">
+            <field name="name">Return</field>
+            <field name="model">stock.return.picking</field>
+            <field name="inherit_id" ref="stock.view_stock_return_picking_form"/>
+            <field name="arch" type="xml">
+                <group position="before">
+                    <field name="partner_id" invisible="1"/>
+                    <field name="suitable_picking_ids" invisible="1"/>
+                    <field name="suitable_sale_order_ids" invisible="1"/>
+                    <field name="ticket_id" invisible="1"/>
+                    <group invisible="not ticket_id">
+                        <group>
+                            <field name="sale_order_id" options="{'no_create': True}"/>
+                            <field name="picking_id" options="{'no_create': True}" string="Delivery to Return"
+                                required="ticket_id"/>
+                        </group>
+                    </group>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>

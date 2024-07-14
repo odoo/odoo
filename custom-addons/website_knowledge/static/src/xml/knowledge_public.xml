@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_knowledge.embedded_view_placeholder">
+        <!-- Note: A visitor will not have the rights to load an embedded view.
+        Instead of hidding it, we will display a small placeholder suggesting the
+        visitor to connect to see the embedded view. When the user clicks on that
+        button and logs in, the user will be redirected to the backend of the
+        article and will be able to load the embedded view iif the user has
+        enough rights (see ACL & record rules). -->
+        <div class="o_knowledge_embedded_view_placeholder d-flex flex-column flex-grow-1 position-relative bg-white border">
+            <div class="d-flex border-bottom p-5 pb-0">
+                <div class="mb-3 p-3 bg-light w-25 me-auto"/>
+                <div class="mb-3 p-3 bg-light w-50"/>
+            </div>
+            <div class="bg-light flex-grow-1 p-3 w-100"></div>
+            <div class="o_knowledge_embedded_view_placeholder_cover d-flex flex-column align-items-center justify-content-center">
+                <p class="o_view_nocontent_empty_folder m-0"></p>
+                <p class="fw-bold">This view is only available for internal users</p>
+                <a t-attf-href="/web/login?redirect=#{url}" class="btn btn-primary">Log in</a>
+            </div>
+        </div>
+    </t>
+    <t t-name="website_knowledge.file_behavior_toolbar_content">
+        <div class="btn-group d-flex flex-wrap">
+            <button title="Download" name="download"
+                class="btn btn-primary btn-link btn-sm border-0 text-break text-start text-o-color-2 text-capitalize fw-bold border-transparent bg-transparent">
+                <i class="fa fa-download me-1"/>
+                <span class="o_knowledge_toolbar_button_text">Download</span>
+            </button>
+        </div>
+    </t>
+</templates>

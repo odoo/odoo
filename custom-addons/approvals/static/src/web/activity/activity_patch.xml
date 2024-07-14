@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="mail.Activity" t-inherit-mode="extension">
+        <xpath expr="//t[@name='tools']" position="replace">
+            <Approval t-if="props.data.approval" activity="props.data" onChange="props.reloadParentView"/>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates>
+    <t t-name="web_studio.XmlResourceEditor">
+        <div class="o_web_studio_xml_editor h-100 d-flex flex-column">
+            <div class="o_web_studio_xml_resource_selector p-2">
+                <SelectMenu
+                    class="'o_web_studio_xml_resource_select_menu text-light'"
+                    value="this.state.currentResourceId"
+                    choices="state.resourcesOptions"
+                    onSelect.bind="onResourceChange"
+                    searchable="state.resourcesOptions.length > 5"
+                    required="true"
+                />
+                <button t-if="props.canSave" t-on-click="onSaveClick" class="btn btn-primary">Save</button>
+                <button t-on-click="onCloseClick" class="btn btn-secondary">Close</button>
+            </div>
+            <ResizablePanel class="'h-100'" minWidth="minWidth">
+                <div class="o_web_studio_code_editor_info p-3">
+                    <div class="d-flex justify-content-between">
+                        <p t-if="props.title" class="mb-0 text-light" t-out="props.title" />
+                        <button class="btn btn-sm btn-link p-0" type="button" t-on-click="onFormat">Format</button>
+                        <t t-if="props.slots and props.slots.additionalControlButtons" t-slot="additionalControlButtons" currentResourceId="this.state.currentResourceId"/>
+                    </div>
+                    <t t-if="this.props.displayAlerts">
+                        <div t-foreach="alerts" t-as="alert" t-key="alert" t-if="alert_value.display" class="alert alert-warning d-flex justify-content-between mt-3" role="alert">
+                            <p class="mb-0" t-out="alert_value.message" />
+                            <button type="button" class="btn-close ms-2" aria-label="Close" t-on-click="() => this.hideAlert(alert)" />
+                        </div>
+                    </t>
+                </div>
+                <CodeEditor mode="'qweb'" sessionId="state.currentResourceId" value="arch" onChange.bind="onCodeChange" theme="'monokai'" class="'o_web_studio_code_editor'" t-key="codeEditorKey"/>
+            </ResizablePanel>
+        </div>
+    </t>
+
+    <t t-name="web_studio.ViewSelector" t-inherit="web.SelectMenu" >
+        <xpath expr="//t[@t-foreach='state.displayedOptions']" position="attributes">
+            <attribute name="t-foreach">this.getMainViews()</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="web_studio.ViewSelector.ChoiceItemRecursive">
+        <t t-set="level" t-value="level or 0"/>
+        <t t-call="web_studio.ViewSelector.ChoiceItem" />
+        <t t-set="sublevel" t-value="level + 1" />
+
+        <t t-set="children" t-value="this.getInherited(choice)" />
+        <t t-foreach="children" t-as="subChoice" t-key="subChoice_index">
+            <t t-call="{{ this.constructor.choiceItemTemplate }}">
+                <t t-set="level" t-value="sublevel" />
+                <t t-set="choice" t-value="subChoice" />
+                <t t-set="mode" t-value="'inherits'" />
+            </t>
+        </t>
+
+        <t t-set="composedBy" t-value="this.getComposedBy(choice)" />
+        <t t-foreach="composedBy" t-as="subChoice" t-key="subChoice_index">
+            <t t-call="{{ this.constructor.choiceItemTemplate }}">
+                <t t-set="level" t-value="sublevel" />
+                <t t-set="choice" t-value="subChoice" />
+                <t t-set="mode" t-value="'composes'" />
+            </t>
+        </t>
+    </t>
+
+    <t t-name="web_studio.ViewSelector.ChoiceItem" t-inherit="web.SelectMenu.ChoiceItem">
+        <xpath expr="./*[1]" position="before">
+            <t t-set="level" t-value="level or 0"/>
+        </xpath>
+
+        <xpath expr="//DropdownItem//div" position="attributes">
+            <attribute name="t-att-class">choice.resource.active ? "" : "text-decoration-line-through"</attribute>
+        </xpath>
+
+        <xpath expr="//DropdownItem//div" position="before">
+            <div t-attf-style="margin-left: {{ (level*10) + 5 }}px;" class="me-2">
+                <span class="d-block fw-bold" style="font-size: 0.7em;">
+                    <t t-if="mode==='inherits'">
+                        <i class="fa fa-sitemap me-2"/>Modified by:
+                    </t>
+                    <t t-elif="mode==='composes'">
+                        <i class="fa fa-play me-2"/>Uses:
+                    </t>
+                </span>
+            </div>
+        </xpath>
+    </t>
+</templates>

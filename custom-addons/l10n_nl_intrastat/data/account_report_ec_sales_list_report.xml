@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- display ec sales list report menu item -->
+        <record model="ir.ui.menu" id="account_reports.menu_action_account_report_sales">
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Add the report variant -->
+        <record id="dutch_icp_report" model="account.report">
+            <field name="name">Dutch EC sales Report (ICP)</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="root_report_id" ref="account_reports.generic_ec_sales_report"/>
+            <field name="load_more_limit" eval="80"/>
+            <field name="search_bar" eval="True"/>
+            <field name="filter_journals" eval="True"/>
+            <field name="custom_handler_model_id" ref="model_l10n_nl_ec_sales_report_handler"/>
+            <field name="column_ids">
+                <record id="account_financial_report_ec_sales_partner" model="account.report.column">
+                    <field name="name">Partner</field>
+                    <field name="expression_label">partner_name</field>
+                    <field name="figure_type">string</field>
+                    <field name="sortable" eval="True"/>
+                </record>
+                <record id="account_financial_report_ec_sales_country_code" model="account.report.column">
+                    <field name="name">Country Code</field>
+                    <field name="expression_label">country_code</field>
+                    <field name="figure_type">string</field>
+                    <field name="sortable" eval="True"/>
+                </record>
+                <record id="account_financial_report_ec_sales_vat" model="account.report.column">
+                    <field name="name">VAT</field>
+                    <field name="expression_label">vat</field>
+                    <field name="figure_type">string</field>
+                    <field name="sortable" eval="True"/>
+                </record>
+                <record id="account_financial_report_ec_sales_amount_product" model="account.report.column">
+                    <field name="name">Amount Product</field>
+                    <field name="expression_label">amount_product</field>
+                    <field name="sortable" eval="True"/>
+                </record>
+                <record id="account_financial_report_ec_sales_amount_service" model="account.report.column">
+                    <field name="name">Amount Service</field>
+                    <field name="expression_label">amount_service</field>
+                    <field name="sortable" eval="True"/>
+                </record>
+                <record id="account_financial_report_ec_sales_amount_triangular" model="account.report.column">
+                    <field name="name">Amount Triangular</field>
+                    <field name="expression_label">amount_triangular</field>
+                    <field name="figure_type">monetary</field>
+                    <field name="sortable" eval="True"/>
+                </record>
+                <record id="account_financial_report_ec_sales_total" model="account.report.column">
+                    <field name="name">Total</field>
+                    <field name="expression_label">total</field>
+                    <field name="sortable" eval="True"/>
+                </record>
+            </field>
+        </record>
+    </data>
+</odoo>

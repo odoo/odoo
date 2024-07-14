@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="calendar_event_view_form_gantt_booking_inherit_appointment_hr" model="ir.ui.view">
+        <field name="name">calendar.event.view.form.gantt.booking.inherit.appointment.hr</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="appointment.calendar_event_view_form_gantt_booking"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_appointment_booking_resource_leave_alert')]" position="before">
+                <div class="o_appointment_booking_user_leave_alert
+                alert alert-warning d-flex justify-content-center" role="alert"
+                invisible="not partners_on_leave">
+                    <span>These partners are unavailable at the selected times</span><field name="partners_on_leave" widget="many2many_tags"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

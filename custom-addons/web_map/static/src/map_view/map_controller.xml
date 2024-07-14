@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web_map.MapView">
+        <div t-att-class="props.className">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="props.display">
+                <t t-set-slot="control-panel-additional-actions">
+                    <CogMenu/>
+                </t>
+                <t t-set-slot="layout-buttons">
+                    <t t-call="{{ props.buttonTemplate }}"/>
+                </t>
+                <t t-set-slot="layout-actions">
+                    <SearchBar t-if="searchBarToggler.state.showSearchBar"/>
+                </t>
+                <t t-set-slot="control-panel-navigation-additional">
+                    <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
+                </t>
+                <t t-component="props.Renderer" t-props="rendererProps" />
+            </Layout>
+        </div>
+    </t>
+
+    <t t-name="web_map.MapView.Buttons" >
+
+    </t>
+
+</templates>

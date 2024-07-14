@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="sign.NextDirectSignDialog">
+        <Dialog t-props="dialogProps">
+            <t t-set-slot="header">
+                <h4 class="modal-title text-break" t-att-class="{ 'me-auto': fullscreen }">
+                    <t t-esc="title"/>
+                </h4>
+            </t>
+            <div class="o_nextdirectsign_message">
+                <p>Your signature has been saved. Next signatory is <t t-esc="nextSigner"/></p>
+                <p>We will send you this document by email once everyone has signed.</p>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="goToNextSigner">Next signatory (<t t-esc="nextSigner"/>)</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

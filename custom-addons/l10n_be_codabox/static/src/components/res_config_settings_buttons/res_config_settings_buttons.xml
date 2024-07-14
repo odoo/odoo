@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="l10n_be_codabox.ActionButtons">
+        <xpath expr="//div[hasclass('l10n_be_codabox_action_buttons')]" position="inside">
+            <div class="d-flex flex">
+                <br/>
+                <button type="button"
+                        class="btn btn-primary mr16"
+                        name="l10nBeCodaboxConnectButton"
+                        t-on-click="l10nBeCodaboxConnect">
+                        Connect
+                </button>
+                <button type="button"
+                        class="btn btn-secondary"
+                        name="l10nBeCodaboxRevokeButton"
+                        t-on-click="l10nBeCodaboxRevoke">
+                        Revoke access
+                </button>
+            </div>
+        </xpath>
+    </t>
+</templates>

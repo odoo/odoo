@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_salary.hr_contract_salary_resume_gross" model="hr.contract.salary.resume">
+        <field name="impacts_monthly_total" eval="False"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee"/>
+    </record>
+
+    <record id="hr_contract_salary_resume_net_employee" model="hr.contract.salary.resume">
+        <field name="name">Net</field>
+        <field name="value_type">payslip</field>
+        <field name="code">NET</field>
+        <field name="category_id" ref="hr_contract_salary.hr_contract_salary_resume_category_monthly_salary"/>
+        <field name="impacts_monthly_total" eval="True"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_employee"/>
+    </record>
+
+    <record id="hr_contract_salary_payroll_resume_gross_worker" model="hr.contract.salary.resume">
+        <field name="name">Gross</field>
+        <field name="value_type">payslip</field>
+        <field name="code">GROSS</field>
+        <field name="category_id" ref="hr_contract_salary.hr_contract_salary_resume_category_monthly_salary"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_worker"/>
+        <field name="impacts_monthly_total" eval="False"/>
+    </record>
+
+    <record id="hr_contract_salary_resume_net_worker" model="hr.contract.salary.resume">
+        <field name="name">Net</field>
+        <field name="value_type">payslip</field>
+        <field name="code">NET</field>
+        <field name="category_id" ref="hr_contract_salary.hr_contract_salary_resume_category_monthly_salary"/>
+        <field name="impacts_monthly_total" eval="True"/>
+        <field name="structure_type_id" ref="hr_contract.structure_type_worker"/>
+    </record>
+</odoo>

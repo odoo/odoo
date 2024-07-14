@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <div t-name="sign.Template" class="d-flex flex-column h-100">
+        <SignTemplateControlPanel 
+            actionType="actionType"
+            hasSignRequests="hasSignRequests"
+            responsibleCount="responsibleCount"
+            signTemplate="signTemplate"
+            isPDF="isPDF"
+            goBackToKanban.bind="goBackToKanban"
+        />
+        <SignTemplateBody 
+            isPDF="isPDF"
+            attachmentLocation="attachmentLocation" 
+            manageTemplateAccess="manageTemplateAccess"
+            hasSignRequests="hasSignRequests"
+            signTemplate="signTemplate"
+            signItemTypes="signItemTypes"
+            signItems="signItems"
+            signRoles="signRoles"
+            signItemOptions="signItemOptions"
+            goBackToKanban.bind="goBackToKanban"
+        />
+    </div>
+</templates>

@@ -1,0 +1,99 @@
+.o_knowledge_form_view {
+    .o_knowledge_article_view_form_dynamic_width ~ .o_knowledge_editor .o_knowledge_behavior_type_embedded_view {
+        margin-left: 0;
+        margin-right: 0;
+        .o_control_panel {
+            padding-right: 0;
+        }
+    }
+}
+
+.note-editable.odoo-editor-editable, .o_readonly {
+    & > .o_knowledge_behavior_type_embedded_view {
+        margin-left: calc(-1 * var(--editor-gutter-size));
+        margin-right: calc(-1 * var(--editor-gutter-size) - 2rem);
+    }
+
+}
+.o_knowledge_behavior_type_embedded_view {
+    position: relative;
+    background-color: $o-webclient-background-color;
+    border-left: 2px solid transparent; // adjust to resizer
+
+    .o_knowledge_embedded_view {
+        .o_content:not(.o_view_sample_data) .o_view_nocontent:not(.o_knowledge_item_calendar_nocontent) {
+            display: none !important;
+        }
+        .breadcrumb {
+            margin-right: 8px;
+        }
+        .o_content {
+            max-height: 80vh;
+        }
+    }
+    .o_view_nocontent_empty_folder:before {
+        @extend %o-nocontent-empty-document;
+    }
+
+    // View adjustments:
+
+    .o_pivot_add_spreadsheet,
+    .o_graph_insert_spreadsheet {
+        display: none;
+    }
+    .o_list_renderer {
+        margin-bottom: 0 !important;
+    }
+    .o_kanban_renderer {
+        min-height: 6rem;
+    }
+    .o_kanban_view {
+        .o_project_updates_breadcrumb {
+            display: none !important;
+        }
+        .o_field_properties {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+        .o_content:has(div.o_kanban_group) .o_kanban_renderer {
+            // force kanban grouped by (stage mainly) to be a bit taller,
+            // to ease reading of stages.
+            min-height: 250px;
+        }
+    }
+    .o_graph_renderer {
+        .o_graph_canvas_container {
+            min-height: clamp(300px, 50vh, 800px);
+        }
+    }
+    .o-map-renderer {
+        .o-map-renderer--container,
+        .o-map-renderer--pin-list-container {
+            height: auto;
+        }
+        .o-map-renderer--container {
+            min-height: clamp(300px, 50vh, 800px);
+        }
+        .leaflet-map-pane {
+            @include o-position-absolute(0, 0, 0, 0);
+        }
+    }
+    .o_calendar_renderer {
+        height: auto !important;
+        max-height: clamp(300px, 60vh, 800px);
+        .o_calendar_widget {
+            height: auto !important;
+            min-height: clamp(300px, 60vh, 800px);
+            // Calendar Renderer's height calculation doesn't work properly on embedded Year views
+            background-color: $o-view-background-color;
+        }
+    }
+    .o_calendar_container {
+        .o_calendar_sidebar_container {
+            max-height: clamp(300px, 60vh, 800px);
+        }
+    }
+    .o_calendar_filter .ui-menu-item a {
+        color: $o-gray-700 !important;
+    }
+}

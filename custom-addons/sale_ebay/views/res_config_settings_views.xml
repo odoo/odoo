@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.ebay</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='sale_ebay']" position="replace">
+                <block title="eBay">
+                    <setting string="eBay Account" documentation="/applications/sales/sales/ebay_connector/setup.html" help="Mode and credentials">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="ebay_domain" string="Mode" class="col-lg-4 o_light_label"/>
+                                <field name="ebay_domain" class="col-lg-4 oe_inline"/>
+                            </div>
+                            <div class="row">
+                                <label for="ebay_dev_id" class="col-lg-4 o_light_label"/>
+                                <field name="ebay_dev_id" class="col-lg-8 oe_inline"/>
+                            </div>
+                            <div invisible="ebay_domain == 'prod'">
+                                <div class="row">
+                                    <label for="ebay_sandbox_token" class="col-lg-4 o_light_label"/>
+                                    <field name="ebay_sandbox_token" class="col-lg-8 oe_inline"/>
+                                </div>
+                                <div class="row">
+                                    <label for="ebay_sandbox_app_id" class="col-lg-4 o_light_label"/>
+                                    <field name="ebay_sandbox_app_id" class="col-lg-8 oe_inline"/>
+                                </div>
+                                <div class="row">
+                                    <label for="ebay_sandbox_cert_id" class="col-lg-4 o_light_label"/>
+                                    <field name="ebay_sandbox_cert_id" class="col-lg-8 oe_inline"/>
+                                </div>
+                            </div>
+                            <div invisible="ebay_domain == 'sand'">
+                                <div class="row">
+                                    <label for="ebay_prod_token" class="col-lg-4 o_light_label"/>
+                                    <field name="ebay_prod_token" class="col-lg-8 oe_inline"/>
+                                </div>
+                                <div class="row">
+                                    <label for="ebay_prod_app_id" class="col-lg-4 o_light_label"/>
+                                    <field name="ebay_prod_app_id" class="col-lg-8 oe_inline"/>
+                                </div>
+                                <div class="row">
+                                    <label for="ebay_prod_cert_id" class="col-lg-4 o_light_label"/>
+                                    <field name="ebay_prod_cert_id" class="col-lg-8 oe_inline"/>
+                                </div>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting string="eBay Marketplace Account Deletion/Closure Notifications"
+                             help="eBay requires supporting customer account deletion/closure notifications."
+                             documentation="/applications/sales/sales/ebay_connector/setup.html#accept-account-deletion-notifications">
+                        <label for="ebay_account_deletion_endpoint"/>
+                        <field name="ebay_account_deletion_endpoint" widget="CopyClipboardChar"/>
+                        <label for="ebay_verification_token"/>
+                        <button
+                            name="action_reset_token" type="object"
+                            string="Generate Token" class="oe_inline"/>
+                        <field name="ebay_verification_token" widget="CopyClipboardChar"/>
+                    </setting>
+                    <setting string="eBay Options" help="eBay parameters">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="ebay_site" class="col-lg-4 o_light_label" />
+                                <field name="ebay_site" class="col-lg-8 oe_inline" options="{'no_create': True, 'no_open': True}"/>
+                            </div>
+                            <div class="row">
+                                <label for="ebay_currency" string="Currency" class="col-lg-4 o_light_label"/>
+                                <field name="ebay_currency" class="col-lg-8 oe_inline" required="1"/>
+                                <button name="%(base.action_currency_form)d" icon="oi-arrow-right" type="action"
+                                        string="Activate Other Currencies" style="margin-left: 150px;" class="btn-link"/>
+                            </div>
+                            <div class="row">
+                                <label for="ebay_out_of_stock" class="col-lg-4 o_light_label"/>
+                                <field name="ebay_out_of_stock" class="col-lg-4 oe_inline"/>
+                            </div>
+                            <div class="row">
+                                <label for="ebay_gallery_plus" class="col-lg-4 o_light_label"/>
+                                <field name="ebay_gallery_plus" class="col-lg-4 oe_inline"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting string="Storage" help="Storage location of your products">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="ebay_country" class="col-lg-4 o_light_label"/>
+                                <field name="ebay_country" class="col-lg-8 oe_inline" options="{'no_create': True, 'no_open': True}"/>
+                                <button name="%(sale_ebay.action_country_all_form)d" icon="oi-arrow-right" type="action"
+                                        string="Add other countries" style="margin-left: 150px;" class="btn-link"/>
+                            </div>
+                            <div class="row">
+                                <label for="ebay_zip_code" class="col-lg-4 o_light_label"/>
+                                <field name="ebay_zip_code" class="col-lg-8 oe_inline"/>
+                            </div>
+                            <div class="row">
+                                <label for="ebay_location" class="col-lg-4 o_light_label"/>
+                                <field name="ebay_location" class="col-lg-8 oe_inline"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting invisible="not ebay_dev_id or not ebay_sandbox_token or not ebay_sandbox_app_id or not ebay_sandbox_cert_id" string="Synchronization" help="Import eBay config data and sync transactions">
+                        <div class="content-group">
+                            <div class="row mt8">
+                                <div class="col-lg-6" title="Sync now"> 
+                                    <button name="sync_ebay_details" icon="fa-lg fa-refresh" type="object" string="Countries &amp; Currencies" class="btn-link"></button>
+                                </div>
+                                <div class="col-lg-6" title="Sync now">
+                                    <button name="button_sync_categories" icon="fa-lg fa-refresh" type="object" string="Product Categories" class="btn-link"></button>
+                                </div>
+                            </div>
+                            <div class="row mt8">
+                                <div class="col-lg-6" title="Sync now">
+                                    <button name="sync_policies" icon="fa-lg fa-refresh" type="object" string="Policies" class="btn-link"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting string="Sales Team" help="Sales Team to manage eBay sales">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="ebay_sales_team" string="Sales Team" class="col-lg-4 o_light_label"/>
+                                <field name="ebay_sales_team" class="col-lg-8 oe_inline" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

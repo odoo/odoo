@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="external_snippets" inherit_id="website.snippets">
+        <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
+            <t id="appointment_snippet" t-install="website_appointment" string="Appointment"
+               t-thumbnail="/website_enterprise/static/src/img/snippets_thumbs/s_appointment.svg"/>
+        </xpath>
+    </template>
+</odoo>

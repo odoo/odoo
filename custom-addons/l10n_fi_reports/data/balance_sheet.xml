@@ -1,0 +1,1136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="account_financial_report_l10n_fi_bs" model="account.report">
+        <field name="name">Balance Sheet</field>
+        <field name="root_report_id" ref="account_reports.balance_sheet"/>
+        <field name="filter_unfold_all" eval="True"/>
+        <field name="filter_date_range" eval="False"/>
+        <field name="filter_analytic_groupby" eval="True"/>
+        <field name="country_id" ref="base.fi"/>
+        <field name="filter_multi_company">selector</field>
+        <field name="column_ids">
+            <record id="account_financial_report_l10n_fi_bs_column" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_financial_report_l10n_fi_bs_line_1" model="account.report.line">
+                <field name="name">Balance sheet Corresponding</field>
+                <field name="aggregation_formula">FIBS_ASS_A.balance + FIBS_ASS_B.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_l10n_fi_bs_line_1_1" model="account.report.line">
+                        <field name="name">A) PERMANENT RESPONSIBILITIES</field>
+                        <field name="code">FIBS_ASS_A</field>
+                        <field name="aggregation_formula">FIBS_ASS_AI.balance + FIBS_ASS_AII.balance + FIBS_ASS_AIII.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_fi_bs_line_1_1_1" model="account.report.line">
+                                <field name="name">I. Intangible assets</field>
+                                <field name="code">FIBS_ASS_AI</field>
+                                <field name="aggregation_formula">FIBS_ASS_AI_1.balance + FIBS_ASS_AI_2.balance + FIBS_ASS_AI_3.balance + FIBS_ASS_AI_4.balance + FIBS_ASS_AI_5.balance + FIBS_ASS_AI_6.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_1_1_1" model="account.report.line">
+                                        <field name="name">1. Development costs</field>
+                                        <field name="code">FIBS_ASS_AI_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">102</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_1_1_2" model="account.report.line">
+                                        <field name="name">2. Intangible rights</field>
+                                        <field name="code">FIBS_ASS_AI_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">103 + 104</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_1_1_3" model="account.report.line">
+                                        <field name="name">3. Goodwill</field>
+                                        <field name="code">FIBS_ASS_AI_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">105</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_1_1_4" model="account.report.line">
+                                        <field name="name">4. Consolidated goodwill</field>
+                                        <field name="code">FIBS_ASS_AI_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">106</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_1_1_5" model="account.report.line">
+                                        <field name="name">5. Other intangible assets</field>
+                                        <field name="code">FIBS_ASS_AI_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">107 + 108</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_1_1_6" model="account.report.line">
+                                        <field name="name">6. Prepayments</field>
+                                        <field name="code">FIBS_ASS_AI_6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">109</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_1_1_2" model="account.report.line">
+                                <field name="name">II. Tangible fixed assets</field>
+                                <field name="code">FIBS_ASS_AII</field>
+                                <field name="aggregation_formula">FIBS_ASS_AII_1.balance + FIBS_ASS_AII_2.balance + FIBS_ASS_AII_3.balance + FIBS_ASS_AII_4.balance + FIBS_ASS_AII_5.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_1_2_1" model="account.report.line">
+                                        <field name="name">1. Land and water areas</field>
+                                        <field name="code">FIBS_ASS_AII_1</field>
+                                        <field name="aggregation_formula">FIBS_ASS_AII_1_a.balance + FIBS_ASS_AII_1_b.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_1_2_1_a" model="account.report.line">
+                                                <field name="name">a) Owned</field>
+                                                <field name="code">FIBS_ASS_AII_1_a</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">110</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_1_2_1_b" model="account.report.line">
+                                                <field name="name">b) Rental rights</field>
+                                                <field name="code">FIBS_ASS_AII_1_b</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">111</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_1_2_2" model="account.report.line">
+                                        <field name="name">2. Buildings and structures</field>
+                                        <field name="code">FIBS_ASS_AII_2</field>
+                                        <field name="aggregation_formula">FIBS_ASS_AII_2_a.balance + FIBS_ASS_AII_2_b.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_1_2_2_a" model="account.report.line">
+                                                <field name="name">a) Owned</field>
+                                                <field name="code">FIBS_ASS_AII_2_a</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">113 + 112 + 114</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_1_2_2_b" model="account.report.line">
+                                                <field name="name">b) Rental rights</field>
+                                                <field name="code">FIBS_ASS_AII_2_b</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">115</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_1_2_3" model="account.report.line">
+                                        <field name="name">3. Machinery and equipment</field>
+                                        <field name="code">FIBS_ASS_AII_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">124 + 121 + 116 + 120 + 117</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_1_2_4" model="account.report.line">
+                                        <field name="name">4. Other tangible assets</field>
+                                        <field name="code">FIBS_ASS_AII_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">130 + 132 + 133 + 131</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_1_2_5" model="account.report.line">
+                                        <field name="name">5. Advances and work in progress</field>
+                                        <field name="code">FIBS_ASS_AII_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">138 + 139</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_1_1_3" model="account.report.line">
+                                <field name="name">III. Investments</field>
+                                <field name="code">FIBS_ASS_AIII</field>
+                                <field name="aggregation_formula">FIBS_ASS_AIII_1.balance + FIBS_ASS_AIII_2.balance + FIBS_ASS_AIII_3.balance + FIBS_ASS_AIII_4.balance + FIBS_ASS_AIII_5.balance + FIBS_ASS_AIII_6.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_1_3_1" model="account.report.line">
+                                        <field name="name">1. Shares in companies of the same group</field>
+                                        <field name="code">FIBS_ASS_AIII_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">140</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_1_3_2" model="account.report.line">
+                                        <field name="name">2. Receivables from companies in the same group</field>
+                                        <field name="code">FIBS_ASS_AIII_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">141</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_1_3_3" model="account.report.line">
+                                        <field name="name">3. Holdings in associated enterprises</field>
+                                        <field name="code">FIBS_ASS_AIII_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">142</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_1_3_4" model="account.report.line">
+                                        <field name="name">4. Receivables from affiliated enterprises</field>
+                                        <field name="code">FIBS_ASS_AIII_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">143</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_1_3_5" model="account.report.line">
+                                        <field name="name">5. Other shares and participations</field>
+                                        <field name="code">FIBS_ASS_AIII_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">144 + 146 + 145</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_1_3_6" model="account.report.line">
+                                        <field name="name">6. Other receivables</field>
+                                        <field name="code">FIBS_ASS_AIII_6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">147 + 148</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_fi_bs_line_1_2" model="account.report.line">
+                        <field name="name">B) CHANGING RESPONSIBILITIES</field>
+                        <field name="code">FIBS_ASS_B</field>
+                        <field name="aggregation_formula">FIBS_ASS_BI.balance + FIBS_ASS_BII.balance + FIBS_ASS_BIII.balance + FIBS_ASS_BIV.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_fi_bs_line_1_2_1" model="account.report.line">
+                                <field name="name">I. Inventories</field>
+                                <field name="code">FIBS_ASS_BI</field>
+                                <field name="aggregation_formula">FIBS_ASS_BI_1.balance + FIBS_ASS_BI_2.balance + FIBS_ASS_BI_3.balance + FIBS_ASS_BI_4.balance + FIBS_ASS_BI_5.balance + FIBS_ASS_BI_6.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_2_1_1" model="account.report.line">
+                                        <field name="name">1. Materials and supplies</field>
+                                        <field name="code">FIBS_ASS_BI_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">150</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_2_1_2" model="account.report.line">
+                                        <field name="name">2. Work in progress</field>
+                                        <field name="code">FIBS_ASS_BI_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">151</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_2_1_3" model="account.report.line">
+                                        <field name="name">3. Finished products</field>
+                                        <field name="code">FIBS_ASS_BI_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">152</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_2_1_4" model="account.report.line">
+                                        <field name="name">4. Goods</field>
+                                        <field name="code">FIBS_ASS_BI_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">153</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_2_1_5" model="account.report.line">
+                                        <field name="name">5. Other current assets</field>
+                                        <field name="code">FIBS_ASS_BI_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">154</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_2_1_6" model="account.report.line">
+                                        <field name="name">6. Prepayments</field>
+                                        <field name="code">FIBS_ASS_BI_6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">155</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_1_2_2" model="account.report.line">
+                                <field name="name">II. Receivables</field>
+                                <field name="code">FIBS_ASS_BII</field>
+                                <field name="aggregation_formula">FIBS_ASS_BII_1.balance + FIBS_ASS_BII_2.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_2_2_1" model="account.report.line">
+                                        <field name="name">1. Long-term</field>
+                                        <field name="code">FIBS_ASS_BII_1</field>
+                                        <field name="aggregation_formula">FIBS_ASS_BII_1_1.balance + FIBS_ASS_BII_1_2.balance + FIBS_ASS_BII_1_3.balance + FIBS_ASS_BII_1_4.balance + FIBS_ASS_BII_1_5.balance + FIBS_ASS_BII_1_6.balance + FIBS_ASS_BII_1_7.balance + FIBS_ASS_BII_1_8.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_2_2_1_1" model="account.report.line">
+                                                <field name="name">a) Trade receivables</field>
+                                                <field name="code">FIBS_ASS_BII_1_1</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">160 + 162</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_2_2_1_2" model="account.report.line">
+                                                <field name="name">b) Receivables from companies in the same group</field>
+                                                <field name="code">FIBS_ASS_BII_1_2</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">163</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_2_2_1_3" model="account.report.line">
+                                                <field name="name">c) Receivables from associates</field>
+                                                <field name="code">FIBS_ASS_BII_1_3</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">164</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_2_2_1_4" model="account.report.line">
+                                                <field name="name">d) Loan receivables</field>
+                                                <field name="code">FIBS_ASS_BII_1_4</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">165</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_2_2_1_5" model="account.report.line">
+                                                <field name="name">e) Deferred tax assets</field>
+                                                <field name="code">FIBS_ASS_BII_1_5</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">169</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_2_2_1_6" model="account.report.line">
+                                                <field name="name">f) Other receivables</field>
+                                                <field name="code">FIBS_ASS_BII_1_6</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">166</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_2_2_1_7" model="account.report.line">
+                                                <field name="name">g) Unpaid shares/units</field>
+                                                <field name="code">FIBS_ASS_BII_1_7</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">167</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_2_2_1_8" model="account.report.line">
+                                                <field name="name">h) Accruals and deferred income</field>
+                                                <field name="code">FIBS_ASS_BII_1_8</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">168</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_2_2_2" model="account.report.line">
+                                        <field name="name">2. Short-term</field>
+                                        <field name="code">FIBS_ASS_BII_2</field>
+                                        <field name="aggregation_formula">FIBS_ASS_BII_2_1.balance + FIBS_ASS_BII_2_2.balance + FIBS_ASS_BII_2_3.balance + FIBS_ASS_BII_2_4.balance + FIBS_ASS_BII_2_5.balance + FIBS_ASS_BII_2_6.balance + FIBS_ASS_BII_2_7.balance + FIBS_ASS_BII_2_8.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_2_2_2_1" model="account.report.line">
+                                                <field name="name">a) Trade receivables</field>
+                                                <field name="code">FIBS_ASS_BII_2_1</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">172 + 170 + 171</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_2_2_2_2" model="account.report.line">
+                                                <field name="name">b) Receivables from companies in the same group</field>
+                                                <field name="code">FIBS_ASS_BII_2_2</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">173</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_2_2_3" model="account.report.line">
+                                                <field name="name">c) Receivables from associates</field>
+                                                <field name="code">FIBS_ASS_BII_2_3</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">174</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_2_2_4" model="account.report.line">
+                                                <field name="name">d) Loan receivables</field>
+                                                <field name="code">FIBS_ASS_BII_2_4</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">175</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_2_2_2_5" model="account.report.line">
+                                                <field name="name">e) Deferred tax assets</field>
+                                                <field name="code">FIBS_ASS_BII_2_5</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">185</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_2_2_5" model="account.report.line">
+                                                <field name="name">f) Other receivables</field>
+                                                <field name="code">FIBS_ASS_BII_2_6</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">177 + 176</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_2_2_6" model="account.report.line">
+                                                <field name="name">g) Unpaid shares/units</field>
+                                                <field name="code">FIBS_ASS_BII_2_7</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">178</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_1_2_2_7" model="account.report.line">
+                                                <field name="name">h) Accruals and deferred income</field>
+                                                <field name="code">FIBS_ASS_BII_2_8</field>
+                                                <field name="aggregation_formula">FIBS_ASS_BII_2_8_a.balance + FIBS_ASS_BII_2_8_b.balance + FIBS_ASS_BII_2_8_c.balance</field>
+                                                <field name="children_ids">
+                                                    <record id="account_financial_report_l10n_fi_bs_line_1_2_2_2_8_1" model="account.report.line">
+                                                        <field name="name">a. Expenditure forecasts</field>
+                                                        <field name="code">FIBS_ASS_BII_2_8_a</field>
+                                                        <field name="groupby">account_id</field>
+                                                        <field name="hide_if_zero" eval="1"/>
+                                                        <field name="foldable" eval="True"/>
+                                                        <field name="account_codes_formula">181 + 180</field>
+                                                    </record>
+                                                    <record id="account_financial_report_l10n_fi_bs_line_1_2_2_2_8_2" model="account.report.line">
+                                                        <field name="name">b. Residual income</field>
+                                                        <field name="code">FIBS_ASS_BII_2_8_b</field>
+                                                        <field name="groupby">account_id</field>
+                                                        <field name="hide_if_zero" eval="1"/>
+                                                        <field name="foldable" eval="True"/>
+                                                        <field name="account_codes_formula">183</field>
+                                                    </record>
+                                                    <record id="account_financial_report_l10n_fi_bs_line_1_2_2_2_8_3" model="account.report.line">
+                                                        <field name="name">c. Other accrued income</field>
+                                                        <field name="code">FIBS_ASS_BII_2_8_c</field>
+                                                        <field name="groupby">account_id</field>
+                                                        <field name="hide_if_zero" eval="1"/>
+                                                        <field name="foldable" eval="True"/>
+                                                        <field name="account_codes_formula">184</field>
+                                                    </record>
+                                                </field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_1_2_3" model="account.report.line">
+                                <field name="name">III. Financial securities</field>
+                                <field name="code">FIBS_ASS_BIII</field>
+                                <field name="aggregation_formula">FIBS_ASS_BIII_1.balance + FIBS_ASS_BIII_2.balance + FIBS_ASS_BIII_3.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_2_3_1" model="account.report.line">
+                                        <field name="name">1. Shares in companies of the same group</field>
+                                        <field name="code">FIBS_ASS_BIII_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">186</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_2_3_2" model="account.report.line">
+                                        <field name="name">2. Other shares and participations</field>
+                                        <field name="code">FIBS_ASS_BIII_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">188</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_2_3_3" model="account.report.line">
+                                        <field name="name">3. Other securities</field>
+                                        <field name="code">FIBS_ASS_BIII_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">189</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_1_2_4" model="account.report.line">
+                                <field name="name">IV. Money and bank receivables</field>
+                                <field name="code">FIBS_ASS_BIV</field>
+                                <field name="aggregation_formula">FIBS_ASS_BIV_a.balance + FIBS_ASS_BIV_b.balance + FIBS_ASS_BIV_c.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_2_4_a" model="account.report.line">
+                                        <field name="name">1. Money</field>
+                                        <field name="code">FIBS_ASS_BIV_a</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="account_codes_formula">190</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_2_4_b" model="account.report.line">
+                                        <field name="name">2. Bank receivables</field>
+                                        <field name="code">FIBS_ASS_BIV_b</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="account_codes_formula">19\(190,199)</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_1_2_4_c" model="account.report.line">
+                                        <field name="name">3. Payment transactions and reconciliations</field>
+                                        <field name="code">FIBS_ASS_BIV_c</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="account_codes_formula">199</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_financial_report_l10n_fi_bs_line_2" model="account.report.line">
+                <field name="name">Balance sheet Liabilities</field>
+                <field name="aggregation_formula">FIBS_LIA_A.balance + FIBS_LIA_B.balance + FIBS_LIA_C.balance + FIBS_LIA_D.balance + FIBS_LIA_E.balance + FIBS_LIA_F.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_financial_report_l10n_fi_bs_line_2_1" model="account.report.line">
+                        <field name="name">A) EQUITY</field>
+                        <field name="code">FIBS_LIA_A</field>
+                        <field name="aggregation_formula">FIBS_LIA_AI.balance + FIBS_LIA_AII.balance + FIBS_LIA_AIII.balance + FIBS_LIA_AIV.balance + FIBS_LIA_AV.balance + FIBS_LIA_AVI.balance + FIBS_LIA_AVII.balance + FIBS_LIA_AVIII.balance + FIBS_LIA_AIX.balance + FIBS_LIA_AX.balance + FIBS_LIA_AXI.balance + FIBS_LIA_AXII.balance + FIBS_LIA_AXIII.balance + FIBS_LIA_AXIV.balance + FIBS_LIA_AXV.balance + FIBS_LIA_AXVI.balance + FIBS_LIA_AXVII.balance + FIBS_LIA_AXVIII.balance + FIBS_LIA_AXIX.balance + FIBS_LIA_AXX.balance + FIBS_LIA_AXXI.balance + FIBS_LIA_AXXII.balance + FIBS_LIA_AXXIII.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_1" model="account.report.line">
+                                <field name="name">I. Share capital</field>
+                                <field name="code">FIBS_LIA_AI</field>
+                                <field name="aggregation_formula">FIBS_LIA_AI_a.balance + FIBS_LIA_AI_b.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_1_1_a" model="account.report.line">
+                                        <field name="name">1. Share capital</field>
+                                        <field name="code">FIBS_LIA_AI_a</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-200</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_1_1_b" model="account.report.line">
+                                        <field name="name">2. Increase in share capital</field>
+                                        <field name="code">FIBS_LIA_AI_b</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-201</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_2" model="account.report.line">
+                                <field name="name">II. Share premium fund (oy)</field>
+                                <field name="code">FIBS_LIA_AII</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-202</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_3" model="account.report.line">
+                                <field name="name">III. Stock appreciation fund (oy)</field>
+                                <field name="code">FIBS_LIA_AIII</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-203</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_4" model="account.report.line">
+                                <field name="name">IV. Fair value fund (oy)</field>
+                                <field name="code">FIBS_LIA_AIV</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-204</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_5" model="account.report.line">
+                                <field name="name">V. Reserve Fund (oy)</field>
+                                <field name="code">FIBS_LIA_AV</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-205</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_6" model="account.report.line">
+                                <field name="name">VI. Other funds</field>
+                                <field name="code">FIBS_LIA_AVI</field>
+                                <field name="aggregation_formula">FIBS_LIA_AV_1.balance + FIBS_LIA_AV_2.balance + FIBS_LIA_AV_3.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_1_5_1" model="account.report.line">
+                                        <field name="name">1. Invested unrestricted equity fund</field>
+                                        <field name="code">FIBS_LIA_AV_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-206</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_1_5_2" model="account.report.line">
+                                        <field name="name">2. Funds under the Articles of Association</field>
+                                        <field name="code">FIBS_LIA_AV_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-207</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_1_5_3" model="account.report.line">
+                                        <field name="name">3. Other funds (oy)</field>
+                                        <field name="code">FIBS_LIA_AV_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-208</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_7" model="account.report.line">
+                                <field name="name">VII. Equity capital</field>
+                                <field name="code">FIBS_LIA_AVII</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-210</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_8" model="account.report.line">
+                                <field name="name">VIII. Share premium fund (osk)</field>
+                                <field name="code">FIBS_LIA_AVIII</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-211</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_9" model="account.report.line">
+                                <field name="name">IX. Value appreciation fund (OSK)</field>
+                                <field name="code">FIBS_LIA_AIX</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-212\(2125)</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_10" model="account.report.line">
+                                <field name="name">X. Fair value reserve (osk)</field>
+                                <field name="code">FIBS_LIA_AX</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2125</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_11" model="account.report.line">
+                                <field name="name">XI. Reserve Fund (osk)</field>
+                                <field name="code">FIBS_LIA_AXI</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">- 213</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_12" model="account.report.line">
+                                <field name="name">XII. Statutory funds</field>
+                                <field name="code">FIBS_LIA_AXII</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-214\(2145)</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_13" model="account.report.line">
+                                <field name="name">XIII. Other funds (osk)</field>
+                                <field name="code">FIBS_LIA_AXIII</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2145</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_14" model="account.report.line">
+                                <field name="name">XIV. Capital contributions</field>
+                                <field name="code">FIBS_LIA_AXIV</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-215</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_15" model="account.report.line">
+                                <field name="name">XV. Remuneration fund (ay)</field>
+                                <field name="code">FIBS_LIA_AXV</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-216\(2165)</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_16" model="account.report.line">
+                                <field name="name">XVI. Fair value reserve (ay)</field>
+                                <field name="code">FIBS_LIA_AXVI</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2165</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_17" model="account.report.line">
+                                <field name="name">XVII. Capital contributions</field>
+                                <field name="code">FIBS_LIA_AXVII</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-217 - 218</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_18" model="account.report.line">
+                                <field name="name">XVIII. Value Adjustment Fund (ky)</field>
+                                <field name="code">FIBS_LIA_AXVIII</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-219\(2195)</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_19" model="account.report.line">
+                                <field name="name">XIX. Fair value reserve (FVA)</field>
+                                <field name="code">FIBS_LIA_AXIX</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2195</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_20" model="account.report.line">
+                                <field name="name">XX. Basic capital</field>
+                                <field name="code">FIBS_LIA_AXX</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-220</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_21" model="account.report.line">
+                                <field name="name">XXI. Capital appreciation reserve (RDF)</field>
+                                <field name="code">FIBS_LIA_AXXI</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-221\(2215)</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_22" model="account.report.line">
+                                <field name="name">XXII. Fair value reserve (tmi)</field>
+                                <field name="code">FIBS_LIA_AXXII</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-2215</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_1_23" model="account.report.line">
+                                <field name="name">XXIII. Common equity accounts</field>
+                                <field name="code">FIBS_LIA_AXXIII</field>
+                                <field name="aggregation_formula">FIBS_LIA_AXXIII_1.balance + FIBS_LIA_AXXIII_2.balance + FIBS_LIA_AXXIII_3.balance + FIBS_LIA_AXXIII_4.balance + FIBS_LIA_AXXIII_5.balance + FIBS_LIA_AXXIII_6.balance + FIBS_LIA_AXXIII_7.balance + FIBS_LIA_AXXIII_8.balance + FIBS_LIA_AXXIII_9.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_1_23_1" model="account.report.line">
+                                        <field name="name">1. Profit (loss) of previous financial periods</field>
+                                        <field name="code">FIBS_LIA_AXXIII_1</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_l10n_fi_bs_line_2_1_23_1_cross_report" model="account.report.expression">
+                                                <field name="label">cross_report</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">FIPL_19.balance</field>
+                                                <field name="date_scope">to_beginning_of_fiscalyear</field>
+                                                <field name="subformula">cross_report</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_2_1_23_1_accounts" model="account.report.expression">
+                                                <field name="label">accounts</field>
+                                                <field name="engine">account_codes</field>
+                                                <field name="formula">-225 - 237</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_2_1_23_1_previous_year_earnings_line_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">FIBS_LIA_AXXIII_1.cross_report + FIBS_LIA_AXXIII_1.accounts</field>
+                                                <field name="subformula" eval="False"/>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_1_23_2" model="account.report.line">
+                                        <field name="name">2. Accounts of a limited company</field>
+                                        <field name="code">FIBS_LIA_AXXIII_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-226</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_1_23_3" model="account.report.line">
+                                        <field name="name">3. Accounts of the cooperative</field>
+                                        <field name="code">FIBS_LIA_AXXIII_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-227</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_1_23_4" model="account.report.line">
+                                        <field name="name">4. The accounts of the general partnership</field>
+                                        <field name="code">FIBS_LIA_AXXIII_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-229</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_1_23_5" model="account.report.line">
+                                        <field name="name">5. Limited partnership accounts</field>
+                                        <field name="code">FIBS_LIA_AXXIII_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-232 - 231</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_1_23_6" model="account.report.line">
+                                        <field name="name">6. Capital deficiency from previous accounting periods</field>
+                                        <field name="code">FIBS_LIA_AXXIII_6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-233</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_1_23_7" model="account.report.line">
+                                        <field name="name">7. Private accounts in the accounting period</field>
+                                        <field name="code">FIBS_LIA_AXXIII_7</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-236 - 234 - 235</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_1_23_8" model="account.report.line">
+                                        <field name="name">8. Profit (loss) for the accounting period</field>
+                                        <field name="code">FIBS_LIA_AXXIII_8</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_financial_report_l10n_fi_bs_line_2_1_23_8_current_year_earnings_line_balance" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">FIPL_19.balance</field>
+                                                <field name="date_scope">from_fiscalyear</field>
+                                                <field name="subformula">cross_report</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_1_23_9" model="account.report.line">
+                                        <field name="name">9. Capital loans</field>
+                                        <field name="code">FIBS_LIA_AXXIII_9</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-238</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_fi_bs_line_2_2" model="account.report.line">
+                        <field name="name">B) MINORITY INTERESTS</field>
+                        <field name="code">FIBS_LIA_B</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-239</field>
+                    </record>
+                    <record id="account_financial_report_l10n_fi_bs_line_2_3" model="account.report.line">
+                        <field name="name">C) ACCUMULATION OF ACCOUNTING TRANSFER</field>
+                        <field name="code">FIBS_LIA_C</field>
+                        <field name="aggregation_formula">FIBS_LIA_C_1.balance + FIBS_LIA_C_2.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_fi_bs_line_2_3_1" model="account.report.line">
+                                <field name="name">I. Withdrawal</field>
+                                <field name="code">FIBS_LIA_C_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-242 - 240 - 241 - 244 - 243</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_3_2" model="account.report.line">
+                                <field name="name">II. Voluntary reservations</field>
+                                <field name="code">FIBS_LIA_C_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-248 - 245 - 249 - 246 - 247</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_fi_bs_line_2_4" model="account.report.line">
+                        <field name="name">D) COMPULSORY RESERVES</field>
+                        <field name="code">FIBS_LIA_D</field>
+                        <field name="aggregation_formula">FIBS_LIA_D_1.balance + FIBS_LIA_D_2.balance + FIBS_LIA_D_3.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_fi_bs_line_2_4_1" model="account.report.line">
+                                <field name="name">I. Pension reservations</field>
+                                <field name="code">FIBS_LIA_D_1</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-250</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_4_2" model="account.report.line">
+                                <field name="name">II. Tax provisions</field>
+                                <field name="code">FIBS_LIA_D_2</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-253</field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_4_3" model="account.report.line">
+                                <field name="name">III. Other compulsory provisions</field>
+                                <field name="code">FIBS_LIA_D_3</field>
+                                <field name="groupby">account_id</field>
+                                <field name="foldable" eval="True"/>
+                                <field name="account_codes_formula">-257 - 255 - 256 - 258</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_financial_report_l10n_fi_bs_line_2_5" model="account.report.line">
+                        <field name="name">E) GROUP RESERVE</field>
+                        <field name="code">FIBS_LIA_E</field>
+                        <field name="groupby">account_id</field>
+                        <field name="foldable" eval="True"/>
+                        <field name="account_codes_formula">-259</field>
+                    </record>
+                    <record id="account_financial_report_l10n_fi_bs_line_2_6" model="account.report.line">
+                        <field name="name">F) DEBT CAPITAL</field>
+                        <field name="code">FIBS_LIA_F</field>
+                        <field name="aggregation_formula">FIBS_LIA_F_1.balance + FIBS_LIA_F_2.balance</field>
+                        <field name="children_ids">
+                            <record id="account_financial_report_l10n_fi_bs_line_2_6_1" model="account.report.line">
+                                <field name="name">I. Long-term</field>
+                                <field name="code">FIBS_LIA_F_1</field>
+                                <field name="aggregation_formula">FIBS_LIA_F_1_1.balance + FIBS_LIA_F_1_2.balance + FIBS_LIA_F_1_3.balance + FIBS_LIA_F_1_4.balance + FIBS_LIA_F_1_5.balance + FIBS_LIA_F_1_6.balance + FIBS_LIA_F_1_7.balance + FIBS_LIA_F_1_8.balance + FIBS_LIA_F_1_9.balance + FIBS_LIA_F_1_10.balance + FIBS_LIA_F_1_11.balance + FIBS_LIA_F_1_12.balance + FIBS_LIA_F_1_13.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_1_1" model="account.report.line">
+                                        <field name="name">1. Capital loans</field>
+                                        <field name="code">FIBS_LIA_F_1_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-260</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_1_2" model="account.report.line">
+                                        <field name="name">2. Bonds and notes</field>
+                                        <field name="code">FIBS_LIA_F_1_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-261\(2617)</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_1_3" model="account.report.line">
+                                        <field name="name">3. Convertible bonds</field>
+                                        <field name="code">FIBS_LIA_F_1_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2617</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_1_4" model="account.report.line">
+                                        <field name="name">4. Loans from financial institutions</field>
+                                        <field name="code">FIBS_LIA_F_1_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-264 - 262 - 263</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_1_5" model="account.report.line">
+                                        <field name="name">5. Pension loans</field>
+                                        <field name="code">FIBS_LIA_F_1_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-265</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_1_6" model="account.report.line">
+                                        <field name="name">6. Advances received</field>
+                                        <field name="code">FIBS_LIA_F_1_6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-266</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_1_7" model="account.report.line">
+                                        <field name="name">7. Accounts payable</field>
+                                        <field name="code">FIBS_LIA_F_1_7</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-267 - 268</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_1_8" model="account.report.line">
+                                        <field name="name">8. Financial bills</field>
+                                        <field name="code">FIBS_LIA_F_1_8</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-269</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_1_9" model="account.report.line">
+                                        <field name="name">9. Liabilities to companies of the same group</field>
+                                        <field name="code">FIBS_LIA_F_1_9</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-270</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_1_10" model="account.report.line">
+                                        <field name="name">10. Liabilities to affiliated companies</field>
+                                        <field name="code">FIBS_LIA_F_1_10</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-271</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_1_11" model="account.report.line">
+                                        <field name="name">11. Deferred tax liabilities</field>
+                                        <field name="code">FIBS_LIA_F_1_11</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-277</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_1_12" model="account.report.line">
+                                        <field name="name">12. Other liabilities</field>
+                                        <field name="code">FIBS_LIA_F_1_12</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-274 - 273 - 272</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_1_13" model="account.report.line">
+                                        <field name="name">13. Accruals and deferred income</field>
+                                        <field name="code">FIBS_LIA_F_1_13</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-275</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_financial_report_l10n_fi_bs_line_2_6_2" model="account.report.line">
+                                <field name="name">II. Short-term</field>
+                                <field name="code">FIBS_LIA_F_2</field>
+                                <field name="aggregation_formula">FIBS_LIA_F_2_1.balance + FIBS_LIA_F_2_2.balance + FIBS_LIA_F_2_3.balance + FIBS_LIA_F_2_4.balance + FIBS_LIA_F_2_5.balance + FIBS_LIA_F_2_6.balance + FIBS_LIA_F_2_7.balance + FIBS_LIA_F_2_8.balance + FIBS_LIA_F_2_9.balance + FIBS_LIA_F_2_10.balance + FIBS_LIA_F_2_11.balance + FIBS_LIA_F_2_12.balance + FIBS_LIA_F_2_13.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_2_1" model="account.report.line">
+                                        <field name="name">1. Capital loans</field>
+                                        <field name="code">FIBS_LIA_F_2_1</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-280</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_2_2" model="account.report.line">
+                                        <field name="name">2. Bonds and notes</field>
+                                        <field name="code">FIBS_LIA_F_2_2</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-281\(2817)</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_2_3" model="account.report.line">
+                                        <field name="name">3. Convertible bonds</field>
+                                        <field name="code">FIBS_LIA_F_2_3</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-2817</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_2_4" model="account.report.line">
+                                        <field name="name">4. Loans from financial institutions</field>
+                                        <field name="code">FIBS_LIA_F_2_4</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-282 - 283 - 284</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_2_5" model="account.report.line">
+                                        <field name="name">5. Pension loans</field>
+                                        <field name="code">FIBS_LIA_F_2_5</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-285</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_2_6" model="account.report.line">
+                                        <field name="name">6. Advances received</field>
+                                        <field name="code">FIBS_LIA_F_2_6</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-286</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_2_7" model="account.report.line">
+                                        <field name="name">7. Accounts payable</field>
+                                        <field name="code">FIBS_LIA_F_2_7</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-287 - 288</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_2_8" model="account.report.line">
+                                        <field name="name">8. Financial bills</field>
+                                        <field name="code">FIBS_LIA_F_2_8</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-289</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_2_9" model="account.report.line">
+                                        <field name="name">9. Liabilities to companies of the same group</field>
+                                        <field name="code">FIBS_LIA_F_2_9</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-290</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_2_10" model="account.report.line">
+                                        <field name="name">10. Liabilities to affiliated companies</field>
+                                        <field name="code">FIBS_LIA_F_2_10</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-291</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_2_11" model="account.report.line">
+                                        <field name="name">11. Deferred tax liabilities</field>
+                                        <field name="code">FIBS_LIA_F_2_11</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-298</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_2_12" model="account.report.line">
+                                        <field name="name">12. Other liabilities</field>
+                                        <field name="code">FIBS_LIA_F_2_12</field>
+                                        <field name="groupby">account_id</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="foldable" eval="True"/>
+                                        <field name="account_codes_formula">-292 - 293 - 294</field>
+                                    </record>
+                                    <record id="account_financial_report_l10n_fi_bs_line_2_6_2_13" model="account.report.line">
+                                        <field name="name">13. Accruals and deferred income</field>
+                                        <field name="code">FIBS_LIA_F_2_13</field>
+                                        <field name="aggregation_formula">FIBS_LIA_F_2_13_1.balance + FIBS_LIA_F_2_13_2.balance + FIBS_LIA_F_2_13_3.balance</field>
+                                        <field name="children_ids">
+                                            <record id="account_financial_report_l10n_fi_bs_line_2_6_2_13_1" model="account.report.line">
+                                                <field name="name">a) Deferred income</field>
+                                                <field name="code">FIBS_LIA_F_2_13_1</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-295</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_2_6_2_13_2" model="account.report.line">
+                                                <field name="name">b) Expenditure</field>
+                                                <field name="code">FIBS_LIA_F_2_13_2</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-296</field>
+                                            </record>
+                                            <record id="account_financial_report_l10n_fi_bs_line_2_6_2_13_3" model="account.report.line">
+                                                <field name="name">c) Other accrued liabilities</field>
+                                                <field name="code">FIBS_LIA_F_2_13_3</field>
+                                                <field name="groupby">account_id</field>
+                                                <field name="hide_if_zero" eval="1"/>
+                                                <field name="foldable" eval="True"/>
+                                                <field name="account_codes_formula">-297</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

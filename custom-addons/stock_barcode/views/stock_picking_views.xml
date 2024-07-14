@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="view_stock_move_line_detailed_operation_tree_inherit_stock_barcode" model="ir.ui.view">
+        <field name="name">stock.move.line.operations.tree.inherit</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="product_barcode" column_invisible="True"/>
+                <field name="location_processed" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//field[@name='quantity']" position="attributes">
+                <attribute name="options">{'barcode_events': True}</attribute>
+                <attribute name="widget">field_float_scannable</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_move_line_kanban_inherited" model="ir.ui.view">
+        <field name="name">stock.move.line.kanban.inherited</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='quantity']" position="after">
+                <field name="product_barcode" invisible="1"/>
+                <field name="location_processed" invisible="1"/>
+                <field name="result_package_id" invisible="1"/>
+                <field name="lots_visible" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_picking_barcode" model="ir.ui.view">
+        <field name="name">stock.picking.form.view.barcode</field>
+        <field name="model">stock.picking</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form string="Picking Details">
+                <field name="show_allocation" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="picking_type_code" invisible="1"/>
+                <group>
+                    <button name="action_view_reception_report" string="Allocation" type="object"
+                        context="{'default_picking_ids': [id]}"
+                        class="btn btn-primary o_reception_report" icon="fa-list"
+                        invisible="not show_allocation"
+                        groups="stock.group_reception_report"/>
+                    <field name="partner_id" readonly="state in ['cancel', 'done']"/>
+                    <field name="scheduled_date" readonly="1" invisible="not scheduled_date"/>
+                    <field name="origin" readonly="1" invisible="not origin"/>
+                    <field name="state" readonly="1" invisible="not state"/>
+                    <field name="priority" readonly="1" invisible="not priority"/>
+                    <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" invisible="picking_type_code == 'incoming'" readonly="state == 'done'"/>
+                    <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" invisible="picking_type_code == 'outgoing'" readonly="state == 'done'"/>
+                    <field name="owner_id" readonly="1" invisible="not owner_id" groups="stock.group_tracking_owner"/>
+                    <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                    <field name="move_ids" readonly="1" invisible="not move_ids">
+                        <kanban>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click">
+                                        <div class="row">
+                                            <div class="col-6 o_kanban_record_title">
+                                                <field name="product_id" readonly="state == 'done'"/>
+                                            </div>
+                                            <div class="col-6 text-end">
+                                                <field name="product_uom_qty" readonly="state == 'done'"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <field name="description_picking"/>
+                                            </div>
+                                            <div class="col-6 text-end">
+                                                <field name="state"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                    <field name="note" readonly="1" invisible="not note"/>
+                </group>
+                <div class="o_barcode_control d-flex fixed-bottom">
+                    <button string="Discard" class="btn btn-secondary o_discard" special="cancel"/>
+                    <button string="Confirm" class="btn btn-primary o_save" special="save"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="open_picking" model="ir.actions.act_window">
+        <field name="name">Open picking form</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">form</field>
+        <field name="context">{
+            'res_id': active_id,
+        }
+        </field>
+    </record>
+
+    <record id="picking_view_kanban_inherit_barcode" model="ir.ui.view">
+        <field name="name">stock.picking.view.kanban.barcode</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.stock_picking_kanban"/>
+        <field name="arch" type="xml">
+
+            <!-- Use the form view -->
+            <xpath expr="//div[hasclass('o_kanban_record_headings')]" position="after">
+                <button class="btn btn-link fa fa-desktop" title="Open picking" name="action_open_picking" type="object"/>
+            </xpath>
+
+            <!-- Use mobile view-->
+            <xpath expr="//strong[hasclass('o_kanban_record_title')]" position="replace">
+                <button class="btn btn-link o_kanban_record_title p-0" name="action_open_picking_client_action"
+                  type="object">
+                  <span><t t-esc="record.name.value"/></span>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_barcode_view_picking_type_form" model="ir.ui.view">
+        <field name="name">Operation Types</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <field name='warehouse_id' position="after">
+                <field name="barcode"/>
+            </field>
+            <xpath expr="//page[@name='hardware']" position="after">
+                <field name="is_barcode_picking_type" invisible="1"/>
+                <page name="barcode_app" string="Barcode App" invisible="not is_barcode_picking_type">
+                    <group name="restrict_scan_settings" string="Mandatory Scan">
+                        <field name="restrict_scan_source_location" string="Source Location"
+                                groups="stock.group_stock_multi_locations"
+                                invisible="code == 'incoming'"/>
+                        <field name="restrict_scan_product" string="Product"/>
+                        <field name="restrict_scan_tracking_number" string="Lot/Serial"
+                                groups="stock.group_production_lot"/>
+                        <field name="restrict_put_in_pack"
+                                groups="stock.group_tracking_lot" string="Put in Pack"/>
+                        <field name="restrict_scan_dest_location" string="Destination Location"
+                                groups="stock.group_stock_multi_locations"
+                                invisible="code == 'outgoing'"/>
+                    </group>
+                    <field name="show_barcode_validation" invisible="1"/>
+                    <group name="barcode_validation" string="Final Validation" invisible="not show_barcode_validation">
+                        <!-- show_barcode_validation handles combined groups/invisible complexity -->
+                        <field name="barcode_validation_full"
+                            invisible="restrict_scan_product"/>
+                        <field name="barcode_validation_all_product_packed"
+                                groups="stock.group_tracking_lot"
+                                invisible="restrict_put_in_pack != 'optional'"/>
+                        <field name="barcode_validation_after_dest_location"
+                                groups="stock.group_stock_multi_locations"
+                                invisible="code == 'outgoing' or restrict_scan_dest_location != 'optional'"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</data></odoo>

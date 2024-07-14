@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_timesheet_forecast_multi_rule" model="ir.rule">
+        <field name="name">Project timesheet forecast multi-company</field>
+        <field name="model_id" ref="model_project_timesheet_forecast_report_analysis"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+    <record id="project_timesheet_forecast_report_view_pivot" model="ir.ui.view">
+         <field name="name">timesheet.forecast.report.pivot</field>
+         <field name="model">project.timesheet.forecast.report.analysis</field>
+         <field name="arch" type="xml">
+             <pivot string="Timesheet and Planning Analysis" sample="1" disable_linking="1">
+                 <field name="entry_date" interval="month"/>
+                 <field name="employee_id" type="row"/>
+                 <field name="planned_hours" widget="timesheet_uom" type="measure"/>
+                 <field name="effective_hours" widget="timesheet_uom" type="measure"/>
+                 <field name="difference" widget="timesheet_uom" type="measure"/>
+                 <field name="planned_costs" widget="monetary" type="measure"/>
+                 <field name="effective_costs" widget="monetary" type="measure"/>
+             </pivot>
+         </field>
+    </record>
+
+    <record id="project_timesheet_forecast_report_view_graph" model="ir.ui.view">
+        <field name="name">timesheet.forecast.report.graph</field>
+        <field name="model">project.timesheet.forecast.report.analysis</field>
+        <field name="arch" type="xml">
+            <graph string="Timesheet and Planning Analysis" sample="1" stacked="0" js_class="hr_timesheet_graphview" disable_linking="1">
+                <field name="entry_date"/>
+                <field name="planned_hours" widget="timesheet_uom"/>
+                <field name="effective_hours" widget="timesheet_uom"/>
+                <field name="difference" widget="timesheet_uom"/>
+                <field name="planned_costs" widget="timesheet_uom"/>
+                <field name="effective_costs" widget="timesheet_uom"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="project_timesheet_forecast_report_analysis_view_tree" model="ir.ui.view">
+         <field name="name">project.timesheet.forecast.report.analysis.view.tree</field>
+         <field name="model">project.timesheet.forecast.report.analysis</field>
+         <field name="arch" type="xml">
+            <tree string="Timesheets and Planning Analysis">
+                <field name="entry_date"/>
+                <field name="project_id" optional="show"/>
+                <field name="employee_id" optional="show" widget="many2one_avatar_employee"/>
+                <field name="company_id" optional="show" groups="base.group_multi_company"/>
+                <field name="planned_hours" optional="show" sum="Sum of Planned Hours"/>
+                <field name="effective_hours" optional="show" sum="Sum of Effective Hours"/>
+                <field name="difference" optional="show" sum="Sum of Difference"/>
+            </tree>
+         </field>
+    </record>
+
+    <record id="project_timesheet_forecast_report_view_search" model="ir.ui.view">
+        <field name="name">timesheet.forecast.report.search</field>
+        <field name="model">project.timesheet.forecast.report.analysis</field>
+        <field name="arch" type="xml">
+            <search string="Timesheets and Planning Analysis">
+                <field name="employee_id" filter_domain="[('employee_id', 'ilike', self)]"/>
+                <field name="project_id" filter_domain="[('project_id', 'ilike', self)]"/>
+                <field name="entry_date"/>
+                <filter string="My Team" name="myteam" help="My Team" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
+                <filter string="My Department" name="my_department" domain="[('employee_id.member_of_department', '=', True)]"/>
+                <filter string="My Projects" name="myprojects" domain="[('project_id.user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Date" name="year" date="entry_date"/>
+                <group expand="1" string="Group By">
+                    <filter string="Employee" name="resource_employee" context="{'group_by':'employee_id'}"/>
+                    <filter string="Project" name="project_resource" context="{'group_by':'project_id'}"/>
+                    <filter string="Date" name="date_month" context="{'group_by':'entry_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="project_timesheet_forecast_report_action" model="ir.actions.act_window">
+        <field name="name">Timesheets / Planning Analysis</field>
+        <field name="res_model">project.timesheet.forecast.report.analysis</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="search_view_id" ref="project_timesheet_forecast_report_view_search"/>
+        <field name="context">{
+            'pivot_row_groupby': ['entry_date:month'],
+            'pivot_measures': ['planned_hours', 'effective_hours', 'difference'],
+            'graph_groupbys': ['entry_date:month', 'line_type'],
+            'group_by': [],
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data yet!
+            </p><p>
+                Track the progress of your projects by comparing the hours initially planned with the effective hours recorded
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_project_timesheet_forecast_report_analysis"
+        name="Timesheets / Planning Analysis"
+        sequence="15"
+        parent="hr_timesheet.menu_timesheets_reports"
+        action="project_timesheet_forecast_report_action"/>
+
+</odoo>

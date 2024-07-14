@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="hr_contract_history_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.history.form</field>
+        <field name="model">hr.contract.history</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_history_view_form"/>
+        <field name="arch" type="xml">
+            <field name="resource_calendar_id" position="after">
+                <field name="is_under_contract" invisible="1"/>
+                <field name="has_valid_schedule_change_contract" invisible="1"/>
+                <field name="time_credit" invisible="True"/>
+                <field string="Reference Working Time" name="standard_calendar_id" invisible="not time_credit"/>
+            </field>
+            <field name="resource_calendar_id" position="attributes">
+                <attribute name="invisible">time_credit</attribute>
+            </field>
+            <xpath expr="//header/button[@name='hr_contract_view_form_new_action']" position="after">
+                <button name="action_work_schedule_change_wizard" string="Working Schedule Change"  type="object" groups="hr_contract.group_hr_contract_manager"
+                    context="{'from_history': True}" invisible="country_code != 'BE' or not has_valid_schedule_change_contract"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <div role="alert" class="alert alert-danger text-center" invisible="not l10n_be_is_below_scale">
+                    <field name="l10n_be_is_below_scale_warning"/>
+                    <field name="l10n_be_is_below_scale" invisible="1"/>
+                </div>
+            </xpath>
+            <field name="date_hired" position="after">
+                <field name="fiscal_voluntarism" invisible="country_code != 'BE' or wage_type == 'hourly'"/>
+                <label for="fiscal_voluntary_rate"
+                       invisible="wage_type == 'hourly' or not fiscal_voluntarism"/>
+                <div class="o_row" invisible="wage_type == 'hourly' or not fiscal_voluntarism">
+                    <field name="fiscal_voluntary_rate" class="o_hr_narrow_field" nolabel="1"/>
+                    <span>%</span>
+                </div>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_contract_history_view_search" model="ir.ui.view">
+        <field name="name">hr.contract.history.search</field>
+        <field name="model">hr.contract.history</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_history_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="no_contracts" position="after">
+                <filter string="Part Time" name="part_time" domain="[('work_time_rate', '&lt;', 1)]"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

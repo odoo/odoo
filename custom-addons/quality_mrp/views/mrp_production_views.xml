@@ -1,0 +1,34 @@
+<odoo>
+    <record id="mrp_production_view_form_inherit_quality" model="ir.ui.view">
+        <field name="name">mrp.production.view.form.inherit.quality</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <button name="action_cancel" position="before">
+                <field name="quality_check_fail" invisible="1"/>
+                <button name="check_quality" invisible="not quality_check_todo" type="object" string="Quality Checks" class="oe_highlight" data-hotkey="shift+z"/>
+                <button name="button_quality_alert" type="object" string="Quality Alert" context="{'default_production_id': id}" invisible="not check_ids or quality_check_fail and quality_alert_count == 0"/>
+                <button name="button_quality_alert" type="object" string="Quality Alert" context="{'default_production_id': id}" class="oe_highlight" invisible="not quality_check_fail or quality_alert_count != 0"/>
+                <field name="check_ids" invisible="1"/>
+                <field name="quality_check_todo" invisible="1"/>
+            </button>
+            <div name="button_box" position="inside">
+                <button name="open_quality_alert_mo" type="object" class="oe_stat_button" icon="fa-bell" invisible="quality_alert_count == 0" context="{'search_default_production_id': id}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="quality_alert_count"/></span>
+                        <span class="o_stat_text">Quality Alerts</span>
+                    </div>
+                </button>
+                <button name="%(quality_check_action_mo)d" invisible="not check_ids or quality_check_fail or not quality_check_todo" type="action" class="oe_stat_button" icon="fa-check">
+                    <span class="o_stat_text">Quality Checks</span>
+                </button>
+                <button name="%(quality_check_action_mo)d" invisible="not check_ids or quality_check_fail or quality_check_todo" type="action" class="oe_stat_button text-success" icon="fa-check">
+                    <span class="o_stat_text text-success">Quality Checks</span>
+                </button>
+                <button name="%(quality_check_action_mo)d" invisible="not check_ids or not quality_check_fail" type="action" class="oe_stat_button text-danger" icon="fa-check">
+                    <span class="o_stat_text text-danger">Quality Checks</span>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

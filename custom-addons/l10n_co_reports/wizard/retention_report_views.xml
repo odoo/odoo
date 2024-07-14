@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="retention_report_wizard_form">
+            <field name="name">l10n_co_reports.retention_report.wizard.form</field>
+            <field name="model">l10n_co_reports.retention_report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Certificados de Retención">
+                    <group string="Fechas para Certificado">
+                        <field name="expedition_date"/>
+                        <field name="declaration_date"/>
+                    </group>
+                    <group>
+                        <field name="article"/>
+                    </group>
+                    <footer>
+                        <button name="generate_report" type="object"
+                                string="Imprimir" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

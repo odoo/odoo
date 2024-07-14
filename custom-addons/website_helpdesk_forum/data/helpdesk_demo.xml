@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="helpdesk.helpdesk_team1" model="helpdesk.team">
+        <field name="use_website_helpdesk_forum" eval="True"/>
+    </record>
+
+    <record id="helpdesk_forum_post_1" model="forum.post">
+        <field name="name" eval="obj().env.ref('helpdesk.helpdesk_ticket_3').name" model="helpdesk.ticket"/>
+        <field name="forum_id" ref="website_forum.forum_help"/>
+        <field name="ticket_id" ref="helpdesk.helpdesk_ticket_3"/>
+        <field name="content" eval="obj().env.ref('helpdesk.helpdesk_ticket_3').description" model="helpdesk.ticket"/>
+        <field name="create_uid" ref="base.user_demo"/>
+        <field name="write_uid" ref="base.user_demo"/>
+    </record>
+    <record id="helpdesk.helpdesk_ticket_3" model="helpdesk.ticket">
+        <field name="forum_post_ids" eval="[(4, ref('helpdesk_forum_post_1'))]"/>
+    </record>
+    <record id="helpdesk_forum_post_2" model="forum.post">
+        <field name="name" eval="obj().env.ref('helpdesk.helpdesk_ticket_6').name" model="helpdesk.ticket"/>
+        <field name="forum_id" ref="website_forum.forum_help"/>
+        <field name="ticket_id" ref="helpdesk.helpdesk_ticket_6"/>
+        <field name="content" eval="obj().env.ref('helpdesk.helpdesk_ticket_6').description" model="helpdesk.ticket"/>
+        <field name="create_uid" ref="base.user_demo"/>
+        <field name="write_uid" ref="base.user_demo"/>
+    </record>
+    <record id="helpdesk.helpdesk_ticket_6" model="helpdesk.ticket">
+        <field name="forum_post_ids" eval="[(4, ref('helpdesk_forum_post_2'))]"/>
+    </record>
+    <record id="helpdesk_forum_post_3" model="forum.post">
+        <field name="name" eval="obj().env.ref('helpdesk.helpdesk_ticket_12').name" model="helpdesk.ticket"/>
+        <field name="forum_id" ref="website_forum.forum_help"/>
+        <field name="ticket_id" ref="helpdesk.helpdesk_ticket_12"/>
+        <field name="content" eval="obj().env.ref('helpdesk.helpdesk_ticket_12').description" model="helpdesk.ticket"/>
+        <field name="create_uid" ref="base.user_demo"/>
+        <field name="write_uid" ref="base.user_demo"/>
+    </record>
+    <record id="helpdesk.helpdesk_ticket_12" model="helpdesk.ticket">
+        <field name="forum_post_ids" eval="[(4, ref('helpdesk_forum_post_3'))]"/>
+    </record>
+    <record id="helpdesk_forum_post_4" model="forum.post">
+        <field name="name" eval="obj().env.ref('helpdesk.helpdesk_ticket_16').name" model="helpdesk.ticket"/>
+        <field name="forum_id" ref="website_forum.forum_help"/>
+        <field name="ticket_id" ref="helpdesk.helpdesk_ticket_16"/>
+        <field name="content" eval="obj().env.ref('helpdesk.helpdesk_ticket_16').description" model="helpdesk.ticket"/>
+        <field name="create_uid" ref="base.user_demo"/>
+        <field name="write_uid" ref="base.user_demo"/>
+    </record>
+    <record id="helpdesk.helpdesk_ticket_16" model="helpdesk.ticket">
+        <field name="forum_post_ids" eval="[(4, ref('helpdesk_forum_post_4'))]"/>
+    </record>
+</odoo>
